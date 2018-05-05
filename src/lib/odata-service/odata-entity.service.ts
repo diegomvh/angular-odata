@@ -13,29 +13,29 @@ export class ODataEntityService<T> {
   constructor(
     protected odataService: ODataService,
     protected serviceRoot: string,
-    protected entitySet: string) {
+    protected set: string) {
   }
 
   public entity(key): ODataQuery {
     return new ODataQuery(this.odataService, this.serviceRoot)
-        .entitySet(this.entitySet)
+        .entitySet(this.set)
         .entityKey(key);
   }
 
   public collection(): ODataQuery {
     return new ODataQuery(this.odataService, this.serviceRoot)
-        .entitySet(this.entitySet);
+        .entitySet(this.set);
   }
 
   public entityBuilder(key): ODataQueryBuilder {
     return new ODataQueryBuilder(this.odataService, this.serviceRoot)
-        .set(this.entitySet)
+        .set(this.set)
         .key(key);
   }
 
   public collectionBuilder(): ODataQueryBuilder {
     return new ODataQueryBuilder(this.odataService, this.serviceRoot)
-        .set(this.entitySet);
+        .set(this.set);
   }
 
   public fetch(query: ODataQuery | ODataQueryBuilder): Promise<ODataResponse> {
@@ -118,7 +118,6 @@ export class ODataEntityService<T> {
     }
 
   protected createRef(entity, property, target: ODataQuery) {
-    
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
