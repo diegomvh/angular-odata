@@ -6,7 +6,6 @@ import { ODataResponse } from '../odata-response/odata-response';
 import { HttpOptionsI } from '../odata-service/http-options';
 import { ODataService } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
-import { ODataQuery } from './odata-query';
 import { ODataQueryAbstract } from './odata-query-abstract';
 
 export enum Method {
@@ -16,7 +15,7 @@ export enum Method {
 export class BatchRequest {
   constructor(
     public method: Method,
-    public odataQuery: ODataQuery,
+    public odataQuery: ODataQueryAbstract,
     public body?: any,
     public httpOptions?: HttpOptionsI) { }
 }
@@ -61,31 +60,31 @@ export class ODataQueryBatch extends ODataQueryAbstract {
     this.changesetID = 1;
   }
 
-  get(odataQuery: ODataQuery, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  get(odataQuery: ODataQueryAbstract, httpOptions?: HttpOptionsI): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
     this.requests.push(new BatchRequest(Method.GET, odataQuery, undefined, httpOptions));
     return this;
   }
 
-  post(odataQuery: ODataQuery, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  post(odataQuery: ODataQueryAbstract, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
     this.requests.push(new BatchRequest(Method.POST, odataQuery, body, httpOptions));
     return this;
   }
 
-  put(odataQuery: ODataQuery, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  put(odataQuery: ODataQueryAbstract, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
     this.requests.push(new BatchRequest(Method.PUT, odataQuery, body, httpOptions));
     return this;
   }
 
-  patch(odataQuery: ODataQuery, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  patch(odataQuery: ODataQueryAbstract, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
     this.requests.push(new BatchRequest(Method.PATCH, odataQuery, body, httpOptions));
     return this;
   }
 
-  delete(odataQuery: ODataQuery, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  delete(odataQuery: ODataQueryAbstract, httpOptions?: HttpOptionsI): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
     this.requests.push(new BatchRequest(Method.DELETE, odataQuery, undefined, httpOptions));
     return this;
@@ -114,7 +113,7 @@ export class ODataQueryBatch extends ODataQueryAbstract {
 
     for (const request of this.requests) {
       const method: Method = request.method;
-      const odataQuery: ODataQuery = request.odataQuery;
+      const odataQuery: ODataQueryAbstract = request.odataQuery;
       const httpOptions: HttpOptionsI = request.httpOptions;
       const body: any = request.body;
 

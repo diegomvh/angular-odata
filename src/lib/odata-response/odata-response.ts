@@ -4,7 +4,6 @@ import { Utils } from '../utils/utils';
 import { EntitySet } from './entity-collection';
 import { Metadata } from './metadata';
 import { ODataResponseAbstract } from './odata-response-abstract';
-import { ODataResponseBatch } from './odata-response-batch';
 
 export class ODataResponse extends ODataResponseAbstract {
     private static readonly VALUE = 'value';
@@ -65,10 +64,6 @@ export class ODataResponse extends ODataResponseAbstract {
 
     toCount(): number {
         return Number(this.getBodyAsText());
-    }
-
-    toODataResponseBatch(): ODataResponseBatch {
-        return new ODataResponseBatch(this.getHttpResponse());
     }
 
     protected toObject<T>(): T {

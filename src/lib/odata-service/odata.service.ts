@@ -16,7 +16,7 @@ export class ODataService {
 
   constructor(private http: HttpClient) { }
 
-  get(odataQuery: ODataQuery, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
+  get(odataQuery: ODataQueryAbstract, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
     const url: string = odataQuery.toString();
     const options: HttpOptions = this.createHttpOptions(httpOptions);
     return this.http.get(url, options).pipe(
@@ -32,7 +32,7 @@ export class ODataService {
     );
   }
 
-  patch(odataQuery: ODataQuery, body: any, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
+  patch(odataQuery: ODataQueryAbstract, body: any, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
     const url: string = odataQuery.toString();
     let options: HttpOptions = this.createHttpOptions(httpOptions);
     options = this.mergeETag(options, etag);
@@ -41,7 +41,7 @@ export class ODataService {
     );
   }
 
-  put(odataQuery: ODataQuery, body: any, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
+  put(odataQuery: ODataQueryAbstract, body: any, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
     const url: string = odataQuery.toString();
     let options: HttpOptions = this.createHttpOptions(httpOptions);
     options = this.mergeETag(options, etag);
@@ -50,7 +50,7 @@ export class ODataService {
     );
   }
 
-  delete(odataQuery: ODataQuery, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
+  delete(odataQuery: ODataQueryAbstract, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
     const url: string = odataQuery.toString();
     let options: HttpOptions = this.createHttpOptions(httpOptions);
     options = this.mergeETag(options, etag);

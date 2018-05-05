@@ -1,5 +1,8 @@
 import { Utils } from '../utils/utils';
 import { ODataService } from '../odata-service/odata.service';
+import { HttpOptionsI } from '../odata-service/http-options';
+import { Observable } from 'rxjs';
+import { ODataResponse } from '../odata-response/odata-response';
 
 export abstract class ODataQueryAbstract {
   protected odataService: ODataService;

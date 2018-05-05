@@ -1,8 +1,8 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Utils } from '../utils/utils';
-import { ODataResponse } from './odata-response';
 import { ODataResponseAbstract } from './odata-response-abstract';
+import { ODataResponse } from './odata-response';
 
 export class ODataResponseBatch extends ODataResponseAbstract {
     private static readonly CONTENT_TYPE = 'Content-Type';
@@ -12,7 +12,7 @@ export class ODataResponseBatch extends ODataResponseAbstract {
     private static readonly NEWLINE = '\r\n';
     private static readonly MULTIPART_MIXED = 'multipart/mixed';
 
-    private odataResponses: ODataResponse[];
+    private odataResponses: ODataResponseAbstract[];
 
     constructor(httpResponse: HttpResponse<string>) {
         super(httpResponse);
@@ -20,8 +20,12 @@ export class ODataResponseBatch extends ODataResponseAbstract {
         this.parseResponses();
     }
 
-    getODataResponses(): ODataResponse[] {
+    getODataResponses(): ODataResponseAbstract[] {
         return this.odataResponses;
+    }
+
+    static fromODataResponse(odataResponse: ODataResponse): ODataResponseBatch {
+        return new ODataResponseBatch(odataResponse.getHttpResponse());
     }
 
     protected parseResponses(): void {
@@ -32,7 +36,7 @@ export class ODataResponseBatch extends ODataResponseAbstract {
         const batchBody: string = this.getBodyAsText();
         const batchBodyLines: string[] = batchBody.split(ODataResponseBatch.NEWLINE);
 
-        let odataResponseCS: ODataResponse[];
+        let odataResponseCS: ODataResponseAbstract[];
         let contentId: number;
         let boundaryDelimiterCS;
         let boundaryEndCS;
@@ -60,7 +64,7 @@ export class ODataResponseBatch extends ODataResponseAbstract {
                     continue;
                 }
 
-                const odataResponse: ODataResponse = this.createODataResponse(batchBodyLines, batchPartStartIndex, index - 1);
+                const odataResponse: ODataResponseAbstract = this.createODataResponse(batchBodyLines, batchPartStartIndex, index - 1);
                 if (Utils.isNotNullNorUndefined(odataResponseCS)) {
                     odataResponseCS[contentId] = odataResponse;
                 } else {
@@ -111,7 +115,7 @@ export class ODataResponseBatch extends ODataResponseAbstract {
         return boundaryEnd;
     }
 
-    protected createODataResponse(batchBodyLines: string[], batchPartStartIndex: number, batchPartEndIndex: number): ODataResponse {
+    protected createODataResponse(batchBodyLines: string[], batchPartStartIndex: number, batchPartEndIndex: number): ODataResponseAbstract {
         let index: number = batchPartStartIndex;
         const statusLine: string = batchBodyLines[index];
         const statusLineParts: string[] = batchBodyLines[index].split(' ');
