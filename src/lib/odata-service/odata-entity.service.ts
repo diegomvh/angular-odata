@@ -16,7 +16,7 @@ export class ODataEntityService<T> {
     protected entitySet: string) {
   }
 
-  public entity(key: number | string): ODataQuery {
+  public entity(key): ODataQuery {
     return new ODataQuery(this.odataService, this.serviceRoot)
         .entitySet(this.entitySet)
         .entityKey(key);
@@ -25,6 +25,17 @@ export class ODataEntityService<T> {
   public collection(): ODataQuery {
     return new ODataQuery(this.odataService, this.serviceRoot)
         .entitySet(this.entitySet);
+  }
+
+  public entityBuilder(key): ODataQueryBuilder {
+    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
+        .set(this.entitySet)
+        .key(key);
+  }
+
+  public collectionBuilder(): ODataQueryBuilder {
+    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
+        .set(this.entitySet);
   }
 
   public fetch(query: ODataQuery | ODataQueryBuilder): Promise<ODataResponse> {
@@ -148,34 +159,28 @@ export class ODataEntityService<T> {
 
   // Function and actions
   protected customAction(key: any, name: string, postdata: any = {}): Promise<ODataResponse> {
-    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
-      .set(this.entitySet)
-      .key(key)
+    return this.entityBuilder(key)
       .action(name)
       .post(postdata)
       .toPromise();
   }
 
   protected customCollectionAction(name: string, postdata: any = {}): Promise<ODataResponse> {
-    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
-      .set(this.entitySet)
+    return this.collectionBuilder()
       .action(name)
       .post(postdata)
       .toPromise();
   }
 
   protected customFunction(key: any, name: string, parameters: any = {}): Promise<ODataResponse> {
-    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
-      .set(this.entitySet)
-      .key(key)
+    return this.entityBuilder(key)
       .func({[name]: parameters})
       .get()
       .toPromise();
   }
 
   protected customCollectionFunction(name: string, parameters: any = {}): Promise<ODataResponse> {
-    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
-      .set(this.entitySet)
+    return this.collectionBuilder()
       .func({[name]: parameters})
       .get()
       .toPromise();
