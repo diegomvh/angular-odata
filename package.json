@@ -1,0 +1,23 @@
+{
+  "name": "angular-odata",
+  "version": "0.0.2",
+  "license": "MIT",
+  "description": "Client side OData V4 typescript library for Angular",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegomvh/angular-odata.git"
+  },
+  "keywords": [
+    "client",
+    "odata",
+    "odata v4",
+    "typescript",
+    "angular",
+    "angular6"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
+    "angular2-uuid": "^1.1.1"
+  }
+}
