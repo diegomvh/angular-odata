@@ -41,11 +41,8 @@ export class ODataQuery extends ODataQueryAbstract {
   private segments: string[];
   private lastSegment: string;
 
-  constructor(odataService: ODataService, serviceRoot: string) {
-    super(odataService, serviceRoot);
-    Utils.requireNotNullNorUndefined(odataService, 'odataService');
-    Utils.requireNotNullNorUndefined(serviceRoot, 'serviceRoot');
-    Utils.requireNotEmpty(serviceRoot, 'serviceRoot');
+  constructor(odataService: ODataService) {
+    super(odataService);
     this.queryOptions = new QueryOptions(ODataQuery.SEPARATOR);
     this.segments = [];
     this.lastSegment = null;
@@ -176,7 +173,7 @@ export class ODataQuery extends ODataQueryAbstract {
   }
 
   batch(): ODataQueryBatch {
-    return new ODataQueryBatch(this.odataService, this.serviceRoot);
+    return new ODataQueryBatch(this.odataService);
   }
 
   // QUERY OPTIONS

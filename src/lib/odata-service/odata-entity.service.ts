@@ -12,35 +12,35 @@ export class ODataEntityService<T> {
   
   constructor(
     protected odataService: ODataService,
-    protected serviceRoot: string,
     protected set: string) {
   }
 
   public entity(key): ODataQuery {
-    return new ODataQuery(this.odataService, this.serviceRoot)
+    return new ODataQuery(this.odataService)
         .entitySet(this.set)
         .entityKey(key);
   }
 
   public collection(): ODataQuery {
-    return new ODataQuery(this.odataService, this.serviceRoot)
+    return new ODataQuery(this.odataService)
         .entitySet(this.set);
   }
 
   public entityBuilder(key): ODataQueryBuilder {
-    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
+    return new ODataQueryBuilder(this.odataService)
         .set(this.set)
         .key(key);
   }
 
   public collectionBuilder(): ODataQueryBuilder {
-    return new ODataQueryBuilder(this.odataService, this.serviceRoot)
+    return new ODataQueryBuilder(this.odataService)
         .set(this.set);
   }
 
   public fetch(query: ODataQuery | ODataQueryBuilder): Promise<ODataResponse> {
     return query
-      .get().toPromise();
+      .get()
+      .toPromise();
   }
 
   public fetchAll(query: ODataQuery | ODataQueryBuilder): Promise<T[]> {
@@ -74,15 +74,17 @@ export class ODataEntityService<T> {
   }
 
   public update(entity): Promise<T> {
+    let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
-      .put(entity)
+      .put(entity, etag)
       .toPromise()
       .then(resp => resp.toEntity<T>());
   }
 
   public patch(delta) {
+    let etag = delta[ODataEntityService.ODATA_ETAG];
     return this.entity(delta.id)
-      .patch(delta)
+      .patch(delta, etag)
       .toPromise();
   }
 
@@ -118,10 +120,11 @@ export class ODataEntityService<T> {
     }
 
   protected createRef(entity, property, target: ODataQuery) {
+    let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .put({[ODataEntityService.ODATA_ID]: target.toString()})
+      .put({[ODataEntityService.ODATA_ID]: target.toString()}, etag)
       .toPromise();
   }
 

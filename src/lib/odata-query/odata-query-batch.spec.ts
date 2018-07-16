@@ -1,6 +1,6 @@
 import { ODataQueryBatch, BatchRequest, Method } from './odata-query-batch';
 import { ODataService } from '../odata-service/odata.service';
-import { ODataModule } from './../odata.module';
+import { ODataModule } from '../odata.module';
 import { ODataQuery } from './odata-query';
 import { HttpModule } from '@angular/http';
 import { TestBed } from '@angular/core/testing';

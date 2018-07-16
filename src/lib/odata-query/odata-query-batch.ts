@@ -48,12 +48,10 @@ export class ODataQueryBatch extends ODataQueryAbstract {
   private changesetBoundary: string;
   private changesetID: number;
 
-  constructor(odataService: ODataService, serviceRoot: string) {
-    super(odataService, serviceRoot);
+  constructor(odataService: ODataService) {
+    super(odataService);
     Utils.requireNotNullNorUndefined(odataService, 'odataService');
-    Utils.requireNotNullNorUndefined(serviceRoot, 'serviceRoot');
-    Utils.requireNotEmpty(serviceRoot, 'serviceRoot');
-    this.queryString = Utils.appendSegment(serviceRoot, ODataQueryBatch.$BATCH);
+    this.queryString = Utils.appendSegment(this.queryString, ODataQueryBatch.$BATCH);
     this.requests = [];
     this.batchBoundary = ODataQueryBatch.BATCH_PREFIX + UUID.UUID();
     this.changesetBoundary = null;

@@ -4,20 +4,24 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataQuery } from '../odata-query/odata-query';
 import { ODataQueryAbstract } from '../odata-query/odata-query-abstract';
 import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
 import { HttpOptions, HttpOptionsI } from './http-options';
 
+export interface ODataOptions {
+  serviceRoot: string;
+  withCredentials: boolean;
+}
+
 @Injectable()
 export class ODataService {
   private static readonly IF_MATCH_HEADER = 'If-Match';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private options: ODataOptions) { }
 
   get(odataQuery: ODataQueryAbstract, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
-    const url: string = odataQuery.toString();
+    const url: string = this.createEndpointUrl(odataQuery);
     const options: HttpOptions = this.createHttpOptions(httpOptions);
     return this.http.get(url, options).pipe(
       map(response => new ODataResponse(response))
@@ -25,7 +29,7 @@ export class ODataService {
   }
 
   post(odataQuery: ODataQueryAbstract, body: any, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
-    const url: string = odataQuery.toString();
+    const url: string = this.createEndpointUrl(odataQuery);
     const options: HttpOptions = this.createHttpOptions(httpOptions);
     return this.http.post(url, body, options).pipe(
       map(response => new ODataResponse(response))
@@ -33,7 +37,7 @@ export class ODataService {
   }
 
   patch(odataQuery: ODataQueryAbstract, body: any, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
-    const url: string = odataQuery.toString();
+    const url: string = this.createEndpointUrl(odataQuery);
     let options: HttpOptions = this.createHttpOptions(httpOptions);
     options = this.mergeETag(options, etag);
     return this.http.patch(url, body, options).pipe(
@@ -42,7 +46,7 @@ export class ODataService {
   }
 
   put(odataQuery: ODataQueryAbstract, body: any, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
-    const url: string = odataQuery.toString();
+    const url: string = this.createEndpointUrl(odataQuery);
     let options: HttpOptions = this.createHttpOptions(httpOptions);
     options = this.mergeETag(options, etag);
     return this.http.put(url, body, options).pipe(
@@ -51,7 +55,7 @@ export class ODataService {
   }
 
   delete(odataQuery: ODataQueryAbstract, etag?: string, httpOptions?: HttpOptionsI): Observable<ODataResponse> {
-    const url: string = odataQuery.toString();
+    const url: string = this.createEndpointUrl(odataQuery);
     let options: HttpOptions = this.createHttpOptions(httpOptions);
     options = this.mergeETag(options, etag);
     return this.http.delete(url, options).pipe(
@@ -59,11 +63,15 @@ export class ODataService {
     );
   }
 
+  protected createEndpointUrl(odataQuery: ODataQueryAbstract): string {
+    return `${this.options.serviceRoot}${odataQuery}`;
+  }
+
   protected createHttpOptions(httpOptions: HttpOptionsI): HttpOptions {
     if (httpOptions instanceof HttpOptions) {
       return httpOptions;
     }
-    return Object.assign(new HttpOptions(), httpOptions);
+    return Object.assign(new HttpOptions(), { withCredentials: this.options.withCredentials }, httpOptions);
   }
 
   protected mergeETag(httpOptions: HttpOptions, etag: string): HttpOptions {

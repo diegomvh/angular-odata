@@ -1,28 +1,23 @@
 import { ODataQueryAbstract } from "./odata-query-abstract";
 import { ODataService } from "../odata-service/odata.service";
-import { Utils } from "../utils/utils";
 import buildQuery from 'odata-query';
-import { ODataQuery } from "./odata-query";
 import { HttpOptionsI } from "../odata-service/http-options";
 import { Observable } from "rxjs";
 import { ODataResponse } from "../odata-response/odata-response";
 
-interface BuilderOptions {
+export interface BuilderOptions {
   set: string;
 }
 
 export class ODataQueryBuilder extends ODataQueryAbstract {
   options: BuilderOptions;
-  constructor(odataService: ODataService, serviceRoot: string, options?: BuilderOptions) {
-    super(odataService, serviceRoot);
-    Utils.requireNotNullNorUndefined(odataService, 'odataService');
-    Utils.requireNotNullNorUndefined(serviceRoot, 'serviceRoot');
-    Utils.requireNotEmpty(serviceRoot, 'serviceRoot');
+  constructor(odataService: ODataService, options?: BuilderOptions) {
+    super(odataService);
     this.options = options || <BuilderOptions>{};
   }
 
   clone(): ODataQueryBuilder {
-    return new ODataQueryBuilder(this.odataService, this.serviceRoot, Object.assign({}, this.options));
+    return new ODataQueryBuilder(this.odataService, Object.assign({}, this.options));
   }
 
   toObject() {
@@ -34,8 +29,8 @@ export class ODataQueryBuilder extends ODataQueryAbstract {
     return `${set}${buildQuery(this.options)}`;
   }
 
-  static fromObject(odataService: ODataService, serviceRoot: string, options: BuilderOptions): ODataQueryBuilder {
-    return new ODataQueryBuilder(odataService, serviceRoot, options);
+  static fromObject(odataService: ODataService, options: BuilderOptions): ODataQueryBuilder {
+    return new ODataQueryBuilder(odataService, options);
   }
 
   private wrapper(value, opts): ODataQueryBuilder | any {
