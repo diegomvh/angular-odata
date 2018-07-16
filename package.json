@@ -16,9 +16,9 @@
     "angular6"
   ],
   "peerDependencies": {
-    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
-    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/common": "^6.0.9",
+    "@angular/core": "^6.0.9",
     "angular2-uuid": "^1.1.1",
-    "odata-query": "^5.3.1"
+    "odata-query": "^5.4.2"
   }
 }
