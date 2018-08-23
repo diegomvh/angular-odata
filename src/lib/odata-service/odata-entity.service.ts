@@ -1,39 +1,39 @@
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpClient } from '@angular/common/http';
 
 import { ODataResponse } from "../odata-response/odata-response";
 import { ODataQueryBuilder } from "../odata-query/odata-query-builder";
 import { ODataQuery } from "../odata-query/odata-query";
 import { ODataService } from "./odata.service";
-import { HttpOptions } from "./http-options";
+import { ODataQueryAbstract } from '../odata-query/odata-query-abstract';
+import { ODataContext } from './odata-context';
 
-export class ODataEntityService<T> {
+export class ODataEntityService<T> extends ODataService {
   private static readonly ODATA_ETAG = '@odata.etag';
   private static readonly ODATA_ID = '@odata.id';
   
-  constructor(
-    protected odataService: ODataService,
-    protected set: string) {
+  constructor(protected http: HttpClient, protected context: ODataContext, protected set: string) {
+    super(http, context);
   }
 
   public entity(key): ODataQuery {
-    return new ODataQuery(this.odataService)
+    return this.query()
         .entitySet(this.set)
         .entityKey(key);
   }
 
   public collection(): ODataQuery {
-    return new ODataQuery(this.odataService)
+    return this.query()
         .entitySet(this.set);
   }
 
   public entityBuilder(key): ODataQueryBuilder {
-    return new ODataQueryBuilder(this.odataService)
+    return this.queryBuilder()
         .set(this.set)
         .key(key);
   }
 
   public collectionBuilder(): ODataQueryBuilder {
-    return new ODataQueryBuilder(this.odataService)
+    return this.queryBuilder()
         .set(this.set);
   }
 
@@ -59,14 +59,14 @@ export class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public get(key): Promise<T> {
+  public read(key): Promise<T> {
     return this.entity(key)
       .get()
       .toPromise()
       .then(resp => resp.toEntity<T>());
   }
 
-  public create(data) {
+  public create(data): Promise<T> {
     return this.collection()
       .post(data)
       .toPromise()
@@ -81,14 +81,14 @@ export class ODataEntityService<T> {
       .then(resp => resp.toEntity<T>());
   }
 
-  public patch(delta) {
+  public assign(delta) {
     let etag = delta[ODataEntityService.ODATA_ETAG];
     return this.entity(delta.id)
       .patch(delta, etag)
       .toPromise();
   }
 
-  public delete(entity) {
+  public remove(entity) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
       .delete(etag)
@@ -119,24 +119,26 @@ export class ODataEntityService<T> {
       .then(resp => resp.toPropertyValue());
     }
 
-  protected createRef(entity, property, target: ODataQuery) {
+  protected createRef(entity, property, target: ODataQueryAbstract) {
+    let refurl = this.context.createEndpointUrl(target);
     let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .put({[ODataEntityService.ODATA_ID]: target.toString()}, etag)
+      .put({[ODataEntityService.ODATA_ID]: refurl}, etag)
       .toPromise();
   }
 
-  protected createCollectionRef(entity, property, target: ODataQuery) {
+  protected createCollectionRef(entity, property, target: ODataQueryAbstract) {
+    let refurl = this.context.createEndpointUrl(target);
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .post({[ODataEntityService.ODATA_ID]: target.toString()})
+      .post({[ODataEntityService.ODATA_ID]: refurl})
       .toPromise();
   }
 
-  protected deleteRef(entity, property, target: ODataQuery) {
+  protected deleteRef(entity, property, target: ODataQueryAbstract) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
       .navigationProperty(property)
@@ -145,17 +147,13 @@ export class ODataEntityService<T> {
       .toPromise();
   }
 
-  protected deleteCollectionRef(entity, property, target: ODataQuery) {
+  protected deleteCollectionRef(entity, property, target: ODataQueryAbstract) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    let options = new HttpOptions();
-    options.params = new HttpParams({fromObject: {
-      "$id": target
-        .toString()}
-      });
+    let refurl = this.context.createEndpointUrl(target);
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .delete(etag, options)
+      .delete(etag, {params: {"$id": refurl}})
       .toPromise();
   }
 

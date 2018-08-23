@@ -3,6 +3,7 @@
  */
 
 export * from './lib/odata.module';
+export * from './lib/odata-service/odata-context';
 // Services
 export * from './lib/odata-service/odata.service';
 export * from './lib/odata-service/odata-entity.service';

@@ -3,7 +3,6 @@ import { UUID } from 'angular2-uuid';
 import { Observable } from 'rxjs';
 
 import { ODataResponse } from '../odata-response/odata-response';
-import { HttpOptionsI } from '../odata-service/http-options';
 import { ODataService } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
 import { ODataQueryAbstract } from './odata-query-abstract';
@@ -17,7 +16,7 @@ export class BatchRequest {
     public method: Method,
     public odataQuery: ODataQueryAbstract,
     public body?: any,
-    public httpOptions?: HttpOptionsI) { }
+    public httpOptions?) { }
 }
 
 export class ODataQueryBatch extends ODataQueryAbstract {
@@ -61,50 +60,50 @@ export class ODataQueryBatch extends ODataQueryAbstract {
     this.changesetID = 1;
   }
 
-  get(odataQuery: ODataQueryAbstract, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  get(odataQuery: ODataQueryAbstract, options?): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
-    this.requests.push(new BatchRequest(Method.GET, odataQuery, undefined, httpOptions));
+    this.requests.push(new BatchRequest(Method.GET, odataQuery, undefined, options));
     return this;
   }
 
-  post(odataQuery: ODataQueryAbstract, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  post(odataQuery: ODataQueryAbstract, body: any, options?): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
-    this.requests.push(new BatchRequest(Method.POST, odataQuery, body, httpOptions));
+    this.requests.push(new BatchRequest(Method.POST, odataQuery, body, options));
     return this;
   }
 
-  put(odataQuery: ODataQueryAbstract, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  put(odataQuery: ODataQueryAbstract, body: any, options?): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
-    this.requests.push(new BatchRequest(Method.PUT, odataQuery, body, httpOptions));
+    this.requests.push(new BatchRequest(Method.PUT, odataQuery, body, options));
     return this;
   }
 
-  patch(odataQuery: ODataQueryAbstract, body: any, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  patch(odataQuery: ODataQueryAbstract, body: any, options?): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
-    this.requests.push(new BatchRequest(Method.PATCH, odataQuery, body, httpOptions));
+    this.requests.push(new BatchRequest(Method.PATCH, odataQuery, body, options));
     return this;
   }
 
-  delete(odataQuery: ODataQueryAbstract, httpOptions?: HttpOptionsI): ODataQueryBatch {
+  delete(odataQuery: ODataQueryAbstract, options?): ODataQueryBatch {
     Utils.requireNotNullNorUndefined(odataQuery, 'odataQuery');
-    this.requests.push(new BatchRequest(Method.DELETE, odataQuery, undefined, httpOptions));
+    this.requests.push(new BatchRequest(Method.DELETE, odataQuery, undefined, options));
     return this;
   }
 
-  execute(httpOptions?: HttpOptionsI): Observable<ODataResponse> {
+  execute(options?): Observable<ODataResponse> {
     // set headers
-    if (Utils.isNullOrUndefined(httpOptions)) {
-      httpOptions = {};
+    if (Utils.isNullOrUndefined(options)) {
+      options = {};
     }
-    if (Utils.isNullOrUndefined(httpOptions.headers)) {
-      httpOptions.headers = new HttpHeaders();
+    if (Utils.isNullOrUndefined(options.headers)) {
+      options.headers = new HttpHeaders();
     }
-    httpOptions.headers = httpOptions.headers.set(ODataQueryBatch.ODATA_VERSION, ODataQueryBatch.VERSION_4_0);
-    httpOptions.headers = httpOptions.headers.set(ODataQueryBatch.CONTENT_TYPE, ODataQueryBatch.MULTIPART_MIXED_BOUNDARY + this.batchBoundary);
-    httpOptions.headers = httpOptions.headers.set(ODataQueryBatch.ACCEPT, ODataQueryBatch.MULTIPART_MIXED);
+    options.headers = options.headers.set(ODataQueryBatch.ODATA_VERSION, ODataQueryBatch.VERSION_4_0);
+    options.headers = options.headers.set(ODataQueryBatch.CONTENT_TYPE, ODataQueryBatch.MULTIPART_MIXED_BOUNDARY + this.batchBoundary);
+    options.headers = options.headers.set(ODataQueryBatch.ACCEPT, ODataQueryBatch.MULTIPART_MIXED);
 
     // send request
-    return this.odataService.post(this, this.getBody(), httpOptions);
+    return this.odataService.post(this, this.getBody(), options);
   }
 
   toString(): string {
@@ -117,7 +116,7 @@ export class ODataQueryBatch extends ODataQueryAbstract {
     for (const request of this.requests) {
       const method: Method = request.method;
       const odataQuery: ODataQueryAbstract = request.odataQuery;
-      const httpOptions: HttpOptionsI = request.httpOptions;
+      const httpOptions = request.httpOptions;
       const body: any = request.body;
 
       // if method is GET and there is a changeset boundary open then close it
@@ -172,19 +171,19 @@ export class ODataQueryBatch extends ODataQueryAbstract {
     return res;
   }
 
-  protected getHeaders(method: Method, httpOptions: HttpOptionsI): string {
+  protected getHeaders(method: Method, options): string {
     let res = '';
 
     if (method === Method.POST || method === Method.PATCH || method === Method.PUT) {
       res += ODataQueryBatch.CONTENT_TYPE + ': ' + ODataQueryBatch.APPLICATION_JSON + ODataQueryBatch.NEWLINE;
     }
 
-    if (Utils.isNullOrUndefined(httpOptions) || Utils.isNullOrUndefined(httpOptions.headers)) {
+    if (Utils.isNullOrUndefined(options) || Utils.isNullOrUndefined(options.headers)) {
       return res;
     }
 
-    for (const key of httpOptions.headers.keys()) {
-      res += key + ': ' + httpOptions.headers.getAll(key) + ODataQueryBatch.NEWLINE;
+    for (const key of options.headers.keys()) {
+      res += key + ': ' + options.headers.getAll(key) + ODataQueryBatch.NEWLINE;
     }
 
     return res;
