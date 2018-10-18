@@ -1,66 +1,225 @@
 import { ODataQueryAbstract } from "./odata-query-abstract";
 import { ODataService } from "../odata-service/odata.service";
 import buildQuery from 'odata-query';
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
 import { ODataResponse } from "../odata-response/odata-response";
 
-export interface BuilderOptions {
-  set: string;
+export interface ODataQueryBuilderOptions {
+}
+
+export interface ODataQueryBuilderSegment {
+  type: string;
+  name: string;
+  options: ODataQueryBuilderOptions;
 }
 
 export class ODataQueryBuilder extends ODataQueryAbstract {
-  options: BuilderOptions;
-  constructor(odataService: ODataService, options?: BuilderOptions) {
+  segments: ODataQueryBuilderSegment[];
+  options: ODataQueryBuilderOptions;
+  constructor(odataService: ODataService, options?: ODataQueryBuilderOptions) {
     super(odataService);
-    this.options = options || <BuilderOptions>{};
+    this.segments = [];
+    this.options = options || <ODataQueryBuilderOptions>{};
   }
 
-  clone(): ODataQueryBuilder {
-    return new ODataQueryBuilder(this.odataService, Object.assign({}, this.options));
-  }
+  clone() {
+    // TODO: hacer un deep clone
+    let newBuilder = new ODataQueryBuilder(this.odataService, Object.assign({}, this.options));
+    newBuilder.segments = this.segments.slice();
+    return newBuilder;
+  };
 
-  toObject() {
-    return Object.assign({}, this.options);
-  }
-
-  toString() {
-    let set = this.options.set || "";
-    return `${set}${buildQuery(this.options)}`;
-  }
-
-  static fromObject(odataService: ODataService, options: BuilderOptions): ODataQueryBuilder {
-    return new ODataQueryBuilder(odataService, options);
-  }
-
-  private wrapper(value, opts): ODataQueryBuilder | any {
-    if (typeof(opts) === 'undefined') {
-      return this.options[value];
+  toJSON() {
+    return {
+      segments: this.segments.slice(), options: Object.assign({}, this.options)
     }
-    else if (opts === null) {
-      delete this.options[value];
+  }
+
+  static fromJSON(service: ODataService, json) {
+    let builder = new ODataQueryBuilder(service, json.options);
+    builder.segments = json.segments || [];
+    return builder;
+  }
+
+  protected toString() {
+    let segments = this.segments
+      .map(segment => {
+        if (segment.type == ODataQueryBuilder.FUNCTION_CALL)
+          return buildQuery({ func: { [segment.name]: segment.options } }).slice(1);
+        return segment.name + buildQuery(segment.options);
+      });
+    let odata = [
+      ODataQueryBuilder.SELECT,
+      ODataQueryBuilder.FILTER,
+      ODataQueryBuilder.SEARCH,
+      ODataQueryBuilder.GROUP_BY,
+      ODataQueryBuilder.TRANSFORM,
+      ODataQueryBuilder.ORDER_BY,
+      ODataQueryBuilder.TOP,
+      ODataQueryBuilder.SKIP,
+      ODataQueryBuilder.COUNT,
+      ODataQueryBuilder.EXPAND]
+      .map(key => this.options[key] ? { [key]: this.options[key] } : {})
+      .reduce((acc, obj) => Object.assign(acc, obj), {});
+    let rawFilter = this.options[ODataQueryBuilder.RAWFILTER];
+    if (rawFilter)
+      odata[ODataQueryBuilder.FILTER] = [odata[ODataQueryBuilder.FILTER] || {}, rawFilter];
+    let query = buildQuery(odata);
+    return segments.join(ODataQueryBuilder.PATHSEP) + query;
+  }
+
+  // ================
+  protected objectHandler(value) {
+    return {
+      attrs: value,
+      toJSON: function () {
+        return this.attrs;
+      },
+      get: function (name) {
+        return this.attrs[name];
+      },
+      set: function (name, value) {
+        return this.attrs[name] = value;
+      },
+      unset: function (name) {
+        delete this.attrs[name];
+      },
+      assign: function (values) {
+        return Object.assign(this.attrs, values);
+      }
+    };
+  }
+
+  protected arrayHandler(value) {
+    return {
+      array: value,
+      push: function (value) {
+        this.array.push(value);
+      }
+    };
+  }
+
+  // Options
+  protected wrapOption(type: string, opts?: ODataQueryBuilderOptions) {
+    if (typeof(opts) === "undefined") {
+      // query.<property>() retorna un manejador de objeto
+      // Fix filter y expand para retornar el handler
+      if (!this.hasOption(type) && [ODataQueryBuilder.FILTER, ODataQueryBuilder.EXPAND].indexOf(type) !== -1)
+        this.options[type] = {};
+      // Fix selecy order_by y rawfilter para retornar un manejador de array
+      if ([ODataQueryBuilder.SELECT, ODataQueryBuilder.ORDER_BY, ODataQueryBuilder.RAWFILTER].indexOf(type) !== -1) {
+        this.options[type] = typeof(this.options[type]) === "string" ? [this.options[type]] : this.options[type] || [];
+      }
+      let value = this.options[type];
+      return typeof(value) === "object" ?
+        (!Array.isArray(value) ? this.objectHandler(value) : this.arrayHandler(value)) : value;
+    } else if (opts === null) {
+      // query.<property>(null) limpia la propiedad
+      delete this.options[type];
     } else {
-      this.options = Object.assign(this.options, {[value]: opts});
+      // query.<property>(opts) setea la propiedad
+      this.options[type] = opts;
     }
     return this;
   }
+  protected hasOption(type) {
+    return typeof(this.options[type]) !== "undefined";
+  }
+  protected removeOption(type) {
+    delete this.options[type];
+  }
 
-  select(opts=null) { return this.wrapper("select", opts); }
-  filter(opts=null) { return this.wrapper("filter", opts); }
-  search(opts=null) { return this.wrapper("search", opts); }
-  groupBy(opts=null) { return this.wrapper("groupBy", opts); }
-  transform(opts=null) { return this.wrapper("transform", opts); }
-  orderBy(opts=null) { return this.wrapper("orderBy", opts); }
-  top(opts=null) { return this.wrapper("top", opts); }
-  skip(opts=null) { return this.wrapper("skip", opts); }
-  set(opts=null) { return this.wrapper("set", opts); }
-  key(opts=null) { return this.wrapper("key", opts); }
-  count(opts=null) { return this.wrapper("count", opts); }
-  expand(opts=null) { return this.wrapper("expand", opts); }
-  action(opts=null) { return this.wrapper("action", opts); }
-  func(opts=null) { return this.wrapper("func", opts); }
+  // Segments
+  protected wrapSegment(type: string, name?: string, index: number = -1) {
+    let segment;
+    if (typeof (name) === "undefined") {
+      segment = this.segments.find(s => s.type === type);
+      if (segment)
+        return segment.name;
+    } else {
+      segment = this.segments.find(s => s.type === type && s.name === name);
+      if (!segment) {
+        segment = { type, name, options: {} };
+        if (index === -1)
+          this.segments.push(segment);
+        else {
+          this.segments.splice(index, 0, segment);
+        }
+      }
+      return this.objectHandler(segment.options);
+    }
+  }
+  protected hasSegment(type, name) {
+    return !!this.segments.find(s => s.type === type && ( typeof(name) === "undefined" || s.name === name));
+  }
+  protected removeSegment(type, name) {
+    this.segments = this.segments.filter(s => s.type === type && s.name === name);
+  }
 
+  select(opts) { return this.wrapOption(ODataQueryBuilder.SELECT, opts); }
+  hasSelect(name) { return this.hasSegment(ODataQueryBuilder.SELECT, name); }
+  removeSelect() { this.removeOption(ODataQueryBuilder.SELECT); }
+  filter(opts) { return this.wrapOption(ODataQueryBuilder.FILTER, opts); }
+  removeFilter() { this.removeOption(ODataQueryBuilder.FILTER); }
+  rawFilter(opts) { return this.wrapOption(ODataQueryBuilder.RAWFILTER, opts); }
+  removeRawFilter() { this.removeOption(ODataQueryBuilder.RAWFILTER); }
+  search(opts) { return this.wrapOption(ODataQueryBuilder.SEARCH, opts); }
+  removeSearch() { this.removeOption(ODataQueryBuilder.SEARCH); }
+  groupBy(opts) { return this.wrapOption(ODataQueryBuilder.GROUP_BY, opts); }
+  removeGroupBy() { this.removeOption(ODataQueryBuilder.GROUP_BY); }
+  transform(opts) { return this.wrapOption(ODataQueryBuilder.TRANSFORM, opts); }
+  removeTransform() { this.removeOption(ODataQueryBuilder.TRANSFORM); }
+  orderBy(opts) { return this.wrapOption(ODataQueryBuilder.ORDER_BY, opts); }
+  removeOrderBy() { this.removeOption(ODataQueryBuilder.ORDER_BY); }
+  expand(opts) { return this.wrapOption(ODataQueryBuilder.EXPAND, opts); }
+  removeExpand() { this.removeOption(ODataQueryBuilder.EXPAND); }
+
+  top(opts) { return this.wrapOption(ODataQueryBuilder.TOP, opts); }
+  removeTop() { this.removeOption(ODataQueryBuilder.TOP); }
+  skip(opts) { return this.wrapOption(ODataQueryBuilder.SKIP, opts); }
+  removeSkip() { this.removeOption(ODataQueryBuilder.SKIP); }
+  count(opts) { return this.wrapOption(ODataQueryBuilder.COUNT, opts); }
+  removeCount() { this.removeOption(ODataQueryBuilder.COUNT); }
+
+  entityKey(opts) {
+    let name = this.wrapSegment(ODataQueryBuilder.ENTITY_SET);
+    // Quito lo que no se puede usar con keys
+    this.removeFilter();
+    this.removeRawFilter();
+    this.removeOrderBy();
+    this.removeCount();
+    this.removeSkip();
+    this.removeTop();
+    this.wrapSegment(ODataQueryBuilder.ENTITY_SET, name || "").set('key', opts);
+    return this;
+  }
+  removeEntityKey() {
+    let name = this.wrapSegment(ODataQueryBuilder.ENTITY_SET);
+    if (typeof(name) !== "undefined")
+      this.wrapSegment(ODataQueryBuilder.ENTITY_SET, name).unset('key');
+  }
+
+  singleton(name) { return this.wrapSegment(ODataQueryBuilder.SINGLETON, name); }
+  removeSingleton(name) { return this.removeSegment(ODataQueryBuilder.SINGLETON, name); }
+  entitySet(name) { return this.wrapSegment(ODataQueryBuilder.ENTITY_SET, name, 0); }
+  removeEntitySet(name) { return this.removeSegment(ODataQueryBuilder.ENTITY_SET, name); }
+  action(name) { return this.wrapSegment(ODataQueryBuilder.ACTION_CALL, name); }
+  hasAction(name) { return this.hasSegment(ODataQueryBuilder.ACTION_CALL, name); }
+  removeAction(name) { return this.removeSegment(ODataQueryBuilder.ACTION_CALL, name); }
+  function(name) { return this.wrapSegment(ODataQueryBuilder.FUNCTION_CALL, name); }
+  removeFunction(name) { return this.removeSegment(ODataQueryBuilder.FUNCTION_CALL, name); }
+  property(name) { return this.wrapSegment(ODataQueryBuilder.PROPERTY, name); }
+  removeProperty(name) { return this.removeSegment(ODataQueryBuilder.PROPERTY, name); }
+  navigationProperty(name) { return this.wrapSegment(ODataQueryBuilder.NAVIGATION_PROPERTY, name); }
+  removeNavigationProperty(name) { return this.removeSegment(ODataQueryBuilder.NAVIGATION_PROPERTY, name); }
+  ref() { return this.wrapSegment(ODataQueryBuilder.REF, ODataQueryBuilder.$REF); }
+  removeRef() { return this.removeSegment(ODataQueryBuilder.REF, ODataQueryBuilder.$REF); }
+  value() { return this.wrapSegment(ODataQueryBuilder.VALUE, ODataQueryBuilder.$VALUE); }
+  removeValue() { return this.removeSegment(ODataQueryBuilder.VALUE, ODataQueryBuilder.$VALUE); }
+  countSegment() { return this.wrapSegment(ODataQueryBuilder.COUNT, ODataQueryBuilder.$COUNT); }
+  removeCountSegment() { return this.removeSegment(ODataQueryBuilder.COUNT, ODataQueryBuilder.$COUNT); }
+  
   // QUERY EXECUTION
-
   get(httpOptions?): Observable<ODataResponse> {
     return this.odataService.get(this, httpOptions);
   }
@@ -80,4 +239,5 @@ export class ODataQueryBuilder extends ODataQueryAbstract {
   delete(etag?: string, httpOptions?): Observable<ODataResponse> {
     return this.odataService.delete(this, etag, httpOptions);
   }
+
 }

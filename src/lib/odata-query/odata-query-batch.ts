@@ -20,29 +20,6 @@ export class BatchRequest {
 }
 
 export class ODataQueryBatch extends ODataQueryAbstract {
-  private static readonly BOUNDARY_PREFIX_SUFFIX = '--';
-  private static readonly BATCH_PREFIX = 'batch_';
-  private static readonly CHANGESET_PREFIX = 'changeset_';
-  private static readonly NEWLINE = '\r\n';
-
-  // CONSTANT SEGMENTS
-  private static readonly $BATCH = '$batch';
-
-  // HEADERS
-  private static readonly HTTP11 = 'HTTP/1.1';
-  private static readonly ODATA_VERSION = 'OData-Version';
-  private static readonly CONTENT_TYPE = 'Content-Type';
-  private static readonly ACCEPT = 'Accept';
-  private static readonly CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';
-  private static readonly CONTENT_ID = 'Content-ID';
-
-  // HEADER VALUES
-  private static readonly VERSION_4_0 = '4.0';
-  private static readonly MULTIPART_MIXED = 'multipart/mixed';
-  private static readonly MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
-  private static readonly APPLICATION_HTTP = 'application/http';
-  private static readonly BINARY = 'binary';
-  private static readonly APPLICATION_JSON = 'application/json';
 
   // VARIABLES
   private requests: BatchRequest[];

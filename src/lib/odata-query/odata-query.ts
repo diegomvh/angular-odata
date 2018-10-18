@@ -12,29 +12,6 @@ import { ODataQueryAbstract } from './odata-query-abstract';
 import { ODataQueryBatch } from './odata-query-batch';
 
 export class ODataQuery extends ODataQueryAbstract {
-  // QUERY OPTIONS SEPARATOR
-  static readonly SEPARATOR = '&';
-
-  // SEGMENT NAMES
-  private static readonly METADATA = 'metadata';
-  private static readonly ENTITY_SET = 'entitySet';
-  private static readonly ENTITY_KEY = 'entityKey';
-  private static readonly SINGLETON = 'singleton';
-  private static readonly TYPE_NAME = 'typeName';
-  private static readonly PROPERTY = 'property';
-  private static readonly NAVIGATION_PROPERTY = 'navigationProperty';
-  private static readonly REF = 'ref';
-  private static readonly VALUE = 'value';
-  private static readonly COUNT = 'count';
-  private static readonly FUNCTION_CALL = 'functionCall';
-  private static readonly ACTION_CALL = 'actionCall';
-
-  // CONSTANT SEGMENTS
-  private static readonly $METADATA = '$metadata';
-  private static readonly $REF = '$ref';
-  private static readonly $VALUE = '$value';
-  private static readonly $COUNT = '$count';
-
   // VARIABLES
   private queryOptions: QueryOptions;
   private segments: string[];
