@@ -8,12 +8,20 @@ import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
 import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
 import { ODataQuery } from '../odata-query/odata-query';
-import { ODataContext } from './odata-context';
+import { ODataContext } from '../odata-context';
 
 export class ODataService {
   private static readonly IF_MATCH_HEADER = 'If-Match';
-
   constructor(protected http: HttpClient, protected context: ODataContext) {
+  }
+
+  public metadata(): any {
+    if (!this.context.metadata) {
+      this.context.metadata = this.http.get(this.context.metadataUrl, {observe: 'response', responseType: 'text'}).pipe(
+        map(response => new ODataResponse(response).toMetadata())
+      ).toPromise();
+    }
+    return this.context.metadata;
   }
 
   public query(): ODataQuery {

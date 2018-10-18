@@ -5,7 +5,9 @@ import { ODataQueryBuilder } from "../odata-query/odata-query-builder";
 import { ODataQuery } from "../odata-query/odata-query";
 import { ODataService } from "./odata.service";
 import { ODataQueryAbstract } from '../odata-query/odata-query-abstract';
-import { ODataContext } from './odata-context';
+import { ODataContext } from '../odata-context';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export class ODataEntityService<T> extends ODataService {
   private static readonly ODATA_ETAG = '@odata.etag';
@@ -15,84 +17,78 @@ export class ODataEntityService<T> extends ODataService {
     super(http, context);
   }
 
-  public entity(key): ODataQuery {
-    return this.query()
-        .entitySet(this.set)
-        .entityKey(key);
-  }
-
   public collection(): ODataQuery {
     return this.query()
         .entitySet(this.set);
   }
 
-  public entityBuilder(key): ODataQueryBuilder {
-    return this.queryBuilder()
-        .set(this.set)
-        .key(key);
+  public entity(key): ODataQuery {
+    return this.collection()
+        .entityKey(key);
   }
 
   public collectionBuilder(): ODataQueryBuilder {
-    return this.queryBuilder()
-        .set(this.set);
+    let builder = this.queryBuilder();
+    builder.entitySet(this.set);
+    return builder;
   }
 
-  public fetch(query: ODataQuery | ODataQueryBuilder): Promise<ODataResponse> {
+  public entityBuilder(key): ODataQueryBuilder {
+    let builder = this.collectionBuilder();
+    builder.entityKey(key);
+    return builder;
+  }
+
+  public fetch(query: ODataQuery | ODataQueryBuilder, options?): Observable<ODataResponse> {
     return query
-      .get()
-      .toPromise();
+      .get();
   }
 
-  public fetchAll(query: ODataQuery | ODataQueryBuilder): Promise<T[]> {
-    return this.fetch(query)
-      .then(resp => resp.toEntitySet<T>().getEntities());
+  public fetchAll(query: ODataQuery | ODataQueryBuilder, options?): Observable<T[]> {
+    return this.fetch(query, options)
+      .pipe(map(resp => resp.toEntitySet<T>().getEntities()));
   }
 
-  public fetchOne(query: ODataQuery | ODataQueryBuilder): Promise<T> {
-    return this.fetch(query)
-      .then(resp => resp.toEntity<T>());
+  public fetchOne(query: ODataQuery | ODataQueryBuilder, options?): Observable<T> {
+    return this.fetch(query, options)
+      .pipe(map(resp => resp.toEntity<T>()));
   }
 
-  public fetchValue<V>(query: ODataQuery | ODataQueryBuilder): Promise<V> {
-    return this.fetch(query)
-      .then(resp => resp.toPropertyValue<V>());
+  public fetchValue<V>(query: ODataQuery | ODataQueryBuilder, options?): Observable<V> {
+    return this.fetch(query, options)
+      .pipe(map(resp => resp.toPropertyValue<V>()));
   }
 
   // Entity Actions
-  public read(key): Promise<T> {
+  public read(key, options?): Observable<T> {
     return this.entity(key)
-      .get()
-      .toPromise()
-      .then(resp => resp.toEntity<T>());
+      .get(options)
+      .pipe(map(resp => resp.toEntity<T>()));
   }
 
-  public create(data): Promise<T> {
+  public create(data, options?): Observable<T> {
     return this.collection()
-      .post(data)
-      .toPromise()
-      .then(resp => resp.toEntity<T>());
+      .post(data, options)
+      .pipe(map(resp => resp.toEntity<T>()));
   }
 
-  public update(entity): Promise<T> {
+  public update(entity, options?): Observable<T> {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
-      .put(entity, etag)
-      .toPromise()
-      .then(resp => resp.toEntity<T>());
+      .put(entity, etag, options)
+      .pipe(map(resp => resp.toEntity<T>()));
   }
 
-  public assign(delta) {
+  public assign(delta, options?) {
     let etag = delta[ODataEntityService.ODATA_ETAG];
     return this.entity(delta.id)
-      .patch(delta, etag)
-      .toPromise();
+      .patch(delta, etag, options);
   }
 
-  public remove(entity) {
+  public remove(entity, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
-      .delete(etag)
-      .toPromise();
+      .delete(etag, options);
   }
 
   // Shortcuts
@@ -103,86 +99,81 @@ export class ODataEntityService<T> extends ODataService {
       return this.create(entity);
   }
 
-  protected navigation(entity, name) {
+  protected navigation(entity, name, options?) {
     return this.entity(entity.id)
       .navigationProperty(name)
-      .get()
-      .toPromise()
-      .then(resp => resp.toEntitySet<T>().getEntities());
+      .get(options)
+      .pipe(
+        map(resp => resp.toEntitySet<T>().getEntities())
+        );
     }
     
-  protected property(entity, name) {
+  protected property(entity, name, options?) {
     return this.entity(entity.id)
       .property(name)
-      .get()
-      .toPromise()
-      .then(resp => resp.toPropertyValue());
+      .get(options)
+      .pipe(
+        map(resp=> resp.toPropertyValue())
+      );
     }
 
-  protected createRef(entity, property, target: ODataQueryAbstract) {
+  protected createRef(entity, property, target: ODataQueryAbstract, options?) {
     let refurl = this.context.createEndpointUrl(target);
     let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .put({[ODataEntityService.ODATA_ID]: refurl}, etag)
-      .toPromise();
+      .put({[ODataEntityService.ODATA_ID]: refurl}, etag, options);
   }
 
-  protected createCollectionRef(entity, property, target: ODataQueryAbstract) {
+  protected createCollectionRef(entity, property, target: ODataQueryAbstract, options?) {
     let refurl = this.context.createEndpointUrl(target);
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .post({[ODataEntityService.ODATA_ID]: refurl})
-      .toPromise();
+      .post({[ODataEntityService.ODATA_ID]: refurl}, options);
   }
 
-  protected deleteRef(entity, property, target: ODataQueryAbstract) {
+  protected deleteRef(entity, property, target: ODataQueryAbstract, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .delete(etag)
-      .toPromise();
+      .delete(etag, options);
   }
 
-  protected deleteCollectionRef(entity, property, target: ODataQueryAbstract) {
+  protected deleteCollectionRef(entity, property, target: ODataQueryAbstract, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     let refurl = this.context.createEndpointUrl(target);
+    options = this.context.assignOptions(options || {}, {params: {"$id": refurl}});
     return this.entity(entity.id)
       .navigationProperty(property)
       .ref()
-      .delete(etag, {params: {"$id": refurl}})
-      .toPromise();
+      .delete(etag, options);
   }
 
   // Function and actions
-  protected customAction(key: any, name: string, postdata: any = {}): Promise<ODataResponse> {
-    return this.entityBuilder(key)
-      .action(name)
-      .post(postdata)
-      .toPromise();
+  protected customAction(key: any, name: string, postdata: any = {}, options?): Observable<ODataResponse> {
+    let builder = this.entityBuilder(key);
+    builder.action(name);
+    return builder.post(postdata, options);
   }
 
-  protected customCollectionAction(name: string, postdata: any = {}): Promise<ODataResponse> {
-    return this.collectionBuilder()
-      .action(name)
-      .post(postdata)
-      .toPromise();
+  protected customCollectionAction(name: string, postdata: any = {}, options?): Observable<ODataResponse> {
+    let builder = this.collectionBuilder();
+    builder.action(name);
+    return builder.post(postdata, options);
   }
 
-  protected customFunction(key: any, name: string, parameters: any = {}): Promise<ODataResponse> {
-    return this.entityBuilder(key)
-      .func({[name]: parameters})
-      .get()
-      .toPromise();
+  protected customFunction(key: any, name: string, parameters: any = {}, options?): Observable<ODataResponse> {
+    let builder = this.entityBuilder(key);
+    builder.function(name).assign(parameters);
+    return builder.get(options);
   }
 
-  protected customCollectionFunction(name: string, parameters: any = {}): Promise<ODataResponse> {
-    return this.collectionBuilder()
-      .func({[name]: parameters})
-      .get()
-      .toPromise();
+  protected customCollectionFunction(name: string, parameters: any = {}, opcions?): Observable<ODataResponse> {
+    let builder = this.collectionBuilder();
+    builder.function(name).assign(parameters);
+    return builder.get(opcions);
   }
 }
