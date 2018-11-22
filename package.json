@@ -1,6 +1,6 @@
 {
   "name": "angular-odata",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "description": "Client side OData V4 typescript library for Angular",
   "repository": {
@@ -16,9 +16,9 @@
     "angular6"
   ],
   "peerDependencies": {
-    "@angular/common": "^6.1.7",
-    "@angular/core": "^6.1.7",
+    "@angular/common": "^7.0.4",
+    "@angular/core": "^7.0.4",
     "angular2-uuid": "^1.1.1",
-    "odata-query": "^5.4.2"
+    "odata-query": "^5.4.4"
   }
 }
