@@ -60,6 +60,12 @@ export class ODataEntityService<T> extends ODataService {
   }
 
   // Entity Actions
+  public all(options?): Observable<T[]> {
+    return this.collection()
+      .get(options)
+      .pipe(map(resp => resp.toEntitySet<T>().getEntities()));
+  }
+
   public read(key, options?): Observable<T> {
     return this.entity(key)
       .get(options)

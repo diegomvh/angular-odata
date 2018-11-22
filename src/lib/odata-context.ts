@@ -1,19 +1,23 @@
 import { ODataQueryAbstract } from "./odata-query/odata-query-abstract";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 export class ODataContext {
   baseUrl: string;
   metadataUrl: string;
-  withCredentials: boolean = false;
-  creation: Date = new Date();
-  version: string = "4.0";
+  withCredentials: boolean;
+  creation: Date;
+  version: string;
   metadata: Promise<any>;
+  errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(options: {
     baseUrl?: string,
     metadataUrl?: string,
     withCredentials?: boolean,
     creation?: Date,
-    version?: string
+    version?: string,
+    errorHandler?: (error: HttpErrorResponse) => Observable<never>
   }) {
     Object.assign(this, options);
     if (!options.metadataUrl && options.baseUrl)

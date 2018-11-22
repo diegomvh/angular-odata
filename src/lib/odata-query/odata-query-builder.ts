@@ -156,29 +156,30 @@ export class ODataQueryBuilder extends ODataQueryAbstract {
     this.segments = this.segments.filter(s => s.type === type && s.name === name);
   }
 
-  select(opts) { return this.wrapOption(ODataQueryBuilder.SELECT, opts); }
-  hasSelect(name) { return this.hasSegment(ODataQueryBuilder.SELECT, name); }
+  select(opts?) { return this.wrapOption(ODataQueryBuilder.SELECT, opts); }
+  hasSelect() { return this.hasOption(ODataQueryBuilder.SELECT); }
   removeSelect() { this.removeOption(ODataQueryBuilder.SELECT); }
-  filter(opts) { return this.wrapOption(ODataQueryBuilder.FILTER, opts); }
+  filter(opts?) { return this.wrapOption(ODataQueryBuilder.FILTER, opts); }
   removeFilter() { this.removeOption(ODataQueryBuilder.FILTER); }
-  rawFilter(opts) { return this.wrapOption(ODataQueryBuilder.RAWFILTER, opts); }
+  rawFilter(opts?) { return this.wrapOption(ODataQueryBuilder.RAWFILTER, opts); }
   removeRawFilter() { this.removeOption(ODataQueryBuilder.RAWFILTER); }
-  search(opts) { return this.wrapOption(ODataQueryBuilder.SEARCH, opts); }
+  search(opts?) { return this.wrapOption(ODataQueryBuilder.SEARCH, opts); }
   removeSearch() { this.removeOption(ODataQueryBuilder.SEARCH); }
-  groupBy(opts) { return this.wrapOption(ODataQueryBuilder.GROUP_BY, opts); }
+  groupBy(opts?) { return this.wrapOption(ODataQueryBuilder.GROUP_BY, opts); }
   removeGroupBy() { this.removeOption(ODataQueryBuilder.GROUP_BY); }
-  transform(opts) { return this.wrapOption(ODataQueryBuilder.TRANSFORM, opts); }
+  transform(opts?) { return this.wrapOption(ODataQueryBuilder.TRANSFORM, opts); }
   removeTransform() { this.removeOption(ODataQueryBuilder.TRANSFORM); }
-  orderBy(opts) { return this.wrapOption(ODataQueryBuilder.ORDER_BY, opts); }
+  orderBy(opts?) { return this.wrapOption(ODataQueryBuilder.ORDER_BY, opts); }
   removeOrderBy() { this.removeOption(ODataQueryBuilder.ORDER_BY); }
-  expand(opts) { return this.wrapOption(ODataQueryBuilder.EXPAND, opts); }
+  expand(opts?) { return this.wrapOption(ODataQueryBuilder.EXPAND, opts); }
+  hasExpand() { return this.hasOption(ODataQueryBuilder.EXPAND); }
   removeExpand() { this.removeOption(ODataQueryBuilder.EXPAND); }
 
-  top(opts) { return this.wrapOption(ODataQueryBuilder.TOP, opts); }
+  top(opts?) { return this.wrapOption(ODataQueryBuilder.TOP, opts); }
   removeTop() { this.removeOption(ODataQueryBuilder.TOP); }
-  skip(opts) { return this.wrapOption(ODataQueryBuilder.SKIP, opts); }
+  skip(opts?) { return this.wrapOption(ODataQueryBuilder.SKIP, opts); }
   removeSkip() { this.removeOption(ODataQueryBuilder.SKIP); }
-  count(opts) { return this.wrapOption(ODataQueryBuilder.COUNT, opts); }
+  count(opts?) { return this.wrapOption(ODataQueryBuilder.COUNT, opts); }
   removeCount() { this.removeOption(ODataQueryBuilder.COUNT); }
 
   entityKey(opts) {

@@ -1,7 +1,7 @@
 
 import { HttpHeaders, HttpResponse, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 import { ODataQueryAbstract } from '../odata-query/odata-query-abstract';
 import { ODataResponse } from '../odata-response/odata-response';
@@ -35,18 +35,18 @@ export class ODataService {
   get(odataQuery: ODataQueryAbstract, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    return this.http.get(url, 
-      <{observe: 'response', responseType: 'text'}>options).pipe(
-      map(response => new ODataResponse(response))
+    return this.handleError( 
+      this.http.get(url, <{observe: 'response', responseType: 'text'}>options)
+        .pipe( map(response => new ODataResponse(response)))
     );
   }
 
   post(odataQuery: ODataQueryAbstract, body: any, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    return this.http.post(url, body, 
-      <{observe: 'response', responseType: 'text'}>options).pipe(
-      map(response => new ODataResponse(response))
+    return this.handleError( 
+      this.http.post(url, body, <{observe: 'response', responseType: 'text'}>options)
+      .pipe( map(response => new ODataResponse(response)))
     );
   }
 
@@ -54,9 +54,9 @@ export class ODataService {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     options = this.mergeETag(options, etag);
-    return this.http.patch(url, body, 
-      <{observe: 'response', responseType: 'text'}>options).pipe(
-      map(response => new ODataResponse(response))
+    return this.handleError( 
+      this.http.patch(url, body, <{observe: 'response', responseType: 'text'}>options)
+        .pipe( map(response => new ODataResponse(response)))
     );
   }
 
@@ -64,9 +64,9 @@ export class ODataService {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     options = this.mergeETag(options, etag);
-    return this.http.put(url, body, 
-      <{observe: 'response', responseType: 'text'}>options).pipe(
-      map(response => new ODataResponse(response))
+    return this.handleError(
+      this.http.put(url, body, <{observe: 'response', responseType: 'text'}>options)
+        .pipe(map(response => new ODataResponse(response)))
     );
   }
 
@@ -74,10 +74,19 @@ export class ODataService {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     options = this.mergeETag(options, etag);
-    return this.http.delete(url, 
-      <{observe: 'response', responseType: 'text'}>options).pipe(
-      map(response => new ODataResponse(response))
+    return this.handleError(
+      this.http.delete(url, <{observe: 'response', responseType: 'text'}>options)
+        .pipe( map(response => new ODataResponse(response)))
     );
+  }
+
+  protected handleError(observable: Observable<ODataResponse>): Observable<ODataResponse> {
+    if (this.context.errorHandler) {
+      observable = observable.pipe(
+        catchError(this.context.errorHandler)
+      );
+    }
+    return observable;
   }
 
   protected mergeETag(options, etag: string) {
