@@ -1,5 +1,5 @@
 
-import { HttpHeaders, HttpResponse, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -11,7 +11,8 @@ import { ODataQuery } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
 
 export class ODataService {
-  private static readonly IF_MATCH_HEADER = 'If-Match';
+  public static readonly IF_MATCH_HEADER = 'If-Match';
+
   constructor(protected http: HttpClient, protected context: ODataContext) {
   }
 
@@ -53,7 +54,8 @@ export class ODataService {
   patch(odataQuery: ODataQueryAbstract, body: any, etag?: string, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    options = this.mergeETag(options, etag);
+    if (etag)
+      options = this.mergeETag(options, etag);
     return this.handleError( 
       this.http.patch(url, body, <{observe: 'response', responseType: 'text'}>options)
         .pipe( map(response => new ODataResponse(response)))
@@ -63,7 +65,8 @@ export class ODataService {
   put(odataQuery: ODataQueryAbstract, body: any, etag?: string, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    options = this.mergeETag(options, etag);
+    if (etag)
+      options = this.mergeETag(options, etag);
     return this.handleError(
       this.http.put(url, body, <{observe: 'response', responseType: 'text'}>options)
         .pipe(map(response => new ODataResponse(response)))
@@ -73,7 +76,8 @@ export class ODataService {
   delete(odataQuery: ODataQueryAbstract, etag?: string, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    options = this.mergeETag(options, etag);
+    if (etag)
+      options = this.mergeETag(options, etag);
     return this.handleError(
       this.http.delete(url, <{observe: 'response', responseType: 'text'}>options)
         .pipe( map(response => new ODataResponse(response)))
