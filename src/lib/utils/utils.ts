@@ -19,6 +19,10 @@ export class Utils {
         return !Utils.isNull(value) && !Utils.isUndefined(value);
     }
 
+    static isObject(value: any): boolean {
+        return typeof value === 'object' && !Utils.isNull(value);
+    }
+
     static isEmpty(value: any): boolean {
         if (Utils.isNullOrUndefined(value)
             || typeof (value) === 'string' && !value.length

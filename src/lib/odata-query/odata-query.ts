@@ -51,8 +51,13 @@ export class ODataQuery extends ODataQueryAbstract {
     }
     Utils.requireNotNullNorUndefined(entityKey, 'entityKey');
     Utils.requireNotEmpty(entityKey, 'entityKey');
-    entityKey = Utils.getValueURI(entityKey, true);
-    this.queryString = Utils.removeEndingSeparator(this.queryString) + '(' + entityKey + ')';
+    if (Utils.isObject(entityKey)) {
+      var parts = Object.keys(entityKey).map(key => `${key}=${Utils.getValueURI(entityKey[key], true)}`);
+      this.queryString = Utils.removeEndingSeparator(this.queryString) + '(' + parts.join(",") + ')';
+    } else {
+      entityKey = Utils.getValueURI(entityKey, true);
+      this.queryString = Utils.removeEndingSeparator(this.queryString) + '(' + entityKey + ')';
+    }
     this.addSegment(ODataQuery.ENTITY_KEY);
     return this;
   }

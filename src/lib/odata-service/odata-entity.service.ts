@@ -10,8 +10,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export class ODataEntityService<T> extends ODataService {
-  private static readonly ODATA_ETAG = '@odata.etag';
-  private static readonly ODATA_ID = '@odata.id';
+  public static readonly ODATA_ETAG = '@odata.etag';
+  public static readonly ODATA_ID = '@odata.id';
   
   constructor(protected http: HttpClient, protected context: ODataContext, protected set: string) {
     super(http, context);
@@ -19,12 +19,12 @@ export class ODataEntityService<T> extends ODataService {
 
   public collection(): ODataQuery {
     return this.query()
-        .entitySet(this.set);
+      .entitySet(this.set);
   }
 
   public entity(key): ODataQuery {
     return this.collection()
-        .entityKey(key);
+      .entityKey(key);
   }
 
   public collectionBuilder(): ODataQueryBuilder {
@@ -37,6 +37,14 @@ export class ODataEntityService<T> extends ODataService {
     let builder = this.collectionBuilder();
     builder.entityKey(key);
     return builder;
+  }
+
+  protected resolveEntityKey(entity) {
+    return entity.id;
+  }
+
+  protected isNew(entity) {
+    return !this.resolveEntityKey(entity);
   }
 
   public fetch(query: ODataQuery | ODataQueryBuilder, options?): Observable<ODataResponse> {
@@ -80,33 +88,37 @@ export class ODataEntityService<T> extends ODataService {
 
   public update(entity, options?): Observable<T> {
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    return this.entity(entity.id)
+    let key = this.resolveEntityKey(entity);
+    return this.entity(key)
       .put(entity, etag, options)
       .pipe(map(resp => resp.toEntity<T>()));
   }
 
   public assign(delta, options?) {
     let etag = delta[ODataEntityService.ODATA_ETAG];
-    return this.entity(delta.id)
+    let key = this.resolveEntityKey(delta);
+    return this.entity(key)
       .patch(delta, etag, options);
   }
 
   public remove(entity, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    return this.entity(entity.id)
+    let key = this.resolveEntityKey(entity);
+    return this.entity(key)
       .delete(etag, options);
   }
 
   // Shortcuts
   public save(entity) {
-    if (entity.id)
+    if (this.isNew(entity))
       return this.update(entity);
     else
       return this.create(entity);
   }
 
   protected navigation(entity, name, options?) {
-    return this.entity(entity.id)
+    let key = this.resolveEntityKey(entity);
+    return this.entity(key)
       .navigationProperty(name)
       .get(options)
       .pipe(
@@ -115,7 +127,8 @@ export class ODataEntityService<T> extends ODataService {
     }
     
   protected property(entity, name, options?) {
-    return this.entity(entity.id)
+    let key = this.resolveEntityKey(entity);
+    return this.entity(key)
       .property(name)
       .get(options)
       .pipe(
@@ -126,7 +139,8 @@ export class ODataEntityService<T> extends ODataService {
   protected createRef(entity, property, target: ODataQueryAbstract, options?) {
     let refurl = this.context.createEndpointUrl(target);
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    return this.entity(entity.id)
+    let key = this.resolveEntityKey(entity);
+    return this.entity(key)
       .navigationProperty(property)
       .ref()
       .put({[ODataEntityService.ODATA_ID]: refurl}, etag, options);
@@ -134,7 +148,8 @@ export class ODataEntityService<T> extends ODataService {
 
   protected createCollectionRef(entity, property, target: ODataQueryAbstract, options?) {
     let refurl = this.context.createEndpointUrl(target);
-    return this.entity(entity.id)
+    let key = this.resolveEntityKey(entity);
+    return this.entity(key)
       .navigationProperty(property)
       .ref()
       .post({[ODataEntityService.ODATA_ID]: refurl}, options);
@@ -142,7 +157,8 @@ export class ODataEntityService<T> extends ODataService {
 
   protected deleteRef(entity, property, target: ODataQueryAbstract, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    return this.entity(entity.id)
+    let key = this.resolveEntityKey(entity);
+    return this.entity(key)
       .navigationProperty(property)
       .ref()
       .delete(etag, options);
@@ -151,8 +167,9 @@ export class ODataEntityService<T> extends ODataService {
   protected deleteCollectionRef(entity, property, target: ODataQueryAbstract, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     let refurl = this.context.createEndpointUrl(target);
+    let key = this.resolveEntityKey(entity);
     options = this.context.assignOptions(options || {}, {params: {"$id": refurl}});
-    return this.entity(entity.id)
+    return this.entity(key)
       .navigationProperty(property)
       .ref()
       .delete(etag, options);
