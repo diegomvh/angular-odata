@@ -16,16 +16,18 @@ export interface ODataQueryBuilderSegment {
 export class ODataQueryBuilder extends ODataQueryAbstract {
   segments: ODataQueryBuilderSegment[];
   options: ODataQueryBuilderOptions;
-  constructor(odataService: ODataService, options?: ODataQueryBuilderOptions) {
+
+  constructor(odataService: ODataService, segments?: ODataQueryBuilderSegment[], options?: ODataQueryBuilderOptions) {
     super(odataService);
-    this.segments = [];
+    this.segments = segments || <ODataQueryBuilderSegment[]>[];
     this.options = options || <ODataQueryBuilderOptions>{};
   }
 
   clone() {
-    // TODO: hacer un deep clone
-    let newBuilder = new ODataQueryBuilder(this.odataService, Object.assign({}, this.options));
-    newBuilder.segments = this.segments.slice();
+    // TODO: Que pasa con Date?
+    let newBuilder = new ODataQueryBuilder(this.odataService, 
+      JSON.parse(JSON.stringify(this.segments)),
+      JSON.parse(JSON.stringify(this.options)));
     return newBuilder;
   };
 
@@ -122,9 +124,11 @@ export class ODataQueryBuilder extends ODataQueryAbstract {
     }
     return this;
   }
+
   protected hasOption(type) {
     return typeof(this.options[type]) !== "undefined";
   }
+  
   protected removeOption(type) {
     delete this.options[type];
   }
