@@ -7,7 +7,7 @@ import { ODataService } from "./odata.service";
 import { ODataQueryAbstract } from '../odata-query/odata-query-abstract';
 import { ODataContext } from '../odata-context';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 export class ODataEntityService<T> extends ODataService {
   public static readonly ODATA_ETAG = '@odata.etag';
@@ -86,6 +86,13 @@ export class ODataEntityService<T> extends ODataService {
       .pipe(map(resp => resp.toEntity<T>()));
   }
 
+  public readOrCreate(key, data, options?): Observable<T> {
+    return this.read(key, options)
+      .pipe(catchError(error => {
+        return this.create(data, options);
+      }));
+  }
+
   public update(entity, options?): Observable<T> {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     let key = this.resolveEntityKey(entity);
@@ -111,9 +118,9 @@ export class ODataEntityService<T> extends ODataService {
   // Shortcuts
   public save(entity) {
     if (this.isNew(entity))
-      return this.update(entity);
-    else
       return this.create(entity);
+    else
+      return this.update(entity);
   }
 
   protected navigation(entity, name, options?) {
