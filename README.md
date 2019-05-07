@@ -17,16 +17,54 @@ npm i angular-odata
 
 ```typescript
 import { NgModule } from '@angular/core';
+import { throwError } from 'rxjs';
 
 import { ODataModule } from 'angular-odata';
 
 @NgModule({
   imports: [
-    ODataModule.forRoot({
-      serviceRoot: "http://localhost:54872/odata/",
-      withCredentials: true
+    ...
+    ODataModule.forContext({
+      baseUrl: "http://localhost:54872/odata/",
+      withCredentials: true,
+      errorHandler: (error: HttpErrorResponse) => {
+        // Custom error processing
+        return throwError(error);
+      }
     }),
   ]
+})
+export class AppModule {}
+```
+
+If you choose using [OData to TypeScript](https://github.com/diegomvh/Od2Ts), import the config from generated source and build context through a factory function.
+
+```typescript
+import { NgModule } from '@angular/core';
+import { throwError } from 'rxjs';
+
+import { ODataContext } from 'angular-odata';
+import { MyApiModule, SiuApiConfig } from './myapi';
+
+export function oDataContextFactory() {
+  return new ODataContext(Object.assign(MyApiConfig, {
+    baseUrl: "http://localhost:54872/odata/",
+    withCredentials: true,
+    errorHandler: (error: HttpErrorResponse) => {
+      return throwError(error);
+    }
+  }));
+}
+
+@NgModule({
+  imports: [
+    ...
+    MyApiModule
+  ]
+  providers: [
+    ...
+    { provide: ODataContext, useFactory: oDataContextFactory }
+  ],
 })
 export class AppModule {}
 ```
@@ -36,6 +74,7 @@ export class AppModule {}
 ```typescript
 import { Component } from '@angular/core';
 import { ODataService, ODataQuery } from 'angular-odata';
+import { Song } from './Song';
 
 @Component({
   selector: 'audio-player',
@@ -43,33 +82,47 @@ import { ODataService, ODataQuery } from 'angular-odata';
   styles: ['']
 })
 export class AudioPlayerComponent {
-  
-  constructor(private odataService: ODataService) { }
+  songs: Songs[]
+  song: Song; 
+
+  constructor(private odata: ODataService) { 
+    let collectionQuery = this.odata
+      .query()
+      .entitySet("Songs");
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    let entityQuery = this.odata
+      .query()
+      .entitySet("Songs")
+      .entityKey(1);
+    this.odata.get(entityQuery).subscribe(resp => this.song = resp.toEntity<Song>())
+  }
 
 }
 ```
 
-3) Build services for entites
+3) Or build service for entity
 
 ```typescript
-import { Song } from './Song';
 import { Injectable } from '@angular/core';
 import { ODataEntityService, ODataService } from 'angular-odata';
+import { Song } from './Song';
 
 @Injectable()
 export class SongsODataService extends ODataEntityService<Song> {
   constructor(
-    protected odata: ODataService
+    protected http: HttpClient,
+    protected context: ODataContext
   ) {
-    super(odata, 'Songs');
+    super(http, context, 'Songs');
   } 
 }
 ```
 
-4) Inject and use the entity service
+4) And inject and use the entity service
 
 ```typescript
 import { Component } from '@angular/core';
+import { Song } from './Song';
 import { SongODataService } from './songs.service';
 
 @Component({
@@ -78,11 +131,21 @@ import { SongODataService } from './songs.service';
   styles: ['']
 })
 export class AudioPlayerComponent {
+  songs: Songs[]
+  song: Song; 
   
-  constructor(private songsService: SongsODataService) { }
-
+  constructor(private songsService: SongsODataService) {
+    let entityQuery = this.songsService.entity(1);
+    this.songsService.fetchOne(entityQuery).subscribe(song => this.song = song)
+    let collectionQuery = this.songsService.collection();
+    this.songsService.fetchAll(collectionQuery).subscribe(songs => this.songs = songs)
+  }
 }
 ```
+
+5) Again, if you using OData to TypeScript import the service from generated source and use... but not abuse :). 
+
+For a deep query customizations the library use `odata-query` as a builder, use the `queryBuilder` method in the ODataService or `entityBuilder` and `collectionBuilder` in your custom entity service.
 
 ## Base on implementation of odata-v4-ng
  - [OData service for Angular](https://github.com/riccardomariani/odata-v4-ng)
