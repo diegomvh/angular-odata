@@ -25,7 +25,7 @@ import { ODataModule } from 'angular-odata';
   imports: [
     ...
     ODataModule.forContext({
-      baseUrl: "http://localhost:54872/odata/",
+      baseUrl: "http://localhost/odata/",
       withCredentials: true,
       errorHandler: (error: HttpErrorResponse) => {
         // Custom error processing
@@ -44,11 +44,11 @@ import { NgModule } from '@angular/core';
 import { throwError } from 'rxjs';
 
 import { ODataContext } from 'angular-odata';
-import { MyApiModule, SiuApiConfig } from './myapi';
+import { MyApiModule, MyApiConfig } from './myapi';
 
 export function oDataContextFactory() {
   return new ODataContext(Object.assign(MyApiConfig, {
-    baseUrl: "http://localhost:54872/odata/",
+    baseUrl: "http://localhost/odata/",
     withCredentials: true,
     errorHandler: (error: HttpErrorResponse) => {
       return throwError(error);
