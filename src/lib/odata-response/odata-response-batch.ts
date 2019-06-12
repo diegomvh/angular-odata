@@ -141,10 +141,10 @@ export class ODataResponseBatch extends ODataResponseAbstract {
         }
 
         return new ODataResponse(new HttpResponse({
-            body: body,
+            body,
             headers: httpHeaders,
             status: Number(status),
-            statusText: statusText
+            statusText
         }));
     }
 }
