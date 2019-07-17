@@ -1,4 +1,4 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Utils } from '../utils/utils';
 import { EntitySet } from './entity-collection';
@@ -8,22 +8,30 @@ import { ODataResponseAbstract } from './odata-response-abstract';
 export class ODataResponse extends ODataResponseAbstract {
     private static readonly VALUE = 'value';
     private static readonly ODATA_COUNT = '@odata.count';
+    private static readonly CONTENT_TYPE = 'content-type';
 
     constructor(httpResponse: HttpResponse<string>) {
         super(httpResponse);
     }
 
-    getBodyAsJson(): any {
-        const contentType: string = this.getHttpResponse().headers.get('Content-Type');
-        if (Utils.isNotNullNorUndefined(contentType) && contentType.includes('json')) {
-            try {
-                return JSON.parse(this.getBodyAsText());
-            } catch (error) {
-                return null;
-            }
-        }
-        return null;
+  getBodyAsJson(): any {
+    const headers: HttpHeaders = this.getHttpResponse().headers;
+    let contentType: string;
+    for (const key of headers.keys()) {
+      if (key.toLowerCase() === ODataResponse.CONTENT_TYPE) {
+        contentType = headers.get(key).toLowerCase();
+        break;
+      }
     }
+    if (Utils.isNotNullNorUndefined(contentType) && contentType.includes('application/json')) {
+      try {
+        return JSON.parse(this.getBodyAsText());
+      } catch (error) {
+        return null;
+      }
+    }
+    return null;
+  }
 
     toMetadata(): Metadata {
         const xml: string = this.getBodyAsText();
@@ -42,7 +50,21 @@ export class ODataResponse extends ODataResponseAbstract {
         return null;
     }
 
+    toComplexCollection<T>(): T[] {
+        const json: any = this.getBodyAsJson();
+
+        if (Utils.isNotNullNorUndefined(json) && json.hasOwnProperty(ODataResponse.VALUE)) {
+            return json[ODataResponse.VALUE] as T[];
+        }
+
+        return null;
+    }
+
     toEntity<T>(): T {
+        return this.toObject<T>();
+    }
+
+    toComplexValue<T>(): T {
         return this.toObject<T>();
     }
 
@@ -50,21 +72,23 @@ export class ODataResponse extends ODataResponseAbstract {
         const json: any = this.getBodyAsJson();
         if (Utils.isNotNullNorUndefined(json)) {
             if (json.hasOwnProperty(ODataResponse.VALUE)) {
-                return <T>json[ODataResponse.VALUE];
+                return json[ODataResponse.VALUE] as T;
             }
             return null;
         } else {
-            return <T>JSON.parse(this.getBodyAsText());
+            return JSON.parse(this.getBodyAsText()) as T;
         }
-    }
-
-    toComplexValue<T>(): T {
-        return this.toObject<T>();
     }
 
     toCount(): number {
         return Number(this.getBodyAsText());
     }
+
+    /*
+    toODataResponseBatch(): ODataResponseBatch {
+        return new ODataResponseBatch(this.getHttpResponse());
+    }
+    */
 
     protected toObject<T>(): T {
         const json: any = this.getBodyAsJson();

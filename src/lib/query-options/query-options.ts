@@ -6,103 +6,103 @@ import { Orderby } from './orderby';
 import { Search } from './search/search';
 
 export class QueryOptions {
-  private _separator: string;
-  private _select: string[];
-  private _filter: Filter;
-  private _expand: Expand[];
-  private _orderby: Orderby[];
-  private _search: string | Search;
-  private _skip: number;
-  private _top: number;
-  private _count: boolean;
-  private _customOptions: Map<string, string>;
-  private _format: string;
+  private separatorVar: string;
+  private selectVar: string[];
+  private filterVar: Filter;
+  private expandVar: Expand[];
+  private orderbyVar: Orderby[];
+  private searchVar: string | Search;
+  private skipVar: number;
+  private topVar: number;
+  private countVar: boolean;
+  private customOptionsVar: Map<string, string>;
+  private formatVar: string;
 
   constructor(separator: string) {
     Utils.requireNotNullNorUndefined(separator, 'separator');
     Utils.requireNotEmpty(separator, 'separator');
-    this._separator = separator;
-    this._select = null;
-    this._filter = null;
-    this._expand = null;
-    this._orderby = null;
-    this._search = null;
-    this._skip = null;
-    this._top = null;
-    this._count = null;
-    this._customOptions = null;
-    this._format = null;
+    this.separatorVar = separator;
+    this.selectVar = null;
+    this.filterVar = null;
+    this.expandVar = null;
+    this.orderbyVar = null;
+    this.searchVar = null;
+    this.skipVar = null;
+    this.topVar = null;
+    this.countVar = null;
+    this.customOptionsVar = null;
+    this.formatVar = null;
   }
 
   select(select: string | string[]): QueryOptions {
     if (Utils.isNullOrUndefined(select) || Utils.isEmpty(select)) {
-      this._select = null;
+      this.selectVar = null;
     } else {
-      this._select = typeof (select) === 'string' ? [select] : select;
+      this.selectVar = typeof (select) === 'string' ? [select] : select;
     }
     return this;
   }
 
   filter(filter: string | Filter): QueryOptions {
     if (Utils.isNullOrUndefined(filter) || Utils.isEmpty(filter)) {
-      this._filter = null;
+      this.filterVar = null;
     } else {
-      this._filter = typeof (filter) === 'string' ? new FilterString(filter) : filter;
+      this.filterVar = typeof (filter) === 'string' ? new FilterString(filter) : filter;
     }
     return this;
   }
 
   expand(expand: string | Expand | Expand[]): QueryOptions {
     if (Utils.isNullOrUndefined(expand) || Utils.isEmpty(expand)) {
-      this._expand = null;
+      this.expandVar = null;
     } else {
-      this._expand = typeof (expand) === 'string' ? [new Expand(expand)] : expand instanceof Expand ? [expand] : expand;
+      this.expandVar = typeof (expand) === 'string' ? [new Expand(expand)] : expand instanceof Expand ? [expand] : expand;
     }
     return this;
   }
 
   orderby(orderby: string | Orderby[]): QueryOptions {
     if (Utils.isNullOrUndefined(orderby) || Utils.isEmpty(orderby)) {
-      this._orderby = null;
+      this.orderbyVar = null;
     } else {
-      this._orderby = typeof (orderby) === 'string' ? [new Orderby(orderby)] : orderby;
+      this.orderbyVar = typeof (orderby) === 'string' ? [new Orderby(orderby)] : orderby;
     }
     return this;
   }
 
   search(search: string | Search): QueryOptions {
-    this._search = search;
+    this.searchVar = search;
     return this;
   }
 
   skip(skip: number): QueryOptions {
     Utils.requireNotNegative(skip, 'skip');
-    this._skip = skip;
+    this.skipVar = skip;
     return this;
   }
 
   top(top: number): QueryOptions {
     Utils.requireNotNegative(top, 'top');
-    this._top = top;
+    this.topVar = top;
     return this;
   }
 
   count(count: boolean): QueryOptions {
-    this._count = count;
+    this.countVar = count;
     return this;
   }
 
   format(format: string): QueryOptions {
-    this._format = format;
+    this.formatVar = format;
     return this;
   }
 
   customOption(key: string, value: string) {
     Utils.requireNotNullNorUndefined(key, 'key');
-    if (Utils.isNullOrUndefined(this._customOptions)) {
-      this._customOptions = new Map<string, string>();
+    if (Utils.isNullOrUndefined(this.customOptionsVar)) {
+      this.customOptionsVar = new Map<string, string>();
     }
-    this._customOptions.set(key, value);
+    this.customOptionsVar.set(key, value);
     return this;
   }
 
@@ -111,88 +111,88 @@ export class QueryOptions {
     let queryOptions = '';
 
     // add select
-    if (!Utils.isNullOrUndefined(this._select) && !Utils.isEmpty(this._select)) {
+    if (!Utils.isNullOrUndefined(this.selectVar) && !Utils.isEmpty(this.selectVar)) {
       queryOptions += '$select=';
-      if (typeof (this._select) === 'string') {
-        queryOptions += this._select;
+      if (typeof (this.selectVar) === 'string') {
+        queryOptions += this.selectVar;
       } else {
-        queryOptions += Utils.toString(this._select);
+        queryOptions += Utils.toString(this.selectVar);
       }
     }
 
     // add filter
-    if (!Utils.isNullOrUndefined(this._filter) && !Utils.isEmpty(this._filter)) {
+    if (!Utils.isNullOrUndefined(this.filterVar) && !Utils.isEmpty(this.filterVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
-      queryOptions += '$filter=' + encodeURIComponent(this._filter.toString());
+      queryOptions += '$filter=' + encodeURIComponent(this.filterVar.toString());
     }
 
     // add expand
-    if (!Utils.isNullOrUndefined(this._expand) && !Utils.isEmpty(this._expand)) {
+    if (!Utils.isNullOrUndefined(this.expandVar) && !Utils.isEmpty(this.expandVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
       queryOptions += '$expand=';
-      if (typeof (this._expand) === 'string') {
-        queryOptions += this._expand;
+      if (typeof (this.expandVar) === 'string') {
+        queryOptions += this.expandVar;
       } else {
-        queryOptions += Utils.toString(this._expand);
+        queryOptions += Utils.toString(this.expandVar);
       }
     }
 
     // add orderby
-    if (!Utils.isNullOrUndefined(this._orderby) && !Utils.isEmpty(this._orderby)) {
+    if (!Utils.isNullOrUndefined(this.orderbyVar) && !Utils.isEmpty(this.orderbyVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
       queryOptions += '$orderby=';
-      if (typeof (this._orderby) === 'string') {
-        queryOptions += this._orderby;
+      if (typeof (this.orderbyVar) === 'string') {
+        queryOptions += this.orderbyVar;
       } else {
-        queryOptions += Utils.toString(this._orderby);
+        queryOptions += Utils.toString(this.orderbyVar);
       }
     }
 
     // add search
-    if (!Utils.isNullOrUndefined(this._search) && !Utils.isEmpty(this._search)) {
+    if (!Utils.isNullOrUndefined(this.searchVar) && !Utils.isEmpty(this.searchVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
-      queryOptions += '$search=' + encodeURIComponent(this._search.toString());
+      queryOptions += '$search=' + encodeURIComponent(this.searchVar.toString());
     }
 
     // add skip
-    if (!Utils.isNullOrUndefined(this._skip) && !Utils.isEmpty(this._skip)) {
+    if (!Utils.isNullOrUndefined(this.skipVar) && !Utils.isEmpty(this.skipVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
-      queryOptions += '$skip=' + this._skip;
+      queryOptions += '$skip=' + this.skipVar;
     }
 
     // add top
-    if (!Utils.isNullOrUndefined(this._top) && !Utils.isEmpty(this._top)) {
+    if (!Utils.isNullOrUndefined(this.topVar) && !Utils.isEmpty(this.topVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
-      queryOptions += '$top=' + this._top;
+      queryOptions += '$top=' + this.topVar;
     }
 
     // add count
-    if (!Utils.isNullOrUndefined(this._count) && !Utils.isEmpty(this._count)) {
+    if (!Utils.isNullOrUndefined(this.countVar) && !Utils.isEmpty(this.countVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
-      queryOptions += '$count=' + this._count;
+      queryOptions += '$count=' + this.countVar;
     }
 
     // add custom query options
-    if (Utils.isNotNullNorUndefined(this._customOptions) && this._customOptions.size > 0) {
-      this._customOptions.forEach((value: string, key: string, map: Map<string, string>) => {
+    if (Utils.isNotNullNorUndefined(this.customOptionsVar) && this.customOptionsVar.size > 0) {
+      this.customOptionsVar.forEach((value: string, key: string, map: Map<string, string>) => {
         if (Utils.isNotNullNorUndefined(key) && !Utils.isEmpty(key)
           && Utils.isNotNullNorUndefined(value) && !Utils.isEmpty(value)) {
           if (queryOptions.length) {
-            queryOptions += this._separator;
+            queryOptions += this.separatorVar;
           }
           queryOptions += key + '=' + encodeURIComponent(value);
         }
@@ -200,11 +200,11 @@ export class QueryOptions {
     }
 
     // add format
-    if (!Utils.isNullOrUndefined(this._format) && !Utils.isEmpty(this._format)) {
+    if (!Utils.isNullOrUndefined(this.formatVar) && !Utils.isEmpty(this.formatVar)) {
       if (queryOptions.length) {
-        queryOptions += this._separator;
+        queryOptions += this.separatorVar;
       }
-      queryOptions += '$format=' + this._format;
+      queryOptions += '$format=' + this.formatVar;
     }
 
     return queryOptions;
@@ -212,7 +212,7 @@ export class QueryOptions {
 
   isEmpty(): boolean {
     for (const key in this) {
-      if (key === '_purpose' || key === '_separator') {
+      if (key === 'purposeVar' || key === 'separatorVar') {
         continue;
       }
       if (this.hasOwnProperty(key) && !Utils.isEmpty(this[key])) {

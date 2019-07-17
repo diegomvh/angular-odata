@@ -169,4 +169,12 @@ export class ODataQueryBatch extends ODataQueryAbstract {
   getUUID(): string {
     return UUID.UUID();
   }
+
+  getRequests(): BatchRequest[] {
+    return this.requests;
+  }
+
+  setBatchBoundary(batchBoundary: string): void {
+    this.batchBoundary = batchBoundary;
+  }
 }

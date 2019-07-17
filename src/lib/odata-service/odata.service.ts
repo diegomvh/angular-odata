@@ -11,7 +11,7 @@ import { ODataQuery } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
 
 export class ODataService {
-  public static readonly IF_MATCH_HEADER = 'If-Match';
+  protected static readonly IF_MATCH_HEADER = 'If-Match';
 
   constructor(protected http: HttpClient, protected context: ODataContext) {
   }

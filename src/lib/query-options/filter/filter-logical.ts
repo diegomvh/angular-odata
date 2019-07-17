@@ -25,7 +25,7 @@ export class FilterLogical extends FilterHasFilter implements Filter {
         if (Utils.isNullOrUndefined(this.filter)) {
             return true;
         }
-        for (const filter of <Filter[]>this.filter) {
+        for (const filter of this.filter as Filter[]) {
             if (filter.isEmpty()) {
                 return true;
             }
