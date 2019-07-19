@@ -7,6 +7,7 @@ import { Search } from '../query-options/search/search';
 import { Utils } from '../utils/utils';
 import { ODataQueryBase } from './odata-query-base';
 import { ODataQueryBatch } from './odata-query-batch';
+import { QuotedString } from 'angular-odata/lib/odata-query/quoted-string';
 
 export class ODataQuery extends ODataQueryBase {
   // VARIABLES
@@ -49,10 +50,14 @@ export class ODataQuery extends ODataQueryBase {
     Utils.requireNotNullNorUndefined(entityKey, 'entityKey');
     Utils.requireNotEmpty(entityKey, 'entityKey');
     if (Utils.isObject(entityKey)) {
-      var parts = Object.keys(entityKey).map(key => `${key}=${Utils.getValueURI(entityKey[key], true)}`);
+      var parts = Object.keys(entityKey).map(key => `${key}=${Utils.getValueURI(
+        typeof(entityKey[key]) === "string" ? new QuotedString(entityKey[key]) : entityKey[key], 
+        true)}`);
       this.queryString = Utils.removeEndingSeparator(this.queryString) + '(' + parts.join(",") + ')';
     } else {
-      entityKey = Utils.getValueURI(entityKey, true);
+      entityKey = Utils.getValueURI(
+        typeof(entityKey) === "string" ? new QuotedString(entityKey) : entityKey, 
+        true);
       this.queryString = Utils.removeEndingSeparator(this.queryString) + '(' + entityKey + ')';
     }
     this.addSegment(ODataQuery.ENTITY_KEY);

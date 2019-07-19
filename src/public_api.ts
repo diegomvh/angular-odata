@@ -11,7 +11,7 @@ export * from './lib/odata-query/odata-query';
 export * from './lib/odata-query/odata-query-builder';
 
 // Models
-export * from './lib/odata-model/odata-model-options';
+export * from './lib/odata-model/odata-model-schema';
 export * from './lib/odata-model/odata-model';
 export * from './lib/odata-model/odata-collection';
 

@@ -1,4 +1,4 @@
-export class ODataModelOptions<M> {
+export class ODataModelSchema {
   fields: any[];
   relations: any[];
   defaults: any;
@@ -16,7 +16,7 @@ export class ODataModelOptions<M> {
     return value;
   }
 
-  json(model: M) {
+  json(model) {
     return model;
   }
 }

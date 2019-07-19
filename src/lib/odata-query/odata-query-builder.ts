@@ -64,6 +64,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
     let rawFilter = this.options[ODataQueryBuilder.RAWFILTER];
     if (rawFilter)
       odata[ODataQueryBuilder.FILTER] = [odata[ODataQueryBuilder.FILTER] || {}, rawFilter];
+    console.log(this.segments);
     let query = buildQuery(odata);
     return segments.join(ODataQueryBuilder.PATHSEP) + query;
   }

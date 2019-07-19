@@ -50,13 +50,13 @@ export class ODataEntityService<T> extends ODataService {
 
   // Entity Actions
   public all(options?): Observable<EntitySet<T>> {
-    return this.get(this.collectionQuery(), options)
+    return this.collectionQuery().get(options)
       .pipe(map(resp => resp.toEntitySet<T>()));
   }
 
   public fetch(entity, options?): Observable<T> {
     let key = typeof(entity) === "object" ? this.resolveEntityKey(entity) : entity;
-    return this.get(this.entityQuery(key), options)
+    return this.entityQuery(key).get(options)
       .pipe(map(resp => resp.toEntity<T>()));
   }
 
