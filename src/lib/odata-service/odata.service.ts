@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataQueryAbstract } from '../odata-query/odata-query-abstract';
 import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
 import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
 import { ODataQuery } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
+import { ODataQueryType } from '../odata-query/odata-query-type';
 
 export class ODataService {
   protected static readonly IF_MATCH_HEADER = 'If-Match';
@@ -33,7 +33,7 @@ export class ODataService {
     return new ODataQueryBuilder(this);
   }
 
-  get(odataQuery: ODataQueryAbstract, options?): Observable<ODataResponse> {
+  get(odataQuery: ODataQueryType, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     return this.handleError( 
@@ -42,7 +42,7 @@ export class ODataService {
     );
   }
 
-  post(odataQuery: ODataQueryAbstract, body: any, options?): Observable<ODataResponse> {
+  post(odataQuery: ODataQueryType, body: any, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     return this.handleError( 
@@ -51,7 +51,7 @@ export class ODataService {
     );
   }
 
-  patch(odataQuery: ODataQueryAbstract, body: any, etag?: string, options?): Observable<ODataResponse> {
+  patch(odataQuery: ODataQueryType, body: any, etag?: string, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     if (etag)
@@ -62,7 +62,7 @@ export class ODataService {
     );
   }
 
-  put(odataQuery: ODataQueryAbstract, body: any, etag?: string, options?): Observable<ODataResponse> {
+  put(odataQuery: ODataQueryType, body: any, etag?: string, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     if (etag)
@@ -73,7 +73,7 @@ export class ODataService {
     );
   }
 
-  delete(odataQuery: ODataQueryAbstract, etag?: string, options?): Observable<ODataResponse> {
+  delete(odataQuery: ODataQueryType, etag?: string, options?): Observable<ODataResponse> {
     const url: string = this.context.createEndpointUrl(odataQuery);
     options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
     if (etag)

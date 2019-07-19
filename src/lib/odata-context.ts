@@ -1,6 +1,6 @@
-import { ODataQueryAbstract } from "./odata-query/odata-query-abstract";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { ODataQueryType } from './odata-query/odata-query-type';
 
 export class ODataContext {
   baseUrl: string;
@@ -26,7 +26,7 @@ export class ODataContext {
       this.baseUrl = options.metadataUrl.substr(0, options.metadataUrl.indexOf("$metadata"));
   }
 
-  createEndpointUrl(query: ODataQueryAbstract): string {
+  createEndpointUrl(query: ODataQueryType): string {
     let path = `${query}`;
     let base = `${this.baseUrl}`;
     if (path.startsWith('/'))

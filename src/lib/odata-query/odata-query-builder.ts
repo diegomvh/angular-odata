@@ -1,26 +1,24 @@
-import { ODataQueryAbstract } from "./odata-query-abstract";
+import { ODataQueryBase } from "./odata-query-base";
 import { ODataService } from "../odata-service/odata.service";
 import buildQuery from 'odata-query';
-import { Observable } from 'rxjs';
-import { ODataResponse } from "../odata-response/odata-response";
 
-export interface ODataQueryBuilderOptions {
+export interface QueryBuilderOptions {
 }
 
-export interface ODataQueryBuilderSegment {
+export interface QueryBuilderSegment {
   type: string;
   name: string;
-  options: ODataQueryBuilderOptions;
+  options: QueryBuilderOptions;
 }
 
-export class ODataQueryBuilder extends ODataQueryAbstract {
-  segments: ODataQueryBuilderSegment[];
-  options: ODataQueryBuilderOptions;
+export class ODataQueryBuilder extends ODataQueryBase {
+  segments: QueryBuilderSegment[];
+  options: QueryBuilderOptions;
 
-  constructor(odataService: ODataService, segments?: ODataQueryBuilderSegment[], options?: ODataQueryBuilderOptions) {
+  constructor(odataService: ODataService, segments?: QueryBuilderSegment[], options?: QueryBuilderOptions) {
     super(odataService);
-    this.segments = segments || <ODataQueryBuilderSegment[]>[];
-    this.options = options || <ODataQueryBuilderOptions>{};
+    this.segments = segments || <QueryBuilderSegment[]>[];
+    this.options = options || <QueryBuilderOptions>{};
   }
 
   clone() {
@@ -102,7 +100,7 @@ export class ODataQueryBuilder extends ODataQueryAbstract {
   }
 
   // Options
-  protected wrapOption(type: string, opts?: ODataQueryBuilderOptions) {
+  protected wrapOption(type: string, opts?: QueryBuilderOptions) {
     if (typeof(opts) === "undefined") {
       // query.<property>() retorna un manejador de objeto
       // Fix filter y expand para retornar el handler
@@ -223,26 +221,4 @@ export class ODataQueryBuilder extends ODataQueryAbstract {
   removeValue() { return this.removeSegment(ODataQueryBuilder.VALUE, ODataQueryBuilder.$VALUE); }
   countSegment() { return this.wrapSegment(ODataQueryBuilder.COUNT, ODataQueryBuilder.$COUNT); }
   removeCountSegment() { return this.removeSegment(ODataQueryBuilder.COUNT, ODataQueryBuilder.$COUNT); }
-  
-  // QUERY EXECUTION
-  get(httpOptions?): Observable<ODataResponse> {
-    return this.odataService.get(this, httpOptions);
-  }
-
-  post(body: any, httpOptions?): Observable<ODataResponse> {
-    return this.odataService.post(this, body, httpOptions);
-  }
-
-  patch(body: any, etag?: string, httpOptions?): Observable<ODataResponse> {
-    return this.odataService.patch(this, body, etag, httpOptions);
-  }
-
-  put(body: any, etag?: string, httpOptions?): Observable<ODataResponse> {
-    return this.odataService.put(this, body, etag, httpOptions);
-  }
-
-  delete(etag?: string, httpOptions?): Observable<ODataResponse> {
-    return this.odataService.delete(this, etag, httpOptions);
-  }
-
 }
