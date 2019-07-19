@@ -4,11 +4,18 @@
 
 export * from './lib/odata.module';
 export * from './lib/odata-context';
-// Services
-export * from './lib/odata-service/odata.service';
-export * from './lib/odata-service/odata-entity.service';
 
 // Queries
 export * from './lib/odata-query/odata-query-base';
 export * from './lib/odata-query/odata-query';
 export * from './lib/odata-query/odata-query-builder';
+
+// Models
+export * from './lib/odata-model/odata-model-options';
+export * from './lib/odata-model/odata-model';
+export * from './lib/odata-model/odata-collection';
+
+// Services
+export * from './lib/odata-service/odata.service';
+export * from './lib/odata-service/odata-entity.service';
+export * from './lib/odata-service/odata-model.service';
