@@ -45,7 +45,7 @@ export class ODataResponse extends ODataResponseAbstract {
             if (json.hasOwnProperty(ODataResponse.ODATA_COUNT)) {
                 count = json[ODataResponse.ODATA_COUNT];
             }
-            return new EntitySet<T>(json[ODataResponse.VALUE], count);
+            return new EntitySet<T>(json[ODataResponse.VALUE], count || json[ODataResponse.VALUE].length);
         }
         return null;
     }

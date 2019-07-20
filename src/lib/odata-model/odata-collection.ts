@@ -1,9 +1,10 @@
 import { ODataModel } from './odata-model';
 import { ODataEntityService } from '../odata-service/odata-entity.service';
 
-export abstract class ODataCollection<M extends ODataModel> {
-  protected _service: ODataEntityService<M>;
+export class ODataCollection<M extends ODataModel> {
+  static Model: new (...params: any) => ODataModel = ODataModel;
+  service: ODataEntityService<M>;
 
-  constructor(protected models: M[]) {
+  constructor(values: any[], opts: {parse: boolean, service: ODataEntityService<M>}) {
   }
 }

@@ -7,7 +7,7 @@ import { Search } from '../query-options/search/search';
 import { Utils } from '../utils/utils';
 import { ODataQueryBase } from './odata-query-base';
 import { ODataQueryBatch } from './odata-query-batch';
-import { QuotedString } from 'angular-odata/lib/odata-query/quoted-string';
+import { QuotedString } from './quoted-string';
 
 export class ODataQuery extends ODataQueryBase {
   // VARIABLES
