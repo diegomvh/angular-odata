@@ -4,11 +4,19 @@ import { ODataEntityService } from '../odata-service/odata-entity.service';
 
 export class Schema {
   fields: any[];
-  relations: any[];
+  relationships: any[];
   defaults: any;
 
-  constructor(opts: {fields?: any[], relations?: any[], defaults?: any}) {
-    Object.assign(this, {relations: [], defaults: {}}, opts);
+  static create(opts: {fields?: any[], relationships?: any[], defaults?: any}) {
+    return Object.assign(new Schema(), {fields: [], relationships: [], defaults: {}}, opts);
+  }
+
+  extend(opts: {fields?: any[], relationships?: any[], defaults?: any}) {
+    let {fields, relationships, defaults} = this;
+    fields = [...fields, ...(opts.fields || [])];
+    relationships = [...relationships, ...(opts.relationships || [])];
+    defaults = Object.assign({}, defaults, opts.defaults || {});
+    return Object.assign(new Schema(), {fields, relationships, defaults});
   }
 
   attrs(value: any, parse: boolean) {
