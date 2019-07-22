@@ -6,8 +6,12 @@ import { Metadata } from './metadata';
 import { ODataResponseAbstract } from './odata-response-abstract';
 
 export class ODataResponse extends ODataResponseAbstract {
+    public static readonly ODATA_ETAG = '@odata.etag';
+    public static readonly ODATA_ID = '@odata.id';
+    public static readonly ODATA_COUNT = '@odata.count';
+    public static readonly ODATA_NEXT_LINK = '@odata.nextLink';
+
     private static readonly VALUE = 'value';
-    private static readonly ODATA_COUNT = '@odata.count';
     private static readonly CONTENT_TYPE = 'content-type';
 
     constructor(httpResponse: HttpResponse<string>) {
@@ -45,7 +49,12 @@ export class ODataResponse extends ODataResponseAbstract {
             if (json.hasOwnProperty(ODataResponse.ODATA_COUNT)) {
                 count = json[ODataResponse.ODATA_COUNT];
             }
-            return new EntitySet<T>(json[ODataResponse.VALUE], count || json[ODataResponse.VALUE].length);
+            let skip: number = null;
+            if (json.hasOwnProperty(ODataResponse.ODATA_NEXT_LINK)) {
+                // TODO: Extraer el skip del link
+                skip = json[ODataResponse.ODATA_NEXT_LINK];
+            }
+            return new EntitySet<T>(json[ODataResponse.VALUE], count || json[ODataResponse.VALUE].length, skip);
         }
         return null;
     }

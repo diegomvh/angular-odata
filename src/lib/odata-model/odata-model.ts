@@ -59,7 +59,7 @@ export class ODataModel extends Model {
     return this.toJSON();
   }
 
-  fetch(options: { parse?: boolean }): Observable<ODataModel> {
+  fetch<M>(options: { parse?: boolean }): Observable<M> {
     let ctor = <typeof ODataModel>this.constructor;
     let entity = this.toEntity();
     return this.service.fetch(entity, options)
@@ -68,7 +68,7 @@ export class ODataModel extends Model {
       );
   }
 
-  save(options: { parse?: boolean }): Observable<ODataModel> {
+  save<M>(options: { parse?: boolean }): Observable<M> {
     let ctor = <typeof ODataModel>this.constructor;
     let entity = this.toEntity();
     return this.service.save(entity, options)

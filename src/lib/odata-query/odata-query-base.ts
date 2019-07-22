@@ -5,11 +5,6 @@ import { ODataResponse } from '../odata-response/odata-response';
 import { ODataQueryType } from './odata-query-type';
 
 export abstract class ODataQueryBase implements ODataQueryType {
-  public static readonly BOUNDARY_PREFIX_SUFFIX = '--';
-  public static readonly BATCH_PREFIX = 'batch_';
-  public static readonly CHANGESET_PREFIX = 'changeset_';
-  public static readonly NEWLINE = '\r\n';
-
   // URL QUERY PARTS
   public static readonly SEPARATOR = '&';
   public static readonly PATHSEP = '/';
@@ -41,27 +36,10 @@ export abstract class ODataQueryBase implements ODataQueryType {
   public static readonly ACTION_CALL = 'actionCall';
 
   // CONSTANT SEGMENTS
-  public static readonly $BATCH = '$batch';
   public static readonly $METADATA = '$metadata';
   public static readonly $REF = '$ref';
   public static readonly $VALUE = '$value';
   public static readonly $COUNT = '$count';
-
-  // HEADERS
-  public static readonly HTTP11 = 'HTTP/1.1';
-  public static readonly ODATA_VERSION = 'OData-Version';
-  public static readonly CONTENT_TYPE = 'Content-Type';
-  public static readonly ACCEPT = 'Accept';
-  public static readonly CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';
-  public static readonly CONTENT_ID = 'Content-ID';
-
-  // HEADER VALUES
-  public static readonly VERSION_4_0 = '4.0';
-  public static readonly MULTIPART_MIXED = 'multipart/mixed';
-  public static readonly MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
-  public static readonly APPLICATION_HTTP = 'application/http';
-  public static readonly BINARY = 'binary';
-  public static readonly APPLICATION_JSON = 'application/json';
 
   // VARIABLES
   public odataService: ODataService;

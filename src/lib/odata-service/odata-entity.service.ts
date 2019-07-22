@@ -12,9 +12,6 @@ import { EntitySet } from '../odata-response/entity-collection';
 import { Utils } from '../utils/utils';
 
 export abstract class ODataEntityService<T> extends ODataService {
-  public static readonly ODATA_ETAG = '@odata.etag';
-  public static readonly ODATA_ID = '@odata.id';
-
   constructor(protected http: HttpClient, protected context: ODataContext, protected set: string) {
     super(http, context);
   }
@@ -100,20 +97,20 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   public update(entity: T, options?): Observable<T> {
-    let etag = entity[ODataEntityService.ODATA_ETAG];
+    let etag = entity[ODataResponse.ODATA_ETAG];
     return this.entityQuery(entity)
       .put(entity, etag, options)
       .pipe(map(resp => resp.toEntity<T>()));
   }
 
   public assign(entity: Partial<T>, options?) {
-    let etag = entity[ODataEntityService.ODATA_ETAG];
+    let etag = entity[ODataResponse.ODATA_ETAG];
     return this.entityQuery(entity)
       .patch(entity, etag, options);
   }
 
   public destroy(entity: T, options?) {
-    let etag = entity[ODataEntityService.ODATA_ETAG];
+    let etag = entity[ODataResponse.ODATA_ETAG];
     return this.entityQuery(entity)
       .delete(etag, options);
   }
@@ -144,25 +141,25 @@ export abstract class ODataEntityService<T> extends ODataService {
 
   protected createRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
     let refurl = this.context.createEndpointUrl(target);
-    let etag = entity[ODataEntityService.ODATA_ETAG];
+    let etag = entity[ODataResponse.ODATA_ETAG];
     return this.refQuery(entity, name)
-      .put({ [ODataEntityService.ODATA_ID]: refurl }, etag, options);
+      .put({ [ODataResponse.ODATA_ID]: refurl }, etag, options);
   }
 
   protected createCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
     let refurl = this.context.createEndpointUrl(target);
     return this.refQuery(entity, name)
-      .post({ [ODataEntityService.ODATA_ID]: refurl }, options);
+      .post({ [ODataResponse.ODATA_ID]: refurl }, options);
   }
 
   protected deleteRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
-    let etag = entity[ODataEntityService.ODATA_ETAG];
+    let etag = entity[ODataResponse.ODATA_ETAG];
     return this.refQuery(entity, name)
       .delete(etag, options);
   }
 
   protected deleteCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
-    let etag = entity[ODataEntityService.ODATA_ETAG];
+    let etag = entity[ODataResponse.ODATA_ETAG];
     let refurl = this.context.createEndpointUrl(target);
     options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
     return this.refQuery(entity, name)
