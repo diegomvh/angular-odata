@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataEntityService } from '../odata-service/odata-entity.service';
+import { ODataResponse } from '../odata-response/odata-response';
 
 export class Schema {
   fields: any[];
@@ -29,7 +30,7 @@ export class Schema {
   }
 
   json(model) {
-    return model;
+    return this.fields.reduce((acc, field) => Object.assign(acc, {[field.name]: model[field.name]}), {});
   }
 }
 
@@ -56,7 +57,11 @@ export class ODataModel extends Model {
   }
 
   toEntity() {
-    return this.toJSON();
+    let entity = this.toJSON();
+    if (ODataResponse.ODATA_ETAG in this) {
+      entity[ODataResponse.ODATA_ETAG] = this[ODataResponse.ODATA_ETAG];
+    }
+    return entity;
   }
 
   fetch<M>(options: { parse?: boolean }): Observable<M> {
