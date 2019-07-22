@@ -20,12 +20,7 @@ export class Schema {
     return Object.assign(new Schema(), { fields, relationships, defaults });
   }
 
-  attrs(value: any, parse: boolean) {
-    let attrs = parse ? this.parse(value) : value;
-    return Object.assign({}, this.defaults, attrs);
-  }
-
-  parse(value) {
+  parse(value, models) {
     return value;
   }
 
@@ -35,12 +30,11 @@ export class Schema {
 }
 
 export class Model {
-  static type: string;
+  static type: string = "";
   static schema: Schema = null;
 
-  constructor(value?: any, options?: { parse?: boolean }) {
-    let ctor = <typeof Model>this.constructor;
-    Object.assign(this, ctor.schema.attrs(value, options.parse));
+  constructor(value?: any) {
+    Object.assign(this, value);
   }
 
   toJSON() {
@@ -52,8 +46,8 @@ export class Model {
 export class ODataModel extends Model {
   service: ODataEntityService<ODataModel>;
 
-  constructor(value?: any, options?: { parse?: boolean, service?: ODataEntityService<ODataModel> }) {
-    super(value, options)
+  constructor(value?: any, options?: { service?: ODataEntityService<ODataModel> }) {
+    super(value)
     this.service = options.service;
   }
 
@@ -68,18 +62,20 @@ export class ODataModel extends Model {
   fetch<M>(options?: { parse?: boolean }): Observable<M> {
     let ctor = <typeof ODataModel>this.constructor;
     let entity = this.toEntity();
+    options = Object.assign({parse: true}, options || {});
     return this.service.fetch(entity, options)
       .pipe(
-        map(attrs => Object.assign(this, ctor.schema.attrs(attrs, options.parse)))
+        map(attrs => Object.assign(this, options.parse ? ctor.schema.parse(attrs, {}) : attrs))
       );
   }
 
   save<M>(options?: { parse?: boolean }): Observable<M> {
     let ctor = <typeof ODataModel>this.constructor;
     let entity = this.toEntity();
+    options = Object.assign({parse: true}, options || {});
     return this.service.save(entity, options)
       .pipe(
-        map(attrs => Object.assign(this, ctor.schema.attrs(attrs, options.parse)))
+        map(attrs => Object.assign(this, options.parse ? ctor.schema.parse(attrs, {}) : attrs))
       );
   }
 
