@@ -10,6 +10,10 @@ export * from './lib/odata-query/odata-query-base';
 export * from './lib/odata-query/odata-query';
 export * from './lib/odata-query/odata-query-builder';
 
+// Response
+export * from './lib/odata-response/entity-collection';
+export * from './lib/odata-response/odata-response';
+
 // Models
 export * from './lib/odata-model/odata-model';
 export * from './lib/odata-model/odata-collection';
