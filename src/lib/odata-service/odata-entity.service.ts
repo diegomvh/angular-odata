@@ -89,11 +89,11 @@ export abstract class ODataEntityService<T> extends ODataService {
       .pipe(map(resp => resp.toEntity<T>()));
   }
 
-  public readOrCreate(entity: T, options?): Observable<T> {
+  public readOrCreate(entity: Partial<T>, options?): Observable<T> {
     return this.fetch(entity, options)
       .pipe(catchError(error => {
         if (error.code === 404)
-          return this.create(entity, options);
+          return this.create(entity as T, options);
         else
           return throwError(error);
       }));
