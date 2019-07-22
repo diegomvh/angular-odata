@@ -4,7 +4,6 @@ import { ODataContext } from '../odata-context';
 import { ODataEntityService } from './odata-entity.service';
 import { ODataModel } from '../odata-model/odata-model';
 import { ODataCollection } from '../odata-model/odata-collection';
-import { Observable } from 'rxjs';
 
 export abstract class ODataModelService<M extends ODataModel, C extends ODataCollection<M>> extends ODataEntityService<M> {
   static Model: new (...params: any) => ODataModel = ODataModel;

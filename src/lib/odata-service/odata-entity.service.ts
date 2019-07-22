@@ -18,24 +18,32 @@ export abstract class ODataEntityService<T> extends ODataService {
     super(http, context);
   }
 
+  protected abstract resolveEntityKey(entity: Partial<T>);
+
   // Queries
   public entitySetQuery(): ODataQuery {
     return this.query()
       .entitySet(this.set);
   }
 
-  public entityQuery(key): ODataQuery {
+  public entityQuery(entity: Partial<T>): ODataQuery {
+    let key = this.resolveEntityKey(entity);
     return this.entitySetQuery()
       .entityKey(key);
   }
 
-  public navigationPropertyQuery(key, name): ODataQuery {
-    return this.entityQuery(key)
+  public navigationPropertyQuery(entity: Partial<T>, name): ODataQuery {
+    return this.entityQuery(entity)
       .navigationProperty(name);
   }
 
-  public refQuery(key, name): ODataQuery {
-    return this.entityQuery(key)
+  public propertyQuery(entity: Partial<T>, name): ODataQuery {
+    return this.entityQuery(entity)
+      .property(name);
+  }
+
+  public refQuery(entity: Partial<T>, name): ODataQuery {
+    return this.entityQuery(entity)
       .navigationProperty(name)
       .ref();
   }
@@ -46,19 +54,17 @@ export abstract class ODataEntityService<T> extends ODataService {
     return builder;
   }
 
-  public entityQueryBuilder(key): ODataQueryBuilder {
+  public entityQueryBuilder(entity: Partial<T>): ODataQueryBuilder {
     let builder = this.collectionQueryBuilder();
-    builder.entityKey(key);
+    builder.entityKey(entity);
     return builder;
   }
 
-  public navigationPropertyQueryBuilder(key, name): ODataQueryBuilder {
-    let builder = this.entityQueryBuilder(key);
+  public navigationPropertyQueryBuilder(entity: Partial<T>, name): ODataQueryBuilder {
+    let builder = this.entityQueryBuilder(entity);
     builder.navigationProperty(name);
     return builder;
   }
-
-  protected abstract resolveEntityKey(entity: Partial<T>);
 
   public isNew(entity: Partial<T>) {
     return !this.resolveEntityKey(entity);
@@ -95,23 +101,20 @@ export abstract class ODataEntityService<T> extends ODataService {
 
   public update(entity: T, options?): Observable<T> {
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    let key = this.resolveEntityKey(entity);
-    return this.entityQuery(key)
+    return this.entityQuery(entity)
       .put(entity, etag, options)
       .pipe(map(resp => resp.toEntity<T>()));
   }
 
-  public assign(delta: Partial<T>, options?) {
-    let etag = delta[ODataEntityService.ODATA_ETAG];
-    let key = this.resolveEntityKey(delta);
-    return this.entityQuery(key)
-      .patch(delta, etag, options);
+  public assign(entity: Partial<T>, options?) {
+    let etag = entity[ODataEntityService.ODATA_ETAG];
+    return this.entityQuery(entity)
+      .patch(entity, etag, options);
   }
 
   public destroy(entity: T, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    let key = this.resolveEntityKey(entity);
-    return this.entityQuery(key)
+    return this.entityQuery(entity)
       .delete(etag, options);
   }
 
@@ -124,61 +127,51 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   protected navigationProperty<M>(entity: Partial<T>, name, options?): Observable<EntitySet<M>> {
-    let key = this.resolveEntityKey(entity);
-    return this.navigationPropertyQuery(key, name)
+    return this.navigationPropertyQuery(entity, name)
       .get(options)
       .pipe(
         map(resp => resp.toEntitySet<M>())
       );
   }
 
-  protected property<P>(entity: Partial<T>, name, options?): Observable<P> {
-    let key = this.resolveEntityKey(entity);
-    return this.entityQuery(key)
-      .property(name)
+  protected property<P>(entity: Partial<T>, name: string, options?): Observable<P> {
+    return this.propertyQuery(entity, name)
       .get(options)
       .pipe(
         map(resp => resp.toPropertyValue<P>())
       );
   }
 
-  protected createRef(entity: Partial<T>, property, target: ODataQueryBase, options?) {
+  protected createRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
     let refurl = this.context.createEndpointUrl(target);
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    let key = this.resolveEntityKey(entity);
-    return this.entityQuery(key)
-      .navigationProperty(property)
-      .ref()
+    return this.refQuery(entity, name)
       .put({ [ODataEntityService.ODATA_ID]: refurl }, etag, options);
   }
 
-  protected createCollectionRef(entity: Partial<T>, property, target: ODataQueryBase, options?) {
+  protected createCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
     let refurl = this.context.createEndpointUrl(target);
-    let key = this.resolveEntityKey(entity);
-    return this.refQuery(key, property)
+    return this.refQuery(entity, name)
       .post({ [ODataEntityService.ODATA_ID]: refurl }, options);
   }
 
-  protected deleteRef(entity: Partial<T>, property, target: ODataQueryBase, options?) {
+  protected deleteRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
-    let key = this.resolveEntityKey(entity);
-    return this.refQuery(key, property)
+    return this.refQuery(entity, name)
       .delete(etag, options);
   }
 
-  protected deleteCollectionRef(entity: Partial<T>, property, target: ODataQueryBase, options?) {
+  protected deleteCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
     let etag = entity[ODataEntityService.ODATA_ETAG];
     let refurl = this.context.createEndpointUrl(target);
-    let key = this.resolveEntityKey(entity);
     options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
-    return this.refQuery(key, property)
+    return this.refQuery(entity, name)
       .delete(etag, options);
   }
 
   // Function and actions
   protected customAction(entity: Partial<T>, name: string, postdata: any = {}, options?): Observable<ODataResponse> {
-    let key = this.resolveEntityKey(entity);
-    let builder = this.entityQueryBuilder(key);
+    let builder = this.entityQueryBuilder(entity);
     builder.action(name);
     return builder.post(postdata, options);
   }
@@ -190,8 +183,7 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   protected customFunction(entity: Partial<T>, name: string, parameters: any = {}, options?): Observable<ODataResponse> {
-    let key = this.resolveEntityKey(entity);
-    let builder = this.entityQueryBuilder(key);
+    let builder = this.entityQueryBuilder(entity);
     builder.function(name).assign(parameters);
     return builder.get(options);
   }
