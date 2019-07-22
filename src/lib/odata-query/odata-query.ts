@@ -43,7 +43,7 @@ export class ODataQuery extends ODataQueryBase {
     return this;
   }
 
-  entityKey(entityKey: any | any[]): ODataQuery {
+  entityKey(entityKey: any): ODataQuery {
     if (this.lastSegment !== ODataQuery.ENTITY_SET && this.lastSegment !== ODataQuery.NAVIGATION_PROPERTY) {
       throw new Error('entityKey can only be appended to entitySet or navigationProperty');
     }

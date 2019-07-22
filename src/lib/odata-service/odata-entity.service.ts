@@ -9,6 +9,7 @@ import { ODataContext } from '../odata-context';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { EntitySet } from '../odata-response/entity-collection';
+import { Utils } from '../utils/utils';
 
 export abstract class ODataEntityService<T> extends ODataService {
   public static readonly ODATA_ETAG = '@odata.etag';
@@ -26,8 +27,8 @@ export abstract class ODataEntityService<T> extends ODataService {
       .entitySet(this.set);
   }
 
-  public entityQuery(entity: Partial<T>): ODataQuery {
-    let key = this.resolveEntityKey(entity);
+  public entityQuery(entity: number | string | Partial<T>): ODataQuery {
+    let key = Utils.isObject(entity) ? this.resolveEntityKey(entity as Partial<T>) : entity;
     return this.entitySetQuery()
       .entityKey(key);
   }
@@ -77,8 +78,7 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   public fetch(entity: Partial<T>, options?): Observable<T> {
-    let key = typeof (entity) === "object" ? this.resolveEntityKey(entity) : entity;
-    return this.entityQuery(key)
+    return this.entityQuery(entity)
       .get(options)
       .pipe(map(resp => resp.toEntity<T>()));
   }
