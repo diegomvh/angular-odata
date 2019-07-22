@@ -34,11 +34,12 @@ export class Schema {
 }
 
 export class Model {
+  static type: string;
   static schema: Schema = null;
 
-  constructor(value: any, opts: { parse: boolean }) {
+  constructor(value?: any, options?: { parse?: boolean }) {
     let ctor = <typeof Model>this.constructor;
-    Object.assign(this, ctor.schema.attrs(value, opts.parse));
+    Object.assign(this, ctor.schema.attrs(value, options.parse));
   }
 
   toJSON() {
@@ -50,16 +51,16 @@ export class Model {
 export class ODataModel extends Model {
   service: ODataEntityService<ODataModel>;
 
-  constructor(value: any, opts: { parse: boolean, service: ODataEntityService<ODataModel> }) {
-    super(value, opts)
-    this.service = opts.service;
+  constructor(value?: any, options?: { parse?: boolean, service?: ODataEntityService<ODataModel> }) {
+    super(value, options)
+    this.service = options.service;
   }
 
   toEntity() {
     return this.toJSON();
   }
 
-  fetch<M>(options: { parse?: boolean }): Observable<M> {
+  fetch<M>(options?: { parse?: boolean }): Observable<M> {
     let ctor = <typeof ODataModel>this.constructor;
     let entity = this.toEntity();
     return this.service.fetch(entity, options)
@@ -68,7 +69,7 @@ export class ODataModel extends Model {
       );
   }
 
-  save<M>(options: { parse?: boolean }): Observable<M> {
+  save<M>(options?: { parse?: boolean }): Observable<M> {
     let ctor = <typeof ODataModel>this.constructor;
     let entity = this.toEntity();
     return this.service.save(entity, options)
