@@ -12,7 +12,7 @@ import { EntitySet } from '../odata-response/entity-collection';
 import { Utils } from '../utils/utils';
 
 export abstract class ODataEntityService<T> extends ODataService {
-  constructor(protected http: HttpClient, protected context: ODataContext, protected set: string) {
+  constructor(protected http: HttpClient, public context: ODataContext, public set: string) {
     super(http, context);
   }
 

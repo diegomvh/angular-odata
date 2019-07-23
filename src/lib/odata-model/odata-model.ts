@@ -2,6 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataEntityService } from '../odata-service/odata-entity.service';
 import { ODataResponse } from '../odata-response/odata-response';
+import { ODataContext } from '../odata-context';
 
 export class Schema {
   fields: any[];
@@ -20,35 +21,52 @@ export class Schema {
     return Object.assign(new Schema(), { fields, relationships, defaults });
   }
 
-  parse(value, models) {
-    return value;
+  parse(attrs: {[name: string]: any}, context: ODataContext) {
+    return this.fields.reduce((attrs, field) => {
+      if (field.name in attrs) {
+        var value = attrs[field.name];
+        if (typeof (value) !== field.type.toLowerCase()) {
+          var Model = context.getModel(field.type);
+          if (Model != null && value != null)
+            attrs[field.name] = field.collection ? value.map(v => new Model(v, context)) : new Model(value, context);
+        }
+      }
+      return attrs;
+    }, attrs);
   }
 
   json(model) {
-    return this.fields.reduce((acc, field) => Object.assign(acc, {[field.name]: model[field.name]}), {});
-  }
+    return this.fields.reduce((json, field) => {
+      if (field.name in model) {
+        var value = this[field.name];
+        json[field.name] = field.collection ? value.map(v => v.toJSON()) : value.toJSON();
+      }
+      return json;
+    }, {});
+  } 
 }
 
 export class Model {
-  static type: string = "";
+  static type: string = null;
   static schema: Schema = null;
 
-  constructor(value?: any) {
-    Object.assign(this, value);
+  constructor(attrs: {[name: string]: any}, context: ODataContext) {
+    let ctor = <typeof Model>this.constructor;
+    Object.assign(this, ctor.schema.parse(attrs, context));
   }
 
   toJSON() {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.json(this);
+    return ctor.schema.json(this)
   }
 }
 
 export class ODataModel extends Model {
   service: ODataEntityService<ODataModel>;
 
-  constructor(value?: any, options?: { service?: ODataEntityService<ODataModel> }) {
-    super(value)
-    this.service = options.service;
+  constructor(attrs: {[name: string]: any}, service: ODataEntityService<ODataModel>) {
+    super(attrs, service.context);
+    this.service = service;
   }
 
   toEntity() {
@@ -59,23 +77,24 @@ export class ODataModel extends Model {
     return entity;
   }
 
-  fetch<M>(options?: { parse?: boolean }): Observable<M> {
-    let ctor = <typeof ODataModel>this.constructor;
+  parse(attrs: {[name: string]: any}) {
+    let ctor = <typeof Model>this.constructor;
+    return ctor.schema.parse(attrs, this.service.context);
+  }
+
+  fetch<M>(options?: any): Observable<M> {
     let entity = this.toEntity();
-    options = Object.assign({parse: true}, options || {});
     return this.service.fetch(entity, options)
       .pipe(
-        map(attrs => Object.assign(this, options.parse ? ctor.schema.parse(attrs, {}) : attrs))
+        map(attrs => Object.assign(this, this.parse(attrs)))
       );
   }
 
-  save<M>(options?: { parse?: boolean }): Observable<M> {
-    let ctor = <typeof ODataModel>this.constructor;
+  save<M>(options?: any): Observable<M> {
     let entity = this.toEntity();
-    options = Object.assign({parse: true}, options || {});
     return this.service.save(entity, options)
       .pipe(
-        map(attrs => Object.assign(this, options.parse ? ctor.schema.parse(attrs, {}) : attrs))
+        map(attrs => Object.assign(this, this.parse(attrs)))
       );
   }
 

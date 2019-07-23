@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataQueryType } from './odata-query/odata-query-type';
+import { ODataModel } from './odata-model/odata-model';
+import { ODataCollection } from './odata-model/odata-collection';
 
 export class ODataContext {
   baseUrl: string;
@@ -9,6 +11,8 @@ export class ODataContext {
   creation: Date;
   version: string;
   metadata: Promise<any>;
+  models: {[type: string]: new (...params: any) => ODataModel };
+  collections: {[type: string]: new (...params: any) => ODataCollection<ODataModel> };
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(options: {
@@ -17,6 +21,8 @@ export class ODataContext {
     withCredentials?: boolean,
     creation?: Date,
     version?: string,
+    models?: {[type: string]: new (...params: any) => ODataModel }
+    collections?: {[type: string]: new (...params: any) => ODataCollection<ODataModel> }
     errorHandler?: (error: HttpErrorResponse) => Observable<never>
   }) {
     Object.assign(this, options);
@@ -39,5 +45,13 @@ export class ODataContext {
 
   assignOptions(...options) {
     return Object.assign({}, ...options, { withCredentials: this.withCredentials });
+  }
+
+  getModel(name: string): new (...params: any) => ODataModel {
+    return name in this.models ? this.models[name] : null;
+  }
+
+  getCollection(name: string): new (...params: any) => ODataCollection<ODataModel> {
+    return name in this.collections ? this.collections[name] : null;
   }
 }

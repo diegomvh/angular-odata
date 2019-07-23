@@ -9,17 +9,20 @@ import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
 import { ODataQuery } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
 import { ODataQueryType } from '../odata-query/odata-query-type';
+import { Metadata } from '../odata-response/metadata';
 
 export class ODataService {
   protected static readonly IF_MATCH_HEADER = 'If-Match';
 
-  constructor(protected http: HttpClient, protected context: ODataContext) {
+  constructor(protected http: HttpClient, public context: ODataContext) {
   }
 
-  public metadata(): any {
+  public metadata(): Promise<Metadata> {
     if (!this.context.metadata) {
-      this.context.metadata = this.http.get(this.context.metadataUrl, {observe: 'response', responseType: 'text'}).pipe(
-        map(response => new ODataResponse(response).toMetadata())
+      this.context.metadata = this.http
+        .get(this.context.metadataUrl, {observe: 'response', responseType: 'text'})
+        .pipe(
+          map(response => new ODataResponse(response).toMetadata())
       ).toPromise();
     }
     return this.context.metadata;

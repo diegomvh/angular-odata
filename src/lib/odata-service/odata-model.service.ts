@@ -5,27 +5,23 @@ import { ODataEntityService } from './odata-entity.service';
 import { ODataModel } from '../odata-model/odata-model';
 import { ODataCollection } from '../odata-model/odata-collection';
 
-export abstract class ODataModelService<M extends ODataModel, C extends ODataCollection<M>> extends ODataEntityService<M> {
-  static Model: new (...params: any) => ODataModel = ODataModel;
-  static Collection: new (...params: any) => ODataCollection<ODataModel> = ODataCollection;
+export abstract class ODataModelService<M extends ODataModel, C extends ODataCollection<ODataModel>> extends ODataEntityService<M> {
+  static model: string = null;
+  static collection: string = null;
 
-  constructor(protected http: HttpClient, protected context: ODataContext, protected set: string) {
+  constructor(protected http: HttpClient, public context: ODataContext, public set: string) {
     super(http, context, set);
   }
 
-  collection<T extends C>(attrs: any, type?: new (...params: any) => T) : T {
-    if (type == null) {
-      let cotr = <any>this.constructor;
-      type = cotr.Collection;
-    }
-    return new type(attrs, {service: this});
+  model(attrs: any): M {
+    let cotr = <typeof ODataModelService>this.constructor;
+    let Model = this.context.getModel(cotr.model);
+    return new Model(attrs, this) as M;
   }
 
-  model<T extends M>(attrs: any, type?: new (...params: any) => T) : T {
-    if (type == null) {
-      let cotr = <any>this.constructor;
-      type = cotr.Model;
-    }
-    return new type(attrs, {service: this});
+  collection(attrs: any): C {
+    let cotr = <typeof ODataModelService>this.constructor;
+    let Collection = this.context.getCollection(cotr.collection);
+    return new Collection(attrs, this) as C;
   }
 }
