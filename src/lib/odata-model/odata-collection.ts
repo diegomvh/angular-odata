@@ -45,7 +45,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     let skip = entitySet.getSkip();
     if (skip)
       this.state.size = skip;
-    this.state.pages = Math.floor(this.state.records / this.state.size);
+    this.state.pages = Math.ceil(this.state.records / this.state.size);
     this.models = this.parse(entitySet.getEntities(), query);
     return this;
   }
@@ -61,25 +61,25 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
       );
   }
 
-  getPage(index: number | string, options?: any) {
-    var { page, pages } = this.state;
-    switch (index) {
-      case "first": page = 1; break;
-      case "prev": page = page - 1; break;
-      case "next": page = page + 1; break;
-      case "last": page = pages; break;
-      default: page = index as number;
-    }
+  getPage(page: number, options?: any) {
     this.state.page = page;
     return this.fetch(options);
   }
 
+  getFirstPage(options?: any) {
+    return this.getPage(1, options);
+  }
+
   getPreviousPage(options?: any) {
-    return this.getPage("prev", options);
+    return this.getPage(this.state.page - 1, options);
   }
 
   getNextPage(options?: any) {
-    return this.getPage("next", options);
+    return this.getPage(this.state.page + 1, options);
+  }
+
+  getLastPage(options?: any) {
+    return this.getPage(this.state.pages, options);
   }
 
   setPageSize(size: number) { this.state.size = size; }

@@ -49,12 +49,12 @@ export class Schema {
   }
 
   json(model: Model) {
-    return this.fields.reduce((json, field) => {
-      if (field.name in model) {
-        var value = this[field.name];
-        json[field.name] = field.collection ? value.map(v => v.toJSON()) : value.toJSON();
+    return this.fields.reduce((acc, field) => {
+      if (field.name in model && model[field.name] != null) {
+        var value = model[field.name];
+        acc[field.name] = field.collection ? value.map(v => v.toJSON()) : value.toJSON();
       }
-      return json;
+      return acc;
     }, {});
   } 
 }

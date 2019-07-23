@@ -19,8 +19,16 @@ export class ODataResponse extends ODataResponseAbstract {
     super(httpResponse);
   }
 
+  getSkipToken(url: string) {
+    //https://docs.microsoft.com/en-us/odata/webapi/skiptoken-for-server-side-paging
+    let match = url.match(/\$skiptoken=(\d+)/);
+    if (match) {
+      return Number(match[1]);
+    }
+  }
+
   getSkip(url: string) {
-    let match = url.match(/skip=(\d+)/);
+    let match = url.match(/\$skip=(\d+)/);
     if (match) {
       return Number(match[1]);
     }
@@ -60,6 +68,8 @@ export class ODataResponse extends ODataResponseAbstract {
       let skip: number = null;
       if (json.hasOwnProperty(ODataResponse.ODATA_NEXT_LINK)) {
         skip = this.getSkip(json[ODataResponse.ODATA_NEXT_LINK]);
+        if (!skip)
+          skip = this.getSkipToken(json[ODataResponse.ODATA_NEXT_LINK]);
       }
       return new EntitySet<T>(json[ODataResponse.VALUE], count || json[ODataResponse.VALUE].length, skip);
     }
