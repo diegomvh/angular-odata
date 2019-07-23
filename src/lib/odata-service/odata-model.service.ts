@@ -1,27 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 
 import { ODataContext } from '../odata-context';
-import { ODataEntityService } from './odata-entity.service';
 import { ODataModel } from '../odata-model/odata-model';
+import { ODataService } from './odata.service';
 import { ODataCollection } from '../odata-model/odata-collection';
 
-export abstract class ODataModelService<M extends ODataModel, C extends ODataCollection<ODataModel>> extends ODataEntityService<M> {
+export abstract class ODataModelService<M extends ODataModel> extends ODataService {
   static model: string = null;
   static collection: string = null;
 
   constructor(protected http: HttpClient, public context: ODataContext, public set: string) {
-    super(http, context, set);
+    super(http, context);
   }
 
-  model(attrs: any): M {
+  model(attrs?: {[name: string]: any}): M {
     let cotr = <typeof ODataModelService>this.constructor;
     let Model = this.context.getModel(cotr.model);
-    return new Model(attrs, this) as M;
+    let query = this.queryBuilder();
+    query.entitySet(this.set);
+    return new Model(attrs || {}, query) as M;
   }
 
-  collection(attrs: any): C {
+  collection(attrs?: {[name: string]: any}[]): ODataCollection<M> {
     let cotr = <typeof ODataModelService>this.constructor;
     let Collection = this.context.getCollection(cotr.collection);
-    return new Collection(attrs, this) as C;
+    let query = this.queryBuilder();
+    query.entitySet(this.set);
+    return new Collection(attrs || [], query) as ODataCollection<M>;
   }
 }

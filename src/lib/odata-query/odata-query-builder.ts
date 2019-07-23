@@ -2,31 +2,25 @@ import { ODataQueryBase } from "./odata-query-base";
 import { ODataService } from "../odata-service/odata.service";
 import buildQuery from 'odata-query';
 
-export interface QueryBuilderOptions {
-}
-
-export interface QueryBuilderSegment {
-  type: string;
-  name: string;
-  options: QueryBuilderOptions;
-}
-
 export class ODataQueryBuilder extends ODataQueryBase {
-  segments: QueryBuilderSegment[];
-  options: QueryBuilderOptions;
+  segments: {type: string, name: string, options: {[key: string]: any}}[];
+  options: {[key: string]: any};
 
-  constructor(odataService: ODataService, segments?: QueryBuilderSegment[], options?: QueryBuilderOptions) {
-    super(odataService);
-    this.segments = segments || <QueryBuilderSegment[]>[];
-    this.options = options || <QueryBuilderOptions>{};
+  constructor(
+    service: ODataService, 
+    segments?: {type: string, name: string, options: {[key: string]: any}}[],
+    options?: {[key: string]: any}
+  ) {
+    super(service);
+    this.segments = segments || [];
+    this.options = options || {};
   }
 
   clone() {
-    // TODO: Que pasa con Date?
-    let newBuilder = new ODataQueryBuilder(this.odataService, 
-      JSON.parse(JSON.stringify(this.segments)),
-      JSON.parse(JSON.stringify(this.options)));
-    return newBuilder;
+    return new ODataQueryBuilder(this.service,
+      this.segments.map(segment => 
+        ({type: segment.type, name: segment.name, options: Object.assign({}, segment.options)})),
+      Object.assign({}, this.options));
   };
 
   toJSON() {
@@ -100,7 +94,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
   }
 
   // Options
-  protected wrapOption(type: string, opts?: QueryBuilderOptions) {
+  protected wrapOption(type: string, opts?: {[key: string]: any}) {
     if (typeof(opts) === "undefined") {
       // query.<property>() retorna un manejador de objeto
       // Fix filter y expand para retornar el handler

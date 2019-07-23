@@ -6,17 +6,25 @@ import { Metadata } from './metadata';
 import { ODataResponseAbstract } from './odata-response-abstract';
 
 export class ODataResponse extends ODataResponseAbstract {
-    public static readonly ODATA_ETAG = '@odata.etag';
-    public static readonly ODATA_ID = '@odata.id';
-    public static readonly ODATA_COUNT = '@odata.count';
-    public static readonly ODATA_NEXT_LINK = '@odata.nextLink';
+  public static readonly ODATA_CONTEXT = '@odata.context';
+  public static readonly ODATA_ETAG = '@odata.etag';
+  public static readonly ODATA_ID = '@odata.id';
+  public static readonly ODATA_COUNT = '@odata.count';
+  public static readonly ODATA_NEXT_LINK = '@odata.nextLink';
 
-    private static readonly VALUE = 'value';
-    private static readonly CONTENT_TYPE = 'content-type';
+  private static readonly VALUE = 'value';
+  private static readonly CONTENT_TYPE = 'content-type';
 
-    constructor(httpResponse: HttpResponse<string>) {
-        super(httpResponse);
+  constructor(httpResponse: HttpResponse<string>) {
+    super(httpResponse);
+  }
+
+  getSkip(url: string) {
+    let match = url.match(/skip=(\d+)/);
+    if (match) {
+      return Number(match[1]);
     }
+  }
 
   getBodyAsJson(): any {
     const headers: HttpHeaders = this.getHttpResponse().headers;
@@ -37,73 +45,72 @@ export class ODataResponse extends ODataResponseAbstract {
     return null;
   }
 
-    toMetadata(): Metadata {
-        const xml: string = this.getBodyAsText();
-        return new Metadata(xml);
+  toMetadata(): Metadata {
+    const xml: string = this.getBodyAsText();
+    return new Metadata(xml);
+  }
+
+  toEntitySet<T>(): EntitySet<T> {
+    const json: any = this.getBodyAsJson();
+    if (Utils.isNotNullNorUndefined(json) && json.hasOwnProperty(ODataResponse.VALUE)) {
+      let count: number = null;
+      if (json.hasOwnProperty(ODataResponse.ODATA_COUNT)) {
+        count = json[ODataResponse.ODATA_COUNT];
+      }
+      let skip: number = null;
+      if (json.hasOwnProperty(ODataResponse.ODATA_NEXT_LINK)) {
+        skip = this.getSkip(json[ODataResponse.ODATA_NEXT_LINK]);
+      }
+      return new EntitySet<T>(json[ODataResponse.VALUE], count || json[ODataResponse.VALUE].length, skip);
+    }
+    return null;
+  }
+
+  toComplexCollection<T>(): T[] {
+    const json: any = this.getBodyAsJson();
+
+    if (Utils.isNotNullNorUndefined(json) && json.hasOwnProperty(ODataResponse.VALUE)) {
+      return json[ODataResponse.VALUE] as T[];
     }
 
-    toEntitySet<T>(): EntitySet<T> {
-        const json: any = this.getBodyAsJson();
-        if (Utils.isNotNullNorUndefined(json) && json.hasOwnProperty(ODataResponse.VALUE)) {
-            let count: number = null;
-            if (json.hasOwnProperty(ODataResponse.ODATA_COUNT)) {
-                count = json[ODataResponse.ODATA_COUNT];
-            }
-            let skip: number = null;
-            if (json.hasOwnProperty(ODataResponse.ODATA_NEXT_LINK)) {
-                // TODO: Extraer el skip del link
-                skip = json[ODataResponse.ODATA_NEXT_LINK];
-            }
-            return new EntitySet<T>(json[ODataResponse.VALUE], count || json[ODataResponse.VALUE].length, skip);
-        }
-        return null;
+    return null;
+  }
+
+  toEntity<T>(): T {
+    return this.toObject<T>();
+  }
+
+  toComplexValue<T>(): T {
+    return this.toObject<T>();
+  }
+
+  toPropertyValue<T>(): T {
+    const json: any = this.getBodyAsJson();
+    if (Utils.isNotNullNorUndefined(json)) {
+      if (json.hasOwnProperty(ODataResponse.VALUE)) {
+        return json[ODataResponse.VALUE] as T;
+      }
+      return null;
+    } else {
+      return JSON.parse(this.getBodyAsText()) as T;
     }
+  }
 
-    toComplexCollection<T>(): T[] {
-        const json: any = this.getBodyAsJson();
+  toCount(): number {
+    return Number(this.getBodyAsText());
+  }
 
-        if (Utils.isNotNullNorUndefined(json) && json.hasOwnProperty(ODataResponse.VALUE)) {
-            return json[ODataResponse.VALUE] as T[];
-        }
+  /*
+  toODataResponseBatch(): ODataResponseBatch {
+      return new ODataResponseBatch(this.getHttpResponse());
+  }
+  */
 
-        return null;
+  protected toObject<T>(): T {
+    const json: any = this.getBodyAsJson();
+    if (Utils.isNotNullNorUndefined(json)) {
+      return <T>json;
     }
-
-    toEntity<T>(): T {
-        return this.toObject<T>();
-    }
-
-    toComplexValue<T>(): T {
-        return this.toObject<T>();
-    }
-
-    toPropertyValue<T>(): T {
-        const json: any = this.getBodyAsJson();
-        if (Utils.isNotNullNorUndefined(json)) {
-            if (json.hasOwnProperty(ODataResponse.VALUE)) {
-                return json[ODataResponse.VALUE] as T;
-            }
-            return null;
-        } else {
-            return JSON.parse(this.getBodyAsText()) as T;
-        }
-    }
-
-    toCount(): number {
-        return Number(this.getBodyAsText());
-    }
-
-    /*
-    toODataResponseBatch(): ODataResponseBatch {
-        return new ODataResponseBatch(this.getHttpResponse());
-    }
-    */
-
-    protected toObject<T>(): T {
-        const json: any = this.getBodyAsJson();
-        if (Utils.isNotNullNorUndefined(json)) {
-            return <T>json;
-        }
-        return null;
-    }
+    return null;
+  }
 }

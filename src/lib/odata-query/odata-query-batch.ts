@@ -46,14 +46,15 @@ export class ODataQueryBatch implements ODataQueryType {
   private static readonly APPLICATION_JSON = 'application/json';
 
   // VARIABLES
-  public odataService: ODataService;
+  public service: ODataService;
   public queryString: string;
   private requests: BatchRequest[];
   private batchBoundary: string;
   private changesetBoundary: string;
   private changesetID: number;
 
-  constructor(odataService: ODataService) {
+  constructor(service: ODataService) {
+    this.service = service;
     this.queryString = Utils.appendSegment(this.queryString, ODataQueryBatch.$BATCH);
     this.requests = [];
     this.batchBoundary = ODataQueryBatch.BATCH_PREFIX + this.getUUID();
@@ -99,7 +100,7 @@ export class ODataQueryBatch implements ODataQueryType {
     options.headers = options.headers.set(ODataQueryBatch.ACCEPT, ODataQueryBatch.MULTIPART_MIXED);
 
     // send request
-    return this.odataService.post(this, this.getBody(), options);
+    return this.service.post(this, this.getBody(), options);
   }
 
   toString(): string {

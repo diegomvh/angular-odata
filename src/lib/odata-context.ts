@@ -54,4 +54,18 @@ export class ODataContext {
   getCollection(name: string): new (...params: any) => ODataCollection<ODataModel> {
     return name in this.collections ? this.collections[name] : null;
   }
+
+  parseValue(value: any, type: string, ...params: any) {
+    switch(type) {
+      case 'String': return typeof (value) === "string"? value : value.toString();
+      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
+      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
+      case 'Date': return value instanceof Date ? value : new Date(value);
+      default: {
+          var Model = this.getModel(type);
+          if (Model != null) return new Model(value, ...params);
+      }
+    }
+    return value;
+  }
 }

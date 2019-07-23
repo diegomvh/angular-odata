@@ -42,33 +42,31 @@ export abstract class ODataQueryBase implements ODataQueryType {
   public static readonly $COUNT = '$count';
 
   // VARIABLES
-  public odataService: ODataService;
-  public queryString: string;
+  public service: ODataService;
 
-  constructor(odataService: ODataService) {
-    Utils.requireNotNullNorUndefined(odataService, 'odataService');
-    this.odataService = odataService;
-    this.queryString = "";
+  constructor(service: ODataService) {
+    Utils.requireNotNullNorUndefined(service, 'odataService');
+    this.service = service;
   }
 
   // QUERY EXECUTION
   get(options?): Observable<ODataResponse> {
-    return this.odataService.get(this, options);
+    return this.service.get(this, options);
   }
 
   post(body: any, options?): Observable<ODataResponse> {
-    return this.odataService.post(this, body, options);
+    return this.service.post(this, body, options);
   }
 
   patch(body: any, etag?: string, options?): Observable<ODataResponse> {
-    return this.odataService.patch(this, body, etag, options);
+    return this.service.patch(this, body, etag, options);
   }
 
   put(body: any, etag?: string, options?): Observable<ODataResponse> {
-    return this.odataService.put(this, body, etag, options);
+    return this.service.put(this, body, etag, options);
   }
 
   delete(etag?: string, options?): Observable<ODataResponse> {
-    return this.odataService.delete(this, etag, options);
+    return this.service.delete(this, etag, options);
   }
 }

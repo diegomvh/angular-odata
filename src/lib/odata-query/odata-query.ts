@@ -12,12 +12,14 @@ import { QuotedString } from './quoted-string';
 export class ODataQuery extends ODataQueryBase {
   // VARIABLES
   private queryOptions: QueryOptions;
+  private queryString: string;
   private segments: string[];
   private lastSegment: string;
 
-  constructor(odataService: ODataService) {
-    super(odataService);
+  constructor(service: ODataService) {
+    super(service);
     this.queryOptions = new QueryOptions(ODataQuery.SEPARATOR);
+    this.queryString = "";
     this.segments = [];
     this.lastSegment = null;
   }
@@ -156,7 +158,7 @@ export class ODataQuery extends ODataQueryBase {
   }
 
   batch(): ODataQueryBatch {
-    return new ODataQueryBatch(this.odataService);
+    return new ODataQueryBatch(this.service);
   }
 
   // QUERY OPTIONS

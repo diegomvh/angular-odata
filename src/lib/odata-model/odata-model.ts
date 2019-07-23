@@ -1,41 +1,54 @@
-import { Observable } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ODataEntityService } from '../odata-service/odata-entity.service';
 import { ODataResponse } from '../odata-response/odata-response';
 import { ODataContext } from '../odata-context';
+import { Utils } from '../utils/utils';
+import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
 
 export class Schema {
+  keys: string[];
   fields: any[];
   relationships: any[];
   defaults: any;
 
-  static create(opts: { fields?: any[], relationships?: any[], defaults?: any }) {
-    return Object.assign(new Schema(), { fields: [], relationships: [], defaults: {} }, opts);
+  static create(opts: { keys?: string[], fields?: any[], relationships?: any[], defaults?: any }) {
+    return Object.assign(new Schema(), { keys: [], fields: [], relationships: [], defaults: {} }, opts);
   }
 
-  extend(opts: { fields?: any[], relationships?: any[], defaults?: any }) {
-    let { fields, relationships, defaults } = this;
+  extend(opts: { keys?: string[], fields?: any[], relationships?: any[], defaults?: any }) {
+    let { keys, fields, relationships, defaults } = this;
+    keys = [...keys, ...(opts.keys || [])];
     fields = [...fields, ...(opts.fields || [])];
     relationships = [...relationships, ...(opts.relationships || [])];
     defaults = Object.assign({}, defaults, opts.defaults || {});
-    return Object.assign(new Schema(), { fields, relationships, defaults });
+    return Object.assign(new Schema(), { keys, fields, relationships, defaults });
   }
 
-  parse(attrs: {[name: string]: any}, context: ODataContext) {
-    return this.fields.reduce((attrs, field) => {
-      if (field.name in attrs) {
-        var value = attrs[field.name];
-        if (typeof (value) !== field.type.toLowerCase()) {
-          var Model = context.getModel(field.type);
-          if (Model != null && value != null)
-            attrs[field.name] = field.collection ? value.map(v => new Model(v, context)) : new Model(value, context);
-        }
+  resolveKey(model: Model) {
+    let key = this.keys.length === 1 ? 
+      model[this.keys[0]] : 
+      this.keys.reduce((acc, key) => Object.assign(acc, {[key]: model[key]}), {});
+    if (!Utils.isEmpty(key))
+      return key;
+  }
+
+  isNew(model: Model) {
+    return !this.resolveKey(model);
+  }
+
+  parse(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
+    let context = query.service.context;
+    return this.fields.reduce((acc, field) => {
+      if (field.name in attrs && attrs[field.name] != null) {
+        acc[field.name] = Array.isArray(attrs[field.name]) ? 
+          attrs[field.name].map(v => context.parseValue(v, field.type, query)) :
+          context.parseValue(attrs[field.name], field.type, query);
       }
-      return attrs;
-    }, attrs);
+      return acc;
+    }, {});
   }
 
-  json(model) {
+  json(model: Model) {
     return this.fields.reduce((json, field) => {
       if (field.name in model) {
         var value = this[field.name];
@@ -50,9 +63,18 @@ export class Model {
   static type: string = null;
   static schema: Schema = null;
 
-  constructor(attrs: {[name: string]: any}, context: ODataContext) {
+  constructor(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
+    Object.assign(this, this.parse(attrs, query));
+  }
+
+  parse(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
     let ctor = <typeof Model>this.constructor;
-    Object.assign(this, ctor.schema.parse(attrs, context));
+    return ctor.schema.parse(attrs, query);
+  }
+
+  resolveKey() {
+    let ctor = <typeof Model>this.constructor;
+    return ctor.schema.resolveKey(this);
   }
 
   toJSON() {
@@ -62,44 +84,52 @@ export class Model {
 }
 
 export class ODataModel extends Model {
-  service: ODataEntityService<ODataModel>;
+  query: ODataQueryBuilder;
 
-  constructor(attrs: {[name: string]: any}, service: ODataEntityService<ODataModel>) {
-    super(attrs, service.context);
-    this.service = service;
+  constructor(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
+    super(attrs, query);
+    this.query = query;
   }
 
-  toEntity() {
-    let entity = this.toJSON();
-    if (ODataResponse.ODATA_ETAG in this) {
-      entity[ODataResponse.ODATA_ETAG] = this[ODataResponse.ODATA_ETAG];
-    }
-    return entity;
+  private assign(entry: {[name: string]: any}, query: ODataQueryBuilder) {
+    return Object.assign(this, 
+      Object.keys(entry).filter(k => k.startsWith('@')).reduce((acc, k) => Object.assign(acc, {[k]: entry[k]}), {}), 
+      this.parse(entry, query)
+    );
   }
 
-  parse(attrs: {[name: string]: any}) {
-    let ctor = <typeof Model>this.constructor;
-    return ctor.schema.parse(attrs, this.service.context);
-  }
-
-  fetch<M>(options?: any): Observable<M> {
-    let entity = this.toEntity();
-    return this.service.fetch(entity, options)
+  fetch(options?: any): Observable<this> {
+    //TODO: assert key
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    return query.get(options)
       .pipe(
-        map(attrs => Object.assign(this, this.parse(attrs)))
+        map(resp => this.assign(resp.toEntity(), query))
       );
   }
 
-  save<M>(options?: any): Observable<M> {
-    let entity = this.toEntity();
-    return this.service.save(entity, options)
+  save<M>(options?: any): Observable<this> {
+    let query = this.query.clone();
+    let ctor = <typeof Model>this.constructor;
+    let json = this.toJSON();
+    let obs$ = EMPTY as Observable<ODataResponse>;
+    if (!ctor.schema.isNew(this)) {
+      let key = ctor.schema.resolveKey(this);
+      query.entityKey(key);
+      obs$ = query.put(json, this[ODataResponse.ODATA_ETAG], options);
+    } else {
+      obs$ = query.post(json, options);
+    }
+    return obs$ 
       .pipe(
-        map(attrs => Object.assign(this, this.parse(attrs)))
+        map(resp => this.assign(resp.toEntity(), query))
       );
   }
 
   destroy(options?: any): Observable<any> {
-    let entity = this.toEntity();
-    return this.service.destroy(entity, options);
+    //TODO: assert key
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    return query.delete(this[ODataResponse.ODATA_ETAG], options);
   }
 }
