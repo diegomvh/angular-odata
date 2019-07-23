@@ -45,6 +45,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     let skip = entitySet.getSkip();
     if (skip)
       this.state.size = skip;
+    this.state.pages = Math.floor(this.state.records / this.state.size);
     this.models = this.parse(entitySet.getEntities(), query);
     return this;
   }
