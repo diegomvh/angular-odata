@@ -4,27 +4,24 @@ import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
 import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
 import { Collection, ODataCollection } from './odata-collection';
-import { EntitySet } from '../odata-response/entity-collection';
 import { ODataContext } from '../odata-context';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 
 export class Schema {
   keys: string[];
   fields: any[];
-  relationships: any[];
   defaults: any;
 
-  static create(opts: { keys?: string[], fields?: any[], relationships?: any[], defaults?: any }) {
-    return Object.assign(new Schema(), { keys: [], fields: [], relationships: [], defaults: {} }, opts);
+  static create(opts: { keys?: string[], fields?: any[], defaults?: any }) {
+    return Object.assign(new Schema(), { keys: [], fields: [], defaults: {} }, opts);
   }
 
-  extend(opts: { keys?: string[], fields?: any[], relationships?: any[], defaults?: any }) {
-    let { keys, fields, relationships, defaults } = this;
+  extend(opts: { keys?: string[], fields?: any[], defaults?: any }) {
+    let { keys, fields, defaults } = this;
     keys = [...keys, ...(opts.keys || [])];
     fields = [...fields, ...(opts.fields || [])];
-    relationships = [...relationships, ...(opts.relationships || [])];
     defaults = Object.assign({}, defaults, opts.defaults || {});
-    return Object.assign(new Schema(), { keys, fields, relationships, defaults });
+    return Object.assign(new Schema(), { keys, fields, defaults });
   }
 
   resolveKey(model: Model) {
@@ -41,7 +38,7 @@ export class Schema {
 
   parse(attrs: {[name: string]: any}, context: ODataContext, ...params: any) {
     return this.fields.reduce((acc, field) => {
-      if (field.name in attrs && typeof(attrs[field.name]) !== 'undefined') {
+      if (field.name in attrs && attrs[field.name] != null) {
         acc[field.name] = context.parse(attrs[field.name], field.type, ...params);
       }
       return acc;
@@ -49,13 +46,13 @@ export class Schema {
   }
 
   related(name: string, attrs: {[name: string]: any} | {[name: string]: any}[], context: ODataContext, ...params: any) {
-    var relationship = this.relationships.find(r => r.name === name);
-    return context.parse(attrs, relationship.type, ...params);
+    var field = this.fields.find(r => r.name === name);
+    return context.parse(attrs, field.type, ...params);
   }
 
   toJSON(model: Model, context: ODataContext) {
     return this.fields.reduce((acc, field) => {
-      if (field.name in model && typeof(model[field.name]) !== 'undefined') {
+      if (field.name in model && model[field.name] != null) {
         acc[field.name] = context.toJSON(model[field.name], field.type);
       }
       return acc;

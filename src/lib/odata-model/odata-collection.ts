@@ -28,6 +28,7 @@ export class Collection<M extends Model> {
 
   parse(models: {[name: string]: any}[], ...params: any) {
     let ctor = <typeof Collection>this.constructor;
+    console.log(models);
     return models.map(model => this.context.parse(model, ctor.model, ...params));
   }
 
