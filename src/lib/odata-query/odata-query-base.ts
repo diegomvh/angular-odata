@@ -11,7 +11,6 @@ export abstract class ODataQueryBase implements ODataQueryType {
 
   // OPTIONS NAMES
   public static readonly SELECT = 'select';
-  public static readonly RAWFILTER = 'rawFilter';
   public static readonly FILTER = 'filter';
   public static readonly SEARCH = 'search';
   public static readonly GROUP_BY = 'groupBy';
@@ -20,6 +19,7 @@ export abstract class ODataQueryBase implements ODataQueryType {
   public static readonly TOP = 'top';
   public static readonly SKIP = 'skip';
   public static readonly EXPAND = 'expand';
+  public static readonly FORMAT = 'format';
 
   // SEGMENT NAMES
   public static readonly METADATA = 'metadata';
