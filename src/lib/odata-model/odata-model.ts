@@ -5,6 +5,8 @@ import { Utils } from '../utils/utils';
 import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
 import { Collection, ODataCollection } from './odata-collection';
 import { EntitySet } from '../odata-response/entity-collection';
+import { ODataContext } from '../odata-context';
+import { ODataQueryBase } from '../odata-query/odata-query-base';
 
 export class Schema {
   keys: string[];
@@ -37,24 +39,21 @@ export class Schema {
     return !this.resolveKey(model);
   }
 
-  parse(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
-    let context = query.service.context;
+  parse(attrs: {[name: string]: any}, context: ODataContext, ...params: any) {
     return this.fields.reduce((acc, field) => {
       if (field.name in attrs && typeof(attrs[field.name]) !== 'undefined') {
-        acc[field.name] = context.parse(attrs[field.name], field.type, query);
+        acc[field.name] = context.parse(attrs[field.name], field.type, ...params);
       }
       return acc;
     }, {});
   }
 
-  related(name: string, attrs: {[name: string]: any} | {[name: string]: any}[], query: ODataQueryBuilder) {
-    let context = query.service.context;
+  related(name: string, attrs: {[name: string]: any} | {[name: string]: any}[], context: ODataContext, ...params: any) {
     var relationship = this.relationships.find(r => r.name === name);
-    return context.parse(attrs, relationship.type, query);
+    return context.parse(attrs, relationship.type, ...params);
   }
 
-  toJSON(model: Model, query: ODataQueryBuilder) {
-    let context = query.service.context;
+  toJSON(model: Model, context: ODataContext) {
     return this.fields.reduce((acc, field) => {
       if (field.name in model && typeof(model[field.name]) !== 'undefined') {
         acc[field.name] = context.toJSON(model[field.name], field.type);
@@ -68,8 +67,8 @@ export class Model {
   static type: string = null;
   static schema: Schema = null;
 
-  constructor(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
-    Object.assign(this, this.parse(attrs, query));
+  constructor(attrs: {[name: string]: any}, protected context: ODataContext) {
+    Object.assign(this, this.parse(attrs));
   }
 
   isNew() {
@@ -77,19 +76,19 @@ export class Model {
     return ctor.schema.isNew(this);
   }
 
-  parse(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
+  parse(attrs: {[name: string]: any}, ...params: any) {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.parse(attrs, query);
+    return ctor.schema.parse(attrs, this.context, ...params);
   }
 
-  relatedCollection<M extends Model>(name: string, query: ODataQueryBuilder): Collection<M> {
+  protected relatedCollection<M extends Model>(name: string, ...params: any): Collection<M> {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.related(name, this[name] || [], query);
+    return ctor.schema.related(name, this[name] || [], this.context, ...params);
   }
 
-  relatedModel<M extends Model>(name: string, query: ODataQueryBuilder): M {
+  protected relatedModel<M extends Model>(name: string, ...params: any): M {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.related(name, this[name] || {}, query);
+    return ctor.schema.related(name, this[name] || {}, this.context, ...params);
   }
 
   resolveKey() {
@@ -97,17 +96,19 @@ export class Model {
     return ctor.schema.resolveKey(this);
   }
 
-  toJSON(query: ODataQueryBuilder) {
+  toJSON() {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.toJSON(this, query)
+    return ctor.schema.toJSON(this, this.context)
   }
 }
 
 export class ODataModel extends Model {
-  query: ODataQueryBuilder;
-
-  constructor(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
-    super(attrs, query);
+  constructor(
+    attrs: {[name: string]: any}, 
+    context: ODataContext, 
+    private query: ODataQueryBuilder
+  ) {
+    super(attrs, context);
     this.query = query;
   }
 
@@ -116,10 +117,6 @@ export class ODataModel extends Model {
       Object.keys(entry).filter(k => k.startsWith('@')).reduce((acc, k) => Object.assign(acc, {[k]: entry[k]}), {}), 
       this.parse(entry, query)
     );
-  }
-
-  toJSON() {
-    return super.toJSON(this.query);
   }
 
   fetch(options?: any): Observable<this> {
@@ -153,6 +150,59 @@ export class ODataModel extends Model {
     //TODO: assert key
     let query = this.query.clone();
     query.entityKey(this.resolveKey());
+    return query.delete(this[ODataResponse.ODATA_ETAG], options);
+  }
+
+  protected relatedODataCollection<M extends ODataModel>(name: string): ODataCollection<M> {
+    //TODO: assert key
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    query.navigationProperty(name);
+    return this.relatedCollection(name, query) as ODataCollection<M>;
+  }
+
+  protected relatedODataModel<M extends ODataModel>(name: string): M {
+    //TODO: assert key
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    query.navigationProperty(name);
+    return this.relatedModel(name, query) as M;
+  }
+
+  protected createODataModelRef(name: string, target: ODataQueryBase, options?) {
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    query.navigationProperty(name);
+    query.ref();
+    let refurl = this.context.createEndpointUrl(target);
+    return query.put({ [ODataResponse.ODATA_ID]: refurl }, this[ODataResponse.ODATA_ETAG], options);
+  }
+
+  protected deleteODataModelRef(name: string, target: ODataQueryBase, options?) {
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    query.navigationProperty(name);
+    query.ref();
+    let refurl = this.context.createEndpointUrl(target);
+    return query.delete(this[ODataResponse.ODATA_ETAG], options);
+  }
+
+  protected createODataCollectionRef(name: string, target: ODataQueryBase, options?) {
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    query.navigationProperty(name);
+    query.ref();
+    let refurl = this.context.createEndpointUrl(target);
+    return query.post({ [ODataResponse.ODATA_ID]: refurl }, options);
+  }
+
+  protected deleteODataCollectionRef(name: string, target: ODataQueryBase, options?) {
+    let query = this.query.clone();
+    query.entityKey(this.resolveKey());
+    query.navigationProperty(name);
+    query.ref();
+    let refurl = this.context.createEndpointUrl(target);
+    options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
   }
 }

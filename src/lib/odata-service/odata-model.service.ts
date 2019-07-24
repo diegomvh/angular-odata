@@ -18,7 +18,7 @@ export abstract class ODataModelService<M extends ODataModel> extends ODataServi
     let Model = this.context.getModel(cotr.model);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new Model(attrs || {}, query) as M;
+    return new Model(attrs || {}, this.context, query) as M;
   }
 
   collection(attrs?: {[name: string]: any}[]): ODataCollection<M> {
@@ -26,6 +26,6 @@ export abstract class ODataModelService<M extends ODataModel> extends ODataServi
     let Collection = this.context.getCollection(cotr.collection);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new Collection(attrs || [], query) as ODataCollection<M>;
+    return new Collection(attrs || [], this.context, query) as ODataCollection<M>;
   }
 }

@@ -73,10 +73,10 @@ export class ODataContext {
         if (Enum) return value;
         // Model? 
         var Model = this.getModel(type);
-        if (Model) return new Model(value, ...params);
+        if (Model) return new Model(value, this, ...params);
         // Collection?
         var Collection = this.getCollection(type);
-        if (Collection) return new Collection(value, ...params);
+        if (Collection) return new Collection(value, this, ...params);
       }
     }
     return value;
