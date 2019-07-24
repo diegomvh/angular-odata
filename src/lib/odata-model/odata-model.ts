@@ -53,7 +53,7 @@ export class Schema {
     return context.parse(attrs, relationship.type, query);
   }
 
-  json(model: Model, query: ODataQueryBuilder) {
+  toJSON(model: Model, query: ODataQueryBuilder) {
     let context = query.service.context;
     return this.fields.reduce((acc, field) => {
       if (field.name in model && typeof(model[field.name]) !== 'undefined') {
@@ -72,15 +72,24 @@ export class Model {
     Object.assign(this, this.parse(attrs, query));
   }
 
+  isNew() {
+    let ctor = <typeof Model>this.constructor;
+    return ctor.schema.isNew(this);
+  }
+
   parse(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
     let ctor = <typeof Model>this.constructor;
     return ctor.schema.parse(attrs, query);
   }
 
-  related(name: string, attrs: {[name: string]: any} | {[name: string]: any}[], query: ODataQueryBuilder) {
+  relatedCollection<M extends Model>(name: string, query: ODataQueryBuilder): Collection<M> {
     let ctor = <typeof Model>this.constructor;
-    let collection = ctor.schema.related(name, attrs, query);
-    return collection;
+    return ctor.schema.related(name, this[name] || [], query);
+  }
+
+  relatedModel<M extends Model>(name: string, query: ODataQueryBuilder): M {
+    let ctor = <typeof Model>this.constructor;
+    return ctor.schema.related(name, this[name] || {}, query);
   }
 
   resolveKey() {
@@ -90,7 +99,7 @@ export class Model {
 
   toJSON(query: ODataQueryBuilder) {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.json(this, query)
+    return ctor.schema.toJSON(this, query)
   }
 }
 
@@ -109,18 +118,6 @@ export class ODataModel extends Model {
     );
   }
 
-  relatedMany<M extends ODataModel>(name: string, entitySet: EntitySet<M>, query: ODataQueryBuilder): ODataCollection<M> {
-    let collection = super.related(name, [], query) as ODataCollection<M>;
-    collection.assign(entitySet, query);
-    return collection;
-  }
-
-  relatedOne<M extends ODataModel>(name: string, attrs: {[name: string]: any}, query: ODataQueryBuilder): M {
-    let model = super.related(name, {}, query) as M;
-    model.assign(attrs, query);
-    return model;
-  }
-
   toJSON() {
     return super.toJSON(this.query);
   }
@@ -137,11 +134,10 @@ export class ODataModel extends Model {
 
   save(options?: any): Observable<this> {
     let query = this.query.clone();
-    let ctor = <typeof Model>this.constructor;
     let json = this.toJSON();
     let obs$ = EMPTY as Observable<ODataResponse>;
-    if (!ctor.schema.isNew(this)) {
-      let key = ctor.schema.resolveKey(this);
+    if (!this.isNew()) {
+      let key = this.resolveKey();
       query.entityKey(key);
       obs$ = query.put(json, this[ODataResponse.ODATA_ETAG], options);
     } else {
@@ -158,23 +154,5 @@ export class ODataModel extends Model {
     let query = this.query.clone();
     query.entityKey(this.resolveKey());
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
-  }
-
-  protected hasMany<M extends ODataModel>(name, options?): Observable<ODataCollection<M>> {
-    let query = this.query.clone();
-    query.navigationProperty(name);
-    return query.get(options)
-      .pipe(
-        map(resp => this.relatedMany(name, resp.toEntitySet<M>(), query) as ODataCollection<M>)
-      );
-  }
-
-  protected hasOne<M extends ODataModel>(name, options?): Observable<M> {
-    let query = this.query.clone();
-    query.navigationProperty(name);
-    return query.get(options)
-      .pipe(
-        map(resp => this.relatedOne(name, resp.toEntity<M>(), query) as M)
-      );
   }
 }
