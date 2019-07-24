@@ -11,6 +11,7 @@ export class ODataContext {
   creation: Date;
   version: string;
   metadata: Promise<any>;
+  enums?: {[type: string]: any };
   models: {[type: string]: new (...params: any) => ODataModel };
   collections: {[type: string]: new (...params: any) => ODataCollection<ODataModel> };
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
@@ -21,6 +22,7 @@ export class ODataContext {
     withCredentials?: boolean,
     creation?: Date,
     version?: string,
+    enums?: {[type: string]: any }
     models?: {[type: string]: new (...params: any) => ODataModel }
     collections?: {[type: string]: new (...params: any) => ODataCollection<ODataModel> }
     errorHandler?: (error: HttpErrorResponse) => Observable<never>
@@ -47,6 +49,10 @@ export class ODataContext {
     return Object.assign({}, ...options, { withCredentials: this.withCredentials });
   }
 
+  getEnum(name: string): new (...params: any) => ODataModel {
+    return name in this.enums ? this.enums[name] : null;
+  }
+
   getModel(name: string): new (...params: any) => ODataModel {
     return name in this.models ? this.models[name] : null;
   }
@@ -55,15 +61,43 @@ export class ODataContext {
     return name in this.collections ? this.collections[name] : null;
   }
 
-  parseValue(value: any, type: string, ...params: any) {
+  parse(value: any, type: string, ...params: any) {
     switch(type) {
       case 'String': return typeof (value) === "string"? value : value.toString();
       case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
       case 'Boolean': return typeof (value) === "boolean"? value : !!value;
       case 'Date': return value instanceof Date ? value : new Date(value);
       default: {
-          var Model = this.getModel(type);
-          if (Model != null) return new Model(value, ...params);
+        // TODO: Enum? 
+        var Enum = this.getEnum(type);
+        if (Enum) return value;
+        // Model? 
+        var Model = this.getModel(type);
+        if (Model) return new Model(value, ...params);
+        // Collection?
+        var Collection = this.getCollection(type);
+        if (Collection) return new Collection(value, ...params);
+      }
+    }
+    return value;
+  }
+
+  toJSON(value: any, type: string) {
+    switch(type) {
+      case 'String': return typeof (value) === "string"? value : value.toString();
+      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
+      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
+      case 'Date': return value instanceof Date ? value.toISOString() : value;
+      default: {
+        // TODO: Enum? 
+        var Enum = this.getEnum(type);
+        if (Enum) return value;
+        // Model? 
+        var Model = this.getModel(type);
+        if (Model) return value.toJSON(); 
+        // Collection?
+        var Collection = this.getCollection(type);
+        if (Collection) return value.toJSON() 
       }
     }
     return value;

@@ -10,25 +10,30 @@ export class Collection<M extends Model> {
   static model: string = null;
   models: M[];
   state: {
-    page: number,
+    page?: number,
+    pages?: number,
     size?: number,
     records?: number,
-    pages?: number,
-  } = {
-    page: 1
   };
 
   constructor(attrs: {[name: string]: any}[], query: ODataQueryBuilder) {
     this.models = this.parse(attrs, query);
+    this.state = {
+      page: 1,
+      pages: 1,
+      size: this.models.length,
+      records: this.models.length,
+    };
   }
 
   parse(attrs: {[name: string]: any}[], query: ODataQueryBuilder) {
     let ctor = <typeof Collection>this.constructor;
-    return attrs.map(attr => query.service.context.parseValue(attr, ctor.model, query));
+    return attrs.map(attr => query.service.context.parse(attr, ctor.model, query));
   }
 
-  toJSON() {
-    return this.models.map(model => model.toJSON());
+  toJSON(query: ODataQueryBuilder) {
+    let ctor = <typeof Collection>this.constructor;
+    return this.models.map(model => query.service.context.toJSON(model, ctor.model));
   }
 }
 
@@ -40,7 +45,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     this.query = query;
   }
 
-  private assign(entitySet: EntitySet<M>, query: ODataQueryBuilder) {
+  assign(entitySet: EntitySet<M>, query: ODataQueryBuilder) {
     this.state.records = entitySet.getCount();
     let skip = entitySet.getSkip();
     if (skip)
@@ -48,6 +53,10 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     this.state.pages = Math.ceil(this.state.records / this.state.size);
     this.models = this.parse(entitySet.getEntities(), query);
     return this;
+  }
+
+  toJSON() {
+    return super.toJSON(this.query);
   }
 
   fetch(options?: any): Observable<this> {

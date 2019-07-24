@@ -123,20 +123,14 @@ export abstract class ODataEntityService<T> extends ODataService {
       return this.update(entity, options);
   }
 
-  protected navigationProperty<M>(entity: Partial<T>, name, options?): Observable<EntitySet<M>> {
+  protected navigationProperty(entity: Partial<T>, name, options?): Observable<ODataResponse> {
     return this.navigationPropertyQuery(entity, name)
-      .get(options)
-      .pipe(
-        map(resp => resp.toEntitySet<M>())
-      );
+      .get(options);
   }
 
-  protected property<P>(entity: Partial<T>, name: string, options?): Observable<P> {
+  protected property(entity: Partial<T>, name: string, options?): Observable<ODataResponse> {
     return this.propertyQuery(entity, name)
-      .get(options)
-      .pipe(
-        map(resp => resp.toPropertyValue<P>())
-      );
+      .get(options);
   }
 
   protected createRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
