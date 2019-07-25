@@ -175,13 +175,13 @@ export abstract class ODataEntityService<T> extends ODataService {
 
   protected customFunction(entity: Partial<T>, name: string, parameters: any = {}, options?): Observable<ODataResponse> {
     let builder = this.entityQueryBuilder(entity);
-    builder.function(name).assign(parameters);
+    builder.function(name).params().assign(parameters);
     return builder.get(options);
   }
 
   protected customCollectionFunction(name: string, parameters: any = {}, opcions?): Observable<ODataResponse> {
     let builder = this.collectionQueryBuilder();
-    builder.function(name).assign(parameters);
+    builder.function(name).params().assign(parameters);
     return builder.get(opcions);
   }
 }
