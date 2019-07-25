@@ -42,14 +42,20 @@ export interface QueryOptions extends ExpandQueryOptions {
   format: string;
 }
 
+export interface Segment {
+  type: string;
+  name: string; 
+  params: PlainObject;
+}
+
 export class ODataQueryBuilder extends ODataQueryBase {
-  segments: { type: string, name: string, options: { [key: string]: any } }[];
-  options: { [key: string]: any };
+  segments: Segment[];
+  options: PlainObject;
 
   constructor(
     service: ODataService,
-    segments?: { type: string, name: string, options: { [key: string]: any } }[],
-    options?: { [key: string]: any }
+    segments?: Segment[],
+    options?: PlainObject
   ) {
     super(service);
     this.segments = segments || [];
@@ -59,7 +65,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
   clone() {
     return new ODataQueryBuilder(this.service,
       this.segments.map(segment =>
-        ({ type: segment.type, name: segment.name, options: Object.assign({}, segment.options) })),
+        ({ type: segment.type, name: segment.name, params: Object.assign({}, segment.params) })),
       Object.assign({}, this.options));
   };
 
@@ -79,8 +85,8 @@ export class ODataQueryBuilder extends ODataQueryBase {
     let segments = this.segments
       .map(segment => {
         if (segment.type == ODataQueryBuilder.FUNCTION_CALL)
-          return buildQuery({ func: { [segment.name]: segment.options } }).slice(1);
-        return segment.name + buildQuery(segment.options);
+          return buildQuery({ func: { [segment.name]: segment.params } }).slice(1);
+        return segment.name + buildQuery(segment.params);
       });
     let odata = [
       ODataQueryBuilder.SELECT,
@@ -101,82 +107,82 @@ export class ODataQueryBuilder extends ODataQueryBase {
   }
 
   // ================
-  protected objectHandler(options, type) {
+  protected objectHandler<T>(options: PlainObject, type: string) {
     return {
-      toJSON: function () {
+      toJSON: function (): T {
         return options[type];
       },
-      get: function (name) {
+      get: function (name: string): T {
         return options[type][name];
       },
-      set: function (name, value) {
+      set: function (name: string, value: T) {
         return options[type][name] = value;
       },
-      unset: function (name) {
+      unset: function (name: string) {
         delete options[type][name];
       },
-      assign: function (values) {
+      assign: function (values: T) {
         Object.assign(options[type], values);
       }
     };
   }
 
-  protected arrayHandler(options, type) {
+  protected arrayHandler<T>(options: PlainObject, type: string) {
     return {
-      push: function (value) {
+      push: function (value: T) {
         options[type].push(value);
       }
     };
   }
 
-  protected valueHandler(options, type) {
+  protected valueHandler<T>(options: PlainObject, type: string) {
     return {
-      get: function () {
+      get: function (): T {
         return options[type];
       },
-      set: function (value) {
+      set: function (value: T) {
         return options[type] = value;
       }
     };
   }
 
-  protected segmentHandler(options) {
+  protected paramsHandler(params) {
     return {
       toJSON: function () {
-        return options;
+        return params;
       },
       get: function (name) {
-        return options[name];
+        return params[name];
       },
       set: function (name, value) {
-        return options[name] = value;
+        return params[name] = value;
       },
       unset: function (name) {
-        delete options[name];
+        delete params[name];
       },
       assign: function (values) {
-        Object.assign(options, values);
+        Object.assign(params, values);
       }
     };
   }
 
   // Object
-  protected wrapObject(type: string, opts?: any) {
+  protected wrapObject<T>(type: string, opts?: T) {
     if (typeof (opts) === "undefined")
       this.options[type] = {};
-    return this.objectHandler(this.options, type);
+    return this.objectHandler<T>(this.options, type);
   }
 
-  protected wrapArray(type: string, opts?: any[]) {
+  protected wrapArray<T>(type: string, opts?: T[]) {
     if (typeof (opts) === "undefined")
       this.options[type] = [];
-    return this.arrayHandler(this.options, type);
+    return this.arrayHandler<T>(this.options, type);
   }
 
-  protected wrapValue(type: string, opts?: any) {
+  protected wrapValue<T>(type: string, opts?: T) {
     if (typeof (opts) === "undefined")
       this.options[type] = null;
-    return this.valueHandler(this.options, type);
+    return this.valueHandler<T>(this.options, type);
   }
 
   protected hasOption(type) {
@@ -189,7 +195,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
 
   // Segments
   protected wrapSegment(type: string, name?: string, index: number = -1) {
-    let segment;
+    let segment: Segment;
     if (typeof (name) === "undefined") {
       segment = this.segments.find(s => s.type === type);
       if (segment)
@@ -197,14 +203,14 @@ export class ODataQueryBuilder extends ODataQueryBase {
     } else {
       segment = this.segments.find(s => s.type === type && s.name === name);
       if (!segment) {
-        segment = { type, name, options: {} };
+        segment = { type, name, params: {} } as Segment;
         if (index === -1)
           this.segments.push(segment);
         else {
           this.segments.splice(index, 0, segment);
         }
       }
-      return this.segmentHandler(segment.options);
+      return this.paramsHandler(segment.params);
     }
   }
   protected hasSegment(type, name) {
@@ -215,7 +221,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
   }
 
   select(opts?: string | string[]) {
-    return this.wrapArray(ODataQueryBuilder.SELECT, typeof (opts) === 'string' ? [opts] : opts);
+    return this.wrapArray<string>(ODataQueryBuilder.SELECT, typeof (opts) === 'string' ? [opts] : opts);
   }
   hasSelect() {
     return this.hasOption(ODataQueryBuilder.SELECT);
@@ -224,7 +230,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
     this.removeOption(ODataQueryBuilder.SELECT);
   }
   search(opts?: string) {
-    return this.wrapValue(ODataQueryBuilder.SEARCH, opts);
+    return this.wrapValue<string>(ODataQueryBuilder.SEARCH, opts);
   }
   hasSearch() {
     return this.hasOption(ODataQueryBuilder.SEARCH);
@@ -236,13 +242,13 @@ export class ODataQueryBuilder extends ODataQueryBase {
     if (typeof (opts) === 'undefined') {
       let current = this.options[ODataQueryBuilder.FILTER];
       return (Array.isArray(current) || typeof (current) === 'undefined') ?
-        this.wrapArray(ODataQueryBuilder.FILTER, current || []) :
-        this.wrapObject(ODataQueryBuilder.FILTER, current || {});
+        this.wrapArray<Filter>(ODataQueryBuilder.FILTER, current || []) :
+        this.wrapObject<Filter>(ODataQueryBuilder.FILTER, current || {});
     } else {
       opts = typeof (opts) === 'string' ? [opts] : opts;
       return Array.isArray(opts) ?
-        this.wrapArray(ODataQueryBuilder.FILTER, opts) :
-        this.wrapObject(ODataQueryBuilder.FILTER, opts);
+        this.wrapArray<Filter>(ODataQueryBuilder.FILTER, opts) :
+        this.wrapObject<Filter>(ODataQueryBuilder.FILTER, opts);
     }
   }
   removeFilter() {
@@ -261,20 +267,20 @@ export class ODataQueryBuilder extends ODataQueryBase {
     this.removeOption(ODataQueryBuilder.TRANSFORM);
   }
   orderBy(opts?: string | string[]) {
-    return this.wrapArray(ODataQueryBuilder.ORDER_BY, (opts && Array.isArray(opts)) ? opts : []);
+    return this.wrapArray<string>(ODataQueryBuilder.ORDER_BY, (opts && Array.isArray(opts)) ? opts : []);
   }
   removeOrderBy() { this.removeOption(ODataQueryBuilder.ORDER_BY); }
   expand(opts?: Expand) {
     if (typeof (opts) === 'undefined') {
       let current = this.options[ODataQueryBuilder.EXPAND];
       return (Array.isArray(current) || typeof (current) === 'undefined') ?
-        this.wrapArray(ODataQueryBuilder.EXPAND, current || []) :
-        this.wrapObject(ODataQueryBuilder.EXPAND, current || {});
+        this.wrapArray<Expand>(ODataQueryBuilder.EXPAND, current || []) :
+        this.wrapObject<Expand>(ODataQueryBuilder.EXPAND, current || {});
     } else {
       opts = typeof (opts) === 'string' ? [opts] : opts;
       return Array.isArray(opts) ?
-        this.wrapArray(ODataQueryBuilder.EXPAND, opts) :
-        this.wrapObject(ODataQueryBuilder.EXPAND, opts);
+        this.wrapArray<Expand>(ODataQueryBuilder.EXPAND, opts) :
+        this.wrapObject<Expand>(ODataQueryBuilder.EXPAND, opts);
     }
   }
   hasExpand() {
@@ -284,19 +290,21 @@ export class ODataQueryBuilder extends ODataQueryBase {
     this.removeOption(ODataQueryBuilder.EXPAND);
   }
   format(opts?: string) {
-    return this.wrapValue(ODataQueryBuilder.FORMAT, opts);
+    return this.wrapValue<string>(ODataQueryBuilder.FORMAT, opts);
   }
   removeFormat() {
     this.removeOption(ODataQueryBuilder.FORMAT);
   }
 
   top(opts?: number) {
-    return this.wrapValue(ODataQueryBuilder.TOP, opts);
+    return this.wrapValue<number>(ODataQueryBuilder.TOP, opts);
   }
   removeTop() {
     this.removeOption(ODataQueryBuilder.TOP);
   }
-  skip(opts?: number) { return this.wrapValue(ODataQueryBuilder.SKIP, opts); }
+  skip(opts?: number) { 
+    return this.wrapValue<number>(ODataQueryBuilder.SKIP, opts); 
+  }
   removeSkip() {
     this.removeOption(ODataQueryBuilder.SKIP);
   }

@@ -1,7 +1,7 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
 import { ODataContext } from '../odata-context';
-import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
+import { ODataQueryBuilder, Filter, Expand } from '../odata-query/odata-query-builder';
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
 
@@ -59,8 +59,10 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     let query = this.query.clone();
     if (!this.state.page)
       this.state.page = 1;
-    if (this.state.size)
-      query.top(this.state.size).skip((this.state.page - 1) * this.state.size);
+    if (this.state.size) {
+      query.top(this.state.size);
+      query.skip((this.state.page - 1) * this.state.size);
+    }
     query.count(true);
     return query.get(options)
       .pipe(
@@ -98,7 +100,20 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     }
   }
 
-  filter(filter?: {[name: string]: any} | null) {
+  // Mutate query
+  select(select?: string | string[]) {
+    return this.query.select(select);
+  }
+
+  filter(filter?: Filter) {
     return this.query.filter(filter);
+  }
+
+  orderBy(orderBy?: string | string[]) {
+    return this.query.orderBy(orderBy);
+  }
+
+  expand(expand?: Expand) {
+    return this.query.expand(expand);
   }
 }
