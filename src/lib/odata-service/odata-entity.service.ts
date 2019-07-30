@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { ODataResponse } from "../odata-response/odata-response";
 import { ODataQueryBuilder } from "../odata-query/odata-query-builder";
@@ -88,8 +88,8 @@ export abstract class ODataEntityService<T> extends ODataService {
 
   public readOrCreate(entity: Partial<T>, options?): Observable<T> {
     return this.fetch(entity, options)
-      .pipe(catchError(error => {
-        if (error.code === 404)
+      .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status === 404)
           return this.create(entity as T, options);
         else
           return throwError(error);
