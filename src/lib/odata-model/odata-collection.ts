@@ -19,10 +19,7 @@ export class Collection<M extends Model> {
   constructor(models: {[name: string]: any}[], private context: ODataContext) {
     this.models = this.parse(models);
     this.state = {
-      page: 1,
-      pages: 1,
-      size: this.models.length,
-      records: this.models.length,
+      records: this.models.length
     };
   }
 
@@ -52,13 +49,16 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     let skip = entitySet.getSkip();
     if (skip)
       this.state.size = skip;
-    this.state.pages = Math.ceil(this.state.records / this.state.size);
+    if (this.state.size)
+      this.state.pages = Math.ceil(this.state.records / this.state.size);
     this.models = this.parse(entitySet.getEntities(), query);
     return this;
   }
 
   fetch(options?: any): Observable<this> {
     let query = this.query.clone();
+    if (!this.state.page)
+      this.state.page = 1;
     if (this.state.size)
       query.top(this.state.size).skip((this.state.page - 1) * this.state.size);
     query.count(true);
@@ -78,16 +78,27 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   }
 
   getPreviousPage(options?: any) {
-    return this.getPage(this.state.page - 1, options);
+    return (this.state.page) ? this.getPage(this.state.page - 1, options) : this.fetch(options);
   }
 
   getNextPage(options?: any) {
-    return this.getPage(this.state.page + 1, options);
+    return (this.state.page) ? this.getPage(this.state.page + 1, options) : this.fetch(options);
   }
 
   getLastPage(options?: any) {
-    return this.getPage(this.state.pages, options);
+    return (this.state.pages) ? this.getPage(this.state.pages, options) : this.fetch(options);
   }
 
-  setPageSize(size: number) { this.state.size = size; }
+  setPageSize(size: number) { 
+    this.state.size = size; 
+    if (this.state.records) {
+      this.state.pages = Math.ceil(this.state.records / this.state.size);
+      if (this.state.page > this.state.pages)
+        this.state.page = this.state.pages;
+    }
+  }
+
+  filter(filter?: {[name: string]: any} | null) {
+    return this.query.filter(filter);
+  }
 }
