@@ -36,13 +36,22 @@ export class Collection<M extends Model> {
 }
 
 export class ODataCollection<M extends ODataModel> extends Collection<M> {
+  private query: ODataQueryBuilder;
   constructor(
     models: {[name: string]: any}[], 
     context: ODataContext, 
-    private query: ODataQueryBuilder
+    query: ODataQueryBuilder
   ) {
     super(models, context)
+    this.attach(query);
+  }
+
+  attach(query: ODataQueryBuilder) {
     this.query = query;
+  }
+
+  detached(): boolean {
+    return !!this.query;
   }
 
   assign(entitySet: EntitySet<M>, query: ODataQueryBuilder) {

@@ -28,4 +28,11 @@ export abstract class ODataModelService<M extends ODataModel> extends ODataServi
     query.entitySet(this.set);
     return new Collection(attrs || [], this.context, query) as ODataCollection<M>;
   }
+
+  attach<T extends ODataModel | ODataCollection<ODataModel>>(model: T): T {
+    let query = this.queryBuilder();
+    query.entitySet(this.set);
+    model.attach(query);
+    return model;
+  }
 }

@@ -117,13 +117,22 @@ export class Model {
 }
 
 export class ODataModel extends Model {
+  private query: ODataQueryBuilder;
   constructor(
     attrs: {[name: string]: any}, 
     context: ODataContext, 
-    private query: ODataQueryBuilder
+    query: ODataQueryBuilder
   ) {
     super(attrs, context);
+    this.attach(query);
+  }
+  
+  attach(query:ODataQueryBuilder) {
     this.query = query;
+  }
+
+  detached(): boolean {
+    return !!this.query;
   }
 
   assign(entry: {[name: string]: any}, query: ODataQueryBuilder) {
