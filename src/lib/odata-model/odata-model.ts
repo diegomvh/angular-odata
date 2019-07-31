@@ -2,7 +2,7 @@ import { Observable, EMPTY } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
-import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
+import { ODataQueryBuilder, Expand } from '../odata-query/odata-query-builder';
 import { Collection, ODataCollection } from './odata-collection';
 import { ODataContext } from '../odata-context';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
@@ -201,5 +201,14 @@ export class ODataModel extends Model {
     let refurl = this.context.createEndpointUrl(target);
     options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
+  }
+
+  // Mutate query
+  select(select?: string | string[]) {
+    return this.query.select(select);
+  }
+
+  expand(expand?: Expand) {
+    return this.query.expand(expand);
   }
 }

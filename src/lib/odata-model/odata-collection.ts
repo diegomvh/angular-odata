@@ -4,6 +4,7 @@ import { ODataContext } from '../odata-context';
 import { ODataQueryBuilder, Filter, Expand, PlainObject, ArrayHandler } from '../odata-query/odata-query-builder';
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
+import { GroupBy } from 'angular-odata/public_api';
 
 export class Collection<M extends Model> {
   static type: string = null;
@@ -61,7 +62,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
       this.state.page = 1;
     if (this.state.size) {
       query.top(this.state.size);
-      query.skip((this.state.page - 1) * this.state.size);
+      query.skip(this.state.size * (this.state.page - 1));
     }
     query.count(true);
     return query.get(options)
@@ -109,11 +110,19 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     return this.query.filter(filter);
   }
 
+  search(search?: string) {
+    return this.query.search(search);
+  }
+
   orderBy(orderBy?: string | string[]) {
     return this.query.orderBy(orderBy);
   }
 
   expand(expand?: Expand) {
     return this.query.expand(expand);
+  }
+
+  groupBy(groupBy?: GroupBy) {
+    return this.query.groupBy(groupBy);
   }
 }
