@@ -2,36 +2,47 @@ import { Observable, EMPTY } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
-import { ODataQueryBuilder, Expand } from '../odata-query/odata-query-builder';
+import { ODataQueryBuilder, Expand, PlainObject } from '../odata-query/odata-query-builder';
 import { Collection, ODataCollection } from './odata-collection';
 import { ODataContext } from '../odata-context';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
+
+export class Key {
+  name: string;
+  resolve?: (model: Model) => number | string | PlainObject;
+}
 
 export class Field {
   name: string;
   required: boolean;
   type: string;
+  length?: number;
   key?: boolean;
   default?: any;
 }
 
 export class Schema {
+  keys: Key[];
   fields: Field[];
 
-  static create(fields: Field[] = []) {
-    return Object.assign(new Schema(), { fields });
+  static create(opts: {keys?: Key[], fields?: Field[]}) {
+    var keys = opts.keys || [];
+    var fields = opts.fields || [];
+    return Object.assign(new Schema(), { keys, fields });
   }
 
-  extend(fields: Field[] = []) {
-    fields = [...this.fields, ...fields];
-    return Object.assign(new Schema(), { fields });
+  extend(opts: {keys?: Key[], fields?: Field[]}) {
+    var keys = [...this.keys, ...(opts.keys || [])];
+    var fields = [...this.fields, ...(opts.fields || [])];
+    return Object.assign(new Schema(), { keys, fields });
   }
 
   resolveKey(model: Model) {
-    let keys = this.fields.filter(field => field.key).map(field => field.name);
+    let keys = this.keys
+      .map(key => [key.name, (key.resolve) ? key.resolve(model) : model[key.name]]);
     let key = keys.length === 1 ? 
-      model[keys[0]] : 
-      keys.reduce((acc, key) => Object.assign(acc, {[key]: model[key]}), {});
+      keys[0][1] :
+      keys.reduce((acc, key) => Object.assign(acc, {[key[0]]: key[1]}), {});
     if (!Utils.isEmpty(key))
       return key;
   }
@@ -79,7 +90,9 @@ export class Model {
 
   parse(attrs: {[name: string]: any}, ...params: any) {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.parse(attrs, this.context, ...params);
+    return Object.assign(
+      Object.keys(attrs).filter(k => k.startsWith('@')).reduce((acc, k) => Object.assign(acc, {[k]: attrs[k]}), {}), 
+      ctor.schema.parse(attrs, this.context, ...params));
   }
 
   protected relatedCollection<M extends Model>(name: string, ...params: any): Collection<M> {
@@ -114,9 +127,7 @@ export class ODataModel extends Model {
   }
 
   assign(entry: {[name: string]: any}, query: ODataQueryBuilder) {
-    return Object.assign(this, 
-      Object.keys(entry).filter(k => k.startsWith('@')).reduce((acc, k) => Object.assign(acc, {[k]: entry[k]}), {}), 
-      this.parse(entry, query)
+    return Object.assign(this, this.parse(entry, query)
     );
   }
 
@@ -211,8 +222,10 @@ export class ODataModel extends Model {
   select(select?: string | string[]) {
     return this.query.select(select);
   }
+  removeSelect() { this.query.removeSelect(); }
 
   expand(expand?: Expand) {
     return this.query.expand(expand);
   }
+  removeExpand() { this.query.removeExpand(); }
 }

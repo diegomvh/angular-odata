@@ -108,13 +108,13 @@ export class AudioPlayerComponent {
     // Update filter and set Artist FirstName
     collectionQuery.filter().set("Artist", { FirstName: { startswith: 'bar' }});
     // Update filter and add raw condition
-    collectionQuery.filter().push("year(Year) eq 1980");
+    collectionQuery.filter().add("year(Year) eq 1980");
     // Set expand 
     collectionQuery.expand({Artist: {select: ["FirstName", "LastName"]}});
     // Set OrderBy
     collectionQuery.orderBy("Year");
     // Update orderBy and add Artist LastName
-    collectionQuery.orderBy().push("Artist/LastName");
+    collectionQuery.orderBy().add("Artist/LastName");
     // Go!
     this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
   }

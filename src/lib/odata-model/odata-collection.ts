@@ -105,24 +105,30 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   select(select?: string | string[]) {
     return this.query.select(select);
   }
+  removeSelect() { this.query.removeSelect(); }
 
   filter(filter?: Filter) {
     return this.query.filter(filter);
   }
+  removeFilter() { this.query.removeFilter(); }
 
   search(search?: string) {
     return this.query.search(search);
   }
+  removeSearch() { this.query.removeSearch(); }
 
   orderBy(orderBy?: string | string[]) {
     return this.query.orderBy(orderBy);
   }
+  removeOrderBy() { this.query.removeOrderBy(); }
 
   expand(expand?: Expand) {
     return this.query.expand(expand);
   }
+  removeExpand() { this.query.removeExpand(); }
 
   groupBy(groupBy?: GroupBy) {
     return this.query.groupBy(groupBy);
   }
+  removeGroupBy() { this.query.removeGroupBy(); }
 }

@@ -1,6 +1,7 @@
 import { ODataQueryBase } from "./odata-query-base";
 import { ODataService } from "../odata-service/odata.service";
 import buildQuery from 'odata-query';
+import { Utils } from '../utils/utils';
 
 export type PlainObject = { [property: string]: any };
 export type Filter = string | PlainObject | Array<string | PlainObject>;
@@ -49,47 +50,66 @@ export interface Segment {
 }
 
 export class ParamHandler<T> {
-  constructor(private options: PlainObject, private type: string) { }
+  constructor(private o: PlainObject, private t: string) { }
   get name() {
-    return this.type;
+    return this.t;
   }
   toJSON() {
-    return this.options[this.type];
+    return this.o[this.t];
   }
-  push(value: T) {
-    if (!Array.isArray(this.options[this.type]))
-      this.options[this.type] = [this.options[this.type]];
-    this.options[this.type].push(value);
+
+  add(value: T) {
+    if (!Array.isArray(this.o[this.t]))
+      this.o[this.t] = [this.o[this.t]];
+    this.o[this.t].push(value);
   }
-  pop(): T {
-    if (Array.isArray(this.options[this.type])) {
-      let value = (<T[]>this.options[this.type]).pop();
-      if ((<T[]>this.options[this.type]).length === 1)
-        this.options[this.type] = this.options[this.type][0];
-      return value;      
+
+  remove(value: T) {
+    if (Array.isArray(this.o[this.t])) {
+      this.o[this.t] = this.o[this.t].filter(v => v !== value);
+      if (this.o[this.t].length === 1)
+        this.o[this.t] = this.o[this.t][0];
     }
   }
-  get(index?: string | number): T {
-    return this.options[this.type][index];
-  }
-  set(index: string | number, value: T) {
-    this.options[this.type][index] = value;
-  }
-  unset(index: string | number) {
-    if (Array.isArray(this.options[this.type])) {
-      this.options[this.type] = [...this.options[this.type].slice(0, index), ...this.options.slice(index)];
-    }
-    else {
-      delete this.options[this.type][name];
+
+  at(index: number) {
+    if (Array.isArray(this.o[this.t])) {
+      return this.o[this.t][index];
     }
   }
-  assign(values: T) {
-    if (Array.isArray(this.options[this.type])) {
-      this.options[this.type].map(opts => Object.assign(opts, values));
+
+  get(name: string): T {
+    if (!Array.isArray(this.o[this.t])) {
+      return this.o[this.t][name];
     }
-    else {
-      Object.assign(this.options[this.type], values);
+  }
+  
+  private assertObject(): PlainObject {
+    if (typeof(this.o[this.t]) === 'object' && !Array.isArray(this.o[this.t]))
+      return this.o[this.t];
+    else if (!Array.isArray(this.o[this.t]))
+      this.o[this.t] = [this.o[this.t]];
+    let obj = this.o[this.t].find(v => typeof(v) === 'object');
+    if (!obj) {
+      obj = {};
+      this.o[this.t].push(obj);
     }
+    return obj;
+  }
+
+  set(name: string, value: T) {
+    this.assertObject()[name] = value;
+  }
+
+  unset(name: string) {
+    delete this.assertObject()[name];
+    this.o[this.t] = this.o[this.t].filter(v => !Utils.isEmpty(v));
+    if (this.o[this.t].length === 1)
+      this.o[this.t] = this.o[this.t][0];
+  }
+
+  assign(values: PlainObject) {
+    Object.assign(this.assertObject(), values);
   }
 }
 
@@ -156,15 +176,15 @@ export class ODataQueryBuilder extends ODataQueryBase {
       ODataQueryBuilder.COUNT,
       ODataQueryBuilder.EXPAND,
       ODataQueryBuilder.FORMAT]
-      .map(key => this.params[key] ? { [key]: this.params[key] } : {})
+      .map(key => !Utils.isEmpty(this.params[key]) ? { [key]: this.params[key] } : {})
       .reduce((acc, obj) => Object.assign(acc, obj), {});
     let query = buildQuery(odata);
     return segments.join(ODataQueryBuilder.PATHSEP) + query;
   }
 
   protected wrapParam<T>(type: string, opts?: T | T[]) {
-    if (typeof (opts) === "undefined")
-      this.params[type] = {};
+    if (typeof (this.params[type]) === "undefined")
+      this.params[type] = opts || {};
     return new ParamHandler<T>(this.params, type);
   }
 
@@ -338,6 +358,8 @@ export class ODataQueryBuilder extends ODataQueryBase {
     return this.removeSegment(ODataQueryBuilder.PROPERTY, name);
   }
   navigationProperty(name: string) {
+    this.removeSelect();
+    this.removeExpand();
     return this.wrapSegment(ODataQueryBuilder.NAVIGATION_PROPERTY, name);
   }
   removeNavigationProperty(name: string) {
