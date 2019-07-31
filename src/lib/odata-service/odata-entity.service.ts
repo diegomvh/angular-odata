@@ -46,14 +46,14 @@ export abstract class ODataEntityService<T> extends ODataService {
       .ref();
   }
 
-  public collectionQueryBuilder(): ODataQueryBuilder {
+  public entitySetQueryBuilder(): ODataQueryBuilder {
     let builder = this.queryBuilder();
     builder.entitySet(this.set);
     return builder;
   }
 
   public entityQueryBuilder(entity: Partial<T>): ODataQueryBuilder {
-    let builder = this.collectionQueryBuilder();
+    let builder = this.entitySetQueryBuilder();
     builder.entityKey(entity);
     return builder;
   }
@@ -168,7 +168,7 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   protected customCollectionAction(name: string, postdata: any = {}, options?): Observable<ODataResponse> {
-    let builder = this.collectionQueryBuilder();
+    let builder = this.entitySetQueryBuilder();
     builder.action(name);
     return builder.post(postdata, options);
   }
@@ -180,7 +180,7 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   protected customCollectionFunction(name: string, parameters: any = {}, opcions?): Observable<ODataResponse> {
-    let builder = this.collectionQueryBuilder();
+    let builder = this.entitySetQueryBuilder();
     builder.function(name).params().assign(parameters);
     return builder.get(opcions);
   }

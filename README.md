@@ -86,6 +86,7 @@ export class AudioPlayerComponent {
   song: Song; 
 
   constructor(private odata: ODataService) { 
+    // Immutable query
     let collectionQuery = this.odata
       .query()
       .entitySet("Songs");
@@ -95,6 +96,31 @@ export class AudioPlayerComponent {
       .entitySet("Songs")
       .entityKey(1);
     this.odata.get(entityQuery).subscribe(resp => this.song = resp.toEntity<Song>())
+
+    // Mutable query
+    let collectionQuery = this.odata.queryBuilder();
+    collectionQuery.entitySet("Songs");
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    // Set top and skip
+    collectionQuery.top(10);
+    collectionQuery.skip(10);
+    // Set filter
+    collectionQuery.filter({Name: {contains: 'foo'});
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    // Update filter and set Artist FirstName
+    collectionQuery.filter().set("Artist", { FirstName: { startswith: 'bar' }});
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    // Update filter and add raw condition
+    collectionQuery.filter().push("year(Year) eq 1980");
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    // Set expand 
+    collectionQuery.expand({Artist: {select: ["FirstName", "LastName"]}});
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    // Set OrderBy
+    collectionQuery.orderBy("Year");
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    // Update orderBy and add Artist LastName
+    collectionQuery.orderBy().push("Artist/LastName");
   }
 
 }
@@ -135,10 +161,8 @@ export class AudioPlayerComponent {
   song: Song; 
   
   constructor(private songsService: SongsODataService) {
-    let entityQuery = this.songsService.entity(1);
-    this.songsService.fetchOne(entityQuery).subscribe(song => this.song = song)
-    let collectionQuery = this.songsService.collection();
-    this.songsService.fetchAll(collectionQuery).subscribe(songs => this.songs = songs)
+    this.songsService.fetch({id: 1}).subscribe(song => this.song = song)
+    this.songsService.all().subscribe(songs => this.songs = songs)
   }
 }
 ```
