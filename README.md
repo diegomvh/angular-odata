@@ -165,7 +165,7 @@ export class AudioPlayerComponent {
 
 5) Again, if you using OData to TypeScript import the service from generated source and use... but not abuse :). 
 
-For a deep query customizations the library use `odata-query` as a builder, use the `queryBuilder` method in the ODataService or `entityBuilder` and `collectionBuilder` in your custom entity service.
+For a deep query customizations the library use `odata-query` as a builder, use the `queryBuilder` method in the ODataService or `entityQueryBuilder` and `entitySetQueryBuilder` in your custom entity service.
 
 ## Base on implementation of odata-v4-ng
  - [OData service for Angular](https://github.com/riccardomariani/odata-v4-ng)
