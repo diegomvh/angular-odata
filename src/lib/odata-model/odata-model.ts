@@ -7,27 +7,31 @@ import { Collection, ODataCollection } from './odata-collection';
 import { ODataContext } from '../odata-context';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 
-export class Schema {
-  keys: string[];
-  fields: any[];
-  defaults: any;
+export class Field {
+  name: string;
+  required: boolean;
+  type: string;
+  key?: boolean;
+  default?: any;
+}
 
-  static create(opts: { keys?: string[], fields?: any[], defaults?: any }) {
-    return Object.assign(new Schema(), { keys: [], fields: [], defaults: {} }, opts);
+export class Schema {
+  fields: Field[];
+
+  static create(fields: Field[] = []) {
+    return Object.assign(new Schema(), { fields });
   }
 
-  extend(opts: { keys?: string[], fields?: any[], defaults?: any }) {
-    let { keys, fields, defaults } = this;
-    keys = [...keys, ...(opts.keys || [])];
-    fields = [...fields, ...(opts.fields || [])];
-    defaults = Object.assign({}, defaults, opts.defaults || {});
-    return Object.assign(new Schema(), { keys, fields, defaults });
+  extend(fields: Field[] = []) {
+    fields = [...this.fields, ...fields];
+    return Object.assign(new Schema(), { fields });
   }
 
   resolveKey(model: Model) {
-    let key = this.keys.length === 1 ? 
-      model[this.keys[0]] : 
-      this.keys.reduce((acc, key) => Object.assign(acc, {[key]: model[key]}), {});
+    let keys = this.fields.filter(field => field.key).map(field => field.name);
+    let key = keys.length === 1 ? 
+      model[keys[0]] : 
+      keys.reduce((acc, key) => Object.assign(acc, {[key]: model[key]}), {});
     if (!Utils.isEmpty(key))
       return key;
   }

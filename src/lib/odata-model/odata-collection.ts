@@ -1,7 +1,7 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
 import { ODataContext } from '../odata-context';
-import { ODataQueryBuilder, Filter, Expand, PlainObject, ArrayHandler } from '../odata-query/odata-query-builder';
+import { ODataQueryBuilder, Filter, Expand } from '../odata-query/odata-query-builder';
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
 import { GroupBy } from 'angular-odata/public_api';
