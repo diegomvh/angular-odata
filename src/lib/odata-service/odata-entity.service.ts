@@ -86,7 +86,7 @@ export abstract class ODataEntityService<T> extends ODataService {
       .pipe(map(resp => resp.toEntity<T>()));
   }
 
-  public readOrCreate(entity: Partial<T>, options?): Observable<T> {
+  public fetchOrCreate(entity: Partial<T>, options?): Observable<T> {
     return this.fetch(entity, options)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)

@@ -100,27 +100,23 @@ export class AudioPlayerComponent {
     // Mutable query
     let collectionQuery = this.odata.queryBuilder();
     collectionQuery.entitySet("Songs");
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
     // Set top and skip
     collectionQuery.top(10);
     collectionQuery.skip(10);
     // Set filter
     collectionQuery.filter({Name: {contains: 'foo'});
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
     // Update filter and set Artist FirstName
     collectionQuery.filter().set("Artist", { FirstName: { startswith: 'bar' }});
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
     // Update filter and add raw condition
     collectionQuery.filter().push("year(Year) eq 1980");
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
     // Set expand 
     collectionQuery.expand({Artist: {select: ["FirstName", "LastName"]}});
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
     // Set OrderBy
     collectionQuery.orderBy("Year");
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
     // Update orderBy and add Artist LastName
     collectionQuery.orderBy().push("Artist/LastName");
+    // Go!
+    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
   }
 
 }
