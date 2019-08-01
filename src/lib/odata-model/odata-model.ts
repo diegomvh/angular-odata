@@ -13,7 +13,8 @@ export class Key {
 
 export class Field {
   name: string;
-  type: string | typeof Model | typeof Collection;
+  type: string;
+  ctor?: (value: PlainObject | PlainObject[], ...params: any) => Model | Collection;
   required?: boolean;
   length?: number;
   related?: boolean;
@@ -59,8 +60,8 @@ export class Schema {
       case 'date': return value instanceof Date ? value : new Date(value);
       default: {
         return (field.collection) ?
-          new (field.type as typeof Collection)(value as PlainObject[], ...params):
-          new (field.type as typeof Model)(value as PlainObject, ...params);
+          field.ctor(value as PlainObject[], ...params):
+          field.ctor(value as PlainObject, ...params);
       }
     }
   }
@@ -81,8 +82,8 @@ export class Schema {
     var field = this.fields.find(r => r.name === name);
     if (field) {
       return (field.collection) ?
-        new (field.type as typeof Collection)(attrs as PlainObject[], ...params):
-        new (field.type as typeof Model)(attrs as PlainObject, ...params);
+        field.ctor(attrs as PlainObject[], ...params):
+        field.ctor(attrs as PlainObject, ...params);
     }
   }
 
