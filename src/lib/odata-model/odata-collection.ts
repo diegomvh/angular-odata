@@ -1,12 +1,15 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
-import { ODataQueryBuilder, Filter, Expand, GroupBy } from '../odata-query/odata-query-builder';
+import { ODataQueryBuilder, Filter, Expand, GroupBy, PlainObject } from '../odata-query/odata-query-builder';
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
+import { ODataQueryBase } from '../odata-query/odata-query-base';
+import { ODataContext } from '../odata-context';
 
-export class Collection {
-  static model: typeof Model = null;
-  models: Model[];
+export class Collection<M extends Model> {
+  static Model: typeof Model = null;
+  protected _query: ODataQueryBase;
+  protected _models: M[];
   state: {
     page?: number,
     pages?: number,
@@ -14,41 +17,52 @@ export class Collection {
     records?: number,
   };
 
-  constructor(models: {[name: string]: any}[], ...params: any) {
-    this.models = this.parse(models);
+  constructor(models: PlainObject[], query?: ODataQueryBase) {
+    this._models = this.parse(models, query);
     this.state = {
-      records: this.models.length
+      records: this._models.length
     };
   }
 
-  parse(models: {[name: string]: any}[], ...params: any) {
+  parse(models: PlainObject[], query: ODataQueryBase) {
     let ctor = <typeof Collection>this.constructor;
-    return models.map(model => new ctor.model(model, ...params));
+    return models.map(model => new ctor.Model(model, query) as M);
   }
 
   toJSON() {
     let ctor = <typeof Collection>this.constructor;
-    return this.models.map(model => model.toJSON());
+    return this._models.map(model => model.toJSON());
+  }
+
+  public [Symbol.iterator]() {
+    let pointer = 0;
+    let models = this._models;
+    return {
+      next(): IteratorResult<M> {
+        return {
+          done: pointer === models.length,
+          value: models[pointer++]
+        };
+      }
+    }
   }
 }
 
-export class ODataCollection extends Collection {
-  private query: ODataQueryBuilder;
+export class ODataCollection<M extends ODataModel> extends Collection<M> {
   constructor(
-    models: {[name: string]: any}[], 
-    query: ODataQueryBuilder,
-    ...params: any
+    models: PlainObject[],
+    query: ODataQueryBuilder
   ) {
-    super(models, ...params);
+    super(models, query);
     this.attach(query);
   }
 
   attach(query: ODataQueryBuilder) {
-    this.query = query;
+    this._query = query;
   }
 
   detached(): boolean {
-    return !!this.query;
+    return !this._query;
   }
 
   assign(entitySet: EntitySet<ODataModel>, query: ODataQueryBuilder) {
@@ -58,12 +72,12 @@ export class ODataCollection extends Collection {
       this.state.size = skip;
     if (this.state.size)
       this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.models = this.parse(entitySet.getEntities(), query);
+    this._models = this.parse(entitySet.getEntities(), query);
     return this;
   }
 
   fetch(options?: any): Observable<this> {
-    let query = this.query.clone();
+    let query = this._query.clone() as ODataQueryBuilder;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {
@@ -98,8 +112,8 @@ export class ODataCollection extends Collection {
     return (this.state.pages) ? this.getPage(this.state.pages, options) : this.fetch(options);
   }
 
-  setPageSize(size: number) { 
-    this.state.size = size; 
+  setPageSize(size: number) {
+    this.state.size = size;
     if (this.state.records) {
       this.state.pages = Math.ceil(this.state.records / this.state.size);
       if (this.state.page > this.state.pages)
@@ -109,32 +123,32 @@ export class ODataCollection extends Collection {
 
   // Mutate query
   select(select?: string | string[]) {
-    return this.query.select(select);
+    return (this._query as ODataQueryBuilder).select(select);
   }
-  removeSelect() { this.query.removeSelect(); }
+  removeSelect() { (this._query as ODataQueryBuilder).removeSelect(); }
 
   filter(filter?: Filter) {
-    return this.query.filter(filter);
+    return (this._query as ODataQueryBuilder).filter(filter);
   }
-  removeFilter() { this.query.removeFilter(); }
+  removeFilter() { (this._query as ODataQueryBuilder).removeFilter(); }
 
   search(search?: string) {
-    return this.query.search(search);
+    return (this._query as ODataQueryBuilder).search(search);
   }
-  removeSearch() { this.query.removeSearch(); }
+  removeSearch() { (this._query as ODataQueryBuilder).removeSearch(); }
 
   orderBy(orderBy?: string | string[]) {
-    return this.query.orderBy(orderBy);
+    return (this._query as ODataQueryBuilder).orderBy(orderBy);
   }
-  removeOrderBy() { this.query.removeOrderBy(); }
+  removeOrderBy() { (this._query as ODataQueryBuilder).removeOrderBy(); }
 
   expand(expand?: Expand) {
-    return this.query.expand(expand);
+    return (this._query as ODataQueryBuilder).expand(expand);
   }
-  removeExpand() { this.query.removeExpand(); }
+  removeExpand() { (this._query as ODataQueryBuilder).removeExpand(); }
 
   groupBy(groupBy?: GroupBy) {
-    return this.query.groupBy(groupBy);
+    return (this._query as ODataQueryBuilder).groupBy(groupBy);
   }
-  removeGroupBy() { this.query.removeGroupBy(); }
+  removeGroupBy() { (this._query as ODataQueryBuilder).removeGroupBy(); }
 }

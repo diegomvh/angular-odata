@@ -1,33 +1,36 @@
 import { HttpClient } from '@angular/common/http';
 
 import { ODataContext } from '../odata-context';
-import { ODataModel } from '../odata-model/odata-model';
+import { ODataModel, Model } from '../odata-model/odata-model';
 import { ODataService } from './odata.service';
-import { ODataCollection } from '../odata-model/odata-collection';
+import { ODataCollection, Collection } from '../odata-model/odata-collection';
+import { PlainObject } from '../odata-query/odata-query-builder';
 
 export abstract class ODataModelService extends ODataService {
-  static model: typeof ODataModel = null;
-  static collection: typeof ODataCollection = null;
+  static modelType: string = "";
+  static collectionType: string = "";
 
   constructor(protected http: HttpClient, public context: ODataContext, public set: string) {
     super(http, context);
   }
 
-  model(attrs?: {[name: string]: any}): ODataModel {
-    let cotr = <typeof ODataModelService>this.constructor;
+  model(attrs?: PlainObject) {
+    let ctor = <typeof ODataModelService>this.constructor;
+    let Ctor = this.context.getConstructor(ctor.modelType);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new cotr.model(attrs || {}, query);
+    return new (Ctor as typeof Model)(attrs || {}, query);
   }
 
-  collection(attrs?: {[name: string]: any}[]) {
-    let cotr = <typeof ODataModelService>this.constructor;
+  collection(models?: PlainObject[]) {
+    let ctor = <typeof ODataModelService>this.constructor;
+    let Ctor = this.context.getConstructor(ctor.collectionType);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new cotr.collection(attrs || [], query);
+    return new (Ctor as typeof Collection)(models || [], query);
   }
 
-  attach<T extends ODataModel | ODataCollection>(model: T): T {
+  attach<T extends ODataModel | ODataCollection<ODataModel>>(model: T): T {
     let query = this.queryBuilder();
     query.entitySet(this.set);
     model.attach(query);

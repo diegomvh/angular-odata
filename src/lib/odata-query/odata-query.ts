@@ -24,8 +24,12 @@ export class ODataQuery extends ODataQueryBase {
     this.lastSegment = null;
   }
 
-  // QUERY SEGMENTS
+  clone(): ODataQueryBase {
+    //TODO: Clone
+    return new ODataQuery(this.service);
+  }
 
+  // QUERY SEGMENTS
   metadata(): ODataQuery {
     Utils.requireNullOrUndefined(this.getSegment(ODataQuery.METADATA), ODataQuery.METADATA);
     if (this.segments.length) {

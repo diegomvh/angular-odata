@@ -49,6 +49,9 @@ export abstract class ODataQueryBase implements ODataQueryType {
     this.service = service;
   }
 
+  // ABSTRACTS
+  abstract clone(): ODataQueryBase;
+
   // QUERY EXECUTION
   get(options?): Observable<ODataResponse> {
     return this.service.get(this, options);

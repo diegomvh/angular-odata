@@ -5,6 +5,7 @@ import { Utils } from '../utils/utils';
 import { ODataQueryBuilder, Expand, PlainObject } from '../odata-query/odata-query-builder';
 import { Collection, ODataCollection } from './odata-collection';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
+import { ODataContext } from '../odata-context';
 
 export class Key {
   name: string;
@@ -14,17 +15,23 @@ export class Key {
 export class Field {
   name: string;
   type: string;
-  ctor?: (value: PlainObject | PlainObject[], ...params: any) => Model | Collection;
   required?: boolean;
   length?: number;
+  ctor?: boolean;
   related?: boolean;
   collection?: boolean;
   default?: any;
 }
 
+const instanceFactory = (Ctor: typeof Model | typeof Collection, field: Field, value: any, query: ODataQueryBase) => 
+  (field.collection) ?
+    new (Ctor as typeof Collection)(value as PlainObject[] || [], query):
+    new (Ctor as typeof Model)(value as PlainObject || {}, query);
+  
 export class Schema {
   keys: Key[];
   fields: Field[];
+  context: ODataContext;
 
   static create(opts: {keys?: Key[], fields?: Field[]}) {
     var keys = opts.keys || [];
@@ -52,45 +59,55 @@ export class Schema {
     return !this.resolveKey(model);
   }
  
-  private parseAttribute(field: Field, value: any, ...params: any) {
+  private parse(field: Field, value: any) {
+    if (value == null) return value;
     switch(field.type) {
-      case 'string': return typeof (value) === "string"? value : value.toString();
-      case 'number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
-      case 'boolean': return typeof (value) === "boolean"? value : !!value;
-      case 'date': return value instanceof Date ? value : new Date(value);
-      default: {
-        return (field.collection) ?
-          field.ctor(value as PlainObject[], ...params):
-          field.ctor(value as PlainObject, ...params);
+      case 'String': return typeof (value) === "string"? value : value.toString();
+      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
+      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
+      case 'Date': return value instanceof Date ? value : new Date(value);
+    }
+    return value;
+  }
+
+  private toJSON(field: Field, value: any) {
+    switch(field.type) {
+      case 'String': return typeof (value) === "string"? value : value.toString();
+      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
+      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
+      case 'Date': return value instanceof Date ? value.toISOString() : value;
+    }
+    return value;
+  }
+
+  private descriptor(field: Field, value: any) {
+    let Ctor = this.context.getConstructor(field.type);
+    return { 
+      get() { 
+        let query = this._query.clone() as ODataQueryBuilder;
+        query.entityKey(this.resolveKey());
+        query.navigationProperty(field.name);
+        return instanceFactory(Ctor, field, value, query);
       }
     }
   }
 
-  assign(model: Model, attrs: {[name: string]: any}, ...params: any) {
+  deserialize(model: Model, attrs: PlainObject, query: ODataQueryBase) {
     for (var f of this.fields) {
       if (!f.related && f.name in attrs) {
-        model[f.name] = this.parseAttribute(f, attrs[f.name], ...params);
+        model[f.name] = f.ctor ? instanceFactory(
+          this.context.getConstructor(f.type),
+          f, attrs[f.name], query) : this.parse(f, attrs[f.name]);
       } else if (f.related) {
-        Object.defineProperty(model, f.name, { 
-          get() { return (f.collection ? this.relatedCollection(f.name) : this.relatedModel(f.name)); }
-        });
+        Object.defineProperty(model, f.name, this.descriptor(f, attrs[f.name]));
       }
     }
   }
 
-  related(name: string, attrs: PlainObject | PlainObject[], ...params: any) {
-    var field = this.fields.find(r => r.name === name);
-    if (field) {
-      return (field.collection) ?
-        field.ctor(attrs as PlainObject[], ...params):
-        field.ctor(attrs as PlainObject, ...params);
-    }
-  }
-
-  toJSON(model: Model) {
+  serialize(model: Model) {
     return this.fields.reduce((acc, field) => {
       if (field.name in model && model[field.name] != null) {
-        acc[field.name] = model[field.name].toJSON();
+        acc[field.name] = field.ctor ? model[field.name].toJSON() : this.toJSON(field, model[field.name]);
       }
       return acc;
     }, {});
@@ -98,10 +115,12 @@ export class Schema {
 }
 
 export class Model {
+  // Statics
   static schema: Schema = null;
+  protected _query: ODataQueryBase;
 
-  constructor(attrs: PlainObject, ...params: any) {
-    this.assign(attrs, ...params);
+  constructor(attrs: PlainObject, query?: ODataQueryBase) {
+    this.assign(attrs, query);
   }
 
   isNew() {
@@ -109,19 +128,9 @@ export class Model {
     return ctor.schema.isNew(this);
   }
 
-  assign(attrs: PlainObject, ...params: any) {
+  assign(attrs: PlainObject, query?: ODataQueryBase) {
     let ctor = <typeof Model>this.constructor;
-    ctor.schema.assign(this, attrs, ...params);
-  }
-
-  protected relatedCollection<M extends Model>(name: string, ...params: any): Collection {
-    let ctor = <typeof Model>this.constructor;
-    return ctor.schema.related(name, this[name] || [], ...params) as Collection;
-  }
-
-  protected relatedModel<M extends Model>(name: string, ...params: any): M {
-    let ctor = <typeof Model>this.constructor;
-    return ctor.schema.related(name, this[name] || {}, ...params) as M;
+    ctor.schema.deserialize(this, attrs, query);
   }
 
   resolveKey() {
@@ -131,36 +140,34 @@ export class Model {
 
   toJSON() {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.toJSON(this);
+    return ctor.schema.serialize(this);
   }
 }
 
 export class ODataModel extends Model {
-  private query: ODataQueryBuilder;
   constructor(
-    attrs: {[name: string]: any}, 
-    query: ODataQueryBuilder, 
-    ...params: any
+    attrs: PlainObject, 
+    query: ODataQueryBuilder
   ) {
-    super(attrs, ...params);
+    super(attrs, query);
     this.attach(query);
   }
   
   attach(query:ODataQueryBuilder) {
-    this.query = query;
+    this._query = query;
   }
 
   detached(): boolean {
-    return !!this.query;
+    return !this._query;
   }
 
-  assign(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
+  assign(attrs: PlainObject, query: ODataQueryBuilder) {
     super.assign(attrs, query);
   }
 
   fetch(options?: any): Observable<this> {
     //TODO: assert key
-    let query = this.query.clone();
+    let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     return query.get(options)
       .pipe(
@@ -169,7 +176,7 @@ export class ODataModel extends Model {
   }
 
   save(options?: any): Observable<this> {
-    let query = this.query.clone();
+    let query = this._query.clone() as ODataQueryBuilder;
     let json = this.toJSON();
     let obs$ = EMPTY as Observable<ODataResponse>;
     if (!this.isNew()) {
@@ -187,29 +194,13 @@ export class ODataModel extends Model {
 
   destroy(options?: any): Observable<any> {
     //TODO: assert key
-    let query = this.query.clone();
+    let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
   }
 
-  protected relatedCollection<M extends Model>(name: string, query: ODataQueryBuilder): Collection {
-    //TODO: assert key
-    query = (query || this.query).clone();
-    query.entityKey(this.resolveKey());
-    query.navigationProperty(name);
-    return super.relatedCollection(name, query);
-  }
-
-  protected relatedModel<M extends Model>(name: string, query: ODataQueryBuilder): M {
-    //TODO: assert key
-    query = (query || this.query).clone();
-    query.entityKey(this.resolveKey());
-    query.navigationProperty(name);
-    return super.relatedModel(name, query);
-  }
-
-  protected createODataModelRef(name: string, target: ODataQueryBase, options?) {
-    let query = this.query.clone();
+  protected createODataModelRef(name: string, target: ODataQueryBuilder, options?) {
+    let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
@@ -218,8 +209,8 @@ export class ODataModel extends Model {
     return query.put({ [ODataResponse.ODATA_ID]: refurl }, this[ODataResponse.ODATA_ETAG], options);
   }
 
-  protected deleteODataModelRef(name: string, target: ODataQueryBase, options?) {
-    let query = this.query.clone();
+  protected deleteODataModelRef(name: string, target: ODataQueryBuilder, options?) {
+    let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
@@ -227,8 +218,8 @@ export class ODataModel extends Model {
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
   }
 
-  protected createODataCollectionRef(name: string, target: ODataQueryBase, options?) {
-    let query = this.query.clone();
+  protected createODataCollectionRef(name: string, target: ODataQueryBuilder, options?) {
+    let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
@@ -237,8 +228,8 @@ export class ODataModel extends Model {
     return query.post({ [ODataResponse.ODATA_ID]: refurl }, options);
   }
 
-  protected deleteODataCollectionRef(name: string, target: ODataQueryBase, options?) {
-    let query = this.query.clone();
+  protected deleteODataCollectionRef(name: string, target: ODataQueryBuilder, options?) {
+    let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
@@ -250,12 +241,12 @@ export class ODataModel extends Model {
 
   // Mutate query
   select(select?: string | string[]) {
-    return this.query.select(select);
+    return (this._query as ODataQueryBuilder).select(select);
   }
-  removeSelect() { this.query.removeSelect(); }
+  removeSelect() { (this._query as ODataQueryBuilder).removeSelect(); }
 
   expand(expand?: Expand) {
-    return this.query.expand(expand);
+    return (this._query as ODataQueryBuilder).expand(expand);
   }
-  removeExpand() { this.query.removeExpand(); }
+  removeExpand() { (this._query as ODataQueryBuilder).removeExpand(); }
 }

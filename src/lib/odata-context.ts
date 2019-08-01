@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataQueryType } from './odata-query/odata-query-type';
-import { ODataModel } from './odata-model/odata-model';
-import { ODataCollection } from './odata-model/odata-collection';
+import { ODataModel, Model } from './odata-model/odata-model';
+import { ODataCollection, Collection } from './odata-model/odata-collection';
 
 export class ODataContext {
   baseUrl: string;
@@ -12,8 +12,8 @@ export class ODataContext {
   version: string;
   metadata: Promise<any>;
   enums?: {[type: string]: any };
-  models: {[type: string]: new (...params: any) => ODataModel };
-  collections: {[type: string]: new (...params: any) => ODataCollection };
+  models: {[type: string]: typeof Model };
+  collections: {[type: string]: typeof Collection };
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(options: {
@@ -23,8 +23,8 @@ export class ODataContext {
     creation?: Date,
     version?: string,
     enums?: {[type: string]: any }
-    models?: {[type: string]: new (...params: any) => ODataModel }
-    collections?: {[type: string]: new (...params: any) => ODataCollection }
+    models?: {[type: string]: typeof Model }
+    collections?: {[type: string]: typeof Collection }
     errorHandler?: (error: HttpErrorResponse) => Observable<never>
   }) {
     Object.assign(this, options);
@@ -49,59 +49,19 @@ export class ODataContext {
     return Object.assign({}, ...options, { withCredentials: this.withCredentials });
   }
 
-  /*
-  getEnum(name: string): new (...params: any) => ODataModel {
+  getEnum(name: string) {
     return name in this.enums ? this.enums[name] : null;
   }
 
-  getModel(name: string): new (...params: any) => ODataModel {
-    return name in this.models ? this.models[name] : null;
-  }
-
-  getCollection(name: string): new (...params: any) => ODataCollection<ODataModel> {
-    return name in this.collections ? this.collections[name] : null;
-  }
-
-  parse(value: any, type: string, ...params: any) {
-    switch(type) {
-      case 'String': return typeof (value) === "string"? value : value.toString();
-      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
-      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
-      case 'Date': return value instanceof Date ? value : new Date(value);
-      default: {
-        // TODO: Enum? 
-        var Enum = this.getEnum(type);
-        if (Enum) return value;
-        // Model? 
-        var Model = this.getModel(type);
-        if (Model) return new Model(value, this, ...params);
-        // Collection?
-        var Collection = this.getCollection(type);
-        if (Collection) return new Collection(value, this, ...params);
-      }
+  getConstructor(name: string): typeof Collection | typeof Model {
+    if (name in this.collections) {
+      let Collection = this.collections[name];
+      Collection.Model.schema.context = this;
+      return Collection;
+    } else if (name in this.models) {
+      let Model = this.models[name];
+      Model.schema.context = this;
+      return Model;
     }
-    return value;
   }
-
-  toJSON(value: any, type: string) {
-    switch(type) {
-      case 'String': return typeof (value) === "string"? value : value.toString();
-      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
-      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
-      case 'Date': return value instanceof Date ? value.toISOString() : value;
-      default: {
-        // TODO: Enum? 
-        var Enum = this.getEnum(type);
-        if (Enum) return value;
-        // Model? 
-        var Model = this.getModel(type);
-        if (Model) return value.toJSON(); 
-        // Collection?
-        var Collection = this.getCollection(type);
-        if (Collection) return value.toJSON() 
-      }
-    }
-    return value;
-  }
-  */
 }

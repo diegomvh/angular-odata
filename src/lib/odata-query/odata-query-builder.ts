@@ -162,7 +162,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
       .map(segment => {
         if (segment.type == ODataQueryBuilder.FUNCTION_CALL)
           return buildQuery({ func: { [segment.name]: segment.params } }).slice(1);
-        return segment.name + buildQuery(segment.params);
+        return (segment.name? `${segment.name}${ODataQueryBuilder.PATHSEP}` : "") + buildQuery(segment.params);
       });
     let odata = [
       ODataQueryBuilder.SELECT,
@@ -179,7 +179,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
       .map(key => !Utils.isEmpty(this.params[key]) ? { [key]: this.params[key] } : {})
       .reduce((acc, obj) => Object.assign(acc, obj), {});
     let query = buildQuery(odata);
-    return segments.join(ODataQueryBuilder.PATHSEP) + query;
+    return segments.join("") + query;
   }
 
   protected wrapParam<T>(type: string, opts?: T | T[]) {
@@ -308,20 +308,20 @@ export class ODataQueryBuilder extends ODataQueryBase {
   }
 
   entityKey(opts: string | number | PlainObject) {
-    let name = this.wrapSegment(ODataQueryBuilder.ENTITY_SET).name;
+    //let name = this.wrapSegment(ODataQueryBuilder.ENTITY_KEY).name;
     // Quito lo que no se puede usar con keys
     this.removeFilter();
     this.removeOrderBy();
     this.removeCount();
     this.removeSkip();
     this.removeTop();
-    this.wrapSegment(ODataQueryBuilder.ENTITY_SET, name || "").params().set('key', opts);
+    this.wrapSegment(ODataQueryBuilder.ENTITY_KEY, name || "").params().set('key', opts);
     return this;
   }
   removeEntityKey() {
-    let name = this.wrapSegment(ODataQueryBuilder.ENTITY_SET).name;
+    let name = this.wrapSegment(ODataQueryBuilder.ENTITY_KEY).name;
     if (typeof (name) !== "undefined")
-      this.wrapSegment(ODataQueryBuilder.ENTITY_SET, name).params().unset('key');
+      this.wrapSegment(ODataQueryBuilder.ENTITY_KEY, name).params().unset('key');
   }
 
   singleton(name: string) {
