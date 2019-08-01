@@ -4,7 +4,6 @@ import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
 import { ODataQueryBuilder, Expand, PlainObject } from '../odata-query/odata-query-builder';
 import { Collection, ODataCollection } from './odata-collection';
-import { ODataContext } from '../odata-context';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 
 export class Key {
@@ -14,10 +13,11 @@ export class Key {
 
 export class Field {
   name: string;
-  required: boolean;
-  type: string;
+  type: string | typeof Model | typeof Collection;
+  required?: boolean;
   length?: number;
-  key?: boolean;
+  related?: boolean;
+  collection?: boolean;
   default?: any;
 }
 
@@ -51,24 +51,30 @@ export class Schema {
     return !this.resolveKey(model);
   }
 
-  parse(attrs: {[name: string]: any}, context: ODataContext, ...params: any) {
+  parse(attrs: {[name: string]: any}, ...params: any) {
     return this.fields.reduce((acc, field) => {
       if (field.name in attrs && attrs[field.name] != null) {
-        acc[field.name] = context.parse(attrs[field.name], field.type, ...params);
+        acc[field.name] = (field.collection) ?
+          new (field.type as typeof Collection)(attrs as {[name: string]: any}[], ...params):
+          new (field.type as typeof Model)(attrs as {[name: string]: any}, ...params);
       }
       return acc;
     }, {});
   }
 
-  related(name: string, attrs: {[name: string]: any} | {[name: string]: any}[], context: ODataContext, ...params: any) {
+  related(name: string, attrs: {[name: string]: any} | {[name: string]: any}[], ...params: any) {
     var field = this.fields.find(r => r.name === name);
-    return context.parse(attrs, field.type, ...params);
+    if (field) {
+      return (field.collection) ?
+        new (field.type as typeof Collection)(attrs as {[name: string]: any}[], ...params):
+        new (field.type as typeof Model)(attrs as {[name: string]: any}, ...params);
+    }
   }
 
-  toJSON(model: Model, context: ODataContext) {
+  toJSON(model: Model) {
     return this.fields.reduce((acc, field) => {
       if (field.name in model && model[field.name] != null) {
-        acc[field.name] = context.toJSON(model[field.name], field.type);
+        acc[field.name] = model[field.name].toJSON();
       }
       return acc;
     }, {});
@@ -76,10 +82,9 @@ export class Schema {
 }
 
 export class Model {
-  static type: string = null;
   static schema: Schema = null;
 
-  constructor(attrs: {[name: string]: any}, protected context: ODataContext) {
+  constructor(attrs: {[name: string]: any}, ...params: any) {
     Object.assign(this, this.parse(attrs));
   }
 
@@ -92,17 +97,17 @@ export class Model {
     let ctor = <typeof Model>this.constructor;
     return Object.assign(
       Object.keys(attrs).filter(k => k.startsWith('@')).reduce((acc, k) => Object.assign(acc, {[k]: attrs[k]}), {}), 
-      ctor.schema.parse(attrs, this.context, ...params));
+      ctor.schema.parse(attrs, ...params));
   }
 
   protected relatedCollection<M extends Model>(name: string, ...params: any): Collection<M> {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.related(name, this[name] || [], this.context, ...params);
+    return ctor.schema.related(name, this[name] || [], ...params) as Collection<M>;
   }
 
   protected relatedModel<M extends Model>(name: string, ...params: any): M {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.related(name, this[name] || {}, this.context, ...params);
+    return ctor.schema.related(name, this[name] || {}, ...params) as M;
   }
 
   resolveKey() {
@@ -112,7 +117,7 @@ export class Model {
 
   toJSON() {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.toJSON(this, this.context)
+    return ctor.schema.toJSON(this);
   }
 }
 
@@ -120,10 +125,10 @@ export class ODataModel extends Model {
   private query: ODataQueryBuilder;
   constructor(
     attrs: {[name: string]: any}, 
-    context: ODataContext, 
-    query: ODataQueryBuilder
+    query: ODataQueryBuilder, 
+    ...params: any
   ) {
-    super(attrs, context);
+    super(attrs, ...params);
     this.attach(query);
   }
   
@@ -195,7 +200,8 @@ export class ODataModel extends Model {
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
-    let refurl = this.context.createEndpointUrl(target);
+    //let refurl = this.context.createEndpointUrl(target);
+    let refurl = "";
     return query.put({ [ODataResponse.ODATA_ID]: refurl }, this[ODataResponse.ODATA_ETAG], options);
   }
 
@@ -204,7 +210,7 @@ export class ODataModel extends Model {
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
-    let refurl = this.context.createEndpointUrl(target);
+    //let refurl = this.context.createEndpointUrl(target);
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
   }
 
@@ -213,7 +219,8 @@ export class ODataModel extends Model {
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
-    let refurl = this.context.createEndpointUrl(target);
+    //let refurl = this.context.createEndpointUrl(target);
+    let refurl = "";
     return query.post({ [ODataResponse.ODATA_ID]: refurl }, options);
   }
 
@@ -222,8 +229,9 @@ export class ODataModel extends Model {
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
     query.ref();
-    let refurl = this.context.createEndpointUrl(target);
-    options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
+    //let refurl = this.context.createEndpointUrl(target);
+    let refurl = "";
+    //options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
   }
 

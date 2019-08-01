@@ -1,14 +1,12 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
-import { ODataContext } from '../odata-context';
 import { ODataQueryBuilder, Filter, Expand } from '../odata-query/odata-query-builder';
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
 import { GroupBy } from 'angular-odata/public_api';
 
 export class Collection<M extends Model> {
-  static type: string = null;
-  static model: string = null;
+  static model: typeof Model;
   models: M[];
   state: {
     page?: number,
@@ -17,7 +15,7 @@ export class Collection<M extends Model> {
     records?: number,
   };
 
-  constructor(models: {[name: string]: any}[], private context: ODataContext) {
+  constructor(models: {[name: string]: any}[], ...params: any) {
     this.models = this.parse(models);
     this.state = {
       records: this.models.length
@@ -26,12 +24,12 @@ export class Collection<M extends Model> {
 
   parse(models: {[name: string]: any}[], ...params: any) {
     let ctor = <typeof Collection>this.constructor;
-    return models.map(model => this.context.parse(model, ctor.model, ...params));
+    return models.map(model => new ctor.model(model, ...params) as M);
   }
 
   toJSON() {
     let ctor = <typeof Collection>this.constructor;
-    return this.models.map(model => this.context.toJSON(model, ctor.model));
+    return this.models.map(model => model.toJSON());
   }
 }
 
@@ -39,10 +37,10 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   private query: ODataQueryBuilder;
   constructor(
     models: {[name: string]: any}[], 
-    context: ODataContext, 
-    query: ODataQueryBuilder
+    query: ODataQueryBuilder,
+    ...params: any
   ) {
-    super(models, context)
+    super(models, ...params);
     this.attach(query);
   }
 

@@ -6,8 +6,8 @@ import { ODataService } from './odata.service';
 import { ODataCollection } from '../odata-model/odata-collection';
 
 export abstract class ODataModelService<M extends ODataModel> extends ODataService {
-  static model: string = null;
-  static collection: string = null;
+  static model: typeof ODataModel;
+  static collection: typeof ODataCollection;
 
   constructor(protected http: HttpClient, public context: ODataContext, public set: string) {
     super(http, context);
@@ -15,18 +15,16 @@ export abstract class ODataModelService<M extends ODataModel> extends ODataServi
 
   model(attrs?: {[name: string]: any}): M {
     let cotr = <typeof ODataModelService>this.constructor;
-    let Model = this.context.getModel(cotr.model);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new Model(attrs || {}, this.context, query) as M;
+    return new cotr.model(attrs || {}, query) as M;
   }
 
   collection(attrs?: {[name: string]: any}[]): ODataCollection<M> {
     let cotr = <typeof ODataModelService>this.constructor;
-    let Collection = this.context.getCollection(cotr.collection);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new Collection(attrs || [], this.context, query) as ODataCollection<M>;
+    return new cotr.collection(attrs || [], query) as ODataCollection<M>;
   }
 
   attach<T extends ODataModel | ODataCollection<ODataModel>>(model: T): T {
