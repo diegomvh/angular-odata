@@ -50,24 +50,39 @@ export class Schema {
   isNew(model: Model) {
     return !this.resolveKey(model);
   }
-
-  parse(attrs: {[name: string]: any}, ...params: any) {
-    return this.fields.reduce((acc, field) => {
-      if (field.name in attrs && attrs[field.name] != null) {
-        acc[field.name] = (field.collection) ?
-          new (field.type as typeof Collection)(attrs as {[name: string]: any}[], ...params):
-          new (field.type as typeof Model)(attrs as {[name: string]: any}, ...params);
+ 
+  private parseAttribute(field: Field, value: any, ...params: any) {
+    switch(field.type) {
+      case 'string': return typeof (value) === "string"? value : value.toString();
+      case 'number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
+      case 'boolean': return typeof (value) === "boolean"? value : !!value;
+      case 'date': return value instanceof Date ? value : new Date(value);
+      default: {
+        return (field.collection) ?
+          new (field.type as typeof Collection)(value as PlainObject[], ...params):
+          new (field.type as typeof Model)(value as PlainObject, ...params);
       }
-      return acc;
-    }, {});
+    }
   }
 
-  related(name: string, attrs: {[name: string]: any} | {[name: string]: any}[], ...params: any) {
+  assign(model: Model, attrs: {[name: string]: any}, ...params: any) {
+    for (var f of this.fields) {
+      if (!f.related && f.name in attrs) {
+        model[f.name] = this.parseAttribute(f, attrs[f.name], ...params);
+      } else if (f.related) {
+        Object.defineProperty(model, f.name, { 
+          get() { return (f.collection ? this.relatedCollection(f.name) : this.relatedModel(f.name)); }
+        });
+      }
+    }
+  }
+
+  related(name: string, attrs: PlainObject | PlainObject[], ...params: any) {
     var field = this.fields.find(r => r.name === name);
     if (field) {
       return (field.collection) ?
-        new (field.type as typeof Collection)(attrs as {[name: string]: any}[], ...params):
-        new (field.type as typeof Model)(attrs as {[name: string]: any}, ...params);
+        new (field.type as typeof Collection)(attrs as PlainObject[], ...params):
+        new (field.type as typeof Model)(attrs as PlainObject, ...params);
     }
   }
 
@@ -84,8 +99,8 @@ export class Schema {
 export class Model {
   static schema: Schema = null;
 
-  constructor(attrs: {[name: string]: any}, ...params: any) {
-    Object.assign(this, this.parse(attrs));
+  constructor(attrs: PlainObject, ...params: any) {
+    this.assign(attrs, ...params);
   }
 
   isNew() {
@@ -93,16 +108,14 @@ export class Model {
     return ctor.schema.isNew(this);
   }
 
-  parse(attrs: {[name: string]: any}, ...params: any) {
+  assign(attrs: PlainObject, ...params: any) {
     let ctor = <typeof Model>this.constructor;
-    return Object.assign(
-      Object.keys(attrs).filter(k => k.startsWith('@')).reduce((acc, k) => Object.assign(acc, {[k]: attrs[k]}), {}), 
-      ctor.schema.parse(attrs, ...params));
+    ctor.schema.assign(this, attrs, ...params);
   }
 
-  protected relatedCollection<M extends Model>(name: string, ...params: any): Collection<M> {
+  protected relatedCollection<M extends Model>(name: string, ...params: any): Collection {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.related(name, this[name] || [], ...params) as Collection<M>;
+    return ctor.schema.related(name, this[name] || [], ...params) as Collection;
   }
 
   protected relatedModel<M extends Model>(name: string, ...params: any): M {
@@ -140,9 +153,8 @@ export class ODataModel extends Model {
     return !!this.query;
   }
 
-  assign(entry: {[name: string]: any}, query: ODataQueryBuilder) {
-    return Object.assign(this, this.parse(entry, query)
-    );
+  assign(attrs: {[name: string]: any}, query: ODataQueryBuilder) {
+    super.assign(attrs, query);
   }
 
   fetch(options?: any): Observable<this> {
@@ -151,7 +163,7 @@ export class ODataModel extends Model {
     query.entityKey(this.resolveKey());
     return query.get(options)
       .pipe(
-        map(resp => this.assign(resp.toEntity(), query))
+        map(resp => { this.assign(resp.toEntity(), query); return this })
       );
   }
 
@@ -168,7 +180,7 @@ export class ODataModel extends Model {
     }
     return obs$ 
       .pipe(
-        map(resp => this.assign(resp.toEntity(), query))
+        map(resp => { this.assign(resp.toEntity(), query); return this })
       );
   }
 
@@ -179,20 +191,20 @@ export class ODataModel extends Model {
     return query.delete(this[ODataResponse.ODATA_ETAG], options);
   }
 
-  protected relatedODataCollection<M extends ODataModel>(name: string): ODataCollection<M> {
+  protected relatedCollection<M extends Model>(name: string, query: ODataQueryBuilder): Collection {
     //TODO: assert key
-    let query = this.query.clone();
+    query = (query || this.query).clone();
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
-    return this.relatedCollection(name, query) as ODataCollection<M>;
+    return super.relatedCollection(name, query);
   }
 
-  protected relatedODataModel<M extends ODataModel>(name: string): M {
+  protected relatedModel<M extends Model>(name: string, query: ODataQueryBuilder): M {
     //TODO: assert key
-    let query = this.query.clone();
+    query = (query || this.query).clone();
     query.entityKey(this.resolveKey());
     query.navigationProperty(name);
-    return this.relatedModel(name, query) as M;
+    return super.relatedModel(name, query);
   }
 
   protected createODataModelRef(name: string, target: ODataQueryBase, options?) {

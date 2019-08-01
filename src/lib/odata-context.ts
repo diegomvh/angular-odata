@@ -13,7 +13,7 @@ export class ODataContext {
   metadata: Promise<any>;
   enums?: {[type: string]: any };
   models: {[type: string]: new (...params: any) => ODataModel };
-  collections: {[type: string]: new (...params: any) => ODataCollection<ODataModel> };
+  collections: {[type: string]: new (...params: any) => ODataCollection };
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(options: {
@@ -24,7 +24,7 @@ export class ODataContext {
     version?: string,
     enums?: {[type: string]: any }
     models?: {[type: string]: new (...params: any) => ODataModel }
-    collections?: {[type: string]: new (...params: any) => ODataCollection<ODataModel> }
+    collections?: {[type: string]: new (...params: any) => ODataCollection }
     errorHandler?: (error: HttpErrorResponse) => Observable<never>
   }) {
     Object.assign(this, options);
@@ -49,6 +49,7 @@ export class ODataContext {
     return Object.assign({}, ...options, { withCredentials: this.withCredentials });
   }
 
+  /*
   getEnum(name: string): new (...params: any) => ODataModel {
     return name in this.enums ? this.enums[name] : null;
   }
@@ -102,4 +103,5 @@ export class ODataContext {
     }
     return value;
   }
+  */
 }

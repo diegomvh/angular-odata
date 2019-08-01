@@ -1,13 +1,12 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
-import { ODataQueryBuilder, Filter, Expand } from '../odata-query/odata-query-builder';
+import { ODataQueryBuilder, Filter, Expand, GroupBy } from '../odata-query/odata-query-builder';
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
-import { GroupBy } from 'angular-odata/public_api';
 
-export class Collection<M extends Model> {
-  static model: typeof Model;
-  models: M[];
+export class Collection {
+  static model: typeof Model = null;
+  models: Model[];
   state: {
     page?: number,
     pages?: number,
@@ -24,7 +23,7 @@ export class Collection<M extends Model> {
 
   parse(models: {[name: string]: any}[], ...params: any) {
     let ctor = <typeof Collection>this.constructor;
-    return models.map(model => new ctor.model(model, ...params) as M);
+    return models.map(model => new ctor.model(model, ...params));
   }
 
   toJSON() {
@@ -33,7 +32,7 @@ export class Collection<M extends Model> {
   }
 }
 
-export class ODataCollection<M extends ODataModel> extends Collection<M> {
+export class ODataCollection extends Collection {
   private query: ODataQueryBuilder;
   constructor(
     models: {[name: string]: any}[], 
@@ -52,7 +51,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     return !!this.query;
   }
 
-  assign(entitySet: EntitySet<M>, query: ODataQueryBuilder) {
+  assign(entitySet: EntitySet<ODataModel>, query: ODataQueryBuilder) {
     this.state.records = entitySet.getCount();
     let skip = entitySet.getSkip();
     if (skip)
