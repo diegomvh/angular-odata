@@ -1,10 +1,10 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { ODataContext } from './odata-context';
+import { ODataContext, ODataConfig } from './odata-context';
 
 @NgModule({
 })
 export class ODataModule {
-  public static forContext(options): ModuleWithProviders {
+  public static forContext(options: ODataConfig): ModuleWithProviders {
     return {
       ngModule: ODataModule,
       providers: [

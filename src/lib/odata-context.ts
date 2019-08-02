@@ -1,10 +1,22 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataQueryType } from './odata-query/odata-query-type';
-import { ODataModel, Model } from './odata-model/odata-model';
-import { ODataCollection, Collection } from './odata-model/odata-collection';
+import { Model } from './odata-model/odata-model';
+import { Collection } from './odata-model/odata-collection';
 
-export class ODataContext {
+export interface ODataConfig {
+    baseUrl?: string,
+    metadataUrl?: string,
+    withCredentials?: boolean,
+    creation?: Date,
+    version?: string,
+    enums?: {[type: string]: any }
+    models?: {[type: string]: typeof Model }
+    collections?: {[type: string]: typeof Collection }
+    errorHandler?: (error: HttpErrorResponse) => Observable<never>
+}
+
+export class ODataContext implements ODataConfig {
   baseUrl: string;
   metadataUrl: string;
   withCredentials: boolean;
@@ -16,22 +28,12 @@ export class ODataContext {
   collections: {[type: string]: typeof Collection };
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
-  constructor(options: {
-    baseUrl?: string,
-    metadataUrl?: string,
-    withCredentials?: boolean,
-    creation?: Date,
-    version?: string,
-    enums?: {[type: string]: any }
-    models?: {[type: string]: typeof Model }
-    collections?: {[type: string]: typeof Collection }
-    errorHandler?: (error: HttpErrorResponse) => Observable<never>
-  }) {
-    Object.assign(this, options);
-    if (!options.metadataUrl && options.baseUrl)
-      this.metadataUrl = `${options.baseUrl}$metadata`;
-    else if (options.metadataUrl && !options.baseUrl)
-      this.baseUrl = options.metadataUrl.substr(0, options.metadataUrl.indexOf("$metadata"));
+  constructor(config: ODataConfig) {
+    Object.assign(this, config);
+    if (!config.metadataUrl && config.baseUrl)
+      this.metadataUrl = `${config.baseUrl}$metadata`;
+    else if (config.metadataUrl && !config.baseUrl)
+      this.baseUrl = config.metadataUrl.substr(0, config.metadataUrl.indexOf("$metadata"));
   }
 
   createEndpointUrl(query: ODataQueryType): string {

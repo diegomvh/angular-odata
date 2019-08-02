@@ -114,12 +114,15 @@ export class ParamHandler<T> {
 }
 
 export class SegmentHandler {
-  constructor(private segment: Segment) { }
+  constructor(private segment: Segment) {}
   get name() {
     return this.segment.name;
   }
+  get type() {
+    return this.segment.type;
+  }
   params() {
-    return new ParamHandler<string | number | PlainObject>(this.segment, "params");
+    return new ParamHandler<string | number | PlainObject>(this.segment.params as PlainObject, "o");
   }
 }
 
@@ -162,7 +165,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
       .map(segment => {
         if (segment.type == ODataQueryBuilder.FUNCTION_CALL)
           return buildQuery({ func: { [segment.name]: segment.params } }).slice(1);
-        return (segment.name? `${segment.name}${ODataQueryBuilder.PATHSEP}` : "") + buildQuery(segment.params);
+        return segment.name + buildQuery(segment.params);
       });
     let odata = [
       ODataQueryBuilder.SELECT,
@@ -179,7 +182,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
       .map(key => !Utils.isEmpty(this.params[key]) ? { [key]: this.params[key] } : {})
       .reduce((acc, obj) => Object.assign(acc, obj), {});
     let query = buildQuery(odata);
-    return segments.join("") + query;
+    return segments.join(ODataQueryBase.PATHSEP) + query;
   }
 
   protected wrapParam<T>(type: string, opts?: T | T[]) {
@@ -222,11 +225,18 @@ export class ODataQueryBuilder extends ODataQueryBase {
       return new SegmentHandler(segment);
     }
   }
-  protected hasSegment(type, name) {
+
+  protected hasSegment(type: string, name?: string) {
     return !!this.segments.find(s => s.type === type && (typeof (name) === "undefined" || s.name === name));
   }
-  protected removeSegment(type, name) {
+
+  protected removeSegment(type: string, name?: string) {
     this.segments = this.segments.filter(s => s.type === type && s.name === name);
+  }
+
+  lastSegment(): SegmentHandler {
+    if (this.segments.length > 1)
+      return new SegmentHandler(this.segments[this.segments.length - 1]);
   }
 
   select(opts?: string | string[]) {
@@ -307,21 +317,22 @@ export class ODataQueryBuilder extends ODataQueryBase {
     this.removeParam(ODataQueryBuilder.COUNT);
   }
 
-  entityKey(opts: string | number | PlainObject) {
-    //let name = this.wrapSegment(ODataQueryBuilder.ENTITY_KEY).name;
-    // Quito lo que no se puede usar con keys
-    this.removeFilter();
-    this.removeOrderBy();
-    this.removeCount();
-    this.removeSkip();
-    this.removeTop();
-    this.wrapSegment(ODataQueryBuilder.ENTITY_KEY, name || "").params().set('key', opts);
-    return this;
+  entityKey(opts?: string | number | PlainObject) {
+    let segment = this.lastSegment();
+    if (segment && typeof(opts) === "undefined") return segment.params().get("key");
+    if (segment && [ODataQueryBase.ENTITY_SET, ODataQueryBase.NAVIGATION_PROPERTY].indexOf(segment.type) != -1) {
+      this.removeFilter();
+      this.removeOrderBy();
+      this.removeCount();
+      this.removeSkip();
+      this.removeTop();
+      segment.params().set("key", opts);
+    }
   }
   removeEntityKey() {
-    let name = this.wrapSegment(ODataQueryBuilder.ENTITY_KEY).name;
-    if (typeof (name) !== "undefined")
-      this.wrapSegment(ODataQueryBuilder.ENTITY_KEY, name).params().unset('key');
+    let segment = this.lastSegment();
+    if (segment)
+      segment.params().unset("key");
   }
 
   singleton(name: string) {
