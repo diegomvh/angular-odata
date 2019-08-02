@@ -116,6 +116,7 @@ export class Schema {
 
 export class Model {
   // Statics
+  static type: string = "";
   static schema: Schema = null;
   protected _query: ODataQueryBase;
 

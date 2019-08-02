@@ -122,7 +122,7 @@ export class SegmentHandler {
     return this.segment.type;
   }
   params() {
-    return new ParamHandler<string | number | PlainObject>(this.segment.params as PlainObject, "o");
+    return new ParamHandler<string | number | PlainObject>(this.segment as PlainObject, "params");
   }
 }
 
@@ -235,7 +235,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
   }
 
   lastSegment(): SegmentHandler {
-    if (this.segments.length > 1)
+    if (this.segments.length > 0)
       return new SegmentHandler(this.segments[this.segments.length - 1]);
   }
 

@@ -4,9 +4,9 @@ import { ODataQueryBuilder, Filter, Expand, GroupBy, PlainObject } from '../odat
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
-import { ODataContext } from '../odata-context';
 
 export class Collection<M extends Model> {
+  static type: string = "";
   static Model: typeof Model = null;
   protected _query: ODataQueryBase;
   protected _models: M[];
