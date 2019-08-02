@@ -71,6 +71,7 @@ export class Schema {
   }
 
   private toJSON(field: Field, value: any) {
+    if (value == null) return value; 
     switch(field.type) {
       case 'String': return typeof (value) === "string"? value : value.toString();
       case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
@@ -84,41 +85,54 @@ export class Schema {
     let Ctor = this.context.getConstructor(field.type);
     return { 
       get() { 
-        let query = this._query.clone() as ODataQueryBuilder;
-        query.entityKey(this.resolveKey());
-        query.navigationProperty(field.name);
-        return instanceFactory(Ctor, field, value, query);
+        if (!(field.name in this._relationships)) {
+          let query = this._query.clone() as ODataQueryBuilder;
+          query.entityKey(this.resolveKey());
+          query.navigationProperty(field.name);
+          this._relationships[field.name] = instanceFactory(Ctor, field, value, query);
+        }
+        return this._relationships[field.name];
       }
     }
   }
 
   deserialize(model: Model, attrs: PlainObject, query: ODataQueryBase) {
-    for (var f of this.fields) {
-      if (!f.related && f.name in attrs) {
+    model._attributes = attrs;
+    this.fields.filter(f => !f.related).forEach(f => {
+      if (f.name in attrs) {
         model[f.name] = f.ctor ? instanceFactory(
           this.context.getConstructor(f.type),
           f, attrs[f.name], query) : this.parse(f, attrs[f.name]);
-      } else if (f.related) {
-        Object.defineProperty(model, f.name, this.descriptor(f, attrs[f.name]));
       }
-    }
+    });
   }
 
   serialize(model: Model) {
-    return this.fields.reduce((acc, field) => {
-      if (field.name in model && model[field.name] != null) {
-        acc[field.name] = field.ctor ? model[field.name].toJSON() : this.toJSON(field, model[field.name]);
+    return this.fields.filter(f => !f.related).reduce((acc, f) => {
+      if (f.name in model) {
+        acc[f.name] = f.ctor ? 
+          model[f.name].toJSON() : 
+          this.toJSON(f, model[f.name]);
       }
       return acc;
     }, {});
   } 
+
+  relationships(model: Model, attrs: PlainObject, query: ODataQueryBase) {
+    model._relationships = {};
+    this.fields.filter(f => f.related).forEach(f => {
+      Object.defineProperty(model, f.name, this.descriptor(f, attrs[f.name]));
+    });
+  }
 }
 
 export class Model {
   // Statics
   static type: string = "";
   static schema: Schema = null;
-  protected _query: ODataQueryBase;
+  _query: ODataQueryBase;
+  _attributes: PlainObject;
+  _relationships: {[name: string]: Model | Collection<Model>}
 
   constructor(attrs: PlainObject, query?: ODataQueryBase) {
     this.assign(attrs, query);
@@ -132,6 +146,7 @@ export class Model {
   assign(attrs: PlainObject, query?: ODataQueryBase) {
     let ctor = <typeof Model>this.constructor;
     ctor.schema.deserialize(this, attrs, query);
+    ctor.schema.relationships(this, attrs, query);
   }
 
   resolveKey() {
