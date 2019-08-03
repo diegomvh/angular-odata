@@ -193,19 +193,21 @@ export class ODataQueryBuilder extends ODataQueryBase {
 
   // Params
   protected wrapParam<T>(type: string, opts?: T | T[]) {
-    if (typeof (this.params[type]) === "undefined")
-      this.params[type] = opts || {};
+    if (Utils.isUndefined(this.params[type]))
+      this.params[type] = {};
+    if (!Utils.isUndefined(opts))
+      this.params[type] = opts;
     return new ParamHandler<T>(this.params, type);
   }
 
   protected wrapValue<T>(type: string, opts?: T) {
-    if (typeof (opts) === "undefined")
+    if (Utils.isUndefined(opts))
       return this.params[type];
     this.params[type] = opts;
   }
 
   protected hasParam(type) {
-    return typeof (this.params[type]) !== "undefined";
+    return !Utils.isUndefined(this.params[type]);
   }
   protected removeParam(type) {
     delete this.params[type];
@@ -215,12 +217,12 @@ export class ODataQueryBuilder extends ODataQueryBase {
   protected findSegment(type: string, name?: string) {
     return this.segments.find(s => 
       s.type === type && 
-      (typeof(name) === "undefined" || s.name === name));
+      (Utils.isUndefined(name) || s.name === name));
   }
 
   protected wrapSegment(type: string, name?: string) {
     let segment = this.findSegment(type, name);
-    if (!segment && typeof(name) !== "undefined") {
+    if (!segment && !Utils.isUndefined(name)) {
       segment = { type, name, params: {} } as Segment;
       this.segments.push(segment);
     }
@@ -325,7 +327,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
   entityKey(opts?: string | number | PlainObject) {
     if (this.isEntitySet() || this.isNavigationProperty()) {
       let segment = this.lastSegment();
-      if (typeof(opts) === "undefined") return segment.params().get("key");
+      if (Utils.isUndefined(opts)) return segment.params().get("key");
       this.removeFilter();
       this.removeOrderBy();
       this.removeCount();
