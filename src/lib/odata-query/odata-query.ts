@@ -6,7 +6,6 @@ import { QueryOptions } from '../query-options/query-options';
 import { Search } from '../query-options/search/search';
 import { Utils } from '../utils/utils';
 import { ODataQueryBase } from './odata-query-base';
-import { ODataQueryBatch } from './odata-query-batch';
 import { QuotedString } from './quoted-string';
 
 export class ODataQuery extends ODataQueryBase {
@@ -161,12 +160,7 @@ export class ODataQuery extends ODataQueryBase {
     return this;
   }
 
-  batch(): ODataQueryBatch {
-    return new ODataQueryBatch(this.service);
-  }
-
   // QUERY OPTIONS
-
   select(select: string | string[]): ODataQuery {
     this.queryOptions.select(select);
     return this;

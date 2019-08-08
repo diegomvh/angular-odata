@@ -3,29 +3,28 @@ import { Observable } from "rxjs";
 import { ODataQueryType } from './odata-query/odata-query-type';
 import { Model } from './odata-model/odata-model';
 import { Collection } from './odata-model/odata-collection';
+import { ODataQueryBase } from './odata-query/odata-query-base';
 
 export interface ODataConfig {
-    baseUrl?: string,
-    metadataUrl?: string,
-    withCredentials?: boolean,
-    creation?: Date,
-    version?: string,
-    enums?: {[type: string]: any }
-    models?: {[type: string]: typeof Model }
-    collections?: {[type: string]: typeof Collection }
-    errorHandler?: (error: HttpErrorResponse) => Observable<never>
+  baseUrl?: string,
+  metadataUrl?: string,
+  withCredentials?: boolean,
+  batchQueries: boolean;
+  creation?: Date,
+  version?: string,
+  types?: (typeof Model | typeof Collection)[],
+  errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
 export class ODataContext implements ODataConfig {
   baseUrl: string;
   metadataUrl: string;
   withCredentials: boolean;
+  batchQueries: boolean;
   creation: Date;
   version: string;
   metadata: Promise<any>;
-  enums?: {[type: string]: any };
-  models: {[type: string]: typeof Model };
-  collections: {[type: string]: typeof Collection };
+  types?: (typeof Model | typeof Collection)[];
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -51,19 +50,14 @@ export class ODataContext implements ODataConfig {
     return Object.assign({}, ...options, { withCredentials: this.withCredentials });
   }
 
-  getEnum(name: string) {
-    return name in this.enums ? this.enums[name] : null;
+  getConstructor(name: string): typeof Collection | typeof Model {
+    return this.types.find(t => t.type === name);
   }
 
-  getConstructor(name: string): typeof Collection | typeof Model {
-    if (name in this.collections) {
-      let Collection = this.collections[name];
-      Collection.Model.schema.context = this;
-      return Collection;
-    } else if (name in this.models) {
-      let Model = this.models[name];
-      Model.schema.context = this;
-      return Model;
-    }
+  createInstance(type: string, value: any, query: ODataQueryBase): Model | Collection<Model> {
+    let Ctor = this.getConstructor(type);
+    let instance = new Ctor(value, query);
+    instance.setContext(this);
+    return instance;
   }
 }

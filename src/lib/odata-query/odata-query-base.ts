@@ -3,6 +3,7 @@ import { ODataService } from '../odata-service/odata.service';
 import { Observable } from 'rxjs';
 import { ODataResponse } from '../odata-response/odata-response';
 import { ODataQueryType } from './odata-query-type';
+import { ODataQueryBatch } from './odata-query-batch';
 
 export abstract class ODataQueryBase implements ODataQueryType {
   // URL QUERY PARTS
@@ -51,6 +52,10 @@ export abstract class ODataQueryBase implements ODataQueryType {
 
   // ABSTRACTS
   abstract clone(): ODataQueryBase;
+
+  batch(): ODataQueryBatch {
+    return new ODataQueryBatch(this.service);
+  }
 
   // QUERY EXECUTION
   get(options?): Observable<ODataResponse> {

@@ -4,12 +4,14 @@ import { ODataQueryBuilder, Filter, Expand, GroupBy, PlainObject } from '../odat
 import { Observable } from 'rxjs';
 import { EntitySet } from '../odata-response/entity-collection';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
+import { ODataContext } from '../odata-context';
 
 export class Collection<M extends Model> {
   static type: string = "";
-  static Model: typeof Model = null;
-  protected _query: ODataQueryBase;
-  protected _models: M[];
+  static modelType: string = "";
+  _context: ODataContext;
+  _query: ODataQueryBase;
+  _models: M[];
   state: {
     page?: number,
     pages?: number,
@@ -22,11 +24,20 @@ export class Collection<M extends Model> {
     this.state = {
       records: this._models.length
     };
+    this.setQuery(query);
+  }
+
+  setContext(context: ODataContext) {
+    this._context = context;
+  }
+
+  setQuery(query: ODataQueryBase) {
+    this._query = query;
   }
 
   parse(models: PlainObject[], query: ODataQueryBase) {
     let ctor = <typeof Collection>this.constructor;
-    return models.map(model => new ctor.Model(model, query) as M);
+    return models.map(model => this._context.createInstance(ctor.modelType, model, query) as M);
   }
 
   toJSON() {
@@ -54,15 +65,6 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     query: ODataQueryBuilder
   ) {
     super(models, query);
-    this.attach(query);
-  }
-
-  attach(query: ODataQueryBuilder) {
-    this._query = query;
-  }
-
-  detached(): boolean {
-    return !this._query;
   }
 
   assign(entitySet: EntitySet<ODataModel>, query: ODataQueryBuilder) {

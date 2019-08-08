@@ -17,7 +17,7 @@ export class BatchRequest {
     public method: Method,
     public odataQuery: ODataQueryBase,
     public body?: any,
-    public httpOptions?) { }
+    public options?) { }
 }
 
 export class ODataQueryBatch implements ODataQueryType {
@@ -47,7 +47,6 @@ export class ODataQueryBatch implements ODataQueryType {
 
   // VARIABLES
   public service: ODataService;
-  public queryString: string;
   private requests: BatchRequest[];
   private batchBoundary: string;
   private changesetBoundary: string;
@@ -55,7 +54,6 @@ export class ODataQueryBatch implements ODataQueryType {
 
   constructor(service: ODataService) {
     this.service = service;
-    this.queryString = Utils.appendSegment(this.queryString, ODataQueryBatch.$BATCH);
     this.requests = [];
     this.batchBoundary = ODataQueryBatch.BATCH_PREFIX + this.getUUID();
     this.changesetBoundary = null;
@@ -104,7 +102,7 @@ export class ODataQueryBatch implements ODataQueryType {
   }
 
   toString(): string {
-    return this.queryString;
+    return ODataQueryBatch.$BATCH;
   }
 
   getBody(): string {
@@ -113,7 +111,7 @@ export class ODataQueryBatch implements ODataQueryType {
     for (const request of this.requests) {
       const method: Method = request.method;
       const odataQuery: ODataQueryBase = request.odataQuery;
-      const httpOptions = request.httpOptions;
+      const httpOptions = request.options;
       const body: any = request.body;
 
       // if method is GET and there is a changeset boundary open then close it

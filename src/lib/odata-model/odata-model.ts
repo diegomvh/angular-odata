@@ -1,11 +1,12 @@
-import { Observable, EMPTY } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, EMPTY, forkJoin, OperatorFunction } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
 import { ODataQueryBuilder, Expand, PlainObject } from '../odata-query/odata-query-builder';
 import { Collection, ODataCollection } from './odata-collection';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 import { ODataContext } from '../odata-context';
+import { ODataQueryType } from '../odata-query/odata-query-type';
 
 export class Key {
   name: string;
@@ -23,15 +24,9 @@ export class Field {
   default?: any;
 }
 
-const instanceFactory = (Ctor: typeof Model | typeof Collection, field: Field, value: any, query: ODataQueryBase) => 
-  (field.collection) ?
-    new (Ctor as typeof Collection)(value as PlainObject[] || [], query):
-    new (Ctor as typeof Model)(value as PlainObject || {}, query);
-  
 export class Schema {
   keys: Key[];
   fields: Field[];
-  context: ODataContext;
 
   static create(opts: {keys?: Key[], fields?: Field[]}) {
     var keys = opts.keys || [];
@@ -80,29 +75,45 @@ export class Schema {
     }
     return value;
   }
-
-  private descriptor(field: Field, value: any) {
-    let Ctor = this.context.getConstructor(field.type);
-    return { 
+  private defineProperty(model: Model, field: Field, value: any) {
+    Object.defineProperty(model, field.name, {
       get() { 
         if (!(field.name in this._relationships)) {
           let query = this._query.clone() as ODataQueryBuilder;
+          if (this.isNew())
+            throw new Error(`Can't resolve ${field.name} relation from new entity`)
           query.entityKey(this.resolveKey());
           query.navigationProperty(field.name);
-          this._relationships[field.name] = instanceFactory(Ctor, field, value, query);
+          this._relationships[field.name] = this._context.createInstance(
+            field.type, value || (field.collection? [] : {}), query);
         }
         return this._relationships[field.name];
+      },
+      set(value: Model | null) {
+        if (field.collection)
+          throw new Error(`Can't set ${field.name} to collection, use add`)
+        this._relationships[field.name] = value;
+        /*
+        let query = this._query.clone() as ODataQueryBuilder;
+        query.entityKey(this.resolveKey());
+        query.navigationProperty(field.name);
+        this._relationships[field.name] = this._context.createInstance(
+          field.type, value !== null ? value.toJSON() : {}, query);
+        this.setState(ModelState.Modified);
+        this._relationships[field.name].setState(value !== null ? ModelState.Added : ModelState.Deleted);
+        */
       }
-    }
+    });
   }
 
   deserialize(model: Model, attrs: PlainObject, query: ODataQueryBase) {
+    let context = model._context;
     model._attributes = attrs;
     this.fields.filter(f => !f.related).forEach(f => {
       if (f.name in attrs) {
-        model[f.name] = f.ctor ? instanceFactory(
-          this.context.getConstructor(f.type),
-          f, attrs[f.name], query) : this.parse(f, attrs[f.name]);
+        model[f.name] = f.ctor ? 
+          context.createInstance(f.type, attrs[f.name], query) : 
+          this.parse(f, attrs[f.name]);
       }
     });
   }
@@ -121,21 +132,44 @@ export class Schema {
   relationships(model: Model, attrs: PlainObject, query: ODataQueryBase) {
     model._relationships = {};
     this.fields.filter(f => f.related).forEach(f => {
-      Object.defineProperty(model, f.name, this.descriptor(f, attrs[f.name]));
+      this.defineProperty(model, f, attrs[f.name]);
     });
   }
+}
+
+export enum ModelState {
+  Added,
+  Modified,
+  Deleted,
+  Unchanged,
+  Detached
 }
 
 export class Model {
   // Statics
   static type: string = "";
   static schema: Schema = null;
+  _context: ODataContext;
+  _state: ModelState;
   _query: ODataQueryBase;
   _attributes: PlainObject;
   _relationships: {[name: string]: Model | Collection<Model>}
 
   constructor(attrs: PlainObject, query?: ODataQueryBase) {
     this.assign(attrs, query);
+    this.setQuery(query);
+  }
+
+  setState(state: ModelState) {
+    this._state = state;
+  }
+
+  setContext(context: ODataContext) {
+    this._context = context;
+  }
+
+  setQuery(query: ODataQueryBase) {
+    this._query = query;
   }
 
   isNew() {
@@ -158,6 +192,14 @@ export class Model {
     let ctor = <typeof Model>this.constructor;
     return ctor.schema.serialize(this);
   }
+
+  clone() {
+    let ctor = <typeof Model>this.constructor;
+    return this._context.createInstance(
+      ctor.type, 
+      this.toJSON(), 
+      this._query);
+  }
 }
 
 export class ODataModel extends Model {
@@ -166,23 +208,15 @@ export class ODataModel extends Model {
     query: ODataQueryBuilder
   ) {
     super(attrs, query);
-    this.attach(query);
   }
   
-  attach(query:ODataQueryBuilder) {
-    this._query = query;
-  }
-
-  detached(): boolean {
-    return !this._query;
-  }
-
   assign(attrs: PlainObject, query: ODataQueryBuilder) {
     super.assign(attrs, query);
   }
 
   fetch(options?: any): Observable<this> {
-    //TODO: assert key
+    if (this.isNew())
+      throw new Error(`Can't fetch without entity key`);
     let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     return query.get(options)
@@ -191,25 +225,84 @@ export class ODataModel extends Model {
       );
   }
 
-  save(options?: any): Observable<this> {
+  private batchSave(options?: any): Observable<this> {
     let query = this._query.clone() as ODataQueryBuilder;
-    let json = this.toJSON();
-    let obs$ = EMPTY as Observable<ODataResponse>;
+    let batch = query.batch();
     if (!this.isNew()) {
       let key = this.resolveKey();
       query.entityKey(key);
-      obs$ = query.put(json, this[ODataResponse.ODATA_ETAG], options);
+      batch.put(query, this.toJSON());
     } else {
-      obs$ = query.post(json, options);
+      batch.post(query, this.toJSON(), options);
     }
-    return obs$ 
+    let changes = Object.keys(this._relationships)
+      .filter(k => this._relationships[k] === null || this._relationships[k] instanceof Model);
+    // Relations 
+    changes.forEach(name => {
+      let model = this._relationships[name] as Model;
+      let q = query.clone() as ODataQueryBuilder;
+      q.entityKey(this.resolveKey());
+      q.navigationProperty(name);
+      q.ref();
+      if (model === null) {
+        batch.delete(q);
+      } else {
+        let target = model._query.clone() as ODataQueryBuilder;
+        target.entityKey(model.resolveKey())
+        let refurl = this._context.createEndpointUrl(target);
+        batch.put(q, { [ODataResponse.ODATA_ID]: refurl });
+      }
+    });
+    return batch.execute(options)
       .pipe(
         map(resp => { this.assign(resp.toEntity(), query); return this })
       );
   }
+  
+  private forkSave(options?: any): Observable<this> {
+    let query = this._query.clone() as ODataQueryBuilder;
+    let obs: OperatorFunction<PlainObject, ODataResponse>[] = [];
+    let changes = Object.keys(this._relationships)
+      .filter(k => this._relationships[k] === null || this._relationships[k] instanceof Model);
+    // Relations 
+    changes.forEach(name => {
+      let model = this._relationships[name] as Model;
+      let q = query.clone() as ODataQueryBuilder;
+      q.entityKey(this.resolveKey());
+      q.navigationProperty(name);
+      q.ref();
+      if (model === null) {
+        obs.push(switchMap((attrs: PlainObject) => 
+          q.delete(attrs[ODataResponse.ODATA_ETAG], options)));
+      } else {
+        let target = model._query.clone() as ODataQueryBuilder;
+        target.entityKey(model.resolveKey())
+        let refurl = this._context.createEndpointUrl(target);
+        obs.push(switchMap((attrs: PlainObject) => q.put({ [ODataResponse.ODATA_ID]: refurl }, attrs[ODataResponse.ODATA_ETAG], options)));
+      }
+    });
+    if (this.isNew()) {
+      obs.push(query.post(this.toJSON(), options));
+    } else {
+      let key = this.resolveKey();
+      query.entityKey(key);
+      obs.push(query.put(this.toJSON(), this[ODataResponse.ODATA_ETAG], options));
+    }
+    return forkJoin(obs)
+      .pipe(
+        map(resp => { this.assign(resp[resp.length - 1].toEntity(), query); return this })
+      );
+  }
 
-  destroy(options?: any): Observable<any> {
-    //TODO: assert key
+  save(options?: any): Observable<this> {
+    return (this._context.batchQueries) ? 
+      this.batchSave(options) :
+      this.forkSave(options);
+  }
+
+  estroy(options?: any): Observable<any> {
+    if (this.isNew())
+      throw new Error(`Can't destroy without entity key`);
     let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
     return query.delete(this[ODataResponse.ODATA_ETAG], options);

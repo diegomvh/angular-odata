@@ -166,7 +166,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
     return new ODataQueryBuilder(service, json.segments || [], json.params || {});
   }
 
-  protected toString() {
+  toString() {
     let segments = this.segments
       .map(segment => {
         if (segment.type == ODataQueryBuilder.FUNCTION_CALL)

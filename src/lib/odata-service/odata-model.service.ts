@@ -16,24 +16,22 @@ export abstract class ODataModelService extends ODataService {
 
   model(attrs?: PlainObject) {
     let ctor = <typeof ODataModelService>this.constructor;
-    let Ctor = this.context.getConstructor(ctor.modelType);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new (Ctor as typeof Model)(attrs || {}, query);
+    return this.context.createInstance(ctor.modelType, attrs || {}, query);
   }
 
   collection(models?: PlainObject[]) {
     let ctor = <typeof ODataModelService>this.constructor;
-    let Ctor = this.context.getConstructor(ctor.collectionType);
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    return new (Ctor as typeof Collection)(models || [], query);
+    return this.context.createInstance(ctor.collectionType, models || [], query);
   }
 
   attach<T extends ODataModel | ODataCollection<ODataModel>>(model: T): T {
     let query = this.queryBuilder();
     query.entitySet(this.set);
-    model.attach(query);
+    model.setQuery(query);
     return model;
   }
 }
