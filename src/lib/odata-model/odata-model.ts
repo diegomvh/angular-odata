@@ -1,4 +1,4 @@
-import { Observable, EMPTY, forkJoin, OperatorFunction } from 'rxjs';
+import { Observable, EMPTY, forkJoin, OperatorFunction, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
@@ -261,7 +261,7 @@ export class ODataModel extends Model {
   
   private forkSave(options?: any): Observable<this> {
     let query = this._query.clone() as ODataQueryBuilder;
-    let obs: OperatorFunction<PlainObject, ODataResponse>[] = [];
+    let obs$ = of(this.toJSON());
     let changes = Object.keys(this._relationships)
       .filter(k => this._relationships[k] === null || this._relationships[k] instanceof Model);
     // Relations 
@@ -272,26 +272,34 @@ export class ODataModel extends Model {
       q.navigationProperty(name);
       q.ref();
       if (model === null) {
-        obs.push(switchMap((attrs: PlainObject) => 
-          q.delete(attrs[ODataResponse.ODATA_ETAG], options)));
+        obs$ = obs$.pipe(switchMap((attrs: PlainObject) => 
+          q.delete(attrs[ODataResponse.ODATA_ETAG], options)
+            .pipe(map(resp => 
+              Object.assign(attrs, {[ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG]})
+            ))
+          ));
       } else {
         let target = model._query.clone() as ODataQueryBuilder;
         target.entityKey(model.resolveKey())
         let refurl = this._context.createEndpointUrl(target);
-        obs.push(switchMap((attrs: PlainObject) => q.put({ [ODataResponse.ODATA_ID]: refurl }, attrs[ODataResponse.ODATA_ETAG], options)));
+        obs$ = obs$.pipe(switchMap((attrs: PlainObject) => 
+          q.put({ [ODataResponse.ODATA_ID]: refurl }, attrs[ODataResponse.ODATA_ETAG], options)
+            .pipe(map(resp => 
+              Object.assign(attrs, {[ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG]})
+            ))
+          ));
       }
     });
     if (this.isNew()) {
-      obs.push(query.post(this.toJSON(), options));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.post(attrs, options).pipe(map(resp => resp.toEntity()))));
     } else {
       let key = this.resolveKey();
       query.entityKey(key);
-      obs.push(query.put(this.toJSON(), this[ODataResponse.ODATA_ETAG], options));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs, attrs[ODataResponse.ODATA_ETAG], options).pipe(map(resp => resp.toEntity()))));
     }
-    return forkJoin(obs)
-      .pipe(
-        map(resp => { this.assign(resp[resp.length - 1].toEntity(), query); return this })
-      );
+    return obs$.pipe(
+      map(attrs => { console.log(attrs); this.assign(attrs, query); return this; })
+    );
   }
 
   save(options?: any): Observable<this> {

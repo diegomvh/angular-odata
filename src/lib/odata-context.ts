@@ -12,7 +12,7 @@ export interface ODataConfig {
   batchQueries: boolean;
   creation?: Date,
   version?: string,
-  types?: (typeof Model | typeof Collection)[],
+  types?: any,
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -24,7 +24,7 @@ export class ODataContext implements ODataConfig {
   creation: Date;
   version: string;
   metadata: Promise<any>;
-  types?: (typeof Model | typeof Collection)[];
+  types?: any;
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -50,12 +50,13 @@ export class ODataContext implements ODataConfig {
     return Object.assign({}, ...options, { withCredentials: this.withCredentials });
   }
 
-  getConstructor(name: string): typeof Collection | typeof Model {
-    return this.types.find(t => t.type === name);
+  getType(name: string) {
+    let Ctor = (this.types || []).find(t => t.type === name);
+    if (Ctor) return Ctor;
   }
 
-  createInstance(type: string, value: any, query: ODataQueryBase): Model | Collection<Model> {
-    let Ctor = this.getConstructor(type);
+  createInstance(type: string, value: any, query: ODataQueryBase) {
+    let Ctor = this.getType(type);
     let instance = new Ctor(value, query);
     instance.setContext(this);
     return instance;
