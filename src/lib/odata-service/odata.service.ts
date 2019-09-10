@@ -1,15 +1,26 @@
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
-import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
+import { ODataQueryBuilder, PlainObject } from '../odata-query/odata-query-builder';
 import { ODataQuery } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
 import { ODataQueryType } from '../odata-query/odata-query-type';
 import { Metadata } from '../odata-response/metadata';
+
+export interface ODataHttpOptions {
+  headers?: HttpHeaders | {
+      [header: string]: string | string[];
+  };
+  params?: HttpParams | {
+      [param: string]: string | string[];
+  };
+  reportProgress?: boolean;
+  withCredentials?: boolean;
+}
 
 export class ODataService {
   protected static readonly IF_MATCH_HEADER = 'If-Match';
@@ -17,15 +28,10 @@ export class ODataService {
   constructor(protected http: HttpClient, public context: ODataContext) {
   }
 
-  public metadata(): Promise<Metadata> {
-    if (!this.context.metadata) {
-      this.context.metadata = this.http
-        .get(this.context.metadataUrl, {observe: 'response', responseType: 'text'})
-        .pipe(
-          map(response => new ODataResponse(response).toMetadata())
-      ).toPromise();
-    }
-    return this.context.metadata;
+  public metadata(): Observable<Metadata> {
+    return this.http
+      .get(this.context.metadataUrl, {observe: 'body', responseType: 'text'})
+      .pipe(map(body => new Metadata(body)));
   }
 
   public query(): ODataQuery {
@@ -36,53 +42,49 @@ export class ODataService {
     return new ODataQueryBuilder(this);
   }
 
-  get(odataQuery: ODataQueryType, options?): Observable<ODataResponse> {
-    const url: string = this.context.createEndpointUrl(odataQuery);
-    options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
+  get(odataQuery: ODataQueryType, options?: ODataHttpOptions): Observable<ODataResponse> {
+    const url: string = this.createEndpointUrl(odataQuery);
+    const httpOptions = this.createHttpOptions(options);
     return this.handleError( 
-      this.http.get(url, <{observe: 'response', responseType: 'text'}>options)
-        .pipe( map(response => new ODataResponse(response)))
-    );
-  }
+      this.http.get(url, httpOptions)
+        .pipe(map(response => new ODataResponse(response)))); 
+      } 
 
-  post(odataQuery: ODataQueryType, body: any, options?): Observable<ODataResponse> {
-    const url: string = this.context.createEndpointUrl(odataQuery);
-    options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
+  post(odataQuery: ODataQueryType, body: any, options?: ODataHttpOptions): Observable<ODataResponse> {
+    const url: string = this.createEndpointUrl(odataQuery);
+    const httpOptions = this.createHttpOptions(options);
     return this.handleError( 
-      this.http.post(url, body, <{observe: 'response', responseType: 'text'}>options)
+      this.http.post(url, body, httpOptions)
       .pipe( map(response => new ODataResponse(response)))
     );
   }
 
-  patch(odataQuery: ODataQueryType, body: any, etag?: string, options?): Observable<ODataResponse> {
-    const url: string = this.context.createEndpointUrl(odataQuery);
-    options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    if (etag)
-      options = this.mergeETag(options, etag);
+  patch(odataQuery: ODataQueryType, body: any, etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
+    const url: string = this.createEndpointUrl(odataQuery);
+    if (etag) this.mergeETag(options, etag);
+    const httpOptions = this.createHttpOptions(options);
     return this.handleError( 
-      this.http.patch(url, body, <{observe: 'response', responseType: 'text'}>options)
+      this.http.patch(url, body, httpOptions)
         .pipe( map(response => new ODataResponse(response)))
     );
   }
 
-  put(odataQuery: ODataQueryType, body: any, etag?: string, options?): Observable<ODataResponse> {
-    const url: string = this.context.createEndpointUrl(odataQuery);
-    options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    if (etag)
-      options = this.mergeETag(options, etag);
+  put(odataQuery: ODataQueryType, body: any, etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
+    const url: string = this.createEndpointUrl(odataQuery);
+    if (etag) this.mergeETag(options, etag);
+    const httpOptions = this.createHttpOptions(options);
     return this.handleError(
-      this.http.put(url, body, <{observe: 'response', responseType: 'text'}>options)
+      this.http.put(url, body, httpOptions)
         .pipe(map(response => new ODataResponse(response)))
     );
   }
 
-  delete(odataQuery: ODataQueryType, etag?: string, options?): Observable<ODataResponse> {
-    const url: string = this.context.createEndpointUrl(odataQuery);
-    options = this.context.assignOptions(options || {}, {observe: 'response', responseType: 'text'});
-    if (etag)
-      options = this.mergeETag(options, etag);
+  delete(odataQuery: ODataQueryType, etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
+    const url: string = this.createEndpointUrl(odataQuery);
+    if (etag) this.mergeETag(options, etag);
+    const httpOptions = this.createHttpOptions(options);
     return this.handleError(
-      this.http.delete(url, <{observe: 'response', responseType: 'text'}>options)
+      this.http.delete(url, httpOptions) 
         .pipe( map(response => new ODataResponse(response)))
     );
   }
@@ -96,13 +98,30 @@ export class ODataService {
     return observable;
   }
 
-  protected mergeETag(options, etag: string) {
+  protected createHttpOptions(options?: ODataHttpOptions) {
+    return Object.assign(
+      <{observe: 'response', responseType: 'text'}>{observe: 'response', responseType: 'text'}, 
+      { withCredentials: this.context.withCredentials },
+      (options || {}));
+  }
+
+  protected createEndpointUrl(query: ODataQueryType) {
+    const serviceRoot = this.context.serviceRoot();
+    return `${serviceRoot}${query}`;
+  }
+
+  protected mergeETag(options: ODataHttpOptions , etag: string) {
     if (Utils.isNullOrUndefined(options.headers)) {
-      options.headers = {};
+      options.headers = new HttpHeaders();
     }
-
     options.headers[ODataService.IF_MATCH_HEADER] = etag;
+  }
 
-    return options;
+  protected mergeParams(options: ODataHttpOptions, params: PlainObject) {
+    if (Utils.isNullOrUndefined(options.params)) {
+      options.params = new HttpParams();
+    }
+    Object.entries(params)
+      .forEach(e => options.params[e[0]] = e[1]);
   }
 }

@@ -53,11 +53,6 @@ export class ODataResponse extends ODataResponseAbstract {
     return null;
   }
 
-  toMetadata(): Metadata {
-    const xml: string = this.getBodyAsText();
-    return new Metadata(xml);
-  }
-
   toEntitySet<T>(): EntitySet<T> {
     const json: any = this.getBodyAsJson();
     if (Utils.isNotNullNorUndefined(json) && json.hasOwnProperty(ODataResponse.VALUE)) {

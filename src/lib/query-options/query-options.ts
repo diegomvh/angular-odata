@@ -15,7 +15,7 @@ export class QueryOptions {
   private skipVar: number;
   private topVar: number;
   private countVar: boolean;
-  private customOptionsVar: Map<string, string>;
+  private customVar: Map<string, string>;
   private formatVar: string;
 
   constructor(separator: string) {
@@ -30,7 +30,7 @@ export class QueryOptions {
     this.skipVar = null;
     this.topVar = null;
     this.countVar = null;
-    this.customOptionsVar = null;
+    this.customVar = null;
     this.formatVar = null;
   }
 
@@ -99,116 +99,92 @@ export class QueryOptions {
 
   customOption(key: string, value: string) {
     Utils.requireNotNullNorUndefined(key, 'key');
-    if (Utils.isNullOrUndefined(this.customOptionsVar)) {
-      this.customOptionsVar = new Map<string, string>();
+    if (Utils.isNullOrUndefined(this.customVar)) {
+      this.customVar = new Map<string, string>();
     }
-    this.customOptionsVar.set(key, value);
+    this.customVar.set(key, value);
     return this;
   }
 
-  toString(): string {
+  options() {
     // query options
-    let queryOptions = '';
+    let options = {};
 
     // add select
     if (!Utils.isNullOrUndefined(this.selectVar) && !Utils.isEmpty(this.selectVar)) {
-      queryOptions += '$select=';
       if (typeof (this.selectVar) === 'string') {
-        queryOptions += this.selectVar;
+        options['$select'] = this.selectVar;
       } else {
-        queryOptions += Utils.toString(this.selectVar);
+        options['$select'] = Utils.toString(this.selectVar);
       }
     }
 
     // add filter
     if (!Utils.isNullOrUndefined(this.filterVar) && !Utils.isEmpty(this.filterVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$filter=' + encodeURIComponent(this.filterVar.toString());
+      options['$filter='] = encodeURIComponent(this.filterVar.toString());
     }
 
     // add expand
     if (!Utils.isNullOrUndefined(this.expandVar) && !Utils.isEmpty(this.expandVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$expand=';
       if (typeof (this.expandVar) === 'string') {
-        queryOptions += this.expandVar;
+        options['$expand'] = this.expandVar;
       } else {
-        queryOptions += Utils.toString(this.expandVar);
+        options['$expand'] = Utils.toString(this.expandVar);
       }
     }
 
     // add orderby
     if (!Utils.isNullOrUndefined(this.orderbyVar) && !Utils.isEmpty(this.orderbyVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$orderby=';
       if (typeof (this.orderbyVar) === 'string') {
-        queryOptions += this.orderbyVar;
+        options['$orderby'] = this.orderbyVar;
       } else {
-        queryOptions += Utils.toString(this.orderbyVar);
+        options['$orderby'] = Utils.toString(this.orderbyVar);
       }
     }
 
     // add search
     if (!Utils.isNullOrUndefined(this.searchVar) && !Utils.isEmpty(this.searchVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$search=' + encodeURIComponent(this.searchVar.toString());
+      options['$search'] = encodeURIComponent(this.searchVar.toString());
     }
 
     // add skip
     if (!Utils.isNullOrUndefined(this.skipVar) && !Utils.isEmpty(this.skipVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$skip=' + this.skipVar;
+      options['$skip'] = this.skipVar;
     }
 
     // add top
     if (!Utils.isNullOrUndefined(this.topVar) && !Utils.isEmpty(this.topVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$top=' + this.topVar;
+      options['$top'] = this.topVar;
     }
 
     // add count
     if (!Utils.isNullOrUndefined(this.countVar) && !Utils.isEmpty(this.countVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$count=' + this.countVar;
-    }
-
-    // add custom query options
-    if (Utils.isNotNullNorUndefined(this.customOptionsVar) && this.customOptionsVar.size > 0) {
-      this.customOptionsVar.forEach((value: string, key: string, map: Map<string, string>) => {
-        if (Utils.isNotNullNorUndefined(key) && !Utils.isEmpty(key)
-          && Utils.isNotNullNorUndefined(value) && !Utils.isEmpty(value)) {
-          if (queryOptions.length) {
-            queryOptions += this.separatorVar;
-          }
-          queryOptions += key + '=' + encodeURIComponent(value);
-        }
-      });
+      options['$count'] = this.countVar;
     }
 
     // add format
     if (!Utils.isNullOrUndefined(this.formatVar) && !Utils.isEmpty(this.formatVar)) {
-      if (queryOptions.length) {
-        queryOptions += this.separatorVar;
-      }
-      queryOptions += '$format=' + this.formatVar;
+      options['$format'] = this.formatVar;
     }
 
-    return queryOptions;
+    // add custom query options
+    if (Utils.isNotNullNorUndefined(this.customVar) && this.customVar.size > 0) {
+      this.customVar.forEach((value: string, key: string, map: Map<string, string>) => {
+        if (Utils.isNotNullNorUndefined(key) && !Utils.isEmpty(key)
+          && Utils.isNotNullNorUndefined(value) && !Utils.isEmpty(value)) {
+          options[key] = encodeURIComponent(value);
+        }
+      });
+    }
+
+    return options;
   }
+
+  toString(): string {
+    return Object.entries(this.options())
+      .map(e => `${e[0]}=${e[1]}`)
+      .join(this.separatorVar);
+    }
 
   isEmpty(): boolean {
     for (const key in this) {

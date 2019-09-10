@@ -7,6 +7,7 @@ import { Search } from '../query-options/search/search';
 import { Utils } from '../utils/utils';
 import { ODataQueryBase } from './odata-query-base';
 import { QuotedString } from './quoted-string';
+import { PlainObject } from './odata-query-builder';
 
 export class ODataQuery extends ODataQueryBase {
   // VARIABLES
@@ -69,6 +70,10 @@ export class ODataQuery extends ODataQueryBase {
     return this;
   }
 
+  isEntity() {
+    return this.lastSegment === ODataQuery.ENTITY_KEY;
+  }
+  
   singleton(singleton: string) {
     if (this.segments.length) {
       throw new Error('singleton segment cannot be appended to other segments');
@@ -211,12 +216,12 @@ export class ODataQuery extends ODataQueryBase {
     return this;
   }
 
-  toString(): string {
-    let res: string = this.queryString;
-    if (Utils.isNotNullNorUndefined(this.queryOptions) && !this.queryOptions.isEmpty()) {
-      res += '?' + this.queryOptions.toString();
-    }
-    return res;
+  path(): string {
+    return this.queryString;
+  }
+
+  params(): PlainObject {
+    return this.queryOptions.options();
   }
 
   protected getSegment(segment: string): string {

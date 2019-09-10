@@ -28,13 +28,13 @@ export class Schema {
   keys: Key[];
   fields: Field[];
 
-  static create(opts: {keys?: Key[], fields?: Field[]}) {
+  static create(opts: { keys?: Key[], fields?: Field[] }) {
     var keys = opts.keys || [];
     var fields = opts.fields || [];
     return Object.assign(new Schema(), { keys, fields });
   }
 
-  extend(opts: {keys?: Key[], fields?: Field[]}) {
+  extend(opts: { keys?: Key[], fields?: Field[] }) {
     var keys = [...this.keys, ...(opts.keys || [])];
     var fields = [...this.fields, ...(opts.fields || [])];
     return Object.assign(new Schema(), { keys, fields });
@@ -43,9 +43,9 @@ export class Schema {
   resolveKey(model: Model) {
     let keys = this.keys
       .map(key => [key.name, (key.resolve) ? key.resolve(model) : model[key.name]]);
-    let key = keys.length === 1 ? 
+    let key = keys.length === 1 ?
       keys[0][1] :
-      keys.reduce((acc, key) => Object.assign(acc, {[key[0]]: key[1]}), {});
+      keys.reduce((acc, key) => Object.assign(acc, { [key[0]]: key[1] }), {});
     if (!Utils.isEmpty(key))
       return key;
   }
@@ -53,31 +53,31 @@ export class Schema {
   isNew(model: Model) {
     return !this.resolveKey(model);
   }
- 
+
   private parse(field: Field, value: any) {
     if (value == null) return value;
-    switch(field.type) {
-      case 'String': return typeof (value) === "string"? value : value.toString();
-      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
-      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
+    switch (field.type) {
+      case 'String': return typeof (value) === "string" ? value : value.toString();
+      case 'Number': return typeof (value) === "number" ? value : parseInt(value.toString(), 10);
+      case 'Boolean': return typeof (value) === "boolean" ? value : !!value;
       case 'Date': return value instanceof Date ? value : new Date(value);
     }
     return value;
   }
 
   private toJSON(field: Field, value: any) {
-    if (value == null) return value; 
-    switch(field.type) {
-      case 'String': return typeof (value) === "string"? value : value.toString();
-      case 'Number': return typeof (value) === "number"? value : parseInt(value.toString(), 10);
-      case 'Boolean': return typeof (value) === "boolean"? value : !!value;
+    if (value == null) return value;
+    switch (field.type) {
+      case 'String': return typeof (value) === "string" ? value : value.toString();
+      case 'Number': return typeof (value) === "number" ? value : parseInt(value.toString(), 10);
+      case 'Boolean': return typeof (value) === "boolean" ? value : !!value;
       case 'Date': return value instanceof Date ? value.toISOString() : value;
     }
     return value;
   }
   private defineProperty(model: Model, field: Field, value: any) {
     Object.defineProperty(model, field.name, {
-      get() { 
+      get() {
         if (!(field.name in this._relationships)) {
           let query = this._query.clone() as ODataQueryBuilder;
           if (this.isNew())
@@ -85,13 +85,15 @@ export class Schema {
           query.entityKey(this.resolveKey());
           query.navigationProperty(field.name);
           this._relationships[field.name] = this._context.createInstance(
-            field.type, value || (field.collection? [] : {}), query);
+            field.type, value || (field.collection ? [] : {}), query);
         }
         return this._relationships[field.name];
       },
       set(value: Model | null) {
         if (field.collection)
-          throw new Error(`Can't set ${field.name} to collection, use add`)
+          throw new Error(`Can't set ${field.name} to collection, use add`);
+        if (!(value as Model)._query.isEntity())
+          throw new Error(`Can't set ${value} to model`);
         this._relationships[field.name] = value;
         /*
         let query = this._query.clone() as ODataQueryBuilder;
@@ -111,8 +113,8 @@ export class Schema {
     model._attributes = attrs;
     this.fields.filter(f => !f.related).forEach(f => {
       if (f.name in attrs) {
-        model[f.name] = f.ctor ? 
-          context.createInstance(f.type, attrs[f.name], query) : 
+        model[f.name] = f.ctor ?
+          context.createInstance(f.type, attrs[f.name], query) :
           this.parse(f, attrs[f.name]);
       }
     });
@@ -121,13 +123,13 @@ export class Schema {
   serialize(model: Model) {
     return this.fields.filter(f => !f.related).reduce((acc, f) => {
       if (f.name in model) {
-        acc[f.name] = f.ctor ? 
-          model[f.name].toJSON() : 
+        acc[f.name] = f.ctor ?
+          model[f.name].toJSON() :
           this.toJSON(f, model[f.name]);
       }
       return acc;
     }, {});
-  } 
+  }
 
   relationships(model: Model, attrs: PlainObject, query: ODataQueryBase) {
     model._relationships = {};
@@ -153,7 +155,7 @@ export class Model {
   _state: ModelState;
   _query: ODataQueryBase;
   _attributes: PlainObject;
-  _relationships: {[name: string]: Model | Collection<Model>}
+  _relationships: { [name: string]: Model | Collection<Model> }
 
   constructor(attrs: PlainObject, query?: ODataQueryBase) {
     this.assign(attrs, query);
@@ -196,20 +198,20 @@ export class Model {
   clone() {
     let ctor = <typeof Model>this.constructor;
     return this._context.createInstance(
-      ctor.type, 
-      this.toJSON(), 
+      ctor.type,
+      this.toJSON(),
       this._query);
   }
 }
 
 export class ODataModel extends Model {
   constructor(
-    attrs: PlainObject, 
+    attrs: PlainObject,
     query: ODataQueryBuilder
   ) {
     super(attrs, query);
   }
-  
+
   assign(attrs: PlainObject, query: ODataQueryBuilder) {
     super.assign(attrs, query);
   }
@@ -249,7 +251,7 @@ export class ODataModel extends Model {
       } else {
         let target = model._query.clone() as ODataQueryBuilder;
         target.entityKey(model.resolveKey())
-        let refurl = this._context.createEndpointUrl(target);
+        let refurl = ""; //this._context.createEndpointUrl(target);
         batch.put(q, { [ODataResponse.ODATA_ID]: refurl });
       }
     });
@@ -258,13 +260,12 @@ export class ODataModel extends Model {
         map(resp => { this.assign(resp.toEntity(), query); return this })
       );
   }
-  
+
   private forkSave(options?: any): Observable<this> {
     let query = this._query.clone() as ODataQueryBuilder;
     let obs$ = of(this.toJSON());
     let changes = Object.keys(this._relationships)
       .filter(k => this._relationships[k] === null || this._relationships[k] instanceof Model);
-    // Relations 
     changes.forEach(name => {
       let model = this._relationships[name] as Model;
       let q = query.clone() as ODataQueryBuilder;
@@ -272,22 +273,24 @@ export class ODataModel extends Model {
       q.navigationProperty(name);
       q.ref();
       if (model === null) {
-        obs$ = obs$.pipe(switchMap((attrs: PlainObject) => 
+        // Delete 
+        obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
           q.delete(attrs[ODataResponse.ODATA_ETAG], options)
-            .pipe(map(resp => 
-              Object.assign(attrs, {[ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG]})
+            .pipe(map(resp =>
+              Object.assign(attrs, { [ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG] })
             ))
-          ));
+        ));
       } else {
+        // Create
         let target = model._query.clone() as ODataQueryBuilder;
         target.entityKey(model.resolveKey())
-        let refurl = this._context.createEndpointUrl(target);
-        obs$ = obs$.pipe(switchMap((attrs: PlainObject) => 
+        let refurl = ""; //this._context.createEndpointUrl(target);
+        obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
           q.put({ [ODataResponse.ODATA_ID]: refurl }, attrs[ODataResponse.ODATA_ETAG], options)
-            .pipe(map(resp => 
-              Object.assign(attrs, {[ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG]})
+            .pipe(map(resp =>
+              Object.assign(attrs, { [ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG] })
             ))
-          ));
+        ));
       }
     });
     if (this.isNew()) {
@@ -303,7 +306,7 @@ export class ODataModel extends Model {
   }
 
   save(options?: any): Observable<this> {
-    return (this._context.batchQueries) ? 
+    return (this._context.batchQueries) ?
       this.batchSave(options) :
       this.forkSave(options);
   }

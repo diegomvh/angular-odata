@@ -134,14 +134,14 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   protected createRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
-    let refurl = this.context.createEndpointUrl(target);
+    let refurl = this.createEndpointUrl(target);
     let etag = entity[ODataResponse.ODATA_ETAG];
     return this.refQuery(entity, name)
       .put({ [ODataResponse.ODATA_ID]: refurl }, etag, options);
   }
 
   protected createCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
-    let refurl = this.context.createEndpointUrl(target);
+    let refurl = this.createEndpointUrl(target);
     return this.refQuery(entity, name)
       .post({ [ODataResponse.ODATA_ID]: refurl }, options);
   }
@@ -154,8 +154,8 @@ export abstract class ODataEntityService<T> extends ODataService {
 
   protected deleteCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
     let etag = entity[ODataResponse.ODATA_ETAG];
-    let refurl = this.context.createEndpointUrl(target);
-    options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
+    let refurl = this.createEndpointUrl(target);
+    options = this.mergeParams(options, { "$id": refurl });
     return this.refQuery(entity, name)
       .delete(etag, options);
   }
@@ -175,13 +175,13 @@ export abstract class ODataEntityService<T> extends ODataService {
 
   protected customFunction(entity: Partial<T>, name: string, parameters: any = {}, options?): Observable<ODataResponse> {
     let builder = this.entityQueryBuilder(entity);
-    builder.function(name).params().assign(parameters);
+    builder.function(name).options().assign(parameters);
     return builder.get(options);
   }
 
   protected customCollectionFunction(name: string, parameters: any = {}, opcions?): Observable<ODataResponse> {
     let builder = this.entitySetQueryBuilder();
-    builder.function(name).params().assign(parameters);
+    builder.function(name).options().assign(parameters);
     return builder.get(opcions);
   }
 }

@@ -1,8 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataQueryType } from './odata-query/odata-query-type';
-import { Model } from './odata-model/odata-model';
-import { Collection } from './odata-model/odata-collection';
 import { ODataQueryBase } from './odata-query/odata-query-base';
 
 export interface ODataConfig {
@@ -35,19 +33,12 @@ export class ODataContext implements ODataConfig {
       this.baseUrl = config.metadataUrl.substr(0, config.metadataUrl.indexOf("$metadata"));
   }
 
-  createEndpointUrl(query: ODataQueryType): string {
-    let path = `${query}`;
-    let base = `${this.baseUrl}`;
-    if (path.startsWith('/'))
-      path = path.slice(1);
+  serviceRoot(): string {
+    let base = this.baseUrl;
     if (!base.endsWith('/')) {
       base += '/';
     }
-    return `${base}${path}`;
-  }
-
-  assignOptions(...options) {
-    return Object.assign({}, ...options, { withCredentials: this.withCredentials });
+    return base;
   }
 
   getType(name: string) {

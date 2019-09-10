@@ -36,6 +36,9 @@ export abstract class ODataQueryBase implements ODataQueryType {
   public static readonly FUNCTION_CALL = 'functionCall';
   public static readonly ACTION_CALL = 'actionCall';
 
+  // CUSTOM OPTIONS
+  public static readonly CUSTOM = 'custom';
+
   // CONSTANT SEGMENTS
   public static readonly $METADATA = '$metadata';
   public static readonly $REF = '$ref';
@@ -52,6 +55,17 @@ export abstract class ODataQueryBase implements ODataQueryType {
 
   // ABSTRACTS
   abstract clone(): ODataQueryBase;
+  abstract isEntity(): boolean;
+  abstract path();
+  abstract params();
+
+  toString(): string {
+    let path = this.path();
+    let queryString = Object.entries(this.params())
+      .map(e => `${e[0]}=${e[1]}`)
+      .join("&");
+    return queryString ? `${path}?${queryString}` : path
+  }
 
   batch(): ODataQueryBatch {
     return new ODataQueryBatch(this.service);

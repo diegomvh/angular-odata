@@ -7,6 +7,7 @@ import { ODataService } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
 import { ODataQueryBase } from './odata-query-base';
 import { ODataQueryType } from './odata-query-type';
+import { PlainObject } from './odata-query-builder';
 
 export enum Method {
   GET, POST, PUT, PATCH, DELETE
@@ -101,8 +102,12 @@ export class ODataQueryBatch implements ODataQueryType {
     return this.service.post(this, this.getBody(), options);
   }
 
-  toString(): string {
+  path(): string {
     return ODataQueryBatch.$BATCH;
+  }
+
+  params(): PlainObject {
+    return {}; 
   }
 
   getBody(): string {
