@@ -42,8 +42,6 @@ export class ODataService {
     options.headers = this.mergeHttpHeaders(options.headers);
     options.params = this.mergeHttpParams(options.params, odataQuery.params());
     const httpOptions = this.createHttpOptions(options);
-    (<any>window).PARAMS = httpOptions.params;
-    console.log(httpOptions);
     return this.handleError( 
       this.http.get(url, httpOptions)
         .pipe(map(response => new ODataResponse(response)))); 
