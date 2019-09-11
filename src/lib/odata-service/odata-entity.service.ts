@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ODataResponse } from "../odata-response/odata-response";
 import { ODataQueryBuilder } from "../odata-query/odata-query-builder";
 import { ODataQuery } from "../odata-query/odata-query";
-import { ODataService } from "./odata.service";
+import { ODataService, ODataHttpOptions } from "./odata.service";
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 import { ODataContext } from '../odata-context';
 import { Observable, throwError } from 'rxjs';
@@ -123,63 +123,63 @@ export abstract class ODataEntityService<T> extends ODataService {
       return this.update(entity, options);
   }
 
-  protected navigationProperty(entity: Partial<T>, name, options?): Observable<ODataResponse> {
+  protected navigationProperty(entity: Partial<T>, name, options: ODataHttpOptions = {}): Observable<ODataResponse> {
     return this.navigationPropertyQuery(entity, name)
       .get(options);
   }
 
-  protected property(entity: Partial<T>, name: string, options?): Observable<ODataResponse> {
+  protected property(entity: Partial<T>, name: string, options: ODataHttpOptions = {}): Observable<ODataResponse> {
     return this.propertyQuery(entity, name)
       .get(options);
   }
 
-  protected createRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
+  protected createRef(entity: Partial<T>, name: string, target: ODataQueryBase, options: ODataHttpOptions = {}) {
     let refurl = this.createEndpointUrl(target);
     let etag = entity[ODataResponse.ODATA_ETAG];
     return this.refQuery(entity, name)
       .put({ [ODataResponse.ODATA_ID]: refurl }, etag, options);
   }
 
-  protected createCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
+  protected createCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options: ODataHttpOptions = {}) {
     let refurl = this.createEndpointUrl(target);
     return this.refQuery(entity, name)
       .post({ [ODataResponse.ODATA_ID]: refurl }, options);
   }
 
-  protected deleteRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
+  protected deleteRef(entity: Partial<T>, name: string, target: ODataQueryBase, options: ODataHttpOptions = {}) {
     let etag = entity[ODataResponse.ODATA_ETAG];
     return this.refQuery(entity, name)
       .delete(etag, options);
   }
 
-  protected deleteCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options?) {
+  protected deleteCollectionRef(entity: Partial<T>, name: string, target: ODataQueryBase, options: ODataHttpOptions = {}) {
     let etag = entity[ODataResponse.ODATA_ETAG];
     let refurl = this.createEndpointUrl(target);
-    options = this.mergeParams(options, { "$id": refurl });
+    options.params = this.mergeHttpParams(options.params, { "$id": refurl }); 
     return this.refQuery(entity, name)
       .delete(etag, options);
   }
 
   // Function and actions
-  protected customAction(entity: Partial<T>, name: string, postdata: any = {}, options?): Observable<ODataResponse> {
+  protected customAction(entity: Partial<T>, name: string, postdata: any = {}, options: ODataHttpOptions = {}): Observable<ODataResponse> {
     let builder = this.entityQueryBuilder(entity);
     builder.action(name);
     return builder.post(postdata, options);
   }
 
-  protected customCollectionAction(name: string, postdata: any = {}, options?): Observable<ODataResponse> {
+  protected customCollectionAction(name: string, postdata: any = {}, options: ODataHttpOptions = {}): Observable<ODataResponse> {
     let builder = this.entitySetQueryBuilder();
     builder.action(name);
     return builder.post(postdata, options);
   }
 
-  protected customFunction(entity: Partial<T>, name: string, parameters: any = {}, options?): Observable<ODataResponse> {
+  protected customFunction(entity: Partial<T>, name: string, parameters: any = {}, options: ODataHttpOptions = {}): Observable<ODataResponse> {
     let builder = this.entityQueryBuilder(entity);
     builder.function(name).options().assign(parameters);
     return builder.get(options);
   }
 
-  protected customCollectionFunction(name: string, parameters: any = {}, opcions?): Observable<ODataResponse> {
+  protected customCollectionFunction(name: string, parameters: any = {}, opcions: ODataHttpOptions = {}): Observable<ODataResponse> {
     let builder = this.entitySetQueryBuilder();
     builder.function(name).options().assign(parameters);
     return builder.get(opcions);

@@ -11,17 +11,19 @@ import { PlainObject } from './odata-query-builder';
 
 export class ODataQuery extends ODataQueryBase {
   // VARIABLES
-  private queryOptions: QueryOptions;
-  private queryString: string;
-  private segments: string[];
-  private lastSegment: string;
+  private options: QueryOptions;
+  private segments: {type: string, value: string}[];
+
+  private get lastSegment() {
+    if (Utils.isNotNullNorUndefined(this.segments) && this.segments.length) {
+      return this.segments[this.segments.length - 1];
+    }
+  }
 
   constructor(service: ODataService) {
     super(service);
-    this.queryOptions = new QueryOptions(ODataQuery.SEPARATOR);
-    this.queryString = "";
+    this.options = new QueryOptions(ODataQuery.SEPARATOR);
     this.segments = [];
-    this.lastSegment = null;
   }
 
   clone(): ODataQueryBase {
@@ -35,8 +37,7 @@ export class ODataQuery extends ODataQueryBase {
     if (this.segments.length) {
       throw new Error('metadata segment cannot be appended to other segments');
     }
-    this.queryString = Utils.appendSegment(this.queryString, ODataQuery.$METADATA);
-    this.addSegment(ODataQuery.METADATA);
+    this.addSegment(ODataQuery.METADATA, ODataQuery.$METADATA);
     return this;
   }
 
@@ -44,13 +45,12 @@ export class ODataQuery extends ODataQueryBase {
     Utils.requireNullOrUndefined(this.getSegment(ODataQuery.ENTITY_SET), ODataQuery.ENTITY_SET);
     Utils.requireNotNullNorUndefined(entitySet, 'entitySet');
     Utils.requireNotEmpty(entitySet, 'entitySet');
-    this.queryString = Utils.appendSegment(this.queryString, entitySet);
-    this.addSegment(ODataQuery.ENTITY_SET);
+    this.addSegment(ODataQuery.ENTITY_SET, entitySet);
     return this;
   }
 
   entityKey(entityKey: any): ODataQuery {
-    if (this.lastSegment !== ODataQuery.ENTITY_SET && this.lastSegment !== ODataQuery.NAVIGATION_PROPERTY) {
+    if (this.lastSegment.type !== ODataQuery.ENTITY_SET && this.lastSegment.type !== ODataQuery.NAVIGATION_PROPERTY) {
       throw new Error('entityKey can only be appended to entitySet or navigationProperty');
     }
     Utils.requireNotNullNorUndefined(entityKey, 'entityKey');
@@ -59,19 +59,19 @@ export class ODataQuery extends ODataQueryBase {
       var parts = Object.keys(entityKey).map(key => `${key}=${Utils.getValueURI(
         typeof(entityKey[key]) === "string" ? new QuotedString(entityKey[key]) : entityKey[key], 
         true)}`);
-      this.queryString = Utils.removeEndingSeparator(this.queryString) + '(' + parts.join(",") + ')';
+      this.lastSegment.value = this.lastSegment.value + '(' + parts.join(",") + ')';
     } else {
       entityKey = Utils.getValueURI(
         typeof(entityKey) === "string" ? new QuotedString(entityKey) : entityKey, 
         true);
-      this.queryString = Utils.removeEndingSeparator(this.queryString) + '(' + entityKey + ')';
+      this.lastSegment.value = this.lastSegment.value + '(' + entityKey + ')';
     }
-    this.addSegment(ODataQuery.ENTITY_KEY);
+    this.lastSegment.type = ODataQuery.ENTITY_KEY;
     return this;
   }
 
   isEntity() {
-    return this.lastSegment === ODataQuery.ENTITY_KEY;
+    return this.lastSegment.type === ODataQuery.ENTITY_KEY;
   }
   
   singleton(singleton: string) {
@@ -80,163 +80,153 @@ export class ODataQuery extends ODataQueryBase {
     }
     Utils.requireNotNullNorUndefined(singleton, 'singleton');
     Utils.requireNotEmpty(singleton, 'singleton');
-    this.queryString = Utils.appendSegment(this.queryString, singleton);
-    this.addSegment(ODataQuery.SINGLETON);
+    this.addSegment(ODataQuery.SINGLETON, singleton);
     return this;
   }
 
   typeName(typeName: string) {
-    if (this.lastSegment !== ODataQuery.ENTITY_SET && this.lastSegment !== ODataQuery.NAVIGATION_PROPERTY && this.lastSegment !== ODataQuery.ENTITY_KEY) {
+    if (this.lastSegment.type !== ODataQuery.ENTITY_SET && this.lastSegment.type !== ODataQuery.NAVIGATION_PROPERTY && this.lastSegment.type !== ODataQuery.ENTITY_KEY) {
       throw new Error('typeName can only be appended to entitySet, navigationProperty or entityKey');
     }
     Utils.requireNotNullNorUndefined(typeName, 'typeName');
     Utils.requireNotEmpty(typeName, 'typeName');
-    this.queryString = Utils.appendSegment(this.queryString, typeName);
-    this.addSegment(ODataQuery.TYPE_NAME);
+    this.addSegment(ODataQuery.TYPE_NAME, typeName);
     return this;
   }
 
   property(property: string): ODataQuery {
     Utils.requireNullOrUndefined(this.getSegment(ODataQuery.PROPERTY), ODataQuery.PROPERTY);
-    if (this.lastSegment !== ODataQuery.ENTITY_KEY && this.lastSegment !== ODataQuery.SINGLETON) {
+    if (this.lastSegment.type !== ODataQuery.ENTITY_KEY && this.lastSegment.type !== ODataQuery.SINGLETON) {
       throw new Error('property can only be appended to entityKey or singleton');
     }
     Utils.requireNotNullNorUndefined(property, 'property');
     Utils.requireNotEmpty(property, 'property');
-    this.queryString = Utils.appendSegment(this.queryString, property);
-    this.addSegment(ODataQuery.PROPERTY);
+    this.addSegment(ODataQuery.PROPERTY, property);
     return this;
   }
 
   navigationProperty(navigationProperty: string): ODataQuery {
-    if (this.lastSegment !== ODataQuery.ENTITY_KEY && this.lastSegment !== ODataQuery.SINGLETON && this.lastSegment !== ODataQuery.TYPE_NAME) {
+    if (this.lastSegment.type !== ODataQuery.ENTITY_KEY && this.lastSegment.type !== ODataQuery.SINGLETON && this.lastSegment.type !== ODataQuery.TYPE_NAME) {
       throw new Error('navigationProperty can only be appended to entityKey, singleton or typeName');
     }
     Utils.requireNotNullNorUndefined(navigationProperty, 'navigationProperty');
     Utils.requireNotEmpty(navigationProperty, 'navigationProperty');
-    this.queryString = Utils.appendSegment(this.queryString, navigationProperty);
-    this.addSegment(ODataQuery.NAVIGATION_PROPERTY);
+    this.addSegment(ODataQuery.NAVIGATION_PROPERTY, navigationProperty);
     return this;
   }
 
   ref(): ODataQuery {
     Utils.requireNullOrUndefined(this.getSegment(ODataQuery.REF), ODataQuery.REF);
-    if (this.lastSegment !== ODataQuery.NAVIGATION_PROPERTY) {
+    if (this.lastSegment.type !== ODataQuery.NAVIGATION_PROPERTY) {
       throw new Error('ref can only be appended to navigationProperty');
     }
-    this.queryString = Utils.appendSegment(this.queryString, ODataQuery.$REF);
-    this.addSegment(ODataQuery.REF);
+    this.addSegment(ODataQuery.REF, ODataQuery.$REF);
     return this;
   }
 
   value(): ODataQuery {
     Utils.requireNullOrUndefined(this.getSegment(ODataQuery.VALUE), ODataQuery.VALUE);
-    if (this.lastSegment !== ODataQuery.PROPERTY) {
+    if (this.lastSegment.type !== ODataQuery.PROPERTY) {
       throw new Error('value can only be appended to property');
     }
-    this.queryString = Utils.appendSegment(this.queryString, ODataQuery.$VALUE);
-    this.addSegment(ODataQuery.VALUE);
+    this.addSegment(ODataQuery.VALUE, ODataQuery.$VALUE);
     return this;
   }
 
   countSegment(): ODataQuery {
     Utils.requireNullOrUndefined(this.getSegment(ODataQuery.COUNT), ODataQuery.COUNT);
-    if (this.lastSegment !== ODataQuery.ENTITY_SET && this.lastSegment !== ODataQuery.NAVIGATION_PROPERTY) {
+    if (this.lastSegment.type !== ODataQuery.ENTITY_SET && this.lastSegment.type !== ODataQuery.NAVIGATION_PROPERTY) {
       throw new Error('count can only be appended to entitySet or navigationProperty');
     }
-    this.queryString = Utils.appendSegment(this.queryString, ODataQuery.$COUNT);
-    this.addSegment(ODataQuery.COUNT);
+    this.addSegment(ODataQuery.COUNT, ODataQuery.$COUNT);
     return this;
   }
 
   functionCall(functionCall: string): ODataQuery {
     Utils.requireNotNullNorUndefined(functionCall, 'functionCall');
     Utils.requireNotEmpty(functionCall, 'functionCall');
-    this.queryString = Utils.appendSegment(this.queryString, functionCall);
-    this.addSegment(ODataQuery.FUNCTION_CALL);
+    this.addSegment(ODataQuery.FUNCTION_CALL, functionCall);
     return this;
   }
 
   actionCall(actionCall: string): ODataQuery {
     Utils.requireNotNullNorUndefined(actionCall, 'actionCall');
     Utils.requireNotEmpty(actionCall, 'actionCall');
-    this.queryString = Utils.appendSegment(this.queryString, actionCall);
-    this.addSegment(ODataQuery.ACTION_CALL);
+    this.addSegment(ODataQuery.ACTION_CALL, actionCall);
     return this;
   }
 
   // QUERY OPTIONS
   select(select: string | string[]): ODataQuery {
-    this.queryOptions.select(select);
+    this.options.select(select);
     return this;
   }
 
   filter(filter: string | Filter): ODataQuery {
-    this.queryOptions.filter(filter);
+    this.options.filter(filter);
     return this;
   }
 
   expand(expand: string | Expand | Expand[]): ODataQuery {
-    this.queryOptions.expand(expand);
+    this.options.expand(expand);
     return this;
   }
 
   orderby(orderby: string | Orderby[]): ODataQuery {
-    this.queryOptions.orderby(orderby);
+    this.options.orderby(orderby);
     return this;
   }
 
   search(search: string | Search): ODataQuery {
-    this.queryOptions.search(search);
+    this.options.search(search);
     return this;
   }
 
   skip(skip: number): ODataQuery {
-    this.queryOptions.skip(skip);
+    this.options.skip(skip);
     return this;
   }
 
   top(top: number): ODataQuery {
-    this.queryOptions.top(top);
+    this.options.top(top);
     return this;
   }
 
   countOption(count: boolean): ODataQuery {
-    this.queryOptions.count(count);
+    this.options.count(count);
     return this;
   }
 
   customOption(key: string, value: string) {
-    this.queryOptions.customOption(key, value);
+    this.options.customOption(key, value);
     return this;
   }
 
   format(format: string): ODataQuery {
-    this.queryOptions.format(format);
+    this.options.format(format);
     return this;
   }
 
   path(): string {
-    return this.queryString;
+    return this.segments.map(segment => segment.value).join('/');
   }
 
   params(): PlainObject {
-    return this.queryOptions.options();
+    return this.options.params();
   }
 
   protected getSegment(segment: string): string {
     Utils.requireNotNull(segment, 'segment');
-    const res: string = this.segments.find((value: string, index: number, segments: string[]) => {
-      return value === segment;
+    const res = this.segments.find(value => {
+      return value.type === segment;
     });
-    return res;
+    if (res)
+      return res.value;
   }
 
-  protected addSegment(segment: string): void {
-    Utils.requireNotNull(segment, 'segment');
-    this.segments.push(segment);
-    if (Utils.isNotNullNorUndefined(this.segments) && this.segments.length) {
-      this.lastSegment = this.segments[this.segments.length - 1];
-    }
+  protected addSegment(type: string, value: string): void {
+    Utils.requireNotNull(type, 'type');
+    Utils.requireNotNull(value, 'value');
+    this.segments.push({type, value});
   }
 }

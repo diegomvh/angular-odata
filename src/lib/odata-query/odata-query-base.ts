@@ -1,5 +1,5 @@
 import { Utils } from '../utils/utils';
-import { ODataService } from '../odata-service/odata.service';
+import { ODataService, ODataHttpOptions } from '../odata-service/odata.service';
 import { Observable } from 'rxjs';
 import { ODataResponse } from '../odata-response/odata-response';
 import { ODataQueryType } from './odata-query-type';
@@ -72,23 +72,23 @@ export abstract class ODataQueryBase implements ODataQueryType {
   }
 
   // QUERY EXECUTION
-  get(options?): Observable<ODataResponse> {
+  get(options?: ODataHttpOptions): Observable<ODataResponse> {
     return this.service.get(this, options);
   }
 
-  post(body: any, options?): Observable<ODataResponse> {
+  post(body: any, options?: ODataHttpOptions): Observable<ODataResponse> {
     return this.service.post(this, body, options);
   }
 
-  patch(body: any, etag?: string, options?): Observable<ODataResponse> {
+  patch(body: any, etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
     return this.service.patch(this, body, etag, options);
   }
 
-  put(body: any, etag?: string, options?): Observable<ODataResponse> {
+  put(body: any, etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
     return this.service.put(this, body, etag, options);
   }
 
-  delete(etag?: string, options?): Observable<ODataResponse> {
+  delete(etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
     return this.service.delete(this, etag, options);
   }
 }

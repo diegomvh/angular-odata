@@ -106,7 +106,7 @@ export class QueryOptions {
     return this;
   }
 
-  options() {
+  params() {
     // query options
     let options = {};
 
@@ -181,10 +181,10 @@ export class QueryOptions {
   }
 
   toString(): string {
-    return Object.entries(this.options())
+    return Object.entries(this.params())
       .map(e => `${e[0]}=${e[1]}`)
       .join(this.separatorVar);
-    }
+  }
 
   isEmpty(): boolean {
     for (const key in this) {

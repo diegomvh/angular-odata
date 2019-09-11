@@ -23,7 +23,7 @@ describe('OdataQuery', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ODataModule.forContext({baseUrl: SERVICE_ROOT}), HttpClientTestingModule]
+      imports: [ODataModule.forContext({baseUrl: SERVICE_ROOT, batchQueries: false}), HttpClientTestingModule]
     });
 
     odataService = TestBed.get(ODataService);

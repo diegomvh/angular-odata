@@ -3,7 +3,7 @@ import { UUID } from 'angular2-uuid';
 import { Observable } from 'rxjs';
 
 import { ODataResponse } from '../odata-response/odata-response';
-import { ODataService } from '../odata-service/odata.service';
+import { ODataService, ODataHttpOptions } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
 import { ODataQueryBase } from './odata-query-base';
 import { ODataQueryType } from './odata-query-type';
@@ -18,7 +18,7 @@ export class BatchRequest {
     public method: Method,
     public odataQuery: ODataQueryBase,
     public body?: any,
-    public options?) { }
+    public options?: ODataHttpOptions) { }
 }
 
 export class ODataQueryBatch implements ODataQueryType {
@@ -61,27 +61,27 @@ export class ODataQueryBatch implements ODataQueryType {
     this.changesetID = 1;
   }
 
-  get(query: ODataQueryBase, options?): ODataQueryBatch {
+  get(query: ODataQueryBase, options?: ODataHttpOptions): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.GET, query, undefined, options));
     return this;
   }
 
-  post(query: ODataQueryBase, body: any, options?): ODataQueryBatch {
+  post(query: ODataQueryBase, body: any, options?: ODataHttpOptions): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.POST, query, body, options));
     return this;
   }
 
-  put(query: ODataQueryBase, body: any, options?): ODataQueryBatch {
+  put(query: ODataQueryBase, body: any, options?: ODataHttpOptions): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PUT, query, body, options));
     return this;
   }
 
-  patch(query: ODataQueryBase, body: any, options?): ODataQueryBatch {
+  patch(query: ODataQueryBase, body: any, options?: ODataHttpOptions): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PATCH, query, body, options));
     return this;
   }
 
-  delete(query: ODataQueryBase, options?): ODataQueryBatch {
+  delete(query: ODataQueryBase, options?: ODataHttpOptions): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.DELETE, query, undefined, options));
     return this;
   }

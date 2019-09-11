@@ -88,26 +88,6 @@ export class Utils {
         }
     }
 
-    static appendSegment(path: string, segment: string): string {
-        Utils.requireNotNullNorUndefined(path, 'path');
-        Utils.requireNotNullNorUndefined(segment, 'segment');
-        if (!path.endsWith('/')) {
-            path += '/';
-        }
-        return path + segment;
-    }
-
-    static removeEndingSeparator(value: string): string {
-        Utils.requireNotNullNorUndefined(value, 'value');
-        if (value.endsWith('/')) {
-            if (value.length === 1) {
-                return '';
-            }
-            return value.substring(0, value.length - 1);
-        }
-        return value;
-    }
-
     static getValueURI(value: boolean | number | string | QuotedString, encodeURI: boolean): any {
         Utils.requireNotUndefined(value, 'value');
         Utils.requireNotNullNorUndefined(encodeURI, 'encodeURI');

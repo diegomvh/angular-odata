@@ -177,7 +177,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
   }
 
   params(): PlainObject {
-    return [
+    let odata = [
       ODataQueryBuilder.SELECT,
       ODataQueryBuilder.FILTER,
       ODataQueryBuilder.SEARCH,
@@ -195,6 +195,7 @@ export class ODataQueryBuilder extends ODataQueryBase {
         let kv = param.substr(1).split("=");
         return Object.assign(acc, {[kv[0]]: kv[1]});
       }, {});
+    return Object.assign(odata, this.options[ODataQueryBuilder.CUSTOM] || {});
   }
 
   // Params
