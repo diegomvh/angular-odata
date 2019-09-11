@@ -192,8 +192,10 @@ export class ODataQueryBuilder extends ODataQueryBase {
       .filter(key => !Utils.isEmpty(this.options[key]))
       .map(key => buildQuery({ [key]: this.options[key] }))
       .reduce((acc, param: string) => {
-        let kv = param.substr(1).split("=");
-        return Object.assign(acc, {[kv[0]]: kv[1]});
+        let index = param.indexOf("=");
+        let name = param.substr(1, index - 1);
+        let values = param.substr(index + 1);
+        return Object.assign(acc, {[name]: values});
       }, {});
     return Object.assign(odata, this.options[ODataQueryBuilder.CUSTOM] || {});
   }
