@@ -1,9 +1,11 @@
 import { Utils } from '../utils/utils';
-import { ODataService, ODataHttpOptions } from '../odata-service/odata.service';
+import { ODataService, ODataObserve } from '../odata-service/odata.service';
 import { Observable } from 'rxjs';
 import { ODataResponse } from '../odata-response/odata-response';
 import { ODataQueryType } from './odata-query-type';
 import { ODataQueryBatch } from './odata-query-batch';
+import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { ODataSet } from '../odata-response/odata-set';
 
 export abstract class ODataQueryBase implements ODataQueryType {
   // URL QUERY PARTS
@@ -72,23 +74,112 @@ export abstract class ODataQueryBase implements ODataQueryType {
   }
 
   // QUERY EXECUTION
-  get(options?: ODataHttpOptions): Observable<ODataResponse> {
-    return this.service.get(this, options);
+  get<P>(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<P>;
+
+  get<T>(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'json',
+    withCredentials?: boolean,
+  }): Observable<T>;
+
+  get<T>(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'set',
+    withCredentials?: boolean,
+  }): Observable<ODataSet<T>>;
+
+  get(options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: ODataObserve,
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    withCredentials?: boolean,
+  } = {}): Observable<any> {
+    return this.service.request("GET", this, options);
   }
 
-  post(body: any, options?: ODataHttpOptions): Observable<ODataResponse> {
-    return this.service.post(this, body, options);
+  post<T>(body: any|null, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'json',
+    withCredentials?: boolean,
+  }): Observable<T>;
+
+  post<T>(body: any|null, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'set',
+    withCredentials?: boolean,
+  }): Observable<ODataSet<T>>;
+
+  post<T>(body: any|null, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<T>;
+
+  post(body: any|null, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: ODataObserve,
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    withCredentials?: boolean,
+  } = {}): Observable<any> {
+    return this.service.request("POST", this, Object.assign(options, {body}));
   }
 
-  patch(body: any, etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
-    return this.service.patch(this, body, etag, options);
+  patch(body: any|null, etag?: string, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: ODataObserve,
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    withCredentials?: boolean,
+  } = {}): Observable<any> {
+    return this.service.request("PATCH", this, Object.assign(options, {body, etag}));
   }
 
-  put(body: any, etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
-    return this.service.put(this, body, etag, options);
+  put(body: any|null, etag?: string, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: ODataObserve,
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    withCredentials?: boolean,
+  } = {}): Observable<any> {
+    return this.service.request("PUT", this, Object.assign(options, {body, etag}));
   }
 
-  delete(etag?: string, options?: ODataHttpOptions): Observable<ODataResponse> {
-    return this.service.delete(this, etag, options);
+  delete (etag?: string, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: ODataObserve,
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    withCredentials?: boolean,
+  } = {}): Observable<any> {
+    return this.service.request("DELETE", this, Object.assign(options, {etag}));
   }
 }

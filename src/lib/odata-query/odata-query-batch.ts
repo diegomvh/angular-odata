@@ -1,13 +1,14 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { Observable } from 'rxjs';
 
-import { ODataResponse } from '../odata-response/odata-response';
-import { ODataService, ODataHttpOptions } from '../odata-service/odata.service';
+import { ODataService } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
 import { ODataQueryBase } from './odata-query-base';
 import { ODataQueryType } from './odata-query-type';
 import { PlainObject } from './odata-query-builder';
+import { ODataResponseBatch } from '../odata-response/odata-response-batch';
+import { map } from 'rxjs/operators';
 
 export enum Method {
   GET, POST, PUT, PATCH, DELETE
@@ -18,7 +19,9 @@ export class BatchRequest {
     public method: Method,
     public odataQuery: ODataQueryBase,
     public body?: any,
-    public options?: ODataHttpOptions) { }
+    public options?: {
+      headers?: HttpHeaders|{[header: string]: string | string[]},
+    }) { }
 }
 
 export class ODataQueryBatch implements ODataQueryType {
@@ -61,45 +64,64 @@ export class ODataQueryBatch implements ODataQueryType {
     this.changesetID = 1;
   }
 
-  get(query: ODataQueryBase, options?: ODataHttpOptions): ODataQueryBatch {
+  get(query: ODataQueryBase, options?: {
+    headers?: HttpHeaders|{[header: string]: string | string[]},
+  }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.GET, query, undefined, options));
     return this;
   }
 
-  post(query: ODataQueryBase, body: any, options?: ODataHttpOptions): ODataQueryBatch {
+  post(query: ODataQueryBase, body: any, options?: {
+    headers?: HttpHeaders|{[header: string]: string | string[]},
+  }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.POST, query, body, options));
     return this;
   }
 
-  put(query: ODataQueryBase, body: any, options?: ODataHttpOptions): ODataQueryBatch {
+  put(query: ODataQueryBase, body: any, options?: {
+    headers?: HttpHeaders|{[header: string]: string | string[]},
+  }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PUT, query, body, options));
     return this;
   }
 
-  patch(query: ODataQueryBase, body: any, options?: ODataHttpOptions): ODataQueryBatch {
+  patch(query: ODataQueryBase, body: any, options?: {
+    headers?: HttpHeaders|{[header: string]: string | string[]},
+  }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PATCH, query, body, options));
     return this;
   }
 
-  delete(query: ODataQueryBase, options?: ODataHttpOptions): ODataQueryBatch {
+  delete(query: ODataQueryBase, options?: {
+    headers?: HttpHeaders|{[header: string]: string | string[]},
+  }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.DELETE, query, undefined, options));
     return this;
   }
 
-  execute(options?): Observable<ODataResponse> {
-    // set headers
-    if (Utils.isNullOrUndefined(options)) {
-      options = {};
-    }
-    if (Utils.isNullOrUndefined(options.headers)) {
-      options.headers = new HttpHeaders();
-    }
-    options.headers = options.headers.set(ODataQueryBatch.ODATA_VERSION, ODataQueryBatch.VERSION_4_0);
-    options.headers = options.headers.set(ODataQueryBatch.CONTENT_TYPE, ODataQueryBatch.MULTIPART_MIXED_BOUNDARY + this.batchBoundary);
-    options.headers = options.headers.set(ODataQueryBatch.ACCEPT, ODataQueryBatch.MULTIPART_MIXED);
+  execute(options?: {
+    headers?: HttpHeaders|{[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+  }): Observable<ODataResponseBatch> {
+
+    let headers = this.mergeHttpHeaders(options.headers, {
+      [ODataQueryBatch.ODATA_VERSION]: ODataQueryBatch.VERSION_4_0,
+      [ODataQueryBatch.CONTENT_TYPE]: ODataQueryBatch.MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
+      [ODataQueryBatch.ACCEPT]: ODataQueryBatch.MULTIPART_MIXED
+    });
 
     // send request
-    return this.service.post(this, this.getBody(), options);
+    return this.service.request("POST", this, {
+      body: this.getBody(),
+      headers: headers,
+      params: options.params,
+      observe: 'response',
+      reportProgress: options.reportProgress,
+      responseType: 'text',
+      withCredentials: options.withCredentials
+    }).pipe(map(resp => new ODataResponseBatch(resp)));
   }
 
   path(): string {
@@ -199,5 +221,17 @@ export class ODataQueryBatch implements ODataQueryType {
 
   setBatchBoundary(batchBoundary: string): void {
     this.batchBoundary = batchBoundary;
+  }
+
+  protected mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
+    let attrs = {};
+    headers.forEach(header => {
+    if (header instanceof HttpHeaders) {
+      const httpHeader = header as HttpHeaders;
+      attrs = httpHeader.keys().reduce((acc, key) => Object.assign(acc, {[key]: httpHeader.getAll(key)}), attrs);
+    } else if (typeof(header) === 'object')
+      attrs = Object.assign(attrs, header);
+    });
+    return new HttpHeaders(attrs);
   }
 }

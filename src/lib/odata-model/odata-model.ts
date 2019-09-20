@@ -7,6 +7,7 @@ import { Collection, ODataCollection } from './odata-collection';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 import { ODataContext } from '../odata-context';
 import { ODataQueryType } from '../odata-query/odata-query-type';
+import { ODataService } from '../odata-service/odata.service';
 
 export class Key {
   name: string;
@@ -221,9 +222,9 @@ export class ODataModel extends Model {
       throw new Error(`Can't fetch without entity key`);
     let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
-    return query.get(options)
+    return query.get({responseType: 'json'})
       .pipe(
-        map(resp => { this.assign(resp.toEntity(), query); return this })
+        map(entity => { this.assign(entity, query); return this })
       );
   }
 
@@ -252,12 +253,12 @@ export class ODataModel extends Model {
         let target = model._query.clone() as ODataQueryBuilder;
         target.entityKey(model.resolveKey())
         let refurl = ""; //this._context.createEndpointUrl(target);
-        batch.put(q, { [ODataResponse.ODATA_ID]: refurl });
+        batch.put(q, { [ODataService.ODATA_ID]: refurl });
       }
     });
     return batch.execute(options)
       .pipe(
-        map(resp => { this.assign(resp.toEntity(), query); return this })
+        map(resp => { this.assign(resp, query); return this })
       );
   }
 
@@ -275,9 +276,9 @@ export class ODataModel extends Model {
       if (model === null) {
         // Delete 
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
-          q.delete(attrs[ODataResponse.ODATA_ETAG], options)
+          q.delete(attrs[ODataService.ODATA_ETAG], options)
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG] })
+              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp.toEntity()[ODataService.ODATA_ETAG] })
             ))
         ));
       } else {
@@ -286,19 +287,19 @@ export class ODataModel extends Model {
         target.entityKey(model.resolveKey())
         let refurl = ""; //this._context.createEndpointUrl(target);
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
-          q.put({ [ODataResponse.ODATA_ID]: refurl }, attrs[ODataResponse.ODATA_ETAG], options)
+          q.put({ [ODataService.ODATA_ID]: refurl }, attrs[ODataService.ODATA_ETAG], options)
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataResponse.ODATA_ETAG]: resp.toEntity()[ODataResponse.ODATA_ETAG] })
+              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp.toEntity()[ODataService.ODATA_ETAG] })
             ))
         ));
       }
     });
     if (this.isNew()) {
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.post(attrs, options).pipe(map(resp => resp.toEntity()))));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.post(attrs, {responseType: 'json'})));
     } else {
       let key = this.resolveKey();
       query.entityKey(key);
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs, attrs[ODataResponse.ODATA_ETAG], options).pipe(map(resp => resp.toEntity()))));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs, attrs[ODataService.ODATA_ETAG], {responseType: 'json'})));
     }
     return obs$.pipe(
       map(attrs => { console.log(attrs); this.assign(attrs, query); return this; })
@@ -316,7 +317,7 @@ export class ODataModel extends Model {
       throw new Error(`Can't destroy without entity key`);
     let query = this._query.clone() as ODataQueryBuilder;
     query.entityKey(this.resolveKey());
-    return query.delete(this[ODataResponse.ODATA_ETAG], options);
+    return query.delete(this[ODataService.ODATA_ETAG], options);
   }
 
   protected createODataModelRef(name: string, target: ODataQueryBuilder, options?) {
@@ -326,7 +327,7 @@ export class ODataModel extends Model {
     query.ref();
     //let refurl = this.context.createEndpointUrl(target);
     let refurl = "";
-    return query.put({ [ODataResponse.ODATA_ID]: refurl }, this[ODataResponse.ODATA_ETAG], options);
+    return query.put({ [ODataService.ODATA_ID]: refurl }, this[ODataService.ODATA_ETAG], options);
   }
 
   protected deleteODataModelRef(name: string, target: ODataQueryBuilder, options?) {
@@ -335,7 +336,7 @@ export class ODataModel extends Model {
     query.navigationProperty(name);
     query.ref();
     //let refurl = this.context.createEndpointUrl(target);
-    return query.delete(this[ODataResponse.ODATA_ETAG], options);
+    return query.delete(this[ODataService.ODATA_ETAG], options);
   }
 
   protected createODataCollectionRef(name: string, target: ODataQueryBuilder, options?) {
@@ -345,7 +346,7 @@ export class ODataModel extends Model {
     query.ref();
     //let refurl = this.context.createEndpointUrl(target);
     let refurl = "";
-    return query.post({ [ODataResponse.ODATA_ID]: refurl }, options);
+    return query.post({ [ODataService.ODATA_ID]: refurl }, options);
   }
 
   protected deleteODataCollectionRef(name: string, target: ODataQueryBuilder, options?) {
@@ -356,7 +357,7 @@ export class ODataModel extends Model {
     //let refurl = this.context.createEndpointUrl(target);
     let refurl = "";
     //options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
-    return query.delete(this[ODataResponse.ODATA_ETAG], options);
+    return query.delete(this[ODataService.ODATA_ETAG], options);
   }
 
   // Mutate query

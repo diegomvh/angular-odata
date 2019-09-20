@@ -1,41 +1,24 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Utils } from '../utils/utils';
-import { EntitySet } from './entity-collection';
-import { Metadata } from './metadata';
-import { ODataResponseAbstract } from './odata-response-abstract';
 
-export class ODataResponse extends ODataResponseAbstract {
-  public static readonly ODATA_CONTEXT = '@odata.context';
-  public static readonly ODATA_ETAG = '@odata.etag';
-  public static readonly ODATA_ID = '@odata.id';
-  public static readonly ODATA_COUNT = '@odata.count';
-  public static readonly ODATA_NEXT_LINK = '@odata.nextLink';
+export class ODataResponse<T> extends HttpResponse<T> {
 
   private static readonly VALUE = 'value';
   private static readonly CONTENT_TYPE = 'content-type';
 
-  constructor(httpResponse: HttpResponse<string>) {
-    super(httpResponse);
+    constructor(init?: {
+        body?: T | null;
+        headers?: HttpHeaders;
+        status?: number;
+        statusText?: string;
+        url?: string;
+    }) {
+    super(init);
   }
 
-  getSkipToken(url: string) {
-    //https://docs.microsoft.com/en-us/odata/webapi/skiptoken-for-server-side-paging
-    let match = url.match(/\$skiptoken=(\d+)/);
-    if (match) {
-      return Number(match[1]);
-    }
-  }
-
-  getSkip(url: string) {
-    let match = url.match(/\$skip=(\d+)/);
-    if (match) {
-      return Number(match[1]);
-    }
-  }
-
-  getBodyAsJson(): any {
-    const headers: HttpHeaders = this.getHttpResponse().headers;
+  getBodyAsJson(): T {
+    const headers: HttpHeaders = this.headers;
     let contentType: string;
     for (const key of headers.keys()) {
       if (key.toLowerCase() === ODataResponse.CONTENT_TYPE) {
@@ -45,28 +28,10 @@ export class ODataResponse extends ODataResponseAbstract {
     }
     if (Utils.isNotNullNorUndefined(contentType) && contentType.includes('application/json')) {
       try {
-        return JSON.parse(this.getBodyAsText());
+        return this.body;
       } catch (error) {
         return null;
       }
-    }
-    return null;
-  }
-
-  toEntitySet<T>(): EntitySet<T> {
-    const json: any = this.getBodyAsJson();
-    if (Utils.isNotNullNorUndefined(json) && json.hasOwnProperty(ODataResponse.VALUE)) {
-      let count: number = null;
-      if (json.hasOwnProperty(ODataResponse.ODATA_COUNT)) {
-        count = json[ODataResponse.ODATA_COUNT];
-      }
-      let skip: number = null;
-      if (json.hasOwnProperty(ODataResponse.ODATA_NEXT_LINK)) {
-        skip = this.getSkip(json[ODataResponse.ODATA_NEXT_LINK]);
-        if (!skip)
-          skip = this.getSkipToken(json[ODataResponse.ODATA_NEXT_LINK]);
-      }
-      return new EntitySet<T>(json[ODataResponse.VALUE], count || json[ODataResponse.VALUE].length, skip);
     }
     return null;
   }
@@ -89,15 +54,19 @@ export class ODataResponse extends ODataResponseAbstract {
     return this.toObject<T>();
   }
 
-  toPropertyValue<T>(): T {
+  getBodyAsText(): string {
+    return <any>this.body as string;
+  }
+
+  toPropertyValue<V>(): V {
     const json: any = this.getBodyAsJson();
     if (Utils.isNotNullNorUndefined(json)) {
       if (json.hasOwnProperty(ODataResponse.VALUE)) {
-        return json[ODataResponse.VALUE] as T;
+        return json[ODataResponse.VALUE] as V;
       }
       return null;
     } else {
-      return JSON.parse(this.getBodyAsText()) as T;
+      return JSON.parse(this.getBodyAsText()) as V;
     }
   }
 
@@ -105,17 +74,36 @@ export class ODataResponse extends ODataResponseAbstract {
     return Number(this.getBodyAsText());
   }
 
-  /*
-  toODataResponseBatch(): ODataResponseBatch {
-      return new ODataResponseBatch(this.getHttpResponse());
-  }
-  */
-
   protected toObject<T>(): T {
     const json: any = this.getBodyAsJson();
     if (Utils.isNotNullNorUndefined(json)) {
       return <T>json;
     }
     return null;
+  }
+
+  toString(): string {
+    let res = `${this.status} ${this.statusText}\n`;
+
+    const headers = this.headers;
+    for (const key of headers.keys()) {
+      res += key + ': ';
+      let valueString = '';
+      for (const value of headers.getAll(key)) {
+        if (valueString.length) {
+          valueString += ' ';
+        }
+        valueString += value;
+      }
+      res += valueString + '\n';
+    }
+
+    const json = this.getBodyAsJson();
+    if (Utils.isNotNullNorUndefined(json)) {
+      res += JSON.stringify(json, null, 4);
+    } else {
+      res += this.getBodyAsText();
+    }
+    return res;
   }
 }

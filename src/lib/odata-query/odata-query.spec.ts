@@ -1,7 +1,7 @@
 import {HttpHeaders} from '@angular/common/http';
 import {HttpClientTestingModule, HttpTestingController, TestRequest} from '@angular/common/http/testing';
 import {fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {EntitySet} from '../odata-response/entity-collection';
+import {ODataSet} from '../odata-response/odata-set';
 import {ODataResponse} from '../odata-response/odata-response';
 import {ODataService} from '../odata-service/odata.service';
 import {ODataModule} from '../odata.module';
@@ -336,7 +336,7 @@ describe('OdataQuery', () => {
 
     odataService.query().entitySet(ENTITY_SET).get().subscribe(
       (odataResponse: ODataResponse) => {
-        const entitySetData: EntitySet<Type> = odataResponse.toEntitySet<Type>();
+        const entitySetData: ODataSet<Type> = odataResponse.toEntitySet<Type>();
         const types: Type[] = entitySetData.getEntities();
 
         expect(types[0].type).toEqual('type1');
@@ -354,7 +354,7 @@ describe('OdataQuery', () => {
 
     odataService.query().entitySet(ENTITY_SET).get().subscribe(
       (odataResponse: ODataResponse) => {
-        const entitySetData: EntitySet<Type> = odataResponse.toEntitySet<Type>();
+        const entitySetData: ODataSet<Type> = odataResponse.toEntitySet<Type>();
         const types: Type[] = entitySetData.getEntities();
 
         expect(types[0].type).toEqual('type1');

@@ -2,7 +2,7 @@ import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
 import { ODataQueryBuilder, Filter, Expand, GroupBy, PlainObject } from '../odata-query/odata-query-builder';
 import { Observable } from 'rxjs';
-import { EntitySet } from '../odata-response/entity-collection';
+import { ODataSet } from '../odata-response/odata-set';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 import { ODataContext } from '../odata-context';
 
@@ -67,14 +67,14 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     super(models, query);
   }
 
-  assign(entitySet: EntitySet<ODataModel>, query: ODataQueryBuilder) {
-    this.state.records = entitySet.getCount();
-    let skip = entitySet.getSkip();
+  assign(entitySet: ODataSet<ODataModel>, query: ODataQueryBuilder) {
+    this.state.records = entitySet.count;
+    let skip = entitySet.skip;
     if (skip)
       this.state.size = skip;
     if (this.state.size)
       this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this._models = this.parse(entitySet.getEntities(), query);
+    this._models = this.parse(entitySet.entities, query);
     return this;
   }
 
@@ -87,9 +87,9 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
       query.skip(this.state.size * (this.state.page - 1));
     }
     query.countOption(true);
-    return query.get(options)
+    return query.get<M>({responseType: 'set'})
       .pipe(
-        map(resp => this.assign(resp.toEntitySet(), query))
+        map(set => this.assign(set, query))
       );
   }
 
