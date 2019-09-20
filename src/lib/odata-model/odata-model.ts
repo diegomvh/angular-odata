@@ -287,9 +287,9 @@ export class ODataModel extends Model {
         target.entityKey(model.resolveKey())
         let refurl = ""; //this._context.createEndpointUrl(target);
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
-          q.put({ [ODataService.ODATA_ID]: refurl }, attrs[ODataService.ODATA_ETAG], options)
+          q.put<any>({ [ODataService.ODATA_ID]: refurl }, attrs[ODataService.ODATA_ETAG], options)
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp.toEntity()[ODataService.ODATA_ETAG] })
+              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp[ODataService.ODATA_ETAG] })
             ))
         ));
       }
