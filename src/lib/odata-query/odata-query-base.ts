@@ -118,12 +118,12 @@ export abstract class ODataQueryBase implements ODataQueryType {
     withCredentials?: boolean,
   }): Observable<ODataSet<T>> {
     return this.get<T>({
-      headers: options.headers,
+      headers: options && options.headers,
       observe: 'body',
-      params: options.params,
+      params: options && options.params,
       responseType: 'set',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
     });
   }
 
@@ -134,12 +134,12 @@ export abstract class ODataQueryBase implements ODataQueryType {
     withCredentials?: boolean,
   }): Observable<P> {
     return this.get<P>({
-      headers: options.headers,
+      headers: options && options.headers,
       observe: 'body',
-      params: options.params,
+      params: options && options.params,
       responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
     });
   }
 

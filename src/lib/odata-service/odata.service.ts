@@ -83,16 +83,11 @@ export class ODataService {
     res$ = this.handleError(res$);
 
     // ODataResponse
-    switch (options.observe || 'body') {
-      case 'body':
-        switch (options.responseType) {
-          case 'set':
-            res$ = res$.pipe(map((res: HttpResponse<any>) => new ODataSet<any>(res.body)));;
-            break;
-          case 'property':
-            res$ = res$.pipe(map((res: HttpResponse<any>) => res.body[ODataService.PROPERTY_VALUE]));;
-            break;
-        }
+    switch(options.responseType) {
+      case 'set':
+        return res$.pipe(map((body: any) => new ODataSet<any>(body)));
+      case 'property':
+        return res$.pipe(map((body: any) => body[ODataService.PROPERTY_VALUE]));
     }
     return res$;
   }
