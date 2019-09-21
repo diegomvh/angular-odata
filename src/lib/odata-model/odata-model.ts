@@ -1,12 +1,10 @@
 import { Observable, EMPTY, forkJoin, OperatorFunction, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { ODataResponse } from '../odata-response/odata-response';
 import { Utils } from '../utils/utils';
 import { ODataQueryBuilder, Expand, PlainObject } from '../odata-query/odata-query-builder';
-import { Collection, ODataCollection } from './odata-collection';
+import { Collection } from './odata-collection';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 import { ODataContext } from '../odata-context';
-import { ODataQueryType } from '../odata-query/odata-query-type';
 import { ODataService } from '../odata-service/odata.service';
 
 export class Key {
@@ -278,7 +276,7 @@ export class ODataModel extends Model {
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
           q.delete(attrs[ODataService.ODATA_ETAG], options)
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp.toEntity()[ODataService.ODATA_ETAG] })
+              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp[ODataService.ODATA_ETAG] })
             ))
         ));
       } else {
@@ -295,11 +293,11 @@ export class ODataModel extends Model {
       }
     });
     if (this.isNew()) {
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.post(attrs, {responseType: 'json'})));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.post<ODataModel>(attrs)));
     } else {
       let key = this.resolveKey();
       query.entityKey(key);
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs, attrs[ODataService.ODATA_ETAG], {responseType: 'json'})));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put<ODataModel>(attrs, attrs[ODataService.ODATA_ETAG])));
     }
     return obs$.pipe(
       map(attrs => { console.log(attrs); this.assign(attrs, query); return this; })

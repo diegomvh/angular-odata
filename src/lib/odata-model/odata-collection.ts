@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ODataSet } from '../odata-response/odata-set';
 import { ODataQueryBase } from '../odata-query/odata-query-base';
 import { ODataContext } from '../odata-context';
+import { OptionHandler } from 'angular-odata/public-api';
 
 export class Collection<M extends Model> {
   static type: string = "";

@@ -111,22 +111,6 @@ export abstract class ODataQueryBase implements ODataQueryType {
     return this.service.request("GET", this, options);
   }
 
-  getProperty<P>(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<P> {
-    return this.get<P>({
-      headers: options.headers,
-      observe: 'body',
-      params: options.params,
-      responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
-
   getSet<T>(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
@@ -138,6 +122,22 @@ export abstract class ODataQueryBase implements ODataQueryType {
       observe: 'body',
       params: options.params,
       responseType: 'set',
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
+  }
+
+  getProperty<P>(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+  }): Observable<P> {
+    return this.get<P>({
+      headers: options.headers,
+      observe: 'body',
+      params: options.params,
+      responseType: 'property',
       reportProgress: options.reportProgress,
       withCredentials: options.withCredentials
     });
@@ -179,40 +179,6 @@ export abstract class ODataQueryBase implements ODataQueryType {
     withCredentials?: boolean,
   } = {}): Observable<any> {
     return this.service.request("POST", this, Object.assign(options, {body}));
-  }
-
-  postSet<T>(body: any|null, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<ODataSet<T>> {
-    return this.post<T>(body, {
-      headers: options.headers,
-      observe: 'body',
-      params: options.params,
-      responseType: 'set',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
-
-  postProperty<P>(body: any|null, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe?: 'body',
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'property',
-    withCredentials?: boolean,
-  }): Observable<P> {
-    return this.post<P>(body, {
-      headers: options.headers,
-      observe: 'body',
-      params: options.params,
-      responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
   }
 
   patch(body: any|null, etag?: string, options: {

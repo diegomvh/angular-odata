@@ -213,7 +213,14 @@ export abstract class ODataEntityService<T> extends ODataService {
   }): Observable<ODataSet<P>> {
     let builder = this.entityQueryBuilder(entity);
     builder.action(name);
-    return builder.postSet<P>(postdata, options);
+    return builder.post<P>(postdata, {
+      observe: 'body',
+      headers: options.headers,
+      params: options.params,
+      responseType: 'set',
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
   }
 
   protected customActionProperty<P>(entity: Partial<T>, name: string, postdata: any = {}, options?: {
@@ -224,7 +231,14 @@ export abstract class ODataEntityService<T> extends ODataService {
   }): Observable<P> {
     let builder = this.entityQueryBuilder(entity);
     builder.action(name);
-    return builder.postProperty<P>(postdata, options);
+    return builder.post<P>(postdata, {
+      observe: 'body',
+      headers: options.headers,
+      params: options.params,
+      responseType: 'property',
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
   }
 
   protected customCollectionAction<P>(name: string, postdata: any = {}, options?: {
@@ -246,7 +260,14 @@ export abstract class ODataEntityService<T> extends ODataService {
   }): Observable<ODataSet<P>> {
     let builder = this.entitySetQueryBuilder();
     builder.action(name);
-    return builder.postSet<P>(postdata, options);
+    return builder.post<P>(postdata, {
+      observe: 'body',
+      headers: options.headers,
+      params: options.params,
+      responseType: 'set',
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
   }
 
   protected customCollectionActionProperty<P>(name: string, postdata: any = {}, options?: {
@@ -257,7 +278,14 @@ export abstract class ODataEntityService<T> extends ODataService {
   }): Observable<P> {
     let builder = this.entitySetQueryBuilder();
     builder.action(name);
-    return builder.postProperty<P>(postdata, options);
+    return builder.post<P>(postdata, {
+      observe: 'body',
+      headers: options.headers,
+      params: options.params,
+      responseType: 'property',
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
   }
 
   protected customFunction<P>(entity: Partial<T>, name: string, parameters: any = {}, options?: {
