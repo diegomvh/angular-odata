@@ -660,3 +660,9 @@ export class ODataQuery {
     return this.removeSegment(ODataQuery.COUNT, ODataQuery.$COUNT);
   }
 }
+
+export class ODataSingleQuery<T> extends ODataQuery {}
+export class ODataCollectionQuery<T> extends ODataQuery {}
+export class ODataValueQuery<T> extends ODataQuery {}
+export class ODataSingletonQuery<T> extends ODataQuery {}
+export class ODataRefQuery<T> extends ODataQuery {}
