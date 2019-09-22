@@ -1,8 +1,6 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Utils } from '../utils/utils';
-import { ODataResponseBase } from './odata-response-abstract';
-import { ODataResponse } from './odata-response';
 
 export class ODataResponseBatch extends HttpResponse<string> {
     private static readonly CONTENT_TYPE = 'Content-Type';
@@ -12,19 +10,19 @@ export class ODataResponseBatch extends HttpResponse<string> {
     private static readonly NEWLINE = '\r\n';
     private static readonly MULTIPART_MIXED = 'multipart/mixed';
 
-    private odataResponses: ODataResponse<any>[];
+    private odataResponses: HttpResponse<string>[];
 
-    constructor(httpResponse: ODataResponse<any>) {
+    constructor(httpResponse: HttpResponse<string>) {
         super(httpResponse);
         this.odataResponses = [];
         this.parseResponses();
     }
 
-    getODataResponses(): ODataResponse<any>[] {
+    getODataResponses(): HttpResponse<string>[] {
         return this.odataResponses;
     }
 
-    static fromODataResponse(odataResponse: ODataResponse<any>): ODataResponseBatch {
+    static fromODataResponse(odataResponse: HttpResponse<string>): ODataResponseBatch {
         return new ODataResponseBatch(odataResponse);
     }
 
@@ -36,7 +34,7 @@ export class ODataResponseBatch extends HttpResponse<string> {
         const batchBody: string = this.body;
         const batchBodyLines: string[] = batchBody.split(ODataResponseBatch.NEWLINE);
 
-        let odataResponseCS: ODataResponse<any>[];
+        let odataResponseCS: HttpResponse<any>[];
         let contentId: number;
         let boundaryDelimiterCS;
         let boundaryEndCS;
@@ -64,7 +62,7 @@ export class ODataResponseBatch extends HttpResponse<string> {
                     continue;
                 }
 
-                const odataResponse: ODataResponse<any> = this.createODataResponse(batchBodyLines, batchPartStartIndex, index - 1);
+                const odataResponse: HttpResponse<any> = this.createODataResponse(batchBodyLines, batchPartStartIndex, index - 1);
                 if (Utils.isNotNullNorUndefined(odataResponseCS)) {
                     odataResponseCS[contentId] = odataResponse;
                 } else {
@@ -115,7 +113,7 @@ export class ODataResponseBatch extends HttpResponse<string> {
         return boundaryEnd;
     }
 
-    protected createODataResponse(batchBodyLines: string[], batchPartStartIndex: number, batchPartEndIndex: number): ODataResponse<any> {
+    protected createODataResponse(batchBodyLines: string[], batchPartStartIndex: number, batchPartEndIndex: number): HttpResponse<any> {
         let index: number = batchPartStartIndex;
         const statusLine: string = batchBodyLines[index];
         const statusLineParts: string[] = batchBodyLines[index].split(' ');
@@ -140,7 +138,7 @@ export class ODataResponseBatch extends HttpResponse<string> {
             body += batchBodyLines[index];
         }
 
-        return new ODataResponse({
+        return new HttpResponse({
             body,
             headers: httpHeaders,
             status: Number(status),

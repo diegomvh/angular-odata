@@ -3,15 +3,11 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/comm
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataQueryBuilder } from '../odata-query/odata-query-builder';
-import { ODataQuery } from '../odata-query/odata-query';
+import { ODataQuery, ODataObserve } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
-import { ODataQueryType } from '../odata-query/odata-query-type';
 import { Metadata } from '../odata-response/metadata';
 import { ODataSet } from '../odata-response/odata-set';
 import { Injectable } from '@angular/core';
-
-export type ODataObserve = 'body' | 'events' | 'response';
 
 @Injectable()
 export class ODataService {
@@ -36,11 +32,7 @@ export class ODataService {
     return new ODataQuery(this);
   }
 
-  public queryBuilder(): ODataQueryBuilder {
-    return new ODataQueryBuilder(this);
-  }
-
-  request(method: string, query?: ODataQueryType, options: {
+  request(method: string, query?: ODataQuery, options: {
     body?: any,
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },

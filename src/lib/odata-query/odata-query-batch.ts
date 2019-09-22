@@ -1,12 +1,10 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { ODataService } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
-import { ODataQueryBase } from './odata-query-base';
-import { ODataQueryType } from './odata-query-type';
-import { PlainObject } from './odata-query-builder';
+import { PlainObject, ODataQuery } from './odata-query';
 import { ODataResponseBatch } from '../odata-response/odata-response-batch';
 import { map } from 'rxjs/operators';
 
@@ -17,14 +15,14 @@ export enum Method {
 export class BatchRequest {
   constructor(
     public method: Method,
-    public odataQuery: ODataQueryBase,
+    public odataQuery: ODataQuery,
     public body?: any,
     public options?: {
       headers?: HttpHeaders|{[header: string]: string | string[]},
     }) { }
 }
 
-export class ODataQueryBatch implements ODataQueryType {
+export class ODataQueryBatch {
   private static readonly BOUNDARY_PREFIX_SUFFIX = '--';
   private static readonly BATCH_PREFIX = 'batch_';
   private static readonly CHANGESET_PREFIX = 'changeset_';
@@ -64,35 +62,35 @@ export class ODataQueryBatch implements ODataQueryType {
     this.changesetID = 1;
   }
 
-  get(query: ODataQueryBase, options?: {
+  get(query: ODataQuery, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.GET, query, undefined, options));
     return this;
   }
 
-  post(query: ODataQueryBase, body: any, options?: {
+  post(query: ODataQuery, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.POST, query, body, options));
     return this;
   }
 
-  put(query: ODataQueryBase, body: any, options?: {
+  put(query: ODataQuery, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PUT, query, body, options));
     return this;
   }
 
-  patch(query: ODataQueryBase, body: any, options?: {
+  patch(query: ODataQuery, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PATCH, query, body, options));
     return this;
   }
 
-  delete(query: ODataQueryBase, options?: {
+  delete(query: ODataQuery, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.DELETE, query, undefined, options));
@@ -104,7 +102,7 @@ export class ODataQueryBatch implements ODataQueryType {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<ODataResponseBatch> {
+  }): Observable<HttpResponse<any>> {
 
     let headers = this.mergeHttpHeaders(options.headers, {
       [ODataQueryBatch.ODATA_VERSION]: ODataQueryBatch.VERSION_4_0,
@@ -112,8 +110,10 @@ export class ODataQueryBatch implements ODataQueryType {
       [ODataQueryBatch.ACCEPT]: ODataQueryBatch.MULTIPART_MIXED
     });
 
+    return of(new HttpResponse<any>());
     // send request
-    return this.service.request("POST", this, {
+    /*
+    return this.service.request("POST", ODataQueryBatch.$BATCH, {
       body: this.getBody(),
       headers: headers,
       params: options.params,
@@ -122,10 +122,11 @@ export class ODataQueryBatch implements ODataQueryType {
       responseType: 'text',
       withCredentials: options.withCredentials
     }).pipe(map(resp => new ODataResponseBatch(resp)));
+    */
   }
 
   path(): string {
-    return ODataQueryBatch.$BATCH;
+    return ;
   }
 
   params(): PlainObject {
@@ -137,7 +138,7 @@ export class ODataQueryBatch implements ODataQueryType {
 
     for (const request of this.requests) {
       const method: Method = request.method;
-      const odataQuery: ODataQueryBase = request.odataQuery;
+      const odataQuery: ODataQuery = request.odataQuery;
       const httpOptions = request.options;
       const body: any = request.body;
 

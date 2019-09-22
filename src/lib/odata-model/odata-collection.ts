@@ -1,17 +1,15 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
-import { ODataQueryBuilder, Filter, Expand, GroupBy, PlainObject } from '../odata-query/odata-query-builder';
+import { ODataQuery, Filter, Expand, GroupBy, PlainObject } from '../odata-query/odata-query';
 import { Observable } from 'rxjs';
 import { ODataSet } from '../odata-response/odata-set';
-import { ODataQueryBase } from '../odata-query/odata-query-base';
 import { ODataContext } from '../odata-context';
-import { OptionHandler } from 'angular-odata/public-api';
 
 export class Collection<M extends Model> {
   static type: string = "";
   static modelType: string = "";
   _context: ODataContext;
-  _query: ODataQueryBase;
+  _query: ODataQuery;
   _models: M[];
   state: {
     page?: number,
@@ -20,7 +18,7 @@ export class Collection<M extends Model> {
     records?: number,
   };
 
-  constructor(models: PlainObject[], query?: ODataQueryBase) {
+  constructor(models: PlainObject[], query?: ODataQuery) {
     this._models = this.parse(models, query);
     this.state = {
       records: this._models.length
@@ -32,11 +30,11 @@ export class Collection<M extends Model> {
     this._context = context;
   }
 
-  setQuery(query: ODataQueryBase) {
+  setQuery(query: ODataQuery) {
     this._query = query;
   }
 
-  parse(models: PlainObject[], query: ODataQueryBase) {
+  parse(models: PlainObject[], query: ODataQuery) {
     let ctor = <typeof Collection>this.constructor;
     return models.map(model => this._context.createInstance(ctor.modelType, model, query) as M);
   }
@@ -63,12 +61,12 @@ export class Collection<M extends Model> {
 export class ODataCollection<M extends ODataModel> extends Collection<M> {
   constructor(
     models: PlainObject[],
-    query: ODataQueryBuilder
+    query: ODataQuery
   ) {
     super(models, query);
   }
 
-  assign(entitySet: ODataSet<ODataModel>, query: ODataQueryBuilder) {
+  assign(entitySet: ODataSet<ODataModel>, query: ODataQuery) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)
@@ -80,7 +78,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   }
 
   fetch(options?: any): Observable<this> {
-    let query = this._query.clone() as ODataQueryBuilder;
+    let query = this._query.clone() as ODataQuery;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {
@@ -126,32 +124,32 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
 
   // Mutate query
   select(select?: string | string[]) {
-    return (this._query as ODataQueryBuilder).select(select);
+    return this._query.select(select);
   }
-  removeSelect() { (this._query as ODataQueryBuilder).removeSelect(); }
+  removeSelect() { this._query.removeSelect(); }
 
   filter(filter?: Filter) {
-    return (this._query as ODataQueryBuilder).filter(filter);
+    return this._query.filter(filter);
   }
-  removeFilter() { (this._query as ODataQueryBuilder).removeFilter(); }
+  removeFilter() { this._query.removeFilter(); }
 
   search(search?: string) {
-    return (this._query as ODataQueryBuilder).search(search);
+    return this._query.search(search);
   }
-  removeSearch() { (this._query as ODataQueryBuilder).removeSearch(); }
+  removeSearch() { this._query.removeSearch(); }
 
   orderBy(orderBy?: string | string[]) {
-    return (this._query as ODataQueryBuilder).orderBy(orderBy);
+    return this._query.orderBy(orderBy);
   }
-  removeOrderBy() { (this._query as ODataQueryBuilder).removeOrderBy(); }
+  removeOrderBy() { this._query.removeOrderBy(); }
 
   expand(expand?: Expand) {
-    return (this._query as ODataQueryBuilder).expand(expand);
+    return this._query.expand(expand);
   }
-  removeExpand() { (this._query as ODataQueryBuilder).removeExpand(); }
+  removeExpand() { this._query.removeExpand(); }
 
   groupBy(groupBy?: GroupBy) {
-    return (this._query as ODataQueryBuilder).groupBy(groupBy);
+    return this._query.groupBy(groupBy);
   }
-  removeGroupBy() { (this._query as ODataQueryBuilder).removeGroupBy(); }
+  removeGroupBy() { this._query.removeGroupBy(); }
 }
