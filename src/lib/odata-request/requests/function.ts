@@ -1,16 +1,27 @@
-import { ODataRequestBase } from './odata-request';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ODataSet } from '../odata-response/odata-set';
 
-export class ODataActionUrl<T> extends ODataRequestBase {
-  public static readonly ACTION_CALL = 'actionCall';
+import { ODataRequest } from '../request';
+import { ODataSet } from '../../odata-response/odata-set';
+import { Segments, ODataSegment, PlainObject } from '../types';
+import { ODataService } from '../../odata-service/odata.service';
 
-  name(name: string) {
-    return this.wrapSegment(ODataActionUrl.ACTION_CALL, name);
+export class ODataFunctionRequest<T> extends ODataRequest {
+  constructor(
+    name: string,
+    service: ODataService,
+    segments?: ODataSegment[],
+    options?: PlainObject
+  ) {
+    super(service, segments, options);
+    this.segments.segment(Segments.functionCall, name);
   }
 
-  post(body: T, options?: {
+  parameters() {
+    return this.segments.last().options();
+  }
+
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -18,7 +29,7 @@ export class ODataActionUrl<T> extends ODataRequestBase {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  post(body: T, options?: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -26,22 +37,22 @@ export class ODataActionUrl<T> extends ODataRequestBase {
     withCredentials?: boolean,
   }): Observable<ODataSet<T>>;
 
-  post(body: T, options?: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'property',
     withCredentials?: boolean,
-  }): Observable<any>;
+  }): Observable<T>;
 
-  post(body: T, options: {
+  get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     reportProgress?: boolean,
-    withCredentials?: boolean
+    withCredentials?: boolean,
   }): Observable<any> {
-    return super.post(body, {
+    return super.get({
       headers: options.headers,
       observe: 'body',
       params: options.params,

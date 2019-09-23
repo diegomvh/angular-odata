@@ -1,20 +1,20 @@
-import { ODataRequestBase } from './odata-request';
-import { ODataService } from '../odata-service/odata.service';
-import { Segment, PlainObject } from './odata-request-handlers';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export class ODataRefUrl extends ODataRequestBase {
-  public static readonly REF = 'ref';
+import { ODataRequest } from '../request';
+import { ODataService } from '../../odata-service/odata.service';
+import { ODataSegment, PlainObject, Segments } from '../types';
+
+export class ODataRefRequest extends ODataRequest {
   public static readonly $REF = '$ref';
 
   constructor(
     service: ODataService,
-    segments?: Segment[],
+    segments?: ODataSegment[],
     options?: PlainObject
   ) {
     super(service, segments, options);
-    this.wrapSegment(ODataRefUrl.REF, ODataRefUrl.$REF);
+    this.segments.segment(Segments.ref, ODataRefRequest.$REF);
   }
 
   post(body: any, options?: {

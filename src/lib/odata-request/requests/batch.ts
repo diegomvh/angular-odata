@@ -2,10 +2,10 @@ import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { Observable, of } from 'rxjs';
 
-import { ODataService } from '../odata-service/odata.service';
-import { Utils } from '../utils/utils';
-import { ODataRequest } from './odata-request';
-import { PlainObject } from './odata-request-handlers';
+import { ODataService } from '../../odata-service/odata.service';
+import { Utils } from '../../utils/utils';
+import { ODataRequest } from '../request';
+import { PlainObject } from '../types';
 
 export enum Method {
   GET, POST, PUT, PATCH, DELETE

@@ -1,3 +1,5 @@
+import buildQuery from 'odata-query';
+
 import { Utils } from '../utils/utils';
 
 export type PlainObject = { [property: string]: any };
@@ -38,12 +40,6 @@ export interface QueryOptions extends ExpandQueryOptions {
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;
-}
-
-export interface Segment {
-  type: string;
-  name: string;
-  options: PlainObject;
 }
 
 export class OptionHandler<T> {
@@ -114,15 +110,54 @@ export class OptionHandler<T> {
   }
 }
 
+export interface ODataSegment {
+  type: string;
+  name: string;
+  options: PlainObject;
+}
+
 export class SegmentHandler {
-  constructor(private segment: Segment) {}
+  constructor(private segment: ODataSegment) {}
+
   get name() {
     return this.segment.name;
   }
+
   get type() {
     return this.segment.type;
   }
+
   options() {
     return new OptionHandler<string | number | PlainObject>(this.segment as PlainObject, "options");
   }
+}
+
+export enum Segments {
+  metadata = 'metadata',
+  entitySet = 'entitySet',
+  entityKey = 'entityKey',
+  singleton = 'singleton',
+  typeName = 'typeName',
+  property = 'property',
+  navigationProperty = 'navigationProperty',
+  ref = 'ref',
+  value = 'value',
+  count = 'count',
+  functionCall = 'functionCall',
+  actionCall = 'actionCall'
+}
+
+export enum Options {
+  select = 'select',
+  filter = 'filter',
+  search = 'search',
+  groupBy = 'groupBy',
+  transform = 'transform',
+  orderBy = 'orderBy',
+  top = 'top',
+  skip = 'skip',
+  expand = 'expand',
+  format = 'format',
+  count = 'count',
+  custom = 'custom'
 }

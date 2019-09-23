@@ -6,9 +6,9 @@ import { map, catchError } from 'rxjs/operators';
 import { ODataContext } from '../odata-context';
 import { Metadata } from '../odata-response/metadata';
 import { Injectable } from '@angular/core';
-import { ODataBatchRequest } from '../odata-request/odata-batch-request';
+import { ODataBatchRequest } from '../odata-request/requests/batch';
 import { ODataSet } from '../odata-response/odata-set';
-import { ODataSingletonUrl, ODataEntitySetUrl, ODataRequest, ODataObserve } from '../odata-request';
+import { ODataSingletonRequest, ODataEntitySetRequest, ODataRequest, ODataObserve } from '../odata-request';
 
 @Injectable()
 export class ODataService {
@@ -33,14 +33,12 @@ export class ODataService {
   }
 
   singleton<T>(name: string) {
-    let singleton = new ODataSingletonUrl<T>(this);
-    singleton.name(name);
+    let singleton = new ODataSingletonRequest<T>(name, this);
     return singleton;
   }
 
-  entitySet<T>(name: string): ODataEntitySetUrl<T> {
-    let entityset = new ODataEntitySetUrl<T>(this);
-    entityset.name(name);
+  entitySet<T>(name: string): ODataEntitySetRequest<T> {
+    let entityset = new ODataEntitySetRequest<T>(name, this);
     return entityset;
   }
 
@@ -52,25 +50,25 @@ export class ODataService {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'set' | 'property',
-    withCredentials?: boolean,
+    withCredentials?: boolean
   } = {}): Observable<any> {
     const url = this.createEndpointUrl(query);
 
     let headers = this.mergeHttpHeaders(options.headers);
     let params = this.mergeHttpParams(query.params(), options.params);
-    let withCredentials = options.withCredentials;
 
     if (typeof (options.etag) === 'string')
       headers = headers.set(ODataService.IF_MATCH_HEADER, options.etag);
-
-    if (withCredentials === undefined)
-      withCredentials = this.context.withCredentials;
 
     let observe = (['set', 'property'].indexOf(options.responseType) !== -1) ? 'body' :
       options.observe;
 
     let responseType = (['set', 'property'].indexOf(options.responseType) !== -1) ? 'json' :
       <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
+
+    let withCredentials = options.withCredentials;
+    if (withCredentials === undefined)
+      withCredentials = this.context.withCredentials;
 
     // Call http request
     let res$ = this.http.request(method, url, {

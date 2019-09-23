@@ -5,19 +5,19 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ODataSet } from '../odata-response/odata-set';
 import { Utils } from '../utils/utils';
-import { ODataEntitySetUrl, ODataEntityUrl, ODataRequest } from '../odata-request';
+import { ODataEntitySetRequest, ODataEntityRequest, ODataRequest } from '../odata-request';
 
 export abstract class ODataEntityService<T> extends ODataService {
   static set: string = "";
 
   protected abstract resolveEntityKey(entity: Partial<T>);
 
-  public entities(): ODataEntitySetUrl<T> {
+  public entities(): ODataEntitySetRequest<T> {
     let ctor = <typeof ODataEntityService>this.constructor;
     return this.entitySet<T>(ctor.set);
   }
 
-  public entity(entity?: number | string | Partial<T>): ODataEntityUrl<T> {
+  public entity(entity?: number | string | Partial<T>): ODataEntityRequest<T> {
     let key = Utils.isObject(entity) ? this.resolveEntityKey(entity as Partial<T>) : entity;
     return this.entities().entity(key);
   }
@@ -161,7 +161,14 @@ export abstract class ODataEntityService<T> extends ODataService {
     withCredentials?: boolean
   }): Observable<P> {
     let query = this.entity(entity).action<P>(name);
-    return query.post(postdata, options);
+    return query.post(postdata, {
+      headers: options && options.headers,
+      observe: 'body',
+      params: options && options.params,
+      responseType: 'json',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    });
   }
 
   protected customActionSet<P>(entity: Partial<T>, name: string, postdata: any = {}, options?: {
@@ -173,6 +180,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     let query = this.entity(entity).action<P>(name);
     return query.post(postdata, {
       headers: options && options.headers,
+      observe: 'body',
       params: options && options.params,
       responseType: 'set',
       reportProgress: options && options.reportProgress,
@@ -189,6 +197,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     let query = this.entity(entity).action<P>(name);
     return query.post(postdata, {
       headers: options.headers,
+      observe: 'body',
       params: options.params,
       responseType: 'property',
       reportProgress: options.reportProgress,
@@ -203,7 +212,14 @@ export abstract class ODataEntityService<T> extends ODataService {
     withCredentials?: boolean
   }): Observable<P> {
     let query = this.entities().action<P>(name);
-    return query.post(postdata, options);
+    return query.post(postdata, {
+      headers: options && options.headers,
+      observe: 'body',
+      params: options && options.params,
+      responseType: 'json',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    });
   }
 
   protected customCollectionActionSet<P>(name: string, postdata: any = {}, options?: {
@@ -215,6 +231,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     let query = this.entities().action<P>(name);
     return query.post(postdata, {
       headers: options.headers,
+      observe: 'body',
       params: options.params,
       responseType: 'set',
       reportProgress: options.reportProgress,
@@ -231,6 +248,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     let query = this.entities().action<P>(name);
     return query.post(postdata, {
       headers: options.headers,
+      observe: 'body',
       params: options.params,
       responseType: 'property',
       reportProgress: options.reportProgress,

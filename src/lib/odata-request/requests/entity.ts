@@ -1,41 +1,48 @@
-import { Utils } from '../utils/utils';
-import { PlainObject } from './odata-request-handlers';
-import { ODataSingleUrl } from './odata-single-request';
-import { ODataNavigationPropertyUrl } from './odata-navigationproperty-request';
-import { ODataActionUrl } from './odata-action-request';
-import { ODataFunctionUrl } from './odata-function-request';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export class ODataEntityUrl<T> extends ODataSingleUrl<T> {
+import { ODataSingleRequest } from './single';
+import { ODataActionRequest } from './action';
+import { ODataFunctionRequest } from './function';
+import { Utils } from '../../utils/utils';
+import { PlainObject } from '../types';
+import { ODataNavigationPropertyRequest } from './navigationproperty';
+import { ODataPropertyRequest } from './property';
+
+export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
   // Entity key
-  key(opts?: string | number | PlainObject) {
-    let segment = this.lastSegment();
-    if (Utils.isUndefined(opts)) return segment.options().get("key");
-    this.removeFilter();
-    this.removeOrderBy();
-    this.removeCount();
-    this.removeSkip();
-    this.removeTop();
-    segment.options().set("key", opts);
+  key(key?: string | number | PlainObject) {
+    let segment = this.segments.last();
+    if (Utils.isUndefined(key)) return segment.options().get("key");
+    segment.options().set("key", key);
   }
 
   navigationProperty<E>(name: string) {
-    let query = this.clone(ODataNavigationPropertyUrl) as ODataNavigationPropertyUrl<E>;
-    query.name(name);
-    return query;
+    return new ODataNavigationPropertyRequest<E>(name, 
+      this.service, 
+      this.segments.toObject(), 
+      this.options.toObject());
+  }
+
+  property<P>(name: string) {
+    return new ODataPropertyRequest<P>(name, 
+      this.service, 
+      this.segments.toObject(), 
+      this.options.toObject());
   }
 
   action<T>(name: string) {
-    let action = this.clone(ODataActionUrl) as ODataActionUrl<T>;
-    action.name(name);
-    return action;
+    return new ODataActionRequest<T>(name, 
+      this.service,
+      this.segments.toObject(),
+      this.options.toObject());
   }
 
   function<T>(name: string) {
-    let func = this.clone(ODataFunctionUrl) as ODataFunctionUrl<T>;
-    func.name(name);
-    return func;
+    return new ODataFunctionRequest<T>(name, 
+      this.service,
+      this.segments.toObject(),
+      this.options.toObject());
   }
 
   post(body: T, options?: {
@@ -101,4 +108,5 @@ export class ODataEntityUrl<T> extends ODataSingleUrl<T> {
       withCredentials: options && options.withCredentials
     });
   }
+
 }

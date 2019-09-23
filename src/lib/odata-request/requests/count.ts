@@ -1,21 +1,27 @@
-import { ODataRequestBase } from './odata-request';
-import { ODataPropertyUrl } from './odata-property-request';
+import { ODataRequest } from '../request';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ODataService } from '../../odata-service';
+import { ODataSegment, PlainObject, Segments } from '../types';
 
-export class ODataSingleUrl<T> extends ODataRequestBase {
-  property<P>(name: string) {
-    let prop = this.clone(ODataPropertyUrl) as ODataPropertyUrl<P>
-    prop.name(name);
-    return prop;
+export class ODataCountRequest extends ODataRequest {
+  public static readonly $COUNT = '$count';
+
+  constructor(
+    service: ODataService,
+    segments?: ODataSegment[],
+    options?: PlainObject
+  ) {
+    super(service, segments, options);
+    this.segments.segment(Segments.count, ODataCountRequest.$COUNT);
   }
-
-  get(options?: {
+  
+  get<Number>(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<T> {
+  }): Observable<Number> {
     return super.get({
       headers: options && options.headers,
       observe: 'body',

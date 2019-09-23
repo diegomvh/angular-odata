@@ -1,15 +1,26 @@
-import { ODataRequestBase } from './odata-request';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ODataValueUrl } from './odata-value-request';
 
-export class ODataPropertyUrl<P> extends ODataRequestBase {
-  name(name: string) {
-    return this.wrapSegment(ODataRequestBase.PROPERTY, name);
+import { ODataRequest } from '../request';
+import { ODataValueRequest } from './value';
+import { Segments, ODataSegment, PlainObject } from '../types';
+import { ODataService } from '../../odata-service/odata.service';
+
+export class ODataPropertyRequest<P> extends ODataRequest {
+  constructor(
+    name: string,
+    service: ODataService,
+    segments?: ODataSegment[],
+    options?: PlainObject
+  ) {
+    super(service, segments, options);
+    this.segments.segment(Segments.property, name);
   }
 
   value() {
-    return this.clone(ODataValueUrl) as ODataValueUrl;
+    return new ODataValueRequest(this.service,
+      this.segments.toObject(),
+      this.options.toObject());
   }
 
   get(options?: {

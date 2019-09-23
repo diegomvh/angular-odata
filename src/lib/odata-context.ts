@@ -1,12 +1,12 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { ODataRequest } from './odata-request/odata-request';
+import { ODataRequest } from './odata-request/request';
 
 export interface ODataConfig {
   baseUrl?: string,
   metadataUrl?: string,
   withCredentials?: boolean,
-  batchQueries: boolean;
+  batch: boolean;
   creation?: Date,
   version?: string,
   types?: any,
@@ -17,7 +17,7 @@ export class ODataContext implements ODataConfig {
   baseUrl: string;
   metadataUrl: string;
   withCredentials: boolean;
-  batchQueries: boolean;
+  batch: boolean;
   creation: Date;
   version: string;
   metadata: Promise<any>;
