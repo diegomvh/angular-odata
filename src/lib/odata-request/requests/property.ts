@@ -9,7 +9,7 @@ export class ODataPropertyRequest<P> extends ODataRequest {
   value() {
     let segments = this.segments.clone();
     segments.segment(Segments.value, ODataValueRequest.$VALUE);
-    return new ODataValueRequest(this.service, segments);
+    return new ODataValueRequest<P>(this.service, segments);
   }
 
   get(options?: {
