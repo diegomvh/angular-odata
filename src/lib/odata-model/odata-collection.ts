@@ -1,6 +1,6 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
-import { ODataUrl, Filter, Expand, GroupBy, PlainObject } from '../odata-query/odata-query';
+import { ODataUrl, Filter, Expand, GroupBy, PlainObject, ODataEntitySetUrl } from '../odata-query/odata-query';
 import { Observable } from 'rxjs';
 import { ODataSet } from '../odata-response/odata-set';
 import { ODataContext } from '../odata-context';
@@ -78,15 +78,15 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   }
 
   fetch(options?: any): Observable<this> {
-    let query = this._query.clone() as ODataUrl;
+    let query = this._query.clone() as ODataEntitySetUrl<M>;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {
       query.top(this.state.size);
       query.skip(this.state.size * (this.state.page - 1));
     }
-    query.countOption(true);
-    return query.get<M>({responseType: 'set'})
+    query.count(true);
+    return query.get()
       .pipe(
         map(set => this.assign(set, query))
       );

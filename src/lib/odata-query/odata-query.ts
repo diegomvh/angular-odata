@@ -176,16 +176,15 @@ export class ODataUrl {
   public static readonly $COUNT = '$count';
 
   // VARIABLES
-  private service: ODataService;
-  private segments: Segment[];
-  private options: PlainObject;
+  protected service: ODataService;
+  protected segments: Segment[];
+  protected options: PlainObject;
 
   constructor(
     service: ODataService,
     segments?: Segment[],
     options?: PlainObject
   ) {
-    Utils.requireNotNullNorUndefined(service, 'odataService');
     this.service = service;
     this.segments = segments || [];
     this.options = options || {};
@@ -200,6 +199,7 @@ export class ODataUrl {
   }
 
   // QUERY EXECUTION
+  /*
   get<T>(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body',
@@ -226,6 +226,7 @@ export class ODataUrl {
     responseType?: 'property',
     withCredentials?: boolean,
   }): Observable<P>;
+  */
 
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -318,10 +319,9 @@ export class ODataUrl {
     return this.service.request("DELETE", this, Object.assign(options, {etag}));
   }
 
-  clone<T>(type?: { new(service: ODataService, segments: Segment[], options: PlainObject): T; }): T {
-    if (!type) {
+  clone<T extends ODataUrl>(type?: { new(service: ODataService, segments: Segment[], options: PlainObject): T; }): T {
+    if (!type) 
       type = this.constructor as { new(service: ODataService, segments: Segment[], options: PlainObject): T; };
-    }
     let options = Object.assign({}, this.options);
     let segments = this.segments.map(segment =>
         ({ type: segment.type, name: segment.name, options: Object.assign({}, segment.options) }));
@@ -406,7 +406,7 @@ export class ODataUrl {
       (Utils.isUndefined(name) || s.name === name));
   }
 
-  wrapSegment(type: string, name?: string) {
+  protected wrapSegment(type: string, name?: string) {
     let segment = this.findSegment(type, name);
     if (!segment && !Utils.isUndefined(name)) {
       segment = { type, name, options: {} } as Segment;
@@ -424,7 +424,7 @@ export class ODataUrl {
     this.segments = this.segments.filter(s => s !== segment);
   }
 
-  lastSegment(): SegmentHandler {
+  protected lastSegment(): SegmentHandler {
     if (this.segments.length > 0)
       return new SegmentHandler(this.segments[this.segments.length - 1]);
   }
@@ -475,6 +475,7 @@ export class ODataUrl {
   removeTransform() {
     this.removeOption(ODataUrl.TRANSFORM);
   }
+
   orderBy(opts?: string | string[]) {
     opts = typeof (opts) === 'string' ? [opts] : opts;
     return this.wrapObject<string>(ODataUrl.ORDER_BY, opts);
@@ -482,6 +483,7 @@ export class ODataUrl {
   removeOrderBy() { 
     this.removeOption(ODataUrl.ORDER_BY); 
   }
+
   expand(opts?: Expand): OptionHandler<Expand> {
     opts = typeof (opts) === 'string' ? [opts] : opts;
     return this.wrapObject<Expand>(ODataUrl.EXPAND, opts);
@@ -492,92 +494,71 @@ export class ODataUrl {
   removeExpand() {
     this.removeOption(ODataUrl.EXPAND);
   }
+
   format(opts?: string) {
     return this.wrapValue<string>(ODataUrl.FORMAT, opts);
   }
   removeFormat() {
     this.removeOption(ODataUrl.FORMAT);
   }
+
   top(opts?: number) {
     return this.wrapValue<number>(ODataUrl.TOP, opts);
   }
   removeTop() {
     this.removeOption(ODataUrl.TOP);
   }
+
   skip(opts?: number) {
     return this.wrapValue<number>(ODataUrl.SKIP, opts);
   }
   removeSkip() {
     this.removeOption(ODataUrl.SKIP);
   }
-  countOption(opts?: boolean | Filter) {
-    return this.wrapObject(ODataUrl.COUNT, opts);
+  
+  count(opts?: boolean) {
+    return this.wrapValue<boolean>(ODataUrl.COUNT, opts);
   }
-  removeCountOption() {
+  removeCount() {
     this.removeOption(ODataUrl.COUNT);
   }
-  customOption(opts?: PlainObject) {
+
+  custom(opts?: PlainObject) {
     return this.wrapObject(ODataUrl.CUSTOM, opts);
   }
-  removeCustomOption() {
+  removeCustom() {
     this.removeOption(ODataUrl.CUSTOM);
   }
 
-  batch(): ODataQueryBatch {
-    return new ODataQueryBatch(this.service);
-  }
-
-  singleton(name: string) {
-    let query = this.clone(ODataSingletonUrl) as ODataSingletonUrl;
-    query.wrapSegment(ODataUrl.SINGLETON, name);
-    return query;
-  }
-
-  entitySet<T>(name: string): ODataEntitySetUrl<T> {
-    let query = this.clone(ODataEntitySetUrl) as ODataEntitySetUrl<T>;
-    query.wrapSegment(ODataUrl.ENTITY_SET, name);
-    return query;
-  }
-
   action<T>(name: string) {
-    let query = this.clone(ODataActionUrl) as ODataActionUrl<T>;
-    query.wrapSegment(ODataUrl.ACTION_CALL, name);
-    return query;
+    let action = this.clone(ODataActionUrl) as ODataActionUrl<T>;
+    action.name(name);
+    return action;
   }
 
   function<T>(name: string) {
-    let query = this.clone(ODataFunctionUrl) as ODataFunctionUrl<T>;
-    query.wrapSegment(ODataUrl.FUNCTION_CALL, name);
-    return query;
+    let func = this.clone(ODataFunctionUrl) as ODataFunctionUrl<T>;
+    func.name(name);
+    return func;
   }
 }
 
 export class ODataCollectionUrl<T> extends ODataUrl {
   // Entity key
-  entityKey(opts?: string | number | PlainObject) {
-    let query = this.clone(ODataEntityUrl) as ODataEntityUrl<T>
-    query.lastSegment().options().set("key", opts);
-    query.removeFilter();
-    query.removeOrderBy();
-    query.removeCountOption();
-    query.removeSkip();
-    query.removeTop();
-    return query;
+  entity(key?: string | number | PlainObject) {
+    let entity = this.clone(ODataEntityUrl) as ODataEntityUrl<T>;
+    if (key)
+      entity.key(key);
+    return entity;
   }
 
-  countSegment() {
-    let query = this.clone(ODataCountUrl) as ODataCountUrl;
-    query.wrapSegment(ODataUrl.COUNT, ODataUrl.$COUNT);
-    return query;
-  }
-
-  get<T>(options?: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
   }): Observable<ODataSet<T>> {
-    return super.get<T>({
+    return super.get({
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -587,40 +568,76 @@ export class ODataCollectionUrl<T> extends ODataUrl {
     });
   }
 
+  getCount(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+  }): Observable<Number> {
+    return (this.clone(ODataCountUrl) as ODataCountUrl).get<Number>(options);
+  }
+
 }
 
 export class ODataSingleUrl<T> extends ODataUrl {
+  property<P>(name: string) {
+    let prop = this.clone(ODataPropertyUrl) as ODataPropertyUrl<P>
+    prop.name(name);
+    return prop;
+  }
+
+  get(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+  }): Observable<T> {
+    return super.get({
+      headers: options && options.headers,
+      observe: 'body',
+      params: options && options.params,
+      responseType: 'json',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    });
+  }
 }
 
 export class ODataEntitySetUrl<T> extends ODataCollectionUrl<T> {
+  name(name: string) {
+    return this.wrapSegment(ODataUrl.ENTITY_SET, name);
+  }
 }
 
 export class ODataEntityUrl<T> extends ODataSingleUrl<T> {
   // Entity key
-  entityKey(opts?: string | number | PlainObject) {
+  key(opts?: string | number | PlainObject) {
     let segment = this.lastSegment();
     if (Utils.isUndefined(opts)) return segment.options().get("key");
+    this.removeFilter();
+    this.removeOrderBy();
+    this.removeCount();
+    this.removeSkip();
+    this.removeTop();
     segment.options().set("key", opts);
-  }
-
-  property<P>(name: string) {
-    let query = this.clone(ODataPropertyUrl) as ODataPropertyUrl<P>
-    query.wrapSegment(ODataUrl.PROPERTY, name);
-    return query;
   }
 
   navigationProperty<E>(name: string) {
     let query = this.clone(ODataNavigationPropertyUrl) as ODataNavigationPropertyUrl<E>;
-    query.wrapSegment(ODataUrl.NAVIGATION_PROPERTY, name);
+    query.name(name);
     return query;
   }
 }
 
 export class ODataNavigationPropertyUrl<T> extends ODataUrl {
+  name(name: string) {
+    this.removeSelect();
+    this.removeExpand();
+    return this.wrapSegment(ODataUrl.NAVIGATION_PROPERTY, name);
+  }
+
   ref() {
-    let query = this.clone(ODataRefUrl) as ODataRefUrl;
-    query.wrapSegment(ODataUrl.REF, ODataUrl.$REF);
-    return query;
+    return this.clone(ODataRefUrl) as ODataRefUrl;
   }
 
   single() {
@@ -633,19 +650,21 @@ export class ODataNavigationPropertyUrl<T> extends ODataUrl {
 }
 
 export class ODataPropertyUrl<P> extends ODataUrl {
-  value() {
-    let query = this.clone(ODataValueUrl) as ODataValueUrl;
-    query.wrapSegment(ODataUrl.VALUE, ODataUrl.$VALUE);
-    return query;
+  name(name: string) {
+    return this.wrapSegment(ODataUrl.PROPERTY, name);
   }
 
-  get<P>(options?: {
+  value() {
+    return this.clone(ODataValueUrl) as ODataValueUrl;
+  }
+
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
   }): Observable<P> {
-    return super.get<P>({
+    return super.get({
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -658,20 +677,43 @@ export class ODataPropertyUrl<P> extends ODataUrl {
 }
 
 export class ODataActionUrl<T> extends ODataUrl {
+  name(name: string) {
+    return this.wrapSegment(ODataUrl.ACTION_CALL, name);
+  }
 }
 
 export class ODataFunctionUrl<T> extends ODataUrl {
+  name(name: string) {
+    return this.wrapSegment(ODataUrl.FUNCTION_CALL, name);
+  }
+
   parameters() {
     return this.lastSegment().options();
   }
 
-  getSet<T>(options?: {
+  get(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+  }): Observable<T> {
+    return super.get({
+      headers: options && options.headers,
+      observe: 'body',
+      params: options && options.params,
+      responseType: 'json',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    });
+  }
+
+  getSet(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
   }): Observable<ODataSet<T>> {
-    return this.get<T>({
+    return super.get({
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -681,13 +723,13 @@ export class ODataFunctionUrl<T> extends ODataUrl {
     });
   }
 
-  getProperty<P>(options?: {
+  getProperty(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<P> {
-    return this.get<P>({
+  }): Observable<T> {
+    return super.get({
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -698,16 +740,48 @@ export class ODataFunctionUrl<T> extends ODataUrl {
   }
 }
 
-export class ODataValueUrl extends ODataUrl {}
-
-export class ODataCountUrl extends ODataUrl {}
-
-export class ODataSingletonUrl extends ODataUrl {
-  property<P>(name: string) {
-    let query = this.clone(ODataPropertyUrl) as ODataPropertyUrl<P>
-    query.wrapSegment(ODataUrl.PROPERTY, name);
-    return query;
+export class ODataValueUrl extends ODataUrl {
+  constructor(
+    service: ODataService,
+    segments?: Segment[],
+    options?: PlainObject
+  ) {
+    super(service, segments, options);
+    this.wrapSegment(ODataUrl.VALUE, ODataUrl.$VALUE);
   }
 }
 
-export class ODataRefUrl extends ODataUrl {}
+export class ODataCountUrl extends ODataUrl {
+  get<Number>(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+  }): Observable<Number> {
+    return super.get({
+      headers: options && options.headers,
+      observe: 'body',
+      params: options && options.params,
+      responseType: 'json',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    });
+  }
+}
+
+export class ODataSingletonUrl<T> extends ODataSingleUrl<T> {
+  name(name: string) {
+    return this.wrapSegment(ODataUrl.SINGLETON, name);
+  }
+}
+
+export class ODataRefUrl extends ODataUrl {
+  constructor(
+    service: ODataService,
+    segments?: Segment[],
+    options?: PlainObject
+  ) {
+    super(service, segments, options);
+    this.wrapSegment(ODataUrl.REF, ODataUrl.$REF);
+  }
+}

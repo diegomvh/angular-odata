@@ -3,11 +3,12 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/comm
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataUrl, ODataObserve } from '../odata-query/odata-query';
+import { ODataUrl, ODataSingletonUrl, ODataEntitySetUrl, ODataActionUrl, ODataFunctionUrl, ODataObserve } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
 import { Metadata } from '../odata-response/metadata';
-import { ODataSet } from '../odata-response/odata-set';
 import { Injectable } from '@angular/core';
+import { ODataQueryBatch } from '../odata-query/odata-query-batch';
+import { ODataSet } from '../odata-response/odata-set';
 
 @Injectable()
 export class ODataService {
@@ -27,9 +28,32 @@ export class ODataService {
       .pipe(map(body => new Metadata(body)));
   }
 
-  // Queries
-  public query(): ODataUrl {
-    return new ODataUrl(this);
+  batch(): ODataQueryBatch {
+    return new ODataQueryBatch(this);
+  }
+
+  singleton<T>(name: string) {
+    let singleton = new ODataSingletonUrl<T>(this);
+    singleton.name(name);
+    return singleton;
+  }
+
+  entities<T>(name: string): ODataEntitySetUrl<T> {
+    let entityset = new ODataEntitySetUrl<T>(this);
+    entityset.name(name);
+    return entityset;
+  }
+
+  action<T>(name: string) {
+    let action = new ODataActionUrl<T>(this);
+    action.name(name);
+    return action;
+  }
+
+  function<T>(name: string) {
+    let func = new ODataFunctionUrl<T>(this);
+    func.name(name);
+    return func;
   }
 
   request(method: string, query?: ODataUrl, options: {
@@ -75,16 +99,11 @@ export class ODataService {
     res$ = this.handleError(res$);
 
     // ODataResponse
-    switch (options.observe || 'body') {
-      case 'body':
-        switch (options.responseType) {
-          case 'set':
-            res$ = res$.pipe(map((res: HttpResponse<any>) => new ODataSet<any>(res.body)));;
-            break;
-          case 'property':
-            res$ = res$.pipe(map((res: HttpResponse<any>) => res.body[ODataService.PROPERTY_VALUE]));;
-            break;
-        }
+    switch(options.responseType) {
+      case 'set':
+        return res$.pipe(map((body: any) => new ODataSet<any>(body)));
+      case 'property':
+        return res$.pipe(map((body: any) => body[ODataService.PROPERTY_VALUE]));
     }
     return res$;
   }
