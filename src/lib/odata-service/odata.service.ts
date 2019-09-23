@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/comm
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataQuery, ODataObserve } from '../odata-query/odata-query';
+import { ODataUrl, ODataObserve } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
 import { Metadata } from '../odata-response/metadata';
 import { ODataSet } from '../odata-response/odata-set';
@@ -28,11 +28,11 @@ export class ODataService {
   }
 
   // Queries
-  public query(): ODataQuery {
-    return new ODataQuery(this);
+  public query(): ODataUrl {
+    return new ODataUrl(this);
   }
 
-  request(method: string, query?: ODataQuery, options: {
+  request(method: string, query?: ODataUrl, options: {
     body?: any,
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },

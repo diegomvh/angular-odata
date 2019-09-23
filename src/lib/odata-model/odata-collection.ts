@@ -1,6 +1,6 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
-import { ODataQuery, Filter, Expand, GroupBy, PlainObject } from '../odata-query/odata-query';
+import { ODataUrl, Filter, Expand, GroupBy, PlainObject } from '../odata-query/odata-query';
 import { Observable } from 'rxjs';
 import { ODataSet } from '../odata-response/odata-set';
 import { ODataContext } from '../odata-context';
@@ -9,7 +9,7 @@ export class Collection<M extends Model> {
   static type: string = "";
   static modelType: string = "";
   _context: ODataContext;
-  _query: ODataQuery;
+  _query: ODataUrl;
   _models: M[];
   state: {
     page?: number,
@@ -18,7 +18,7 @@ export class Collection<M extends Model> {
     records?: number,
   };
 
-  constructor(models: PlainObject[], query?: ODataQuery) {
+  constructor(models: PlainObject[], query?: ODataUrl) {
     this._models = this.parse(models, query);
     this.state = {
       records: this._models.length
@@ -30,11 +30,11 @@ export class Collection<M extends Model> {
     this._context = context;
   }
 
-  setQuery(query: ODataQuery) {
+  setQuery(query: ODataUrl) {
     this._query = query;
   }
 
-  parse(models: PlainObject[], query: ODataQuery) {
+  parse(models: PlainObject[], query: ODataUrl) {
     let ctor = <typeof Collection>this.constructor;
     return models.map(model => this._context.createInstance(ctor.modelType, model, query) as M);
   }
@@ -61,12 +61,12 @@ export class Collection<M extends Model> {
 export class ODataCollection<M extends ODataModel> extends Collection<M> {
   constructor(
     models: PlainObject[],
-    query: ODataQuery
+    query: ODataUrl
   ) {
     super(models, query);
   }
 
-  assign(entitySet: ODataSet<ODataModel>, query: ODataQuery) {
+  assign(entitySet: ODataSet<ODataModel>, query: ODataUrl) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)
@@ -78,7 +78,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   }
 
   fetch(options?: any): Observable<this> {
-    let query = this._query.clone() as ODataQuery;
+    let query = this._query.clone() as ODataUrl;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {

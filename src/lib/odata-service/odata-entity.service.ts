@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { ODataQuery } from "../odata-query/odata-query";
+import { ODataUrl, ODataEntitySetUrl, ODataEntityUrl } from "../odata-query/odata-query";
 import { ODataService } from "./odata.service";
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -13,37 +13,16 @@ export abstract class ODataEntityService<T> extends ODataService {
   protected abstract resolveEntityKey(entity: Partial<T>);
 
   // Queries
-  public entitySetQuery(): ODataQuery {
+  public entitySetQuery(): ODataEntitySetUrl<T> {
     let ctor = <typeof ODataEntityService>this.constructor;
     let query = this.query();
-    query.entitySet(ctor.set);
-    return query;
+    return query.entitySet<T>(ctor.set);
   }
 
-  public entityQuery(entity: number | string | Partial<T>): ODataQuery {
+  public entityQuery(entity: number | string | Partial<T>): ODataEntityUrl<T> {
     let key = Utils.isObject(entity) ? this.resolveEntityKey(entity as Partial<T>) : entity;
     let query = this.entitySetQuery()
-    query.entityKey(key);
-    return query;
-  }
-
-  public navigationPropertyQuery(entity: Partial<T>, name: string): ODataQuery {
-    let query = this.entityQuery(entity);
-    query.navigationProperty(name);
-    return query;
-  }
-
-  public propertyQuery(entity: Partial<T>, name: string): ODataQuery {
-    let query = this.entityQuery(entity);
-    query.property(name);
-    return query;
-  }
-
-  public refQuery(entity: Partial<T>, name: string): ODataQuery {
-    let query = this.entityQuery(entity);
-    query.navigationProperty(name);
-    query.ref();
-    return query;
+    return query.entityKey(key);
   }
 
   public isNew(entity: Partial<T>) {
@@ -52,7 +31,7 @@ export abstract class ODataEntityService<T> extends ODataService {
 
   // Entity Actions
   public all(): Observable<ODataSet<T>> {
-    return this.entitySetQuery().getSet<T>();
+    return this.entitySetQuery().get();
   }
 
   public fetch(entity: Partial<T>): Observable<T> {
@@ -107,8 +86,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    return this.navigationPropertyQuery(entity, name)
-      .get<P>(options);
+    let query = this.entityQuery(entity).navigationProperty(name).single();
+    return query.get(options);
   }
 
   protected navigationPropertySet<P>(entity: Partial<T>, name: string, options?: {
@@ -117,8 +96,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataSet<P>> {
-    return this.navigationPropertyQuery(entity, name)
-      .getSet<P>(options);
+    let query = this.entityQuery(entity).navigationProperty<P>(name).collection();
+    return query.get(options);
   }
 
   protected property<P>(entity: Partial<T>, name: string, options?: {
@@ -127,11 +106,11 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    return this.propertyQuery(entity, name)
-      .getProperty<P>(options);
+    let query = this.entityQuery(entity).property<P>(name);
+    return query.get(options);
   }
 
-  protected createRef(entity: Partial<T>, name: string, target: ODataQuery, options?: {
+  protected createRef<P>(entity: Partial<T>, name: string, target: ODataUrl, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -139,33 +118,33 @@ export abstract class ODataEntityService<T> extends ODataService {
   }) {
     let refurl = this.createEndpointUrl(target);
     let etag = entity[ODataService.ODATA_ETAG];
-    return this.refQuery(entity, name)
-      .put({ [ODataService.ODATA_ID]: refurl }, etag);
+    let query = this.entityQuery(entity).navigationProperty<P>(name).ref();
+    return query.put({ [ODataService.ODATA_ID]: refurl }, etag);
   }
 
-  protected createCollectionRef(entity: Partial<T>, name: string, target: ODataQuery, options?: {
+  protected createCollectionRef<P>(entity: Partial<T>, name: string, target: ODataUrl, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
   }) {
     let refurl = this.createEndpointUrl(target);
-    return this.refQuery(entity, name)
-      .post({ [ODataService.ODATA_ID]: refurl });
+    let query = this.entityQuery(entity).navigationProperty<P>(name).ref();
+    return query.post({ [ODataService.ODATA_ID]: refurl });
   }
 
-  protected deleteRef(entity: Partial<T>, name: string, target: ODataQuery, options?: {
+  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataUrl, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
   }) {
     let etag = entity[ODataService.ODATA_ETAG];
-    return this.refQuery(entity, name)
-      .delete(etag);
+    let query = this.entityQuery(entity).navigationProperty<P>(name).ref();
+    return query.delete(etag);
   }
 
-  protected deleteCollectionRef(entity: Partial<T>, name: string, target: ODataQuery, options?: {
+  protected deleteCollectionRef<P>(entity: Partial<T>, name: string, target: ODataUrl, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -173,8 +152,8 @@ export abstract class ODataEntityService<T> extends ODataService {
   }) {
     let etag = entity[ODataService.ODATA_ETAG];
     let refurl = this.createEndpointUrl(target);
-    return this.refQuery(entity, name)
-      .delete(etag, {params: {"$id": refurl}});
+    let query = this.entityQuery(entity).navigationProperty<P>(name).ref();
+    return query.delete(etag, {params: {"$id": refurl}});
   }
 
   // Function and actions
@@ -184,8 +163,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entityQuery(entity);
-    query.action(name);
+    let query = this.entityQuery(entity).action(name);
     return query.post<P>(postdata, options);
   }
 
@@ -195,8 +173,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataSet<P>> {
-    let query = this.entityQuery(entity);
-    query.action(name);
+    let query = this.entityQuery(entity).action(name);
     return query.post<P>(postdata, {
       observe: 'body',
       headers: options.headers,
@@ -213,8 +190,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entityQuery(entity);
-    query.action(name);
+    let query = this.entityQuery(entity).action(name);
     return query.post<P>(postdata, {
       observe: 'body',
       headers: options.headers,
@@ -231,8 +207,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entitySetQuery();
-    query.action(name);
+    let query = this.entitySetQuery().action(name);
     return query.post<P>(postdata, options);
   }
 
@@ -242,8 +217,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataSet<P>> {
-    let query = this.entitySetQuery();
-    query.action(name);
+    let query = this.entitySetQuery().action(name);
     return query.post<P>(postdata, {
       observe: 'body',
       headers: options.headers,
@@ -260,8 +234,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entitySetQuery();
-    query.action(name);
+    let query = this.entitySetQuery().action(name);
     return query.post<P>(postdata, {
       observe: 'body',
       headers: options.headers,
@@ -278,8 +251,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entityQuery(entity);
-    query.function(name).options().assign(parameters);
+    let query = this.entityQuery(entity).function(name)
+    query.parameters().assign(parameters);
     return query.get<P>(options);
   }
 
@@ -289,8 +262,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataSet<P>> {
-    let query = this.entityQuery(entity);
-    query.function(name).options().assign(parameters);
+    let query = this.entityQuery(entity).function(name)
+    query.parameters().assign(parameters);
     return query.getSet<P>(options);
   }
 
@@ -300,8 +273,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entityQuery(entity);
-    query.function(name).options().assign(parameters);
+    let query = this.entityQuery(entity).function(name)
+    query.parameters().assign(parameters);
     return query.getProperty<P>(options);
   }
 
@@ -311,8 +284,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entitySetQuery();
-    query.function(name).options().assign(parameters);
+    let query = this.entitySetQuery().function(name);
+    query.parameters().assign(parameters);
     return query.get<P>(options);
   }
 
@@ -322,8 +295,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataSet<P>> {
-    let query = this.entitySetQuery();
-    query.function(name).options().assign(parameters);
+    let query = this.entitySetQuery().function(name);
+    query.parameters().assign(parameters);
     return query.getSet<P>(options);
   }
 
@@ -333,8 +306,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entitySetQuery();
-    query.function(name).options().assign(parameters);
+    let query = this.entitySetQuery().function(name);
+    query.parameters().assign(parameters);
     return query.getProperty<P>(options);
   }
 }

@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 
 import { ODataService } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
-import { PlainObject, ODataQuery } from './odata-query';
+import { PlainObject, ODataUrl } from './odata-query';
 import { ODataResponseBatch } from '../odata-response/odata-response-batch';
 import { map } from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ export enum Method {
 export class BatchRequest {
   constructor(
     public method: Method,
-    public odataQuery: ODataQuery,
+    public odataQuery: ODataUrl,
     public body?: any,
     public options?: {
       headers?: HttpHeaders|{[header: string]: string | string[]},
@@ -62,35 +62,35 @@ export class ODataQueryBatch {
     this.changesetID = 1;
   }
 
-  get(query: ODataQuery, options?: {
+  get(query: ODataUrl, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.GET, query, undefined, options));
     return this;
   }
 
-  post(query: ODataQuery, body: any, options?: {
+  post(query: ODataUrl, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.POST, query, body, options));
     return this;
   }
 
-  put(query: ODataQuery, body: any, options?: {
+  put(query: ODataUrl, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PUT, query, body, options));
     return this;
   }
 
-  patch(query: ODataQuery, body: any, options?: {
+  patch(query: ODataUrl, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.PATCH, query, body, options));
     return this;
   }
 
-  delete(query: ODataQuery, options?: {
+  delete(query: ODataUrl, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataQueryBatch {
     this.requests.push(new BatchRequest(Method.DELETE, query, undefined, options));
@@ -138,7 +138,7 @@ export class ODataQueryBatch {
 
     for (const request of this.requests) {
       const method: Method = request.method;
-      const odataQuery: ODataQuery = request.odataQuery;
+      const odataQuery: ODataUrl = request.odataQuery;
       const httpOptions = request.options;
       const body: any = request.body;
 
