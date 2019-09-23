@@ -5,7 +5,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ODataSet } from '../odata-response/odata-set';
 import { Utils } from '../utils/utils';
-import { ODataEntitySetRequest, ODataEntityRequest, ODataRequest } from '../odata-request';
+import { ODataEntitySetRequest, ODataEntityRequest, ODataRequest, ODataCollectionRequest } from '../odata-request';
+import { ODataRefRequest } from '../odata-request/requests/ref';
 
 export abstract class ODataEntityService<T> extends ODataService {
   static set: string = "";
@@ -107,7 +108,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     return query.get(options);
   }
 
-  protected createRef<P>(entity: Partial<T>, name: string, target: ODataRequest, options?: {
+  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -119,7 +120,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     return query.put({ [ODataService.ODATA_ID]: refurl }, etag);
   }
 
-  protected createCollectionRef<P>(entity: Partial<T>, name: string, target: ODataRequest, options?: {
+  protected createCollectionRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -130,7 +131,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     return query.post({ [ODataService.ODATA_ID]: refurl });
   }
 
-  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataRequest, options?: {
+  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -141,7 +142,7 @@ export abstract class ODataEntityService<T> extends ODataService {
     return query.delete(etag);
   }
 
-  protected deleteCollectionRef<P>(entity: Partial<T>, name: string, target: ODataRequest, options?: {
+  protected deleteCollectionRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
