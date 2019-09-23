@@ -578,12 +578,12 @@ export class ODataCollectionUrl<T> extends ODataUrl {
     withCredentials?: boolean,
   }): Observable<ODataSet<T>> {
     return super.get<T>({
-      headers: options.headers,
+      headers: options && options.headers,
       observe: 'body',
-      params: options.params,
+      params: options && options.params,
       responseType: 'set',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
     });
   }
 
@@ -646,12 +646,12 @@ export class ODataPropertyUrl<P> extends ODataUrl {
     withCredentials?: boolean,
   }): Observable<P> {
     return super.get<P>({
-      headers: options.headers,
+      headers: options && options.headers,
       observe: 'body',
-      params: options.params,
+      params: options && options.params,
       responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
     });
   }
 

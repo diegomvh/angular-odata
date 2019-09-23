@@ -7,15 +7,22 @@ export class ODataSet<T> {
   entities: T[];
   count: number;
   skip: number;
+  skiptoken: number;
 
   constructor(json: any) {
     this.entities = json[ODataSet.SET_VALUE] || [];
-    this.count = json[ODataSet.ODATA_COUNT] || this.entities.length;
+    if (json.hasOwnProperty(ODataSet.ODATA_COUNT)) {
+      this.count = json[ODataSet.ODATA_COUNT];
+    }
     if (json.hasOwnProperty(ODataSet.ODATA_NEXT_LINK)) {
       let url = json[ODataSet.ODATA_NEXT_LINK];
-      let match = url.match(/\$skip=(\d+)/) || url.match(/\$skiptoken=(\d+)/);
+      let match = url.match(/\$skip=(\d+)/);
       if (match) {
         this.skip = Number(match[1]);
+      }
+      match = url.match(/\$skiptoken=(\d+)/);
+      if (match) {
+        this.skiptoken = Number(match[1]);
       }
     }
   }
