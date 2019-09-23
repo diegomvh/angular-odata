@@ -1,10 +1,10 @@
 import { ODataModel, Model } from '../odata-model/odata-model';
 import { ODataCollection } from '../odata-model/odata-collection';
-import { PlainObject } from '../odata-query/odata-query';
 import { ODataEntityService } from './odata-entity.service';
+import { PlainObject } from '../odata-request/odata-request-handlers';
 
 export abstract class ODataModelService<T extends Model> extends ODataEntityService<T> {
-  static set: string = "";
+  static entities: string = "";
   static modelType: string = "";
   static collectionType: string = "";
 
@@ -16,7 +16,7 @@ export abstract class ODataModelService<T extends Model> extends ODataEntityServ
 
   collection(models?: PlainObject[]) {
     let ctor = <typeof ODataModelService>this.constructor;
-    let query = this.set();
+    let query = this.entities();
     return this.context.createInstance(ctor.collectionType, models || [], query);
   }
 

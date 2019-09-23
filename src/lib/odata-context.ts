@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { ODataUrl } from './odata-query/odata-query';
+import { ODataRequest } from './odata-request/odata-request';
 
 export interface ODataConfig {
   baseUrl?: string,
@@ -45,7 +45,7 @@ export class ODataContext implements ODataConfig {
     if (Ctor) return Ctor;
   }
 
-  createInstance(type: string, value: any, query: ODataUrl) {
+  createInstance(type: string, value: any, query: ODataRequest) {
     let Ctor = this.getType(type);
     let instance = new Ctor(value, query);
     instance.setContext(this);

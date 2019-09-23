@@ -4,9 +4,8 @@ import { Observable, of } from 'rxjs';
 
 import { ODataService } from '../odata-service/odata.service';
 import { Utils } from '../utils/utils';
-import { PlainObject, ODataUrl } from './odata-query';
-import { ODataResponseBatch } from '../odata-response/odata-response-batch';
-import { map } from 'rxjs/operators';
+import { ODataRequest } from './odata-request';
+import { PlainObject } from './odata-request-handlers';
 
 export enum Method {
   GET, POST, PUT, PATCH, DELETE
@@ -15,14 +14,14 @@ export enum Method {
 export class BatchRequest {
   constructor(
     public method: Method,
-    public odataQuery: ODataUrl,
+    public odataQuery: ODataRequest,
     public body?: any,
     public options?: {
       headers?: HttpHeaders|{[header: string]: string | string[]},
     }) { }
 }
 
-export class ODataQueryBatch {
+export class ODataBatchRequest {
   private static readonly BOUNDARY_PREFIX_SUFFIX = '--';
   private static readonly BATCH_PREFIX = 'batch_';
   private static readonly CHANGESET_PREFIX = 'changeset_';
@@ -57,42 +56,42 @@ export class ODataQueryBatch {
   constructor(service: ODataService) {
     this.service = service;
     this.requests = [];
-    this.batchBoundary = ODataQueryBatch.BATCH_PREFIX + this.getUUID();
+    this.batchBoundary = ODataBatchRequest.BATCH_PREFIX + this.getUUID();
     this.changesetBoundary = null;
     this.changesetID = 1;
   }
 
-  get(query: ODataUrl, options?: {
+  get(query: ODataRequest, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
-  }): ODataQueryBatch {
+  }): ODataBatchRequest {
     this.requests.push(new BatchRequest(Method.GET, query, undefined, options));
     return this;
   }
 
-  post(query: ODataUrl, body: any, options?: {
+  post(query: ODataRequest, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
-  }): ODataQueryBatch {
+  }): ODataBatchRequest {
     this.requests.push(new BatchRequest(Method.POST, query, body, options));
     return this;
   }
 
-  put(query: ODataUrl, body: any, options?: {
+  put(query: ODataRequest, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
-  }): ODataQueryBatch {
+  }): ODataBatchRequest {
     this.requests.push(new BatchRequest(Method.PUT, query, body, options));
     return this;
   }
 
-  patch(query: ODataUrl, body: any, options?: {
+  patch(query: ODataRequest, body: any, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
-  }): ODataQueryBatch {
+  }): ODataBatchRequest {
     this.requests.push(new BatchRequest(Method.PATCH, query, body, options));
     return this;
   }
 
-  delete(query: ODataUrl, options?: {
+  delete(query: ODataRequest, options?: {
     headers?: HttpHeaders|{[header: string]: string | string[]},
-  }): ODataQueryBatch {
+  }): ODataBatchRequest {
     this.requests.push(new BatchRequest(Method.DELETE, query, undefined, options));
     return this;
   }
@@ -105,9 +104,9 @@ export class ODataQueryBatch {
   }): Observable<HttpResponse<any>> {
 
     let headers = this.mergeHttpHeaders(options.headers, {
-      [ODataQueryBatch.ODATA_VERSION]: ODataQueryBatch.VERSION_4_0,
-      [ODataQueryBatch.CONTENT_TYPE]: ODataQueryBatch.MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
-      [ODataQueryBatch.ACCEPT]: ODataQueryBatch.MULTIPART_MIXED
+      [ODataBatchRequest.ODATA_VERSION]: ODataBatchRequest.VERSION_4_0,
+      [ODataBatchRequest.CONTENT_TYPE]: ODataBatchRequest.MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
+      [ODataBatchRequest.ACCEPT]: ODataBatchRequest.MULTIPART_MIXED
     });
 
     return of(new HttpResponse<any>());
@@ -138,57 +137,57 @@ export class ODataQueryBatch {
 
     for (const request of this.requests) {
       const method: Method = request.method;
-      const odataQuery: ODataUrl = request.odataQuery;
+      const odataQuery: ODataRequest = request.odataQuery;
       const httpOptions = request.options;
       const body: any = request.body;
 
       // if method is GET and there is a changeset boundary open then close it
       if (method === Method.GET && Utils.isNotNullNorUndefined(this.changesetBoundary)) {
-        res += ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX + ODataQueryBatch.NEWLINE;
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + ODataBatchRequest.NEWLINE;
         this.changesetBoundary = null;
       }
 
       // if there is no changeset boundary open then open a batch boundary
       if (Utils.isNullOrUndefined(this.changesetBoundary)) {
-        res += ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + ODataQueryBatch.NEWLINE;
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + ODataBatchRequest.NEWLINE;
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (method !== Method.GET) {
         if (Utils.isNullOrUndefined(this.changesetBoundary)) {
-          this.changesetBoundary = ODataQueryBatch.CHANGESET_PREFIX + this.getUUID();
-          res += ODataQueryBatch.CONTENT_TYPE + ': ' + ODataQueryBatch.MULTIPART_MIXED_BOUNDARY + this.changesetBoundary + ODataQueryBatch.NEWLINE;
-          res += ODataQueryBatch.NEWLINE;
+          this.changesetBoundary = ODataBatchRequest.CHANGESET_PREFIX + this.getUUID();
+          res += ODataBatchRequest.CONTENT_TYPE + ': ' + ODataBatchRequest.MULTIPART_MIXED_BOUNDARY + this.changesetBoundary + ODataBatchRequest.NEWLINE;
+          res += ODataBatchRequest.NEWLINE;
         }
-        res += ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataQueryBatch.NEWLINE;
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataBatchRequest.NEWLINE;
       }
 
-      res += ODataQueryBatch.CONTENT_TYPE + ': ' + ODataQueryBatch.APPLICATION_HTTP + ODataQueryBatch.NEWLINE;
-      res += ODataQueryBatch.CONTENT_TRANSFER_ENCODING + ': ' + ODataQueryBatch.BINARY + ODataQueryBatch.NEWLINE;
+      res += ODataBatchRequest.CONTENT_TYPE + ': ' + ODataBatchRequest.APPLICATION_HTTP + ODataBatchRequest.NEWLINE;
+      res += ODataBatchRequest.CONTENT_TRANSFER_ENCODING + ': ' + ODataBatchRequest.BINARY + ODataBatchRequest.NEWLINE;
 
       if (method !== Method.GET) {
-        res += ODataQueryBatch.CONTENT_ID + ': ' + this.changesetID++ + ODataQueryBatch.NEWLINE;
+        res += ODataBatchRequest.CONTENT_ID + ': ' + this.changesetID++ + ODataBatchRequest.NEWLINE;
       }
 
-      res += ODataQueryBatch.NEWLINE;
-      res += Method[method] + ' ' + odataQuery + ' ' + ODataQueryBatch.HTTP11 + ODataQueryBatch.NEWLINE;
+      res += ODataBatchRequest.NEWLINE;
+      res += Method[method] + ' ' + odataQuery + ' ' + ODataBatchRequest.HTTP11 + ODataBatchRequest.NEWLINE;
 
       res += this.getHeaders(method, httpOptions);
 
-      res += ODataQueryBatch.NEWLINE;
+      res += ODataBatchRequest.NEWLINE;
       if (method === Method.GET || method === Method.DELETE) {
-        res += ODataQueryBatch.NEWLINE;
+        res += ODataBatchRequest.NEWLINE;
       } else {
-        res += JSON.stringify(body) + ODataQueryBatch.NEWLINE;
+        res += JSON.stringify(body) + ODataBatchRequest.NEWLINE;
       }
     }
 
     if (res.length) {
       if (Utils.isNotNullNorUndefined(this.changesetBoundary)) {
-        res += ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX + ODataQueryBatch.NEWLINE;
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + ODataBatchRequest.NEWLINE;
         this.changesetBoundary = null;
       }
-      res += ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + ODataQueryBatch.BOUNDARY_PREFIX_SUFFIX;
+      res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX;
     }
 
     return res;
@@ -198,7 +197,7 @@ export class ODataQueryBatch {
     let res = '';
 
     if (method === Method.POST || method === Method.PATCH || method === Method.PUT) {
-      res += ODataQueryBatch.CONTENT_TYPE + ': ' + ODataQueryBatch.APPLICATION_JSON + ODataQueryBatch.NEWLINE;
+      res += ODataBatchRequest.CONTENT_TYPE + ': ' + ODataBatchRequest.APPLICATION_JSON + ODataBatchRequest.NEWLINE;
     }
 
     if (Utils.isNullOrUndefined(options) || Utils.isNullOrUndefined(options.headers)) {
@@ -206,7 +205,7 @@ export class ODataQueryBatch {
     }
 
     for (const key of options.headers.keys()) {
-      res += key + ': ' + options.headers.getAll(key) + ODataQueryBatch.NEWLINE;
+      res += key + ': ' + options.headers.getAll(key) + ODataBatchRequest.NEWLINE;
     }
 
     return res;

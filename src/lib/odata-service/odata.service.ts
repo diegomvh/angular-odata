@@ -3,12 +3,12 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/comm
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataUrl, ODataSingletonUrl, ODataEntitySetUrl, ODataActionUrl, ODataFunctionUrl, ODataObserve } from '../odata-query/odata-query';
 import { ODataContext } from '../odata-context';
 import { Metadata } from '../odata-response/metadata';
 import { Injectable } from '@angular/core';
-import { ODataQueryBatch } from '../odata-query/odata-query-batch';
+import { ODataBatchRequest } from '../odata-request/odata-batch-request';
 import { ODataSet } from '../odata-response/odata-set';
+import { ODataSingletonUrl, ODataEntitySetUrl, ODataRequest, ODataObserve } from '../odata-request';
 
 @Injectable()
 export class ODataService {
@@ -28,8 +28,8 @@ export class ODataService {
       .pipe(map(body => new Metadata(body)));
   }
 
-  batch(): ODataQueryBatch {
-    return new ODataQueryBatch(this);
+  batch(): ODataBatchRequest {
+    return new ODataBatchRequest(this);
   }
 
   singleton<T>(name: string) {
@@ -38,25 +38,13 @@ export class ODataService {
     return singleton;
   }
 
-  entities<T>(name: string): ODataEntitySetUrl<T> {
+  entitySet<T>(name: string): ODataEntitySetUrl<T> {
     let entityset = new ODataEntitySetUrl<T>(this);
     entityset.name(name);
     return entityset;
   }
 
-  action<T>(name: string) {
-    let action = new ODataActionUrl<T>(this);
-    action.name(name);
-    return action;
-  }
-
-  function<T>(name: string) {
-    let func = new ODataFunctionUrl<T>(this);
-    func.name(name);
-    return func;
-  }
-
-  request(method: string, query?: ODataUrl, options: {
+  request(method: string, query?: ODataRequest, options: {
     body?: any,
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },

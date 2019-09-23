@@ -1,6 +1,3 @@
-import { OperatorLogical } from '../query-options/operator';
-
-import { QuotedString } from '../odata-query/quoted-string';
 
 export class Utils {
     static isNull(value: any): boolean {
@@ -86,71 +83,5 @@ export class Utils {
         if (fieldValue < 0) {
             throw new Error(fieldName + ' cannot be negative');
         }
-    }
-
-    static getValueURI(value: boolean | number | string | QuotedString, encodeURI: boolean): any {
-        Utils.requireNotUndefined(value, 'value');
-        Utils.requireNotNullNorUndefined(encodeURI, 'encodeURI');
-
-        let res: any = value;
-
-        if (typeof (res) === 'string') {
-            // encode uri component
-            if (Utils.isNotNullNorUndefined(encodeURI) && encodeURI) {
-                res = encodeURIComponent(res);
-            }
-        } else if (res instanceof QuotedString) {
-            // escape single quote
-            res = res.toString().replace(/'/g, '\'\'');
-
-            // encode uri component
-            if (Utils.isNotNullNorUndefined(encodeURI) && encodeURI) {
-                res = encodeURIComponent(res);
-            }
-
-            // add start/ending quotes
-            res = '\'' + res + '\'';
-        }
-
-        // boolean, number
-        return res;
-    }
-
-    static toString(items: any[], operator?: OperatorLogical, operatorUppercase: boolean = false): string {
-        let res = '';
-        if (Utils.isNullOrUndefined(items) || !items.length) {
-            return res;
-        }
-
-        for (const item of items) {
-            if (res.length) {
-                if (Utils.isNotNullNorUndefined(operator)) {
-                    const operatorString: string = Utils.getOperatorString(operator, operatorUppercase);
-                    res += ` ${operatorString} `;
-                } else {
-                    res += ',';
-                }
-            }
-            if (Utils.isNotNullNorUndefined(operator) && operator === OperatorLogical.NOT) {
-                const operatorString: string = Utils.getOperatorString(operator, operatorUppercase);
-                res += `${operatorString} `;
-            }
-
-            res += item;
-        }
-
-        if (Utils.isNotNullNorUndefined(operator)) {
-            return `(${res})`;
-        }
-
-        return res;
-    }
-
-    protected static getOperatorString(operator: OperatorLogical, operatorUppercase: boolean): string {
-        let operatorString: string = OperatorLogical[operator].toLowerCase();
-        if (Utils.isNotNullNorUndefined(operatorUppercase) && operatorUppercase) {
-            operatorString = operatorString.toUpperCase();
-        }
-        return operatorString;
     }
 }

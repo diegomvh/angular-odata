@@ -6,8 +6,8 @@ export * from './lib/odata.module';
 export * from './lib/odata-context';
 
 // Queries
-export * from './lib/odata-query/odata-query';
-export * from './lib/odata-query/odata-query';
+export * from './lib/odata-request/odata-request';
+export * from './lib/odata-request/odata-request';
 
 // Response
 export * from './lib/odata-response/odata-set';

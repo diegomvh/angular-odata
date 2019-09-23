@@ -1,6 +1,6 @@
 import { ODataModel, Model } from './odata-model';
 import { map } from 'rxjs/operators';
-import { ODataUrl, Filter, Expand, GroupBy, PlainObject, ODataEntitySetUrl } from '../odata-query/odata-query';
+import { ODataRequest, Filter, Expand, GroupBy, PlainObject, ODataEntitySetUrl } from '../odata-request/odata-request';
 import { Observable } from 'rxjs';
 import { ODataSet } from '../odata-response/odata-set';
 import { ODataContext } from '../odata-context';
@@ -9,7 +9,7 @@ export class Collection<M extends Model> {
   static type: string = "";
   static modelType: string = "";
   _context: ODataContext;
-  _query: ODataUrl;
+  _query: ODataRequest;
   _models: M[];
   state: {
     page?: number,
@@ -18,7 +18,7 @@ export class Collection<M extends Model> {
     records?: number,
   };
 
-  constructor(models: PlainObject[], query?: ODataUrl) {
+  constructor(models: PlainObject[], query?: ODataRequest) {
     this._models = this.parse(models, query);
     this.state = {
       records: this._models.length
@@ -30,11 +30,11 @@ export class Collection<M extends Model> {
     this._context = context;
   }
 
-  setQuery(query: ODataUrl) {
+  setQuery(query: ODataRequest) {
     this._query = query;
   }
 
-  parse(models: PlainObject[], query: ODataUrl) {
+  parse(models: PlainObject[], query: ODataRequest) {
     let ctor = <typeof Collection>this.constructor;
     return models.map(model => this._context.createInstance(ctor.modelType, model, query) as M);
   }
@@ -61,12 +61,12 @@ export class Collection<M extends Model> {
 export class ODataCollection<M extends ODataModel> extends Collection<M> {
   constructor(
     models: PlainObject[],
-    query: ODataUrl
+    query: ODataRequest
   ) {
     super(models, query);
   }
 
-  assign(entitySet: ODataSet<ODataModel>, query: ODataUrl) {
+  assign(entitySet: ODataSet<ODataModel>, query: ODataRequest) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)

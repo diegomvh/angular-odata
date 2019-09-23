@@ -1,7 +1,7 @@
 import { Observable, EMPTY, forkJoin, OperatorFunction, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Utils } from '../utils/utils';
-import { ODataUrl, Expand, PlainObject, ODataEntityUrl, ODataEntitySetUrl } from '../odata-query/odata-query';
+import { ODataRequest, Expand, PlainObject, ODataEntityUrl, ODataEntitySetUrl } from '../odata-request/odata-request';
 import { Collection } from './odata-collection';
 import { ODataContext } from '../odata-context';
 import { ODataService } from '../odata-service/odata.service';
@@ -106,7 +106,7 @@ export class Schema {
     });
   }
 
-  deserialize(model: Model, attrs: PlainObject, query: ODataUrl) {
+  deserialize(model: Model, attrs: PlainObject, query: ODataRequest) {
     let context = model._context;
     model._attributes = attrs;
     this.fields.filter(f => !f.related).forEach(f => {
@@ -129,7 +129,7 @@ export class Schema {
     }, {});
   }
 
-  relationships(model: Model, attrs: PlainObject, query: ODataUrl) {
+  relationships(model: Model, attrs: PlainObject, query: ODataRequest) {
     model._relationships = {};
     this.fields.filter(f => f.related).forEach(f => {
       this.defineProperty(model, f, attrs[f.name]);
@@ -315,7 +315,7 @@ export class ODataModel extends Model {
     return query.delete(this[ODataService.ODATA_ETAG], options);
   }
 
-  protected createODataModelRef(name: string, target: ODataUrl, options?) {
+  protected createODataModelRef(name: string, target: ODataRequest, options?) {
     let query = this._query.clone() as ODataEntityUrl<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
@@ -324,7 +324,7 @@ export class ODataModel extends Model {
     return ref.put({ [ODataService.ODATA_ID]: refurl }, this[ODataService.ODATA_ETAG], options);
   }
 
-  protected deleteODataModelRef(name: string, target: ODataUrl, options?) {
+  protected deleteODataModelRef(name: string, target: ODataRequest, options?) {
     let query = this._query.clone() as ODataEntityUrl<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
@@ -332,7 +332,7 @@ export class ODataModel extends Model {
     return ref.delete(this[ODataService.ODATA_ETAG], options);
   }
 
-  protected createODataCollectionRef(name: string, target: ODataUrl, options?) {
+  protected createODataCollectionRef(name: string, target: ODataRequest, options?) {
     let query = this._query.clone() as ODataEntityUrl<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
@@ -341,7 +341,7 @@ export class ODataModel extends Model {
     return ref.post({ [ODataService.ODATA_ID]: refurl }, options);
   }
 
-  protected deleteODataCollectionRef(name: string, target: ODataUrl, options?) {
+  protected deleteODataCollectionRef(name: string, target: ODataRequest, options?) {
     let query = this._query.clone() as ODataEntityUrl<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
