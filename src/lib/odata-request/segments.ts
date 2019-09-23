@@ -26,8 +26,8 @@ export class ODataSegments {
     return this.segments.map(segment => ({ type: segment.type, name: segment.name, options: Object.assign({}, segment.options) }));
   }
 
-  toObject(): ODataSegment[] {
-    return this.segments.map(segment => ({ type: segment.type, name: segment.name, options: Object.assign({}, segment.options) }));
+  clone() {
+    return new ODataSegments(this.toJSON());
   }
 
   // Handlersk

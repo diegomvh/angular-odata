@@ -3,24 +3,13 @@ import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
 import { ODataValueRequest } from './value';
-import { Segments, ODataSegment, PlainObject } from '../types';
-import { ODataService } from '../../odata-service/odata.service';
+import { Segments } from '../types';
 
 export class ODataPropertyRequest<P> extends ODataRequest {
-  constructor(
-    name: string,
-    service: ODataService,
-    segments?: ODataSegment[],
-    options?: PlainObject
-  ) {
-    super(service, segments, options);
-    this.segments.segment(Segments.property, name);
-  }
-
   value() {
-    return new ODataValueRequest(this.service,
-      this.segments.toObject(),
-      this.options.toObject());
+    let segments = this.segments.clone();
+    segments.segment(Segments.value, ODataValueRequest.$VALUE);
+    return new ODataValueRequest(this.service, segments);
   }
 
   get(options?: {

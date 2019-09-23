@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ODataRequest } from '../request';
 import { ODataSet } from '../../odata-response/odata-set';
 import { ODataCountRequest } from './count';
-import { PlainObject, Options, Filter, GroupBy, Transform, Expand } from '../types';
+import { PlainObject, Options, Filter, GroupBy, Transform, Expand, Segments } from '../types';
 import { ODataEntityRequest } from './entity';
 
 export class ODataCollectionRequest<T> extends ODataRequest {
@@ -32,9 +32,9 @@ export class ODataCollectionRequest<T> extends ODataRequest {
   }
 
   count() {
-    return new ODataCountRequest(this.service, 
-      this.segments.toObject(), 
-      this.options.toObject());
+    let segments = this.segments.clone();
+    segments.segment(Segments.count, ODataCountRequest.$COUNT);
+    return new ODataCountRequest(this.service, segments);
   }
 
   select(opts?: string | string[]) {

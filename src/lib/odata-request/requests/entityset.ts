@@ -6,16 +6,14 @@ import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { ODataEntityRequest } from './entity';
 import { PlainObject, Segments, ODataSegment } from '../types';
 import { ODataService } from '../../odata-service/odata.service';
+import { ODataSegments } from '../segments';
 
 export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
-  constructor(
-    name: string,
-    service: ODataService,
-    segments?: ODataSegment[],
-    options?: PlainObject
-  ) {
-    super(service, segments, options);
-    this.segments.segment(Segments.entitySet, name);
+
+  static factory<T>(service: ODataService, name: string) {
+    let segments = new ODataSegments();
+    segments.segment(Segments.entitySet, name);
+    return new ODataEntitySetRequest<T>(service, segments);
   }
 
   entity(key?: string | number | PlainObject) {
@@ -26,17 +24,15 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
   }
 
   action<T>(name: string) {
-    return new ODataActionRequest<T>(name, 
-      this.service,
-      this.segments.toObject(),
-      this.options.toObject());
+    let segments = this.segments.clone();
+    segments.segment(Segments.actionCall, name);
+    return new ODataActionRequest<T>(this.service, segments);
   }
 
   function<T>(name: string) {
-    return new ODataFunctionRequest<T>(name, 
-      this.service,
-      this.segments.toObject(),
-      this.options.toObject());
+    let segments = this.segments.clone();
+    segments.segment(Segments.functionCall, name);
+    return new ODataFunctionRequest<T>(this.service, segments);
   }
 
   post(body: T, options?: {

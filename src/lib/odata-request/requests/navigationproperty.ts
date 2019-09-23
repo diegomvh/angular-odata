@@ -1,43 +1,25 @@
-import { ODataOptions } from '../options';
-import { PlainObject, ODataSegment, Segments } from '../types';
-import { ODataSegments } from '../segments';
-import { ODataService } from '../../odata-service/odata.service';
 import { ODataRefRequest } from './ref';
 import { ODataSingleRequest } from './single';
 import { ODataCollectionRequest } from './collection';
+import { ODataRequest } from '../request';
+import { Segments } from '../types';
 
-export class ODataNavigationPropertyRequest<T> {
-  protected service: ODataService;
-  protected segments: ODataSegments;
-  protected options: ODataOptions;
-
-  constructor(
-    name: string,
-    service: ODataService,
-    segments?: ODataSegment[],
-    options?: PlainObject
-  ) {
-    this.service = service;
-    this.segments = new ODataSegments(segments || []);
-    this.segments.segment(Segments.navigationProperty, name);
-    this.options = new ODataOptions(options || {});
-  }
-
+export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   ref() {
-    return new ODataRefRequest(this.service, 
-      this.segments.toObject(), 
-      this.options.toObject());
+    let segments = this.segments.clone();
+    segments.segment(Segments.ref, ODataRefRequest.$REF);
+    return new ODataRefRequest(this.service, segments);
   }
 
   single() {
     return new ODataSingleRequest<T>(this.service, 
-      this.segments.toObject(), 
-      this.options.toObject());
+      this.segments.clone(), 
+      this.options.clone());
   }
 
   collection() {
     return new ODataCollectionRequest<T>(this.service, 
-      this.segments.toObject(), 
-      this.options.toObject());
+      this.segments.clone(), 
+      this.options.clone());
   }
 }

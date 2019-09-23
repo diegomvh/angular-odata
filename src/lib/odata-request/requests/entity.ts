@@ -5,7 +5,7 @@ import { ODataSingleRequest } from './single';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
 import { Utils } from '../../utils/utils';
-import { PlainObject } from '../types';
+import { PlainObject, Segments } from '../types';
 import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
 
@@ -17,32 +17,28 @@ export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
     segment.options().set("key", key);
   }
 
-  navigationProperty<E>(name: string) {
-    return new ODataNavigationPropertyRequest<E>(name, 
-      this.service, 
-      this.segments.toObject(), 
-      this.options.toObject());
+  navigationProperty<N>(name: string) {
+    let segments = this.segments.clone();
+    segments.segment(Segments.navigationProperty, name);
+    return new ODataNavigationPropertyRequest<N>(this.service, segments);
   }
 
   property<P>(name: string) {
-    return new ODataPropertyRequest<P>(name, 
-      this.service, 
-      this.segments.toObject(), 
-      this.options.toObject());
+    let segments = this.segments.clone();
+    segments.segment(Segments.property, name);
+    return new ODataPropertyRequest<P>(this.service, segments);
   }
 
-  action<T>(name: string) {
-    return new ODataActionRequest<T>(name, 
-      this.service,
-      this.segments.toObject(),
-      this.options.toObject());
+  action<A>(name: string) {
+    let segments = this.segments.clone();
+    segments.segment(Segments.actionCall, name);
+    return new ODataActionRequest<A>(this.service, segments);
   }
 
-  function<T>(name: string) {
-    return new ODataFunctionRequest<T>(name, 
-      this.service,
-      this.segments.toObject(),
-      this.options.toObject());
+  function<F>(name: string) {
+    let segments = this.segments.clone();
+    segments.segment(Segments.functionCall, name);
+    return new ODataFunctionRequest<F>(this.service, segments);
   }
 
   post(body: T, options?: {

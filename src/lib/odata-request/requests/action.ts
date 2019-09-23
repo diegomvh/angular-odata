@@ -7,16 +7,6 @@ import { ODataService } from '../../odata-service/odata.service';
 import { ODataSegment, PlainObject, Segments } from '../types';
 
 export class ODataActionRequest<T> extends ODataRequest {
-  constructor(
-    name: string,
-    service: ODataService,
-    segments?: ODataSegment[],
-    options?: PlainObject
-  ) {
-    super(service, segments, options);
-    this.segments.segment(Segments.actionCall, name);
-  }
-
   post(body: T, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe: 'body',

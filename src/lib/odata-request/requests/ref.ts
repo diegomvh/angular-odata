@@ -8,15 +8,6 @@ import { ODataSegment, PlainObject, Segments } from '../types';
 export class ODataRefRequest extends ODataRequest {
   public static readonly $REF = '$ref';
 
-  constructor(
-    service: ODataService,
-    segments?: ODataSegment[],
-    options?: PlainObject
-  ) {
-    super(service, segments, options);
-    this.segments.segment(Segments.ref, ODataRefRequest.$REF);
-  }
-
   post(body: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},

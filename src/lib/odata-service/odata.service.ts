@@ -33,13 +33,11 @@ export class ODataService {
   }
 
   singleton<T>(name: string) {
-    let singleton = new ODataSingletonRequest<T>(name, this);
-    return singleton;
+    return ODataSingletonRequest.factory<T>(this, name);
   }
 
   entitySet<T>(name: string): ODataEntitySetRequest<T> {
-    let entityset = new ODataEntitySetRequest<T>(name, this);
-    return entityset;
+    return ODataEntitySetRequest.factory<T>(this, name);
   }
 
   request(method: string, query?: ODataRequest, options: {

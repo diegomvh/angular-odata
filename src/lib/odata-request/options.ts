@@ -37,8 +37,8 @@ export class ODataOptions {
     return Object.assign({}, this.options);
   }
 
-  toObject(): PlainObject {
-    return Object.assign({}, this.options);
+  clone() {
+    return new ODataOptions(this.toJSON());
   }
 
   //Handlers

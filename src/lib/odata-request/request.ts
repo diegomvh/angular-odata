@@ -29,12 +29,12 @@ export abstract class ODataRequest {
 
   constructor(
     service: ODataService,
-    segments?: ODataSegment[],
-    options?: PlainObject
+    segments?: ODataSegments,
+    options?: ODataOptions
   ) {
     this.service = service;
-    this.segments = new ODataSegments(segments || []);
-    this.options = new ODataOptions(options || {});
+    this.segments = segments || new ODataSegments();
+    this.options = options || new ODataOptions();
   }
 
   protected get(options: {
@@ -108,12 +108,10 @@ export abstract class ODataRequest {
     return this.options.params();
   }
 
-  clone<T extends ODataRequest>(type?: { new(service: ODataService, segments: ODataSegment[], options: PlainObject): T; }): T {
+  clone<T extends ODataRequest>(type?: { new(service: ODataService, segments: ODataSegments, options: ODataOptions): T; }): T {
     if (!type) 
-      type = this.constructor as { new(service: ODataService, segments: ODataSegment[], options: PlainObject): T; };
-    let options = this.options.toObject();
-    let segments = this.segments.toObject();
-    return new type(this.service, segments, options);
+      type = this.constructor as { new(service: ODataService, segments: ODataSegments, options: ODataOptions): T; };
+    return new type(this.service, this.segments.clone(), this.options.clone());
   };
 
   toJSON() {

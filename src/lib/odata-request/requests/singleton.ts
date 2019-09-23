@@ -1,15 +1,12 @@
 import { ODataSingleRequest } from './single';
 import { Segments, PlainObject, ODataSegment } from '../types';
 import { ODataService } from '../../odata-service/odata.service';
+import { ODataSegments } from '../segments';
 
 export class ODataSingletonRequest<T> extends ODataSingleRequest<T> {
-  constructor(
-    name: string,
-    service: ODataService,
-    segments?: ODataSegment[],
-    options?: PlainObject
-  ) {
-    super(service, segments, options);
-    this.segments.segment(Segments.singleton, name);
+  static factory<T>(service: ODataService, name: string) {
+    let segments = new ODataSegments();
+    segments.segment(Segments.singleton, name);
+    return new ODataSingletonRequest<T>(service, segments);
   }
 }
