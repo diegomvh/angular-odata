@@ -4,10 +4,9 @@ import { catchError } from 'rxjs/operators';
 
 import { ODataEntitySet } from '../odata-response';
 import { Utils } from '../utils/utils';
-import { ODataEntitySetRequest, ODataEntityRequest, PlainObject, ODataFunctionRequest, ODataActionRequest, RequestMethod, ODataObserve } from '../odata-request';
+import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
 import { ODataService } from "./service";
-import { ODataPropertyRequest } from '../odata-request';
 
 export abstract class ODataEntityService<T> extends ODataService {
   static set: string = "";
