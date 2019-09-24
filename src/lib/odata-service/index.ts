@@ -1,3 +1,3 @@
-export * from './odata.service';
-export * from './odata-entity.service';
-export * from './odata-model.service';
+export * from './service';
+export * from './entity';
+export * from './model';

@@ -1,12 +1,11 @@
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { ODataService } from "./odata.service";
+import { ODataService } from "./service";
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ODataSet } from '../odata-response/odata-set';
+import { ODataSet } from '../odata-response/entityset';
 import { Utils } from '../utils/utils';
-import { ODataEntitySetRequest, ODataEntityRequest, ODataRequest, ODataCollectionRequest } from '../odata-request';
-import { ODataRefRequest } from '../odata-request/requests/ref';
+import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
 export abstract class ODataEntityService<T> extends ODataService {
   static set: string = "";

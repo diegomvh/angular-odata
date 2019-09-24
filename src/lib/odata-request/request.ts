@@ -1,7 +1,7 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataService } from "../odata-service/odata.service";
+import { ODataService } from "../odata-service/service";
 import { ODataOptions } from './options';
 import { ODataSegment, PlainObject, SegmentHandler } from './types';
 import { ODataSegments } from './segments';

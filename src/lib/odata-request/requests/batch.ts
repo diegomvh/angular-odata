@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { Observable, of } from 'rxjs';
 
-import { ODataService } from '../../odata-service/odata.service';
+import { ODataService } from '../../odata-service/service';
 import { Utils } from '../../utils/utils';
 import { ODataRequest } from '../request';
 import { PlainObject } from '../types';

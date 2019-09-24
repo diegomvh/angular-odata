@@ -1,9 +1,9 @@
 import { Observable, EMPTY, forkJoin, OperatorFunction, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Utils } from '../utils/utils';
-import { Collection } from './odata-collection';
+import { Collection } from './collection';
 import { ODataContext } from '../odata-context';
-import { ODataService } from '../odata-service/odata.service';
+import { ODataService } from '../odata-service/service';
 import { PlainObject, ODataSingletonRequest, ODataSingleRequest, ODataRequest, Expand, ODataEntityRequest, ODataEntitySetRequest } from '../odata-request';
 
 export class Key {

@@ -2,8 +2,8 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest, ODataObserve } from '../request';
-import { ODataSet } from '../../odata-response/odata-set';
-import { ODataService } from '../../odata-service/odata.service';
+import { ODataSet } from '../../odata-response/entityset';
+import { ODataService } from '../../odata-service/service';
 import { ODataSegment, PlainObject, Segments } from '../types';
 
 export class ODataActionRequest<T> extends ODataRequest {

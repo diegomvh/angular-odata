@@ -7,7 +7,7 @@ import { ODataContext } from '../odata-context';
 import { Metadata } from '../odata-response/metadata';
 import { Injectable } from '@angular/core';
 import { ODataBatchRequest } from '../odata-request/requests/batch';
-import { ODataSet } from '../odata-response/odata-set';
+import { ODataSet } from '../odata-response/entityset';
 import { ODataSingletonRequest, ODataEntitySetRequest, ODataRequest, ODataObserve } from '../odata-request';
 
 @Injectable()

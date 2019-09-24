@@ -1,7 +1,7 @@
-import { ODataModel, Model } from './odata-model';
+import { ODataModel, Model } from './model';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ODataSet } from '../odata-response/odata-set';
+import { ODataSet } from '../odata-response/entityset';
 import { ODataContext } from '../odata-context';
 import { ODataEntitySetRequest, ODataCollectionRequest, PlainObject, Filter, Expand, GroupBy } from '../odata-request';
 

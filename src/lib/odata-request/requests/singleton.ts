@@ -1,6 +1,6 @@
 import { ODataSingleRequest } from './single';
 import { Segments, PlainObject, ODataSegment } from '../types';
-import { ODataService } from '../../odata-service/odata.service';
+import { ODataService } from '../../odata-service/service';
 import { ODataSegments } from '../segments';
 
 export class ODataSingletonRequest<T> extends ODataSingleRequest<T> {

@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
-import { ODataSet } from '../../odata-response/odata-set';
+import { ODataSet } from '../../odata-response/entityset';
 import { ODataCountRequest } from './count';
 import { PlainObject, Options, Filter, GroupBy, Transform, Expand, Segments } from '../types';
 import { ODataEntityRequest } from './entity';

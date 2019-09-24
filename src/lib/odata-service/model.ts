@@ -1,5 +1,5 @@
-import { Model } from '../odata-model/odata-model';
-import { ODataEntityService } from './odata-entity.service';
+import { Model } from '../odata-model/model';
+import { ODataEntityService } from './entity';
 import { PlainObject } from '../odata-request';
 
 export abstract class ODataModelService<T extends Model> extends ODataEntityService<T> {

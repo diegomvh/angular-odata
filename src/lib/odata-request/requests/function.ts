@@ -2,7 +2,7 @@ import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
-import { ODataSet } from '../../odata-response/odata-set';
+import { ODataSet } from '../../odata-response/entityset';
 
 export class ODataFunctionRequest<T> extends ODataRequest {
   parameters() {

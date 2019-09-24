@@ -1,2 +1,2 @@
-export * from './odata-set';
+export * from './entityset';
 export * from './metadata';
