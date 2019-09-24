@@ -6,8 +6,7 @@ export class ODataEntitySet<T> {
 
   entities: T[];
   count: number;
-  skip: number;
-  skiptoken: number;
+  nextLink: string;
 
   constructor(json: any) {
     this.entities = json[ODataEntitySet.SET_VALUE] || [];
@@ -15,15 +14,18 @@ export class ODataEntitySet<T> {
       this.count = json[ODataEntitySet.ODATA_COUNT];
     }
     if (json.hasOwnProperty(ODataEntitySet.ODATA_NEXT_LINK)) {
-      let url = json[ODataEntitySet.ODATA_NEXT_LINK];
-      let match = url.match(/\$skip=(\d+)/);
-      if (match) {
-        this.skip = Number(match[1]);
-      }
-      match = url.match(/\$skiptoken=(\d+)/);
-      if (match) {
-        this.skiptoken = Number(match[1]);
-      }
+      this.nextLink = decodeURIComponent(json[ODataEntitySet.ODATA_NEXT_LINK]);
     }
   }
+
+  get skip(): number {
+    let match = this.nextLink.match(/\$skip=(\d+)/);
+    if (match) return Number(match[1]);
+  }
+
+  get skiptoken(): number {
+    let match = this.nextLink.match(/\$skiptoken=(\d+)/);
+    if (match) return Number(match[1]);
+  }
+
 }
