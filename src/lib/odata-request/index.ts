@@ -4,5 +4,8 @@ export * from './requests/collection';
 export * from './requests/single';
 export * from './requests/entityset';
 export * from './requests/entity';
+export * from './requests/function';
+export * from './requests/action';
+export * from './requests/property';
 export * from './requests/singleton';
 export * from './requests/batch';

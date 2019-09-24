@@ -5,6 +5,10 @@ import { Utils } from '../utils/utils';
 import { PlainObject, OptionHandler, Options } from './types';
 
 export class ODataOptions {
+  // URL QUERY PARTS
+  public static readonly PARAM_SEPARATOR = '&';
+  public static readonly VALUE_SEPARATOR = '=';
+
   options?: PlainObject
 
   constructor( options?: PlainObject) {
@@ -27,7 +31,7 @@ export class ODataOptions {
       .filter(key => !Utils.isEmpty(this.options[key]))
       .map(key => buildQuery({ [key]: this.options[key] }))
       .reduce((acc, param: string) => {
-        let index = param.indexOf("=");
+        let index = param.indexOf(ODataOptions.VALUE_SEPARATOR);
         let name = param.substr(1, index - 1);
         let values = param.substr(index + 1);
         return Object.assign(acc, {[name]: values});

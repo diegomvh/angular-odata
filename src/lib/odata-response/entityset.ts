@@ -1,4 +1,4 @@
-export class ODataSet<T> {
+export class ODataEntitySet<T> {
   public static readonly ODATA_COUNT = '@odata.count';
   public static readonly ODATA_NEXT_LINK = '@odata.nextLink';
 
@@ -10,12 +10,12 @@ export class ODataSet<T> {
   skiptoken: number;
 
   constructor(json: any) {
-    this.entities = json[ODataSet.SET_VALUE] || [];
-    if (json.hasOwnProperty(ODataSet.ODATA_COUNT)) {
-      this.count = json[ODataSet.ODATA_COUNT];
+    this.entities = json[ODataEntitySet.SET_VALUE] || [];
+    if (json.hasOwnProperty(ODataEntitySet.ODATA_COUNT)) {
+      this.count = json[ODataEntitySet.ODATA_COUNT];
     }
-    if (json.hasOwnProperty(ODataSet.ODATA_NEXT_LINK)) {
-      let url = json[ODataSet.ODATA_NEXT_LINK];
+    if (json.hasOwnProperty(ODataEntitySet.ODATA_NEXT_LINK)) {
+      let url = json[ODataEntitySet.ODATA_NEXT_LINK];
       let match = url.match(/\$skip=(\d+)/);
       if (match) {
         this.skip = Number(match[1]);

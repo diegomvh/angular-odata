@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
-import { ODataSet } from '../../odata-response';
+import { ODataEntitySet } from '../../odata-response';
 import { PlainObject, Options, Filter, GroupBy, Transform, Expand, Segments } from '../types';
 
 import { ODataCountRequest } from './count';
@@ -21,7 +21,7 @@ export class ODataCollectionRequest<T> extends ODataRequest {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSet<T>> {
+  }): Observable<ODataEntitySet<T>> {
     return super.get({
       headers: options && options.headers,
       observe: 'body',

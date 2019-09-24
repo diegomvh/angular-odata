@@ -2,7 +2,7 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Utils } from '../utils/utils';
 
-export class ODataResponseBatch extends HttpResponse<string> {
+export class ODataBatch {
     private static readonly CONTENT_TYPE = 'Content-Type';
     private static readonly CONTENT_ID = 'Content-ID';
     private static readonly HTTP11 = 'HTTP/1.1';
@@ -10,10 +10,11 @@ export class ODataResponseBatch extends HttpResponse<string> {
     private static readonly NEWLINE = '\r\n';
     private static readonly MULTIPART_MIXED = 'multipart/mixed';
 
+    private httpResponse: HttpResponse<string>;
     private odataResponses: HttpResponse<string>[];
 
     constructor(httpResponse: HttpResponse<string>) {
-        super(httpResponse);
+        this.httpResponse = httpResponse;
         this.odataResponses = [];
         this.parseResponses();
     }
@@ -22,17 +23,17 @@ export class ODataResponseBatch extends HttpResponse<string> {
         return this.odataResponses;
     }
 
-    static fromODataResponse(odataResponse: HttpResponse<string>): ODataResponseBatch {
-        return new ODataResponseBatch(odataResponse);
+    static fromODataResponse(odataResponse: HttpResponse<string>): ODataBatch {
+        return new ODataBatch(odataResponse);
     }
 
     protected parseResponses(): void {
-        const contentType: string = this.headers.get(ODataResponseBatch.CONTENT_TYPE);
+        const contentType: string = this.httpResponse.headers.get(ODataBatch.CONTENT_TYPE);
         const boundaryDelimiterBatch: string = this.getBoundaryDelimiter(contentType);
         const boundaryEndBatch: string = this.getBoundaryEnd(boundaryDelimiterBatch);
 
-        const batchBody: string = this.body;
-        const batchBodyLines: string[] = batchBody.split(ODataResponseBatch.NEWLINE);
+        const batchBody: string = this.httpResponse.body;
+        const batchBodyLines: string[] = batchBody.split(ODataBatch.NEWLINE);
 
         let odataResponseCS: HttpResponse<any>[];
         let contentId: number;
@@ -42,9 +43,9 @@ export class ODataResponseBatch extends HttpResponse<string> {
         for (let index = 0; index < batchBodyLines.length; index++) {
             const batchBodyLine: string = batchBodyLines[index];
 
-            if (batchBodyLine.startsWith(ODataResponseBatch.CONTENT_TYPE)) {
+            if (batchBodyLine.startsWith(ODataBatch.CONTENT_TYPE)) {
                 const contentTypeValue: string = this.getHeaderValue(batchBodyLine);
-                if (contentTypeValue === ODataResponseBatch.MULTIPART_MIXED) {
+                if (contentTypeValue === ODataBatch.MULTIPART_MIXED) {
                     odataResponseCS = [];
                     contentId = undefined;
                     boundaryDelimiterCS = this.getBoundaryDelimiter(batchBodyLine);
@@ -52,9 +53,9 @@ export class ODataResponseBatch extends HttpResponse<string> {
                     batchPartStartIndex = undefined;
                 }
                 continue;
-            } else if (Utils.isNotNullNorUndefined(odataResponseCS) && batchBodyLine.startsWith(ODataResponseBatch.CONTENT_ID)) {
+            } else if (Utils.isNotNullNorUndefined(odataResponseCS) && batchBodyLine.startsWith(ODataBatch.CONTENT_ID)) {
                 contentId = Number(this.getHeaderValue(batchBodyLine));
-            } else if (batchBodyLine.startsWith(ODataResponseBatch.HTTP11)) {
+            } else if (batchBodyLine.startsWith(ODataBatch.HTTP11)) {
                 batchPartStartIndex = index;
             } else if (batchBodyLine === boundaryDelimiterBatch || batchBodyLine === boundaryDelimiterCS
                 || batchBodyLine === boundaryEndBatch || batchBodyLine === boundaryEndCS) {
@@ -98,7 +99,7 @@ export class ODataResponseBatch extends HttpResponse<string> {
         const contentTypeParts: string[] = contentType.split(';');
         if (contentTypeParts.length === 2) {
             const boundary: string = contentType.split(';')[1].trim();
-            const boundaryDelimiter: string = ODataResponseBatch.BOUNDARY_PREFIX_SUFFIX + boundary.split('=')[1];
+            const boundaryDelimiter: string = ODataBatch.BOUNDARY_PREFIX_SUFFIX + boundary.split('=')[1];
             return boundaryDelimiter;
         } else {
             return '';
@@ -109,7 +110,7 @@ export class ODataResponseBatch extends HttpResponse<string> {
         if (!boundaryDelimiter.length) {
             return '';
         }
-        const boundaryEnd: string = boundaryDelimiter + ODataResponseBatch.BOUNDARY_PREFIX_SUFFIX;
+        const boundaryEnd: string = boundaryDelimiter + ODataBatch.BOUNDARY_PREFIX_SUFFIX;
         return boundaryEnd;
     }
 

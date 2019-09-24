@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest, ODataObserve } from '../request';
-import { ODataSet } from '../../odata-response/entityset';
+import { ODataEntitySet } from '../../odata-response/entityset';
 import { ODataService } from '../../odata-service';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
@@ -20,7 +20,6 @@ export class ODataActionRequest<T> extends ODataRequest {
 
   post(body: T, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe: 'body',
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'json',
@@ -29,25 +28,30 @@ export class ODataActionRequest<T> extends ODataRequest {
 
   post(body: T, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe: 'body',
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'set',
     withCredentials?: boolean,
-  }): Observable<ODataSet<T>>;
+  }): Observable<ODataEntitySet<T>>;
 
   post(body: T, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe: 'body',
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'property',
     withCredentials?: boolean,
+  }): Observable<T>;
+
+  post(body: T, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    reportProgress?: boolean,
+    withCredentials?: boolean
   }): Observable<any>;
 
   post(body: T, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     reportProgress?: boolean,
@@ -55,7 +59,7 @@ export class ODataActionRequest<T> extends ODataRequest {
   }): Observable<any> {
     return super.post(body, {
       headers: options.headers,
-      observe: options.observe,
+      observe: 'body',
       params: options.params,
       responseType: options.responseType,
       reportProgress: options.reportProgress,

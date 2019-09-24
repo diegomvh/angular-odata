@@ -19,7 +19,7 @@ export class Field {
     constructor(public name: string, public fieldType: FieldType) { }
 }
 
-export class Metadata {
+export class ODataMetadata {
     // TAGS
     private static readonly TAG_EDMX = 'edmx:Edmx';
     private static readonly TAG_DATA_SERVICES = 'edmx:DataServices';
@@ -107,30 +107,30 @@ export class Metadata {
             this.checkVersion(document);
 
             this.version = this.getFieldValueByAttribute(
-                new Field(Metadata.ATTRIBUTE_VERSION, FieldType.ATTRIBUTE),
+                new Field(ODataMetadata.ATTRIBUTE_VERSION, FieldType.ATTRIBUTE),
                 document.documentElement.attributes);
 
-            this.references = this.getObjects(document.documentElement, Metadata.TAG_REFERENCE, [
-                new Field(Metadata.ATTRIBUTE_URI, FieldType.ATTRIBUTE),
-                new Field(Metadata.TAG_INCLUDE, FieldType.TAG),
-                new Field(Metadata.TAG_INCLUDE_ANNOTATIONS, FieldType.TAG),
-                new Field(Metadata.TAG_ANNOTATION, FieldType.TAG)
+            this.references = this.getObjects(document.documentElement, ODataMetadata.TAG_REFERENCE, [
+                new Field(ODataMetadata.ATTRIBUTE_URI, FieldType.ATTRIBUTE),
+                new Field(ODataMetadata.TAG_INCLUDE, FieldType.TAG),
+                new Field(ODataMetadata.TAG_INCLUDE_ANNOTATIONS, FieldType.TAG),
+                new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG)
             ]);
 
-            const dataServices: Element = document.documentElement.getElementsByTagName(Metadata.TAG_DATA_SERVICES)[0];
-            this.schemas = this.getObjects(dataServices, Metadata.TAG_SCHEMA, [
-                new Field(Metadata.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
-                new Field(Metadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
-                new Field(Metadata.TAG_ENUM_TYPE, FieldType.TAG),
-                new Field(Metadata.TAG_COMPLEX_TYPE, FieldType.TAG),
-                new Field(Metadata.TAG_ENTITY_TYPE, FieldType.TAG),
-                new Field(Metadata.TAG_FUNCTION, FieldType.TAG),
-                new Field(Metadata.TAG_ACTION, FieldType.TAG),
-                new Field(Metadata.TAG_ENTITY_CONTAINER, FieldType.TAG),
-                new Field(Metadata.TAG_TYPE_DEFINITION, FieldType.TAG),
-                new Field(Metadata.TAG_TERM, FieldType.TAG),
-                new Field(Metadata.TAG_ANNOTATIONS, FieldType.TAG),
-                new Field(Metadata.TAG_ANNOTATION, FieldType.TAG)
+            const dataServices: Element = document.documentElement.getElementsByTagName(ODataMetadata.TAG_DATA_SERVICES)[0];
+            this.schemas = this.getObjects(dataServices, ODataMetadata.TAG_SCHEMA, [
+                new Field(ODataMetadata.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
+                new Field(ODataMetadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
+                new Field(ODataMetadata.TAG_ENUM_TYPE, FieldType.TAG),
+                new Field(ODataMetadata.TAG_COMPLEX_TYPE, FieldType.TAG),
+                new Field(ODataMetadata.TAG_ENTITY_TYPE, FieldType.TAG),
+                new Field(ODataMetadata.TAG_FUNCTION, FieldType.TAG),
+                new Field(ODataMetadata.TAG_ACTION, FieldType.TAG),
+                new Field(ODataMetadata.TAG_ENTITY_CONTAINER, FieldType.TAG),
+                new Field(ODataMetadata.TAG_TYPE_DEFINITION, FieldType.TAG),
+                new Field(ODataMetadata.TAG_TERM, FieldType.TAG),
+                new Field(ODataMetadata.TAG_ANNOTATIONS, FieldType.TAG),
+                new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG)
             ]);
         } catch (error) {
             throw new Error('Unable to parse metadata, ' + error);
@@ -170,25 +170,25 @@ export class Metadata {
                 objects = [];
             }
             switch (tag) {
-                case Metadata.TAG_REFERENCE:
+                case ODataMetadata.TAG_REFERENCE:
                     objects.push(new CsdlReference(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2],
                         fieldValues[3]));
                     break;
-                case Metadata.TAG_INCLUDE:
+                case ODataMetadata.TAG_INCLUDE:
                     objects.push(new CsdlInclude(
                         fieldValues[0],
                         fieldValues[1]));
                     break;
-                case Metadata.TAG_INCLUDE_ANNOTATIONS:
+                case ODataMetadata.TAG_INCLUDE_ANNOTATIONS:
                     objects.push(new CsdlIncludeAnnotations(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2]));
                     break;
-                case Metadata.TAG_TERM:
+                case ODataMetadata.TAG_TERM:
                     objects.push(new CsdlTerm(
                         fieldValues[0],
                         fieldValues[1],
@@ -202,20 +202,20 @@ export class Metadata {
                         fieldValues[9]
                     ));
                     break;
-                case Metadata.TAG_ANNOTATIONS:
+                case ODataMetadata.TAG_ANNOTATIONS:
                     objects.push(new CsdlAnnotations(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2]
                     ));
                     break;
-                case Metadata.TAG_ANNOTATION:
+                case ODataMetadata.TAG_ANNOTATION:
                     objects.push(new CsdlAnnotation(
                         fieldValues[0],
                         fieldValues[1]
                     ));
                     break;
-                case Metadata.TAG_SCHEMA:
+                case ODataMetadata.TAG_SCHEMA:
                     objects.push(new CsdlSchema(
                         fieldValues[0],
                         fieldValues[1],
@@ -230,14 +230,14 @@ export class Metadata {
                         fieldValues[10],
                         fieldValues[11]));
                     break;
-                case Metadata.TAG_ENUM_TYPE:
+                case ODataMetadata.TAG_ENUM_TYPE:
                     objects.push(new CsdlEnumType(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2],
                         fieldValues[3]));
                     break;
-                case Metadata.TAG_COMPLEX_TYPE:
+                case ODataMetadata.TAG_COMPLEX_TYPE:
                     objects.push(new CsdlComplexType(
                         fieldValues[0],
                         fieldValues[1],
@@ -246,7 +246,7 @@ export class Metadata {
                         fieldValues[4],
                         fieldValues[5]));
                     break;
-                case Metadata.TAG_ENTITY_TYPE:
+                case ODataMetadata.TAG_ENTITY_TYPE:
                     objects.push(new CsdlEntityType(
                         fieldValues[0],
                         fieldValues[1],
@@ -257,7 +257,7 @@ export class Metadata {
                         fieldValues[6],
                         fieldValues[7]));
                     break;
-                case Metadata.TAG_FUNCTION:
+                case ODataMetadata.TAG_FUNCTION:
                     objects.push(new CsdlFunction(
                         fieldValues[0],
                         fieldValues[1],
@@ -266,12 +266,12 @@ export class Metadata {
                         fieldValues[4],
                         fieldValues[5]));
                     break;
-                case Metadata.TAG_MEMBER:
+                case ODataMetadata.TAG_MEMBER:
                     objects.push(new CsdlEnumMember(
                         fieldValues[0],
                         fieldValues[1]));
                     break;
-                case Metadata.TAG_PROPERTY:
+                case ODataMetadata.TAG_PROPERTY:
                     objects.push(new CsdlProperty(
                         fieldValues[0],
                         fieldValues[1],
@@ -283,12 +283,12 @@ export class Metadata {
                         fieldValues[7],
                         fieldValues[8]));
                     break;
-                case Metadata.TAG_PROPERTY_REF:
+                case ODataMetadata.TAG_PROPERTY_REF:
                     objects.push(new CsdlPropertyRef(
                         fieldValues[0],
                         fieldValues[1]));
                     break;
-                case Metadata.TAG_NAVIGATION_PROPERTY:
+                case ODataMetadata.TAG_NAVIGATION_PROPERTY:
                     objects.push(new CsdlNavigationProperty(
                         fieldValues[0],
                         fieldValues[1],
@@ -298,12 +298,12 @@ export class Metadata {
                         fieldValues[5],
                         fieldValues[6]));
                     break;
-                case Metadata.TAG_REFERENTIAL_CONSTRAINT:
+                case ODataMetadata.TAG_REFERENTIAL_CONSTRAINT:
                     objects.push(new CsdlReferentialConstraint(
                         fieldValues[0],
                         fieldValues[1]));
                     break;
-                case Metadata.TAG_PARAMETER:
+                case ODataMetadata.TAG_PARAMETER:
                     objects.push(new CsdlParameter(
                         fieldValues[0],
                         fieldValues[1],
@@ -313,7 +313,7 @@ export class Metadata {
                         fieldValues[5],
                         fieldValues[6]));
                     break;
-                case Metadata.TAG_ACTION:
+                case ODataMetadata.TAG_ACTION:
                     objects.push(new CsdlAction(
                         fieldValues[0],
                         fieldValues[1],
@@ -321,38 +321,38 @@ export class Metadata {
                         fieldValues[3],
                         fieldValues[4]));
                     break;
-                case Metadata.TAG_ENTITY_SET:
+                case ODataMetadata.TAG_ENTITY_SET:
                     objects.push(new CsdlEntitySet(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2],
                         fieldValues[3]));
                     break;
-                case Metadata.TAG_SINGLETON:
+                case ODataMetadata.TAG_SINGLETON:
                     objects.push(new CsdlSingleton(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2]));
                     break;
-                case Metadata.TAG_FUNCTION_IMPORT:
+                case ODataMetadata.TAG_FUNCTION_IMPORT:
                     objects.push(new CsdlFunctionImport(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2],
                         fieldValues[3]));
                     break;
-                case Metadata.TAG_ACTION_IMPORT:
+                case ODataMetadata.TAG_ACTION_IMPORT:
                     objects.push(new CsdlActionImport(
                         fieldValues[0],
                         fieldValues[1],
                         fieldValues[2]));
                     break;
-                case Metadata.TAG_NAVIGATION_PROPERTY_BINDING:
+                case ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING:
                     objects.push(new CsdlNavigationPropertyBinding(
                         fieldValues[0],
                         fieldValues[1]));
                     break;
-                case Metadata.TAG_TYPE_DEFINITION:
+                case ODataMetadata.TAG_TYPE_DEFINITION:
                     objects.push(new CsdlTypeDefinition(
                         fieldValues[0],
                         fieldValues[1],
@@ -388,10 +388,10 @@ export class Metadata {
             const attributes: NamedNodeMap = element.attributes;
             const fieldValues: any[] = this.getFieldValues(fieldNames, attributes, element);
             switch (tag) {
-                case Metadata.TAG_KEY:
+                case ODataMetadata.TAG_KEY:
                     object = new CsdlKey(fieldValues[0]);
                     break;
-                case Metadata.TAG_RETURN_TYPE:
+                case ODataMetadata.TAG_RETURN_TYPE:
                     object = new CsdlReturnType(
                         fieldValues[0],
                         fieldValues[1],
@@ -400,7 +400,7 @@ export class Metadata {
                         fieldValues[4],
                         fieldValues[5]);
                     break;
-                case Metadata.TAG_ENTITY_CONTAINER:
+                case ODataMetadata.TAG_ENTITY_CONTAINER:
                     object = new CsdlEntityContainer(
                         fieldValues[0],
                         fieldValues[1],
@@ -409,7 +409,7 @@ export class Metadata {
                         fieldValues[4],
                         fieldValues[5]);
                     break;
-                case Metadata.TAG_ON_DELETE:
+                case ODataMetadata.TAG_ON_DELETE:
                     object = new CsdlOnDelete(
                         fieldValues[0]);
                     break;
@@ -438,49 +438,49 @@ export class Metadata {
 
     protected getFieldValueByAttribute(field: Field, attributes: NamedNodeMap): any {
         switch (field.name) {
-            case Metadata.ATTRIBUTE_VERSION:
-            case Metadata.ATTRIBUTE_URI:
-            case Metadata.ATTRIBUTE_NAMESPACE:
-            case Metadata.ATTRIBUTE_ALIAS:
-            case Metadata.ATTRIBUTE_TERM_NAMESPACE:
-            case Metadata.ATTRIBUTE_TERM:
-            case Metadata.ATTRIBUTE_QUALIFIER:
-            case Metadata.ATTRIBUTE_TARGET_NAMESPACE:
-            case Metadata.ATTRIBUTE_NAME:
-            case Metadata.ATTRIBUTE_TYPE:
-            case Metadata.ATTRIBUTE_SRID:
-            case Metadata.ATTRIBUTE_DEFAULT_VALUE:
-            case Metadata.ATTRIBUTE_PARTNER:
-            case Metadata.ATTRIBUTE_PROPERTY:
-            case Metadata.ATTRIBUTE_REFERENCED_PROPERTY:
-            case Metadata.ATTRIBUTE_BASE_TYPE:
-            case Metadata.ATTRIBUTE_ENTITY_SET_PATH:
-            case Metadata.ATTRIBUTE_ENTITY_TYPE:
-            case Metadata.ATTRIBUTE_PATH:
-            case Metadata.ATTRIBUTE_TARGET:
-            case Metadata.ATTRIBUTE_FUNCTION:
-            case Metadata.ATTRIBUTE_ACTION:
-            case Metadata.ATTRIBUTE_ENTITY_SET:
-            case Metadata.ATTRIBUTE_UNDERLYING_TYPE:
-            case Metadata.ATTRIBUTE_EXTENDS:
-            case Metadata.ATTRIBUTE_BASE_TERM:
-            case Metadata.ATTRIBUTE_APPLIES_TO:
+            case ODataMetadata.ATTRIBUTE_VERSION:
+            case ODataMetadata.ATTRIBUTE_URI:
+            case ODataMetadata.ATTRIBUTE_NAMESPACE:
+            case ODataMetadata.ATTRIBUTE_ALIAS:
+            case ODataMetadata.ATTRIBUTE_TERM_NAMESPACE:
+            case ODataMetadata.ATTRIBUTE_TERM:
+            case ODataMetadata.ATTRIBUTE_QUALIFIER:
+            case ODataMetadata.ATTRIBUTE_TARGET_NAMESPACE:
+            case ODataMetadata.ATTRIBUTE_NAME:
+            case ODataMetadata.ATTRIBUTE_TYPE:
+            case ODataMetadata.ATTRIBUTE_SRID:
+            case ODataMetadata.ATTRIBUTE_DEFAULT_VALUE:
+            case ODataMetadata.ATTRIBUTE_PARTNER:
+            case ODataMetadata.ATTRIBUTE_PROPERTY:
+            case ODataMetadata.ATTRIBUTE_REFERENCED_PROPERTY:
+            case ODataMetadata.ATTRIBUTE_BASE_TYPE:
+            case ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH:
+            case ODataMetadata.ATTRIBUTE_ENTITY_TYPE:
+            case ODataMetadata.ATTRIBUTE_PATH:
+            case ODataMetadata.ATTRIBUTE_TARGET:
+            case ODataMetadata.ATTRIBUTE_FUNCTION:
+            case ODataMetadata.ATTRIBUTE_ACTION:
+            case ODataMetadata.ATTRIBUTE_ENTITY_SET:
+            case ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE:
+            case ODataMetadata.ATTRIBUTE_EXTENDS:
+            case ODataMetadata.ATTRIBUTE_BASE_TERM:
+            case ODataMetadata.ATTRIBUTE_APPLIES_TO:
                 return this.getAttributeValue(attributes, field.name);
-            case Metadata.ATTRIBUTE_NULLABLE:
-            case Metadata.ATTRIBUTE_UNICODE:
-            case Metadata.ATTRIBUTE_OPEN_TYPE:
-            case Metadata.ATTRIBUTE_HAS_STREAM:
-            case Metadata.ATTRIBUTE_IS_BOUND:
-            case Metadata.ATTRIBUTE_IS_COMPOSABLE:
-            case Metadata.ATTRIBUTE_CONTAINS_TARGET:
-            case Metadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT:
-            case Metadata.ATTRIBUTE_ABSTRACT:
-            case Metadata.ATTRIBUTE_IS_FLAGS:
+            case ODataMetadata.ATTRIBUTE_NULLABLE:
+            case ODataMetadata.ATTRIBUTE_UNICODE:
+            case ODataMetadata.ATTRIBUTE_OPEN_TYPE:
+            case ODataMetadata.ATTRIBUTE_HAS_STREAM:
+            case ODataMetadata.ATTRIBUTE_IS_BOUND:
+            case ODataMetadata.ATTRIBUTE_IS_COMPOSABLE:
+            case ODataMetadata.ATTRIBUTE_CONTAINS_TARGET:
+            case ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT:
+            case ODataMetadata.ATTRIBUTE_ABSTRACT:
+            case ODataMetadata.ATTRIBUTE_IS_FLAGS:
                 return this.propertyValueToBoolean(this.getAttributeValue(attributes, field.name));
-            case Metadata.ATTRIBUTE_VALUE:
-            case Metadata.ATTRIBUTE_MAX_LENGTH:
-            case Metadata.ATTRIBUTE_PRECISION:
-            case Metadata.ATTRIBUTE_SCALE:
+            case ODataMetadata.ATTRIBUTE_VALUE:
+            case ODataMetadata.ATTRIBUTE_MAX_LENGTH:
+            case ODataMetadata.ATTRIBUTE_PRECISION:
+            case ODataMetadata.ATTRIBUTE_SCALE:
                 return this.propertyValueToNumber(this.getAttributeValue(attributes, field.name));
             default: throw new Error('Unknwon attribute:' + field.name);
         }
@@ -488,199 +488,199 @@ export class Metadata {
 
     protected getFieldValueByTag(field: Field, element: Element): any[] {
         switch (field.name) {
-            case Metadata.TAG_INCLUDE:
+            case ODataMetadata.TAG_INCLUDE:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_INCLUDE_ANNOTATIONS:
+            case ODataMetadata.TAG_INCLUDE_ANNOTATIONS:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_TERM_NAMESPACE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_TARGET_NAMESPACE, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_TERM_NAMESPACE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_TARGET_NAMESPACE, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_TERM:
+            case ODataMetadata.TAG_TERM:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_BASE_TERM, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_APPLIES_TO, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_BASE_TERM, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_APPLIES_TO, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_ANNOTATIONS:
+            case ODataMetadata.TAG_ANNOTATIONS:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_TARGET, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_ANNOTATION, FieldType.TAG),
-                    new Field(Metadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_TARGET, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
+                    new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_ANNOTATION:
+            case ODataMetadata.TAG_ANNOTATION:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_TERM, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_TERM, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_ENUM_TYPE:
+            case ODataMetadata.TAG_ENUM_TYPE:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_MEMBER, FieldType.TAG),
-                    new Field(Metadata.ATTRIBUTE_UNDERLYING_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_IS_FLAGS, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_MEMBER, FieldType.TAG),
+                    new Field(ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_IS_FLAGS, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_COMPLEX_TYPE:
+            case ODataMetadata.TAG_COMPLEX_TYPE:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_PROPERTY, FieldType.TAG),
-                    new Field(Metadata.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
-                    new Field(Metadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_PROPERTY, FieldType.TAG),
+                    new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
+                    new Field(ODataMetadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_ENTITY_TYPE:
+            case ODataMetadata.TAG_ENTITY_TYPE:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_KEY, FieldType.TAG),
-                    new Field(Metadata.TAG_PROPERTY, FieldType.TAG),
-                    new Field(Metadata.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
-                    new Field(Metadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_HAS_STREAM, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_KEY, FieldType.TAG),
+                    new Field(ODataMetadata.TAG_PROPERTY, FieldType.TAG),
+                    new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
+                    new Field(ODataMetadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_HAS_STREAM, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_FUNCTION:
+            case ODataMetadata.TAG_FUNCTION:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_RETURN_TYPE, FieldType.TAG),
-                    new Field(Metadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ENTITY_SET_PATH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_IS_COMPOSABLE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_PARAMETER, FieldType.TAG)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_RETURN_TYPE, FieldType.TAG),
+                    new Field(ODataMetadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_IS_COMPOSABLE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_PARAMETER, FieldType.TAG)
                 ]);
-            case Metadata.TAG_MEMBER:
+            case ODataMetadata.TAG_MEMBER:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_VALUE, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_VALUE, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_PROPERTY:
+            case ODataMetadata.TAG_PROPERTY:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_KEY:
+            case ODataMetadata.TAG_KEY:
                 return this.getObject(element, field.name, [
-                    new Field(Metadata.TAG_PROPERTY_REF, FieldType.TAG)
+                    new Field(ODataMetadata.TAG_PROPERTY_REF, FieldType.TAG)
                 ]);
-            case Metadata.TAG_PROPERTY_REF:
+            case ODataMetadata.TAG_PROPERTY_REF:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_NAVIGATION_PROPERTY:
+            case ODataMetadata.TAG_NAVIGATION_PROPERTY:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_PARTNER, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_CONTAINS_TARGET, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_REFERENTIAL_CONSTRAINT, FieldType.TAG),
-                    new Field(Metadata.TAG_ON_DELETE, FieldType.TAG)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_PARTNER, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_CONTAINS_TARGET, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_REFERENTIAL_CONSTRAINT, FieldType.TAG),
+                    new Field(ODataMetadata.TAG_ON_DELETE, FieldType.TAG)
                 ]);
-            case Metadata.TAG_REFERENTIAL_CONSTRAINT:
+            case ODataMetadata.TAG_REFERENTIAL_CONSTRAINT:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_PROPERTY, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_REFERENCED_PROPERTY, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_PROPERTY, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_REFERENCED_PROPERTY, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_ON_DELETE:
+            case ODataMetadata.TAG_ON_DELETE:
                 return this.getObject(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_ACTION, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_ACTION, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_PARAMETER:
+            case ODataMetadata.TAG_PARAMETER:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_RETURN_TYPE:
+            case ODataMetadata.TAG_RETURN_TYPE:
                 return this.getObject(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_ACTION:
+            case ODataMetadata.TAG_ACTION:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_RETURN_TYPE, FieldType.TAG),
-                    new Field(Metadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ENTITY_SET_PATH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_PARAMETER, FieldType.TAG)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_RETURN_TYPE, FieldType.TAG),
+                    new Field(ODataMetadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_PARAMETER, FieldType.TAG)
                 ]);
-            case Metadata.TAG_ENTITY_CONTAINER:
+            case ODataMetadata.TAG_ENTITY_CONTAINER:
                 return this.getObject(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_EXTENDS, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_ENTITY_SET, FieldType.TAG),
-                    new Field(Metadata.TAG_SINGLETON, FieldType.TAG),
-                    new Field(Metadata.TAG_FUNCTION_IMPORT, FieldType.TAG),
-                    new Field(Metadata.TAG_ACTION_IMPORT, FieldType.TAG)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_EXTENDS, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_ENTITY_SET, FieldType.TAG),
+                    new Field(ODataMetadata.TAG_SINGLETON, FieldType.TAG),
+                    new Field(ODataMetadata.TAG_FUNCTION_IMPORT, FieldType.TAG),
+                    new Field(ODataMetadata.TAG_ACTION_IMPORT, FieldType.TAG)
                 ]);
-            case Metadata.TAG_ENTITY_SET:
+            case ODataMetadata.TAG_ENTITY_SET:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ENTITY_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_NAVIGATION_PROPERTY_BINDING, FieldType.TAG),
-                    new Field(Metadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ENTITY_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING, FieldType.TAG),
+                    new Field(ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_SINGLETON:
+            case ODataMetadata.TAG_SINGLETON:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_NAVIGATION_PROPERTY_BINDING, FieldType.TAG)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING, FieldType.TAG)
                 ]);
-            case Metadata.TAG_FUNCTION_IMPORT:
+            case ODataMetadata.TAG_FUNCTION_IMPORT:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_FUNCTION, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_FUNCTION, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_ACTION_IMPORT:
+            case ODataMetadata.TAG_ACTION_IMPORT:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ACTION, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ACTION, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_NAVIGATION_PROPERTY_BINDING:
+            case ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_PATH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_TARGET, FieldType.ATTRIBUTE)
+                    new Field(ODataMetadata.ATTRIBUTE_PATH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_TARGET, FieldType.ATTRIBUTE)
                 ]);
-            case Metadata.TAG_TYPE_DEFINITION:
+            case ODataMetadata.TAG_TYPE_DEFINITION:
                 return this.getObjects(element, field.name, [
-                    new Field(Metadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_UNDERLYING_TYPE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
-                    new Field(Metadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
-                    new Field(Metadata.TAG_ANNOTATION, FieldType.TAG)
+                    new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+                    new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG)
                 ]);
             default: throw new Error('Unknwon tag:' + field.name);
         }

@@ -10,18 +10,7 @@ import { ODataSegments } from './segments';
 export type ODataObserve = 'body' | 'events' | 'response';
 
 export abstract class ODataRequest {
-  // URL QUERY PARTS
-  public static readonly SEPARATOR = '&';
-
-  // SEGMENT NAMES
-  public static readonly METADATA = 'metadata';
-  public static readonly ENTITY_KEY = 'entityKey';
-  public static readonly TYPE_NAME = 'typeName';
-  public static readonly PROPERTY = 'property';
-
-  // CONSTANT SEGMENTS
-  public static readonly $METADATA = '$metadata';
-  public static readonly $COUNT = '$count';
+  public static readonly QUERY_SEPARATOR = '?';
 
   // VARIABLES
   protected service: ODataService;
@@ -96,9 +85,9 @@ export abstract class ODataRequest {
   toString(): string {
     let path = this.path();
     let queryString = Object.entries(this.params())
-      .map(e => `${e[0]}=${e[1]}`)
-      .join("&");
-    return queryString ? `${path}?${queryString}` : path
+      .map(e => `${e[0]}${ODataOptions.VALUE_SEPARATOR}${e[1]}`)
+      .join(ODataOptions.PARAM_SEPARATOR);
+    return queryString ? `${path}${ODataRequest.QUERY_SEPARATOR}${queryString}` : path
   }
 
   path(): string {

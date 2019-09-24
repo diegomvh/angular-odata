@@ -4,9 +4,10 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { ODataContext } from '../context';
-import { Metadata, ODataSet } from '../odata-response';
+import { ODataEntitySet } from '../odata-response';
 import { ODataBatchRequest } from '../odata-request';
 import { ODataSingletonRequest, ODataEntitySetRequest, ODataRequest, ODataObserve } from '../odata-request';
+import { ODataMetadataRequest } from '../odata-request/requests/metadata';
 
 @Injectable()
 export class ODataService {
@@ -14,20 +15,20 @@ export class ODataService {
   public static readonly ODATA_ETAG = '@odata.etag';
   public static readonly ODATA_ID = '@odata.id';
 
+  public static readonly $ID = '$id';
+
   private static readonly PROPERTY_VALUE = 'value';
   public static readonly IF_MATCH_HEADER = 'If-Match';
 
   constructor(protected http: HttpClient, public context: ODataContext) {
   }
 
-  public metadata(): Observable<Metadata> {
-    return this.http
-      .get(this.context.metadataUrl, { observe: 'body', responseType: 'text' })
-      .pipe(map(body => new Metadata(body)));
+  public metadata(): ODataMetadataRequest {
+    return ODataMetadataRequest.factory(this);
   }
 
   batch(): ODataBatchRequest {
-    return new ODataBatchRequest(this);
+    return ODataBatchRequest.factory(this);
   }
 
   singleton<T>(name: string) {
@@ -83,7 +84,7 @@ export class ODataService {
     // ODataResponse
     switch(options.responseType) {
       case 'set':
-        return res$.pipe(map((body: any) => new ODataSet<any>(body)));
+        return res$.pipe(map((body: any) => new ODataEntitySet<any>(body)));
       case 'property':
         return res$.pipe(map((body: any) => body[ODataService.PROPERTY_VALUE]));
     }

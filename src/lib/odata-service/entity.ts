@@ -2,16 +2,26 @@ import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataSet } from '../odata-response';
+import { ODataEntitySet } from '../odata-response';
 import { Utils } from '../utils/utils';
-import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
+import { ODataEntitySetRequest, ODataEntityRequest, PlainObject, ODataFunctionRequest, ODataActionRequest, RequestMethod, ODataObserve } from '../odata-request';
 
 import { ODataService } from "./service";
+import { ODataPropertyRequest } from '../odata-request';
 
 export abstract class ODataEntityService<T> extends ODataService {
   static set: string = "";
 
   protected abstract resolveEntityKey(entity: Partial<T>);
+  protected resolveEtag(entity: Partial<T>): string {
+    return entity[ODataService.ODATA_ETAG];
+  }
+  protected resolveTarget<R>(type: 'body' | 'query', target: ODataEntityRequest<R>) {
+    //TODO: Target has key?
+    let key = (type === 'body') ?
+      ODataService.ODATA_ID : ODataService.$ID;
+    return { [key]: this.createEndpointUrl(target)};
+  }
 
   public entities(): ODataEntitySetRequest<T> {
     let ctor = <typeof ODataEntityService>this.constructor;
@@ -28,7 +38,7 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   // Entity Actions
-  public all(): Observable<ODataSet<T>> {
+  public all(): Observable<ODataEntitySet<T>> {
     return this.entities().get();
   }
 
@@ -53,19 +63,19 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   public update(entity: T): Observable<T> {
-    let etag = entity[ODataService.ODATA_ETAG];
+    let etag = this.resolveEtag(entity);
     return this.entity(entity)
       .put(entity, etag);
   }
 
   public assign(entity: Partial<T>, options?) {
-    let etag = entity[ODataService.ODATA_ETAG];
+    let etag = this.resolveEtag(entity);
     return this.entity(entity)
       .patch(entity, etag, options);
   }
 
   public destroy(entity: T, options?) {
-    let etag = entity[ODataService.ODATA_ETAG];
+    let etag = this.resolveEtag(entity);
     return this.entity(entity)
       .delete(etag, options);
   }
@@ -78,272 +88,237 @@ export abstract class ODataEntityService<T> extends ODataService {
       return this.update(entity);
   }
 
-  protected navigationProperty<P>(entity: Partial<T>, name: string, options?: {
+  protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'json',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P> {
-    let query = this.entity(entity).navigationProperty<P>(name).single();
-    return query.get(options);
-  }
+  }): Observable<P>;
 
-  protected navigationPropertySet<P>(entity: Partial<T>, name: string, options?: {
+  protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'set',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSet<P>> {
-    let query = this.entity(entity).navigationProperty<P>(name).collection();
-    return query.get(options);
-  }
+  }): Observable<ODataEntitySet<P>>;
 
-  protected property<P>(entity: Partial<T>, name: string, options?: {
+  protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'json'|'set',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P> {
-    let query = this.entity(entity).property<P>(name);
-    return query.get(options);
-  }
+  }): Observable<any> {
+    let query = this.entity(entity).navigationProperty<P>(name);
+    return (options.responseType === "set")?
+      query.collection().get(options) :
+      query.single().get(options);
+    }
 
-  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
+  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'json',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }) {
-    let refurl = this.createEndpointUrl(target);
-    let etag = entity[ODataService.ODATA_ETAG];
-    let query = this.entity(entity).navigationProperty<P>(name).ref();
-    return query.put({ [ODataService.ODATA_ID]: refurl }, etag);
-  }
+  }): Observable<P>;
 
-  protected createCollectionRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
+  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'set',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }) {
-    let refurl = this.createEndpointUrl(target);
-    let query = this.entity(entity).navigationProperty<P>(name).ref();
-    return query.post({ [ODataService.ODATA_ID]: refurl });
-  }
+  }): Observable<ODataEntitySet<P>>;
 
-  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
+  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'json'|'set',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }) {
-    let etag = entity[ODataService.ODATA_ETAG];
-    let query = this.entity(entity).navigationProperty<P>(name).ref();
-    return query.delete(etag);
-  }
+  }): Observable<any> {
+    let body = this.resolveTarget('body', target);
+    let etag = this.resolveEtag(entity);
+    let ref = this.entity(entity).navigationProperty<P>(name).ref();
+    return (options.responseType === "set")?
+      ref.post(body, options) :
+      ref.put(body, etag, options);
+    }
 
-  protected deleteCollectionRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options?: {
+  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'json',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }) {
-    let etag = entity[ODataService.ODATA_ETAG];
-    let refurl = this.createEndpointUrl(target);
-    let query = this.entity(entity).navigationProperty<P>(name).ref();
-    return query.delete(etag, {params: {"$id": refurl}});
-  }
+  }): Observable<P>;
 
-  // Function and actions
-  protected customAction<P>(entity: Partial<T>, name: string, postdata: any = {}, options?: {
+  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'set',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<ODataEntitySet<P>>;
+
+  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'json'|'set',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<any> {
+    let etag = this.resolveEtag(entity);
+    let ref = this.entity(entity).navigationProperty<P>(name).ref();
+    if (options.responseType === "set") {
+      let params = this.resolveTarget('query', target);
+      options.params = this.mergeHttpParams(params, options.params);
+    }
+    return ref.delete(etag, options);
+  }
+
+  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<P>;
+
+  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'set',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<ODataEntitySet<P>>;
+
+  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'property',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<P>;
+
+  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json'|'set'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
     let query = this.entity(entity).action<P>(name);
-    return query.post(postdata, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return query.post(data, options);
   }
 
-  protected customActionSet<P>(entity: Partial<T>, name: string, postdata: any = {}, options?: {
+  protected customCollectionAction<P>(name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSet<P>> {
-    let query = this.entity(entity).action<P>(name);
-    return query.post(postdata, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'set',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
-  }
+  }): Observable<P>;
 
-  protected customActionProperty<P>(entity: Partial<T>, name: string, postdata: any = {}, options?: {
+  protected customCollectionAction<P>(name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'set',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P> {
-    let query = this.entity(entity).action<P>(name);
-    return query.post(postdata, {
-      headers: options.headers,
-      observe: 'body',
-      params: options.params,
-      responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
+  }): Observable<ODataEntitySet<P>>;
 
-  protected customCollectionAction<P>(name: string, postdata: any = {}, options?: {
+  protected customCollectionAction<P>(name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'property',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<P>;
+
+  protected customCollectionAction<P>(name: string, data: any, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json'|'set'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
     let query = this.entities().action<P>(name);
-    return query.post(postdata, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return query.post(data, options);
   }
 
-  protected customCollectionActionSet<P>(name: string, postdata: any = {}, options?: {
+  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSet<P>> {
-    let query = this.entities().action<P>(name);
-    return query.post(postdata, {
-      headers: options.headers,
-      observe: 'body',
-      params: options.params,
-      responseType: 'set',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
+  }): Observable<P>;
 
-  protected customCollectionActionProperty<P>(name: string, postdata: any = {}, options?: {
+  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'set',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P> {
-    let query = this.entities().action<P>(name);
-    return query.post(postdata, {
-      headers: options.headers,
-      observe: 'body',
-      params: options.params,
-      responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
+  }): Observable<ODataEntitySet<P>>;
 
-  protected customFunction<P>(entity: Partial<T>, name: string, parameters: any = {}, options?: {
+  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'property',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<P>;
+
+  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json'|'set'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let query = this.entity(entity).function<P>(name)
-    query.parameters().assign(parameters);
+    let query = this.entity(entity).function<P>(name);
+    query.parameters().assign(data);
     return query.get(options);
   }
 
-  protected customFunctionSet<P>(entity: Partial<T>, name: string, parameters: any = {}, options?: {
+  protected customCollectionFunction<P>(name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSet<P>> {
-    let query = this.entity(entity).function<P>(name)
-    query.parameters().assign(parameters);
-    return query.get({
-      headers: options.headers,
-      params: options.params,
-      responseType: 'set',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
+  }): Observable<P>;
 
-  protected customFunctionProperty<P>(entity: Partial<T>, name: string, parameters: any = {}, options?: {
+  protected customCollectionFunction<P>(name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'set',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P> {
-    let query = this.entity(entity).function<P>(name)
-    query.parameters().assign(parameters);
-    return query.get({
-      headers: options.headers,
-      params: options.params,
-      responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
+  }): Observable<ODataEntitySet<P>>;
 
-  protected customCollectionFunction<P>(name: string, parameters: any = {}, options?: {
+  protected customCollectionFunction<P>(name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'property',
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<P>;
+
+  protected customCollectionFunction<P>(name: string, data: any, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'json'|'set'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
     let query = this.entities().function<P>(name);
-    query.parameters().assign(parameters);
+    query.parameters().assign(data);
     return query.get(options);
-  }
-
-  protected customCollectionFunctionSet<P>(name: string, parameters: any = {}, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<ODataSet<P>> {
-    let query = this.entities().function<P>(name);
-    query.parameters().assign(parameters);
-    return query.get({
-      headers: options.headers,
-      params: options.params,
-      responseType: 'set',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-  }
-
-  protected customCollectionFunctionProperty<P>(name: string, parameters: any = {}, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<P> {
-    let query = this.entities().function<P>(name);
-    query.parameters().assign(parameters);
-    return query.get({
-      headers: options.headers,
-      params: options.params,
-      responseType: 'property',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
   }
 }

@@ -130,7 +130,18 @@ export class SegmentHandler {
   }
 }
 
+export enum RequestMethod {
+  Get,
+  Post,
+  Put,
+  Delete,
+  Options,
+  Head,
+  Patch
+}
+
 export enum Segments {
+  batch = 'batch',
   metadata = 'metadata',
   entitySet = 'entitySet',
   entityKey = 'entityKey',

@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataSet } from '../odata-response';
+import { ODataEntitySet } from '../odata-response';
 import { ODataContext } from '../context';
 import { ODataEntitySetRequest, ODataCollectionRequest, PlainObject, Filter, Expand, GroupBy } from '../odata-request';
 
@@ -68,7 +68,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     super(models, query);
   }
 
-  assign(entitySet: ODataSet<ODataModel>, query: ODataCollectionRequest<M>) {
+  assign(entitySet: ODataEntitySet<ODataModel>, query: ODataCollectionRequest<M>) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)

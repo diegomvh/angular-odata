@@ -6,7 +6,7 @@ import { ODataOptions } from '../options';
 import { ODataSingleRequest } from './single';
 
 export class ODataSingletonRequest<T> extends ODataSingleRequest<T> {
-  
+
   static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();

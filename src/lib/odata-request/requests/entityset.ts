@@ -21,13 +21,6 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
     return new ODataEntitySetRequest<T>(service, segments, options);
   }
 
-  entity(key?: string | number | PlainObject) {
-    let entity = ODataEntityRequest.factory<T>(this.service, this.segments.clone());
-    if (key)
-      entity.key(key);
-    return entity;
-  }
-
   action<T>(name: string) {
     let segments = this.segments.clone();
     segments.segment(Segments.actionCall, name);

@@ -2,7 +2,7 @@ import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
-import { ODataSet } from '../../odata-response/entityset';
+import { ODataEntitySet } from '../../odata-response/entityset';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataService } from '../../odata-service';
@@ -36,7 +36,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     reportProgress?: boolean,
     responseType?: 'set',
     withCredentials?: boolean,
-  }): Observable<ODataSet<T>>;
+  }): Observable<ODataEntitySet<T>>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -45,6 +45,14 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     responseType?: 'property',
     withCredentials?: boolean,
   }): Observable<T>;
+
+  get(options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+  }): Observable<any>;
 
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
