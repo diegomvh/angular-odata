@@ -2,7 +2,6 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
-import { ODataPropertyRequest } from './property';
 import { Options, Expand, PlainObject } from '../types';
 
 export class ODataSingleRequest<T> extends ODataRequest {

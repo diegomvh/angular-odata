@@ -1,9 +1,11 @@
-import { ODataModel, Model } from './model';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { ODataSet } from '../odata-response/entityset';
-import { ODataContext } from '../odata-context';
+
+import { ODataSet } from '../odata-response';
+import { ODataContext } from '../context';
 import { ODataEntitySetRequest, ODataCollectionRequest, PlainObject, Filter, Expand, GroupBy } from '../odata-request';
+
+import { ODataModel, Model } from './model';
 
 export class Collection<M extends Model> {
   static type: string = "";

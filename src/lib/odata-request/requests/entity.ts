@@ -1,11 +1,12 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { Utils } from '../../utils/utils';
+import { PlainObject, Segments } from '../types';
+
 import { ODataSingleRequest } from './single';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
-import { Utils } from '../../utils/utils';
-import { PlainObject, Segments } from '../types';
 import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
 

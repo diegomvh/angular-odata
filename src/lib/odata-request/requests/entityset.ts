@@ -1,12 +1,14 @@
+import { HttpParams, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { PlainObject, Segments } from '../types';
+import { ODataService } from '../../odata-service/service';
+import { ODataSegments } from '../segments';
+
 import { ODataCollectionRequest } from './collection';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
-import { Observable } from 'rxjs';
-import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { ODataEntityRequest } from './entity';
-import { PlainObject, Segments, ODataSegment } from '../types';
-import { ODataService } from '../../odata-service/service';
-import { ODataSegments } from '../segments';
 
 export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
 

@@ -1,11 +1,12 @@
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-
-import { ODataService } from "./service";
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ODataSet } from '../odata-response/entityset';
+
+import { ODataSet } from '../odata-response';
 import { Utils } from '../utils/utils';
 import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
+
+import { ODataService } from "./service";
 
 export abstract class ODataEntityService<T> extends ODataService {
   static set: string = "";

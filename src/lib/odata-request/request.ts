@@ -1,9 +1,10 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataService } from "../odata-service/service";
+import { ODataService } from "../odata-service";
+
 import { ODataOptions } from './options';
-import { ODataSegment, PlainObject, SegmentHandler } from './types';
+import { ODataSegment, PlainObject } from './types';
 import { ODataSegments } from './segments';
 
 export type ODataObserve = 'body' | 'events' | 'response';

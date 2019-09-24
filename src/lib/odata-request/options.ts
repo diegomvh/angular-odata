@@ -1,6 +1,8 @@
 import buildQuery from 'odata-query';
-import { PlainObject, OptionHandler, GroupBy, Filter, Transform, Expand, Options } from './types';
+
 import { Utils } from '../utils/utils';
+
+import { PlainObject, OptionHandler, Options } from './types';
 
 export class ODataOptions {
   options?: PlainObject

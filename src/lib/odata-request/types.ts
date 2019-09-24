@@ -1,5 +1,3 @@
-import buildQuery from 'odata-query';
-
 import { Utils } from '../utils/utils';
 
 export type PlainObject = { [property: string]: any };

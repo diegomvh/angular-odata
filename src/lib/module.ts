@@ -1,7 +1,8 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { ODataContext, ODataConfig } from './odata-context';
-import { ODataService } from './odata-service/service';
+import { ODataContext } from './context';
+import { ODataService } from './odata-service';
+import { ODataConfig } from './config';
 
 @NgModule({
   providers: [ODataService]

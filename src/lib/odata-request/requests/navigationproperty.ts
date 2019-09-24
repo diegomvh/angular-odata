@@ -1,8 +1,9 @@
+import { ODataRequest } from '../request';
+import { Segments } from '../types';
+
 import { ODataRefRequest } from './ref';
 import { ODataSingleRequest } from './single';
 import { ODataCollectionRequest } from './collection';
-import { ODataRequest } from '../request';
-import { Segments } from '../types';
 
 export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   ref() {

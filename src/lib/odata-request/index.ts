@@ -5,3 +5,4 @@ export * from './requests/single';
 export * from './requests/entityset';
 export * from './requests/entity';
 export * from './requests/singleton';
+export * from './requests/batch';

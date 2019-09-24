@@ -2,8 +2,8 @@
  * Public API Surface of angular-odata
  */
 
-export * from './lib/odata.module';
-export * from './lib/odata-context';
+export * from './lib/module';
+export * from './lib/context';
 
 // Requests
 export * from './lib/odata-request';

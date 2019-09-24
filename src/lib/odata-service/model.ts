@@ -1,6 +1,7 @@
 import { Model } from '../odata-model/model';
-import { ODataEntityService } from './entity';
 import { PlainObject } from '../odata-request';
+
+import { ODataEntityService } from './entity';
 
 export abstract class ODataModelService<T extends Model> extends ODataEntityService<T> {
   static entities: string = "";

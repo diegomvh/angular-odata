@@ -1,13 +1,11 @@
-
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataContext } from '../odata-context';
-import { Metadata } from '../odata-response/metadata';
-import { Injectable } from '@angular/core';
-import { ODataBatchRequest } from '../odata-request/requests/batch';
-import { ODataSet } from '../odata-response/entityset';
+import { ODataContext } from '../context';
+import { Metadata, ODataSet } from '../odata-response';
+import { ODataBatchRequest } from '../odata-request';
 import { ODataSingletonRequest, ODataEntitySetRequest, ODataRequest, ODataObserve } from '../odata-request';
 
 @Injectable()

@@ -1,8 +1,9 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataRequest } from '../request';
 import { ODataValueRequest } from './value';
+
+import { ODataRequest } from '../request';
 import { Segments } from '../types';
 
 export class ODataPropertyRequest<P> extends ODataRequest {

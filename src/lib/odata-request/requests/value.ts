@@ -1,6 +1,7 @@
-import { ODataRequest } from '../request';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+import { ODataRequest } from '../request';
 
 export class ODataValueRequest<V> extends ODataRequest {
   public static readonly $VALUE = '$value';

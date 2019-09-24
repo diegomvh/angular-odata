@@ -1,7 +1,8 @@
-import { ODataSingleRequest } from './single';
-import { Segments, PlainObject, ODataSegment } from '../types';
+import { Segments } from '../types';
 import { ODataService } from '../../odata-service/service';
 import { ODataSegments } from '../segments';
+
+import { ODataSingleRequest } from './single';
 
 export class ODataSingletonRequest<T> extends ODataSingleRequest<T> {
   static factory<T>(service: ODataService, name: string) {
