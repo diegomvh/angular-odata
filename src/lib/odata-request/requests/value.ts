@@ -2,9 +2,21 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
+import { ODataSegments } from '../segments';
+import { ODataOptions } from '../options';
+import { Segments } from '../types';
+import { ODataService } from '../../odata-service';
 
 export class ODataValueRequest<V> extends ODataRequest {
   public static readonly $VALUE = '$value';
+
+  static factory<T>(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
+
+    segments.segment(Segments.value, ODataValueRequest.$VALUE);
+    return new ODataValueRequest<T>(service, segments, options);
+  }
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

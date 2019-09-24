@@ -31,11 +31,11 @@ export class ODataService {
   }
 
   singleton<T>(name: string) {
-    return ODataSingletonRequest.factory<T>(this, name);
+    return ODataSingletonRequest.factory<T>(name, this);
   }
 
   entitySet<T>(name: string): ODataEntitySetRequest<T> {
-    return ODataEntitySetRequest.factory<T>(this, name);
+    return ODataEntitySetRequest.factory<T>(name, this);
   }
 
   request(method: string, query?: ODataRequest, options: {

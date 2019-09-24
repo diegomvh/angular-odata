@@ -9,9 +9,19 @@ import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
 import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
+import { ODataOptions } from '../options';
+import { ODataSegments } from '../segments';
+import { ODataService } from '../../odata-service';
 
 export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
-  // Entity key
+
+  static factory<T>(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
+
+    return new ODataEntityRequest<T>(service, segments, options);
+  }
+
   key(key?: string | number | PlainObject) {
     let segment = this.segments.last();
     if (Utils.isUndefined(key)) return segment.options().get("key");
@@ -19,27 +29,19 @@ export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
   }
 
   navigationProperty<N>(name: string) {
-    let segments = this.segments.clone();
-    segments.segment(Segments.navigationProperty, name);
-    return new ODataNavigationPropertyRequest<N>(this.service, segments);
+    return ODataNavigationPropertyRequest.factory<N>(name, this.service, this.segments.clone());
   }
 
   property<P>(name: string) {
-    let segments = this.segments.clone();
-    segments.segment(Segments.property, name);
-    return new ODataPropertyRequest<P>(this.service, segments);
+    return ODataPropertyRequest.factory<P>(name, this.service, this.segments.clone());
   }
 
   action<A>(name: string) {
-    let segments = this.segments.clone();
-    segments.segment(Segments.actionCall, name);
-    return new ODataActionRequest<A>(this.service, segments);
+    return ODataActionRequest.factory<A>(name, this.service, this.segments.clone());
   }
 
   function<F>(name: string) {
-    let segments = this.segments.clone();
-    segments.segment(Segments.functionCall, name);
-    return new ODataFunctionRequest<F>(this.service, segments);
+    return ODataFunctionRequest.factory<F>(name, this.service, this.segments.clone());
   }
 
   post(body: T, options?: {

@@ -5,12 +5,22 @@ import { ODataValueRequest } from './value';
 
 import { ODataRequest } from '../request';
 import { Segments } from '../types';
+import { ODataOptions } from '../options';
+import { ODataSegments } from '../segments';
+import { ODataService } from '../../odata-service';
 
 export class ODataPropertyRequest<P> extends ODataRequest {
+
+  static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
+
+    segments.segment(Segments.property, name);
+    return new ODataPropertyRequest<T>(service, segments, options);
+  }
+
   value() {
-    let segments = this.segments.clone();
-    segments.segment(Segments.value, ODataValueRequest.$VALUE);
-    return new ODataValueRequest<P>(this.service, segments);
+    return ODataValueRequest.factory<P>(this.service, this.segments.clone());
   }
 
   get(options?: {

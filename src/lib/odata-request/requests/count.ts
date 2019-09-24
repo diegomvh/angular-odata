@@ -1,9 +1,22 @@
-import { ODataRequest } from '../request';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { Segments } from '../types';
+import { ODataService } from '../../odata-service';
+import { ODataSegments } from '../segments';
+import { ODataOptions } from '../options';
+import { ODataRequest } from '../request';
+
 export class ODataCountRequest extends ODataRequest {
   public static readonly $COUNT = '$count';
+
+  static factory(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
+
+    segments.segment(Segments.count, ODataCountRequest.$COUNT);
+    return new ODataCountRequest(service, segments, options);
+  }
 
   get<Number>(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

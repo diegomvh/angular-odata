@@ -3,8 +3,21 @@ import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
 import { ODataSet } from '../../odata-response/entityset';
+import { ODataSegments } from '../segments';
+import { ODataOptions } from '../options';
+import { ODataService } from '../../odata-service';
+import { Segments } from '../types';
 
 export class ODataFunctionRequest<T> extends ODataRequest {
+
+  static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
+
+    segments.segment(Segments.functionCall, name);
+    return new ODataFunctionRequest<T>(service, segments, options);
+  }
+
   parameters() {
     return this.segments.last().options();
   }

@@ -10,7 +10,7 @@ import { ODataEntityRequest } from './entity';
 
 export class ODataCollectionRequest<T> extends ODataRequest {
   entity(key?: string | number | PlainObject) {
-    let entity = this.clone(ODataEntityRequest) as ODataEntityRequest<T>;
+    let entity = ODataEntityRequest.factory<T>(this.service, this.segments.clone());
     if (key)
       entity.key(key);
     return entity;
@@ -33,9 +33,7 @@ export class ODataCollectionRequest<T> extends ODataRequest {
   }
 
   count() {
-    let segments = this.segments.clone();
-    segments.segment(Segments.count, ODataCountRequest.$COUNT);
-    return new ODataCountRequest(this.service, segments);
+    return ODataCountRequest.factory(this.service, this.segments.clone());
   }
 
   select(opts?: string | string[]) {

@@ -9,17 +9,20 @@ import { ODataCollectionRequest } from './collection';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
 import { ODataEntityRequest } from './entity';
+import { ODataOptions } from '../options';
 
 export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
 
-  static factory<T>(service: ODataService, name: string) {
-    let segments = new ODataSegments();
+  static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
+
     segments.segment(Segments.entitySet, name);
-    return new ODataEntitySetRequest<T>(service, segments);
+    return new ODataEntitySetRequest<T>(service, segments, options);
   }
 
   entity(key?: string | number | PlainObject) {
-    let entity = this.clone(ODataEntityRequest) as ODataEntityRequest<T>;
+    let entity = ODataEntityRequest.factory<T>(this.service, this.segments.clone());
     if (key)
       entity.key(key);
     return entity;

@@ -3,8 +3,21 @@ import { Observable } from 'rxjs';
 
 import { ODataRequest, ODataObserve } from '../request';
 import { ODataSet } from '../../odata-response/entityset';
+import { ODataService } from '../../odata-service';
+import { ODataSegments } from '../segments';
+import { ODataOptions } from '../options';
+import { Segments } from '../types';
 
 export class ODataActionRequest<T> extends ODataRequest {
+
+  static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
+
+    segments.segment(Segments.actionCall, name);
+    return new ODataActionRequest<T>(service, segments, options);
+  }
+
   post(body: T, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe: 'body',
