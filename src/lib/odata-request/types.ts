@@ -1,6 +1,8 @@
 import { Utils } from '../utils/utils';
 
 export type PlainObject = { [property: string]: any };
+export type Select = string | string[];
+export type OrderBy = string | string[];
 export type Filter = string | PlainObject | Array<string | PlainObject>;
 export type NestedExpandOptions = { [key: string]: Partial<ExpandQueryOptions>; };
 export type Expand = string | NestedExpandOptions | Array<string | NestedExpandOptions>;
@@ -42,21 +44,29 @@ export interface QueryOptions extends ExpandQueryOptions {
 
 export class OptionHandler<T> {
   constructor(private o: PlainObject, private t: string) { }
+
   get name() {
     return this.t;
   }
+
   toJSON() {
     return this.o[this.t];
   }
 
-  add(value: T) {
-    if (!Array.isArray(this.o[this.t]))
+  // Primitive value
+  value() {
+    return this.o[this.t];
+  }
+
+  // Array
+  push(value: T) {
+    if (!Utils.isArray(this.o[this.t]))
       this.o[this.t] = [this.o[this.t]];
     this.o[this.t].push(value);
   }
 
   remove(value: T) {
-    if (Array.isArray(this.o[this.t])) {
+    if (Utils.isArray(this.o[this.t])) {
       this.o[this.t] = this.o[this.t].filter(v => v !== value);
       if (this.o[this.t].length === 1)
         this.o[this.t] = this.o[this.t][0];
@@ -64,32 +74,35 @@ export class OptionHandler<T> {
   }
 
   at(index: number) {
-    if (Array.isArray(this.o[this.t])) {
+    if (Utils.isArray(this.o[this.t])) {
       return this.o[this.t][index];
     }
+  }
+
+  // Hash map
+  private assertObject(): PlainObject {
+    if (Utils.isObject(this.o[this.t]) && !Utils.isArray(this.o[this.t]))
+      return this.o[this.t];
+    else if (!Array.isArray(this.o[this.t])) {
+      this.o[this.t] = [this.o[this.t]];
+      let obj = this.o[this.t].find(v => Utils.isObject(v));
+      if (!obj) {
+        obj = {};
+        this.o[this.t].push(obj);
+      }
+      return obj;
+    }
+    return (this.o[this.t] = {});
+  }
+
+  set(name: string, value: T) {
+    this.assertObject()[name] = value;
   }
 
   get(name: string): T {
     if (!Array.isArray(this.o[this.t])) {
       return this.o[this.t][name];
     }
-  }
-  
-  private assertObject(): PlainObject {
-    if (typeof(this.o[this.t]) === 'object' && !Array.isArray(this.o[this.t]))
-      return this.o[this.t];
-    else if (!Array.isArray(this.o[this.t]))
-      this.o[this.t] = [this.o[this.t]];
-    let obj = this.o[this.t].find(v => typeof(v) === 'object');
-    if (!obj) {
-      obj = {};
-      this.o[this.t].push(obj);
-    }
-    return obj;
-  }
-
-  set(name: string, value: T) {
-    this.assertObject()[name] = value;
   }
 
   unset(name: string) {
@@ -105,6 +118,10 @@ export class OptionHandler<T> {
 
   assign(values: PlainObject) {
     Object.assign(this.assertObject(), values);
+  }
+
+  clear() {
+    delete this.o[this.t];
   }
 }
 

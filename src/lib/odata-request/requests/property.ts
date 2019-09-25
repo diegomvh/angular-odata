@@ -20,7 +20,11 @@ export class ODataPropertyRequest<P> extends ODataRequest {
   }
 
   value() {
-    return ODataValueRequest.factory<P>(this.service, this.segments.clone());
+    return ODataValueRequest.factory<P>(
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
   get(options?: {

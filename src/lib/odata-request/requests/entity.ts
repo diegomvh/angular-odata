@@ -29,19 +29,39 @@ export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
   }
 
   navigationProperty<N>(name: string) {
-    return ODataNavigationPropertyRequest.factory<N>(name, this.service, this.segments.clone());
+    return ODataNavigationPropertyRequest.factory<N>(
+      name, 
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
   property<P>(name: string) {
-    return ODataPropertyRequest.factory<P>(name, this.service, this.segments.clone());
+    return ODataPropertyRequest.factory<P>(
+      name, 
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
   action<A>(name: string) {
-    return ODataActionRequest.factory<A>(name, this.service, this.segments.clone());
+    return ODataActionRequest.factory<A>(
+      name, 
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
   function<F>(name: string) {
-    return ODataFunctionRequest.factory<F>(name, this.service, this.segments.clone());
+    return ODataFunctionRequest.factory<F>(
+      name, 
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
   post(body: T, options?: {

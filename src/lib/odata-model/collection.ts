@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { ODataEntitySet } from '../odata-response';
 import { ODataContext } from '../context';
-import { ODataEntitySetRequest, ODataCollectionRequest, PlainObject, Filter, Expand, GroupBy } from '../odata-request';
+import { ODataEntitySetRequest, ODataCollectionRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy } from '../odata-request';
 
 import { ODataModel, Model } from './model';
 
@@ -125,33 +125,27 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   }
 
   // Mutate query
-  select(select?: string | string[]) {
+  select(select?: Select) {
     return this._query.select(select);
   }
-  removeSelect() { this._query.removeSelect(); }
 
   filter(filter?: Filter) {
     return this._query.filter(filter);
   }
-  removeFilter() { this._query.removeFilter(); }
 
   search(search?: string) {
     return this._query.search(search);
   }
-  removeSearch() { this._query.removeSearch(); }
 
-  orderBy(orderBy?: string | string[]) {
+  orderBy(orderBy?: OrderBy) {
     return this._query.orderBy(orderBy);
   }
-  removeOrderBy() { this._query.removeOrderBy(); }
 
   expand(expand?: Expand) {
     return this._query.expand(expand);
   }
-  removeExpand() { this._query.removeExpand(); }
 
   groupBy(groupBy?: GroupBy) {
     return this._query.groupBy(groupBy);
   }
-  removeGroupBy() { this._query.removeGroupBy(); }
 }

@@ -20,6 +20,10 @@ export class Utils {
         return typeof value === 'object' && !Utils.isNull(value);
     }
 
+    static isArray(value: any): boolean {
+        return Array.isArray(value);
+    }
+
     static isEmpty(value: any): boolean {
         if (Utils.isNullOrUndefined(value)
             || typeof (value) === 'string' && !value.length

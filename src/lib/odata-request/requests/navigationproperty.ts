@@ -19,18 +19,26 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   }
 
   ref() {
-    return ODataRefRequest.factory(this.service, this.segments.clone());
+    return ODataRefRequest.factory(
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
   single() {
-    return new ODataSingleRequest<T>(this.service, 
+    return new ODataSingleRequest<T>(
+      this.service, 
       this.segments.clone(), 
-      this.options.clone());
+      this.options.clone()
+    );
   }
 
   collection() {
-    return new ODataCollectionRequest<T>(this.service, 
+    return new ODataCollectionRequest<T>(
+      this.service, 
       this.segments.clone(), 
-      this.options.clone());
+      this.options.clone()
+    );
   }
 }

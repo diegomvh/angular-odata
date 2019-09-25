@@ -355,12 +355,10 @@ export class ODataModel extends Model {
 
   // Mutate query
   select(select?: string | string[]) {
-    return (this._query as ODataEntityRequest<Model>).select(select);
+    return this._query.select(select);
   }
-  removeSelect() { (this._query as ODataEntityRequest<Model>).removeSelect(); }
 
   expand(expand?: Expand) {
-    return (this._query as ODataEntityRequest<Model>).expand(expand);
+    return this._query.expand(expand);
   }
-  removeExpand() { (this._query as ODataEntityRequest<Model>).removeExpand(); }
 }

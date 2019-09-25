@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
-import { Options, Expand, PlainObject } from '../types';
+import { Options, Expand, PlainObject, Select } from '../types';
 
 export class ODataSingleRequest<T> extends ODataRequest {
   get(options?: {
@@ -21,25 +21,15 @@ export class ODataSingleRequest<T> extends ODataRequest {
     });
   }
 
-  select(opts?: string | string[]) {
-    return this.options.option<string>(Options.select, opts);
-  }
-  removeSelect() {
-    this.options.remove(Options.select);
+  select(opts?: Select) {
+    return this.options.option<Select>(Options.select, opts);
   }
 
   expand(opts?: Expand) {
     return this.options.option<Expand>(Options.expand, opts);
   }
-  removeExpand() {
-    this.options.remove(Options.expand);
-  }
 
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
-  }
-
-  removeCustom() {
-    this.options.remove(Options.custom);
   }
 }

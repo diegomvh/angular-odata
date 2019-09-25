@@ -3,14 +3,18 @@ import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
 import { ODataEntitySet } from '../../odata-response';
-import { PlainObject, Options, Filter, GroupBy, Transform, Expand, Segments } from '../types';
+import { PlainObject, Options, Filter, GroupBy, Transform, Expand, Segments, Select, OrderBy } from '../types';
 
 import { ODataCountRequest } from './count';
 import { ODataEntityRequest } from './entity';
 
 export class ODataCollectionRequest<T> extends ODataRequest {
   entity(key?: string | number | PlainObject) {
-    let entity = ODataEntityRequest.factory<T>(this.service, this.segments.clone());
+    let entity = ODataEntityRequest.factory<T>(
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
     if (key)
       entity.key(key);
     return entity;
@@ -33,92 +37,58 @@ export class ODataCollectionRequest<T> extends ODataRequest {
   }
 
   count() {
-    return ODataCountRequest.factory(this.service, this.segments.clone());
+    return ODataCountRequest.factory(
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
-  select(opts?: string | string[]) {
-    return this.options.option<string>(Options.select, opts);
-  }
-  removeSelect() {
-    this.options.remove(Options.select);
+  select(opts?: Select) {
+    return this.options.option<Select>(Options.select, opts);
   }
 
   search(opts?: string) {
-    return this.options.value<string>(Options.search, opts);
-  }
-  removeSearch() {
-    this.options.remove(Options.search);
+    return this.options.option<string>(Options.search, opts);
   }
 
   filter(opts?: Filter) {
     return this.options.option<Filter>(Options.filter, opts);
   }
-  removeFilter() {
-    this.options.remove(Options.filter);
-  }
 
   groupBy(opts?: GroupBy) {
     return this.options.option(Options.groupBy, opts);
-  }
-  removeGroupBy() {
-    this.options.remove(Options.groupBy);
   }
 
   transform(opts?: Transform) {
     return this.options.option<Transform>(Options.transform, opts);
   }
-  removeTransform() {
-    this.options.remove(Options.transform);
-  }
 
-  orderBy(opts?: string | string[]) {
-    return this.options.option<string>(Options.orderBy, opts);
-  }
-  removeOrderBy() { 
-    this.options.remove(Options.orderBy); 
+  orderBy(opts?: OrderBy) {
+    return this.options.option<OrderBy>(Options.orderBy, opts);
   }
 
   expand(opts?: Expand) {
     return this.options.option<Expand>(Options.expand, opts);
   }
-  removeExpand() {
-    this.options.remove(Options.expand);
-  }
 
   format(opts?: string) {
-    return this.options.value<string>(Options.format, opts);
-  }
-  removeFormat() {
-    this.options.remove(Options.format);
+    return this.options.option<string>(Options.format, opts);
   }
 
   top(opts?: number) {
-    return this.options.value<number>(Options.top, opts);
-  }
-  removeTop() {
-    this.options.remove(Options.top);
+    return this.options.option<number>(Options.top, opts);
   }
 
   skip(opts?: number) {
-    return this.options.value<number>(Options.skip, opts);
-  }
-  removeSkip() {
-    this.options.remove(Options.skip);
+    return this.options.option<number>(Options.skip, opts);
   }
   
   addCount() {
-    return this.options.value<boolean>(Options.count, true);
-  }
-
-  removeCount() {
-    this.options.remove(Options.count);
+    return this.options.option<boolean>(Options.count, true);
   }
 
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
-  }
-
-  removeCustom() {
-    this.options.remove(Options.custom);
   }
 }

@@ -21,16 +21,22 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
     return new ODataEntitySetRequest<T>(service, segments, options);
   }
 
-  action<T>(name: string) {
-    let segments = this.segments.clone();
-    segments.segment(Segments.actionCall, name);
-    return new ODataActionRequest<T>(this.service, segments);
+  action<A>(name: string) {
+    return ODataActionRequest.factory<A>(
+      name, 
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
-  function<T>(name: string) {
-    let segments = this.segments.clone();
-    segments.segment(Segments.functionCall, name);
-    return new ODataFunctionRequest<T>(this.service, segments);
+  function<F>(name: string) {
+    return ODataFunctionRequest.factory<F>(
+      name, 
+      this.service, 
+      this.segments.clone(),
+      this.options.clone()
+    );
   }
 
   post(body: T, options?: {
