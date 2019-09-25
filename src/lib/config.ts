@@ -8,6 +8,6 @@ export interface ODataConfig {
   batch: boolean;
   creation?: Date,
   version?: string,
-  types?: any,
+  types?: any[],
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
