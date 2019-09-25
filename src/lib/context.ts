@@ -11,6 +11,7 @@ export class ODataContext implements ODataConfig {
   batch: boolean;
   creation: Date;
   version: string;
+  withCount?: boolean;
   types?: any[];
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 

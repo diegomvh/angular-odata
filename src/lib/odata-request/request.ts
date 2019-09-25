@@ -34,6 +34,7 @@ export abstract class ODataRequest {
     reportProgress?: boolean,
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     withCredentials?: boolean,
+    withCount?: boolean
   } = {}): Observable<any> {
     return this.service.request("GET", this, options);
   }
@@ -45,6 +46,7 @@ export abstract class ODataRequest {
     reportProgress?: boolean,
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     withCredentials?: boolean,
+    withCount?: boolean
   } = {}): Observable<any> {
     return this.service.request("POST", this, Object.assign(options, {body}));
   }
@@ -56,6 +58,7 @@ export abstract class ODataRequest {
     reportProgress?: boolean,
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     withCredentials?: boolean,
+    withCount?: boolean
   } = {}): Observable<any> {
     return this.service.request("PATCH", this, Object.assign(options, {body, etag}));
   }
@@ -67,6 +70,7 @@ export abstract class ODataRequest {
     reportProgress?: boolean,
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     withCredentials?: boolean,
+    withCount?: boolean
   } = {}): Observable<any> {
     return this.service.request("PUT", this, Object.assign(options, {body, etag}));
   }
@@ -78,6 +82,7 @@ export abstract class ODataRequest {
     reportProgress?: boolean,
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     withCredentials?: boolean,
+    withCount?: boolean
   } = {}): Observable<any> {
     return this.service.request("DELETE", this, Object.assign(options, {etag}));
   }

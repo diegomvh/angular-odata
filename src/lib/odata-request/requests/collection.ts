@@ -25,6 +25,7 @@ export class ODataCollectionRequest<T> extends ODataRequest {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
+    withCount?: boolean
   }): Observable<ODataEntitySet<T>> {
     return super.get({
       headers: options && options.headers,
@@ -32,7 +33,8 @@ export class ODataCollectionRequest<T> extends ODataRequest {
       params: options && options.params,
       responseType: 'set',
       reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
+      withCredentials: options && options.withCredentials,
+      withCount: options && options.withCount
     });
   }
 
@@ -84,10 +86,6 @@ export class ODataCollectionRequest<T> extends ODataRequest {
     return this.options.option<number>(Options.skip, opts);
   }
   
-  addCount() {
-    return this.options.option<boolean>(Options.count, true);
-  }
-
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
   }

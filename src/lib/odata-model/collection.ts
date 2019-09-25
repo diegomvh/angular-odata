@@ -87,7 +87,6 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
       query.top(this.state.size);
       query.skip(this.state.size * (this.state.page - 1));
     }
-    query.addCount();
     return query.get()
       .pipe(
         map(set => this.assign(set, query))

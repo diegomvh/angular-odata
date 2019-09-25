@@ -36,6 +36,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     reportProgress?: boolean,
     responseType?: 'set',
     withCredentials?: boolean,
+    withCount?: boolean
   }): Observable<ODataEntitySet<T>>;
 
   get(options?: {
@@ -60,6 +61,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
+    withCount?: boolean
   }): Observable<any> {
     return super.get({
       headers: options.headers,
@@ -67,7 +69,8 @@ export class ODataFunctionRequest<T> extends ODataRequest {
       params: options.params,
       responseType: options.responseType,
       reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      withCredentials: options.withCredentials,
+      withCount: options.withCount
     });
   }
 }

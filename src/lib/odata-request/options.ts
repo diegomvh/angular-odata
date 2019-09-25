@@ -11,7 +11,7 @@ export class ODataOptions {
 
   options?: PlainObject
 
-  constructor( options?: PlainObject) {
+  constructor(options?: PlainObject) {
     this.options = options || {};
   }
 
@@ -48,20 +48,26 @@ export class ODataOptions {
   }
 
   //Handler
-  protected wrapObject<T>(type: string, opts?: T) {
-    if (Utils.isUndefined(this.options[type]))
-      this.options[type] = {};
+  protected wrapObject<T>(type: Options, opts?: T) {
     if (!Utils.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type);
   }
 
   // Options
-  option<T>(type: string, opts?: T) {
+  option<T>(type: Options, opts?: T) {
     return this.wrapObject<T>(type, opts);
   }
 
-  has(type) {
+  has(type: Options) {
     return !Utils.isUndefined(this.options[type]);
+  }
+
+  remove(...types: Options[]) {
+    types.forEach(type => this.option(type).clear());
+  }
+
+  clear() {
+    this.options = {};
   }
 }

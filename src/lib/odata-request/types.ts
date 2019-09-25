@@ -43,7 +43,7 @@ export interface QueryOptions extends ExpandQueryOptions {
 }
 
 export class OptionHandler<T> {
-  constructor(private o: PlainObject, private t: string) { }
+  constructor(private o: PlainObject, private t: Options) { }
 
   get name() {
     return this.t;
@@ -143,7 +143,7 @@ export class SegmentHandler {
   }
 
   options() {
-    return new OptionHandler<string | number | PlainObject>(this.segment as PlainObject, "options");
+    return new OptionHandler<string | number | PlainObject>(this.segment as PlainObject, Options.custom);
   }
 }
 
@@ -161,7 +161,6 @@ export enum Segments {
   batch = 'batch',
   metadata = 'metadata',
   entitySet = 'entitySet',
-  entityKey = 'entityKey',
   singleton = 'singleton',
   typeName = 'typeName',
   property = 'property',
@@ -174,6 +173,7 @@ export enum Segments {
 }
 
 export enum Options {
+  key = 'key',
   select = 'select',
   filter = 'filter',
   search = 'search',
@@ -184,6 +184,5 @@ export enum Options {
   skip = 'skip',
   expand = 'expand',
   format = 'format',
-  count = 'count',
   custom = 'custom'
 }

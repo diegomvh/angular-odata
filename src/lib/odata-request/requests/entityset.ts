@@ -8,7 +8,6 @@ import { ODataSegments } from '../segments';
 import { ODataCollectionRequest } from './collection';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
-import { ODataEntityRequest } from './entity';
 import { ODataOptions } from '../options';
 
 export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {

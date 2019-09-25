@@ -16,6 +16,7 @@ export class ODataService {
   public static readonly ODATA_ID = '@odata.id';
 
   public static readonly $ID = '$id';
+  public static readonly $COUNT = '$count';
 
   private static readonly PROPERTY_VALUE = 'value';
   public static readonly IF_MATCH_HEADER = 'If-Match';
@@ -47,21 +48,28 @@ export class ODataService {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'set' | 'property',
-    withCredentials?: boolean
+    withCredentials?: boolean,
+    withCount?: boolean
   } = {}): Observable<any> {
     const url = this.createEndpointUrl(query);
 
-    let headers = this.mergeHttpHeaders(options.headers);
-    let params = this.mergeHttpParams(query.params(), options.params);
-
-    if (typeof (options.etag) === 'string')
-      headers = headers.set(ODataService.IF_MATCH_HEADER, options.etag);
-
+    // Resolve Observa and ResponseType
     let observe = (['set', 'property'].indexOf(options.responseType) !== -1) ? 'body' :
       options.observe;
 
     let responseType = (['set', 'property'].indexOf(options.responseType) !== -1) ? 'json' :
       <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
+
+    let customHeaders = {};
+    if (typeof (options.etag) === 'string')
+      customHeaders[ODataService.IF_MATCH_HEADER] = options.etag;
+    let headers = this.mergeHttpHeaders(options.headers, customHeaders);
+
+    let customParams = {};
+    let withCount = options.withCount;
+    if (withCount || this.context.withCount)
+      customParams[ODataService.$COUNT] = 'true';
+    let params = this.mergeHttpParams(query.params(), options.params, customParams);
 
     let withCredentials = options.withCredentials;
     if (withCredentials === undefined)

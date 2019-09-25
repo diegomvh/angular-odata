@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Utils } from '../../utils/utils';
-import { PlainObject, Segments } from '../types';
+import { PlainObject, Options } from '../types';
 
 import { ODataSingleRequest } from './single';
 import { ODataActionRequest } from './action';
@@ -19,13 +19,14 @@ export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
+    options.remove(Options.filter, Options.orderBy, Options.skip, Options.top);
     return new ODataEntityRequest<T>(service, segments, options);
   }
 
   key(key?: string | number | PlainObject) {
     let segment = this.segments.last();
-    if (Utils.isUndefined(key)) return segment.options().get("key");
-    segment.options().set("key", key);
+    if (Utils.isUndefined(key)) return segment.options().get(Options.key);
+    segment.options().set(Options.key, key);
   }
 
   navigationProperty<N>(name: string) {

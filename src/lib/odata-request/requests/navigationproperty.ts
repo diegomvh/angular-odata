@@ -1,5 +1,5 @@
 import { ODataRequest } from '../request';
-import { Segments } from '../types';
+import { Segments, Options } from '../types';
 
 import { ODataRefRequest } from './ref';
 import { ODataSingleRequest } from './single';
@@ -15,6 +15,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.navigationProperty, name);
+    options.clear();
     return new ODataNavigationPropertyRequest<T>(service, segments, options);
   }
 
