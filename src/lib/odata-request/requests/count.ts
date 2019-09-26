@@ -1,7 +1,7 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Segments } from '../types';
+import { Segments, Options } from '../types';
 import { ODataService } from '../../odata-service';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
@@ -15,6 +15,7 @@ export class ODataCountRequest extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.count, ODataCountRequest.$COUNT);
+    options.keep(Options.filter, Options.search);
     return new ODataCountRequest(service, segments, options);
   }
 

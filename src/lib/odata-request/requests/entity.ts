@@ -19,7 +19,7 @@ export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
-    options.remove(Options.filter, Options.orderBy, Options.skip, Options.top);
+    options.keep(Options.expand, Options.select, Options.format);
     return new ODataEntityRequest<T>(service, segments, options);
   }
 

@@ -15,6 +15,7 @@ export class ODataRefRequest extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.ref, ODataRefRequest.$REF);
+    options.clear();
     return new ODataRefRequest(service, segments, options);
   }
 

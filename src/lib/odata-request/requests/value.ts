@@ -15,6 +15,7 @@ export class ODataValueRequest<V> extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.value, ODataValueRequest.$VALUE);
+    options.clear();
     return new ODataValueRequest<T>(service, segments, options);
   }
 

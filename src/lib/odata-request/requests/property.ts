@@ -16,6 +16,7 @@ export class ODataPropertyRequest<P> extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.property, name);
+    options.clear();
     return new ODataPropertyRequest<T>(service, segments, options);
   }
 

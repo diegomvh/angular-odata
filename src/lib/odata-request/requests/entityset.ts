@@ -1,7 +1,7 @@
 import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { PlainObject, Segments } from '../types';
+import { PlainObject, Segments, Options, Expand, Select, Transform } from '../types';
 import { ODataService } from '../../odata-service/service';
 import { ODataSegments } from '../segments';
 
@@ -17,6 +17,7 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
     options = options || new ODataOptions();
 
     segments.segment(Segments.entitySet, name);
+    options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);
     return new ODataEntitySetRequest<T>(service, segments, options);
   }
 
@@ -36,6 +37,18 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
       this.segments.clone(),
       this.options.clone()
     );
+  }
+
+  select(opts?: Select) {
+    return this.options.option<Select>(Options.select, opts);
+  }
+
+  expand(opts?: Expand) {
+    return this.options.option<Expand>(Options.expand, opts);
+  }
+
+  transform(opts?: Transform) {
+    return this.options.option<Transform>(Options.transform, opts);
   }
 
   post(body: T, options?: {

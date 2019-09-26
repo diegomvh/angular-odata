@@ -15,7 +15,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.navigationProperty, name);
-    options.clear();
+    options.keep(Options.format);
     return new ODataNavigationPropertyRequest<T>(service, segments, options);
   }
 

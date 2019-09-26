@@ -6,15 +6,15 @@ import { ODataEntitySet } from '../../odata-response/entityset';
 import { ODataService } from '../../odata-service';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { Segments } from '../types';
+import { Segments, Options } from '../types';
 
 export class ODataActionRequest<T> extends ODataRequest {
-
   static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
 
     segments.segment(Segments.actionCall, name);
+    options.clear();
+    options.keep(Options.format);
     return new ODataActionRequest<T>(service, segments, options);
   }
 

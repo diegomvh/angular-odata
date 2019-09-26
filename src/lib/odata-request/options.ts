@@ -67,6 +67,12 @@ export class ODataOptions {
     types.forEach(type => this.option(type).clear());
   }
 
+  keep(...types: Options[]) {
+    this.options = Object.keys(this.options)
+      .filter((k: Options) => types.indexOf(k) !== -1)
+      .reduce((acc, k) => Object.assign(acc, this.options[k]), {});
+  }
+
   clear() {
     this.options = {};
   }

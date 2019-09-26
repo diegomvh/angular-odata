@@ -88,6 +88,7 @@ export class ODataBatchRequest extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.batch, ODataBatchRequest.$BATCH);
+    options.clear();
     return new ODataBatchRequest(service, segments, options);
   }
 

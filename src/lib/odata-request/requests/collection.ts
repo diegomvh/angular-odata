@@ -46,10 +46,6 @@ export class ODataCollectionRequest<T> extends ODataRequest {
     );
   }
 
-  select(opts?: Select) {
-    return this.options.option<Select>(Options.select, opts);
-  }
-
   search(opts?: string) {
     return this.options.option<string>(Options.search, opts);
   }
@@ -68,10 +64,6 @@ export class ODataCollectionRequest<T> extends ODataRequest {
 
   orderBy(opts?: OrderBy) {
     return this.options.option<OrderBy>(Options.orderBy, opts);
-  }
-
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
   }
 
   format(opts?: string) {

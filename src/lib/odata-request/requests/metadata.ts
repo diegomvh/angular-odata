@@ -17,6 +17,7 @@ export class ODataMetadataRequest extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.metadata, ODataMetadataRequest.$METADATA);
+    options.clear();
     return new ODataMetadataRequest(service, segments, options);
   }
 

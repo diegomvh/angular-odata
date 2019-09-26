@@ -29,6 +29,10 @@ export class ODataSingleRequest<T> extends ODataRequest {
     return this.options.option<Expand>(Options.expand, opts);
   }
 
+  format(opts?: string) {
+    return this.options.option<string>(Options.format, opts);
+  }
+
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
   }

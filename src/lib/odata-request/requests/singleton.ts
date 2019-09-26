@@ -1,4 +1,4 @@
-import { Segments } from '../types';
+import { Segments, Options } from '../types';
 import { ODataService } from '../../odata-service/service';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
@@ -12,6 +12,7 @@ export class ODataSingletonRequest<T> extends ODataSingleRequest<T> {
     options = options || new ODataOptions();
 
     segments.segment(Segments.singleton, name);
+    options.keep(Options.format);
     return new ODataSingletonRequest<T>(service, segments, options);
   }
 }

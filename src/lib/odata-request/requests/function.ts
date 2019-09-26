@@ -6,7 +6,7 @@ import { ODataEntitySet } from '../../odata-response/entityset';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataService } from '../../odata-service';
-import { Segments } from '../types';
+import { Segments, Options } from '../types';
 
 export class ODataFunctionRequest<T> extends ODataRequest {
 
@@ -15,6 +15,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     options = options || new ODataOptions();
 
     segments.segment(Segments.functionCall, name);
+    options.keep(Options.format);
     return new ODataFunctionRequest<T>(service, segments, options);
   }
 
