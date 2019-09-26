@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
 import { ODataEntitySet } from '../../odata-response';
-import { PlainObject, Options, Filter, GroupBy, OrderBy } from '../types';
+import { PlainObject, Options, Filter, GroupBy, OrderBy, Select, Expand, Transform } from '../types';
 
 import { ODataCountRequest } from './count';
 import { ODataEntityRequest } from './entity';
@@ -44,6 +44,18 @@ export class ODataCollectionRequest<T> extends ODataRequest {
       this.segments.clone(),
       this.options.clone()
     );
+  }
+
+  select(opts?: Select) {
+    return this.options.option<Select>(Options.select, opts);
+  }
+
+  expand(opts?: Expand) {
+    return this.options.option<Expand>(Options.expand, opts);
+  }
+
+  transform(opts?: Transform) {
+    return this.options.option<Transform>(Options.transform, opts);
   }
 
   search(opts?: string) {
