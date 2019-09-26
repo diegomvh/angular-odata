@@ -6,25 +6,17 @@ import { ODataEntitySet } from '../odata-response';
 import { Utils } from '../utils/utils';
 import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
-import { ODataService } from "./service";
+import { ODataClient } from "../client";
 
-export abstract class ODataEntityService<T> extends ODataService {
+export abstract class ODataEntityService<T> {
   static set: string = "";
 
-  protected abstract resolveEntityKey(entity: Partial<T>);
-  protected resolveEtag(entity: Partial<T>): string {
-    return entity[ODataService.ODATA_ETAG];
-  }
-  protected resolveTarget<R>(type: 'body' | 'query', target: ODataEntityRequest<R>) {
-    //TODO: Target has key?
-    let key = (type === 'body') ?
-      ODataService.ODATA_ID : ODataService.$ID;
-    return { [key]: this.createEndpointUrl(target)};
-  }
+  constructor(protected odata: ODataClient) { }
 
+  protected abstract resolveEntityKey(entity: Partial<T>);
   public entities(): ODataEntitySetRequest<T> {
     let ctor = <typeof ODataEntityService>this.constructor;
-    return this.entitySet<T>(ctor.set);
+    return this.odata.entitySet<T>(ctor.set);
   }
 
   public entity(entity?: number | string | Partial<T>): ODataEntityRequest<T> {
@@ -62,19 +54,19 @@ export abstract class ODataEntityService<T> extends ODataService {
   }
 
   public update(entity: T): Observable<T> {
-    let etag = this.resolveEtag(entity);
+    let etag = this.odata.resolveEtag<T>(entity);
     return this.entity(entity)
       .put(entity, etag);
   }
 
   public assign(entity: Partial<T>, options?) {
-    let etag = this.resolveEtag(entity);
+    let etag = this.odata.resolveEtag<T>(entity);
     return this.entity(entity)
       .patch(entity, etag, options);
   }
 
   public destroy(entity: T, options?) {
-    let etag = this.resolveEtag(entity);
+    let etag = this.odata.resolveEtag<T>(entity);
     return this.entity(entity)
       .delete(etag, options);
   }
@@ -139,8 +131,8 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let body = this.resolveTarget('body', target);
-    let etag = this.resolveEtag(entity);
+    let body = this.odata.resolveTarget<P>('body', target);
+    let etag = this.odata.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
     return (options.responseType === "set")?
       ref.post(body, options) :
@@ -170,11 +162,11 @@ export abstract class ODataEntityService<T> extends ODataService {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let etag = this.resolveEtag(entity);
+    let etag = this.odata.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
     if (options.responseType === "set") {
-      let params = this.resolveTarget('query', target);
-      options.params = this.mergeHttpParams(params, options.params);
+      let params = this.odata.resolveTarget<P>('query', target);
+      options.params = this.odata.mergeHttpParams(params, options.params);
     }
     return ref.delete(etag, options);
   }

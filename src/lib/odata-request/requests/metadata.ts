@@ -5,14 +5,14 @@ import { ODataRequest } from '../request';
 import { Segments } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { ODataService } from '../../odata-service';
 import { ODataMetadata } from '../../odata-response';
 import { map } from 'rxjs/operators';
+import { ODataClient } from '../../client';
 
 export class ODataMetadataRequest extends ODataRequest {
   public static readonly $METADATA = '$metadata';
 
-  static factory(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

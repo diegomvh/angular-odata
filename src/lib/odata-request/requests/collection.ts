@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { ODataRequest } from '../request';
 import { ODataEntitySet } from '../../odata-response';
-import { PlainObject, Options, Filter, GroupBy, Transform, Expand, Segments, Select, OrderBy } from '../types';
+import { PlainObject, Options, Filter, GroupBy, OrderBy } from '../types';
 
 import { ODataCountRequest } from './count';
 import { ODataEntityRequest } from './entity';
@@ -56,10 +56,6 @@ export class ODataCollectionRequest<T> extends ODataRequest {
 
   groupBy(opts?: GroupBy) {
     return this.options.option(Options.groupBy, opts);
-  }
-
-  transform(opts?: Transform) {
-    return this.options.option<Transform>(Options.transform, opts);
   }
 
   orderBy(opts?: OrderBy) {

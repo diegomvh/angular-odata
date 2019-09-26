@@ -7,11 +7,11 @@ import { ODataRequest } from '../request';
 import { Segments } from '../types';
 import { ODataOptions } from '../options';
 import { ODataSegments } from '../segments';
-import { ODataService } from '../../odata-service';
+import { ODataClient } from '../../client';
 
 export class ODataPropertyRequest<P> extends ODataRequest {
 
-  static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

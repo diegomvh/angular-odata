@@ -2,15 +2,15 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Segments, Options } from '../types';
-import { ODataService } from '../../odata-service';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataRequest } from '../request';
+import { ODataClient } from '../../client';
 
 export class ODataCountRequest extends ODataRequest {
   public static readonly $COUNT = '$count';
 
-  static factory(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

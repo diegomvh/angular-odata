@@ -1,11 +1,10 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataService } from "../odata-service";
-
 import { ODataOptions } from './options';
 import { ODataSegment, PlainObject } from './types';
 import { ODataSegments } from './segments';
+import { ODataClient } from '../client';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -13,12 +12,12 @@ export abstract class ODataRequest {
   public static readonly QUERY_SEPARATOR = '?';
 
   // VARIABLES
-  protected service: ODataService;
+  protected service: ODataClient;
   protected segments: ODataSegments;
   protected options: ODataOptions;
 
   constructor(
-    service: ODataService,
+    service: ODataClient,
     segments?: ODataSegments,
     options?: ODataOptions
   ) {
@@ -103,9 +102,9 @@ export abstract class ODataRequest {
     return this.options.params();
   }
 
-  clone<T extends ODataRequest>(type?: { new(service: ODataService, segments: ODataSegments, options: ODataOptions): T; }): T {
+  clone<T extends ODataRequest>(type?: { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): T; }): T {
     if (!type) 
-      type = this.constructor as { new(service: ODataService, segments: ODataSegments, options: ODataOptions): T; };
+      type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): T; };
     return new type(this.service, this.segments.clone(), this.options.clone());
   };
 
@@ -117,11 +116,11 @@ export abstract class ODataRequest {
   }
 
   static fromJSON<T extends ODataRequest>(
-    service: ODataService, 
+    service: ODataClient, 
     json: {segments: any[], options: PlainObject},
-    type?: { new(service: ODataService, segments?: ODataSegment[], options?: PlainObject): T; }): T {
+    type?: { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): T; }): T {
     if (!type) 
-      type = this.constructor as { new(service: ODataService, segments?: ODataSegment[], options?: PlainObject): T; };
+      type = this.constructor as { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): T; };
     return new type(service, json.segments, json.options);
   }
 

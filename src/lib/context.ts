@@ -35,11 +35,4 @@ export class ODataContext implements ODataConfig {
     let Ctor = (this.types || []).find(t => t.type === name);
     if (Ctor) return Ctor;
   }
-
-  createInstance(type: string, value: any, query: ODataRequest) {
-    let Ctor = this.getType(type);
-    let instance = new Ctor(value, query);
-    instance.setContext(this);
-    return instance;
-  }
 }

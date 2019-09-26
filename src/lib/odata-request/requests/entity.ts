@@ -11,11 +11,11 @@ import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
 import { ODataOptions } from '../options';
 import { ODataSegments } from '../segments';
-import { ODataService } from '../../odata-service';
+import { ODataClient } from '../../client';
 
 export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
 
-  static factory<T>(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<T>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

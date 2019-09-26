@@ -1,8 +1,8 @@
 import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { PlainObject, Segments, Options, Expand, Select, Transform } from '../types';
-import { ODataService } from '../../odata-service/service';
+import { Segments, Options, Expand, Select, Transform } from '../types';
+import { ODataClient } from '../../client';
 import { ODataSegments } from '../segments';
 
 import { ODataCollectionRequest } from './collection';
@@ -12,7 +12,7 @@ import { ODataOptions } from '../options';
 
 export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
 
-  static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

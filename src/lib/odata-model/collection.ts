@@ -2,16 +2,16 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { ODataEntitySet } from '../odata-response';
-import { ODataContext } from '../context';
-import { ODataEntitySetRequest, ODataCollectionRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy } from '../odata-request';
+import { ODataEntitySetRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy } from '../odata-request';
 
 import { ODataModel, Model } from './model';
+import { ODataModelService } from '../odata-service';
 
 export class Collection<M extends Model> {
   static type: string = "";
   static modelType: string = "";
-  _context: ODataContext;
-  _query: ODataCollectionRequest<M>;
+  _service: ODataModelService<M>;
+  _query: ODataEntitySetRequest<M>;
   _models: M[];
   state: {
     page?: number,
@@ -20,7 +20,7 @@ export class Collection<M extends Model> {
     records?: number,
   };
 
-  constructor(models: PlainObject[], query?: ODataCollectionRequest<M>) {
+  constructor(models: PlainObject[], query?: ODataEntitySetRequest<M>) {
     this._models = this.parse(models, query);
     this.state = {
       records: this._models.length
@@ -28,17 +28,17 @@ export class Collection<M extends Model> {
     this.setQuery(query);
   }
 
-  setContext(context: ODataContext) {
-    this._context = context;
+  setService(service: ODataModelService<M>) {
+    this._service = service;
   }
 
-  setQuery(query: ODataCollectionRequest<M>) {
+  setQuery(query: ODataEntitySetRequest<M>) {
     this._query = query;
   }
 
-  parse(models: PlainObject[], query: ODataCollectionRequest<M>) {
+  parse(models: PlainObject[], query: ODataEntitySetRequest<M>) {
     let ctor = <typeof Collection>this.constructor;
-    return models.map(model => this._context.createInstance(ctor.modelType, model, query) as M);
+    return models.map(model => this._service.createInstance(ctor.modelType, model, query) as M);
   }
 
   toJSON() {
@@ -63,12 +63,12 @@ export class Collection<M extends Model> {
 export class ODataCollection<M extends ODataModel> extends Collection<M> {
   constructor(
     models: PlainObject[],
-    query: ODataCollectionRequest<M>
+    query: ODataEntitySetRequest<M>
   ) {
     super(models, query);
   }
 
-  assign(entitySet: ODataEntitySet<ODataModel>, query: ODataCollectionRequest<M>) {
+  assign(entitySet: ODataEntitySet<ODataModel>, query: ODataEntitySetRequest<M>) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)

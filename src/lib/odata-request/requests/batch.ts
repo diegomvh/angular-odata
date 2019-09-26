@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { UUID } from 'angular2-uuid';
 import { Observable, of } from 'rxjs';
 
-import { ODataService } from '../../odata-service/service';
+import { ODataClient } from '../../client';
 import { Utils } from '../../utils/utils';
 import { ODataRequest } from '../request';
 import { Segments, RequestMethod } from '../types';
@@ -75,7 +75,7 @@ export class ODataBatchRequest extends ODataRequest {
   private changesetBoundary: string;
   private changesetID: number;
 
-  constructor(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  constructor(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     super(service, segments, options);
     this.requests = [];
     this.batchBoundary = BatchRequest.BATCH_PREFIX + this.getUUID();
@@ -83,7 +83,7 @@ export class ODataBatchRequest extends ODataRequest {
     this.changesetID = 1;
   }
 
-  static factory(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

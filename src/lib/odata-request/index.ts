@@ -9,3 +9,4 @@ export * from './requests/action';
 export * from './requests/property';
 export * from './requests/singleton';
 export * from './requests/batch';
+export * from './requests/metadata';

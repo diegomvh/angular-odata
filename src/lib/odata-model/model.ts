@@ -2,15 +2,15 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { Utils } from '../utils/utils';
-import { ODataContext } from '../context';
-import { ODataService } from '../odata-service';
+import { ODataModelService } from '../odata-service';
+import { PlainObject, ODataSingleRequest, ODataRequest, Expand, ODataEntityRequest } from '../odata-request';
 
 import { Collection } from './collection';
-import { PlainObject, ODataSingleRequest, ODataRequest, Expand, ODataEntityRequest } from '../odata-request';
+import { ODataClient } from '../client';
 
 export class Key {
   name: string;
-  resolve?: (model: Model) => number | string | PlainObject;
+  resolve?: (model: Partial<Model>) => number | string | PlainObject;
 }
 
 export class Field {
@@ -40,7 +40,7 @@ export class Schema {
     return Object.assign(new Schema(), { keys, fields });
   }
 
-  resolveKey(model: Model) {
+  resolveKey(model: Partial<Model>) {
     let keys = this.keys
       .map(key => [key.name, (key.resolve) ? key.resolve(model) : model[key.name]]);
     let key = keys.length === 1 ?
@@ -108,13 +108,13 @@ export class Schema {
     });
   }
 
-  deserialize(model: Model, attrs: PlainObject, query: ODataSingleRequest<Model>) {
-    let context = model._context;
+  deserialize(model: Model, attrs: PlainObject, query: ODataEntityRequest<Model>) {
+    let service = model._service;
     model._attributes = attrs;
     this.fields.filter(f => !f.related).forEach(f => {
       if (f.name in attrs) {
         model[f.name] = f.ctor ?
-          context.createInstance(f.type, attrs[f.name], query) :
+          service.createInstance(f.type, attrs[f.name], query) :
           this.parse(f, attrs[f.name]);
       }
     });
@@ -151,13 +151,13 @@ export class Model {
   // Statics
   static type: string = "";
   static schema: Schema = null;
-  _context: ODataContext;
+  _service: ODataModelService<Model>;
   _state: ModelState;
-  _query: ODataSingleRequest<Model>;
+  _query: ODataEntityRequest<Model>;
   _attributes: PlainObject;
   _relationships: { [name: string]: Model | Collection<Model> }
 
-  constructor(attrs: PlainObject, query?: ODataSingleRequest<Model>) {
+  constructor(attrs: PlainObject, query?: ODataEntityRequest<Model>) {
     this.assign(attrs, query);
     this.setQuery(query);
   }
@@ -166,11 +166,11 @@ export class Model {
     this._state = state;
   }
 
-  setContext(context: ODataContext) {
-    this._context = context;
+  setService(service: ODataModelService<Model>) {
+    this._service = service;
   }
 
-  setQuery(query: ODataSingleRequest<Model>) {
+  setQuery(query: ODataEntityRequest<Model>) {
     this._query = query;
   }
 
@@ -179,7 +179,7 @@ export class Model {
     return ctor.schema.isNew(this);
   }
 
-  assign(attrs: PlainObject, query?: ODataSingleRequest<Model>) {
+  assign(attrs: PlainObject, query?: ODataEntityRequest<Model>) {
     let ctor = <typeof Model>this.constructor;
     ctor.schema.deserialize(this, attrs, query);
     ctor.schema.relationships(this, attrs, query);
@@ -197,7 +197,7 @@ export class Model {
 
   clone() {
     let ctor = <typeof Model>this.constructor;
-    return this._context.createInstance(
+    return this._service.createInstance(
       ctor.type,
       this.toJSON(),
       this._query);
@@ -207,12 +207,12 @@ export class Model {
 export class ODataModel extends Model {
   constructor(
     attrs: PlainObject,
-    query: ODataSingleRequest<Model>
+    query: ODataEntityRequest<Model>
   ) {
     super(attrs, query);
   }
 
-  assign(attrs: PlainObject, query: ODataSingleRequest<Model>) {
+  assign(attrs: PlainObject, query: ODataEntityRequest<Model>) {
     super.assign(attrs, query);
   }
 
@@ -251,7 +251,7 @@ export class ODataModel extends Model {
         let target = model._query.clone() as ODataEntityRequest<Model>;
         target.key(model.resolveKey())
         let refurl = ""; //this._context.createEndpointUrl(target);
-        batch.put(q, { [ODataService.ODATA_ID]: refurl });
+        batch.put(q, { [ODataClient.ODATA_ID]: refurl });
       }
     });
     return batch.execute(options)
@@ -273,9 +273,9 @@ export class ODataModel extends Model {
       if (model === null) {
         // Delete 
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
-          q.delete(attrs[ODataService.ODATA_ETAG], options)
+          q.delete(attrs[ODataClient.ODATA_ETAG], options)
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp[ODataService.ODATA_ETAG] })
+              Object.assign(attrs, { [ODataClient.ODATA_ETAG]: resp[ODataClient.ODATA_ETAG] })
             ))
         ));
       } else {
@@ -284,9 +284,9 @@ export class ODataModel extends Model {
         target.key(model.resolveKey())
         let refurl = ""; //this._context.createEndpointUrl(target);
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
-          ref.put({ [ODataService.ODATA_ID]: refurl }, attrs[ODataService.ODATA_ETAG], options)
+          ref.put({ [ODataClient.ODATA_ID]: refurl }, attrs[ODataClient.ODATA_ETAG], options)
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataService.ODATA_ETAG]: resp[ODataService.ODATA_ETAG] })
+              Object.assign(attrs, { [ODataClient.ODATA_ETAG]: resp[ODataClient.ODATA_ETAG] })
             ))
         ));
       }
@@ -296,7 +296,7 @@ export class ODataModel extends Model {
     } else {
       let key = this.resolveKey();
       query.key(key);
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs as Model, attrs[ODataService.ODATA_ETAG])));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs as Model, attrs[ODataClient.ODATA_ETAG])));
     }
     return obs$.pipe(
       map(attrs => { console.log(attrs); this.assign(attrs, query); return this; })
@@ -304,7 +304,7 @@ export class ODataModel extends Model {
   }
 
   save(options?: any): Observable<this> {
-    return (this._context.batch) ?
+    return (false) ?
       this.batchSave(options) :
       this.forkSave(options);
   }
@@ -314,7 +314,7 @@ export class ODataModel extends Model {
       throw new Error(`Can't destroy without entity key`);
     let query = this._query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
-    return query.delete(this[ODataService.ODATA_ETAG], options);
+    return query.delete(this[ODataClient.ODATA_ETAG], options);
   }
 
   protected createODataModelRef(name: string, target: ODataRequest, options?) {
@@ -323,7 +323,7 @@ export class ODataModel extends Model {
     let ref = query.navigationProperty(name).ref();
     //let refurl = this.context.createEndpointUrl(target);
     let refurl = "";
-    return ref.put({ [ODataService.ODATA_ID]: refurl }, this[ODataService.ODATA_ETAG], options);
+    return ref.put({ [ODataClient.ODATA_ID]: refurl }, this[ODataClient.ODATA_ETAG], options);
   }
 
   protected deleteODataModelRef(name: string, target: ODataRequest, options?) {
@@ -331,7 +331,7 @@ export class ODataModel extends Model {
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
     //let refurl = this.context.createEndpointUrl(target);
-    return ref.delete(this[ODataService.ODATA_ETAG], options);
+    return ref.delete(this[ODataClient.ODATA_ETAG], options);
   }
 
   protected createODataCollectionRef(name: string, target: ODataRequest, options?) {
@@ -340,7 +340,7 @@ export class ODataModel extends Model {
     let ref = query.navigationProperty(name).ref();
     //let refurl = this.context.createEndpointUrl(target);
     let refurl = "";
-    return ref.post({ [ODataService.ODATA_ID]: refurl }, options);
+    return ref.post({ [ODataClient.ODATA_ID]: refurl }, options);
   }
 
   protected deleteODataCollectionRef(name: string, target: ODataRequest, options?) {
@@ -350,7 +350,7 @@ export class ODataModel extends Model {
     //let refurl = this.context.createEndpointUrl(target);
     let refurl = "";
     //options = this.context.assignOptions(options || {}, { params: { "$id": refurl } });
-    return ref.delete(this[ODataService.ODATA_ETAG], options);
+    return ref.delete(this[ODataClient.ODATA_ETAG], options);
   }
 
   // Mutate query

@@ -5,12 +5,12 @@ import { ODataRequest } from '../request';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { Segments } from '../types';
-import { ODataService } from '../../odata-service';
+import { ODataClient } from '../../client';
 
 export class ODataValueRequest<V> extends ODataRequest {
   public static readonly $VALUE = '$value';
 
-  static factory<T>(service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<T>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

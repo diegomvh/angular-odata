@@ -5,12 +5,12 @@ import { ODataRequest } from '../request';
 import { ODataEntitySet } from '../../odata-response/entityset';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { ODataService } from '../../odata-service';
 import { Segments, Options } from '../types';
+import { ODataClient } from '../../client';
 
 export class ODataFunctionRequest<T> extends ODataRequest {
 
-  static factory<T>(name: string, service: ODataService, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 

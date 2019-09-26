@@ -3,14 +3,12 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/comm
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataContext } from '../context';
-import { ODataEntitySet } from '../odata-response';
-import { ODataBatchRequest } from '../odata-request';
-import { ODataSingletonRequest, ODataEntitySetRequest, ODataRequest, ODataObserve } from '../odata-request';
-import { ODataMetadataRequest } from '../odata-request/requests/metadata';
+import { ODataContext } from './context';
+import { ODataEntitySet } from './odata-response';
+import { ODataBatchRequest, ODataEntityRequest, ODataMetadataRequest, ODataObserve, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
 
 @Injectable()
-export class ODataService {
+export class ODataClient {
   public static readonly ODATA_CONTEXT = '@odata.context';
   public static readonly ODATA_ETAG = '@odata.etag';
   public static readonly ODATA_ID = '@odata.id';
@@ -21,7 +19,17 @@ export class ODataService {
   private static readonly PROPERTY_VALUE = 'value';
   public static readonly IF_MATCH_HEADER = 'If-Match';
 
-  constructor(protected http: HttpClient, public context: ODataContext) {
+  constructor(protected http: HttpClient, public context: ODataContext) { }
+
+  resolveEtag<T>(entity: Partial<T>): string {
+    return entity[ODataClient.ODATA_ETAG];
+  }
+
+  resolveTarget<T>(type: 'body' | 'query', target: ODataEntityRequest<T>) {
+    //TODO: Target has key?
+    let key = (type === 'body') ?
+      ODataClient.ODATA_ID : ODataClient.$ID;
+    return { [key]: this.createEndpointUrl(target)};
   }
 
   public metadata(): ODataMetadataRequest {
@@ -62,13 +70,13 @@ export class ODataService {
 
     let customHeaders = {};
     if (typeof (options.etag) === 'string')
-      customHeaders[ODataService.IF_MATCH_HEADER] = options.etag;
+      customHeaders[ODataClient.IF_MATCH_HEADER] = options.etag;
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);
 
     let customParams = {};
     let withCount = options.withCount;
     if (withCount || this.context.withCount)
-      customParams[ODataService.$COUNT] = 'true';
+      customParams[ODataClient.$COUNT] = 'true';
     let params = this.mergeHttpParams(query.params(), options.params, customParams);
 
     let withCredentials = options.withCredentials;
@@ -94,7 +102,7 @@ export class ODataService {
       case 'set':
         return res$.pipe(map((body: any) => new ODataEntitySet<any>(body)));
       case 'property':
-        return res$.pipe(map((body: any) => body[ODataService.PROPERTY_VALUE]));
+        return res$.pipe(map((body: any) => body[ODataClient.PROPERTY_VALUE]));
     }
     return res$;
   }
@@ -108,7 +116,7 @@ export class ODataService {
     return observable;
   }
 
-  protected mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
+  mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
     let attrs = {};
     headers.forEach(header => {
       if (header instanceof HttpHeaders) {
@@ -120,7 +128,7 @@ export class ODataService {
     return new HttpHeaders(attrs);
   }
 
-  protected mergeHttpParams(...params: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
+  mergeHttpParams(...params: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
     let attrs = {};
     params.forEach(param => {
       if (param instanceof HttpParams) {
@@ -132,7 +140,7 @@ export class ODataService {
     return new HttpParams({ fromObject: attrs });
   }
 
-  protected createEndpointUrl(query) {
+  createEndpointUrl(query) {
     const serviceRoot = this.context.serviceRoot();
     return `${serviceRoot}${query.path()}`;
   }
