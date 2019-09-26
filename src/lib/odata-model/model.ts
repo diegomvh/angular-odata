@@ -10,7 +10,7 @@ import { ODataClient } from '../client';
 
 export class Key {
   name: string;
-  resolve?: (model: Partial<Model>) => number | string | PlainObject;
+  resolve?: (model: Model) => number | string | PlainObject;
 }
 
 export class Field {
@@ -40,7 +40,7 @@ export class Schema {
     return Object.assign(new Schema(), { keys, fields });
   }
 
-  resolveKey(model: Partial<Model>) {
+  resolveKey(model: Model) {
     let keys = this.keys
       .map(key => [key.name, (key.resolve) ? key.resolve(model) : model[key.name]]);
     let key = keys.length === 1 ?
@@ -75,6 +75,7 @@ export class Schema {
     }
     return value;
   }
+  
   private defineProperty(model: Model, field: Field, value: any) {
     Object.defineProperty(model, field.name, {
       get() {
@@ -84,7 +85,7 @@ export class Schema {
             throw new Error(`Can't resolve ${field.name} relation from new entity`)
           query.key(this.resolveKey());
           let nav = query.navigationProperty<any>(field.name);
-          this._relationships[field.name] = this._context.createInstance(
+          this._relationships[field.name] = this._service.createInstance(
             field.type, value || (field.collection ? [] : {}), field.collection ? nav.collection() : nav.single());
         }
         return this._relationships[field.name];

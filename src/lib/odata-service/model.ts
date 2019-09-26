@@ -1,42 +1,36 @@
 import { Model } from '../odata-model/model';
 import { PlainObject, ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
-import { ODataEntityService } from './entity';
 import { ODataClient } from '../client';
 import { ODataContext } from '../context';
 
-export class ODataModelService<T extends Model> extends ODataEntityService<T> {
-  static entities: string = "";
+export class ODataModelService<T extends Model> {
+  static set: string = "";
   static modelType: string = "";
   static collectionType: string = "";
 
-  constructor(protected odata: ODataClient, protected context: ODataContext) {
-    super(odata);
+  constructor(protected odata: ODataClient, protected context: ODataContext) { }
+
+  protected resolveEntityKey(model: T) {
+    return model.resolveKey();
   }
 
-  protected resolveEntityKey(entity: Partial<T>) {
+  model(attrs?: PlainObject) {
     let ctor = <typeof ODataModelService>this.constructor;
-    let Ctor = this.context.getType(ctor.modelType) as typeof Model;
-    return Ctor.schema.resolveKey(entity);
-    throw new Error("Method not implemented.");
-  }
-
-  model(attrs?: Partial<T>) {
-    let ctor = <typeof ODataModelService>this.constructor;
-    let query = this.entity(attrs);
+    let query = this.odata.entitySet<T>(ctor.set).entity();
     return this.createInstance(ctor.modelType, attrs || {}, query);
   }
 
   collection(models?: PlainObject[]) {
     let ctor = <typeof ODataModelService>this.constructor;
-    let query = this.entities();
+    let query = this.odata.entitySet<T>(ctor.set);
     return this.createInstance(ctor.collectionType, models || [], query);
   }
 
   createInstance(type: string, value: any, query: ODataEntityRequest<T> | ODataEntitySetRequest<T>) {
     let Ctor = this.context.getType(type);
     let instance = new Ctor(value, query);
-    instance.setContext(this);
+    instance.setService(this);
     return instance;
   }
 }
