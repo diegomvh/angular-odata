@@ -14,7 +14,7 @@ export abstract class ODataEntityService<T> {
   constructor(protected odata: ODataClient) { }
 
   protected abstract resolveEntityKey(entity: Partial<T>);
-  
+
   public entities(): ODataEntitySetRequest<T> {
     let ctor = <typeof ODataEntityService>this.constructor;
     return this.odata.entitySet<T>(ctor.set);

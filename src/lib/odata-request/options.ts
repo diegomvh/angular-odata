@@ -70,7 +70,7 @@ export class ODataOptions {
   keep(...types: Options[]) {
     this.options = Object.keys(this.options)
       .filter((k: Options) => types.indexOf(k) !== -1)
-      .reduce((acc, k) => Object.assign(acc, this.options[k]), {});
+      .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
   clear() {

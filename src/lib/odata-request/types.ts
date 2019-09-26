@@ -42,6 +42,37 @@ export interface QueryOptions extends ExpandQueryOptions {
   format: string;
 }
 
+export enum Segments {
+  batch = 'batch',
+  metadata = 'metadata',
+  entitySet = 'entitySet',
+  singleton = 'singleton',
+  typeName = 'typeName',
+  property = 'property',
+  navigationProperty = 'navigationProperty',
+  ref = 'ref',
+  value = 'value',
+  count = 'count',
+  functionCall = 'functionCall',
+  actionCall = 'actionCall'
+}
+
+export enum Options {
+  self = 'options',
+  key = 'key',
+  select = 'select',
+  filter = 'filter',
+  search = 'search',
+  groupBy = 'groupBy',
+  transform = 'transform',
+  orderBy = 'orderBy',
+  top = 'top',
+  skip = 'skip',
+  expand = 'expand',
+  format = 'format',
+  custom = 'custom'
+}
+
 export class OptionHandler<T> {
   constructor(private o: PlainObject, private t: Options) { }
 
@@ -83,7 +114,7 @@ export class OptionHandler<T> {
   private assertObject(): PlainObject {
     if (Utils.isObject(this.o[this.t]) && !Utils.isArray(this.o[this.t]))
       return this.o[this.t];
-    else if (!Array.isArray(this.o[this.t])) {
+    else if (!Utils.isUndefined(this.o[this.t]) && !Array.isArray(this.o[this.t])) {
       this.o[this.t] = [this.o[this.t]];
       let obj = this.o[this.t].find(v => Utils.isObject(v));
       if (!obj) {
@@ -128,7 +159,7 @@ export class OptionHandler<T> {
 export interface ODataSegment {
   type: string;
   name: string;
-  options: PlainObject;
+  [Options.self]: PlainObject;
 }
 
 export class SegmentHandler {
@@ -142,8 +173,8 @@ export class SegmentHandler {
     return this.segment.type;
   }
 
-  options() {
-    return new OptionHandler<string | number | PlainObject>(this.segment as PlainObject, Options.custom);
+  [Options.self]() {
+    return new OptionHandler<string | number | PlainObject>(this.segment as PlainObject, Options.self);
   }
 }
 
@@ -155,34 +186,4 @@ export enum RequestMethod {
   Options,
   Head,
   Patch
-}
-
-export enum Segments {
-  batch = 'batch',
-  metadata = 'metadata',
-  entitySet = 'entitySet',
-  singleton = 'singleton',
-  typeName = 'typeName',
-  property = 'property',
-  navigationProperty = 'navigationProperty',
-  ref = 'ref',
-  value = 'value',
-  count = 'count',
-  functionCall = 'functionCall',
-  actionCall = 'actionCall'
-}
-
-export enum Options {
-  key = 'key',
-  select = 'select',
-  filter = 'filter',
-  search = 'search',
-  groupBy = 'groupBy',
-  transform = 'transform',
-  orderBy = 'orderBy',
-  top = 'top',
-  skip = 'skip',
-  expand = 'expand',
-  format = 'format',
-  custom = 'custom'
 }
