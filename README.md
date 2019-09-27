@@ -37,7 +37,7 @@ import { ODataModule } from 'angular-odata';
 export class AppModule {}
 ```
 
-If you choose using [OData to TypeScript](https://github.com/diegomvh/Od2Ts), import the config from generated source and build context through a factory function.
+or build context through a factory function.
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -47,19 +47,19 @@ import { ODataContext } from 'angular-odata';
 import { MyApiModule, MyApiConfig } from './myapi';
 
 export function oDataContextFactory() {
-  return new ODataContext(Object.assign(MyApiConfig, {
+  return new ODataContext({
     baseUrl: "http://localhost/odata/",
     withCredentials: true,
     errorHandler: (error: HttpErrorResponse) => {
       return throwError(error);
     }
-  }));
+  });
 }
 
 @NgModule({
   imports: [
     ...
-    MyApiModule
+    ODataModule
   ]
   providers: [
     ...
@@ -69,11 +69,31 @@ export function oDataContextFactory() {
 export class AppModule {}
 ```
 
-2) Inject and use the ODataService
+If you choose using [OData to TypeScript](https://github.com/diegomvh/Od2Ts), import the config from generated source and build context through a factory function.
+
+```typescript
+import { NgModule } from '@angular/core';
+import { throwError } from 'rxjs';
+
+import { ODataContext } from 'angular-odata';
+import { MyApiModule, MyApiConfig } from './myapi';
+
+@NgModule({
+  imports: [
+    ...
+    ODataModule.forContext(MyApiConfig),
+    MyApiModule
+  ]
+  ...
+})
+export class AppModule {}
+```
+
+2) Inject and use the ODataClient
 
 ```typescript
 import { Component } from '@angular/core';
-import { ODataService, ODataQuery } from 'angular-odata';
+import { ODataClient, ODataQuery } from 'angular-odata';
 import { Song } from './Song';
 
 @Component({
@@ -85,38 +105,34 @@ export class AudioPlayerComponent {
   songs: Songs[]
   song: Song; 
 
-  constructor(private odata: ODataService) { 
-    // Immutable query
-    let collectionQuery = this.odata
-      .query()
-      .entitySet("Songs");
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
-    let entityQuery = this.odata
-      .query()
-      .entitySet("Songs")
-      .entityKey(1);
-    this.odata.get(entityQuery).subscribe(resp => this.song = resp.toEntity<Song>())
+  constructor(private odata: ODataClient) { 
+    this.odata.entitySet<Song>("Songs");
+      .get()
+      .subscribe(entityset => this.songs = entityset.entities);
+
+    this.odata.entitySet("Songs")
+      .entity(1)
+      .get().subscribe(entity => this.song = entity)
 
     // Mutable query
-    let collectionQuery = this.odata.queryBuilder();
-    collectionQuery.entitySet("Songs");
+    let collection = this.odata.entitySet<Song>("Songs");
     // Set top and skip
-    collectionQuery.top(10);
-    collectionQuery.skip(10);
+    collection.top(10);
+    collection.skip(10);
     // Set filter
-    collectionQuery.filter({Name: {contains: 'foo'});
+    collection.filter({Name: {contains: 'foo'});
     // Update filter and set Artist FirstName
-    collectionQuery.filter().set("Artist", { FirstName: { startswith: 'bar' }});
+    collection.filter().set("Artist", { FirstName: { startswith: 'bar' }});
     // Update filter and add raw condition
-    collectionQuery.filter().add("year(Year) eq 1980");
+    collection.filter().add("year(Year) eq 1980");
     // Set expand 
-    collectionQuery.expand({Artist: {select: ["FirstName", "LastName"]}});
+    collection.expand({Artist: {select: ["FirstName", "LastName"]}});
     // Set OrderBy
-    collectionQuery.orderBy("Year");
+    collection.orderBy("Year");
     // Update orderBy and add Artist LastName
-    collectionQuery.orderBy().add("Artist/LastName");
+    collection.orderBy().add("Artist/LastName");
     // Go!
-    this.odata.get(collectionQuery).subscribe(resp => this.songs = resp.toEntitySet<Song>().getEntities())
+    collection.get().subscribe(entityset => this.songs = entityset.entities)
   }
 
 }
@@ -126,26 +142,26 @@ export class AudioPlayerComponent {
 
 ```typescript
 import { Injectable } from '@angular/core';
-import { ODataEntityService, ODataService } from 'angular-odata';
+import { ODataEntityService, ODataClient } from 'angular-odata';
 import { Song } from './Song';
 
 @Injectable()
-export class SongsODataService extends ODataEntityService<Song> {
+export class SongsService extends ODataEntityService<Song> {
+  static set: string = 'Songs';
+
   constructor(
-    protected http: HttpClient,
-    protected context: ODataContext
+    protected odata: OdataClient
   ) {
-    super(http, context, 'Songs');
   } 
 }
 ```
 
-4) And inject and use the entity service
+4) Inject and use the entity service
 
 ```typescript
 import { Component } from '@angular/core';
 import { Song } from './Song';
-import { SongODataService } from './songs.service';
+import { SongService } from './songs.service';
 
 @Component({
   selector: 'audio-player',
@@ -156,16 +172,16 @@ export class AudioPlayerComponent {
   songs: Songs[]
   song: Song; 
   
-  constructor(private songsService: SongsODataService) {
+  constructor(private songsService: SongsService) {
     this.songsService.fetch({id: 1}).subscribe(song => this.song = song)
-    this.songsService.all().subscribe(songs => this.songs = songs)
+    this.songsService.all().subscribe(entityset => this.songs = entityset.entities)
   }
 }
 ```
 
 5) Again, if you using OData to TypeScript import the service from generated source and use... but not abuse :). 
 
-For a deep query customizations the library use `odata-query` as a builder, use the `queryBuilder` method in the ODataService or `entityQueryBuilder` and `entitySetQueryBuilder` in your custom entity service.
+For a deep query customizations the library use `odata-query` as a builder.
 
 ## Base on implementation of odata-v4-ng
  - [OData service for Angular](https://github.com/riccardomariani/odata-v4-ng)
