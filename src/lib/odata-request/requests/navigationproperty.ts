@@ -29,6 +29,11 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     );
   }
 
+  entity(opts?: EntityKey) {
+    this.key(opts);
+    return this;
+  }
+
   key(opts?: EntityKey) {
     let segment = this.segments.last();
     return segment.option(Options.key, opts);

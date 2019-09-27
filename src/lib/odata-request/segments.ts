@@ -1,7 +1,8 @@
 import buildQuery from 'odata-query';
 
 import { Utils } from '../utils/utils';
-import { SegmentHandler, ODataSegment, Segments } from './types';
+import { SegmentHandler, ODataSegment, Segments, Options } from './types';
+import { ODataOptions } from './options';
 
 export class ODataSegments {
   public static readonly PATHSEP = '/';
@@ -15,9 +16,17 @@ export class ODataSegments {
   path(): string {
     let segments = this.segments
       .map(segment => {
-        if (segment.type == Segments.functionCall)
-          return buildQuery({ func: { [segment.name]: segment.options } }).slice(1);
-        return segment.name + buildQuery(segment.options);
+        switch (segment.type) {
+          case Segments.functionCall:
+            let parameters = segment.options[Options.parameters];
+            return (parameters ? 
+              buildQuery({ func: { [segment.name]: parameters } }) : 
+              buildQuery(segment.name)
+            ).slice(1);
+          default:
+            let key = segment.options[Options.key];
+            return segment.name + (key ? buildQuery({key}) : "");
+          }
       });
     return segments.join(ODataSegments.PATHSEP);
   }
