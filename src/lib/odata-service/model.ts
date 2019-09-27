@@ -1,35 +1,26 @@
-import { Model } from '../odata-model/model';
 import { PlainObject, ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
 import { ODataClient } from '../client';
 import { ODataContext } from '../context';
+import { Model, Collection } from '../odata-model';
 
-export class ODataModelService<T extends Model> {
-  static set: string = "";
+export class ODataModelService {
   static modelType: string = "";
   static collectionType: string = "";
 
   constructor(protected odata: ODataClient, protected context: ODataContext) { }
 
-  protected resolveEntityKey(model: T) {
-    return model.resolveKey();
+  model(type: string): typeof Model {
+    return this.context.getModel(type);
   }
 
-  model(attrs?: PlainObject) {
-    let ctor = <typeof ODataModelService>this.constructor;
-    let query = this.odata.entitySet<T>(ctor.set).entity();
-    return this.createInstance(ctor.modelType, attrs || {}, query);
+  collection(type: string): typeof Collection {
+    return this.context.getCollection(type);
   }
 
-  collection(models?: PlainObject[]) {
-    let ctor = <typeof ODataModelService>this.constructor;
-    let query = this.odata.entitySet<T>(ctor.set);
-    return this.createInstance(ctor.collectionType, models || [], query);
-  }
-
-  createInstance(type: string, value: any, query: ODataEntityRequest<T> | ODataEntitySetRequest<T>) {
+  createInstance(type: string, value: any) {
     let Ctor = this.context.getType(type);
-    let instance = new Ctor(value, query);
+    let instance = new Ctor(value);
     instance.setService(this);
     return instance;
   }

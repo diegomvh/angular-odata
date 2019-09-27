@@ -115,7 +115,7 @@ export class Schema {
     this.fields.filter(f => !f.related).forEach(f => {
       if (f.name in attrs) {
         model[f.name] = f.ctor ?
-          service.createInstance(f.type, attrs[f.name], query) :
+          service.createInstance(f.type, attrs[f.name]) :
           this.parse(f, attrs[f.name]);
       }
     });
@@ -152,7 +152,7 @@ export class Model {
   // Statics
   static type: string = "";
   static schema: Schema = null;
-  _service: ODataModelService<Model>;
+  _service: ODataModelService;
   _state: ModelState;
   _query: ODataEntityRequest<Model>;
   _attributes: PlainObject;
@@ -167,7 +167,7 @@ export class Model {
     this._state = state;
   }
 
-  setService(service: ODataModelService<Model>) {
+  setService(service: ODataModelService) {
     this._service = service;
   }
 
@@ -200,8 +200,7 @@ export class Model {
     let ctor = <typeof Model>this.constructor;
     return this._service.createInstance(
       ctor.type,
-      this.toJSON(),
-      this._query);
+      this.toJSON());
   }
 }
 

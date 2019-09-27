@@ -10,7 +10,7 @@ import { ODataModelService } from '../odata-service';
 export class Collection<M extends Model> {
   static type: string = "";
   static modelType: string = "";
-  _service: ODataModelService<M>;
+  _service: ODataModelService;
   _query: ODataEntitySetRequest<M>;
   _models: M[];
   state: {
@@ -28,7 +28,7 @@ export class Collection<M extends Model> {
     this.setQuery(query);
   }
 
-  setService(service: ODataModelService<M>) {
+  setService(service: ODataModelService) {
     this._service = service;
   }
 
@@ -38,7 +38,7 @@ export class Collection<M extends Model> {
 
   parse(models: PlainObject[], query: ODataEntitySetRequest<M>) {
     let ctor = <typeof Collection>this.constructor;
-    return models.map(model => this._service.createInstance(ctor.modelType, model, query) as M);
+    return models.map(model => this._service.createInstance(ctor.modelType, model) as M);
   }
 
   toJSON() {

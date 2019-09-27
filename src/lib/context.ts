@@ -12,7 +12,8 @@ export class ODataContext implements ODataConfig {
   creation: Date;
   version: string;
   withCount?: boolean;
-  types?: any[];
+  models?: any[];
+  collections?: any[];
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -31,8 +32,18 @@ export class ODataContext implements ODataConfig {
     return base;
   }
 
-  getType(name: string) {
-    let Ctor = (this.types || []).find(t => t.type === name);
+  getModel(name: string) {
+    let Ctor = (this.models || []).find(t => t.type === name);
     if (Ctor) return Ctor;
   }
+
+  getCollection(name: string) {
+    let Ctor = (this.collections || []).find(t => t.type === name);
+    if (Ctor) return Ctor;
+  }
+
+  getType(name: string) {
+    return this.getModel(name) || this.getCollection(name);
+  }
+
 }
