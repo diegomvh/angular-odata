@@ -6,20 +6,8 @@ import { ODataEntitySet } from '../../odata-response';
 import { PlainObject, Options, Filter, GroupBy, OrderBy, Select, Expand, Transform } from '../types';
 
 import { ODataCountRequest } from './count';
-import { ODataEntityRequest } from './entity';
 
 export class ODataCollectionRequest<T> extends ODataRequest {
-  entity(key?: string | number | PlainObject) {
-    let entity = ODataEntityRequest.factory<T>(
-      this.service, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-    if (key)
-      entity.key(key);
-    return entity;
-  }
-
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},

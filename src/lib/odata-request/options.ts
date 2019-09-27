@@ -47,16 +47,11 @@ export class ODataOptions {
     return new ODataOptions(this.toJSON());
   }
 
-  //Handler
-  protected wrapObject<T>(type: Options, opts?: T) {
+  // Option Handler
+  option<T>(type: Options, opts?: T) {
     if (!Utils.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type);
-  }
-
-  // Options
-  option<T>(type: Options, opts?: T) {
-    return this.wrapObject<T>(type, opts);
   }
 
   has(type: Options) {

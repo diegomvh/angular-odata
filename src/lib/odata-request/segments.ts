@@ -30,25 +30,10 @@ export class ODataSegments {
     return new ODataSegments(this.toJSON());
   }
 
-  // Handlersk
-  protected findSegment(type: string, name?: string) {
+  find(type: string, name?: string) {
     return this.segments.find(s => 
       s.type === type && 
       (Utils.isUndefined(name) || s.name === name));
-  }
-
-  protected wrapSegment(type: string, name?: string) {
-    let segment = this.findSegment(type, name);
-    if (!segment && !Utils.isUndefined(name)) {
-      segment = { type, name, options: {} } as ODataSegment;
-      this.segments.push(segment);
-    }
-    return new SegmentHandler(segment);
-  }
-
-  protected removeSegment(type: string, name?: string) {
-    let segment = this.findSegment(type, name);
-    this.segments = this.segments.filter(s => s !== segment);
   }
 
   last(): SegmentHandler {
@@ -57,10 +42,21 @@ export class ODataSegments {
   }
 
   segment(type: string, name?: string): SegmentHandler {
-    return this.wrapSegment(type, name);
+    let segment = this.find(type, name);
+    if (!segment && !Utils.isUndefined(name)) {
+      segment = { type, name, options: {} } as ODataSegment;
+      this.segments.push(segment);
+    }
+    return new SegmentHandler(segment);
   }
 
   has(type: string, name?: string) {
-    return !!this.findSegment(type, name);
+    return !!this.find(type, name);
   }
+
+  remove(type: string, name?: string) {
+    let segment = this.find(type, name);
+    this.segments = this.segments.filter(s => s !== segment);
+  }
+
 }

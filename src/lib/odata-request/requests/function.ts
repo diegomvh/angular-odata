@@ -5,7 +5,7 @@ import { ODataRequest } from '../request';
 import { ODataEntitySet } from '../../odata-response/entityset';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { Segments, Options } from '../types';
+import { Segments, Options, PlainObject } from '../types';
 import { ODataClient } from '../../client';
 
 export class ODataFunctionRequest<T> extends ODataRequest {
@@ -19,8 +19,8 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     return new ODataFunctionRequest<T>(service, segments, options);
   }
 
-  parameters() {
-    return this.segments.last().options();
+  parameters(opts?: PlainObject) {
+    return this.segments.last().option(Options.parameters, opts);
   }
 
   get(options?: {
@@ -54,6 +54,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
+    withCount?: boolean
   }): Observable<any>;
 
   get(options: {

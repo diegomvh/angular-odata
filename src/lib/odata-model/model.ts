@@ -86,7 +86,7 @@ export class Schema {
           query.key(this.resolveKey());
           let nav = query.navigationProperty<any>(field.name);
           this._relationships[field.name] = this._service.createInstance(
-            field.type, value || (field.collection ? [] : {}), field.collection ? nav.collection() : nav.single());
+            field.type, value || (field.collection ? [] : {}), nav);
         }
         return this._relationships[field.name];
       },

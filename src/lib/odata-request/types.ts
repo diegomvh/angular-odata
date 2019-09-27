@@ -1,5 +1,6 @@
 import { Utils } from '../utils/utils';
 
+export type EntityKey = string | number | PlainObject;
 export type PlainObject = { [property: string]: any };
 export type Select = string | string[];
 export type OrderBy = string | string[];
@@ -35,8 +36,7 @@ export interface QueryOptions extends ExpandQueryOptions {
   search: string;
   transform: PlainObject | PlainObject[];
   skip: number;
-  key: string | number | PlainObject;
-  count: boolean | Filter;
+  key: EntityKey; 
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;
@@ -58,7 +58,6 @@ export enum Segments {
 }
 
 export enum Options {
-  self = 'options',
   key = 'key',
   select = 'select',
   filter = 'filter',
@@ -70,6 +69,7 @@ export enum Options {
   skip = 'skip',
   expand = 'expand',
   format = 'format',
+  parameters = 'parameters',
   custom = 'custom'
 }
 
@@ -159,11 +159,14 @@ export class OptionHandler<T> {
 export interface ODataSegment {
   type: string;
   name: string;
-  [Options.self]: PlainObject;
+  options: PlainObject;
 }
 
 export class SegmentHandler {
-  constructor(private segment: ODataSegment) {}
+  options?: PlainObject
+  constructor(private segment: ODataSegment) {
+    this.options = this.segment.options;
+  }
 
   get name() {
     return this.segment.name;
@@ -173,8 +176,11 @@ export class SegmentHandler {
     return this.segment.type;
   }
 
-  [Options.self]() {
-    return new OptionHandler<string | number | PlainObject>(this.segment as PlainObject, Options.self);
+  // Option Handler
+  option<T>(type: Options, opts?: T) {
+    if (!Utils.isUndefined(opts))
+      this.options[type] = opts;
+    return new OptionHandler<T>(this.options, type);
   }
 }
 

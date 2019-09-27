@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Utils } from '../../utils/utils';
-import { PlainObject, Options } from '../types';
+import { PlainObject, Options, EntityKey } from '../types';
 
 import { ODataSingleRequest } from './single';
 import { ODataActionRequest } from './action';
@@ -14,7 +14,6 @@ import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 
 export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
-
   static factory<T>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
@@ -23,10 +22,9 @@ export class ODataEntityRequest<T> extends ODataSingleRequest<T> {
     return new ODataEntityRequest<T>(service, segments, options);
   }
 
-  key(key?: string | number | PlainObject) {
+  key(opts?: EntityKey) {
     let segment = this.segments.last();
-    if (Utils.isUndefined(key)) return segment.options().get(Options.key);
-    segment.options().set(Options.key, key);
+    return segment.option(Options.key, opts);
   }
 
   navigationProperty<N>(name: string) {

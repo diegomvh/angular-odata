@@ -30,8 +30,13 @@ export abstract class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public all(): Observable<ODataEntitySet<T>> {
-    return this.entities().get();
+  public all(skip?: number, top?: number): Observable<ODataEntitySet<T>> {
+    let query = this.entities();
+    if (skip)
+      query.skip(skip);
+    if (top)
+      query.top(top);
+    return query.get();
   }
 
   public fetch(entity: Partial<T>): Observable<T> {
@@ -93,21 +98,21 @@ export abstract class ODataEntityService<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     responseType: 'set',
     reportProgress?: boolean,
-    withCredentials?: boolean
+    withCredentials?: boolean,
+    withCount?: boolean
   }): Observable<ODataEntitySet<P>>;
 
   protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'json'|'set',
+    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
     reportProgress?: boolean,
-    withCredentials?: boolean
+    withCredentials?: boolean,
+    withCount?: boolean
   }): Observable<any> {
     let query = this.entity(entity).navigationProperty<P>(name);
-    return (options.responseType === "set")?
-      query.collection().get(options) :
-      query.single().get(options);
-    }
+    return query.get(options);
+  }
 
   protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
