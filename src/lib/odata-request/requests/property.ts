@@ -11,6 +11,7 @@ import { ODataClient } from '../../client';
 
 export class ODataPropertyRequest<P> extends ODataRequest {
 
+  // Factory
   static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
@@ -20,9 +21,10 @@ export class ODataPropertyRequest<P> extends ODataRequest {
     return new ODataPropertyRequest<T>(service, segments, options);
   }
 
+  // Segments
   value() {
     return ODataValueRequest.factory<P>(
-      this.service, 
+      this.client, 
       this.segments.clone(),
       this.options.clone()
     );

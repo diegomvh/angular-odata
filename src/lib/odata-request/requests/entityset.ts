@@ -1,28 +1,20 @@
 import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Segments, Options, Expand, Select, Transform, EntityKey } from '../types';
+import { Segments, Options, Expand, Select, Transform, EntityKey, Filter, GroupBy, OrderBy, PlainObject } from '../types';
 import { ODataClient } from '../../client';
 import { ODataSegments } from '../segments';
 
-import { ODataCollectionRequest } from './collection';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
 import { ODataOptions } from '../options';
 import { ODataEntityRequest } from './entity';
+import { ODataCountRequest } from './count';
+import { ODataEntitySet } from '../../odata-response';
+import { ODataRequest } from '../request';
 
-export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
-  entity(key?: EntityKey) {
-    let entity = ODataEntityRequest.factory<T>(
-      this.service, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-    if (key)
-      entity.key(key);
-    return entity;
-  }
-
+export class ODataEntitySetRequest<T> extends ODataRequest {
+  // Factory
   static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
@@ -32,10 +24,22 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
     return new ODataEntitySetRequest<T>(service, segments, options);
   }
 
+  // Segments
+  entity(key?: EntityKey) {
+    let entity = ODataEntityRequest.factory<T>(
+      this.client, 
+      this.segments.clone(),
+      this.options.clone()
+    );
+    if (key)
+      entity.key(key);
+    return entity;
+  }
+
   action<A>(name: string) {
     return ODataActionRequest.factory<A>(
       name, 
-      this.service, 
+      this.client, 
       this.segments.clone(),
       this.options.clone()
     );
@@ -44,7 +48,15 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
   function<F>(name: string) {
     return ODataFunctionRequest.factory<F>(
       name, 
-      this.service, 
+      this.client, 
+      this.segments.clone(),
+      this.options.clone()
+    );
+  }
+
+  count() {
+    return ODataCountRequest.factory(
+      this.client, 
       this.segments.clone(),
       this.options.clone()
     );
@@ -60,9 +72,72 @@ export class ODataEntitySetRequest<T> extends ODataCollectionRequest<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'json',
+      responseType: 'entity',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });
+  }
+
+  get(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    withCredentials?: boolean
+    withCount?: boolean
+  }): Observable<ODataEntitySet<T>> {
+    return super.get({
+      headers: options && options.headers,
+      observe: 'body',
+      params: options && options.params,
+      responseType: 'entityset',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials,
+      withCount: options && options.withCount
+    });
+  }
+
+  // Options
+  select(opts?: Select) {
+    return this.options.option<Select>(Options.select, opts);
+  }
+
+  expand(opts?: Expand) {
+    return this.options.option<Expand>(Options.expand, opts);
+  }
+
+  transform(opts?: Transform) {
+    return this.options.option<Transform>(Options.transform, opts);
+  }
+
+  search(opts?: string) {
+    return this.options.option<string>(Options.search, opts);
+  }
+
+  filter(opts?: Filter) {
+    return this.options.option<Filter>(Options.filter, opts);
+  }
+
+  groupBy(opts?: GroupBy) {
+    return this.options.option(Options.groupBy, opts);
+  }
+
+  orderBy(opts?: OrderBy) {
+    return this.options.option<OrderBy>(Options.orderBy, opts);
+  }
+
+  format(opts?: string) {
+    return this.options.option<string>(Options.format, opts);
+  }
+
+  top(opts?: number) {
+    return this.options.option<number>(Options.top, opts);
+  }
+
+  skip(opts?: number) {
+    return this.options.option<number>(Options.skip, opts);
+  }
+  
+  custom(opts?: PlainObject) {
+    return this.options.option<PlainObject>(Options.custom, opts);
   }
 }

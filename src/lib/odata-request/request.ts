@@ -12,16 +12,16 @@ export abstract class ODataRequest {
   public static readonly QUERY_SEPARATOR = '?';
 
   // VARIABLES
-  protected service: ODataClient;
+  protected client: ODataClient;
   protected segments: ODataSegments;
   protected options: ODataOptions;
 
   constructor(
-    service: ODataClient,
+    client: ODataClient,
     segments?: ODataSegments,
     options?: ODataOptions
   ) {
-    this.service = service;
+    this.client = client;
     this.segments = segments || new ODataSegments();
     this.options = options || new ODataOptions();
   }
@@ -31,11 +31,11 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.service.request("GET", this, options);
+    return this.client.request("GET", this, options);
   }
 
   protected post(body: any|null, options: {
@@ -43,11 +43,11 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.service.request("POST", this, Object.assign(options, {body}));
+    return this.client.request("POST", this, Object.assign(options, {body}));
   }
 
   protected patch(body: any|null, etag?: string, options: {
@@ -55,11 +55,11 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.service.request("PATCH", this, Object.assign(options, {body, etag}));
+    return this.client.request("PATCH", this, Object.assign(options, {body, etag}));
   }
 
   protected put(body: any|null, etag?: string, options: {
@@ -67,11 +67,11 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.service.request("PUT", this, Object.assign(options, {body, etag}));
+    return this.client.request("PUT", this, Object.assign(options, {body, etag}));
   }
 
   protected delete (etag?: string, options: {
@@ -79,11 +79,11 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.service.request("DELETE", this, Object.assign(options, {etag}));
+    return this.client.request("DELETE", this, Object.assign(options, {etag}));
   }
 
   toString(): string {
@@ -105,7 +105,7 @@ export abstract class ODataRequest {
   clone<T extends ODataRequest>(type?: { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): T; }): T {
     if (!type) 
       type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): T; };
-    return new type(this.service, this.segments.clone(), this.options.clone());
+    return new type(this.client, this.segments.clone(), this.options.clone());
   };
 
   toJSON() {

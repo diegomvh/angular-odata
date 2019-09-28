@@ -55,17 +55,17 @@ export class ODataClient {
     observe?: ODataObserve,
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'set' | 'property',
+    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
     const url = this.createEndpointUrl(query);
 
     // Resolve Observa and ResponseType
-    let observe = (['set', 'property'].indexOf(options.responseType) !== -1) ? 'body' :
+    let observe = (['entity', 'entityset', 'property'].indexOf(options.responseType) !== -1) ? 'body' :
       options.observe;
 
-    let responseType = (['set', 'property'].indexOf(options.responseType) !== -1) ? 'json' :
+    let responseType = (['entity', 'entityset', 'property'].indexOf(options.responseType) !== -1) ? 'json' :
       <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
     let customHeaders = {};
@@ -99,7 +99,7 @@ export class ODataClient {
 
     // ODataResponse
     switch(options.responseType) {
-      case 'set':
+      case 'entityset':
         return res$.pipe(map((body: any) => new ODataEntitySet<any>(body)));
       case 'property':
         return res$.pipe(map((body: any) => body[ODataClient.PROPERTY_VALUE]));

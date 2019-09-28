@@ -88,7 +88,7 @@ export abstract class ODataEntityService<T> {
   protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'json',
+    responseType: 'entity',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P>;
@@ -96,7 +96,7 @@ export abstract class ODataEntityService<T> {
   protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'set',
+    responseType: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -105,7 +105,7 @@ export abstract class ODataEntityService<T> {
   protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -117,7 +117,7 @@ export abstract class ODataEntityService<T> {
   protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'json',
+    responseType: 'entity',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P>;
@@ -125,7 +125,7 @@ export abstract class ODataEntityService<T> {
   protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'set',
+    responseType: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataEntitySet<P>>;
@@ -133,14 +133,14 @@ export abstract class ODataEntityService<T> {
   protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'json'|'set',
+    responseType: 'entity'|'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
     let body = this.odata.resolveTarget<P>('body', target);
     let etag = this.odata.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
-    return (options.responseType === "set")?
+    return (options.responseType === "entityset")?
       ref.post(body, options) :
       ref.put(body, etag, options);
     }
@@ -148,7 +148,7 @@ export abstract class ODataEntityService<T> {
   protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'json',
+    responseType: 'entity',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P>;
@@ -156,7 +156,7 @@ export abstract class ODataEntityService<T> {
   protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'set',
+    responseType: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataEntitySet<P>>;
@@ -164,13 +164,13 @@ export abstract class ODataEntityService<T> {
   protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'json'|'set',
+    responseType: 'entity'|'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
     let etag = this.odata.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
-    if (options.responseType === "set") {
+    if (options.responseType === "entityset") {
       let params = this.odata.resolveTarget<P>('query', target);
       options.params = this.odata.mergeHttpParams(params, options.params);
     }
@@ -180,7 +180,7 @@ export abstract class ODataEntityService<T> {
   protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json',
+    responseType?: 'entity',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P>;
@@ -188,7 +188,7 @@ export abstract class ODataEntityService<T> {
   protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'set',
+    responseType?: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataEntitySet<P>>;
@@ -204,7 +204,7 @@ export abstract class ODataEntityService<T> {
   protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
@@ -215,7 +215,7 @@ export abstract class ODataEntityService<T> {
   protected customCollectionAction<P>(name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json',
+    responseType?: 'entity',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P>;
@@ -223,7 +223,7 @@ export abstract class ODataEntityService<T> {
   protected customCollectionAction<P>(name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'set',
+    responseType?: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataEntitySet<P>>;
@@ -239,7 +239,7 @@ export abstract class ODataEntityService<T> {
   protected customCollectionAction<P>(name: string, data: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
@@ -250,7 +250,7 @@ export abstract class ODataEntityService<T> {
   protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json',
+    responseType?: 'entity',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P>;
@@ -258,7 +258,7 @@ export abstract class ODataEntityService<T> {
   protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'set',
+    responseType?: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataEntitySet<P>>;
@@ -274,7 +274,7 @@ export abstract class ODataEntityService<T> {
   protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
@@ -286,7 +286,7 @@ export abstract class ODataEntityService<T> {
   protected customCollectionFunction<P>(name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json',
+    responseType?: 'entity',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P>;
@@ -294,7 +294,7 @@ export abstract class ODataEntityService<T> {
   protected customCollectionFunction<P>(name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'set',
+    responseType?: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<ODataEntitySet<P>>;
@@ -310,7 +310,7 @@ export abstract class ODataEntityService<T> {
   protected customCollectionFunction<P>(name: string, data: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'json'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {

@@ -40,9 +40,6 @@ export class BatchRequest {
       body?: any,
       headers?: HttpHeaders|{[header: string]: string | string[]},
     }) { }
-  pepe() {
-
-  }
 
   getHeaders(method: RequestMethod): string {
     let res = '';
@@ -113,7 +110,7 @@ export class ODataBatchRequest extends ODataRequest {
       [BatchRequest.ACCEPT]: BatchRequest.MULTIPART_MIXED
     });
 
-    return this.service.request("POST", this, {
+    return this.client.request("POST", this, {
       body: this.getBody(),
       headers: headers,
       params: options.params,

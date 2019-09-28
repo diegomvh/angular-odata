@@ -10,6 +10,7 @@ import { ODataClient } from '../../client';
 
 export class ODataFunctionRequest<T> extends ODataRequest {
 
+  // Factory
   static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
@@ -19,6 +20,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     return new ODataFunctionRequest<T>(service, segments, options);
   }
 
+  // Parameters
   parameters(opts?: PlainObject) {
     return this.segments.last().option(Options.parameters, opts);
   }
@@ -27,7 +29,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'json',
+    responseType?: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
@@ -35,7 +37,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'set',
+    responseType?: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<ODataEntitySet<T>>;
@@ -51,7 +53,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -60,7 +62,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean

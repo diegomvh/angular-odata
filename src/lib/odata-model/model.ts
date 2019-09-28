@@ -2,8 +2,8 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { Utils } from '../utils/utils';
-import { ODataModelService } from '../odata-service';
-import { PlainObject, ODataSingleRequest, ODataRequest, Expand, ODataEntityRequest } from '../odata-request';
+import { ODataModelService, ODataEntityService } from '../odata-service';
+import { PlainObject, ODataRequest, Expand, ODataEntityRequest } from '../odata-request';
 
 import { Collection } from './collection';
 import { ODataClient } from '../client';
@@ -93,7 +93,7 @@ export class Schema {
       set(value: Model | null) {
         if (field.collection)
           throw new Error(`Can't set ${field.name} to collection, use add`);
-        if (!((value as Model)._query instanceof ODataSingleRequest))
+        if (!((value as Model)._query instanceof ODataEntityService))
           throw new Error(`Can't set ${value} to model`);
         this._relationships[field.name] = value;
         /*
@@ -132,7 +132,7 @@ export class Schema {
     }, {});
   }
 
-  relationships(model: Model, attrs: PlainObject, query: ODataSingleRequest<Model>) {
+  relationships(model: Model, attrs: PlainObject, query: ODataEntityRequest<Model>) {
     model._relationships = {};
     this.fields.filter(f => f.related).forEach(f => {
       this.defineProperty(model, f, attrs[f.name]);

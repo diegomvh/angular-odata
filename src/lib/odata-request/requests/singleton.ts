@@ -2,11 +2,11 @@ import { Segments, Options } from '../types';
 import { ODataClient } from '../../client';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
+import { ODataRequest } from '../request';
 
-import { ODataSingleRequest } from './single';
+export class ODataSingletonRequest<T> extends ODataRequest {
 
-export class ODataSingletonRequest<T> extends ODataSingleRequest<T> {
-
+  // Factory
   static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();

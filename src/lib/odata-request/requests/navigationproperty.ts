@@ -12,6 +12,7 @@ import { ODataCountRequest } from './count';
 import { ODataPropertyRequest } from './property';
 
 export class ODataNavigationPropertyRequest<T> extends ODataRequest {
+  // Factory
   static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
@@ -21,9 +22,16 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     return new ODataNavigationPropertyRequest<T>(service, segments, options);
   }
 
+  // Key
+  key(opts?: EntityKey) {
+    let segment = this.segments.last();
+    return segment.option(Options.key, opts);
+  }
+
+  // Segments
   ref() {
     return ODataRefRequest.factory(
-      this.service, 
+      this.client, 
       this.segments.clone(),
       this.options.clone()
     );
@@ -34,15 +42,10 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     return this;
   }
 
-  key(opts?: EntityKey) {
-    let segment = this.segments.last();
-    return segment.option(Options.key, opts);
-  }
-
   navigationProperty<N>(name: string) {
     return ODataNavigationPropertyRequest.factory<N>(
       name, 
-      this.service, 
+      this.client, 
       this.segments.clone(),
       this.options.clone()
     );
@@ -51,7 +54,15 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   property<P>(name: string) {
     return ODataPropertyRequest.factory<P>(
       name, 
-      this.service, 
+      this.client, 
+      this.segments.clone(),
+      this.options.clone()
+    );
+  }
+
+  count() {
+    return ODataCountRequest.factory(
+      this.client, 
       this.segments.clone(),
       this.options.clone()
     );
@@ -61,7 +72,15 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'json',
+    responseType?: 'text',
+    withCredentials?: boolean,
+  }): Observable<string>;
+
+  get(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
@@ -69,7 +88,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'set',
+    responseType?: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<ODataEntitySet<T>>;
@@ -77,7 +96,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -86,7 +105,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'arraybuffer'|'blob'|'json'|'text'|'set'|'property',
+    responseType?: 'text'|'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -102,14 +121,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     });
   }
 
-  count() {
-    return ODataCountRequest.factory(
-      this.service, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-  }
-
+  // Options
   select(opts?: Select) {
     return this.options.option<Select>(Options.select, opts);
   }

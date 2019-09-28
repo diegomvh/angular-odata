@@ -10,6 +10,7 @@ import { ODataClient } from '../../client';
 export class ODataCountRequest extends ODataRequest {
   public static readonly $COUNT = '$count';
 
+  // Factory
   static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
@@ -29,7 +30,7 @@ export class ODataCountRequest extends ODataRequest {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'json',
+      responseType: 'entity',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });
