@@ -293,9 +293,7 @@ export class ODataClient {
   } = {}): Observable<any> {
     const url = this.createEndpointUrl(query);
 
-    // Resolve Observa and ResponseType
-    let observe = (['entity', 'entityset', 'property'].indexOf(options.responseType) !== -1) ? 'body' :
-      options.observe;
+    let observe = <'body'|'events'|'response'>options.observe;
 
     let responseType = (['entity', 'entityset', 'property'].indexOf(options.responseType) !== -1) ? 'json' :
       <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
@@ -334,12 +332,38 @@ export class ODataClient {
     }
 
     // ODataResponse
-    switch(options.responseType) {
-      case 'entityset':
-        return res$.pipe(map((body: any) => new ODataEntitySet<any>(body)));
-      case 'property':
-        return res$.pipe(map((body: any) => body[ODataClient.PROPERTY_VALUE]));
-    }
+    switch(options.observe || 'body') {
+      case 'body':
+        switch(options.responseType) {
+          case 'entity':
+            return res$.pipe(map((body: any) => body));
+          case 'entityset':
+            return res$.pipe(map((body: any) => new ODataEntitySet<any>(body)));
+          case 'property':
+            return res$.pipe(map((body: any) => body[ODataClient.PROPERTY_VALUE]));
+        }
+      case 'response':
+        switch(options.responseType) {
+          case 'entity':
+            return res$.pipe(map((res: HttpResponse<any>) => res));
+          case 'entityset':
+            return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
+              body: new ODataEntitySet<any>(res.body), 
+              headers: res.headers, 
+              status: res.status, 
+              statusText: res.statusText, 
+              url: res.url})
+            ));
+          case 'property':
+            return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
+              body: res.body[ODataClient.PROPERTY_VALUE], 
+              headers: res.headers, 
+              status: res.status, 
+              statusText: res.statusText, 
+              url: res.url})
+            ));
+        }
+      }
     return res$;
   }
 
