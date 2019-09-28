@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 import { ODataOptions } from './options';
 import { ODataSegment, PlainObject } from './types';
 import { ODataSegments } from './segments';
-import { ODataClient } from '../client';
-
-export type ODataObserve = 'body' | 'events' | 'response';
+import { ODataClient, ODataObserve } from '../client';
 
 export abstract class ODataRequest {
   public static readonly QUERY_SEPARATOR = '?';
@@ -35,7 +33,7 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.request("GET", this, options);
+    return this.client.get(this, options as any);
   }
 
   protected post(body: any|null, options: {
@@ -47,7 +45,7 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.request("POST", this, Object.assign(options, {body}));
+    return this.client.post(this, body, options as any);
   }
 
   protected patch(body: any|null, etag?: string, options: {
@@ -59,7 +57,7 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.request("PATCH", this, Object.assign(options, {body, etag}));
+    return this.client.patch(this, body, etag, options as any);
   }
 
   protected put(body: any|null, etag?: string, options: {
@@ -71,7 +69,7 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.request("PUT", this, Object.assign(options, {body, etag}));
+    return this.client.put(this, body, etag, options as any);
   }
 
   protected delete (etag?: string, options: {
@@ -83,7 +81,7 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.request("DELETE", this, Object.assign(options, {etag}));
+    return this.client.delete(this, etag, options as any);
   }
 
   toString(): string {
