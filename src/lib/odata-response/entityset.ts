@@ -1,31 +1,46 @@
+export const ENTITYSET_VALUE = "value";
+
 export class ODataEntitySet<T> {
   public static readonly ODATA_COUNT = '@odata.count';
-  public static readonly ODATA_NEXT_LINK = '@odata.nextLink';
+  public static readonly ODATA_NEXTLINK = '@odata.nextLink';
 
-  private static readonly SET_VALUE = 'value';
-
-  entities: T[];
-  count: number;
-  nextLink: string;
+  [ENTITYSET_VALUE]: T[];
 
   constructor(json: any) {
-    this.entities = json[ODataEntitySet.SET_VALUE] || [];
-    if (json.hasOwnProperty(ODataEntitySet.ODATA_COUNT)) {
-      this.count = json[ODataEntitySet.ODATA_COUNT];
-    }
-    if (json.hasOwnProperty(ODataEntitySet.ODATA_NEXT_LINK)) {
-      this.nextLink = decodeURIComponent(json[ODataEntitySet.ODATA_NEXT_LINK]);
-    }
+    Object.assign(this, {[ENTITYSET_VALUE]:[]}, json);
+  }
+
+  get entities(): T[] {
+    return this[ENTITYSET_VALUE];
+  }
+
+  get count(): number {
+    return this[ODataEntitySet.ODATA_COUNT] as number;
+  }
+
+  get nextLink(): string {
+    return this[ODataEntitySet.ODATA_NEXTLINK] as string;
   }
 
   get skip(): number {
-    let match = this.nextLink.match(/\$skip=(\d+)/);
+    let match = (this.nextLink || "").match(/\$skip=(\d+)/);
     if (match) return Number(match[1]);
   }
 
   get skiptoken(): number {
-    let match = this.nextLink.match(/\$skiptoken=(\d+)/);
+    let match = (this.nextLink || "").match(/\$skiptoken=(\d+)/);
     if (match) return Number(match[1]);
   }
-
+  public [Symbol.iterator]() {
+    let pointer = 0;
+    let models = this[ENTITYSET_VALUE];
+    return {
+      next(): IteratorResult<T> {
+        return {
+          done: pointer === models.length,
+          value: models[pointer++]
+        };
+      }
+    }
+  }
 }

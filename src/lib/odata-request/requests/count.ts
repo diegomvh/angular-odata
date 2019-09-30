@@ -25,7 +25,7 @@ export class ODataCountRequest extends ODataRequest {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<Number> {
+  }): Observable<number> {
     return super.get({
       headers: options && options.headers,
       observe: 'body',
