@@ -20,7 +20,7 @@ export class ODataCountRequest extends ODataRequest {
     return new ODataCountRequest(service, segments, options);
   }
 
-  get<Number>(options?: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -30,7 +30,7 @@ export class ODataCountRequest extends ODataRequest {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });

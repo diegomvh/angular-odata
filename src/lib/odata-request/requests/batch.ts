@@ -8,7 +8,7 @@ import { ODataRequest } from '../request';
 import { Segments, RequestMethod } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { ODataBatch } from '../../odata-response';
+import { ODataBatchResponse } from '../../odata-response';
 import { map } from 'rxjs/operators';
 
 export class BatchRequest {
@@ -102,23 +102,22 @@ export class ODataBatchRequest extends ODataRequest {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<ODataBatch> {
+  }): Observable<ODataBatchResponse> {
 
-    let headers = this.mergeHttpHeaders(options.headers, {
+    let headers = this.client.mergeHttpHeaders(options.headers, {
       [BatchRequest.ODATA_VERSION]: BatchRequest.VERSION_4_0,
       [BatchRequest.CONTENT_TYPE]: BatchRequest.MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
       [BatchRequest.ACCEPT]: BatchRequest.MULTIPART_MIXED
     });
 
-    return this.client.request("POST", this, {
-      body: this.getBody(),
+    return this.client.post(this, this.getBody(), {
       headers: headers,
-      params: options.params,
       observe: 'response',
+      params: options.params,
       reportProgress: options.reportProgress,
       responseType: 'text',
       withCredentials: options.withCredentials
-    }).pipe(map(resp => new ODataBatch(resp)));
+    }).pipe(map(resp => new ODataBatchResponse(resp)));
   }
 
   getBody(): string {
@@ -191,17 +190,5 @@ export class ODataBatchRequest extends ODataRequest {
 
   setBatchBoundary(batchBoundary: string): void {
     this.batchBoundary = batchBoundary;
-  }
-
-  protected mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
-    let attrs = {};
-    headers.forEach(header => {
-    if (header instanceof HttpHeaders) {
-      const httpHeader = header as HttpHeaders;
-      attrs = httpHeader.keys().reduce((acc, key) => Object.assign(acc, {[key]: httpHeader.getAll(key)}), attrs);
-    } else if (typeof(header) === 'object')
-      attrs = Object.assign(attrs, header);
-    });
-    return new HttpHeaders(attrs);
   }
 }

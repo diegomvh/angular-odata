@@ -5,9 +5,11 @@ export interface ODataConfig {
   baseUrl?: string,
   metadataUrl?: string,
   withCredentials?: boolean,
-  batch: boolean;
+  withCount?: boolean;
+  batch?: boolean;
   creation?: Date,
   version?: string,
-  types?: any[],
+  models?: any[];
+  collections?: any[];
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }

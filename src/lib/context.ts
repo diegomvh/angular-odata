@@ -1,16 +1,15 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 
-import { ODataRequest } from './odata-request';
 import { ODataConfig } from './config';
 
 export class ODataContext implements ODataConfig {
   baseUrl: string;
   metadataUrl: string;
-  withCredentials: boolean;
-  batch: boolean;
-  creation: Date;
-  version: string;
+  withCredentials?: boolean;
+  batch?: boolean;
+  creation?: Date;
+  version?: string;
   withCount?: boolean;
   models?: any[];
   collections?: any[];

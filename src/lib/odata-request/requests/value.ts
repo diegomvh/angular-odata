@@ -30,7 +30,7 @@ export class ODataValueRequest<V> extends ODataRequest {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });
