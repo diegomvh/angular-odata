@@ -4,10 +4,10 @@ export * from './client';
 export * from './module';
 
 // Requests
-export * from './odata-request';
+export * from './odata-request/index';
 
 // Responses
-export * from './odata-response';
+export * from './odata-response/index';
 
 // Services
-export * from './odata-service';
+export * from './odata-service/index';
