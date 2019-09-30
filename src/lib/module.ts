@@ -1,8 +1,8 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ODataContext } from './context';
 import { ODataConfig } from './config';
-import { HttpClientModule } from '@angular/common/http';
 import { ODataClient } from './client';
 
 @NgModule({
