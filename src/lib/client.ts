@@ -788,6 +788,24 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
+  get(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataEntitySet<Object>>>;
+
+  get(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataProperty<Object>>>;
+
   get<T>(req: ODataRequest, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe: 'events',
@@ -796,6 +814,24 @@ export class ODataClient {
     responseType?: 'json'|'entity',
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
+
+  get<T>(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataEntitySet<T>>>;
+
+  get<T>(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataProperty<T>>>;
 
   get(req: ODataRequest, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -830,6 +866,24 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
+  get(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataEntitySet<Object>>>;
+
+  get(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataProperty<Object>>>;
+
   get<T>(req: ODataRequest, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe: 'response',
@@ -838,6 +892,24 @@ export class ODataClient {
     responseType?: 'json'|'entity',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
+
+  get<T>(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataEntitySet<T>>>;
+
+  get<T>(req: ODataRequest, options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataProperty<T>>>;
 
   get(req: ODataRequest, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -848,6 +920,24 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
+  get(req: ODataRequest, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<ODataEntitySet<Object>>;
+
+  get(req: ODataRequest, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<ODataProperty<Object>>;
+
   get<T>(req: ODataRequest, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body',
@@ -856,6 +946,24 @@ export class ODataClient {
     responseType?: 'json'|'entity',
     withCredentials?: boolean,
   }): Observable<T>;
+
+  get<T>(req: ODataRequest, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<ODataEntitySet<T>>;
+
+  get<T>(req: ODataRequest, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<ODataProperty<T>>;
 
   get(req: ODataRequest, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
