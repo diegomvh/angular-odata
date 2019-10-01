@@ -7,6 +7,7 @@ import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { Segments } from '../types';
 import { ODataClient } from '../../client';
+import { ODataProperty } from '../../odata-response';
 
 export class ODataActionRequest<T> extends ODataRequest {
   // Factory
@@ -49,7 +50,7 @@ export class ODataActionRequest<T> extends ODataRequest {
     reportProgress?: boolean,
     responseType?: 'property',
     withCredentials?: boolean,
-  }): Observable<T>;
+  }): Observable<ODataProperty<T>>;
 
   post(body: T, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

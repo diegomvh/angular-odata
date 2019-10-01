@@ -7,6 +7,7 @@ import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { Segments, Options, PlainObject } from '../types';
 import { ODataClient } from '../../client';
+import { ODataProperty } from '../../odata-response';
 
 export class ODataFunctionRequest<T> extends ODataRequest {
 
@@ -24,6 +25,14 @@ export class ODataFunctionRequest<T> extends ODataRequest {
   parameters(opts?: PlainObject) {
     return this.segments.last().option(Options.parameters, opts);
   }
+
+  get(options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'text',
+    withCredentials?: boolean,
+  }): Observable<string>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -48,7 +57,7 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     reportProgress?: boolean,
     responseType?: 'property',
     withCredentials?: boolean,
-  }): Observable<T>;
+  }): Observable<ODataProperty<T>>;
 
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
