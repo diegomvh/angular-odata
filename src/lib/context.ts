@@ -2,25 +2,24 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 import { ODataConfig } from './config';
+import { Model, Collection } from './odata-model';
 
 export class ODataContext implements ODataConfig {
   baseUrl: string;
-  metadataUrl: string;
+  metadataUrl?: string;
   withCredentials?: boolean;
   batch?: boolean;
   creation?: Date;
   version?: string;
   withCount?: boolean;
-  models?: any[];
-  collections?: any[];
+  models?: (typeof Model)[];
+  collections?: (typeof Collection)[];
   errorHandler: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
     Object.assign(this, config);
-    if (!config.metadataUrl && config.baseUrl)
-      this.metadataUrl = `${config.baseUrl}$metadata`;
-    else if (config.metadataUrl && !config.baseUrl)
-      this.baseUrl = config.metadataUrl.substr(0, config.metadataUrl.indexOf("$metadata"));
+    if (!this.metadataUrl)
+      this.metadataUrl = `${this.baseUrl}$metadata`;
   }
 
   serviceRoot(): string {
@@ -39,10 +38,6 @@ export class ODataContext implements ODataConfig {
   getCollection(name: string) {
     let Ctor = (this.collections || []).find(t => t.type === name);
     if (Ctor) return Ctor;
-  }
-
-  getType(name: string) {
-    return this.getModel(name) || this.getCollection(name);
   }
 
 }

@@ -543,6 +543,24 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
+  delete (req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataEntitySet<Object>>>;
+
+  delete (req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataProperty<Object>>>;
+
   delete<T>(req: ODataRequest, etag?: string, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe: 'events',
@@ -551,6 +569,24 @@ export class ODataClient {
     responseType?: 'json'|'entity',
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
+
+  delete<T>(req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataEntitySet<T>>>;
+
+  delete<T>(req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'events',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpEvent<ODataProperty<T>>>;
 
   delete (req: ODataRequest, etag?: string, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -585,6 +621,24 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
+  delete (req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataEntitySet<Object>>>;
+
+  delete (req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataProperty<Object>>>;
+
   delete<T>(req: ODataRequest, etag?: string, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe: 'response',
@@ -593,6 +647,24 @@ export class ODataClient {
     responseType?: 'json'|'entity',
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
+
+  delete<T>(req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataEntitySet<T>>>;
+
+  delete<T>(req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe: 'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<HttpResponse<ODataProperty<T>>>;
 
   delete (req: ODataRequest, etag?: string, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -603,6 +675,24 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
+  delete (req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<ODataEntitySet<Object>>;
+
+  delete (req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<ODataProperty<Object>>;
+
   delete<T>(req: ODataRequest, etag?: string, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body',
@@ -611,6 +701,24 @@ export class ODataClient {
     responseType?: 'json'|'entity',
     withCredentials?: boolean,
   }): Observable<T>;
+
+  delete<T>(req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'entityset',
+    withCredentials?: boolean,
+  }): Observable<ODataEntitySet<T>>;
+
+  delete<T>(req: ODataRequest, etag?: string, options?: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    observe?: 'body',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'property',
+    withCredentials?: boolean,
+  }): Observable<ODataProperty<T>>;
 
   delete (req: ODataRequest, etag?: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
