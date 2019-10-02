@@ -8,11 +8,13 @@ import { ODataModel, Model } from './model';
 import { ODataModelService } from '../odata-service';
 
 export class Collection<M extends Model> {
+  static set: string = "";
   static type: string = "";
   static modelType: string = "";
-  _service: ODataModelService;
-  _query: ODataEntitySetRequest<M>;
-  _models: M[];
+  static service: ODataModelService = null;
+  static query: ODataEntitySetRequest<Model> = null;
+  query: ODataEntitySetRequest<M>;
+  models: M[];
   state: {
     page?: number,
     pages?: number,
@@ -21,34 +23,28 @@ export class Collection<M extends Model> {
   };
 
   constructor(models: PlainObject[], query?: ODataEntitySetRequest<M>) {
-    this._models = this.parse(models, query);
+    let ctor = <typeof Model>this.constructor;
+    this.query = query || ctor.query.clone();
     this.state = {
-      records: this._models.length
+      records: this.models.length
     };
-    this.setQuery(query);
+    this.models = this.parse(models);
   }
 
-  setService(service: ODataModelService) {
-    this._service = service;
-  }
-
-  setQuery(query: ODataEntitySetRequest<M>) {
-    this._query = query;
-  }
-
-  parse(models: PlainObject[], query: ODataEntitySetRequest<M>) {
+  parse(models: PlainObject[]) {
     let ctor = <typeof Collection>this.constructor;
-    return models.map(model => this._service.createInstance(ctor.modelType, model) as M);
+    let service = ctor.service;
+    let klass = service.model(ctor.modelType)
+    return models.map(model => new klass(model) as M);
   }
 
   toJSON() {
-    let ctor = <typeof Collection>this.constructor;
-    return this._models.map(model => model.toJSON());
+    return this.models.map(model => model.toJSON());
   }
 
   public [Symbol.iterator]() {
     let pointer = 0;
-    let models = this._models;
+    let models = this.models;
     return {
       next(): IteratorResult<M> {
         return {
@@ -61,26 +57,19 @@ export class Collection<M extends Model> {
 }
 
 export class ODataCollection<M extends ODataModel> extends Collection<M> {
-  constructor(
-    models: PlainObject[],
-    query: ODataEntitySetRequest<M>
-  ) {
-    super(models, query);
-  }
-
-  assign(entitySet: ODataEntitySet<ODataModel>, query: ODataEntitySetRequest<M>) {
+  assign(entitySet: ODataEntitySet<ODataModel>) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)
       this.state.size = skip;
     if (this.state.size)
       this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this._models = this.parse(entitySet.entities, query);
+    this.models = this.parse(entitySet.entities);
     return this;
   }
 
   fetch(options?: any): Observable<this> {
-    let query = this._query.clone() as ODataEntitySetRequest<M>;
+    let query = this.query.clone() as ODataEntitySetRequest<M>;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {
@@ -89,7 +78,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
     }
     return query.get()
       .pipe(
-        map(set => this.assign(set, query))
+        map(set => this.assign(set))
       );
   }
 
@@ -125,26 +114,26 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
 
   // Mutate query
   select(select?: Select) {
-    return this._query.select(select);
+    return this.query.select(select);
   }
 
   filter(filter?: Filter) {
-    return this._query.filter(filter);
+    return this.query.filter(filter);
   }
 
   search(search?: string) {
-    return this._query.search(search);
+    return this.query.search(search);
   }
 
   orderBy(orderBy?: OrderBy) {
-    return this._query.orderBy(orderBy);
+    return this.query.orderBy(orderBy);
   }
 
   expand(expand?: Expand) {
-    return this._query.expand(expand);
+    return this.query.expand(expand);
   }
 
   groupBy(groupBy?: GroupBy) {
-    return this._query.groupBy(groupBy);
+    return this.query.groupBy(groupBy);
   }
 }

@@ -8,18 +8,20 @@ import { PlainObject, ODataRequest, Expand, ODataEntityRequest } from '../odata-
 import { Collection } from './collection';
 import { ODataClient } from '../client';
 
-export class Key {
+export interface Key {
   name: string;
   resolve?: (model: Model) => number | string | PlainObject;
 }
 
-export class Field {
+export interface Field {
   name: string;
   type: string;
   required?: boolean;
   length?: number;
   ctor?: boolean;
-  related?: boolean;
+  navigation?: boolean;
+  field?: string;
+  ref?: string;
   collection?: boolean;
   default?: any;
 }
@@ -41,7 +43,9 @@ export class Schema {
   }
 
   resolveKey(model: Model) {
-    let keys = this.keys
+    let ctor = <typeof Model>model.constructor;
+    let schema = ctor.schema;
+    let keys = schema.keys
       .map(key => [key.name, (key.resolve) ? key.resolve(model) : model[key.name]]);
     let key = keys.length === 1 ?
       keys[0][1] :
@@ -54,89 +58,12 @@ export class Schema {
     return !this.resolveKey(model);
   }
 
-  private parse(field: Field, value: any) {
-    if (value == null) return value;
-    switch (field.type) {
-      case 'String': return typeof (value) === "string" ? value : value.toString();
-      case 'Number': return typeof (value) === "number" ? value : parseInt(value.toString(), 10);
-      case 'Boolean': return typeof (value) === "boolean" ? value : !!value;
-      case 'Date': return value instanceof Date ? value : new Date(value);
-    }
-    return value;
+  get navigations():Field[] {
+    return this.fields.filter(f => f.navigation);
   }
 
-  private toJSON(field: Field, value: any) {
-    if (value == null) return value;
-    switch (field.type) {
-      case 'String': return typeof (value) === "string" ? value : value.toString();
-      case 'Number': return typeof (value) === "number" ? value : parseInt(value.toString(), 10);
-      case 'Boolean': return typeof (value) === "boolean" ? value : !!value;
-      case 'Date': return value instanceof Date ? value.toISOString() : value;
-    }
-    return value;
-  }
-  
-  private defineProperty(model: Model, field: Field, value: any) {
-    Object.defineProperty(model, field.name, {
-      get() {
-        if (!(field.name in this._relationships)) {
-          let query = this._query.clone() as ODataEntityRequest<Model>;
-          if (this.isNew())
-            throw new Error(`Can't resolve ${field.name} relation from new entity`)
-          query.key(this.resolveKey());
-          let nav = query.navigationProperty<any>(field.name);
-          this._relationships[field.name] = this._service.createInstance(
-            field.type, value || (field.collection ? [] : {}), nav);
-        }
-        return this._relationships[field.name];
-      },
-      set(value: Model | null) {
-        if (field.collection)
-          throw new Error(`Can't set ${field.name} to collection, use add`);
-        if (!((value as Model)._query instanceof ODataEntityService))
-          throw new Error(`Can't set ${value} to model`);
-        this._relationships[field.name] = value;
-        /*
-        let query = this._query.clone() as ODataQueryBuilder;
-        query.entityKey(this.resolveKey());
-        query.navigationProperty(field.name);
-        this._relationships[field.name] = this._context.createInstance(
-          field.type, value !== null ? value.toJSON() : {}, query);
-        this.setState(ModelState.Modified);
-        this._relationships[field.name].setState(value !== null ? ModelState.Added : ModelState.Deleted);
-        */
-      }
-    });
-  }
-
-  deserialize(model: Model, attrs: PlainObject, query: ODataEntityRequest<Model>) {
-    let service = model._service;
-    model._attributes = attrs;
-    this.fields.filter(f => !f.related).forEach(f => {
-      if (f.name in attrs) {
-        model[f.name] = f.ctor ?
-          service.createInstance(f.type, attrs[f.name]) :
-          this.parse(f, attrs[f.name]);
-      }
-    });
-  }
-
-  serialize(model: Model) {
-    return this.fields.filter(f => !f.related).reduce((acc, f) => {
-      if (f.name in model) {
-        acc[f.name] = f.ctor ?
-          model[f.name].toJSON() :
-          this.toJSON(f, model[f.name]);
-      }
-      return acc;
-    }, {});
-  }
-
-  relationships(model: Model, attrs: PlainObject, query: ODataEntityRequest<Model>) {
-    model._relationships = {};
-    this.fields.filter(f => f.related).forEach(f => {
-      this.defineProperty(model, f, attrs[f.name]);
-    });
+  get properties():Field[] {
+    return this.fields.filter(f => !f.navigation);
   }
 }
 
@@ -150,29 +77,23 @@ export enum ModelState {
 
 export class Model {
   // Statics
+  static set: string = "";
   static type: string = "";
   static schema: Schema = null;
-  _service: ODataModelService;
-  _state: ModelState;
-  _query: ODataEntityRequest<Model>;
-  _attributes: PlainObject;
-  _relationships: { [name: string]: Model | Collection<Model> }
+  static service: ODataModelService = null;
+  static query: ODataEntityRequest<Model> = null;
+  query: ODataEntityRequest<Model>;
+  state: ModelState;
+  relationships: { [name: string]: Model | Collection<Model> }
 
   constructor(attrs: PlainObject, query?: ODataEntityRequest<Model>) {
-    this.assign(attrs, query);
-    this.setQuery(query);
+    let ctor = <typeof Model>this.constructor;
+    this.query = query || ctor.query.clone();
+    this.assign(attrs);
   }
 
   setState(state: ModelState) {
-    this._state = state;
-  }
-
-  setService(service: ODataModelService) {
-    this._service = service;
-  }
-
-  setQuery(query: ODataEntityRequest<Model>) {
-    this._query = query;
+    this.state = state;
   }
 
   isNew() {
@@ -182,8 +103,8 @@ export class Model {
 
   assign(attrs: PlainObject, query?: ODataEntityRequest<Model>) {
     let ctor = <typeof Model>this.constructor;
-    ctor.schema.deserialize(this, attrs, query);
-    ctor.schema.relationships(this, attrs, query);
+    ctor.service.deserialize(this, attrs);
+    ctor.service.relationships(this, attrs);
   }
 
   resolveKey() {
@@ -193,42 +114,34 @@ export class Model {
 
   toJSON() {
     let ctor = <typeof Model>this.constructor;
-    return ctor.schema.serialize(this);
+    return ctor.service.serialize(this);
   }
 
   clone() {
     let ctor = <typeof Model>this.constructor;
-    return this._service.createInstance(
-      ctor.type,
-      this.toJSON());
+    let klass = ctor.service.model(ctor.type);
+    return new klass(this.toJSON());
   }
 }
 
 export class ODataModel extends Model {
-  constructor(
-    attrs: PlainObject,
-    query: ODataEntityRequest<Model>
-  ) {
-    super(attrs, query);
-  }
-
-  assign(attrs: PlainObject, query: ODataEntityRequest<Model>) {
-    super.assign(attrs, query);
+  assign(attrs: PlainObject) {
+    super.assign(attrs);
   }
 
   fetch(options?: any): Observable<this> {
     if (this.isNew())
       throw new Error(`Can't fetch without entity key`);
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
     return query.get()
       .pipe(
-        map(entity => { this.assign(entity, query); return this })
+        map(entity => { this.assign(entity); return this })
       );
   }
 
   private batchSave(options?: any): Observable<this> {
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     let batch = null; //query.batch();
     if (!this.isNew()) {
       let key = this.resolveKey();
@@ -237,18 +150,18 @@ export class ODataModel extends Model {
     } else {
       batch.post(query, this.toJSON(), options);
     }
-    let changes = Object.keys(this._relationships)
-      .filter(k => this._relationships[k] === null || this._relationships[k] instanceof Model);
+    let changes = Object.keys(this.relationships)
+      .filter(k => this.relationships[k] === null || this.relationships[k] instanceof Model);
     // Relations 
     changes.forEach(name => {
-      let model = this._relationships[name] as Model;
+      let model = this.relationships[name] as Model;
       let q = query.clone() as ODataEntityRequest<Model>;
       q.key(this.resolveKey());
       let ref = q.navigationProperty(name).ref();
       if (model === null) {
         batch.delete(q);
       } else {
-        let target = model._query.clone() as ODataEntityRequest<Model>;
+        let target = model.query.clone() as ODataEntityRequest<Model>;
         target.key(model.resolveKey())
         let refurl = ""; //this._context.createEndpointUrl(target);
         batch.put(q, { [ODataClient.ODATA_ID]: refurl });
@@ -256,17 +169,17 @@ export class ODataModel extends Model {
     });
     return batch.execute(options)
       .pipe(
-        map(resp => { this.assign(resp, query); return this })
+        map(resp => { this.assign(resp); return this })
       );
   }
 
   private forkSave(options?: any): Observable<this> {
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     let obs$ = of(this.toJSON());
-    let changes = Object.keys(this._relationships)
-      .filter(k => this._relationships[k] === null || this._relationships[k] instanceof Model);
+    let changes = Object.keys(this.relationships)
+      .filter(k => this.relationships[k] === null || this.relationships[k] instanceof Model);
     changes.forEach(name => {
-      let model = this._relationships[name] as Model;
+      let model = this.relationships[name] as Model;
       let q = query.clone() as ODataEntityRequest<Model>;
       q.key(this.resolveKey());
       let ref = q.navigationProperty(name).ref();
@@ -280,7 +193,7 @@ export class ODataModel extends Model {
         ));
       } else {
         // Create
-        let target = model._query.clone() as ODataEntityRequest<Model>;
+        let target = model.query.clone() as ODataEntityRequest<Model>;
         target.key(model.resolveKey())
         let refurl = ""; //this._context.createEndpointUrl(target);
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
@@ -299,7 +212,7 @@ export class ODataModel extends Model {
       obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs as Model, attrs[ODataClient.ODATA_ETAG])));
     }
     return obs$.pipe(
-      map(attrs => { console.log(attrs); this.assign(attrs, query); return this; })
+      map(attrs => { console.log(attrs); this.assign(attrs); return this; })
     );
   }
 
@@ -309,16 +222,16 @@ export class ODataModel extends Model {
       this.forkSave(options);
   }
 
-  estroy(options?: any): Observable<any> {
+  destroy(options?: any): Observable<any> {
     if (this.isNew())
       throw new Error(`Can't destroy without entity key`);
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
     return query.delete(this[ODataClient.ODATA_ETAG], options);
   }
 
   protected createODataModelRef(name: string, target: ODataRequest, options?) {
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
     //let refurl = this.context.createEndpointUrl(target);
@@ -327,7 +240,7 @@ export class ODataModel extends Model {
   }
 
   protected deleteODataModelRef(name: string, target: ODataRequest, options?) {
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
     //let refurl = this.context.createEndpointUrl(target);
@@ -335,7 +248,7 @@ export class ODataModel extends Model {
   }
 
   protected createODataCollectionRef(name: string, target: ODataRequest, options?) {
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
     //let refurl = this.context.createEndpointUrl(target);
@@ -344,7 +257,7 @@ export class ODataModel extends Model {
   }
 
   protected deleteODataCollectionRef(name: string, target: ODataRequest, options?) {
-    let query = this._query.clone() as ODataEntityRequest<Model>;
+    let query = this.query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
     let ref = query.navigationProperty(name).ref();
     //let refurl = this.context.createEndpointUrl(target);
@@ -355,10 +268,10 @@ export class ODataModel extends Model {
 
   // Mutate query
   select(select?: string | string[]) {
-    return this._query.select(select);
+    return this.query.select(select);
   }
 
   expand(expand?: Expand) {
-    return this._query.expand(expand);
+    return this.query.expand(expand);
   }
 }
