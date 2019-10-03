@@ -12,10 +12,10 @@ import { CsdlReference, CsdlInclude, CsdlIncludeAnnotations } from './csdl/csdl-
 import { CsdlAnnotation, CsdlTerm, CsdlAnnotations } from './csdl/csdl-annotation';
 import { CsdlNavigationPropertyBinding } from './csdl/csdl-navigation-property-binding';
 
-export enum FieldType {
+enum FieldType {
     ATTRIBUTE, TAG
 }
-export class Field {
+class Field {
     constructor(public name: string, public fieldType: FieldType) { }
 }
 
