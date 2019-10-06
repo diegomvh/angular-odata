@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -8,6 +9,7 @@ import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
 import { ODataClient } from "../client";
 
+@Injectable()
 export abstract class ODataEntityService<T> {
   static set: string = "";
 

@@ -5,15 +5,9 @@ import { ODataEntitySet } from '../odata-response';
 import { ODataEntitySetRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy } from '../odata-request';
 
 import { ODataModel, Model } from './model';
-import { ODataModelService } from '../odata-service';
 
 export class Collection<M extends Model> {
-  static set: string = "";
-  static type: string = "";
-  static modelType: string = "";
-  static service: ODataModelService = null;
-  static query: ODataEntitySetRequest<Model> = null;
-  query: ODataEntitySetRequest<M>;
+  static model: typeof Model = null;
   models: M[];
   state: {
     page?: number,
@@ -22,20 +16,16 @@ export class Collection<M extends Model> {
     records?: number,
   };
 
-  constructor(models: PlainObject[], query?: ODataEntitySetRequest<M>) {
-    let ctor = <typeof Model>this.constructor;
-    this.query = query || ctor.query.clone();
+  constructor(models: PlainObject[]) {
+    this.models = this.parse(models);
     this.state = {
       records: this.models.length
     };
-    this.models = this.parse(models);
   }
 
   parse(models: PlainObject[]) {
-    let ctor = <typeof Collection>this.constructor;
-    let service = ctor.service;
-    let klass = service.model(ctor.modelType)
-    return models.map(model => new klass(model) as M);
+    let Ctor = <typeof Collection>this.constructor;
+    return models.map(model => new Ctor.model(model) as M);
   }
 
   toJSON() {
@@ -57,6 +47,15 @@ export class Collection<M extends Model> {
 }
 
 export class ODataCollection<M extends ODataModel> extends Collection<M> {
+  static query: ODataEntitySetRequest<ODataModel> = null;
+  query: ODataEntitySetRequest<ODataModel>;
+
+  constructor(models: PlainObject[]) {
+    super(models);
+    let Ctor = <typeof ODataCollection>this.constructor;
+    this.query = Ctor.query.clone();
+  }
+
   assign(entitySet: ODataEntitySet<ODataModel>) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
@@ -69,7 +68,7 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
   }
 
   fetch(options?: any): Observable<this> {
-    let query = this.query.clone() as ODataEntitySetRequest<M>;
+    let query = this.query.clone() as ODataEntitySetRequest<ODataModel>;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {

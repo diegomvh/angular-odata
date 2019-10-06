@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataContext } from './context';
 import { ODataEntitySet, ODataProperty } from './odata-response';
 import { ODataBatchRequest, ODataEntityRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
+import { ODATA_CONFIG, ODataConfig } from './config';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -59,7 +59,7 @@ function addEtag(
   };
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ODataClient {
   public static readonly ODATA_CONTEXT = '@odata.context';
   public static readonly ODATA_ETAG = '@odata.etag';
@@ -70,7 +70,8 @@ export class ODataClient {
 
   public static readonly IF_MATCH_HEADER = 'If-Match';
 
-  constructor(protected http: HttpClient, public context: ODataContext) { }
+  constructor(protected http: HttpClient, @Inject(ODATA_CONFIG) protected config: ODataConfig) {
+  }
 
   resolveEtag<T>(entity: Partial<T>): string {
     return entity[ODataClient.ODATA_ETAG];
@@ -123,8 +124,16 @@ export class ODataClient {
     return new HttpParams({ fromObject: attrs });
   }
 
+  serviceRoot(): string {
+    let base = this.config.baseUrl;
+    if (!base.endsWith('/')) {
+      base += '/';
+    }
+    return base;
+  }
+
   createEndpointUrl(query) {
-    const serviceRoot = this.context.serviceRoot();
+    const serviceRoot = this.serviceRoot();
     return `${serviceRoot}${query.path()}`
   }
 
@@ -424,13 +433,13 @@ export class ODataClient {
 
     let customParams = {};
     let withCount = options.withCount;
-    if (withCount || this.context.withCount)
+    if (withCount || this.config.withCount)
       customParams[ODataClient.$COUNT] = 'true';
     let params = this.mergeHttpParams(query.params(), options.params, customParams);
 
     let withCredentials = options.withCredentials;
     if (withCredentials === undefined)
-      withCredentials = this.context.withCredentials;
+      withCredentials = this.config.withCredentials;
 
     // Call http request
     let res$ = this.http.request(method, url, {
@@ -444,9 +453,9 @@ export class ODataClient {
     });
 
     // Context Error Handler
-    if (this.context.errorHandler) {
+    if (this.config.errorHandler) {
       res$ = res$.pipe(
-        catchError(this.context.errorHandler)
+        catchError(this.config.errorHandler)
       );
     }
 

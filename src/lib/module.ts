@@ -1,8 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { ODataContext } from './context';
-import { ODataConfig } from './config';
+import { ODataConfig, ODATA_CONFIG } from './config';
 import { ODataClient } from './client';
 
 @NgModule({
@@ -10,12 +9,11 @@ import { ODataClient } from './client';
   providers: [ODataClient]
 })
 export class ODataModule {
-  public static forContext(config: ODataConfig): ModuleWithProviders {
+  public static forConfig(config: ODataConfig): ModuleWithProviders {
     return {
       ngModule: ODataModule,
       providers: [
-        ODataClient,
-        { provide: ODataContext, useValue: new ODataContext(config) }
+        { provide: ODATA_CONFIG, useValue: config }
       ]
     };
   }

@@ -1,16 +1,17 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { Model, Collection } from './odata-model';
+import { InjectionToken } from '@angular/core';
+
+export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
 export interface ODataConfig {
   baseUrl: string,
   metadataUrl?: string,
   withCredentials?: boolean,
-  withCount?: boolean;
-  batch?: boolean;
+  withCount?: boolean,
+  batch?: boolean,
   creation?: Date,
   version?: string,
-  models?: (typeof Model)[];
-  collections?: (typeof Collection)[];
+  types?: {[type: string]: { new(...args: any[]): any; } | { [k: number]: string }},
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
