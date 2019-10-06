@@ -11,6 +11,7 @@ export interface ODataConfig {
   metadataUrl?: string,
   withCredentials?: boolean,
   withCount?: boolean,
+  maxPageSize?: number,
   batch?: boolean,
   creation?: Date,
   version?: string,

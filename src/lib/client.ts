@@ -67,6 +67,7 @@ export class ODataClient {
 
   public static readonly $ID = '$id';
   public static readonly $COUNT = '$count';
+  public static readonly $TOP = '$top';
 
   public static readonly IF_MATCH_HEADER = 'If-Match';
 
@@ -419,6 +420,8 @@ export class ODataClient {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
+
+    // The Url
     const url = this.createEndpointUrl(query);
 
     let observe = <'body'|'events'|'response'>options.observe;
@@ -426,17 +429,28 @@ export class ODataClient {
     let responseType = (['entity', 'entityset', 'property'].indexOf(options.responseType) !== -1) ? 'json' :
       <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
+    // Headers
     let customHeaders = {};
     if (typeof (options.etag) === 'string')
       customHeaders[ODataClient.IF_MATCH_HEADER] = options.etag;
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);
 
+    // Params
+    let queryParams = query.params();
     let customParams = {};
+    
+    // With Count ?
     let withCount = options.withCount;
     if (withCount || this.config.withCount)
       customParams[ODataClient.$COUNT] = 'true';
-    let params = this.mergeHttpParams(query.params(), options.params, customParams);
+    
+    // Page Size?
+    if (options.responseType === 'entityset' && !(ODataClient.$TOP in queryParams) && this.config.maxPageSize)
+      customParams[ODataClient.$TOP] = this.config.maxPageSize;
 
+    let params = this.mergeHttpParams(queryParams, options.params, customParams);
+
+    // Credentials ?
     let withCredentials = options.withCredentials;
     if (withCredentials === undefined)
       withCredentials = this.config.withCredentials;
