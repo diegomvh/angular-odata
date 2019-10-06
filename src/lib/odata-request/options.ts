@@ -36,6 +36,9 @@ export class ODataOptions {
         let values = param.substr(index + 1);
         return Object.assign(acc, {[name]: values});
       }, {});
+    // TODO: Add query builder Skiptoken support
+    if (Options.skiptoken in this.options)
+      odata['$skiptoken'] = this.options[Options.skiptoken];
     return Object.assign(odata, this.options[Options.custom] || {});
   }
 

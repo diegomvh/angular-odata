@@ -19,7 +19,7 @@ export class ODataEntitySet<T> {
   }
 
   get nextLink(): string {
-    return this[ODataEntitySet.ODATA_NEXTLINK] as string;
+    return decodeURIComponent(this[ODataEntitySet.ODATA_NEXTLINK]) as string;
   }
 
   get skip(): number {
@@ -27,9 +27,9 @@ export class ODataEntitySet<T> {
     if (match) return Number(match[1]);
   }
 
-  get skiptoken(): number {
-    let match = (this.nextLink || "").match(/\$skiptoken=(\d+)/);
-    if (match) return Number(match[1]);
+  get skiptoken(): string {
+    let match = (this.nextLink || "").match(/\$skiptoken=([\d\w\s]+)/);
+    if (match) return match[1];
   }
   public [Symbol.iterator]() {
     let pointer = 0;

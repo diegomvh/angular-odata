@@ -67,6 +67,7 @@ export enum Options {
   orderBy = 'orderBy',
   top = 'top',
   skip = 'skip',
+  skiptoken = 'skiptoken',
   expand = 'expand',
   format = 'format',
   parameters = 'parameters',

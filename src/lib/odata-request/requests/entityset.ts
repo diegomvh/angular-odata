@@ -136,6 +136,10 @@ export class ODataEntitySetRequest<T> extends ODataRequest {
   skip(opts?: number) {
     return this.options.option<number>(Options.skip, opts);
   }
+
+  skiptoken(opts?: string) {
+    return this.options.option<string>(Options.skiptoken, opts);
+  }
   
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
