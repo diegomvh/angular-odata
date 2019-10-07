@@ -6,6 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 import { ODataEntitySet, ODataProperty } from './odata-response';
 import { ODataBatchRequest, ODataEntityRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
 import { ODATA_CONFIG, ODataConfig } from './config';
+import { ODataModel } from './odata-model';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -72,6 +73,9 @@ export class ODataClient {
   public static readonly IF_MATCH_HEADER = 'If-Match';
 
   constructor(protected http: HttpClient, @Inject(ODATA_CONFIG) protected config: ODataConfig) {
+    // Resolve types
+    let models = Object.values(config.types).filter(t => 'schema' in t);
+    models.forEach(m => (m as typeof ODataModel).schema.resolveTypes(config.types));
   }
 
   resolveEtag<T>(entity: Partial<T>): string {
