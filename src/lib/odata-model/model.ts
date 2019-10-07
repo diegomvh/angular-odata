@@ -40,6 +40,14 @@ export class Schema {
     return Object.assign(new Schema(), { keys, fields });
   }
 
+  resolveTypes(types: {[type: string]: { new(...args: any[]): any; }}) {
+    this.fields.forEach(f => {
+      if (f.type in types) {
+        f.ctor = types[f.type];
+      }
+    });
+  }
+
   resolveKey(model: Model) {
     let ctor = <typeof Model>model.constructor;
     let schema = ctor.schema;
