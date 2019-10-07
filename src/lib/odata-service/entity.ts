@@ -32,7 +32,7 @@ export abstract class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public fetchPage(options: {skip?: number, skiptoken?: string, top?: number}): Observable<ODataEntitySet<T>> {
+  public fetchPage(options: {skip?: number, skiptoken?: string, top?: number, withCount?: boolean} = {}): Observable<ODataEntitySet<T>> {
     let query = this.entities();
     if (options.skiptoken)
       query.skiptoken(options.skiptoken);
@@ -40,25 +40,13 @@ export abstract class ODataEntityService<T> {
       query.skip(options.skip);
     if (options.top)
       query.top(options.top);
-    return query.get();
+    return query.get({withCount: options.withCount});
   }
 
   public fetchAll(): Observable<T> {
-    let query = this.entities();
-    let get = (query: ODataEntitySetRequest<T>, 
-      options: {skip?: number, skiptoken?: string, top?: number}) => {
-        if (options.skiptoken)
-          query.skiptoken(options.skiptoken);
-        else if (options.skip)
-          query.skip(options.skip);
-        if (options.top)
-          query.top(options.top);
-        console.log(query);
-        return query.get({withCount: true});
-      }
-    return get(query, {})
+    return this.fetchPage()
       .pipe(
-        expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? get(query, resp) : empty()),
+        expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? this.fetchPage(resp) : empty()),
         concatMap((resp: ODataEntitySet<T>) => resp.entities));
   }
 
