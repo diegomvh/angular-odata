@@ -60,7 +60,7 @@ function addEtag(
   };
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class ODataClient {
   public static readonly ODATA_CONTEXT = '@odata.context';
   public static readonly ODATA_ETAG = '@odata.etag';
