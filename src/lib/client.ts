@@ -74,8 +74,8 @@ export class ODataClient {
 
   constructor(protected http: HttpClient, @Inject(ODATA_CONFIG) protected config: ODataConfig) {
     // Resolve types
-    let models = Object.values(config.types).filter(t => 'schema' in t);
-    models.forEach(m => (m as typeof ODataModel).schema.resolveTypes(config.types));
+    Object.values(config.models || [])
+      .forEach(model => (model as typeof ODataModel).schema.configure(config));
   }
 
   resolveEtag<T>(entity: Partial<T>): string {
