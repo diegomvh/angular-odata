@@ -9,19 +9,17 @@ export class ODataModelService<M extends ODataModel, C extends ODataCollection<O
   static model: { new(attrs: PlainObject, query: ODataRequest): ODataModel; } = null; 
   static collection: { new(models: PlainObject[], query: ODataRequest): ODataCollection<ODataModel>; } = null; 
   
-  constructor(protected odata: ODataClient) {
-    var Ctor = <typeof ODataModelService>this.constructor;
-  }
+  constructor(protected client: ODataClient) {}
 
   model(): M {
     let Ctor = <typeof ODataModelService>this.constructor;
-    let query = this.odata.entitySet<M>(Ctor.set).entity();
+    let query = this.client.entitySet<M>(Ctor.set).entity();
     return new Ctor.model({}, query) as M;
   }
 
   collection(): C {
     let Ctor = <typeof ODataModelService>this.constructor;
-    let query = this.odata.entitySet<M>(Ctor.set);
+    let query = this.client.entitySet<M>(Ctor.set);
     return new Ctor.collection([], query) as C;
   }
 }

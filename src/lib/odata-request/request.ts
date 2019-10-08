@@ -100,7 +100,7 @@ export abstract class ODataRequest {
     return this.options.params();
   }
 
-  clone<T extends ODataRequest>(type?: { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): T; }): T {
+  clone<T extends ODataRequest>(type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions): T; }): T {
     if (!type) 
       type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): T; };
     return new type(this.client, this.segments.clone(), this.options.clone());
@@ -114,12 +114,12 @@ export abstract class ODataRequest {
   }
 
   static fromJSON<T extends ODataRequest>(
-    service: ODataClient, 
+    client: ODataClient, 
     json: {segments: any[], options: PlainObject},
     type?: { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): T; }): T {
     if (!type) 
       type = this.constructor as { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): T; };
-    return new type(service, json.segments, json.options);
+    return new type(client, json.segments, json.options);
   }
 
   is(type: string) {

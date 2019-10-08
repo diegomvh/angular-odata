@@ -13,6 +13,7 @@ export class ODataModule {
     return {
       ngModule: ODataModule,
       providers: [
+        ODataClient,
         { provide: ODATA_CONFIG, useValue: config }
       ]
     };

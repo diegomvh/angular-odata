@@ -13,13 +13,13 @@ import { ODataClient } from "../client";
 export abstract class ODataEntityService<T> {
   static set: string = "";
 
-  constructor(protected odata: ODataClient) { }
+  constructor(protected client: ODataClient) { }
 
   protected abstract resolveEntityKey(entity: Partial<T>);
 
   public entities(): ODataEntitySetRequest<T> {
     let ctor = <typeof ODataEntityService>this.constructor;
-    return this.odata.entitySet<T>(ctor.set);
+    return this.client.entitySet<T>(ctor.set);
   }
 
   public entity(entity?: number | string | Partial<T>): ODataEntityRequest<T> {
@@ -71,19 +71,19 @@ export abstract class ODataEntityService<T> {
   }
 
   public update(entity: T): Observable<T> {
-    let etag = this.odata.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
       .put(entity, etag);
   }
 
   public assign(entity: Partial<T>, options?) {
-    let etag = this.odata.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
       .patch(entity, etag, options);
   }
 
   public destroy(entity: T, options?) {
-    let etag = this.odata.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
       .delete(etag, options);
   }
@@ -148,7 +148,7 @@ export abstract class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let etag = this.odata.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
     return (options.responseType === "entityset") ?
       ref.post(target, options) :
@@ -162,7 +162,7 @@ export abstract class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let etag = this.odata.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
     return ref.delete(etag, options);
   }
