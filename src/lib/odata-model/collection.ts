@@ -2,13 +2,15 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { ODataEntitySet } from '../odata-response';
-import { ODataEntitySetRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy } from '../odata-request';
+import { ODataEntitySetRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy, ODataRequest } from '../odata-request';
 
-import { ODataModel, Model } from './model';
+import { ODataModel } from './model';
 
-export class Collection<M extends Model> {
-  static model: typeof Model = null;
+export class ODataCollection<M extends ODataModel> {
+  static model: typeof ODataModel = null;
+  query: ODataRequest;
   models: M[];
+
   state: {
     page?: number,
     pages?: number,
@@ -16,22 +18,23 @@ export class Collection<M extends Model> {
     records?: number,
   };
 
-  constructor(models: PlainObject[]) {
-    this.models = this.parse(models);
+  constructor(models: PlainObject[], query: ODataRequest) {
+    this.models = this.parse(models, query);
     this.state = {
       records: this.models.length
     };
   }
 
-  parse(models: PlainObject[]) {
-    let Ctor = <typeof Collection>this.constructor;
-    return models.map(model => new Ctor.model(model) as M);
+  parse(models: PlainObject[], query: ODataRequest) {
+    let Ctor = <typeof ODataCollection>this.constructor;
+    return models.map(model => new Ctor.model(model, query.clone()) as M);
   }
 
   toJSON() {
     return this.models.map(model => model.toJSON());
   }
 
+  // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;
     let models = this.models;
@@ -44,30 +47,19 @@ export class Collection<M extends Model> {
       }
     }
   }
-}
 
-export class ODataCollection<M extends ODataModel> extends Collection<M> {
-  static query: ODataEntitySetRequest<ODataModel> = null;
-  query: ODataEntitySetRequest<ODataModel>;
-
-  constructor(models: PlainObject[]) {
-    super(models);
-    let Ctor = <typeof ODataCollection>this.constructor;
-    this.query = Ctor.query.clone();
-  }
-
-  assign(entitySet: ODataEntitySet<ODataModel>) {
+  assign(entitySet: ODataEntitySet<ODataModel>, query: ODataRequest) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)
       this.state.size = skip;
     if (this.state.size)
       this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.models = this.parse(entitySet.entities);
+    this.models = this.parse(entitySet.entities, query);
     return this;
   }
 
-  fetch(options?: any): Observable<this> {
+  fetch(): Observable<this> {
     let query = this.query.clone() as ODataEntitySetRequest<ODataModel>;
     if (!this.state.page)
       this.state.page = 1;
@@ -75,31 +67,31 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
       query.top(this.state.size);
       query.skip(this.state.size * (this.state.page - 1));
     }
-    return query.get()
+    return query.get({ withCount: true })
       .pipe(
-        map(set => this.assign(set))
+        map(set => this.assign(set, query))
       );
   }
 
-  getPage(page: number, options?: any) {
+  getPage(page: number) {
     this.state.page = page;
-    return this.fetch(options);
+    return this.fetch();
   }
 
-  getFirstPage(options?: any) {
-    return this.getPage(1, options);
+  getFirstPage() {
+    return this.getPage(1);
   }
 
-  getPreviousPage(options?: any) {
-    return (this.state.page) ? this.getPage(this.state.page - 1, options) : this.fetch(options);
+  getPreviousPage() {
+    return (this.state.page) ? this.getPage(this.state.page - 1) : this.fetch();
   }
 
-  getNextPage(options?: any) {
-    return (this.state.page) ? this.getPage(this.state.page + 1, options) : this.fetch(options);
+  getNextPage() {
+    return (this.state.page) ? this.getPage(this.state.page + 1) : this.fetch();
   }
 
-  getLastPage(options?: any) {
-    return (this.state.pages) ? this.getPage(this.state.pages, options) : this.fetch(options);
+  getLastPage() {
+    return (this.state.pages) ? this.getPage(this.state.pages) : this.fetch();
   }
 
   setPageSize(size: number) {
@@ -113,26 +105,26 @@ export class ODataCollection<M extends ODataModel> extends Collection<M> {
 
   // Mutate query
   select(select?: Select) {
-    return this.query.select(select);
+    return (this.query as ODataEntitySetRequest<ODataModel>).select(select);
   }
 
   filter(filter?: Filter) {
-    return this.query.filter(filter);
+    return (this.query as ODataEntitySetRequest<ODataModel>).filter(filter);
   }
 
   search(search?: string) {
-    return this.query.search(search);
+    return (this.query as ODataEntitySetRequest<ODataModel>).search(search);
   }
 
   orderBy(orderBy?: OrderBy) {
-    return this.query.orderBy(orderBy);
+    return (this.query as ODataEntitySetRequest<ODataModel>).orderBy(orderBy);
   }
 
   expand(expand?: Expand) {
-    return this.query.expand(expand);
+    return (this.query as ODataEntitySetRequest<ODataModel>).expand(expand);
   }
 
   groupBy(groupBy?: GroupBy) {
-    return this.query.groupBy(groupBy);
+    return (this.query as ODataEntitySetRequest<ODataModel>).groupBy(groupBy);
   }
 }
