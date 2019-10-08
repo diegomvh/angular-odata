@@ -148,43 +148,22 @@ export abstract class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let body = this.odata.resolveTarget<P>('body', target);
     let etag = this.odata.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
     return (options.responseType === "entityset") ?
-      ref.post(body, options) :
-      ref.put(body, etag, options);
+      ref.post(target, options) :
+      ref.put(target, etag, options);
   }
 
-  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
+  protected deleteRef<P>(entity: Partial<T>, name: string, options: {
+    target?: ODataEntityRequest<P>, 
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity',
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<P>;
-
-  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entityset',
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<ODataEntitySet<P>>;
-
-  protected deleteRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity' | 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
     let etag = this.odata.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
-    if (options.responseType === "entityset") {
-      let params = this.odata.resolveTarget<P>('query', target);
-      options.params = this.odata.mergeHttpParams(params, options.params);
-    }
     return ref.delete(etag, options);
   }
 
