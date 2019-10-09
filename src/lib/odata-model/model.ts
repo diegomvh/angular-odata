@@ -5,7 +5,7 @@ import { Utils } from '../utils/utils';
 import { PlainObject, Expand, ODataEntityRequest, ODataRequest } from '../odata-request';
 
 import { ODataClient } from '../client';
-import { ODataConfig } from '../config';
+import { ODataSettings } from '../settings';
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
 
@@ -52,13 +52,13 @@ export class Schema {
     return Object.assign(new Schema(), { keys, fields });
   }
 
-  configure(config: ODataConfig) {
+  configure(settings: ODataSettings) {
     this.fields.forEach(f => {
-      if (f.type in config.models) {
-        f.ctor = config.models[f.type];
+      if (f.type in settings.models) {
+        f.ctor = settings.models[f.type];
       }
-      else if (f.type in config.collections) {
-        f.ctor = config.collections[f.type];
+      else if (f.type in settings.collections) {
+        f.ctor = settings.collections[f.type];
       }
     });
   }

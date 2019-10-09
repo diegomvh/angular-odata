@@ -5,8 +5,7 @@ import { map, catchError } from 'rxjs/operators';
 
 import { ODataEntitySet, ODataProperty } from './odata-response';
 import { ODataBatchRequest, ODataEntityRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
-import { ODATA_CONFIG, ODataConfig } from './config';
-import { ODataModel } from './odata-model';
+import { ODataSettings } from './settings';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -72,10 +71,7 @@ export class ODataClient {
 
   public static readonly IF_MATCH_HEADER = 'If-Match';
 
-  constructor(protected http: HttpClient, @Inject(ODATA_CONFIG) protected config: ODataConfig) {
-    // Resolve types
-    Object.values(config.models || [])
-      .forEach(model => (model as typeof ODataModel).schema.configure(config));
+  constructor(protected http: HttpClient, protected settings: ODataSettings) {
   }
 
   resolveEtag<T>(entity: Partial<T>): string {
@@ -130,7 +126,7 @@ export class ODataClient {
   }
 
   serviceRoot(): string {
-    let base = this.config.baseUrl;
+    let base = this.settings.baseUrl;
     if (!base.endsWith('/')) {
       base += '/';
     }
@@ -445,19 +441,19 @@ export class ODataClient {
     
     // With Count ?
     let withCount = options.withCount;
-    if (withCount || this.config.withCount)
+    if (withCount || this.settings.withCount)
       customParams[ODataClient.$COUNT] = 'true';
     
     // Page Size?
-    if (options.responseType === 'entityset' && !(ODataClient.$TOP in queryParams) && this.config.maxPageSize)
-      customParams[ODataClient.$TOP] = this.config.maxPageSize;
+    if (options.responseType === 'entityset' && !(ODataClient.$TOP in queryParams) && this.settings.maxPageSize)
+      customParams[ODataClient.$TOP] = this.settings.maxPageSize;
 
     let params = this.mergeHttpParams(queryParams, options.params, customParams);
 
     // Credentials ?
     let withCredentials = options.withCredentials;
     if (withCredentials === undefined)
-      withCredentials = this.config.withCredentials;
+      withCredentials = this.settings.withCredentials;
 
     // Call http request
     let res$ = this.http.request(method, url, {
@@ -471,9 +467,9 @@ export class ODataClient {
     });
 
     // Context Error Handler
-    if (this.config.errorHandler) {
+    if (this.settings.errorHandler) {
       res$ = res$.pipe(
-        catchError(this.config.errorHandler)
+        catchError(this.settings.errorHandler)
       );
     }
 
