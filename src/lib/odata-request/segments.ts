@@ -25,6 +25,7 @@ export class ODataSegments {
             ).slice(1);
           default:
             let key = segment.options[Options.key];
+            if (typeof(key) === 'string' && !(key.charAt(0) === key.charAt(key.length-1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) key = `'${key}'`;
             return segment.name + (key ? buildQuery({key}) : "");
           }
       });
