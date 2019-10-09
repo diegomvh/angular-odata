@@ -87,15 +87,16 @@ export class Schema {
 
   parse(field: Field, value: any, query: ODataRequest) {
     if (value === null) return value;
-    if (value === undefined) value = field.collection? [] : {};
     if (field.ctor) {
-      return new field.ctor(value, query);
+      return new field.ctor(value || (field.collection? [] : {}), query);
     }
     else if (field.enum) {
       //TODO: Resolve enum?
       return value;
     } else if (field.type in CONSTRUCTORS) {
-      return field.collection ? value.map(CONSTRUCTORS[field.type]) : CONSTRUCTORS[field.type](value);
+      return (Array.isArray(value) && field.collection) ? 
+        value.map(CONSTRUCTORS[field.type]) : 
+        CONSTRUCTORS[field.type](value);
     }
     return value;
   }
@@ -108,8 +109,6 @@ export class Schema {
     else if (field.enum) {
       //TODO: Resolve enum?
       return value;
-    } else if (field.type in CONSTRUCTORS) {
-      return field.collection ? value.map(CONSTRUCTORS[field.type]) : CONSTRUCTORS[field.type](value);
     }
     return value;
   }
@@ -138,12 +137,14 @@ export class Schema {
       Object.defineProperty(model, field.name, {
         get() {
           if (!(field.name in this.relationships)) {
-            if (this.isNew())
-              throw new Error(`Can't resolve ${field.name} relation from new entity`);
-            (query as ODataEntityRequest<ODataModel>).key(this.resolveKey());
-            let nav = (query as ODataEntityRequest<ODataModel>).navigationProperty<any>(field.name);
-            this.relationships[field.name] = parse(field, attrs[field.name], query);
-            this.relationships[field.name].query = nav;
+            let query: ODataEntityRequest<ODataModel> | ODataNavigationPropertyRequest<ODataModel> = this.query.clone();
+            if (query instanceof ODataEntityRequest) {
+              if (this.isNew())
+                throw new Error(`Can't resolve ${field.name} relation from new entity`);
+              query.key(this.resolveKey());
+            }
+            let nav = query.navigationProperty<any>(field.name);
+            this.relationships[field.name] = parse(field, attrs[field.name], nav);
           }
           return this.relationships[field.name];
         },
