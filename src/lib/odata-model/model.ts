@@ -8,6 +8,7 @@ import { ODataClient } from '../client';
 import { ODataSettings } from '../settings';
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
+import { EnumUtils } from './utils';
 
 export interface Key {
   name: string;
@@ -17,13 +18,14 @@ export interface Key {
 export interface Field {
   name: string;
   type: string;
-  ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataRequest): ODataModel } | { new(models: PlainObject[], query: ODataRequest): ODataCollection<ODataModel> };
-  collection?: boolean;
+  enum?: {[key: number]: string | number};
+  model?: { new(attrs: PlainObject, query: ODataRequest): ODataModel };
+  collection?: { new(models: PlainObject[], query: ODataRequest): ODataCollection<ODataModel> };
   length?: number;
-  required?: boolean;
-  enum?: boolean;
-  flags?: boolean;
-  navigation?: boolean;
+  isCollection?: boolean;
+  isNullable?: boolean;
+  isFlags?: boolean;
+  isNavigation?: boolean;
   field?: string;
   ref?: string;
   default?: any;
@@ -54,11 +56,13 @@ export class Schema {
 
   configure(settings: ODataSettings) {
     this.fields.forEach(f => {
-      if (f.type in settings.models) {
-        f.ctor = settings.models[f.type];
+      if (f.type in settings.enums) {
+        f.enum = settings.enums[f.type];
+      } else if (f.type in settings.models) {
+        f.model = settings.models[f.type];
       }
       else if (f.type in settings.collections) {
-        f.ctor = settings.collections[f.type];
+        f.collection = settings.collections[f.type];
       }
     });
   }
@@ -78,23 +82,25 @@ export class Schema {
   }
 
   get navigations(): Field[] {
-    return this.fields.filter(f => f.navigation);
+    return this.fields.filter(f => f.isNavigation);
   }
 
   get properties(): Field[] {
-    return this.fields.filter(f => !f.navigation);
+    return this.fields.filter(f => !f.isNavigation);
   }
 
   parse(field: Field, value: any, query: ODataRequest) {
     if (value === null) return value;
-    if (field.ctor) {
-      return new field.ctor(value || (field.collection? [] : {}), query);
-    }
-    else if (field.enum) {
-      //TODO: Resolve enum?
-      return value;
+    if (field.enum) {
+      return field.isFlags ? 
+        EnumUtils.toFlags(field.enum, value) : 
+        EnumUtils.toValues(field.enum, value); 
+    } else if (field.model) {
+      return new field.model(value || {}, query);
+    } else if (field.collection) {
+      return new field.collection(value || [], query);
     } else if (field.type in CONSTRUCTORS) {
-      return (Array.isArray(value) && field.collection) ? 
+      return (Array.isArray(value) && field.isCollection) ? 
         value.map(CONSTRUCTORS[field.type]) : 
         CONSTRUCTORS[field.type](value);
     }
@@ -103,12 +109,12 @@ export class Schema {
 
   toJSON(field: Field, value: any) {
     if (value === null) return value;
-    if (field.ctor) {
+    if (field.enum) {
+      return EnumUtils.toString(field.enum, value); 
+    } else if (field.model) {
       return value.toJSON();
-    }
-    else if (field.enum) {
-      //TODO: Resolve enum?
-      return value;
+    } else if (field.collection) {
+      return value.toJSON();
     }
     return value;
   }
@@ -149,7 +155,7 @@ export class Schema {
           return this.relationships[field.name];
         },
         set(value: ODataModel | null) {
-          if (field.collection)
+          if (field.isCollection)
             throw new Error(`Can't set ${field.name} to collection, use add`);
           if (!((value as ODataModel).query instanceof ODataEntityRequest))
             throw new Error(`Can't set ${value} to model`);
@@ -182,7 +188,7 @@ export class ODataModel {
   static schema: Schema = null;
   query: ODataRequest;
   state: ModelState;
-  relationships: { [name: string]: any }
+  relationships: { [name: string]: ODataModel | ODataCollection<ODataModel> }
 
   constructor(attrs: PlainObject, query: ODataRequest) {
     this.assign(attrs, query);
