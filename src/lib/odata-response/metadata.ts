@@ -1,6 +1,6 @@
 import { CsdlTypeDefinition } from './csdl/csdl-type-definition';
 import { CsdlSchema } from './csdl/csdl-schema';
-import { Utils } from '../utils/utils';
+import { Types } from '../utils/types';
 import { CsdlEnumType, CsdlEnumMember } from './csdl/csdl-enum-type';
 import { CsdlEntityType, CsdlPropertyRef, CsdlKey, CsdlComplexType } from './csdl/csdl-structured-type';
 import { CsdlFunction, CsdlParameter, CsdlFunctionImport, CsdlActionImport, CsdlReturnType, CsdlAction } from './csdl/csdl-function-action';
@@ -140,11 +140,11 @@ export class ODataMetadata {
     protected checkVersion(document: Document) {
         // check version
         const attributes: NamedNodeMap = document.documentElement.attributes;
-        if (Utils.isNullOrUndefined(attributes)) {
+        if (Types.isNullOrUndefined(attributes)) {
             throw new Error('OData version is not specified in the metadata');
         }
         const attr: Attr = attributes.getNamedItem('Version');
-        if (Utils.isNullOrUndefined(attr)) {
+        if (Types.isNullOrUndefined(attr)) {
             throw new Error('OData version is not specified in the metadata');
         }
         const odataVersion: string = attr.nodeValue;
@@ -166,7 +166,7 @@ export class ODataMetadata {
 
             const attributes: NamedNodeMap = element.attributes;
             const fieldValues: any[] = this.getFieldValues(fieldNames, attributes, element);
-            if (Utils.isNullOrUndefined(objects)) {
+            if (Types.isNullOrUndefined(objects)) {
                 objects = [];
             }
             switch (tag) {
@@ -377,14 +377,14 @@ export class ODataMetadata {
         let element: Element;
         for (let index = 0; index < children.length; index++) {
             if (children.item(index).nodeName === tag) {
-                if (Utils.isNotNullNorUndefined(element)) {
+                if (Types.isNotNullNorUndefined(element)) {
                     throw new Error('Expected one ' + tag);
                 }
                 element = children.item(index);
             }
         }
 
-        if (Utils.isNotNullNorUndefined(element)) {
+        if (Types.isNotNullNorUndefined(element)) {
             const attributes: NamedNodeMap = element.attributes;
             const fieldValues: any[] = this.getFieldValues(fieldNames, attributes, element);
             switch (tag) {
@@ -688,17 +688,17 @@ export class ODataMetadata {
 
     protected getAttributeValue(attributes: NamedNodeMap, attributeName: string): string {
         const attribute: Attr = attributes.getNamedItem(attributeName);
-        if (Utils.isNotNullNorUndefined(attribute)) {
+        if (Types.isNotNullNorUndefined(attribute)) {
             return attribute.nodeValue;
         }
         return undefined;
     }
 
     protected propertyValueToNumber(attributeValue: string): number {
-        return Utils.isNotNullNorUndefined(attributeValue) ? Number(attributeValue) : undefined;
+        return Types.isNotNullNorUndefined(attributeValue) ? Number(attributeValue) : undefined;
     }
 
     protected propertyValueToBoolean(attributeValue: string): boolean {
-        return Utils.isNotNullNorUndefined(attributeValue) ? attributeValue === 'true' : undefined;
+        return Types.isNotNullNorUndefined(attributeValue) ? attributeValue === 'true' : undefined;
     }
 }

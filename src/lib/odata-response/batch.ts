@@ -1,6 +1,6 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
-import { Utils } from '../utils/utils';
+import { Types } from '../utils/types';
 
 export class ODataBatchResponse {
     private static readonly CONTENT_TYPE = 'Content-Type';
@@ -53,7 +53,7 @@ export class ODataBatchResponse {
                     batchPartStartIndex = undefined;
                 }
                 continue;
-            } else if (Utils.isNotNullNorUndefined(odataResponseCS) && batchBodyLine.startsWith(ODataBatchResponse.CONTENT_ID)) {
+            } else if (Types.isNotNullNorUndefined(odataResponseCS) && batchBodyLine.startsWith(ODataBatchResponse.CONTENT_ID)) {
                 contentId = Number(this.getHeaderValue(batchBodyLine));
             } else if (batchBodyLine.startsWith(ODataBatchResponse.HTTP11)) {
                 batchPartStartIndex = index;
@@ -64,7 +64,7 @@ export class ODataBatchResponse {
                 }
 
                 const odataResponse: HttpResponse<any> = this.createODataResponse(batchBodyLines, batchPartStartIndex, index - 1);
-                if (Utils.isNotNullNorUndefined(odataResponseCS)) {
+                if (Types.isNotNullNorUndefined(odataResponseCS)) {
                     odataResponseCS[contentId] = odataResponse;
                 } else {
                     this.odataResponses.push(odataResponse);
@@ -73,9 +73,9 @@ export class ODataBatchResponse {
                 if (batchBodyLine === boundaryDelimiterBatch || batchBodyLine === boundaryDelimiterCS) {
                     batchPartStartIndex = index + 1;
                 } else if (batchBodyLine === boundaryEndBatch || batchBodyLine === boundaryEndCS) {
-                    if (Utils.isNotNullNorUndefined(odataResponseCS)) {
+                    if (Types.isNotNullNorUndefined(odataResponseCS)) {
                         for (const response of odataResponseCS) {
-                            if (Utils.isNotNullNorUndefined(response)) {
+                            if (Types.isNotNullNorUndefined(response)) {
                                 this.odataResponses.push(response);
                             }
                         }
