@@ -2,7 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { PlainObject, ODataRequest } from './odata-request';
 import { ODataModel, ODataCollection } from './odata-model';
-import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -11,6 +11,7 @@ export interface ODataConfig {
   metadataUrl?: string,
   withCredentials?: boolean,
   withCount?: boolean,
+  stringAsEnum?: boolean,
   maxPageSize?: number,
   creation?: Date,
   version?: string,
@@ -25,6 +26,7 @@ export class ODataSettings {
   metadataUrl?: string;
   withCredentials?: boolean;
   withCount?: boolean;
+  stringAsEnum?: boolean;
   maxPageSize?: number;
   creation?: Date;
   version?: string;
