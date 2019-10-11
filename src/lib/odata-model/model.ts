@@ -1,60 +1,47 @@
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { Utils } from '../utils/utils';
 import { PlainObject, Expand, ODataEntityRequest, ODataRequest } from '../odata-request';
 
 import { ODataClient } from '../client';
-import { ODataSettings } from '../settings';
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
-import { EnumUtils } from './utils';
+import { Enums } from '../utils/enums';
+import { Schema, Field, Key } from './schema';
+import { ODataSettings } from '../settings';
 
-export interface Key {
-  name: string;
-  resolve?: (model: ODataModel) => number | string | PlainObject;
+interface ModelKey extends Key {
 }
 
-export interface Field {
-  name: string;
-  type: string;
+interface ModelField extends Field {
   enum?: {[key: number]: string | number};
   model?: { new(attrs: PlainObject, query: ODataRequest): ODataModel };
   collection?: { new(models: PlainObject[], query: ODataRequest): ODataCollection<ODataModel> };
-  length?: number;
-  isCollection?: boolean;
-  isNullable?: boolean;
-  isFlags?: boolean;
-  isNavigation?: boolean;
-  field?: string;
-  ref?: string;
-  default?: any;
 }
 
-const CONSTRUCTORS = {
-  'String': (value) => String(value),
-  'Number': (value) => Number(value),
-  'Boolean': (value) => Boolean(value),
+const PARSERS = {
+  'string': (value) => String(value),
+  'number': (value) => Number(value),
+  'boolean': (value) => Boolean(value),
   'Date': (value) => new Date(value),
 };
 
-export class Schema {
-  keys: Key[];
-  fields: Field[];
-
-  static create(opts: { keys?: Key[], fields?: Field[] }) {
+export class ModelSchema<M> extends Schema<ModelKey, ModelField, M> {
+  static create<M extends ODataModel>(opts: { keys?: ModelKey[], fields?: ModelField[] }) {
     var keys = opts.keys || [];
     var fields = opts.fields || [];
-    return Object.assign(new Schema(), { keys, fields });
+    return Object.assign(new ModelSchema(), { keys, fields }) as ModelSchema<M>;
   }
 
-  extend(opts: { keys?: Key[], fields?: Field[] }) {
-    var keys = [...this.keys, ...(opts.keys || [])];
-    var fields = [...this.fields, ...(opts.fields || [])];
-    return Object.assign(new Schema(), { keys, fields });
+  extend<M extends ODataModel>(opts: { keys?: ModelKey[], fields?: ModelField[] }) {
+    let Cotr = <typeof ModelSchema>this.constructor;
+    let keys = [...this.keys, ...(opts.keys || [])];
+    let fields = [...this.fields, ...(opts.fields || [])];
+    return Object.assign(new Cotr(), { keys, fields }) as ModelSchema<M>;
   }
 
   configure(settings: ODataSettings) {
+    super.configure(settings);
     this.fields.forEach(f => {
       if (f.type in settings.enums) {
         f.enum = settings.enums[f.type];
@@ -67,50 +54,28 @@ export class Schema {
     });
   }
 
-  resolveKey(model: ODataModel) {
-    let keys = this.keys
-      .map(key => [key.name, (key.resolve) ? key.resolve(model) : model[key.name]]);
-    let key = keys.length === 1 ?
-      keys[0][1] :
-      keys.reduce((acc, key) => Object.assign(acc, { [key[0]]: key[1] }), {});
-    if (!Utils.isEmpty(key))
-      return key;
-  }
-
-  isNew(model: ODataModel) {
-    return !this.resolveKey(model);
-  }
-
-  get navigations(): Field[] {
-    return this.fields.filter(f => f.isNavigation);
-  }
-
-  get properties(): Field[] {
-    return this.fields.filter(f => !f.isNavigation);
-  }
-
-  parse(field: Field, value: any, query: ODataRequest) {
+  parse(field: ModelField, value: any, query: ODataRequest) {
     if (value === null) return value;
     if (field.enum) {
       return field.isFlags ? 
-        EnumUtils.toFlags(field.enum, value) : 
-        EnumUtils.toValues(field.enum, value); 
+        Enums.toFlags(field.enum, value) : 
+        Enums.toValues(field.enum, value); 
     } else if (field.model) {
       return new field.model(value || {}, query);
     } else if (field.collection) {
       return new field.collection(value || [], query);
-    } else if (field.type in CONSTRUCTORS) {
+    } else if (field.type in PARSERS) {
       return (Array.isArray(value) && field.isCollection) ? 
-        value.map(CONSTRUCTORS[field.type]) : 
-        CONSTRUCTORS[field.type](value);
+        value.map(PARSERS[field.type]) : 
+        PARSERS[field.type](value);
     }
     return value;
   }
 
-  toJSON(field: Field, value: any) {
+  toJSON(field: ModelField, value: any) {
     if (value === null) return value;
     if (field.enum) {
-      return EnumUtils.toString(field.enum, value); 
+      return Enums.toString(field.enum, value); 
     } else if (field.model) {
       return value.toJSON();
     } else if (field.collection) {
@@ -120,20 +85,16 @@ export class Schema {
   }
 
   serialize(model: ODataModel) {
-    return this.properties.reduce((acc, f) => {
-      if (f.name in model) {
-        acc[f.name] = this.toJSON(f, model[f.name]);
-      }
-      return acc;
-    }, {});
+    return this.properties.filter(f => f.name in model).reduce((acc, f) => 
+      Object.assign(acc, {[f.name]: this.toJSON(f, model[f.name])}), 
+      {});
   }
 
   deserialize(model: ODataModel, attrs: PlainObject, query: ODataRequest) {
-    this.properties.forEach(f => {
-      if (f.name in attrs) {
-        model[f.name] = this.parse(f, attrs[f.name], query);
-      }
-    });
+    Object.assign(model, this.properties.filter(f => f.name in attrs).reduce((acc, f) => 
+      Object.assign(acc, {[f.name]: this.parse(f, attrs[f.name], query)}), 
+      {})
+    );
   }
 
   relationships(model: ODataModel, attrs: PlainObject, query: ODataRequest) {
@@ -185,7 +146,7 @@ export enum ModelState {
 
 export class ODataModel {
   // Statics
-  static schema: Schema = null;
+  static schema: ModelSchema<ODataModel> = null;
   query: ODataRequest;
   state: ModelState;
   relationships: { [name: string]: ODataModel | ODataCollection<ODataModel> }

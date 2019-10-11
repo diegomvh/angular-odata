@@ -1,34 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError, empty } from 'rxjs';
-import { catchError, expand, concatMap, toArray } from 'rxjs/operators';
+import { catchError, expand, concatMap, toArray, map } from 'rxjs/operators';
 
-import { ODataEntitySet } from '../odata-response';
-import { Utils } from '../utils/utils';
+import { ODataEntitySet, ODataProperty } from '../odata-response';
+import { Types } from '../utils/types';
 import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
 import { ODataClient } from "../client";
+import { EntitySchema } from '../odata-model/entity';
 
 @Injectable()
-export abstract class ODataEntityService<T> {
+export class ODataEntityService<T> {
   static set: string = "";
+  schema: EntitySchema<T>;
 
-  constructor(protected client: ODataClient) { }
+  constructor(protected client: ODataClient) {}
 
-  protected abstract resolveEntityKey(entity: Partial<T>);
+  protected resolveEntityKey(entity: Partial<T>) {
+    return this.schema.resolveKey(entity);
+  }
 
   public entities(): ODataEntitySetRequest<T> {
-    let ctor = <typeof ODataEntityService>this.constructor;
-    return this.client.entitySet<T>(ctor.set);
+    let Ctor = <typeof ODataEntityService>this.constructor;
+    return this.client.entitySet<T>(Ctor.set);
   }
 
   public entity(entity?: number | string | Partial<T>): ODataEntityRequest<T> {
-    let key = Utils.isObject(entity) ? this.resolveEntityKey(entity as Partial<T>) : entity;
+    let key = Types.isObject(entity) ? this.resolveEntityKey(entity as Partial<T>) : entity;
     return this.entities().entity(key);
   }
 
   public isNew(entity: Partial<T>) {
-    return !this.resolveEntityKey(entity);
+    return this.schema.isNew(entity);
   }
 
   // Entity Actions
@@ -40,7 +44,8 @@ export abstract class ODataEntityService<T> {
       query.skip(options.skip);
     if (options.top)
       query.top(options.top);
-    return query.get({withCount: options.withCount});
+    return query
+      .get({withCount: options.withCount});
   }
 
   public fetchAll(): Observable<T[]> {
@@ -190,7 +195,7 @@ export abstract class ODataEntityService<T> {
     responseType?: 'property',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P>;
+  }): Observable<ODataProperty<P>>;
 
   protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -225,7 +230,7 @@ export abstract class ODataEntityService<T> {
     responseType?: 'property',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P>;
+  }): Observable<ODataProperty<P>>;
 
   protected customCollectionAction<P>(name: string, data: any, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -260,7 +265,7 @@ export abstract class ODataEntityService<T> {
     responseType?: 'property',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P>;
+  }): Observable<ODataProperty<P>>;
 
   protected customFunction<P>(entity: Partial<T>, name: string, data: any, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -296,7 +301,7 @@ export abstract class ODataEntityService<T> {
     responseType?: 'property',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<P>;
+  }): Observable<ODataProperty<P>>;
 
   protected customCollectionFunction<P>(name: string, data: any, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
