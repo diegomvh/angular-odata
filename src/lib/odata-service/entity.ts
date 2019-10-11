@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError, empty } from 'rxjs';
-import { catchError, map, expand, concatMap } from 'rxjs/operators';
+import { catchError, map, expand, concatMap, toArray } from 'rxjs/operators';
 
 import { ODataEntitySet } from '../odata-response';
 import { Utils } from '../utils/utils';
@@ -43,11 +43,12 @@ export abstract class ODataEntityService<T> {
     return query.get({withCount: options.withCount});
   }
 
-  public fetchAll(): Observable<T> {
+  public fetchAll(): Observable<T[]> {
     return this.fetchPage()
       .pipe(
         expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? this.fetchPage(resp) : empty()),
-        concatMap((resp: ODataEntitySet<T>) => resp.entities));
+        concatMap((resp: ODataEntitySet<T>) => resp.entities),
+        toArray());
   }
 
   public fetchOne(entity: Partial<T>): Observable<T> {
