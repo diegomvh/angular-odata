@@ -1,6 +1,6 @@
 import buildQuery from 'odata-query';
 
-import { Utils } from '../utils/utils';
+import { Types } from '../utils/types';
 
 import { PlainObject, OptionHandler, Options } from './types';
 
@@ -28,7 +28,7 @@ export class ODataOptions {
       Options.skip,
       Options.expand,
       Options.format]
-      .filter(key => !Utils.isEmpty(this.options[key]))
+      .filter(key => !Types.isEmpty(this.options[key]))
       .map(key => buildQuery({ [key]: this.options[key] }))
       .reduce((acc, param: string) => {
         let index = param.indexOf(ODataOptions.VALUE_SEPARATOR);
@@ -52,13 +52,13 @@ export class ODataOptions {
 
   // Option Handler
   option<T>(type: Options, opts?: T) {
-    if (!Utils.isUndefined(opts))
+    if (!Types.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type);
   }
 
   has(type: Options) {
-    return !Utils.isUndefined(this.options[type]);
+    return !Types.isUndefined(this.options[type]);
   }
 
   remove(...types: Options[]) {

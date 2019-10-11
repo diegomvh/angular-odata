@@ -1,4 +1,4 @@
-import { Utils } from '../utils/utils';
+import { Types } from '../utils/types';
 
 export type EntityKey = string | number | PlainObject;
 export type PlainObject = { [property: string]: any };
@@ -92,13 +92,13 @@ export class OptionHandler<T> {
 
   // Array
   push(value: T) {
-    if (!Utils.isArray(this.o[this.t]))
+    if (!Types.isArray(this.o[this.t]))
       this.o[this.t] = [this.o[this.t]];
     this.o[this.t].push(value);
   }
 
   remove(value: T) {
-    if (Utils.isArray(this.o[this.t])) {
+    if (Types.isArray(this.o[this.t])) {
       this.o[this.t] = this.o[this.t].filter(v => v !== value);
       if (this.o[this.t].length === 1)
         this.o[this.t] = this.o[this.t][0];
@@ -106,18 +106,18 @@ export class OptionHandler<T> {
   }
 
   at(index: number) {
-    if (Utils.isArray(this.o[this.t])) {
+    if (Types.isArray(this.o[this.t])) {
       return this.o[this.t][index];
     }
   }
 
   // Hash map
   private assertObject(): PlainObject {
-    if (Utils.isObject(this.o[this.t]) && !Utils.isArray(this.o[this.t]))
+    if (Types.isObject(this.o[this.t]) && !Types.isArray(this.o[this.t]))
       return this.o[this.t];
-    else if (!Utils.isUndefined(this.o[this.t]) && !Array.isArray(this.o[this.t])) {
+    else if (!Types.isUndefined(this.o[this.t]) && !Array.isArray(this.o[this.t])) {
       this.o[this.t] = [this.o[this.t]];
-      let obj = this.o[this.t].find(v => Utils.isObject(v));
+      let obj = this.o[this.t].find(v => Types.isObject(v));
       if (!obj) {
         obj = {};
         this.o[this.t].push(obj);
@@ -139,7 +139,7 @@ export class OptionHandler<T> {
 
   unset(name: string) {
     delete this.assertObject()[name];
-    this.o[this.t] = this.o[this.t].filter(v => !Utils.isEmpty(v));
+    this.o[this.t] = this.o[this.t].filter(v => !Types.isEmpty(v));
     if (this.o[this.t].length === 1)
       this.o[this.t] = this.o[this.t][0];
   }
@@ -179,7 +179,7 @@ export class SegmentHandler {
 
   // Option Handler
   option<T>(type: Options, opts?: T) {
-    if (!Utils.isUndefined(opts))
+    if (!Types.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type);
   }

@@ -3,7 +3,7 @@ import { UUID } from 'angular2-uuid';
 import { Observable, of } from 'rxjs';
 
 import { ODataClient } from '../../client';
-import { Utils } from '../../utils/utils';
+import { Types } from '../../utils/types';
 import { ODataRequest } from '../request';
 import { Segments, RequestMethod } from '../types';
 import { ODataSegments } from '../segments';
@@ -48,7 +48,7 @@ export class BatchRequest {
       res += BatchRequest.CONTENT_TYPE + ': ' + BatchRequest.APPLICATION_JSON + BatchRequest.NEWLINE;
     }
 
-    if (Utils.isNullOrUndefined(this.options) || Utils.isNullOrUndefined(this.options.headers)) {
+    if (Types.isNullOrUndefined(this.options) || Types.isNullOrUndefined(this.options.headers)) {
       return res;
     }
 
@@ -129,19 +129,19 @@ export class ODataBatchRequest extends ODataRequest {
       const body: any = request.options.body;
 
       // if method is GET and there is a changeset boundary open then close it
-      if (method === RequestMethod.Get && Utils.isNotNullNorUndefined(this.changesetBoundary)) {
+      if (method === RequestMethod.Get && Types.isNotNullNorUndefined(this.changesetBoundary)) {
         res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + BatchRequest.BOUNDARY_PREFIX_SUFFIX + BatchRequest.NEWLINE;
         this.changesetBoundary = null;
       }
 
       // if there is no changeset boundary open then open a batch boundary
-      if (Utils.isNullOrUndefined(this.changesetBoundary)) {
+      if (Types.isNullOrUndefined(this.changesetBoundary)) {
         res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + BatchRequest.NEWLINE;
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (method !== RequestMethod.Get) {
-        if (Utils.isNullOrUndefined(this.changesetBoundary)) {
+        if (Types.isNullOrUndefined(this.changesetBoundary)) {
           this.changesetBoundary = BatchRequest.CHANGESET_PREFIX + this.getUUID();
           res += BatchRequest.CONTENT_TYPE + ': ' + BatchRequest.MULTIPART_MIXED_BOUNDARY + this.changesetBoundary + BatchRequest.NEWLINE;
           res += BatchRequest.NEWLINE;
@@ -170,7 +170,7 @@ export class ODataBatchRequest extends ODataRequest {
     }
 
     if (res.length) {
-      if (Utils.isNotNullNorUndefined(this.changesetBoundary)) {
+      if (Types.isNotNullNorUndefined(this.changesetBoundary)) {
         res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + BatchRequest.BOUNDARY_PREFIX_SUFFIX + BatchRequest.NEWLINE;
         this.changesetBoundary = null;
       }

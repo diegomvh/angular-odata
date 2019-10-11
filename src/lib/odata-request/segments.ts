@@ -1,6 +1,6 @@
 import buildQuery from 'odata-query';
 
-import { Utils } from '../utils/utils';
+import { Types } from '../utils/types';
 import { SegmentHandler, ODataSegment, Segments, Options } from './types';
 import { ODataOptions } from './options';
 
@@ -43,7 +43,7 @@ export class ODataSegments {
   find(type: string, name?: string) {
     return this.segments.find(s => 
       s.type === type && 
-      (Utils.isUndefined(name) || s.name === name));
+      (Types.isUndefined(name) || s.name === name));
   }
 
   last(): SegmentHandler {
@@ -53,7 +53,7 @@ export class ODataSegments {
 
   segment(type: string, name?: string): SegmentHandler {
     let segment = this.find(type, name);
-    if (!segment && !Utils.isUndefined(name)) {
+    if (!segment && !Types.isUndefined(name)) {
       segment = { type, name, options: {} } as ODataSegment;
       this.segments.push(segment);
     }
