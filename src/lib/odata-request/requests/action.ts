@@ -19,7 +19,7 @@ export class ODataActionRequest<T> extends ODataRequest {
     return new ODataActionRequest<T>(service, segments, options);
   }
 
-  post(body: T, options?: {
+  post(body: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -27,7 +27,7 @@ export class ODataActionRequest<T> extends ODataRequest {
     withCredentials?: boolean,
   }): Observable<string>;
 
-  post(body: T, options?: {
+  post(body: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -35,7 +35,7 @@ export class ODataActionRequest<T> extends ODataRequest {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  post(body: T, options?: {
+  post(body: any, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -52,7 +52,7 @@ export class ODataActionRequest<T> extends ODataRequest {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  post(body: T, options: {
+  post(body: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     responseType?: 'text'|'entity'|'entityset'|'property',
@@ -60,7 +60,7 @@ export class ODataActionRequest<T> extends ODataRequest {
     withCredentials?: boolean
   }): Observable<any>;
 
-  post(body: T, options: {
+  post(body: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     responseType?: 'text'|'entity'|'entityset'|'property',

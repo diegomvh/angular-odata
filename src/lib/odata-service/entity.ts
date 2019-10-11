@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError, empty } from 'rxjs';
-import { catchError, map, expand, concatMap, toArray } from 'rxjs/operators';
+import { catchError, expand, concatMap, toArray } from 'rxjs/operators';
 
 import { ODataEntitySet } from '../odata-response';
 import { Utils } from '../utils/utils';
@@ -270,7 +270,7 @@ export abstract class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P> {
     let query = this.entity(entity).function<P>(name);
-    query.parameters().assign(data);
+    query.parameters(data);
     return query.get(options);
   }
 
@@ -306,7 +306,7 @@ export abstract class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P> {
     let query = this.entities().function<P>(name);
-    query.parameters().assign(data);
+    query.parameters(data);
     return query.get(options);
   }
 }
