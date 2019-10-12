@@ -63,7 +63,7 @@ export class ODataEntityService<T> {
 
   public create(entity: T): Observable<T> {
     return this.entities()
-      .post(entity);
+      .post(this.schema.serialize(entity));
   }
 
   public fetchOrCreate(entity: Partial<T>): Observable<T> {

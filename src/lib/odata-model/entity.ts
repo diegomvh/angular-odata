@@ -7,7 +7,7 @@ interface EntityKey extends Key {
 
 interface EntityField extends Field {
   enum?: {[key: number]: string | number};
-  schema?: EntitySchema<any>;
+  schema?: EntitySchema<any> | 'self';
 }
 
 const PARSERS = {
