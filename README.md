@@ -24,7 +24,7 @@ import { ODataModule } from 'angular-odata';
 @NgModule({
   imports: [
     ...
-    ODataModule.forContext({
+    ODataModule.forRoot({
       baseUrl: "http://localhost/odata/",
       withCredentials: true,
       errorHandler: (error: HttpErrorResponse) => {
@@ -43,11 +43,10 @@ or build context through a factory function.
 import { NgModule } from '@angular/core';
 import { throwError } from 'rxjs';
 
-import { ODataContext } from 'angular-odata';
-import { MyApiModule, MyApiConfig } from './myapi';
+import { ODataSettings } from 'angular-odata';
 
-export function oDataContextFactory() {
-  return new ODataContext({
+export function oDataSettingsFactory() {
+  return new ODataSettings({
     baseUrl: "http://localhost/odata/",
     withCredentials: true,
     errorHandler: (error: HttpErrorResponse) => {
@@ -63,7 +62,7 @@ export function oDataContextFactory() {
   ]
   providers: [
     ...
-    { provide: ODataContext, useFactory: oDataContextFactory }
+    { provide: ODataSettings, useFactory: oDataSettingsFactory }
   ],
 })
 export class AppModule {}
@@ -81,7 +80,7 @@ import { MyApiModule, MyApiConfig } from './myapi';
 @NgModule({
   imports: [
     ...
-    ODataModule.forContext(MyApiConfig),
+    ODataModule.forRoot(MyApiConfig),
     MyApiModule
   ]
   ...
@@ -108,7 +107,7 @@ export class AudioPlayerComponent {
   constructor(private odata: ODataClient) { 
     this.odata.entitySet<Song>("Songs");
       .get()
-      .subscribe(entityset => this.songs = entityset.entities);
+      .subscribe(entityset => this.songs = entityset.value);
 
     this.odata.entitySet("Songs")
       .entity(1)
@@ -132,7 +131,7 @@ export class AudioPlayerComponent {
     // Update orderBy and add Artist LastName
     collection.orderBy().add("Artist/LastName");
     // Go!
-    collection.get().subscribe(entityset => this.songs = entityset.entities)
+    collection.get().subscribe(entityset => this.songs = entityset.value)
   }
 
 }
@@ -173,8 +172,9 @@ export class AudioPlayerComponent {
   song: Song; 
   
   constructor(private songsService: SongsService) {
-    this.songsService.fetch({id: 1}).subscribe(song => this.song = song)
-    this.songsService.all().subscribe(entityset => this.songs = entityset.entities)
+    this.songsService.fetchOne({id: 1}).subscribe(song => this.song = song)
+    this.songsService.fetchPage().subscribe(page => this.songs = page.entities)
+    this.songsService.fetchAll().subscribe(all => this.songs = all)
   }
 }
 ```
