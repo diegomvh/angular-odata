@@ -53,19 +53,51 @@ export class ODataEntityService<T> {
       .pipe(
         expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? this.fetchPage(resp) : empty()),
         concatMap((resp: ODataEntitySet<T>) => resp.entities),
+        map(e => this.schema.deserialize(e)),
         toArray());
   }
 
   public fetchOne(entity: Partial<T>): Observable<T> {
     return this.entity(entity)
-      .get();
+      .get()
+      .pipe(
+        map(e => this.schema.deserialize(e)),
+      );
   }
 
   public create(entity: T): Observable<T> {
     return this.entities()
-      .post(this.schema.serialize(entity));
+      .post(this.schema.serialize(entity))
+      .pipe(
+        map(e => this.schema.deserialize(e)),
+      );
   }
 
+  public update(entity: T): Observable<T> {
+    let etag = this.client.resolveEtag<T>(entity);
+    return this.entity(entity)
+      .put(this.schema.serialize(entity), etag)
+      .pipe(
+        map(e => this.schema.deserialize(e)),
+      );
+  }
+
+  public assign(entity: Partial<T>, options?) {
+    let etag = this.client.resolveEtag<T>(entity);
+    return this.entity(entity)
+      .patch(entity, etag, options)
+      .pipe(
+        map(e => this.schema.deserialize(e)),
+      );
+  }
+
+  public destroy(entity: T, options?) {
+    let etag = this.client.resolveEtag<T>(entity);
+    return this.entity(entity)
+      .delete(etag, options);
+  }
+
+  // Shortcuts
   public fetchOrCreate(entity: Partial<T>): Observable<T> {
     return this.fetchOne(entity)
       .pipe(catchError((error: HttpErrorResponse) => {
@@ -76,25 +108,6 @@ export class ODataEntityService<T> {
       }));
   }
 
-  public update(entity: T): Observable<T> {
-    let etag = this.client.resolveEtag<T>(entity);
-    return this.entity(entity)
-      .put(entity, etag);
-  }
-
-  public assign(entity: Partial<T>, options?) {
-    let etag = this.client.resolveEtag<T>(entity);
-    return this.entity(entity)
-      .patch(entity, etag, options);
-  }
-
-  public destroy(entity: T, options?) {
-    let etag = this.client.resolveEtag<T>(entity);
-    return this.entity(entity)
-      .delete(etag, options);
-  }
-
-  // Shortcuts
   public save(entity: T) {
     if (this.isNew(entity))
       return this.create(entity);

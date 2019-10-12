@@ -41,12 +41,11 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
   }
 
   parse(field: EntityField, value: any) {
-    console.log(field);
     if (value === null) return value;
     if (field.enum) {
       return field.isFlags ?
         Enums.toFlags(field.enum, value) :
-        Enums.toValues(field.enum, value);
+        Enums.toValue(field.enum, value);
     } else if (field.type in PARSERS) {
       return (Array.isArray(value) && field.isCollection) ?
         value.map(PARSERS[field.type]) :

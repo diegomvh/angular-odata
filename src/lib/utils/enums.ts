@@ -1,4 +1,8 @@
 export const Enums = {
+  toValue<E>(Enum: E, value: any): number[] {
+    return Enum[value];
+  },
+
   toValues<E>(Enum: E, value: any): number[] {
     if (typeof value === 'string'){
       value = value.split(", ")
@@ -8,11 +12,11 @@ export const Enums = {
     return value.map(opcion => Enum[opcion]);
   },
 
-  toString<E>(Flags: E, value: number): string {
-    let opciones = Object.keys(Flags).filter(key => !isNaN(Number(Flags[key])));
+  toString<E>(Enum: E, value: any): string {
+    let opciones = Object.keys(Enum).filter(key => !isNaN(Number(Enum[key])));
     opciones.reverse();
     opciones = opciones.filter(name => {
-      let opcion = Flags[name];
+      let opcion = Enum[name];
       return (opcion & value) === opcion;
     });
     return opciones.join(", ");

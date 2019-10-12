@@ -59,7 +59,7 @@ export class ModelSchema<M> extends Schema<ModelKey, ModelField, M> {
     if (field.enum) {
       return field.isFlags ? 
         Enums.toFlags(field.enum, value) : 
-        Enums.toValues(field.enum, value); 
+        Enums.toValue(field.enum, value); 
     } else if (field.model) {
       return new field.model(value || {}, query);
     } else if (field.collection) {
