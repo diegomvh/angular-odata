@@ -8,6 +8,7 @@ import { Segments } from '../types';
 import { ODataOptions } from '../options';
 import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
+import { ODataProperty } from '../../odata-response';
 
 export class ODataPropertyRequest<P> extends ODataRequest {
 
@@ -35,7 +36,7 @@ export class ODataPropertyRequest<P> extends ODataRequest {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<P> {
+  }): Observable<ODataProperty<P>> {
     return super.get({
       headers: options && options.headers,
       observe: 'body',

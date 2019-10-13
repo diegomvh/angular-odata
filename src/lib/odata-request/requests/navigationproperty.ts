@@ -72,14 +72,6 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'text',
-    withCredentials?: boolean,
-  }): Observable<string>;
-
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
     responseType?: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
@@ -96,16 +88,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'text'|'entity'|'entityset'|'property',
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<any>;
-
-  get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'text'|'entity'|'entityset'|'property',
+    responseType?: 'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -160,6 +143,10 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
 
   skip(opts?: number) {
     return this.options.option<number>(Options.skip, opts);
+  }
+
+  skiptoken(opts?: string) {
+    return this.options.option<string>(Options.skiptoken, opts);
   }
   
   custom(opts?: PlainObject) {

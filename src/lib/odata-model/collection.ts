@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 import { ODataEntitySet } from '../odata-response';
 import { ODataEntitySetRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy, ODataRequest } from '../odata-request';
 
-import { ODataModel } from './model';
+import { Model } from './model';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
 
-export class ODataCollection<M extends ODataModel> implements Iterable<M> {
-  static model: typeof ODataModel = null;
+export class ModelCollection<M extends Model> implements Iterable<M> {
+  static model: typeof Model = null;
   query: ODataRequest;
   models: M[];
 
@@ -28,7 +28,7 @@ export class ODataCollection<M extends ODataModel> implements Iterable<M> {
 
   parse(models: PlainObject[], query: ODataRequest) {
     this.query = query
-    let Ctor = <typeof ODataCollection>this.constructor;
+    let Ctor = <typeof ModelCollection>this.constructor;
     return models.map(model => new Ctor.model(model, this.query.clone()) as M);
   }
 
@@ -50,19 +50,19 @@ export class ODataCollection<M extends ODataModel> implements Iterable<M> {
     }
   }
 
-  assign(entitySet: ODataEntitySet<ODataModel>, query: ODataRequest) {
+  assign(entitySet: ODataEntitySet<Model>, query: ODataRequest) {
     this.state.records = entitySet.count;
     let skip = entitySet.skip;
     if (skip)
       this.state.size = skip;
     if (this.state.size)
       this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.models = this.parse(entitySet.entities, (query as ODataEntitySetRequest<ODataModel>).entity());
+    this.models = this.parse(entitySet.entities, (query as ODataEntitySetRequest<Model>).entity());
     return this;
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntitySetRequest<ODataModel> | ODataNavigationPropertyRequest<ODataModel> = this.query.clone();
+    let query: ODataEntitySetRequest<Model> | ODataNavigationPropertyRequest<Model> = this.query.clone();
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {
@@ -107,26 +107,26 @@ export class ODataCollection<M extends ODataModel> implements Iterable<M> {
 
   // Mutate query
   select(select?: Select) {
-    return (this.query as ODataEntitySetRequest<ODataModel>).select(select);
+    return (this.query as ODataEntitySetRequest<Model>).select(select);
   }
 
   filter(filter?: Filter) {
-    return (this.query as ODataEntitySetRequest<ODataModel>).filter(filter);
+    return (this.query as ODataEntitySetRequest<Model>).filter(filter);
   }
 
   search(search?: string) {
-    return (this.query as ODataEntitySetRequest<ODataModel>).search(search);
+    return (this.query as ODataEntitySetRequest<Model>).search(search);
   }
 
   orderBy(orderBy?: OrderBy) {
-    return (this.query as ODataEntitySetRequest<ODataModel>).orderBy(orderBy);
+    return (this.query as ODataEntitySetRequest<Model>).orderBy(orderBy);
   }
 
   expand(expand?: Expand) {
-    return (this.query as ODataEntitySetRequest<ODataModel>).expand(expand);
+    return (this.query as ODataEntitySetRequest<Model>).expand(expand);
   }
 
   groupBy(groupBy?: GroupBy) {
-    return (this.query as ODataEntitySetRequest<ODataModel>).groupBy(groupBy);
+    return (this.query as ODataEntitySetRequest<Model>).groupBy(groupBy);
   }
 }

@@ -1,15 +1,16 @@
 import { ODataClient } from '../client';
-import { ODataModel, ODataCollection } from '../odata-model';
+import { Model, ModelCollection } from '../odata-model';
 import { Injectable } from '@angular/core';
 import { PlainObject, ODataRequest } from '../odata-request';
+import { ODataSettings } from '../settings';
 
 @Injectable()
-export class ODataModelService<M extends ODataModel, C extends ODataCollection<ODataModel>> {
+export class ODataModelService<M extends Model, C extends ModelCollection<Model>> {
   static set: string = "";
-  static model: { new(attrs: PlainObject, query: ODataRequest): ODataModel; } = null; 
-  static collection: { new(models: PlainObject[], query: ODataRequest): ODataCollection<ODataModel>; } = null; 
+  static model: { new(attrs: PlainObject, query: ODataRequest): Model; } = null; 
+  static collection: { new(models: PlainObject[], query: ODataRequest): ModelCollection<Model>; } = null; 
   
-  constructor(protected client: ODataClient) {}
+  constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
   model(attrs?: PlainObject): M {
     let Ctor = <typeof ODataModelService>this.constructor;

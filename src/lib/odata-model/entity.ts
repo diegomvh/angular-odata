@@ -1,6 +1,10 @@
 import { Schema, Field, Key } from './schema';
 import { Enums } from '../utils/enums';
-import { ODataSettings } from '../settings';
+import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ODataRequest, ODataEntitySetRequest } from '../odata-request';
+import { ODataEntitySet } from '../odata-response';
 
 interface EntityKey extends Key {
 }
@@ -31,13 +35,14 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
     return Object.assign(new Cotr(), { keys, fields }) as EntitySchema<M>;
   }
 
-  configure(settings: ODataSettings) {
-    super.configure(settings);
-    this.fields.forEach(f => {
-      if (f.type in settings.enums) {
-        f.enum = settings.enums[f.type];
-      } 
-    });
+  getField<E>(name: string): EntityField {
+    return this.fields.find(f => f.name === name);
+  }
+
+  schemaForField<E>(name: string): EntitySchema<E> {
+    let field = this.getField(name);
+    if (field) 
+      return ((field.schema === 'self') ? this : field.schema) as EntitySchema<E>;
   }
 
   parse(field: EntityField, value: any) {
@@ -76,5 +81,92 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
       {});
     Object.assign(entity, properties);
     return entity;
+  }
+}
+
+export class EntityCollection<E> implements Iterable<E> {
+  query: ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
+  shcema: EntitySchema<E>;
+  entities: E[];
+
+  state: {
+    page?: number,
+    pages?: number,
+    size?: number,
+    records?: number,
+  };
+
+  constructor(entityset: ODataEntitySet<E>, schema: EntitySchema<E>, query: ODataRequest) {
+    this.query = query as ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
+    this.shcema = schema;
+    this.assign(entityset);
+  }
+
+  // Iterable
+  public [Symbol.iterator]() {
+    let pointer = 0;
+    let entities = this.entities;
+    return {
+      next(): IteratorResult<E> {
+        return {
+          done: pointer === entities.length,
+          value: entities[pointer++]
+        };
+      }
+    }
+  }
+
+  assign(entitySet: ODataEntitySet<E>) {
+    this.state.records = entitySet.count;
+    let skip = entitySet.skip;
+    if (skip)
+      this.state.size = skip;
+    if (this.state.size)
+      this.state.pages = Math.ceil(this.state.records / this.state.size);
+    this.entities = entitySet.entities.map(entity => this.shcema.deserialize(entity));
+    return this;
+  }
+
+  private fetch(): Observable<this> {
+    if (!this.state.page)
+      this.state.page = 1;
+    if (this.state.size) {
+      this.query.top(this.state.size);
+      this.query.skip(this.state.size * (this.state.page - 1));
+    }
+    return this.query.get({ responseType: 'entityset', withCount: true })
+      .pipe(
+        map(set => set ? this.assign(set) : this)
+      );
+  }
+
+  getPage(page: number) {
+    this.state.page = page;
+    return this.fetch();
+  }
+
+  getFirstPage() {
+    return this.getPage(1);
+  }
+
+  getPreviousPage() {
+    return (this.state.page) ? this.getPage(this.state.page - 1) : this.fetch();
+  }
+
+  getNextPage() {
+    return (this.state.page) ? this.getPage(this.state.page + 1) : this.fetch();
+  }
+
+  getLastPage() {
+    return (this.state.pages) ? this.getPage(this.state.pages) : this.fetch();
+  }
+
+  setPageSize(size: number) {
+    this.state.size = size;
+    if (this.state.records) {
+      this.state.pages = Math.ceil(this.state.records / this.state.size);
+      if (this.state.page > this.state.pages)
+        this.state.page = this.state.pages;
+    }
   }
 }
