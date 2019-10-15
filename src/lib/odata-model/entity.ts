@@ -53,7 +53,7 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
   schemaForField<E>(name: string): EntitySchema<E> {
     let field = this.getField(name);
     if (field) 
-      return ((field.schema === 'self') ? this : field.schema) as EntitySchema<E>;
+      return field.schema as EntitySchema<E>;
   }
 
   parse(field: EntityField, value: any) {
