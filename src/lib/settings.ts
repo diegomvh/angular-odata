@@ -51,7 +51,9 @@ export class ODataSettings {
       models: [],
       collections: []
     }, config);
-    Object.values(this.models || [])
+    Object.values(this.models)
       .forEach(model => (model as typeof Model).schema.configure(this));
+    Object.values(this.schemas)
+      .forEach(schema => schema.configure(this));
   }
 }

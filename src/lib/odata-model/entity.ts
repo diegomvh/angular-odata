@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataRequest, ODataEntitySetRequest } from '../odata-request';
 import { ODataEntitySet } from '../odata-response';
+import { ODataSettings } from '../settings';
 
 interface EntityKey extends Key {
 }
@@ -22,17 +23,27 @@ const PARSERS = {
 };
 
 export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
-  static create<M>(opts: { keys?: EntityKey[], fields?: EntityField[] }) {
+  static create<M>(opts: { keys?: EntityKey[], fields?: EntityField[] }): EntitySchema<M> {
     var keys = opts.keys || [];
     var fields = opts.fields || [];
     return Object.assign(new EntitySchema(), { keys, fields }) as EntitySchema<M>;
   }
 
-  extend<M extends E>(opts: { keys?: EntityKey[], fields?: EntityField[] }) {
-    let Cotr = <typeof EntitySchema>this.constructor;
+  extend<M>(opts: { keys?: EntityKey[], fields?: EntityField[] }): EntitySchema<M> {
     let keys = [...this.keys, ...(opts.keys || [])];
     let fields = [...this.fields, ...(opts.fields || [])];
-    return Object.assign(new Cotr(), { keys, fields }) as EntitySchema<M>;
+    return Object.assign(new EntitySchema(), { keys, fields }) as EntitySchema<M>;
+  }
+
+  configure(settings: ODataSettings) {
+    super.configure(settings);
+    this.fields.forEach(f => {
+      if (f.type in settings.enums) {
+        f.enum = settings.enums[f.type];
+      } else if (f.type in settings.schemas) {
+        f.schema = settings.schemas[f.type];
+      }
+    });
   }
 
   getField<E>(name: string): EntityField {
