@@ -10,10 +10,6 @@ export class ODataEntitySet<T> {
     Object.assign(this, {[ENTITYSET_VALUE]:[]}, json);
   }
 
-  get entities(): T[] {
-    return this[ENTITYSET_VALUE];
-  }
-
   get count(): number {
     return this[ODataEntitySet.ODATA_COUNT] as number;
   }
@@ -31,6 +27,7 @@ export class ODataEntitySet<T> {
     let match = (this.nextLink || "").match(/\$skiptoken=([\d\w\s]+)/);
     if (match) return match[1];
   }
+  
   public [Symbol.iterator]() {
     let pointer = 0;
     let models = this[ENTITYSET_VALUE];

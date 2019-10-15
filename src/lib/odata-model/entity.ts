@@ -86,19 +86,20 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
 
 export class EntityCollection<E> implements Iterable<E> {
   query: ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
-  shcema: EntitySchema<E>;
+  schema: EntitySchema<E>;
   entities: E[];
 
   state: {
-    page?: number,
-    pages?: number,
-    size?: number,
     records?: number,
-  };
+    size?: number,
+    page?: number,
+    pages?: number
+  } = {};
 
-  constructor(entityset: ODataEntitySet<E>, schema: EntitySchema<E>, query: ODataRequest) {
+  constructor(entityset: ODataEntitySet<E>, query: ODataRequest, schema: EntitySchema<E>) {
     this.query = query as ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
-    this.shcema = schema;
+    this.schema = schema;
+    this.state.page = 1;
     this.assign(entityset);
   }
 
@@ -118,18 +119,13 @@ export class EntityCollection<E> implements Iterable<E> {
 
   assign(entitySet: ODataEntitySet<E>) {
     this.state.records = entitySet.count;
-    let skip = entitySet.skip;
-    if (skip)
-      this.state.size = skip;
-    if (this.state.size)
-      this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.entities = entitySet.entities.map(entity => this.shcema.deserialize(entity));
+    this.state.size = entitySet.value.length;
+    this.state.pages = Math.ceil(this.state.records / this.state.size);
+    this.entities = entitySet.value.map(entity => this.schema.deserialize(entity));
     return this;
   }
 
   private fetch(): Observable<this> {
-    if (!this.state.page)
-      this.state.page = 1;
     if (this.state.size) {
       this.query.top(this.state.size);
       this.query.skip(this.state.size * (this.state.page - 1));
@@ -140,25 +136,25 @@ export class EntityCollection<E> implements Iterable<E> {
       );
   }
 
-  getPage(page: number) {
+  page(page: number) {
     this.state.page = page;
     return this.fetch();
   }
 
-  getFirstPage() {
-    return this.getPage(1);
+  firstPage() {
+    return this.page(1);
   }
 
-  getPreviousPage() {
-    return (this.state.page) ? this.getPage(this.state.page - 1) : this.fetch();
+  previousPage() {
+    return (this.state.page) ? this.page(this.state.page - 1) : this.fetch();
   }
 
-  getNextPage() {
-    return (this.state.page) ? this.getPage(this.state.page + 1) : this.fetch();
+  nextPage() {
+    return (this.state.page) ? this.page(this.state.page + 1) : this.fetch();
   }
 
-  getLastPage() {
-    return (this.state.pages) ? this.getPage(this.state.pages) : this.fetch();
+  lastPage() {
+    return (this.state.pages) ? this.page(this.state.pages) : this.fetch();
   }
 
   setPageSize(size: number) {

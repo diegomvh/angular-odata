@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySet } from '../odata-response';
+import { ODataEntitySet, ENTITYSET_VALUE } from '../odata-response';
 import { ODataEntitySetRequest, PlainObject, Filter, Expand, GroupBy, Select, OrderBy, ODataRequest } from '../odata-request';
 
 import { Model } from './model';
@@ -52,12 +52,9 @@ export class ModelCollection<M extends Model> implements Iterable<M> {
 
   assign(entitySet: ODataEntitySet<Model>, query: ODataRequest) {
     this.state.records = entitySet.count;
-    let skip = entitySet.skip;
-    if (skip)
-      this.state.size = skip;
-    if (this.state.size)
-      this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.models = this.parse(entitySet.entities, (query as ODataEntitySetRequest<Model>).entity());
+    this.state.size = entitySet.value.length;
+    this.state.pages = Math.ceil(this.state.records / this.state.size);
+    this.models = this.parse(entitySet.value, (query as ODataEntitySetRequest<Model>).entity());
     return this;
   }
 

@@ -65,7 +65,7 @@ export class ODataEntityService<T> {
     let query = this.entities();
     return query
       .get({ withCount: true })
-      .pipe(map(entityset => new EntityCollection<T>(entityset, this.schema, query)));
+      .pipe(map(entityset => new EntityCollection<T>(entityset, query, this.schema)));
   }
 
   public fetchAll(): Observable<T[]> {
@@ -178,7 +178,7 @@ export class ODataEntityService<T> {
       .get(addCount(options));
     switch (options.responseType) {
       case 'entityset':
-        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset as any, schema, query)));
+        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset as any, query, schema)));
       default:
         return resp$;
     }
@@ -228,7 +228,7 @@ export class ODataEntityService<T> {
     switch (options.responseType) {
       case 'entityset':
         let schema = this.schema.schemaForField<P>(name) as EntitySchema<P>;
-        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset, schema, ref)));
+        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset, ref, schema)));
       default:
         return resp$;
     }

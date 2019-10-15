@@ -441,7 +441,7 @@ export class ODataClient {
     
     // With Count ?
     let withCount = options.withCount;
-    if (withCount || this.settings.withCount)
+    if (options.responseType === 'entityset' && (withCount || this.settings.withCount))
       customParams[ODataClient.$COUNT] = 'true';
     
     // Page Size?
