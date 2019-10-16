@@ -1,89 +1,13 @@
-import { Schema, Field, Key } from './schema';
-import { Enums } from '../utils/enums';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataRequest, ODataEntitySetRequest } from '../odata-request';
 import { ODataEntitySet } from '../odata-response';
-import { ODataSettings } from '../settings';
-
-interface EntityKey extends Key {
-}
-
-interface EntityField extends Field {
-  enum?: {[key: number]: string | number};
-  schema?: EntitySchema<any>;
-}
-
-const PARSERS = {
-  'string': (value) => String(value),
-  'number': (value) => Number(value),
-  'boolean': (value) => Boolean(value),
-  'Date': (value) => new Date(value),
-};
-
-export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
-  configure(settings: ODataSettings) {
-    super.configure(settings);
-    this.fields.forEach((f: EntityField) => {
-      if (f.type in settings.enums) {
-        f.enum = settings.enums[f.type];
-      } else if (f.type in settings.schemas) {
-        f.schema = settings.schemas[f.type] as EntitySchema<any>;
-      }
-    });
-  }
-
-  schemaForField<E>(name: string): Schema<Key, Field, E> {
-    let field = this.getField(name) as EntityField;
-    if (field) 
-      return field.schema as Schema<Key, Field, E>;
-  }
-
-  parse(field: EntityField, value: any) {
-    if (value === null) return value;
-    if (field.enum) {
-      return field.isFlags ?
-        Enums.toFlags(field.enum, value) :
-        Enums.toValue(field.enum, value);
-    } else if (field.schema) {
-      return (Array.isArray(value) && field.isCollection) ?
-        value.map(v => field.schema.deserialize(v)) :
-        field.schema.deserialize(value);
-    } else if (field.type in PARSERS) {
-      return (Array.isArray(value) && field.isCollection) ?
-        value.map(PARSERS[field.type]) :
-        PARSERS[field.type](value);
-    }
-    return value;
-  }
-
-  toJSON(field: EntityField, value: any) {
-    if (value === null) return value;
-    if (field.enum) {
-      return Enums.toString(field.enum, value);
-    }
-    return value;
-  }
-
-  serialize(entity: E): E {
-    return Object.assign(entity, this.properties
-      .filter(f => f.name in entity)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: this.toJSON(f, entity[f.name]) }), {}) 
-    ) as E;
-  }
-
-  deserialize(entity: E): E {
-    return Object.assign(entity, this.properties
-      .filter(f => f.name in entity)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: this.parse(f, entity[f.name]) }), {})
-    ) as E;
-  }
-}
+import { Schema } from '../odata-request/schema';
 
 export class EntityCollection<E> implements Iterable<E> {
   private query: ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
-  private schema: EntitySchema<E>;
+  private schema: Schema<E>;
   entities: E[];
 
   state: {
@@ -93,10 +17,10 @@ export class EntityCollection<E> implements Iterable<E> {
     pages?: number
   } = {};
 
-  constructor(entityset: ODataEntitySet<E>, query: ODataRequest, schema: EntitySchema<E>) {
+  constructor(entityset: ODataEntitySet<E>, query: ODataRequest, schema: Schema<E>) {
     this.query = query as ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
     this.schema = schema;
-    this.entities = entityset.value.map(entity => this.schema.deserialize(entity));
+    this.entities = entityset.value.map(entity => this.schema.deserialize(entity, query));
     this.setState({
       records: entityset.count, 
       page: 1, 
@@ -142,7 +66,7 @@ export class EntityCollection<E> implements Iterable<E> {
             if (set.skip) {
               this.setState({size: set.skip});
             }
-            this.entities = set.value.map(entity => this.schema.deserialize(entity));
+            this.entities = set.value.map(entity => this.schema.deserialize(entity, this.query));
           }
           return this;
         }));
