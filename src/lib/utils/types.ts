@@ -24,21 +24,12 @@ export const Types = {
     },
 
     isEmpty(value: any): boolean {
-        if (Types.isNullOrUndefined(value)
-            || typeof (value) === 'string' && !value.length
-            || value instanceof Array && !value.length
-            || typeof (value.isEmpty) === 'function' && value.isEmpty()) {
-            return true;
-        }
-        if (value instanceof Array && value) {
-            for (const v of value) {
-                if (!Types.isEmpty(v)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
+        return Types.isNullOrUndefined(value)
+            || (typeof (value) === 'string' && !value.length)
+            || (Types.isArray(value) && !value.length)
+            || (typeof (value.isEmpty) === 'function' && value.isEmpty())
+            || (Types.isArray(value) && (value as any[]).every(v => Types.isEmpty(v)))
+            || (Types.isObject(value) && !Object.keys(value).filter(k => value.hasOwnProperty(k)).length);
     },
 
     requireNull(fieldValue: any, fieldName: string) {

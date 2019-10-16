@@ -72,7 +72,7 @@ export class ODataEntityService<T> {
   public fetch(size?: number): Observable<EntityCollection<T>> {
     let schema = this.schema();
     let query = this.entities();
-    size = size || this.settings.maxPageSize;
+    size = size || this.settings.maxSize;
     if (size)
       query.top(size);
     return query
@@ -217,38 +217,15 @@ export class ODataEntityService<T> {
   protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity',
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<P>;
-
-  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entityset',
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<EntityCollection<P>>;
-
-  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity' | 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
+    let field = this.schema().getField(name);
     let etag = this.client.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
-    let resp$ = (options.responseType === "entityset") ?
+    return (field.isCollection) ?
       ref.post(target, options) :
       ref.put(target, etag, options);
-    switch (options.responseType) {
-      case 'entityset':
-        let schema = this.schemaForField<P>(name) as EntitySchema<P>;
-        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset, ref, schema)));
-      default:
-        return resp$;
-    }
   }
 
   protected deleteRef<P>(entity: Partial<T>, name: string, options: {
@@ -304,13 +281,18 @@ export class ODataEntityService<T> {
     switch (options.responseType) {
       case 'entityset':
         return resp$.pipe(
-          map(entityset => (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)))
-        );
+          map(entityset => 
+            schema ? 
+              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
+              (<any>entityset as ODataEntitySet<P>).value
+          ));
       case 'property':
-        let field = schema.getField(name);
         return resp$.pipe(
-          map(property => schema.parse(field, (<any>property as ODataProperty<P>).value))
-        );
+          map(property => 
+            schema ? 
+              schema.deserialize((<any>property as ODataProperty<P>).value) : 
+              (<any>property as ODataProperty<P>).value
+          ));
       default:
         return resp$;
     }
@@ -357,13 +339,18 @@ export class ODataEntityService<T> {
     switch (options.responseType) {
       case 'entityset':
         return resp$.pipe(
-          map(entityset => (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)))
-        );
+          map(entityset => 
+            schema ? 
+              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
+              (<any>entityset as ODataEntitySet<P>).value
+          ));
       case 'property':
-        let field = schema.getField(name);
         return resp$.pipe(
-          map(property => schema.parse(field, (<any>property as ODataProperty<P>).value))
-        );
+          map(property => 
+            schema ? 
+              schema.deserialize((<any>property as ODataProperty<P>).value) : 
+              (<any>property as ODataProperty<P>).value
+          ));
       default:
         return resp$;
     }
@@ -411,13 +398,18 @@ export class ODataEntityService<T> {
     switch (options.responseType) {
       case 'entityset':
         return resp$.pipe(
-          map(entityset => (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)))
-        );
+          map(entityset => 
+            schema ? 
+              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
+              (<any>entityset as ODataEntitySet<P>).value
+          ));
       case 'property':
-        let field = schema.getField(name);
         return resp$.pipe(
-          map(property => schema.parse(field, (<any>property as ODataProperty<P>).value))
-        );
+          map(property => 
+            schema ? 
+              schema.deserialize((<any>property as ODataProperty<P>).value) : 
+              (<any>property as ODataProperty<P>).value
+          ));
       default:
         return resp$;
     }
@@ -465,13 +457,18 @@ export class ODataEntityService<T> {
     switch (options.responseType) {
       case 'entityset':
         return resp$.pipe(
-          map(entityset => (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)))
-        );
+          map(entityset => 
+            schema ? 
+              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
+              (<any>entityset as ODataEntitySet<P>).value
+          ));
       case 'property':
-        let field = schema.getField(name);
         return resp$.pipe(
-          map(property => schema.parse(field, (<any>property as ODataProperty<P>).value))
-        );
+          map(property => 
+            schema ? 
+              schema.deserialize((<any>property as ODataProperty<P>).value) : 
+              (<any>property as ODataProperty<P>).value
+          ));
       default:
         return resp$;
     }

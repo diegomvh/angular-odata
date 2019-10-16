@@ -41,7 +41,7 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'text'|'entity'|'entityset'|'property',
+    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
@@ -53,7 +53,7 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'text'|'entity'|'entityset'|'property',
+    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
@@ -65,7 +65,7 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'text'|'entity'|'entityset'|'property',
+    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
@@ -77,7 +77,7 @@ export abstract class ODataRequest {
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'text'|'entity'|'entityset'|'property',
+    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {

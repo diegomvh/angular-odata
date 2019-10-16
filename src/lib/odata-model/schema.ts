@@ -37,7 +37,7 @@ export class Schema<K extends Key, F extends Field, M> {
     this.stringAsEnums = !!settings.stringAsEnum;
   }
 
-  getField<E>(name: string): Field {
+  getField(name: string): Field {
     return this.fields.find(f => f.name === name);
   }
 

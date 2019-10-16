@@ -94,11 +94,12 @@ export class EntityCollection<E> implements Iterable<E> {
   constructor(entityset: ODataEntitySet<E>, query: ODataRequest, schema: EntitySchema<E>) {
     this.query = query as ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
     this.schema = schema;
+    this.entities = entityset.value.map(entity => this.schema.deserialize(entity));
     this.setState({
       records: entityset.count, 
       page: 1, 
       size: entityset.skip || entityset.value.length
-    })
+    });
   }
 
   private setState(state: {records?: number, page?: number, size?: number}) {
