@@ -6,16 +6,15 @@ import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { Segments } from '../types';
 import { ODataClient } from '../../client';
+import { $VALUE } from '../../constants';
 
 export class ODataValueRequest<V> extends ODataRequest {
-  public static readonly $VALUE = '$value';
-
   // Factory
   static factory<T>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
-    segments.segment(Segments.value, ODataValueRequest.$VALUE);
+    segments.segment(Segments.value, $VALUE);
     options.clear();
     return new ODataValueRequest<T>(service, segments, options);
   }

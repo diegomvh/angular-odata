@@ -6,16 +6,15 @@ import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataRequest } from '../request';
 import { ODataClient } from '../../client';
+import { $COUNT } from '../../constants';
 
 export class ODataCountRequest extends ODataRequest {
-  public static readonly $COUNT = '$count';
-
   // Factory
   static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
-    segments.segment(Segments.count, ODataCountRequest.$COUNT);
+    segments.segment(Segments.count, $COUNT);
     options.keep(Options.filter, Options.search);
     return new ODataCountRequest(service, segments, options);
   }

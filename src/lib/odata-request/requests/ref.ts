@@ -7,19 +7,15 @@ import { ODataOptions } from '../options';
 import { Segments, PlainObject, Options } from '../types';
 import { ODataClient } from '../../client';
 import { ODataEntityRequest } from './entity';
+import { $REF, ODATA_ID, $ID } from '../../constants';
 
 export class ODataRefRequest extends ODataRequest {
-  public static readonly ODATA_ID = '@odata.id';
-
-  public static readonly $REF = '$ref';
-  public static readonly $ID = '$id';
-
   // Factory
   static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
-    segments.segment(Segments.ref, ODataRefRequest.$REF);
+    segments.segment(Segments.ref, $REF);
     options.clear();
     return new ODataRefRequest(service, segments, options);
   }
@@ -31,7 +27,7 @@ export class ODataRefRequest extends ODataRequest {
     withCredentials?: boolean
   }): Observable<any> {
     let related = this.client.createEndpointUrl(target);
-    return super.post({[ODataRefRequest.ODATA_ID]: related}, {
+    return super.post({[ODATA_ID]: related}, {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -48,7 +44,7 @@ export class ODataRefRequest extends ODataRequest {
     withCredentials?: boolean
   }): Observable<any> {
     let related = this.client.createEndpointUrl(target);
-    return super.put({[ODataRefRequest.ODATA_ID]: related}, etag, {
+    return super.put({[ODATA_ID]: related}, etag, {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -67,7 +63,7 @@ export class ODataRefRequest extends ODataRequest {
   }): Observable<any> {
     if (options && options.target) {
       let related = this.client.createEndpointUrl(options.target);
-      this.custom({[ODataRefRequest.$ID]: related});
+      this.custom({[$ID]: related});
     }
     return super.delete(etag, {
       headers: options && options.headers,

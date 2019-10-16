@@ -10,6 +10,7 @@ import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataBatchResponse } from '../../odata-response';
 import { map } from 'rxjs/operators';
+import { $BATCH } from '../../constants';
 
 export class BatchRequest {
   public static readonly BOUNDARY_PREFIX_SUFFIX = '--';
@@ -61,9 +62,6 @@ export class BatchRequest {
 }
 
 export class ODataBatchRequest extends ODataRequest {
-  // CONSTANT SEGMENTS
-  private static readonly $BATCH = '$batch';
-
   private static readonly BINARY = 'binary';
 
   // VARIABLES
@@ -84,7 +82,7 @@ export class ODataBatchRequest extends ODataRequest {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
-    segments.segment(Segments.batch, ODataBatchRequest.$BATCH);
+    segments.segment(Segments.batch, $BATCH);
     options.clear();
     return new ODataBatchRequest(service, segments, options);
   }

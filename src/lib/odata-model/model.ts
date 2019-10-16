@@ -3,12 +3,12 @@ import { map, switchMap } from 'rxjs/operators';
 
 import { PlainObject, Expand, ODataEntityRequest, ODataRequest } from '../odata-request';
 
-import { ODataClient } from '../client';
 import { ModelCollection } from './collection';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
 import { Enums } from '../utils/enums';
 import { Schema, Field, Key } from './schema';
 import { ODataSettings } from '../settings';
+import { ODATA_ETAG } from '../constants';
 
 interface ModelKey extends Key {
 }
@@ -200,9 +200,9 @@ export class Model {
       if (model === null) {
         // Delete 
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
-          q.delete(attrs[ODataClient.ODATA_ETAG])
+          q.delete(attrs[ODATA_ETAG])
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataClient.ODATA_ETAG]: resp[ODataClient.ODATA_ETAG] })
+              Object.assign(attrs, { [ODATA_ETAG]: resp[ODATA_ETAG] })
             ))
         ));
       } else {
@@ -210,9 +210,9 @@ export class Model {
         let target = model.query.clone() as ODataEntityRequest<Model>;
         target.key(model.resolveKey())
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
-          ref.put(target, attrs[ODataClient.ODATA_ETAG])
+          ref.put(target, attrs[ODATA_ETAG])
             .pipe(map(resp =>
-              Object.assign(attrs, { [ODataClient.ODATA_ETAG]: resp[ODataClient.ODATA_ETAG] })
+              Object.assign(attrs, { [ODATA_ETAG]: resp[ODATA_ETAG] })
             ))
         ));
       }
@@ -222,7 +222,7 @@ export class Model {
     } else {
       let key = this.resolveKey();
       query.key(key);
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs as Model, attrs[ODataClient.ODATA_ETAG])));
+      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs as Model, attrs[ODATA_ETAG])));
     }
     return obs$.pipe(
       map(attrs => { console.log(attrs); this.assign(attrs, query); return this; })
@@ -234,7 +234,7 @@ export class Model {
       throw new Error(`Can't destroy without entity key`);
     let query = this.query.clone() as ODataEntityRequest<Model>;
     query.key(this.resolveKey());
-    return query.delete(this[ODataClient.ODATA_ETAG]);
+    return query.delete(this[ODATA_ETAG]);
   }
 
   // Mutate query

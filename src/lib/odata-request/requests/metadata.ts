@@ -8,15 +8,15 @@ import { ODataOptions } from '../options';
 import { ODataMetadata } from '../../odata-response';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
+import { $METADATA } from '../../constants';
 
 export class ODataMetadataRequest extends ODataRequest {
-  public static readonly $METADATA = '$metadata';
 
   static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
-    segments.segment(Segments.metadata, ODataMetadataRequest.$METADATA);
+    segments.segment(Segments.metadata, $METADATA);
     options.clear();
     return new ODataMetadataRequest(service, segments, options);
   }

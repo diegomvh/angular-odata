@@ -6,6 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 import { ODataEntitySet, ODataProperty } from './odata-response';
 import { ODataBatchRequest, ODataEntityRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
 import { ODataSettings } from './settings';
+import { ODATA_ETAG, $ID, ODATA_ID, IF_MATCH_HEADER, $COUNT } from './constants';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -61,27 +62,17 @@ function addEtag(
 
 @Injectable()
 export class ODataClient {
-  public static readonly ODATA_CONTEXT = '@odata.context';
-  public static readonly ODATA_ETAG = '@odata.etag';
-  public static readonly ODATA_ID = '@odata.id';
-
-  public static readonly $ID = '$id';
-  public static readonly $COUNT = '$count';
-  public static readonly $TOP = '$top';
-
-  public static readonly IF_MATCH_HEADER = 'If-Match';
-
   constructor(protected http: HttpClient, protected settings: ODataSettings) {
   }
 
   resolveEtag<T>(entity: Partial<T>): string {
-    return entity[ODataClient.ODATA_ETAG];
+    return entity[ODATA_ETAG];
   }
 
   resolveTarget<T>(type: 'body' | 'query', target: ODataEntityRequest<T>) {
     //TODO: Target has key?
     let key = (type === 'body') ?
-      ODataClient.ODATA_ID : ODataClient.$ID;
+      ODATA_ID : $ID;
     return { [key]: this.createEndpointUrl(target)};
   }
 
@@ -432,7 +423,7 @@ export class ODataClient {
     // Headers
     let customHeaders = {};
     if (typeof (options.etag) === 'string')
-      customHeaders[ODataClient.IF_MATCH_HEADER] = options.etag;
+      customHeaders[IF_MATCH_HEADER] = options.etag;
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);
 
     // Params
@@ -441,7 +432,7 @@ export class ODataClient {
     
     // With Count ?
     if (options.responseType === 'entityset' && options.withCount)
-      customParams[ODataClient.$COUNT] = 'true';
+      customParams[$COUNT] = 'true';
     
     let params = this.mergeHttpParams(queryParams, options.params, customParams);
 
