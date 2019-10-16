@@ -64,7 +64,6 @@ export class ODataSettings {
     // Configure
     Object.values(this.schemas)
       .forEach(schema => schema.configure(this));
-    console.log(this.schemas);
   }
 
   public schemaForType<E>(type): Schema<Key, Field, E> {

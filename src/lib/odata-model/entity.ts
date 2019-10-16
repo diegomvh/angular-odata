@@ -94,13 +94,23 @@ export class EntityCollection<E> implements Iterable<E> {
   constructor(entityset: ODataEntitySet<E>, query: ODataRequest, schema: EntitySchema<E>) {
     this.query = query as ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
     this.schema = schema;
-    this.state.records = entityset.count;
-    this.state.page = 1;
-    this.state.size = entityset.skip || entityset.value.length;
-    this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.entities = entityset.value.map(entity => this.schema.deserialize(entity));
+    this.setState({
+      records: entityset.count, 
+      page: 1, 
+      size: entityset.skip || entityset.value.length
+    })
   }
 
+  private setState(state: {records?: number, page?: number, size?: number}) {
+    if (state.records)
+      this.state.records = state.records;
+    if (state.page)
+      this.state.page = state.page;
+    if (state.size) {
+      this.state.size = state.size;
+      this.state.pages = Math.ceil(this.state.records / this.state.size);
+    }
+  }
   // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;
@@ -127,8 +137,7 @@ export class EntityCollection<E> implements Iterable<E> {
         map(set => {
           if (set) {
             if (set.skip) {
-              this.state.size = set.skip;
-              this.state.pages = Math.ceil(this.state.records / this.state.size);
+              this.setState({size: set.skip});
             }
             this.entities = set.value.map(entity => this.schema.deserialize(entity));
           }
@@ -137,8 +146,13 @@ export class EntityCollection<E> implements Iterable<E> {
   }
 
   page(page: number) {
-    this.state.page = page;
+    this.setState({page});
     return this.fetch();
+  }
+
+  size(size: number) {
+    this.setState({size});
+    return this.page(1);
   }
 
   firstPage() {
@@ -157,9 +171,4 @@ export class EntityCollection<E> implements Iterable<E> {
     return (this.state.pages) ? this.page(this.state.pages) : this.fetch();
   }
 
-  pageSize(size: number) {
-    this.state.size = size;
-    this.state.pages = Math.ceil(this.state.records / this.state.size);
-    return this.page(1);
-  }
 }
