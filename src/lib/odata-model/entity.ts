@@ -12,7 +12,7 @@ interface EntityKey extends Key {
 
 interface EntityField extends Field {
   enum?: {[key: number]: string | number};
-  schema?: EntitySchema<any> | 'self';
+  schema?: EntitySchema<any>;
 }
 
 const PARSERS = {
@@ -23,37 +23,21 @@ const PARSERS = {
 };
 
 export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
-  static create<M>(opts: { keys?: EntityKey[], fields?: EntityField[] }): EntitySchema<M> {
-    var keys = opts.keys || [];
-    var fields = opts.fields || [];
-    return Object.assign(new EntitySchema(), { keys, fields }) as EntitySchema<M>;
-  }
-
-  extend<M>(opts: { keys?: EntityKey[], fields?: EntityField[] }): EntitySchema<M> {
-    let keys = [...this.keys, ...(opts.keys || [])];
-    let fields = [...this.fields, ...(opts.fields || [])];
-    return Object.assign(new EntitySchema(), { keys, fields }) as EntitySchema<M>;
-  }
-
   configure(settings: ODataSettings) {
     super.configure(settings);
-    this.fields.forEach(f => {
+    this.fields.forEach((f: EntityField) => {
       if (f.type in settings.enums) {
         f.enum = settings.enums[f.type];
       } else if (f.type in settings.schemas) {
-        f.schema = settings.schemas[f.type];
+        f.schema = settings.schemas[f.type] as EntitySchema<any>;
       }
     });
   }
 
-  getField<E>(name: string): EntityField {
-    return this.fields.find(f => f.name === name);
-  }
-
-  schemaForField<E>(name: string): EntitySchema<E> {
-    let field = this.getField(name);
+  schemaForField<E>(name: string): Schema<Key, Field, E> {
+    let field = this.getField(name) as EntityField;
     if (field) 
-      return field.schema as EntitySchema<E>;
+      return field.schema as Schema<Key, Field, E>;
   }
 
   parse(field: EntityField, value: any) {
@@ -96,8 +80,8 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
 }
 
 export class EntityCollection<E> implements Iterable<E> {
-  query: ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
-  schema: EntitySchema<E>;
+  private query: ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
+  private schema: EntitySchema<E>;
   entities: E[];
 
   state: {
@@ -110,8 +94,11 @@ export class EntityCollection<E> implements Iterable<E> {
   constructor(entityset: ODataEntitySet<E>, query: ODataRequest, schema: EntitySchema<E>) {
     this.query = query as ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
     this.schema = schema;
+    this.state.records = entityset.count;
     this.state.page = 1;
-    this.assign(entityset);
+    this.state.size = entityset.skip || entityset.value.length;
+    this.state.pages = Math.ceil(this.state.records / this.state.size);
+    this.entities = entityset.value.map(entity => this.schema.deserialize(entity));
   }
 
   // Iterable
@@ -128,23 +115,25 @@ export class EntityCollection<E> implements Iterable<E> {
     }
   }
 
-  assign(entitySet: ODataEntitySet<E>) {
-    this.state.records = entitySet.count;
-    this.state.size = entitySet.value.length;
-    this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.entities = entitySet.value.map(entity => this.schema.deserialize(entity));
-    return this;
-  }
-
   private fetch(): Observable<this> {
     if (this.state.size) {
       this.query.top(this.state.size);
-      this.query.skip(this.state.size * (this.state.page - 1));
+      let skip = this.state.size * (this.state.page - 1);
+      if (skip)
+        this.query.skip(skip);
     }
-    return this.query.get({ responseType: 'entityset', withCount: true })
+    return this.query.get({ responseType: 'entityset'})
       .pipe(
-        map(set => set ? this.assign(set) : this)
-      );
+        map(set => {
+          if (set) {
+            if (set.skip) {
+              this.state.size = set.skip;
+              this.state.pages = Math.ceil(this.state.records / this.state.size);
+            }
+            this.entities = set.value.map(entity => this.schema.deserialize(entity));
+          }
+          return this;
+        }));
   }
 
   page(page: number) {
@@ -168,12 +157,9 @@ export class EntityCollection<E> implements Iterable<E> {
     return (this.state.pages) ? this.page(this.state.pages) : this.fetch();
   }
 
-  setPageSize(size: number) {
+  pageSize(size: number) {
     this.state.size = size;
-    if (this.state.records) {
-      this.state.pages = Math.ceil(this.state.records / this.state.size);
-      if (this.state.page > this.state.pages)
-        this.state.page = this.state.pages;
-    }
+    this.state.pages = Math.ceil(this.state.records / this.state.size);
+    return this.page(1);
   }
 }

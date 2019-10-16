@@ -21,6 +21,8 @@ export class ODataEntitySet<T> {
   get skip(): number {
     let match = (this.nextLink || "").match(/\$skip=(\d+)/);
     if (match) return Number(match[1]);
+    match = (this.nextLink || "").match(/\$skiptoken=(\d+)/);
+    if (match) return Number(match[1]);
   }
 
   get skiptoken(): string {

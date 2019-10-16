@@ -22,12 +22,23 @@ export interface Field {
 }
 
 export class Schema<K extends Key, F extends Field, M> {
-  keys: K[];
-  fields: F[];
   stringAsEnums: boolean;
+
+  constructor(protected keys?: K[], protected fields?: F[]) {}
+
+  extend<M>(opts: { keys?: Key[], fields?: Field[] }): Schema<Key, Field, M> {
+    let Ctor = <typeof Schema>this.constructor;
+    let keys = [...this.keys, ...(opts.keys || [])];
+    let fields = [...this.fields, ...(opts.fields || [])];
+    return new Ctor(keys, fields) as Schema<Key, Field, M>;
+  }
 
   configure(settings: ODataSettings) {
     this.stringAsEnums = !!settings.stringAsEnum;
+  }
+
+  getField<E>(name: string): Field {
+    return this.fields.find(f => f.name === name);
   }
 
   resolveKey(attrs: Partial<M>) {

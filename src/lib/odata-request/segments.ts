@@ -2,7 +2,6 @@ import buildQuery from 'odata-query';
 
 import { Types } from '../utils/types';
 import { SegmentHandler, ODataSegment, Segments, Options } from './types';
-import { ODataOptions } from './options';
 
 export class ODataSegments {
   public static readonly PATHSEP = '/';

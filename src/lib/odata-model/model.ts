@@ -27,19 +27,6 @@ const PARSERS = {
 };
 
 export class ModelSchema<M> extends Schema<ModelKey, ModelField, M> {
-  static create<M extends Model>(opts: { keys?: ModelKey[], fields?: ModelField[] }) {
-    var keys = opts.keys || [];
-    var fields = opts.fields || [];
-    return Object.assign(new ModelSchema(), { keys, fields }) as ModelSchema<M>;
-  }
-
-  extend<M extends Model>(opts: { keys?: ModelKey[], fields?: ModelField[] }) {
-    let Cotr = <typeof ModelSchema>this.constructor;
-    let keys = [...this.keys, ...(opts.keys || [])];
-    let fields = [...this.fields, ...(opts.fields || [])];
-    return Object.assign(new Cotr(), { keys, fields }) as ModelSchema<M>;
-  }
-
   configure(settings: ODataSettings) {
     super.configure(settings);
     this.fields.forEach(f => {

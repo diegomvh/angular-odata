@@ -440,14 +440,9 @@ export class ODataClient {
     let customParams = {};
     
     // With Count ?
-    let withCount = options.withCount;
-    if (options.responseType === 'entityset' && (withCount || this.settings.withCount))
+    if (options.responseType === 'entityset' && options.withCount)
       customParams[ODataClient.$COUNT] = 'true';
     
-    // Page Size?
-    if (options.responseType === 'entityset' && !(ODataClient.$TOP in queryParams) && this.settings.maxPageSize)
-      customParams[ODataClient.$TOP] = this.settings.maxPageSize;
-
     let params = this.mergeHttpParams(queryParams, options.params, customParams);
 
     // Credentials ?

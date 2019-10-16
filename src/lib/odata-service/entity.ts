@@ -32,21 +32,29 @@ function addCount(
 @Injectable()
 export class ODataEntityService<T> {
   static set: string = "";
-  schema: EntitySchema<T>;
+  static entity: string = "";
 
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
   protected schemaForType<E>(type) {
-    if (type in this.settings.schemas)
-      return this.settings.schemas[type] as EntitySchema<E>;
+    return this.settings.schemaForType(type) as EntitySchema<E>;
   }
 
+  protected schemaForField<E>(name) {
+    let field = this.schema().getField(name);
+    return this.settings.schemaForType(field.type) as EntitySchema<E>;
+  }
+
+  protected schema(): EntitySchema<T> {
+    let Ctor = <typeof ODataEntityService>this.constructor;
+    return this.schemaForType<T>(Ctor.entity) as EntitySchema<T>;
+  }
   protected resolveEntityKey(entity: Partial<T>) {
-    return this.schema.resolveKey(entity);
+    return this.schema().resolveKey(entity);
   }
 
   public isNew(entity: Partial<T>) {
-    return this.schema.isNew(entity);
+    return this.schema().isNew(entity);
   }
 
   // Build requests
@@ -61,14 +69,19 @@ export class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public fetch(): Observable<EntityCollection<T>> {
+  public fetch(size?: number): Observable<EntityCollection<T>> {
+    let schema = this.schema();
     let query = this.entities();
+    size = size || this.settings.maxPageSize;
+    if (size)
+      query.top(size);
     return query
       .get({ withCount: true })
-      .pipe(map(entityset => new EntityCollection<T>(entityset, query, this.schema)));
+      .pipe(map(entityset => new EntityCollection<T>(entityset, query, schema)));
   }
 
   public fetchAll(): Observable<T[]> {
+    let schema = this.schema();
     let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
       let query = this.entities();
       if (options) {
@@ -85,45 +98,50 @@ export class ODataEntityService<T> {
       .pipe(
         expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
         concatMap((resp: ODataEntitySet<T>) => resp.value),
-        map((e: T) => this.schema.deserialize(e)),
+        map((e: T) => schema.deserialize(e)),
         toArray());
   }
 
   public fetchOne(entity: Partial<T>): Observable<T> {
+    let schema = this.schema();
     return this.entity(entity)
       .get()
       .pipe(
-        map(e => this.schema.deserialize(e)),
+        map(e => schema.deserialize(e)),
       );
   }
 
   public create(entity: T): Observable<T> {
+    let schema = this.schema();
     return this.entities()
-      .post(this.schema.serialize(entity))
+      .post(schema.serialize(entity))
       .pipe(
-        map(e => this.schema.deserialize(e)),
+        map(e => schema.deserialize(e)),
       );
   }
 
   public update(entity: T): Observable<T> {
+    let schema = this.schema();
     let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
-      .put(this.schema.serialize(entity), etag)
+      .put(schema.serialize(entity), etag)
       .pipe(
-        map(e => this.schema.deserialize(e)),
+        map(e => schema.deserialize(e)),
       );
   }
 
   public assign(entity: Partial<T>, options?) {
+    let schema = this.schema();
     let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
       .patch(entity, etag, options)
       .pipe(
-        map(e => this.schema.deserialize(e)),
+        map(e => schema.deserialize(e)),
       );
   }
 
   public destroy(entity: T, options?) {
+    let schema = this.schema();
     let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
       .delete(etag, options);
@@ -171,8 +189,7 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let field = this.schema.getField(name);
-    let schema = this.schemaForType<P>(field.type);
+    let schema = this.schemaForField<P>(name);
     let query = this.entity(entity).navigationProperty<P>(name);
     let resp$ = query
       .get(addCount(options));
@@ -190,11 +207,11 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let field = this.schema.getField(name);
+    let schema = this.schemaForField<P>(name);
     let query = this.entity(entity).property<P>(name);
     return query
       .get(options)
-      .pipe(map(property => this.schema.parse(field, property.value)));
+      .pipe(map(property => schema.deserialize(property.value)));
   }
 
   protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
@@ -227,7 +244,7 @@ export class ODataEntityService<T> {
       ref.put(target, etag, options);
     switch (options.responseType) {
       case 'entityset':
-        let schema = this.schema.schemaForField<P>(name) as EntitySchema<P>;
+        let schema = this.schemaForField<P>(name) as EntitySchema<P>;
         return resp$.pipe(map(entityset => new EntityCollection<P>(entityset, ref, schema)));
       default:
         return resp$;
