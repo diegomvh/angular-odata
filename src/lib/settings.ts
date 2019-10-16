@@ -68,7 +68,8 @@ export class ODataSettings {
       return this.schemas[type] as Schema<Key, Field, E>;
   }
 
-  static buildSchemas<S extends Schema<Key, Field, any>>(Ctor: {new (keys: Key[], fields: Field[]): S},
+  static buildSchemas<S extends Schema<Key, Field, any>>(
+    Ctor: {new (keys: Key[], fields: Field[]): S},
     schemas: {[type: string]: {base?: string, keys?: Key[], fields?: Field[] }}
   ): {[type: string]: S } {
     let bases: {[type: string]: S } = Object.entries(schemas)

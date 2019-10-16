@@ -46,6 +46,10 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
       return field.isFlags ?
         Enums.toFlags(field.enum, value) :
         Enums.toValue(field.enum, value);
+    } else if (field.schema) {
+      return (Array.isArray(value) && field.isCollection) ?
+        value.map(v => field.schema.deserialize(v)) :
+        field.schema.deserialize(value);
     } else if (field.type in PARSERS) {
       return (Array.isArray(value) && field.isCollection) ?
         value.map(PARSERS[field.type]) :
@@ -63,19 +67,17 @@ export class EntitySchema<E> extends Schema<EntityKey, EntityField, E> {
   }
 
   serialize(entity: E): E {
-    let properties = this.properties.filter(f => f.name in entity).reduce((acc, f) =>
-      Object.assign(acc, { [f.name]: this.toJSON(f, entity[f.name]) }),
-      {});
-    Object.assign(entity, properties);
-    return entity;
+    return Object.assign(entity, this.properties
+      .filter(f => f.name in entity)
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: this.toJSON(f, entity[f.name]) }), {}) 
+    ) as E;
   }
 
   deserialize(entity: E): E {
-    let properties = this.properties.filter(f => f.name in entity).reduce((acc, f) =>
-      Object.assign(acc, { [f.name]: this.parse(f, entity[f.name]) }),
-      {});
-    Object.assign(entity, properties);
-    return entity;
+    return Object.assign(entity, this.properties
+      .filter(f => f.name in entity)
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: this.parse(f, entity[f.name]) }), {})
+    ) as E;
   }
 }
 
