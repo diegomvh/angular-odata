@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { ODataEntitySet, ODataProperty } from './odata-response';
-import { ODataBatchRequest, ODataEntityRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
+import { ODataBatchRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
 import { ODataSettings } from './settings';
-import { ODATA_ETAG, $ID, ODATA_ID, IF_MATCH_HEADER, $COUNT } from './constants';
+import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT } from './constants';
 import { Schema } from './schema';
 
 export type ODataObserve = 'body' | 'events' | 'response';
@@ -65,7 +65,7 @@ function addEtag(
 export class ODataClient {
 	constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
-	resolveEtag<T>(entity: Partial<T>): string {
+	_resolveEtag<T>(entity: Partial<T>): string {
 		return entity[ODATA_ETAG];
 	}
 
@@ -413,10 +413,13 @@ export class ODataClient {
 		let responseType = (['entity', 'entityset', 'property'].indexOf(options.responseType) !== -1) ? 'json' :
 			<'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
+		// etag
+		let etag = options.etag || options.body && options.body[ODATA_ETAG];
+
 		// Headers
 		let customHeaders = {};
-		if (typeof (options.etag) === 'string')
-			customHeaders[IF_MATCH_HEADER] = options.etag;
+		if (typeof(etag) === 'string')
+			customHeaders[IF_MATCH_HEADER] = etag;
 		let headers = this.mergeHttpHeaders(options.headers, customHeaders);
 
 		// Params
