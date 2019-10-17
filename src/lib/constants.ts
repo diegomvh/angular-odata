@@ -1,6 +1,9 @@
 export const ODATA_CONTEXT = '@odata.context';
 export const ODATA_ETAG = '@odata.etag';
 export const ODATA_ID = '@odata.id';
+export const ODATA_COUNT = '@odata.count';
+export const ODATA_NEXTLINK = '@odata.nextLink';
+
 
 export const $ID = '$id';
   

@@ -6,7 +6,7 @@ import { PlainObject, Expand, ODataEntityRequest, ODataRequest } from '../odata-
 import { ModelCollection } from './collection';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
 import { ODATA_ETAG } from '../constants';
-import { Schema } from '../odata-request/schema';
+import { Schema } from '../schema';
 
 enum State {
   Added,
@@ -19,11 +19,11 @@ enum State {
 export class Model {
   // Statics
   static schema: Schema<Model> = null;
-  query: ODataRequest;
+  query: ODataRequest<any>;
   state: State;
   relationships: { [name: string]: Model | ModelCollection<Model> }
 
-  constructor(attrs: PlainObject, query: ODataRequest) {
+  constructor(attrs: PlainObject, query: ODataRequest<any>) {
     this.assign(attrs, query);
   }
 
@@ -36,7 +36,7 @@ export class Model {
     return Ctor.schema.isNew(this);
   }
 
-  assign(attrs: PlainObject, query: ODataRequest) {
+  assign(attrs: PlainObject, query: ODataRequest<any>) {
     this.query = query;
     let Ctor = <typeof Model>this.constructor;
     Object.assign(this, attrs);
@@ -61,7 +61,7 @@ export class Model {
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntityRequest<Model> | ODataNavigationPropertyRequest<Model> = this.query.clone();
+    let query: ODataEntityRequest<Model> | ODataNavigationPropertyRequest<Model> = this.query.clone<Model>() as ODataEntityRequest<Model> | ODataNavigationPropertyRequest<Model>;
     if (query instanceof ODataEntityRequest) {
       if (this.isNew())
         throw new Error(`Can't fetch without entity key`);

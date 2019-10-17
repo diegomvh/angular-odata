@@ -1,5 +1,5 @@
 import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { UUID } from 'angular2-uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { Observable, of } from 'rxjs';
 
 import { ODataClient } from '../../client';
@@ -36,7 +36,7 @@ export class BatchRequest {
 
   constructor(
     public method: RequestMethod,
-    public odataQuery: ODataRequest,
+    public odataQuery: ODataRequest<any>,
     public options?: {
       body?: any,
       headers?: HttpHeaders|{[header: string]: string | string[]},
@@ -61,7 +61,7 @@ export class BatchRequest {
   }
 }
 
-export class ODataBatchRequest extends ODataRequest {
+export class ODataBatchRequest extends ODataRequest<any> {
   private static readonly BINARY = 'binary';
 
   // VARIABLES
@@ -73,7 +73,7 @@ export class ODataBatchRequest extends ODataRequest {
   constructor(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     super(service, segments, options);
     this.requests = [];
-    this.batchBoundary = BatchRequest.BATCH_PREFIX + this.getUUID();
+    this.batchBoundary = BatchRequest.BATCH_PREFIX + uuidv4();
     this.changesetBoundary = null;
     this.changesetID = 1;
   }
@@ -87,7 +87,7 @@ export class ODataBatchRequest extends ODataRequest {
     return new ODataBatchRequest(service, segments, options);
   }
 
-  add(method: RequestMethod, query: ODataRequest, options?: {
+  add(method: RequestMethod, query: ODataRequest<any>, options?: {
     body?: any,
     headers?: HttpHeaders|{[header: string]: string | string[]},
   }): ODataBatchRequest {
@@ -123,7 +123,7 @@ export class ODataBatchRequest extends ODataRequest {
 
     for (const request of this.requests) {
       const method: RequestMethod = request.method;
-      const odataQuery: ODataRequest = request.odataQuery;
+      const odataQuery: ODataRequest<any> = request.odataQuery;
       const body: any = request.options.body;
 
       // if method is GET and there is a changeset boundary open then close it
@@ -140,7 +140,7 @@ export class ODataBatchRequest extends ODataRequest {
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (method !== RequestMethod.Get) {
         if (Types.isNullOrUndefined(this.changesetBoundary)) {
-          this.changesetBoundary = BatchRequest.CHANGESET_PREFIX + this.getUUID();
+          this.changesetBoundary = BatchRequest.CHANGESET_PREFIX + uuidv4();
           res += BatchRequest.CONTENT_TYPE + ': ' + BatchRequest.MULTIPART_MIXED_BOUNDARY + this.changesetBoundary + BatchRequest.NEWLINE;
           res += BatchRequest.NEWLINE;
         }
@@ -176,10 +176,6 @@ export class ODataBatchRequest extends ODataRequest {
     }
 
     return res;
-  }
-
-  getUUID(): string {
-    return UUID.UUID();
   }
 
   getRequests(): BatchRequest[] {

@@ -1,5 +1,6 @@
 export * from './constants';
 export * from './settings';
+export * from './schema';
 export * from './client';
 export * from './module';
 

@@ -7,8 +7,8 @@ import { ODataSettings } from '../settings';
 @Injectable()
 export class ODataModelService<M extends Model, C extends ModelCollection<Model>> {
   static set: string = "";
-  static model: { new(attrs: PlainObject, query: ODataRequest): Model; } = null; 
-  static collection: { new(models: PlainObject[], query: ODataRequest): ModelCollection<Model>; } = null; 
+  static model: { new(attrs: PlainObject, query: ODataRequest<any>): Model; } = null; 
+  static collection: { new(models: PlainObject[], query: ODataRequest<any>): ModelCollection<Model>; } = null; 
   
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 

@@ -1,44 +1,53 @@
-import { Segments, Options, Select, Expand, PlainObject } from '../types';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { ODataEntitySet } from '../../odata-response';
 import { ODataClient } from '../../client';
+import { Segments, Options, Select, Expand, PlainObject } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataRequest } from '../request';
+
 import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
-export class ODataSingletonRequest<T> extends ODataRequest {
+export class ODataSingletonRequest<T> extends ODataRequest<T> {
 
   // Factory
-  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<R>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
     segments.segment(Segments.singleton, name);
     options.keep(Options.format);
-    return new ODataSingletonRequest<T>(service, segments, options);
+    return new ODataSingletonRequest<R>(service, segments, options);
   }
 
   // Segments
   navigationProperty<N>(name: string) {
-    return ODataNavigationPropertyRequest.factory<N>(
+    let nav = ODataNavigationPropertyRequest.factory<N>(
       name, 
       this.client, 
       this.segments.clone(),
       this.options.clone()
     );
+    if (this.schema)
+      nav.schema = this.schema.schemaForField(name);
+    return nav;
   }
 
   property<P>(name: string) {
-    return ODataPropertyRequest.factory<P>(
+    let prop =  ODataPropertyRequest.factory<P>(
       name, 
       this.client, 
       this.segments.clone(),
       this.options.clone()
     );
+    if (this.schema)
+      prop.schema = this.schema.schemaForField(name);
+    return prop;
   }
 
   action<A>(name: string) {
@@ -59,19 +68,39 @@ export class ODataSingletonRequest<T> extends ODataRequest {
     );
   }
 
-  get(options?: {
+  get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
+    responseType: 'entity',
     withCredentials?: boolean,
-  }): Observable<T> {
+  }): Observable<T>;
+
+  get(options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType: 'entityset',
+    withCredentials?: boolean,
+    withCount?: boolean
+  }): Observable<ODataEntitySet<T>>;
+
+  get(options: {
+    headers?: HttpHeaders | {[header: string]: string | string[]},
+    params?: HttpParams|{[param: string]: string | string[]},
+    responseType: 'entity'|'entityset'|'property',
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+    withCount?: boolean
+  }): Observable<any> {
     return super.get({
-      headers: options && options.headers,
+      headers: options.headers,
       observe: 'body',
-      params: options && options.params,
-      responseType: 'entity',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
+      params: options.params,
+      responseType: options.responseType,
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials,
+      withCount: options.withCount
     });
   }
 

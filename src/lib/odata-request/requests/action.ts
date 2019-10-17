@@ -9,21 +9,21 @@ import { Segments } from '../types';
 import { ODataClient } from '../../client';
 import { ODataProperty } from '../../odata-response';
 
-export class ODataActionRequest<T> extends ODataRequest {
+export class ODataActionRequest<T> extends ODataRequest<T> {
   // Factory
-  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<R>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
 
     segments.segment(Segments.actionCall, name);
     options.clear();
-    return new ODataActionRequest<T>(service, segments, options);
+    return new ODataActionRequest<R>(service, segments, options);
   }
 
   post(body: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'entity',
+    responseType: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
@@ -31,7 +31,7 @@ export class ODataActionRequest<T> extends ODataRequest {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'entityset',
+    responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<ODataEntitySet<T>>;
@@ -40,14 +40,14 @@ export class ODataActionRequest<T> extends ODataRequest {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'property',
+    responseType: 'property',
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
   post(body: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'entity'|'entityset'|'property',
+    responseType: 'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean

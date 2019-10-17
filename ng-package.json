@@ -5,7 +5,7 @@
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
       "odata-query": "buildQuery",
-      "angular2-uuid": "angular2Uuid"
+      "uuid": "uuid"
     }
   }
 }

@@ -9,7 +9,7 @@ import { ODataClient } from '../../client';
 import { ODataEntityRequest } from './entity';
 import { $REF, ODATA_ID, $ID } from '../../constants';
 
-export class ODataRefRequest extends ODataRequest {
+export class ODataRefRequest extends ODataRequest<any> {
   // Factory
   static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();

@@ -9,7 +9,7 @@ import { ODataNavigationPropertyRequest } from '../odata-request/requests/naviga
 
 export class ModelCollection<M extends Model> implements Iterable<M> {
   static model: typeof Model = null;
-  query: ODataRequest;
+  query: ODataRequest<any>;
   models: M[];
 
   state: {
@@ -19,14 +19,14 @@ export class ModelCollection<M extends Model> implements Iterable<M> {
     records?: number,
   };
 
-  constructor(models: PlainObject[], query: ODataRequest) {
+  constructor(models: PlainObject[], query: ODataRequest<any>) {
     this.models = this.parse(models, query);
     this.state = {
       records: this.models.length
     };
   }
 
-  parse(models: PlainObject[], query: ODataRequest) {
+  parse(models: PlainObject[], query: ODataRequest<any>) {
     this.query = query
     let Ctor = <typeof ModelCollection>this.constructor;
     return models.map(model => new Ctor.model(model, this.query.clone()) as M);
@@ -50,7 +50,7 @@ export class ModelCollection<M extends Model> implements Iterable<M> {
     }
   }
 
-  assign(entitySet: ODataEntitySet<Model>, query: ODataRequest) {
+  assign(entitySet: ODataEntitySet<Model>, query: ODataRequest<any>) {
     this.state.records = entitySet.count;
     this.state.size = entitySet.value.length;
     this.state.pages = Math.ceil(this.state.records / this.state.size);
@@ -59,7 +59,7 @@ export class ModelCollection<M extends Model> implements Iterable<M> {
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntitySetRequest<Model> | ODataNavigationPropertyRequest<Model> = this.query.clone();
+    let query: ODataEntitySetRequest<Model> | ODataNavigationPropertyRequest<Model> = this.query.clone<Model>() as ODataEntitySetRequest<Model> | ODataNavigationPropertyRequest<Model>;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {

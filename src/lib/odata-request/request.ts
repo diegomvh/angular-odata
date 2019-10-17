@@ -5,14 +5,16 @@ import { ODataOptions } from './options';
 import { ODataSegment, PlainObject } from './types';
 import { ODataSegments } from './segments';
 import { ODataClient, ODataObserve } from '../client';
+import { Schema } from '../schema';
 
-export abstract class ODataRequest {
+export abstract class ODataRequest<Type> {
   public static readonly QUERY_SEPARATOR = '?';
 
   // VARIABLES
   protected client: ODataClient;
   protected segments: ODataSegments;
   protected options: ODataOptions;
+  schema: Schema<Type>;
 
   constructor(
     client: ODataClient,
@@ -36,7 +38,7 @@ export abstract class ODataRequest {
     return this.client.get(this, options as any);
   }
 
-  protected post(body: any|null, options: {
+  protected post(body: Type|null, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
@@ -45,10 +47,11 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.post(this, body, options as any);
+    let schema = this.schema || new Schema<Type>();
+    return this.client.post(this, schema.serialize(body), options as any);
   }
 
-  protected patch(body: any|null, etag?: string, options: {
+  protected patch(body: Partial<Type>|null, etag?: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
@@ -57,10 +60,11 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.patch(this, body, etag, options as any);
+    let schema = this.schema || new Schema<Type>();
+    return this.client.patch(this, schema.serialize(body), etag, options as any);
   }
 
-  protected put(body: any|null, etag?: string, options: {
+  protected put(body: Type|null, etag?: string, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
@@ -69,7 +73,8 @@ export abstract class ODataRequest {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.put(this, body, etag, options as any);
+    let schema = this.schema || new Schema<Type>();
+    return this.client.put(this, schema.serialize(body), etag, options as any);
   }
 
   protected delete (etag?: string, options: {
@@ -84,14 +89,6 @@ export abstract class ODataRequest {
     return this.client.delete(this, etag, options as any);
   }
 
-  toString(): string {
-    let path = this.path();
-    let queryString = Object.entries(this.params())
-      .map(e => `${e[0]}${ODataOptions.VALUE_SEPARATOR}${e[1]}`)
-      .join(ODataOptions.PARAM_SEPARATOR);
-    return queryString ? `${path}${ODataRequest.QUERY_SEPARATOR}${queryString}` : path
-  }
-
   path(): string {
     return this.segments.path();
   }
@@ -100,10 +97,20 @@ export abstract class ODataRequest {
     return this.options.params();
   }
 
-  clone<T extends ODataRequest>(type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions): T; }): T {
+  toString(): string {
+    let path = this.path();
+    let queryString = Object.entries(this.params())
+      .map(e => `${e[0]}${ODataOptions.VALUE_SEPARATOR}${e[1]}`)
+      .join(ODataOptions.PARAM_SEPARATOR);
+    return queryString ? `${path}${ODataRequest.QUERY_SEPARATOR}${queryString}` : path
+  }
+
+  clone<T>(
+    type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions): ODataRequest<T>; }
+  ): ODataRequest<T> {
     if (!type) 
-      type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): T; };
-    return new type(this.client, this.segments.clone(), this.options.clone());
+      type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): ODataRequest<T>; };
+    return new type(this.client, this.segments.clone(), this.options.clone()) as ODataRequest<T>;
   };
 
   toJSON() {
@@ -113,13 +120,14 @@ export abstract class ODataRequest {
     }
   }
 
-  static fromJSON<T extends ODataRequest>(
+  static fromJSON<T>(
     client: ODataClient, 
     json: {segments: any[], options: PlainObject},
-    type?: { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): T; }): T {
+    type?: { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): ODataRequest<T>; }
+  ): ODataRequest<T> {
     if (!type) 
-      type = this.constructor as { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): T; };
-    return new type(client, json.segments, json.options);
+      type = this.constructor as { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): ODataRequest<T>; };
+    return new type(client, json.segments, json.options) as ODataRequest<T>;
   }
 
   is(type: string) {

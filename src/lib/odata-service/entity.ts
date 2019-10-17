@@ -3,13 +3,15 @@ import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http
 import { Observable, throwError, empty } from 'rxjs';
 import { catchError, expand, concatMap, toArray, map } from 'rxjs/operators';
 
-import { ODataEntitySet, ODataProperty, ENTITYSET_VALUE } from '../odata-response';
+import { ODataEntitySet, ODataProperty } from '../odata-response';
 import { Types } from '../utils/types';
 import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
-import { ODataClient, ODataObserve } from "../client";
-import { EntitySchema, EntityCollection } from '../odata-model/entity';
+import { ODataClient } from "../client";
+import { EntityCollection } from '../odata-model/entity';
 import { ODataSettings } from '../settings';
+import { Schema } from '../schema';
+import { query } from '@angular/animations';
 
 function addCount(
     options: {
@@ -37,18 +39,19 @@ export class ODataEntityService<T> {
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
   protected schemaForType<E>(type) {
-    return this.settings.schemaForType(type) as EntitySchema<E>;
+    return this.settings.schemaForType(type) as Schema<E>;
   }
 
   protected schemaForField<E>(name) {
     let field = this.schema().getField(name);
-    return this.settings.schemaForType(field.type) as EntitySchema<E>;
+    return this.settings.schemaForType(field.type) as Schema<E>;
   }
 
-  protected schema(): EntitySchema<T> {
+  protected schema(): Schema<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.schemaForType<T>(Ctor.entity) as EntitySchema<T>;
+    return this.schemaForType<T>(Ctor.entity) as Schema<T>;
   }
+
   protected resolveEntityKey(entity: Partial<T>) {
     return this.schema().resolveKey(entity);
   }
@@ -60,7 +63,9 @@ export class ODataEntityService<T> {
   // Build requests
   public entities(): ODataEntitySetRequest<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.client.entitySet<T>(Ctor.set);
+    let query = this.client.entitySet<T>(Ctor.set);
+    query.schema = this.schema();
+    return query;
   }
 
   public entity(entity?: number | string | Partial<T>): ODataEntityRequest<T> {
@@ -69,21 +74,19 @@ export class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public fetch(size?: number): Observable<EntityCollection<T>> {
-    let schema = this.schema();
+  public fetchCollection(size?: number): Observable<EntityCollection<T>> {
     let query = this.entities();
     size = size || this.settings.maxSize;
     if (size)
       query.top(size);
     return query
       .get({ withCount: true })
-      .pipe(map(entityset => new EntityCollection<T>(entityset, query, schema)));
+      .pipe(map(entityset => new EntityCollection<T>(entityset, query)));
   }
 
   public fetchAll(): Observable<T[]> {
-    let schema = this.schema();
+    let query = this.entities();
     let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
-      let query = this.entities();
       if (options) {
         if (options.skiptoken)
           query.skiptoken(options.skiptoken);
@@ -98,50 +101,32 @@ export class ODataEntityService<T> {
       .pipe(
         expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
         concatMap((resp: ODataEntitySet<T>) => resp.value),
-        map((e: T) => schema.deserialize(e)),
         toArray());
   }
 
   public fetchOne(entity: Partial<T>): Observable<T> {
-    let schema = this.schema();
     return this.entity(entity)
-      .get()
-      .pipe(
-        map(e => schema.deserialize(e)),
-      );
+      .get();
   }
 
   public create(entity: T): Observable<T> {
-    let schema = this.schema();
     return this.entities()
-      .post(schema.serialize(entity))
-      .pipe(
-        map(e => schema.deserialize(e)),
-      );
+      .post(entity);
   }
 
   public update(entity: T): Observable<T> {
-    let schema = this.schema();
     let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
-      .put(schema.serialize(entity), etag)
-      .pipe(
-        map(e => schema.deserialize(e)),
-      );
+      .put(entity, etag);
   }
 
   public assign(entity: Partial<T>, options?) {
-    let schema = this.schema();
     let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
-      .patch(entity, etag, options)
-      .pipe(
-        map(e => schema.deserialize(e)),
-      );
+      .patch(entity, etag, options);
   }
 
   public destroy(entity: T, options?) {
-    let schema = this.schema();
     let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
       .delete(etag, options);
@@ -189,13 +174,12 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let schema = this.schemaForField<P>(name);
     let query = this.entity(entity).navigationProperty<P>(name);
     let resp$ = query
       .get(addCount(options));
     switch (options.responseType) {
       case 'entityset':
-        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset as any, query, schema)));
+        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset as any, query)));
       default:
         return resp$;
     }
@@ -207,11 +191,10 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<P> {
-    let schema = this.schemaForField<P>(name);
     let query = this.entity(entity).property<P>(name);
     return query
       .get(options)
-      .pipe(map(property => schema.deserialize(property.value)));
+      .pipe(map(property => property.value));
   }
 
   protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
@@ -275,24 +258,14 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let schema = this.schemaForType<P>(options.returnType);
     let query = this.entity(entity).action<P>(name);
+    query.schema = this.schemaForType<P>(options.returnType);
     let resp$ = query.post(data, addCount(options));
     switch (options.responseType) {
       case 'entityset':
-        return resp$.pipe(
-          map(entityset => 
-            schema ? 
-              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
-              (<any>entityset as ODataEntitySet<P>).value
-          ));
+        return resp$.pipe(map(entityset => (<any>entityset as ODataEntitySet<P>).value ));
       case 'property':
-        return resp$.pipe(
-          map(property => 
-            schema ? 
-              schema.deserialize((<any>property as ODataProperty<P>).value) : 
-              (<any>property as ODataProperty<P>).value
-          ));
+        return resp$.pipe( map(property => (<any>property as ODataProperty<P>).value ));
       default:
         return resp$;
     }
@@ -333,24 +306,14 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let schema = this.schemaForType<P>(options.returnType);
     let query = this.entities().action<P>(name);
+    query.schema = this.schemaForType<P>(options.returnType);
     let resp$ = query.post(data, options as any);
     switch (options.responseType) {
       case 'entityset':
-        return resp$.pipe(
-          map(entityset => 
-            schema ? 
-              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
-              (<any>entityset as ODataEntitySet<P>).value
-          ));
+        return resp$.pipe(map(entityset => (<any>entityset as ODataEntitySet<P>).value ));
       case 'property':
-        return resp$.pipe(
-          map(property => 
-            schema ? 
-              schema.deserialize((<any>property as ODataProperty<P>).value) : 
-              (<any>property as ODataProperty<P>).value
-          ));
+        return resp$.pipe(map(property => (<any>property as ODataProperty<P>).value ));
       default:
         return resp$;
     }
@@ -391,25 +354,15 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let schema = this.schemaForType<P>(options.returnType);
     let query = this.entity(entity).function<P>(name);
+    query.schema = this.schemaForType<P>(options.returnType);
     query.parameters(data);
     let resp$ = query.get(options as any);
     switch (options.responseType) {
       case 'entityset':
-        return resp$.pipe(
-          map(entityset => 
-            schema ? 
-              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
-              (<any>entityset as ODataEntitySet<P>).value
-          ));
+        return resp$.pipe(map(entityset => (<any>entityset as ODataEntitySet<P>).value ));
       case 'property':
-        return resp$.pipe(
-          map(property => 
-            schema ? 
-              schema.deserialize((<any>property as ODataProperty<P>).value) : 
-              (<any>property as ODataProperty<P>).value
-          ));
+        return resp$.pipe(map(property => (<any>property as ODataProperty<P>).value ));
       default:
         return resp$;
     }
@@ -450,25 +403,16 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let schema = this.schemaForType<P>(options.returnType);
     let query = this.entities().function<P>(name);
+    query.schema = this.schemaForType<P>(options.returnType);
     query.parameters(data);
     let resp$ = query.get(options as any);
     switch (options.responseType) {
       case 'entityset':
         return resp$.pipe(
-          map(entityset => 
-            schema ? 
-              (<any>entityset as ODataEntitySet<P>).value.map(e => schema.deserialize(e)) :
-              (<any>entityset as ODataEntitySet<P>).value
-          ));
+          map(entityset => (<any>entityset as ODataEntitySet<P>).value ));
       case 'property':
-        return resp$.pipe(
-          map(property => 
-            schema ? 
-              schema.deserialize((<any>property as ODataProperty<P>).value) : 
-              (<any>property as ODataProperty<P>).value
-          ));
+        return resp$.pipe(map(property => (<any>property as ODataProperty<P>).value ));
       default:
         return resp$;
     }

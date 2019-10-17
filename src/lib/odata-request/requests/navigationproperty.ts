@@ -11,15 +11,15 @@ import { ODataEntitySet } from '../../odata-response';
 import { ODataCountRequest } from './count';
 import { ODataPropertyRequest } from './property';
 
-export class ODataNavigationPropertyRequest<T> extends ODataRequest {
+export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   // Factory
-  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<E>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
     segments.segment(Segments.navigationProperty, name);
     options.keep(Options.format);
-    return new ODataNavigationPropertyRequest<T>(service, segments, options);
+    return new ODataNavigationPropertyRequest<E>(service, segments, options);
   }
 
   // Key
@@ -43,21 +43,27 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   }
 
   navigationProperty<N>(name: string) {
-    return ODataNavigationPropertyRequest.factory<N>(
+    let nav = ODataNavigationPropertyRequest.factory<N>(
       name, 
       this.client, 
       this.segments.clone(),
       this.options.clone()
     );
+    if (this.schema)
+      nav.schema = this.schema.schemaForField(name);
+    return nav;
   }
 
   property<P>(name: string) {
-    return ODataPropertyRequest.factory<P>(
+    let prop = ODataPropertyRequest.factory<P>(
       name, 
       this.client, 
       this.segments.clone(),
       this.options.clone()
     );
+    if (this.schema)
+      prop.schema = this.schema.schemaForField(name);
+    return prop;
   }
 
   count() {
@@ -68,19 +74,19 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
     );
   }
 
-  get(options?: {
+  get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'entity',
+    responseType: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
-  get(options?: {
+  get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'entityset',
+    responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<ODataEntitySet<T>>;
@@ -88,7 +94,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest {
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'entity'|'entityset'|'property',
+    responseType: 'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean

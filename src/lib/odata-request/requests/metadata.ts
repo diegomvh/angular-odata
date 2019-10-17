@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../constants';
 
-export class ODataMetadataRequest extends ODataRequest {
+export class ODataMetadataRequest extends ODataRequest<any> {
 
   static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();

@@ -13,15 +13,15 @@ import { ODataCountRequest } from './count';
 import { ODataEntitySet } from '../../odata-response';
 import { ODataRequest } from '../request';
 
-export class ODataEntitySetRequest<T> extends ODataRequest {
+export class ODataEntitySetRequest<T> extends ODataRequest<T> {
   // Factory
-  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<E>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
     segments.segment(Segments.entitySet, name);
     options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);
-    return new ODataEntitySetRequest<T>(service, segments, options);
+    return new ODataEntitySetRequest<E>(service, segments, options);
   }
 
   // Segments
@@ -33,6 +33,7 @@ export class ODataEntitySetRequest<T> extends ODataRequest {
     );
     if (key)
       entity.key(key);
+    entity.schema = this.schema;
     return entity;
   }
 

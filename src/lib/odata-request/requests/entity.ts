@@ -12,14 +12,14 @@ import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataRequest } from '../request';
 
-export class ODataEntityRequest<T> extends ODataRequest {
+export class ODataEntityRequest<T> extends ODataRequest<T> {
   // Factory
-  static factory<T>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<E>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
     options.keep(Options.expand, Options.select, Options.format);
-    return new ODataEntityRequest<T>(service, segments, options);
+    return new ODataEntityRequest<E>(service, segments, options);
   }
 
   // Key
@@ -30,21 +30,27 @@ export class ODataEntityRequest<T> extends ODataRequest {
 
   // Segments
   navigationProperty<N>(name: string) {
-    return ODataNavigationPropertyRequest.factory<N>(
+    let nav = ODataNavigationPropertyRequest.factory<N>(
       name, 
       this.client, 
       this.segments.clone(),
       this.options.clone()
     );
+    if (this.schema)
+      nav.schema = this.schema.schemaForField(name);
+    return nav;
   }
 
   property<P>(name: string) {
-    return ODataPropertyRequest.factory<P>(
+    let prop = ODataPropertyRequest.factory<P>(
       name, 
       this.client, 
       this.segments.clone(),
       this.options.clone()
     );
+    if (this.schema)
+      prop.schema = this.schema.schemaForField(name);
+    return prop;
   }
 
   action<A>(name: string) {
@@ -161,5 +167,4 @@ export class ODataEntityRequest<T> extends ODataRequest {
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
   }
-
 }

@@ -1,9 +1,9 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { PlainObject, ODataRequest } from './odata-request';
-import { Model, ModelCollection, EntitySchema, ModelSchema } from './odata-model';
+import { Model, ModelCollection } from './odata-model';
 import { InjectionToken } from '@angular/core';
-import { Schema, Field, Key } from './odata-model/schema';
+import { Schema, Field, Key } from './schema';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -17,8 +17,8 @@ export interface ODataConfig {
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
   schemas?: {[type: string]: {base?: string, keys?: Key[], fields?: Field[] }},
-  models?: {[type: string]: { new(attrs: PlainObject, query: ODataRequest): Model }},
-  collections?:{[type: string]: { new(models: PlainObject[], query: ODataRequest): ModelCollection<Model> }},
+  models?: {[type: string]: { new(attrs: PlainObject, query: ODataRequest<any>): Model }},
+  collections?:{[type: string]: { new(models: PlainObject[], query: ODataRequest<any>): ModelCollection<Model> }},
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -31,9 +31,9 @@ export class ODataSettings {
   creation?: Date;
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
-  schemas?: {[type: string]: Schema<Key, Field, any> };
-  models?: {[type: string]: { new(attrs: PlainObject, query: ODataRequest): Model }};
-  collections?:{[type: string]: { new(models: PlainObject[], query: ODataRequest): ModelCollection<Model> }};
+  schemas?: {[type: string]: Schema<any> };
+  models?: {[type: string]: { new(attrs: PlainObject, query: ODataRequest<any>): Model }};
+  collections?:{[type: string]: { new(models: PlainObject[], query: ODataRequest<any>): ModelCollection<Model> }};
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -50,12 +50,12 @@ export class ODataSettings {
     this.collections = config.collections || {};
 
     // Build schemas
-    this.schemas = ODataSettings.buildSchemas<EntitySchema<any>>(EntitySchema, config.schemas);
+    this.schemas = ODataSettings.buildSchemas<Schema<any>>(config.schemas);
 
     // Set schema
     Object.entries(this.models)
       .forEach(([type, model]) => {
-        (model as typeof Model).schema = this.schemas[type] as ModelSchema<any>;
+        (model as typeof Model).schema = this.schemas[type] as Schema<any>;
       });
 
     // Configure
@@ -63,23 +63,22 @@ export class ODataSettings {
       .forEach(schema => schema.configure(this));
   }
 
-  public schemaForType<E>(type): Schema<Key, Field, E> {
+  public schemaForType<E>(type): Schema<E> {
     if (type in this.schemas)
-      return this.schemas[type] as Schema<Key, Field, E>;
+      return this.schemas[type] as Schema<E>;
   }
 
-  static buildSchemas<S extends Schema<Key, Field, any>>(
-    Ctor: {new (keys: Key[], fields: Field[]): S},
+  static buildSchemas<S extends Schema<any>>(
     schemas: {[type: string]: {base?: string, keys?: Key[], fields?: Field[] }}
   ): {[type: string]: S } {
     let bases: {[type: string]: S } = Object.entries(schemas)
       .filter(([type, config]) => !('base' in config))
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new Ctor(config.keys, config.fields)}), {});
+      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new Schema(config.keys, config.fields)}), {});
     let descendants = Object.entries(schemas)
       .filter(([type, config]) => 'base' in config);
     while (descendants.length > 0) {
       let descendant = descendants.find(([type, config]) => config.base in bases);
-      bases[descendant[0]] = bases[descendant[1].base].extend(descendant[1]) as S;
+      bases[descendant[0]] = bases[descendant[1].base].extend(descendant[1].keys, descendant[1].fields) as S;
       descendants = descendants.filter(d => d !== descendant);
     }
     return bases;

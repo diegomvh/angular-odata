@@ -8,15 +8,15 @@ import { Segments } from '../types';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../constants';
 
-export class ODataValueRequest<V> extends ODataRequest {
+export class ODataValueRequest<T> extends ODataRequest<T> {
   // Factory
-  static factory<T>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<V>(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
     segments.segment(Segments.value, $VALUE);
     options.clear();
-    return new ODataValueRequest<T>(service, segments, options);
+    return new ODataValueRequest<V>(service, segments, options);
   }
 
   get(options?: {
@@ -24,7 +24,7 @@ export class ODataValueRequest<V> extends ODataRequest {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<V> {
+  }): Observable<T> {
     return super.get({
       headers: options && options.headers,
       observe: 'body',

@@ -9,16 +9,16 @@ import { Segments, Options, PlainObject } from '../types';
 import { ODataClient } from '../../client';
 import { ODataProperty } from '../../odata-response';
 
-export class ODataFunctionRequest<T> extends ODataRequest {
+export class ODataFunctionRequest<T> extends ODataRequest<T> {
 
   // Factory
-  static factory<T>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  static factory<R>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();
     options = options || new ODataOptions();
 
     segments.segment(Segments.functionCall, name);
     options.keep(Options.format);
-    return new ODataFunctionRequest<T>(service, segments, options);
+    return new ODataFunctionRequest<R>(service, segments, options);
   }
 
   // Parameters
@@ -26,35 +26,35 @@ export class ODataFunctionRequest<T> extends ODataRequest {
     return this.segments.last().option(Options.parameters, opts);
   }
 
-  get(options?: {
+  get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'entity',
+    responseType: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
-  get(options?: {
+  get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'entityset',
+    responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<ODataEntitySet<T>>;
 
-  get(options?: {
+  get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'property',
+    responseType: 'property',
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'entity'|'entityset'|'property',
+    responseType: 'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean

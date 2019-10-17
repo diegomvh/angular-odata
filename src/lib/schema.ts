@@ -1,9 +1,9 @@
-import { Types } from '../utils/types';
-import { PlainObject, ODataRequest, ODataEntityRequest } from '../odata-request';
+import { Types } from './utils/types';
+import { PlainObject, ODataRequest, ODataEntityRequest } from './odata-request';
 
-import { ODataSettings } from '../settings';
-import { Enums } from '../utils/enums';
-import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
+import { ODataSettings } from './settings';
+import { Enums } from './utils/enums';
+import { ODataNavigationPropertyRequest } from './odata-request/requests/navigationproperty';
 
 export interface Key {
   name: string;
@@ -15,8 +15,7 @@ export interface Field {
   type: string;
   enum?: {[key: number]: string | number};
   schema?: Schema<any>;
-  model?: { new(attrs: PlainObject, query: ODataRequest): any };
-  collection?: { new(models: PlainObject[], query: ODataRequest): any };
+  ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataRequest<any>): any };
   default?: any;
   maxLength?: number;
   isCollection?: boolean;
@@ -35,14 +34,19 @@ const PARSERS = {
 };
 
 export class Schema<Type> {
+  keys: Key[];
+  fields: Field[];
   stringAsEnums: boolean;
 
-  constructor(protected keys?: Key[], protected fields?: Field[]) {}
+  constructor(keys?: Key[], fields?: Field[]) {
+    this.keys = keys || [];
+    this.fields = fields || [];
+  }
 
-  extend<Type>(opts: { keys?: Key[], fields?: Field[] }): Schema<Type> {
+  extend<Type>(keys?: Key[], fields?: Field[]): Schema<Type> {
     let Ctor = <typeof Schema>this.constructor;
-    let keys = [...this.keys, ...(opts.keys || [])];
-    let fields = [...this.fields, ...(opts.fields || [])];
+    keys = [...this.keys, ...(keys || [])];
+    fields = [...this.fields, ...(fields || [])];
     return new Ctor(keys, fields) as Schema<Type>;
   }
 
@@ -54,10 +58,10 @@ export class Schema<Type> {
       } else if (f.type in settings.schemas) {
         f.schema = settings.schemas[f.type] as Schema<any>;
       } else if (f.type in settings.models) {
-        f.model = settings.models[f.type];
+        f.ctor = settings.models[f.type];
       }
       else if (f.type in settings.collections) {
-        f.collection = settings.collections[f.type];
+        f.ctor = settings.collections[f.type];
       }
     });
   }
@@ -94,7 +98,7 @@ export class Schema<Type> {
       return field.schema as Schema<E>;
   }
 
-  parse(field: Field, value: any, query: ODataRequest) {
+  parse(field: Field, value: any, query?: ODataRequest<any>) {
     if (value === null) return value;
     if (field.enum) {
       return field.isFlags ?
@@ -104,10 +108,10 @@ export class Schema<Type> {
       return (Array.isArray(value) && field.isCollection) ?
         value.map(v => field.schema.deserialize(v, query)) :
         field.schema.deserialize(value, query);
-    } else if (field.model) {
-      return new field.model(value || {}, query);
-    } else if (field.collection) {
-      return new field.collection(value || [], query);
+    } else if (field.ctor) {
+      if (!value)
+        value = field.isCollection ? [] : {};
+      return new field.ctor(value, query);
     } else if (field.type in PARSERS) {
       return (Array.isArray(value) && field.isCollection) ?
         value.map(PARSERS[field.type]) :
@@ -120,9 +124,7 @@ export class Schema<Type> {
     if (value === null) return value;
     if (field.enum) {
       return Enums.toString(field.enum, value);
-    } else if (field.model) {
-      return value.toJSON();
-    } else if (field.collection) {
+    } else if (field.ctor) {
       return value.toJSON();
     } else if (field.schema) {
       return (Array.isArray(value) && field.isCollection) ?
@@ -132,21 +134,21 @@ export class Schema<Type> {
     return value;
   }
 
-  serialize(obj: Type): PlainObject {
+  serialize(obj: Partial<Type>): PlainObject {
     return Object.assign(obj, this.properties
       .filter(f => f.name in obj)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: this.toJSON(f, obj[f.name]) }), {}) 
-    ) as PlainObject;
+    );
   }
 
-  deserialize(obj: Type, query: ODataRequest): Type {
+  deserialize(obj: PlainObject, query?: ODataRequest<any>): Type {
     return Object.assign(obj, this.properties
       .filter(f => f.name in obj)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: this.parse(f, obj[f.name], query) }), {})
     ) as Type;
   }
 
-  relationships(obj: Type, query: ODataRequest) {
+  relationships(obj: Type, query: ODataRequest<any>) {
     let parse = this.parse;
     (obj as any).relationships = {};
     this.navigations.forEach(field => {

@@ -8,7 +8,7 @@ import { ODataRequest } from '../request';
 import { ODataClient } from '../../client';
 import { $COUNT } from '../../constants';
 
-export class ODataCountRequest extends ODataRequest {
+export class ODataCountRequest extends ODataRequest<number> {
   // Factory
   static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
     segments = segments || new ODataSegments();

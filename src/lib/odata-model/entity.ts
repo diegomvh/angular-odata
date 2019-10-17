@@ -3,11 +3,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataRequest, ODataEntitySetRequest } from '../odata-request';
 import { ODataEntitySet } from '../odata-response';
-import { Schema } from '../odata-request/schema';
+import { Schema } from '../schema';
 
 export class EntityCollection<E> implements Iterable<E> {
   private query: ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
-  private schema: Schema<E>;
   entities: E[];
 
   state: {
@@ -17,10 +16,9 @@ export class EntityCollection<E> implements Iterable<E> {
     pages?: number
   } = {};
 
-  constructor(entityset: ODataEntitySet<E>, query: ODataRequest, schema: Schema<E>) {
+  constructor(entityset: ODataEntitySet<E>, query: ODataRequest<any>) {
     this.query = query as ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
-    this.schema = schema;
-    this.entities = entityset.value.map(entity => this.schema.deserialize(entity, query));
+    this.entities = entityset.value;
     this.setState({
       records: entityset.count, 
       page: 1, 
@@ -66,7 +64,7 @@ export class EntityCollection<E> implements Iterable<E> {
             if (set.skip) {
               this.setState({size: set.skip});
             }
-            this.entities = set.value.map(entity => this.schema.deserialize(entity, this.query));
+            this.entities = set.value;
           }
           return this;
         }));
