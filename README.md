@@ -24,14 +24,8 @@ import { ODataModule } from 'angular-odata';
 @NgModule({
   imports: [
     ...
-    ODataModule.forRoot({
-      baseUrl: "http://localhost/odata/",
-      withCredentials: true,
-      errorHandler: (error: HttpErrorResponse) => {
-        // Custom error processing
-        return throwError(error);
-      }
-    }),
+    ODataModule.forRoot({baseUrl: "http://localhost/odata/"}),
+    ...
   ]
 })
 export class AppModule {}
@@ -173,7 +167,7 @@ export class AudioPlayerComponent {
   
   constructor(private songsService: SongsService) {
     this.songsService.fetchOne({id: 1}).subscribe(song => this.song = song)
-    this.songsService.fetchPage().subscribe(page => this.songs = page.entities)
+    this.songsService.fetchCollection(10).subscribe(col => this.songs = col.entities)
     this.songsService.fetchAll().subscribe(all => this.songs = all)
   }
 }
