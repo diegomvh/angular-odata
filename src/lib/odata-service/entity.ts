@@ -38,11 +38,6 @@ export class ODataEntityService<T> {
 
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
-  protected _schemaForField<E>(name) {
-    let field = this.schema().getField(name);
-    return this.settings.schemaForType(field.type) as Schema<E>;
-  }
-
   protected schema(): Schema<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
     return this.client.schemaForType<T>(Ctor.entity) as Schema<T>;
