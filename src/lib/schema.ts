@@ -135,14 +135,14 @@ export class Schema<Type> {
   }
 
   serialize(obj: Partial<Type>): PlainObject {
-    return Object.assign(obj, this.properties
+    return Object.assign(obj, this.fields
       .filter(f => f.name in obj)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: this.toJSON(f, obj[f.name]) }), {}) 
     );
   }
 
   deserialize(obj: PlainObject, query?: ODataRequest<any>): Type {
-    return Object.assign(obj, this.properties
+    return Object.assign(obj, this.fields
       .filter(f => f.name in obj)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: this.parse(f, obj[f.name], query) }), {})
     ) as Type;
