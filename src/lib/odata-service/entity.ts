@@ -7,7 +7,7 @@ import { ODataEntitySet, ODataProperty } from '../odata-response';
 import { Types } from '../utils/types';
 import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
-import { ODataClient } from "../client";
+import { ODataClient, addEtag } from "../client";
 import { EntityCollection } from '../odata-model/entity';
 import { ODataSettings } from '../settings';
 import { Schema } from '../schema';
@@ -38,18 +38,14 @@ export class ODataEntityService<T> {
 
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
-  protected schemaForType<E>(type) {
-    return this.settings.schemaForType(type) as Schema<E>;
-  }
-
-  protected schemaForField<E>(name) {
+  protected _schemaForField<E>(name) {
     let field = this.schema().getField(name);
     return this.settings.schemaForType(field.type) as Schema<E>;
   }
 
   protected schema(): Schema<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.schemaForType<T>(Ctor.entity) as Schema<T>;
+    return this.client.schemaForType<T>(Ctor.entity) as Schema<T>;
   }
 
   protected resolveEntityKey(entity: Partial<T>) {
@@ -115,21 +111,19 @@ export class ODataEntityService<T> {
   }
 
   public update(entity: T): Observable<T> {
-    let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
-      .put(entity, etag);
+      .put(entity);
   }
 
-  public assign(entity: Partial<T>, options?) {
-    let etag = this.client.resolveEtag<T>(entity);
+  public assign(entity: Partial<T>) {
     return this.entity(entity)
-      .patch(entity, etag, options);
+      .patch(entity);
   }
 
-  public destroy(entity: T, options?) {
+  public destroy(entity: T) {
     let etag = this.client.resolveEtag<T>(entity);
     return this.entity(entity)
-      .delete(etag, options);
+      .delete({etag});
   }
 
   // Shortcuts
@@ -208,7 +202,7 @@ export class ODataEntityService<T> {
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
     return (field.isCollection) ?
       ref.post(target, options) :
-      ref.put(target, etag, options);
+      ref.put(target, addEtag(options, etag));
   }
 
   protected deleteRef<P>(entity: Partial<T>, name: string, options: {
@@ -220,7 +214,7 @@ export class ODataEntityService<T> {
   }): Observable<any> {
     let etag = this.client.resolveEtag<T>(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
-    return ref.delete(etag, options);
+    return ref.delete(addEtag(options, etag));
   }
 
   protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
@@ -259,7 +253,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<any> {
     let query = this.entity(entity).action<P>(name);
-    query.schema = this.schemaForType<P>(options.returnType);
+    query.schema = this.client.schemaForType<P>(options.returnType);
     let resp$ = query.post(data, addCount(options));
     switch (options.responseType) {
       case 'entityset':
@@ -307,7 +301,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<any> {
     let query = this.entities().action<P>(name);
-    query.schema = this.schemaForType<P>(options.returnType);
+    query.schema = this.client.schemaForType<P>(options.returnType);
     let resp$ = query.post(data, options as any);
     switch (options.responseType) {
       case 'entityset':
@@ -355,7 +349,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<any> {
     let query = this.entity(entity).function<P>(name);
-    query.schema = this.schemaForType<P>(options.returnType);
+    query.schema = this.client.schemaForType<P>(options.returnType);
     query.parameters(data);
     let resp$ = query.get(options as any);
     switch (options.responseType) {
@@ -404,7 +398,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<any> {
     let query = this.entities().function<P>(name);
-    query.schema = this.schemaForType<P>(options.returnType);
+    query.schema = this.client.schemaForType<P>(options.returnType);
     query.parameters(data);
     let resp$ = query.get(options as any);
     switch (options.responseType) {

@@ -37,14 +37,16 @@ export class ODataRefRequest extends ODataRequest<any> {
     });
   }
 
-  put(target: ODataEntityRequest<any>, etag?: string, options?: {
+  put(target: ODataEntityRequest<any>, options?: {
+    etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
     let related = this.client.createEndpointUrl(target);
-    return super.put({[ODATA_ID]: related}, etag, {
+    return super.put({[ODATA_ID]: related}, {
+      etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -54,7 +56,8 @@ export class ODataRefRequest extends ODataRequest<any> {
     });
   }
 
-  delete(etag?: string, options?: {
+  delete(string, options?: {
+    etag?: string, 
     target?: ODataEntityRequest<any>, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
@@ -65,7 +68,8 @@ export class ODataRefRequest extends ODataRequest<any> {
       let related = this.client.createEndpointUrl(options.target);
       this.custom({[$ID]: related});
     }
-    return super.delete(etag, {
+    return super.delete({
+      etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,

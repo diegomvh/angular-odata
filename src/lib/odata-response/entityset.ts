@@ -15,7 +15,6 @@ export class ODataEntitySet<T> {
     let values = (ENTITYSET_VALUE in json && Array.isArray(json[ENTITYSET_VALUE]) ?
       json[ENTITYSET_VALUE] : []) as any[];
     
-    console.log(schema, values);
     Object.assign(this, odata);
     this[ENTITYSET_VALUE] = values.map(value => schema.deserialize(value));
   }

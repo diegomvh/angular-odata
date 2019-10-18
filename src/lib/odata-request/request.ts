@@ -51,7 +51,8 @@ export abstract class ODataRequest<Type> {
     return this.client.post(this, schema.serialize(body), options as any);
   }
 
-  protected patch(body: Partial<Type>|null, etag?: string, options: {
+  protected patch(body: Partial<Type>|null, options: {
+    etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
@@ -61,10 +62,11 @@ export abstract class ODataRequest<Type> {
     withCount?: boolean
   } = {}): Observable<any> {
     let schema = this.schema || new Schema<Type>();
-    return this.client.patch(this, schema.serialize(body), etag, options as any);
+    return this.client.patch(this, schema.serialize(body), options as any);
   }
 
-  protected put(body: Type|null, etag?: string, options: {
+  protected put(body: Type|null, options: {
+    etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
@@ -74,10 +76,11 @@ export abstract class ODataRequest<Type> {
     withCount?: boolean
   } = {}): Observable<any> {
     let schema = this.schema || new Schema<Type>();
-    return this.client.put(this, schema.serialize(body), etag, options as any);
+    return this.client.put(this, schema.serialize(body), options as any);
   }
 
-  protected delete (etag?: string, options: {
+  protected delete(options: {
+    etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
@@ -86,7 +89,7 @@ export abstract class ODataRequest<Type> {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.delete(this, etag, options as any);
+    return this.client.delete(this, options as any);
   }
 
   path(): string {

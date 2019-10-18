@@ -103,13 +103,15 @@ export class ODataEntityRequest<T> extends ODataRequest<T> {
     });
   }
 
-  put(body: T, etag?: string, options?: {
+  put(body: T, options?: {
+    etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.put(body, etag, {
+    return super.put(body, {
+      etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -119,13 +121,15 @@ export class ODataEntityRequest<T> extends ODataRequest<T> {
     });
   }
 
-  patch(body: Partial<T>, etag?: string, options?: {
+  patch(body: Partial<T>, options?: {
+    etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.patch(body, etag, {
+    return super.patch(body, {
+      etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -135,13 +139,15 @@ export class ODataEntityRequest<T> extends ODataRequest<T> {
     });
   }
 
-  delete(etag?: string, options?: {
+  delete(options?: {
+    etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.delete(etag, {
+    return super.delete({
+      etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,

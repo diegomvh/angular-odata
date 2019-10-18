@@ -14,7 +14,6 @@ export class ODataProperty<T> {
     // Values
     let value = PROPERTY_VALUE in json ? json[PROPERTY_VALUE] : null as any;
 
-    console.log(schema, value);
     Object.assign(this, odata);
     this[PROPERTY_VALUE] = value;
   }

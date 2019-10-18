@@ -50,7 +50,22 @@ export class ODataSettings {
     this.collections = config.collections || {};
 
     // Build schemas
-    this.schemas = ODataSettings.buildSchemas<Schema<any>>(config.schemas);
+    // Bases
+    let bases = Object.entries(config.schemas || {})
+      .filter(([, config]) => !('base' in config));
+    // Descendants
+    let descendants = Object.entries(config.schemas || {})
+      .filter(([, config]) => 'base' in config);
+
+    let schemas = bases.reduce((acc, [type, config]) => 
+      Object.assign(acc, {[type]: new Schema(config.keys, config.fields)}), {});
+
+    while (descendants.length > 0) {
+      let descendant = descendants.find(([, config]) => config.base in schemas);
+      schemas[descendant[0]] = schemas[descendant[1].base].extend(descendant[1].keys, descendant[1].fields) as Schema<any>;
+      descendants = descendants.filter(d => d !== descendant);
+    }
+    this.schemas = schemas;
 
     // Set schema
     Object.entries(this.models)
@@ -68,20 +83,4 @@ export class ODataSettings {
       return this.schemas[type] as Schema<E>;
   }
 
-  static buildSchemas<S extends Schema<any>>(
-    schemas: {[type: string]: {base?: string, keys?: Key[], fields?: Field[] }}
-  ): {[type: string]: S } {
-    let bases: {[type: string]: S } = Object.entries(schemas)
-      .filter(([type, config]) => !('base' in config))
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new Schema(config.keys, config.fields)}), {});
-    let descendants = Object.entries(schemas)
-      .filter(([type, config]) => 'base' in config);
-    while (descendants.length > 0) {
-      let descendant = descendants.find(([type, config]) => config.base in bases);
-      bases[descendant[0]] = bases[descendant[1].base].extend(descendant[1].keys, descendant[1].fields) as S;
-      descendants = descendants.filter(d => d !== descendant);
-    }
-    return bases;
-  }
-  
 }
