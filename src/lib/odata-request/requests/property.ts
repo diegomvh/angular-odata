@@ -9,26 +9,33 @@ import { ODataOptions } from '../options';
 import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataProperty } from '../../odata-response';
+import { Schema } from '../../schema';
 
 export class ODataPropertyRequest<T> extends ODataRequest<T> {
 
   // Factory
-  static factory<P>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory<P>(name: string, client: ODataClient, opts?: {
+      segments?: ODataSegments, 
+      options?: ODataOptions,
+      schema?: Schema<P>}
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<P>();
 
     segments.segment(Segments.property, name);
     options.clear();
-    return new ODataPropertyRequest<P>(service, segments, options);
+    return new ODataPropertyRequest<P>(client, segments, options, schema);
   }
 
   // Segments
   value() {
     return ODataValueRequest.factory<T>(
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema
+    });
   }
 
   get(options?: {

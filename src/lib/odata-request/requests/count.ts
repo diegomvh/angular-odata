@@ -7,16 +7,22 @@ import { ODataOptions } from '../options';
 import { ODataRequest } from '../request';
 import { ODataClient } from '../../client';
 import { $COUNT } from '../../constants';
+import { Schema } from '../../schema';
 
 export class ODataCountRequest extends ODataRequest<number> {
   // Factory
-  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory(service: ODataClient, opts?: {
+      segments?: ODataSegments, 
+      options?: ODataOptions,
+      schema?: Schema<any>}
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<any>();
 
     segments.segment(Segments.count, $COUNT);
     options.keep(Options.filter, Options.search);
-    return new ODataCountRequest(service, segments, options);
+    return new ODataCountRequest(service, segments, options, schema);
   }
 
   get(options?: {

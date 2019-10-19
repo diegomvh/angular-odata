@@ -9,16 +9,22 @@ import { ODataMetadata } from '../../odata-response';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../constants';
+import { Schema } from '../../schema';
 
 export class ODataMetadataRequest extends ODataRequest<any> {
 
-  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory(service: ODataClient, opts?: {
+      segments?: ODataSegments, 
+      options?: ODataOptions,
+      schema?: Schema<any>}
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<any>();
 
     segments.segment(Segments.metadata, $METADATA);
     options.clear();
-    return new ODataMetadataRequest(service, segments, options);
+    return new ODataMetadataRequest(service, segments, options, schema);
   }
 
   get(options?: {

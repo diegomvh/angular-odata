@@ -12,73 +12,80 @@ import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
+import { Schema } from '../../schema';
 
 export class ODataSingletonRequest<T> extends ODataRequest<T> {
 
   // Factory
-  static factory<R>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory<R>(name: string, client: ODataClient, opts?: {
+    segments?: ODataSegments,
+    options?: ODataOptions,
+    schema?: Schema<R>
+  }
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<R>();
 
     segments.segment(Segments.singleton, name);
     options.keep(Options.format);
-    return new ODataSingletonRequest<R>(service, segments, options);
+    return new ODataSingletonRequest<R>(client, segments, options, schema);
   }
 
   // Segments
   navigationProperty<N>(name: string) {
-    let nav = ODataNavigationPropertyRequest.factory<N>(
-      name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-    if (this.schema)
-      nav.schema = this.schema.schemaForField(name);
-    return nav;
+    return ODataNavigationPropertyRequest.factory<N>(
+      name,
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema.schemaForField<N>(name)
+    });
   }
 
   property<P>(name: string) {
-    let prop =  ODataPropertyRequest.factory<P>(
-      name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-    if (this.schema)
-      prop.schema = this.schema.schemaForField(name);
-    return prop;
+    return ODataPropertyRequest.factory<P>(
+      name,
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema.schemaForField<P>(name)
+    });
   }
 
   action<A>(name: string) {
     return ODataActionRequest.factory<A>(
-      name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      name,
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      //TODO: Que esquema mando
+      schema: this.schema as Schema<any>
+    });
   }
 
   function<F>(name: string) {
     return ODataFunctionRequest.factory<F>(
-      name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      name,
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      //TODO: Que esquema mando
+      schema: this.schema as Schema<any>
+    });
   }
 
   get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
   get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'entityset',
     withCredentials?: boolean,
@@ -86,9 +93,9 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
   }): Observable<ODataEntitySet<T>>;
 
   get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'entity'|'entityset'|'property',
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    responseType: 'entity' | 'entityset' | 'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -105,8 +112,8 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
   }
 
   post(body: T, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
@@ -121,9 +128,9 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
   }
 
   put(body: T, options?: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    etag?: string,
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
@@ -139,9 +146,9 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
   }
 
   patch(body: Partial<T>, options?: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    etag?: string,
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
@@ -157,9 +164,9 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
   }
 
   delete(options?: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    etag?: string,
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {

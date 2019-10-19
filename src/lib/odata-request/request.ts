@@ -14,16 +14,18 @@ export abstract class ODataRequest<Type> {
   protected client: ODataClient;
   protected segments: ODataSegments;
   protected options: ODataOptions;
-  schema: Schema<Type>;
+  protected schema: Schema<Type>;
 
   constructor(
     client: ODataClient,
     segments?: ODataSegments,
-    options?: ODataOptions
+    options?: ODataOptions,
+    schema?: Schema<Type>
   ) {
     this.client = client;
     this.segments = segments || new ODataSegments();
     this.options = options || new ODataOptions();
+    this.schema = schema || new Schema<Type>();
   }
 
   protected get(options: {
@@ -47,8 +49,7 @@ export abstract class ODataRequest<Type> {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    let schema = this.schema || new Schema<Type>();
-    return this.client.post(this, schema.serialize(body), options as any);
+    return this.client.post(this, this.schema.serialize(body), options as any);
   }
 
   protected patch(body: Partial<Type>|null, options: {
@@ -61,8 +62,7 @@ export abstract class ODataRequest<Type> {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    let schema = this.schema || new Schema<Type>();
-    return this.client.patch(this, schema.serialize(body), options as any);
+    return this.client.patch(this, this.schema.serialize(body), options as any);
   }
 
   protected put(body: Type|null, options: {
@@ -75,8 +75,7 @@ export abstract class ODataRequest<Type> {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    let schema = this.schema || new Schema<Type>();
-    return this.client.put(this, schema.serialize(body), options as any);
+    return this.client.put(this, this.schema.serialize(body), options as any);
   }
 
   protected delete(options: {
@@ -98,6 +97,10 @@ export abstract class ODataRequest<Type> {
 
   params(): PlainObject {
     return this.options.params();
+  }
+
+  deserialize(obj: PlainObject): Type | null {
+    return obj ? this.schema.deserialize(obj, this.clone()) : obj as null;
   }
 
   toString(): string {

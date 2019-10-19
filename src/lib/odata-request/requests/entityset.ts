@@ -12,55 +12,65 @@ import { ODataEntityRequest } from './entity';
 import { ODataCountRequest } from './count';
 import { ODataEntitySet } from '../../odata-response';
 import { ODataRequest } from '../request';
+import { Schema } from '../../schema';
 
 export class ODataEntitySetRequest<T> extends ODataRequest<T> {
   // Factory
-  static factory<E>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory<E>(name: string, service: ODataClient, opts?: {
+      segments?: ODataSegments, 
+      options?: ODataOptions,
+      schema?: Schema<E>}
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<E>();
 
     segments.segment(Segments.entitySet, name);
     options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);
-    return new ODataEntitySetRequest<E>(service, segments, options);
+    return new ODataEntitySetRequest<E>(service, segments, options, schema);
   }
 
   // Segments
   entity(key?: EntityKey) {
     let entity = ODataEntityRequest.factory<T>(
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-    if (key)
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema
+    });
+    if (key) {
       entity.key(key);
-    entity.schema = this.schema;
+    }
     return entity;
   }
 
-  action<A>(name: string) {
+  action<A>(name: string, schema?: Schema<A>) {
     return ODataActionRequest.factory<A>(
-      name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      name,
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema
+    });
   }
 
-  function<F>(name: string) {
+  function<F>(name: string, schema?: Schema<F>) {
     return ODataFunctionRequest.factory<F>(
-      name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      name,
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema
+    });
   }
 
   count() {
     return ODataCountRequest.factory(
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema
+    });
   }
 
   post(body: T, options?: {

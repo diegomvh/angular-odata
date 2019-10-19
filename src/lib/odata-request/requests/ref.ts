@@ -8,16 +8,22 @@ import { Segments, PlainObject, Options } from '../types';
 import { ODataClient } from '../../client';
 import { ODataEntityRequest } from './entity';
 import { $REF, ODATA_ID, $ID } from '../../constants';
+import { Schema } from '../../schema';
 
 export class ODataRefRequest extends ODataRequest<any> {
   // Factory
-  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory(service: ODataClient, opts?: {
+      segments?: ODataSegments, 
+      options?: ODataOptions,
+      schema?: Schema<any>}
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<any>();
 
     segments.segment(Segments.ref, $REF);
     options.clear();
-    return new ODataRefRequest(service, segments, options);
+    return new ODataRefRequest(service, segments, options, schema);
   }
 
   post(target: ODataEntityRequest<any>, options: {

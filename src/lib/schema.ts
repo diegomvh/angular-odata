@@ -70,7 +70,7 @@ export class Schema<Type> {
     return this.fields.find(f => f.name === name);
   }
 
-  resolveKey(attrs: Partial<Type>) {
+  resolveKey(attrs: PlainObject) {
     let keys = this.keys
       .map(key => [key.name, (key.resolve) ? key.resolve(attrs) : attrs[key.name]]);
     let key = keys.length === 1 ?
@@ -80,7 +80,7 @@ export class Schema<Type> {
       return key;
   }
 
-  isNew(attrs: Partial<Type>) {
+  isNew(attrs: PlainObject) {
     return !this.resolveKey(attrs);
   }
 

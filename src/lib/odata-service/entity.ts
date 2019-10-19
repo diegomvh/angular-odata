@@ -43,7 +43,7 @@ export class ODataEntityService<T> {
     return this.client.schemaForType<T>(Ctor.entity) as Schema<T>;
   }
 
-  protected resolveEntityKey(entity: Partial<T>) {
+  protected _resolveEntityKey(entity: Partial<T>) {
     return this.schema().resolveKey(entity);
   }
 
@@ -54,13 +54,11 @@ export class ODataEntityService<T> {
   // Build requests
   public entities(): ODataEntitySetRequest<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    let query = this.client.entitySet<T>(Ctor.set);
-    query.schema = this.schema();
+    let query = this.client.entitySet<T>(Ctor.set, Ctor.entity);
     return query;
   }
 
-  public entity(entity?: number | string | Partial<T>): ODataEntityRequest<T> {
-    let key = Types.isObject(entity) ? this.resolveEntityKey(entity as Partial<T>) : entity;
+  public entity(key?: number | string | Partial<T>): ODataEntityRequest<T> {
     return this.entities().entity(key);
   }
 
@@ -247,8 +245,8 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let query = this.entity(entity).action<P>(name);
-    query.schema = this.client.schemaForType<P>(options.returnType);
+    let schema = this.client.schemaForType<P>(options.returnType);
+    let query = this.entity(entity).action<P>(name, schema);
     let resp$ = query.post(data, addCount(options));
     switch (options.responseType) {
       case 'entityset':
@@ -295,8 +293,8 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let query = this.entities().action<P>(name);
-    query.schema = this.client.schemaForType<P>(options.returnType);
+    let schema = this.client.schemaForType<P>(options.returnType);
+    let query = this.entities().action<P>(name, schema);
     let resp$ = query.post(data, options as any);
     switch (options.responseType) {
       case 'entityset':
@@ -343,8 +341,8 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let query = this.entity(entity).function<P>(name);
-    query.schema = this.client.schemaForType<P>(options.returnType);
+    let schema = this.client.schemaForType<P>(options.returnType);
+    let query = this.entity(entity).function<P>(name, schema);
     query.parameters(data);
     let resp$ = query.get(options as any);
     switch (options.responseType) {
@@ -392,8 +390,8 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let query = this.entities().function<P>(name);
-    query.schema = this.client.schemaForType<P>(options.returnType);
+    let schema = this.client.schemaForType<P>(options.returnType);
+    let query = this.entities().function<P>(name, schema);
     query.parameters(data);
     let resp$ = query.get(options as any);
     switch (options.responseType) {
