@@ -1,12 +1,13 @@
 import { Schema } from '../schema';
 import { ODATA_COUNT, ODATA_NEXTLINK } from '../constants';
+import { ODataRequest } from '../odata-request';
 
 export const ENTITYSET_VALUE = "value";
 
 export class ODataEntitySet<T> {
   [ENTITYSET_VALUE]: T[];
 
-  constructor(json: any, schema: Schema<T>) {
+  constructor(json: any, query: ODataRequest<T>) {
     // @odata
     let odata = Object.keys(json)
       .filter(k => k.startsWith("@odata"))
@@ -16,7 +17,7 @@ export class ODataEntitySet<T> {
       json[ENTITYSET_VALUE] : []) as any[];
     
     Object.assign(this, odata);
-    this[ENTITYSET_VALUE] = values.map(value => schema.deserialize(value));
+    this[ENTITYSET_VALUE] = values.map(value => query.deserialize(value));
   }
 
   get count(): number {

@@ -1,4 +1,4 @@
-import { Schema } from '../schema';
+import { ODataRequest } from '../odata-request';
 
 export const PROPERTY_VALUE = 'value';
 
@@ -6,7 +6,7 @@ export class ODataProperty<T> {
 
   [PROPERTY_VALUE]: T;
 
-  constructor(json: any, schema: Schema<T>) {
+  constructor(json: any, query: ODataRequest<T>) {
     // @odata
     let odata = Object.keys(json)
       .filter(k => k.startsWith("@odata"))

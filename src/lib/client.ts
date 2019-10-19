@@ -82,12 +82,14 @@ export class ODataClient {
     return ODataBatchRequest.factory(this);
   }
 
-  singleton<T>(name: string) {
-    return ODataSingletonRequest.factory<T>(name, this);
+  singleton<T>(name: string, type?: string) {
+    let schema = type? this.schemaForType<T>(type) as Schema<T> : null;
+    return ODataSingletonRequest.factory<T>(name, this, {schema});
   }
 
-  entitySet<T>(name: string): ODataEntitySetRequest<T> {
-    return ODataEntitySetRequest.factory<T>(name, this);
+  entitySet<T>(name: string, type?: string): ODataEntitySetRequest<T> {
+    let schema = type? this.schemaForType<T>(type) as Schema<T> : null;
+    return ODataEntitySetRequest.factory<T>(name, this, {schema});
   }
 
   mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
@@ -461,22 +463,21 @@ export class ODataClient {
     }
 
     // ODataResponse
-    let schema = query.schema || new Schema<any>();
     switch (options.observe || 'body') {
       case 'body':
         switch (options.responseType) {
           case 'entity':
-            return res$.pipe(map((body: any) => body && schema.deserialize(body) || body));
+            return res$.pipe(map((body: any) => query.deserialize(body)));
           case 'entityset':
-            return res$.pipe(map((body: any) => new ODataEntitySet<any>(body, schema)));
+            return res$.pipe(map((body: any) => new ODataEntitySet<any>(body, query)));
           case 'property':
-            return res$.pipe(map((body: any) => new ODataProperty<any>(body, schema)));
+            return res$.pipe(map((body: any) => new ODataProperty<any>(body, query)));
         }
       case 'response':
         switch (options.responseType) {
           case 'entity':
             return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: res.body && schema.deserialize(res.body) || res.body,
+              body: query.deserialize(res.body),
               headers: res.headers,
               status: res.status,
               statusText: res.statusText,
@@ -485,7 +486,7 @@ export class ODataClient {
             ));
           case 'entityset':
             return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: new ODataEntitySet<any>(res.body, schema),
+              body: new ODataEntitySet<any>(res.body, query),
               headers: res.headers,
               status: res.status,
               statusText: res.statusText,
@@ -494,7 +495,7 @@ export class ODataClient {
             ));
           case 'property':
             return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: new ODataProperty<any>(res.body, schema),
+              body: new ODataProperty<any>(res.body, query),
               headers: res.headers,
               status: res.status,
               statusText: res.statusText,

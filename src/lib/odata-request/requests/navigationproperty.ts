@@ -10,31 +10,41 @@ import { Observable } from 'rxjs';
 import { ODataEntitySet } from '../../odata-response';
 import { ODataCountRequest } from './count';
 import { ODataPropertyRequest } from './property';
+import { Schema } from '../../schema';
+import { Types } from '../../utils/types';
 
 export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   // Factory
-  static factory<E>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory<E>(name: string, client: ODataClient, opts?: {
+      segments?: ODataSegments, 
+      options?: ODataOptions,
+      schema?: Schema<E>}
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<E>();
 
     segments.segment(Segments.navigationProperty, name);
     options.keep(Options.format);
-    return new ODataNavigationPropertyRequest<E>(service, segments, options);
+    return new ODataNavigationPropertyRequest<E>(client, segments, options, schema);
   }
 
   // Key
   key(opts?: EntityKey) {
     let segment = this.segments.last();
+    //TODO: Que pasa cuando el schema no es tal
+    let key = (Types.isObject(opts) && this.schema) ? this.schema.resolveKey(opts as PlainObject) : opts;
     return segment.option(Options.key, opts);
   }
 
   // Segments
   ref() {
     return ODataRefRequest.factory(
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema
+    });
   }
 
   entity(opts?: EntityKey) {
@@ -43,35 +53,32 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   }
 
   navigationProperty<N>(name: string) {
-    let nav = ODataNavigationPropertyRequest.factory<N>(
+    return ODataNavigationPropertyRequest.factory<N>(
       name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-    if (this.schema)
-      nav.schema = this.schema.schemaForField(name);
-    return nav;
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema.schemaForField<N>(name)
+    });
   }
 
   property<P>(name: string) {
-    let prop = ODataPropertyRequest.factory<P>(
+    return ODataPropertyRequest.factory<P>(
       name, 
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
-    if (this.schema)
-      prop.schema = this.schema.schemaForField(name);
-    return prop;
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema.schemaForField<P>(name)
+    });
   }
 
   count() {
     return ODataCountRequest.factory(
-      this.client, 
-      this.segments.clone(),
-      this.options.clone()
-    );
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      schema: this.schema
+    });
   }
 
   get(options: {

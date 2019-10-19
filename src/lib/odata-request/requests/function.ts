@@ -8,17 +8,23 @@ import { ODataOptions } from '../options';
 import { Segments, Options, PlainObject } from '../types';
 import { ODataClient } from '../../client';
 import { ODataProperty } from '../../odata-response';
+import { Schema } from '../../schema';
 
 export class ODataFunctionRequest<T> extends ODataRequest<T> {
 
   // Factory
-  static factory<R>(name: string, service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory<R>(name: string, service: ODataClient, opts?: {
+      segments?: ODataSegments, 
+      options?: ODataOptions,
+      schema?: Schema<R>}
+  ) {
+    let segments = opts && opts.segments || new ODataSegments();
+    let options = opts && opts.options || new ODataOptions();
+    let schema = opts && opts.schema || new Schema<R>();
 
     segments.segment(Segments.functionCall, name);
     options.keep(Options.format);
-    return new ODataFunctionRequest<R>(service, segments, options);
+    return new ODataFunctionRequest<R>(service, segments, options, schema);
   }
 
   // Parameters
