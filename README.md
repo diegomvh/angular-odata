@@ -24,14 +24,14 @@ import { ODataModule } from 'angular-odata';
 @NgModule({
   imports: [
     ...
-    ODataModule.forRoot({baseUrl: "http://localhost/odata/"}),
+    ODataModule.forRoot({baseUrl: "https://services.odata.org/V4/(S(xeajfggf01nqt3frz54nmwme))/TripPinServiceRW/"})
     ...
   ]
 })
 export class AppModule {}
 ```
 
-or build context through a factory function.
+or build settings through a factory function.
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -41,8 +41,7 @@ import { ODataSettings } from 'angular-odata';
 
 export function oDataSettingsFactory() {
   return new ODataSettings({
-    baseUrl: "http://localhost/odata/",
-    withCredentials: true,
+    baseUrl: "https://services.odata.org/V4/(S(xeajfggf01nqt3frz54nmwme))/TripPinServiceRW/",
     errorHandler: (error: HttpErrorResponse) => {
       return throwError(error);
     }
@@ -62,20 +61,20 @@ export function oDataSettingsFactory() {
 export class AppModule {}
 ```
 
-If you choose using [OData to TypeScript](https://github.com/diegomvh/Od2Ts), import the config from generated source and build context through a factory function.
+If you choose using [OData to TypeScript](https://github.com/diegomvh/Od2Ts), import the config from generated source.
 
 ```typescript
 import { NgModule } from '@angular/core';
 import { throwError } from 'rxjs';
 
 import { ODataContext } from 'angular-odata';
-import { MyApiModule, MyApiConfig } from './myapi';
+import { TripPinConfig, TripPinModule } from './trippin';
 
 @NgModule({
   imports: [
     ...
-    ODataModule.forRoot(MyApiConfig),
-    MyApiModule
+    ODataModule.forRoot(Object.assign(TripPinConfig, {baseUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/' })),
+    TripPinModule
   ]
   ...
 })
@@ -86,66 +85,92 @@ export class AppModule {}
 
 ```typescript
 import { Component } from '@angular/core';
-import { ODataClient, ODataQuery } from 'angular-odata';
-import { Song } from './Song';
+import { ODataClient, ODATA_ETAG } from 'angular-odata';
 
 @Component({
-  selector: 'audio-player',
-  template: '',
-  styles: ['']
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class AudioPlayerComponent {
-  songs: Songs[]
-  song: Song; 
+export class AppComponent {
+  title = 'TripPin';
+  constructor(odata: ODataClient) {
+    odata.entitySet<any>("People").get().subscribe(console.log);
+    odata.entitySet<any>("People").entity("javieralfred").get().subscribe(console.log);
 
-  constructor(private odata: ODataClient) { 
-    this.odata.entitySet<Song>("Songs");
-      .get()
-      .subscribe(entityset => this.songs = entityset.value);
+    let people = odata.entitySet<any>("People");
+    people.expand({Trips: {select: ["TripId", "Name"]}});
+    people.get().subscribe(console.log);
 
-    this.odata.entitySet("Songs")
-      .entity(1)
-      .get().subscribe(entity => this.song = entity)
-
-    // Mutable query
-    let collection = this.odata.entitySet<Song>("Songs");
-    // Set top and skip
-    collection.top(10);
-    collection.skip(10);
-    // Set filter
-    collection.filter({Name: {contains: 'foo'});
-    // Update filter and set Artist FirstName
-    collection.filter().set("Artist", { FirstName: { startswith: 'bar' }});
-    // Update filter and add raw condition
-    collection.filter().add("year(Year) eq 1980");
-    // Set expand 
-    collection.expand({Artist: {select: ["FirstName", "LastName"]}});
-    // Set OrderBy
-    collection.orderBy("Year");
-    // Update orderBy and add Artist LastName
-    collection.orderBy().add("Artist/LastName");
-    // Go!
-    collection.get().subscribe(entityset => this.songs = entityset.value)
+    let airports = odata.entitySet<any>("Airports");
+    airports.filter({Location: {Address: {contains: 'San Francisco'}}});
+    airports.get().subscribe(console.log);
   }
-
 }
 ```
 
 3) Or build service for entity
 
+3.1) The entity and schema
+
 ```typescript
+import { PersonGender } from './persongender.enum';
+import { Location, LocationSchema } from './location.entity';
+import { Photo, PhotoSchema } from './photo.entity';
+import { Trip, TripSchema } from './trip.entity';
+
+export interface Person {
+  UserName: string;
+  FirstName: string;
+  LastName: string;
+  Emails: string[];
+  AddressInfo: Location[];
+  Gender: PersonGender;
+  Concurrency: number;
+  Friends?: Person[];
+  Trips?: Trip[];
+  Photo?: Photo
+}
+
+export const PersonSchema = {
+  keys: [ 
+    {name: 'UserName'}
+  ],
+  fields: [
+    {name: 'UserName', type: 'string'},
+    {name: 'FirstName', type: 'string'},
+    {name: 'LastName', type: 'string'},
+    {name: 'Emails', type: 'string', isCollection: true},
+    {name: 'AddressInfo', type: 'Microsoft.OData.SampleService.Models.TripPin.Location', isCollection: true},
+    {name: 'Gender', type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender', isFlags: false},
+    {name: 'Concurrency', type: 'number'},
+    {name: 'Friends', type: 'Microsoft.OData.SampleService.Models.TripPin.Person', isNullable: true, isCollection: true, isNavigation: true},
+    {name: 'Trips', type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', isNullable: true, isCollection: true, isNavigation: true},
+    {name: 'Photo', type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', isNullable: true, isNavigation: true}
+  ]
+};
+```
+
+3.2) The service
+
+```typescript
+// Service
 import { Injectable } from '@angular/core';
-import { ODataEntityService, ODataClient } from 'angular-odata';
-import { Song } from './Song';
+
+import { ODataEntityService } from 'angular-odata';
+
+import { Person, PersonSchema } from './person.entity';
 
 @Injectable()
-export class SongsService extends ODataEntityService<Song> {
-  static set: string = 'Songs';
-
-  constructor(
-    protected odata: OdataClient
-  ) {
-  } 
+export class PeopleService extends ODataEntityService<Person> {
+  static set: string = 'People';
+  static entity: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
+  
+  // Actions
+  
+  // Functions
+  
+  // Navigations
 }
 ```
 
@@ -153,29 +178,54 @@ export class SongsService extends ODataEntityService<Song> {
 
 ```typescript
 import { Component } from '@angular/core';
-import { Song } from './Song';
-import { SongService } from './songs.service';
+import { ODataClient } from 'angular-odata';
+import { AirportsService, AirlinesService, PeopleService, PhotosService, Airport, Person, PersonGender } from './trippin';
 
 @Component({
-  selector: 'audio-player',
-  template: '',
-  styles: ['']
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class AudioPlayerComponent {
-  songs: Songs[]
-  song: Song; 
-  
-  constructor(private songsService: SongsService) {
-    this.songsService.fetchOne({id: 1}).subscribe(song => this.song = song)
-    this.songsService.fetchCollection(10).subscribe(col => this.songs = col.entities)
-    this.songsService.fetchAll().subscribe(all => this.songs = all)
+export class AppComponent {
+  title = 'TripPinEntity';
+  constructor(
+    private people: PeopleService
+  ) {
+    this.useEntityService();
+  }
+
+  useEntityService() {
+    // Fetch collection
+    this.people.fetchCollection(5).toPromise()
+      .then(col => {
+        // Change page size
+        return col.size(7).toPromise();
+      })
+      .then(col => {
+        console.log([...col.entities]);
+        return col.nextPage().toPromise();
+      })
+      .then(col => {
+        console.log([...col.entities]);
+        return col.nextPage().toPromise();
+      })
+      .then(col => {
+        console.log([...col.entities]);
+        return col.nextPage().toPromise();
+      })
   }
 }
 ```
 
-5) Again, if you using OData to TypeScript import the service from generated source and use... but not abuse :). 
+5) Again, if you using OData to TypeScript import the service from generated source and use.
 
 For a deep query customizations the library use `odata-query` as a builder.
+
+Full examples of the library:
+
+ - [TripPin](https://github.com/diegomvh/TripTin)
+ - [TripPinEntity](https://github.com/diegomvh/TripTinEntity)
+
 
 ## Base on implementation of odata-v4-ng
  - [OData service for Angular](https://github.com/riccardomariani/odata-v4-ng)
