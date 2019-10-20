@@ -6,13 +6,13 @@ import { ODataClient } from '../../client';
 import { Segments, Options, Select, Expand, PlainObject } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 
 import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 
 export class ODataSingletonRequest<T> extends ODataRequest<T> {
 

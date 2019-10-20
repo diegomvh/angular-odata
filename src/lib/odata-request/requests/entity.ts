@@ -10,9 +10,9 @@ import { ODataPropertyRequest } from './property';
 import { ODataOptions } from '../options';
 import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 import { Types } from '../../utils/types';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 
 export class ODataEntityRequest<T> extends ODataRequest<T> {
   // Factory
@@ -33,9 +33,13 @@ export class ODataEntityRequest<T> extends ODataRequest<T> {
   // Key
   key(opts?: EntityKey) {
     let segment = this.segments.last();
-    //TODO: Que pasa cuando el schema no es tal
-    let key = (Types.isObject(opts) && this.schema) ? this.schema.resolveKey(opts as PlainObject) : opts;
+    let key = (Types.isObject(opts) && !this.schema.isEmpty()) ? this.schema.resolveKey(opts as PlainObject) : opts;
+    //TODO: Que pasa si el esquema resuelve a vacio?
     return segment.option(Options.key, key);
+  }
+
+  isNew() {
+    return !this.options.has(Options.key);
   }
 
   // Segments

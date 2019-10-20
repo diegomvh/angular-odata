@@ -1,11 +1,10 @@
-import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
+import { ODataNavigationPropertyRequest } from './requests/navigationproperty';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ODataRequest, ODataEntitySetRequest } from '../odata-request';
+import { ODataRequest, ODataEntitySetRequest } from '.';
 import { ODataEntitySet } from '../odata-response';
-import { Schema } from '../schema';
 
-export class EntityCollection<E> implements Iterable<E> {
+export class Collection<E> implements Iterable<E> {
   private query: ODataEntitySetRequest<E> | ODataNavigationPropertyRequest<E>;
   entities: E[];
 

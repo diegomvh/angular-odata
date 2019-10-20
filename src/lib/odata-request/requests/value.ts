@@ -1,13 +1,13 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { Segments } from '../types';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../constants';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 
 export class ODataValueRequest<T> extends ODataRequest<T> {
   // Factory

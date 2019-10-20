@@ -1,4 +1,4 @@
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 import { Segments, Options, Select, Expand, Transform, Filter, OrderBy, GroupBy, PlainObject, EntityKey } from '../types';
 
 import { ODataRefRequest } from './ref';
@@ -6,19 +6,22 @@ import { ODataOptions } from '../options';
 import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, empty } from 'rxjs';
 import { ODataEntitySet } from '../../odata-response';
 import { ODataCountRequest } from './count';
 import { ODataPropertyRequest } from './property';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 import { Types } from '../../utils/types';
+import { expand, concatMap, toArray, map } from 'rxjs/operators';
+import { Collection } from '../collection';
 
 export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   // Factory
   static factory<E>(name: string, client: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
-      schema?: Schema<E>}
+    segments?: ODataSegments,
+    options?: ODataOptions,
+    schema?: Schema<E>
+  }
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
@@ -32,9 +35,9 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   // Key
   key(opts?: EntityKey) {
     let segment = this.segments.last();
-    //TODO: Que pasa cuando el schema no es tal
-    let key = (Types.isObject(opts) && this.schema) ? this.schema.resolveKey(opts as PlainObject) : opts;
-    return segment.option(Options.key, opts);
+    let key = (Types.isObject(opts) && !this.schema.isEmpty()) ? this.schema.resolveKey(opts as PlainObject) : opts;
+    //TODO: Que pasa si el esquema resuelve a vacio?
+    return segment.option(Options.key, key);
   }
 
   // Segments
@@ -54,7 +57,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
 
   navigationProperty<N>(name: string) {
     return ODataNavigationPropertyRequest.factory<N>(
-      name, 
+      name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
@@ -64,7 +67,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
 
   property<P>(name: string) {
     return ODataPropertyRequest.factory<P>(
-      name, 
+      name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
@@ -81,17 +84,18 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
     });
   }
 
+  // Client requests
   get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
   get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'entityset',
     withCredentials?: boolean,
@@ -99,9 +103,9 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   }): Observable<ODataEntitySet<T>>;
 
   get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'entity'|'entityset'|'property',
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    responseType: 'entity' | 'entityset' | 'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -161,8 +165,44 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   skiptoken(opts?: string) {
     return this.options.option<string>(Options.skiptoken, opts);
   }
-  
+
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
+  }
+
+  // Custom
+  isCollection() {
+    let segment = this.segments.last();
+    return this.schema.getField(segment.name).isCollection;
+  }
+
+  all(): Observable<T[]> {
+    let query = this.clone<T>() as ODataNavigationPropertyRequest<T>;
+    let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
+      if (options) {
+        if (options.skiptoken)
+          query.skiptoken(options.skiptoken);
+        else if (options.skip)
+          query.skip(options.skip);
+        if (options.top)
+          query.top(options.top);
+      }
+      return query.get({ responseType: 'entityset' });
+    }
+    return fetch()
+      .pipe(
+        expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
+        concatMap((resp: ODataEntitySet<T>) => resp.value),
+        toArray());
+  }
+
+  collection(size?: number): Observable<Collection<T>> {
+    let query = this.clone<T>() as ODataNavigationPropertyRequest<T>;
+    size = size || this.client.maxSize;
+    if (size)
+      query.top(size);
+    return query
+      .get({ responseType: 'entityset', withCount: true })
+      .pipe(map(entityset => new Collection<T>(entityset, query)));
   }
 }

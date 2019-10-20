@@ -1,10 +1,10 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataOptions } from './options';
-import { ODataSegment, PlainObject } from './types';
-import { ODataSegments } from './segments';
-import { ODataClient, ODataObserve } from '../client';
+import { ODataOptions } from '../options';
+import { ODataSegment, PlainObject } from '../types';
+import { ODataSegments } from '../segments';
+import { ODataClient, ODataObserve } from '../../client';
 import { Schema } from '../schema';
 
 export abstract class ODataRequest<Type> {

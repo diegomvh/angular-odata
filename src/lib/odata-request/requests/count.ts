@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { Segments, Options } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 import { ODataClient } from '../../client';
 import { $COUNT } from '../../constants';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 
 export class ODataCountRequest extends ODataRequest<number> {
   // Factory

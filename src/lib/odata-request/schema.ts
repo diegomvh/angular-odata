@@ -1,9 +1,7 @@
-import { Types } from './utils/types';
-import { PlainObject, ODataRequest, ODataEntityRequest } from './odata-request';
-
-import { ODataSettings } from './settings';
-import { Enums } from './utils/enums';
-import { ODataNavigationPropertyRequest } from './odata-request/requests/navigationproperty';
+import { ODataSettings } from '../settings';
+import { PlainObject } from './types';
+import { Types, Enums } from '../utils';
+import { ODataEntityRequest, ODataRequest, ODataNavigationPropertyRequest } from './requests';
 
 export interface Key {
   name: string;
@@ -66,6 +64,10 @@ export class Schema<Type> {
     });
   }
 
+  isEmpty() {
+    return Types.isEmpty(this.keys) && Types.isEmpty(this.fields);
+  }
+
   getField(name: string): Field {
     return this.fields.find(f => f.name === name);
   }
@@ -84,11 +86,11 @@ export class Schema<Type> {
     return !this.resolveKey(attrs);
   }
 
-  get navigations(): Field[] {
+  navigations(): Field[] {
     return this.fields.filter(f => f.isNavigation);
   }
 
-  get properties(): Field[] {
+  properties(): Field[] {
     return this.fields.filter(f => !f.isNavigation);
   }
 
@@ -151,7 +153,7 @@ export class Schema<Type> {
   relationships(obj: Type, query: ODataRequest<any>) {
     let parse = this.parse;
     (obj as any).relationships = {};
-    this.navigations.forEach(field => {
+    this.navigations().forEach(field => {
       Object.defineProperty(obj, field.name, {
         get() {
           if (!(field.name in this.relationships)) {

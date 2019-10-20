@@ -3,13 +3,13 @@ import { Observable } from 'rxjs';
 
 import { ODataValueRequest } from './value';
 
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 import { Segments } from '../types';
 import { ODataOptions } from '../options';
 import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataProperty } from '../../odata-response';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 
 export class ODataPropertyRequest<T> extends ODataRequest<T> {
 

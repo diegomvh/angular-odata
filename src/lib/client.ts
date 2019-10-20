@@ -7,7 +7,7 @@ import { ODataEntitySet, ODataProperty } from './odata-response';
 import { ODataBatchRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
 import { ODataSettings } from './settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT } from './constants';
-import { Schema } from './schema';
+import { Schema } from './odata-request/schema';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -64,6 +64,10 @@ export const addEtag = (
 @Injectable()
 export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
+
+  get maxSize() {
+    return this.settings.maxSize;
+  }
 
   resolveEtag<T>(entity: Partial<T>): string {
     return entity[ODATA_ETAG];
@@ -129,6 +133,7 @@ export class ODataClient {
     return `${serviceRoot}${query.path()}`
   }
 
+  // Request headers, get, post, put, patch... etc
   request(method: string, req: ODataRequest<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },

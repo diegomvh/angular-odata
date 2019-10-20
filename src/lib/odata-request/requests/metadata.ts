@@ -1,7 +1,7 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 import { Segments } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
@@ -9,7 +9,7 @@ import { ODataMetadata } from '../../odata-response';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../constants';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 
 export class ODataMetadataRequest extends ODataRequest<any> {
 

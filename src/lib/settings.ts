@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 import { PlainObject, ODataRequest } from './odata-request';
 import { Model, ModelCollection } from './odata-model';
 import { InjectionToken } from '@angular/core';
-import { Schema, Field, Key } from './schema';
+import { Schema, Field, Key } from './odata-request/schema';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 

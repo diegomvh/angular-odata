@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, throwError, empty } from 'rxjs';
-import { catchError, expand, concatMap, toArray, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { ODataEntitySet, ODataProperty } from '../odata-response';
-import { Types } from '../utils/types';
 import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
 
 import { ODataClient, addEtag } from "../client";
-import { EntityCollection } from '../odata-model/entity';
+import { Collection } from '../odata-request/collection';
 import { ODataSettings } from '../settings';
-import { Schema } from '../schema';
-import { query } from '@angular/animations';
+import { Schema } from '../odata-request/schema';
 
 function addCount(
     options: {
@@ -38,17 +36,9 @@ export class ODataEntityService<T> {
 
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
-  protected schema(): Schema<T> {
+  protected _schema(): Schema<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
     return this.client.schemaForType<T>(Ctor.entity) as Schema<T>;
-  }
-
-  protected _resolveEntityKey(entity: Partial<T>) {
-    return this.schema().resolveKey(entity);
-  }
-
-  public isNew(entity: Partial<T>) {
-    return this.schema().isNew(entity);
   }
 
   // Build requests
@@ -59,38 +49,23 @@ export class ODataEntityService<T> {
   }
 
   public entity(key?: number | string | Partial<T>): ODataEntityRequest<T> {
-    return this.entities().entity(key);
+    return this.entities()
+      .entity(key);
+  }
+
+  public isNew(entity: Partial<T>) {
+    return this.entity(entity).isNew();
   }
 
   // Entity Actions
-  public fetchCollection(size?: number): Observable<EntityCollection<T>> {
-    let query = this.entities();
-    size = size || this.settings.maxSize;
-    if (size)
-      query.top(size);
-    return query
-      .get({ withCount: true })
-      .pipe(map(entityset => new EntityCollection<T>(entityset, query)));
+  public fetchCollection(): Observable<Collection<T>> {
+    return this.entities()
+      .collection();
   }
 
   public fetchAll(): Observable<T[]> {
-    let query = this.entities();
-    let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
-      if (options) {
-        if (options.skiptoken)
-          query.skiptoken(options.skiptoken);
-        else if (options.skip)
-          query.skip(options.skip);
-        if (options.top)
-          query.top(options.top);
-      }
-      return query.get();
-    }
-    return fetch()
-      .pipe(
-        expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
-        concatMap((resp: ODataEntitySet<T>) => resp.value),
-        toArray());
+    return this.entities()
+      .all();
   }
 
   public fetchOne(entity: Partial<T>): Observable<T> {
@@ -152,7 +127,7 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<EntityCollection<P>>;
+  }): Observable<Collection<P>>;
 
   protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -166,7 +141,7 @@ export class ODataEntityService<T> {
       .get(addCount(options));
     switch (options.responseType) {
       case 'entityset':
-        return resp$.pipe(map(entityset => new EntityCollection<P>(entityset as any, query)));
+        return resp$.pipe(map(entityset => new Collection<P>(entityset as any, query)));
       default:
         return resp$;
     }
@@ -190,10 +165,10 @@ export class ODataEntityService<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let field = this.schema().getField(name);
     let etag = this.client.resolveEtag<T>(entity);
-    let ref = this.entity(entity).navigationProperty<P>(name).ref();
-    return (field.isCollection) ?
+    let nav = this.entity(entity).navigationProperty<P>(name);
+    let ref = nav.ref();
+    return (nav.isCollection()) ?
       ref.post(target, options) :
       ref.put(target, addEtag(options, etag));
   }
@@ -210,7 +185,7 @@ export class ODataEntityService<T> {
     return ref.delete(addEtag(options, etag));
   }
 
-  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -219,7 +194,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -228,7 +203,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P[]>;
 
-  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -237,7 +212,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customAction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -258,7 +233,7 @@ export class ODataEntityService<T> {
     }
   }
 
-  protected customCollectionAction<P>(name: string, data: any, options: {
+  protected collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -267,16 +242,16 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customCollectionAction<P>(name: string, data: any, options: {
+  protected collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     responseType?: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<EntityCollection<P>>;
+  }): Observable<Collection<P>>;
 
-  protected customCollectionAction<P>(name: string, data: any, options: {
+  protected collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -285,7 +260,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customCollectionAction<P>(name: string, data: any, options: {
+  protected collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -306,7 +281,7 @@ export class ODataEntityService<T> {
     }
   }
 
-  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -315,16 +290,16 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     responseType?: 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<EntityCollection<P>>;
+  }): Observable<Collection<P>>;
 
-  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -333,7 +308,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customFunction<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -355,7 +330,7 @@ export class ODataEntityService<T> {
     }
   }
 
-  protected customCollectionFunction<P>(name: string, data: any, options: {
+  protected collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -364,7 +339,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customCollectionFunction<P>(name: string, data: any, options: {
+  protected collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -373,7 +348,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P[]>;
 
-  protected customCollectionFunction<P>(name: string, data: any, options: {
+  protected collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -382,7 +357,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected customCollectionFunction<P>(name: string, data: any, options: {
+  protected collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },

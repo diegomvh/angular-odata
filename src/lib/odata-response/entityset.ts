@@ -1,4 +1,4 @@
-import { Schema } from '../schema';
+import { Schema } from '../odata-request/schema';
 import { ODATA_COUNT, ODATA_NEXTLINK } from '../constants';
 import { ODataRequest } from '../odata-request';
 

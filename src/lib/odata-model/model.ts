@@ -6,7 +6,7 @@ import { PlainObject, Expand, ODataEntityRequest, ODataRequest } from '../odata-
 import { ModelCollection } from './collection';
 import { ODataNavigationPropertyRequest } from '../odata-request/requests/navigationproperty';
 import { ODATA_ETAG } from '../constants';
-import { Schema } from '../schema';
+import { Schema } from '../odata-request/schema';
 
 enum State {
   Added,

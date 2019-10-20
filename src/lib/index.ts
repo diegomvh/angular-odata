@@ -1,6 +1,6 @@
 export * from './constants';
 export * from './settings';
-export * from './schema';
+export * from './odata-request/schema';
 export * from './client';
 export * from './module';
 

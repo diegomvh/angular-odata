@@ -4,14 +4,14 @@ import { Observable, of } from 'rxjs';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
-import { ODataRequest } from '../request';
+import { ODataRequest } from './request';
 import { Segments, RequestMethod } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataBatchResponse } from '../../odata-response';
 import { map } from 'rxjs/operators';
 import { $BATCH } from '../../constants';
-import { Schema } from '../../schema';
+import { Schema } from '../schema';
 
 export class BatchRequest {
   public static readonly BOUNDARY_PREFIX_SUFFIX = '--';

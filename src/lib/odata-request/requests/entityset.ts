@@ -1,5 +1,5 @@
 import { HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, empty } from 'rxjs';
 
 import { Segments, Options, Expand, Select, Transform, EntityKey, Filter, GroupBy, OrderBy, PlainObject } from '../types';
 import { ODataClient } from '../../client';
@@ -11,8 +11,10 @@ import { ODataOptions } from '../options';
 import { ODataEntityRequest } from './entity';
 import { ODataCountRequest } from './count';
 import { ODataEntitySet } from '../../odata-response';
-import { ODataRequest } from '../request';
-import { Schema } from '../../schema';
+import { ODataRequest } from './request';
+import { Schema } from '../schema';
+import { expand, concatMap, toArray, map } from 'rxjs/operators';
+import { Collection } from '../collection';
 
 export class ODataEntitySetRequest<T> extends ODataRequest<T> {
   // Factory
@@ -73,6 +75,7 @@ export class ODataEntitySetRequest<T> extends ODataRequest<T> {
     });
   }
 
+  // Client requests
   post(body: T, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
@@ -154,5 +157,36 @@ export class ODataEntitySetRequest<T> extends ODataRequest<T> {
   
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
+  }
+
+  // Custom
+  all(): Observable<T[]> {
+    let query = this.clone<T>() as ODataEntitySetRequest<T>;
+    let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
+      if (options) {
+        if (options.skiptoken)
+          query.skiptoken(options.skiptoken);
+        else if (options.skip)
+          query.skip(options.skip);
+        if (options.top)
+          query.top(options.top);
+      }
+      return query.get();
+    }
+    return fetch()
+      .pipe(
+        expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
+        concatMap((resp: ODataEntitySet<T>) => resp.value),
+        toArray());
+  }
+
+  collection(size?: number): Observable<Collection<T>> {
+    let query = this.clone<T>() as ODataEntitySetRequest<T>;
+    size = size || this.client.maxSize;
+    if (size)
+      query.top(size);
+    return query
+      .get({ withCount: true })
+      .pipe(map(entityset => new Collection<T>(entityset, query)));
   }
 }
