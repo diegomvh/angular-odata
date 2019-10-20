@@ -4,14 +4,14 @@ import { Observable, of } from 'rxjs';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
-import { ODataRequest } from './request';
+import { ODataRequest } from '../request';
 import { Segments, RequestMethod } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataBatchResponse } from '../../odata-response';
 import { map } from 'rxjs/operators';
 import { $BATCH } from '../../constants';
-import { Schema } from '../schema';
+import { Schema } from '../../schema';
 
 export class BatchRequest {
   public static readonly BOUNDARY_PREFIX_SUFFIX = '--';
@@ -71,26 +71,21 @@ export class ODataBatchRequest extends ODataRequest<any> {
   private changesetBoundary: string;
   private changesetID: number;
 
-  constructor(service: ODataClient, segments?: ODataSegments, options?: ODataOptions, schema?: Schema<any>) {
-    super(service, segments, options, schema);
+  constructor(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+    super(service, segments, options);
     this.requests = [];
     this.batchBoundary = BatchRequest.BATCH_PREFIX + uuidv4();
     this.changesetBoundary = null;
     this.changesetID = 1;
   }
 
-  static factory(client: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
-      schema?: Schema<any>}
-  ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
-    let schema = opts && opts.schema || new Schema<any>();
+  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+    segments = segments || new ODataSegments();
+    options = options || new ODataOptions();
 
     segments.segment(Segments.batch, $BATCH);
     options.clear();
-    return new ODataBatchRequest(client, segments, options, schema);
+    return new ODataBatchRequest(service, segments, options);
   }
 
   add(method: RequestMethod, query: ODataRequest<any>, options?: {
