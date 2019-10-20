@@ -223,8 +223,8 @@ For a deep query customizations the library use `odata-query` as a builder.
 
 Full examples of the library:
 
- - [TripPin](https://github.com/diegomvh/TripTin)
- - [TripPinEntity](https://github.com/diegomvh/TripTinEntity)
+ - [TripPin](https://github.com/diegomvh/TripPin)
+ - [TripPinEntity](https://github.com/diegomvh/TripPinEntity)
 
 
 ## Base on implementation of odata-v4-ng
