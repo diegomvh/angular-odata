@@ -1,14 +1,14 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataRequest } from '../request';
 import { ODataEntitySet } from '../../odata-response/entityset';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { Segments } from '../types';
 import { ODataClient } from '../../client';
 import { ODataProperty } from '../../odata-response';
-import { Schema } from '../../schema';
+import { ODataRequest } from './request';
+import { Schema } from '../schema';
 
 export class ODataActionRequest<T> extends ODataRequest<T> {
   // Factory

@@ -53,28 +53,27 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
     });
   }
 
-  action<A>(name: string) {
+  action<A>(name: string, schema?: Schema<A>) {
     return ODataActionRequest.factory<A>(
       name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      //TODO: Que esquema mando
-      schema: this.schema as Schema<any>
+      schema
     });
   }
 
-  function<F>(name: string) {
+  function<F>(name: string, schema?: Schema<F>) {
     return ODataFunctionRequest.factory<F>(
       name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      //TODO: Que esquema mando
-      schema: this.schema as Schema<any>
+      schema
     });
   }
 
+  // Client Requests
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
