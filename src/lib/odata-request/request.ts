@@ -1,11 +1,11 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataOptions } from '../options';
-import { ODataSegment, PlainObject } from '../types';
-import { ODataSegments } from '../segments';
-import { ODataClient, ODataObserve } from '../../client';
-import { Schema } from '../schema';
+import { ODataOptions } from './options';
+import { ODataSegment, PlainObject } from './types';
+import { ODataSegments } from './segments';
+import { ODataClient, ODataObserve } from '../client';
+import { Schema, Parser } from './schema';
 
 export abstract class ODataRequest<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -14,18 +14,18 @@ export abstract class ODataRequest<Type> {
   protected client: ODataClient;
   protected segments: ODataSegments;
   protected options: ODataOptions;
-  protected schema: Schema<Type>;
+  protected parser: Parser<Type> 
 
   constructor(
     client: ODataClient,
     segments?: ODataSegments,
     options?: ODataOptions,
-    schema?: Schema<Type>
+    parser?: Parser<Type>
   ) {
     this.client = client;
     this.segments = segments || new ODataSegments();
     this.options = options || new ODataOptions();
-    this.schema = schema || new Schema<Type>();
+    this.parser = parser || new Schema<Type>();
   }
 
   protected get(options: {
@@ -49,7 +49,7 @@ export abstract class ODataRequest<Type> {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.post(this, this.schema.serialize(body), options as any);
+    return this.client.post(this, body, options as any);
   }
 
   protected patch(body: Partial<Type>|null, options: {
@@ -62,7 +62,7 @@ export abstract class ODataRequest<Type> {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.patch(this, this.schema.serialize(body), options as any);
+    return this.client.patch(this, body, options as any);
   }
 
   protected put(body: Type|null, options: {
@@ -75,7 +75,7 @@ export abstract class ODataRequest<Type> {
     withCredentials?: boolean,
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.client.put(this, this.schema.serialize(body), options as any);
+    return this.client.put(this, body, options as any);
   }
 
   protected delete(options: {
@@ -99,8 +99,12 @@ export abstract class ODataRequest<Type> {
     return this.options.params();
   }
 
-  deserialize(obj: PlainObject): Type | null {
-    return obj ? this.schema.deserialize(obj, this.clone()) : obj as null;
+  serialize(obj: Type): any {
+    return obj ? this.parser.toJSON(obj) : obj as any;
+  }
+
+  deserialize(attrs: any): Type {
+    return attrs ? this.parser.parse(attrs, this.clone()) : attrs as Type;
   }
 
   toString(): string {

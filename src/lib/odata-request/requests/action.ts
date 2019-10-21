@@ -7,23 +7,23 @@ import { ODataOptions } from '../options';
 import { Segments } from '../types';
 import { ODataClient } from '../../client';
 import { ODataProperty } from '../../odata-response';
-import { ODataRequest } from './request';
-import { Schema } from '../schema';
+import { ODataRequest } from '../request';
+import { Schema, Parser } from '../schema';
 
 export class ODataActionRequest<T> extends ODataRequest<T> {
   // Factory
   static factory<R>(name: string, client: ODataClient, opts?: {
       segments?: ODataSegments, 
       options?: ODataOptions,
-      schema?: Schema<R>}
+      parser?: Parser<R>}
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let schema = opts && opts.schema || new Schema<R>();
+    let parser = opts && opts.parser || new Schema<R>();
 
     segments.segment(Segments.actionCall, name);
     options.clear();
-    return new ODataActionRequest<R>(client, segments, options, schema);
+    return new ODataActionRequest<R>(client, segments, options, parser);
   }
 
   post(body: any, options: {

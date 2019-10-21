@@ -11,8 +11,8 @@ import { ODataOptions } from '../options';
 import { ODataEntityRequest } from './entity';
 import { ODataCountRequest } from './count';
 import { ODataEntitySet } from '../../odata-response';
-import { ODataRequest } from './request';
-import { Schema } from '../schema';
+import { ODataRequest } from '../request';
+import { Schema, Parser } from '../schema';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Collection } from '../collection';
 
@@ -21,15 +21,15 @@ export class ODataEntitySetRequest<T> extends ODataRequest<T> {
   static factory<E>(name: string, service: ODataClient, opts?: {
       segments?: ODataSegments, 
       options?: ODataOptions,
-      schema?: Schema<E>}
+      parser?: Parser<E>}
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let schema = opts && opts.schema || new Schema<E>();
+    let parser = opts && opts.parser || new Schema<E>();
 
     segments.segment(Segments.entitySet, name);
     options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);
-    return new ODataEntitySetRequest<E>(service, segments, options, schema);
+    return new ODataEntitySetRequest<E>(service, segments, options, parser);
   }
 
   // Segments
@@ -38,7 +38,7 @@ export class ODataEntitySetRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema
+      parser: this.parser
     });
     if (key) {
       entity.key(key);
@@ -46,23 +46,23 @@ export class ODataEntitySetRequest<T> extends ODataRequest<T> {
     return entity;
   }
 
-  action<A>(name: string, schema?: Schema<A>) {
+  action<A>(name: string, parser?: Parser<A>) {
     return ODataActionRequest.factory<A>(
       name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema
+      parser: parser
     });
   }
 
-  function<F>(name: string, schema?: Schema<F>) {
+  function<F>(name: string, parser?: Parser<F>) {
     return ODataFunctionRequest.factory<F>(
       name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema
+      parser
     });
   }
 
@@ -71,7 +71,7 @@ export class ODataEntitySetRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema
+      parser: this.parser
     });
   }
 

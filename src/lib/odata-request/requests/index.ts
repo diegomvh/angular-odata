@@ -1,4 +1,4 @@
-export * from './request';
+export * from '../request';
 export * from './entityset';
 export * from './entity';
 export * from './navigationproperty';

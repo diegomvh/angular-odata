@@ -1,11 +1,11 @@
 import { ODataSettings } from '../settings';
 import { PlainObject } from './types';
 import { Types, Enums } from '../utils';
-import { ODataEntityRequest, ODataRequest, ODataNavigationPropertyRequest } from './requests';
+import { ODataRequest } from './requests';
 
 export interface Key {
   name: string;
-  resolve?: (attrs: PlainObject) => number | string | PlainObject;
+  ref: string; 
 }
 
 export interface Field {
@@ -14,6 +14,7 @@ export interface Field {
   enum?: {[key: number]: string | number};
   schema?: Schema<any>;
   ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataRequest<any>): any };
+  enumString?: boolean;
   default?: any;
   maxLength?: number;
   isCollection?: boolean;
@@ -24,6 +25,13 @@ export interface Field {
   ref?: string;
 }
 
+export interface Parser<T> {
+  parse(value: any, query?: ODataRequest<any>): T;
+  toJSON(value: T): any;
+  parser<E>(name: string): Parser<E>;
+  resolveKey(attrs: any);
+}
+
 const PARSERS = {
   'string': (value) => String(value),
   'number': (value) => Number(value),
@@ -31,28 +39,127 @@ const PARSERS = {
   'Date': (value) => new Date(value),
 };
 
-export class Schema<Type> {
-  keys: Key[];
-  fields: Field[];
-  stringAsEnums: boolean;
+class SchemaKey implements Key {
+  name: string;
+  ref: string;
+
+  constructor(key: Key) {
+    Object.assign(this, key);
+  }
+
+  attributes() {
+    return {
+      name: this.name,
+      ref: this.ref
+    }
+  }
+
+  resolve(attrs: PlainObject) {
+    return this.ref.split('/').reduce((acc, name) => acc[name], attrs);
+  }
+}
+
+class SchemaField<T> implements Field, Parser<T> {
+  name: string;
+  type: string;
+  enum?: {[key: number]: string | number};
+  schema?: Schema<any>;
+  ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataRequest<any>): T };
+  enumString?: boolean;
+  default?: any;
+  maxLength?: number;
+  isCollection?: boolean;
+  isNullable?: boolean;
+  isFlags?: boolean;
+  isNavigation?: boolean;
+  field?: string;
+  ref?: string;
+
+  constructor(field: Field) {
+    Object.assign(this, field);
+  }
+
+  attributes() {
+    return {
+      name: this.name, type: this.type,
+      default: this.default, maxLength: this.maxLength,
+      isCollection: this.isCollection, isNullable: this.isNullable, isFlags: this.isFlags, 
+      isNavigation: this.isNavigation,
+      field: this.field,
+      ref: this.ref
+    }
+  }
+
+  parse(value: any, query?: ODataRequest<any>) {
+    if (value === null) return value;
+    if (this.enum) {
+      return this.isFlags ?
+        Enums.toFlags(this.enum, value) :
+        Enums.toValue(this.enum, value);
+    } else if (this.schema) {
+      return (Array.isArray(value) && this.isCollection) ?
+        value.map(v => this.schema.parse(v, query)) :
+        this.schema.parse(value, query);
+    } else if (this.ctor) {
+      if (!value)
+        value = this.isCollection ? [] : {};
+      return new this.ctor(value, query);
+    } else if (this.type in PARSERS) {
+      return (Array.isArray(value) && this.isCollection) ?
+        value.map(PARSERS[this.type]) :
+        PARSERS[this.type](value);
+    }
+    return value;
+  }
+
+  toJSON(value: any) {
+    if (value === null) return value;
+    if (this.enum) {
+      return this.isFlags ?
+        Enums.toEnums(this.enum, value) :
+        Enums.toEnum(this.enum, value);
+    } else if (this.ctor) {
+      return value.toJSON();
+    } else if (this.schema) {
+      return (Array.isArray(value) && this.isCollection) ?
+        value.map(v => this.schema.toJSON(v)) :
+        this.schema.toJSON(value);
+    }
+    return value;
+  }
+
+  parser<E>(name: string): Parser<E> {
+    return this.schema ? this.schema.parser(name) : new Schema<E>();
+  }
+
+  resolveKey(attrs: any) {
+    return this.schema ? this.schema.resolveKey(attrs) : attrs;
+  }
+}
+
+export class Schema<Type> implements Parser<Type> {
+  keys: SchemaKey[];
+  fields: SchemaField<any>[];
 
   constructor(keys?: Key[], fields?: Field[]) {
-    this.keys = keys || [];
-    this.fields = fields || [];
+    this.keys = (keys || []).map(k => new SchemaKey(k));
+    this.fields = (fields || []).map(f => new SchemaField(f));
   }
 
   extend<Type>(keys?: Key[], fields?: Field[]): Schema<Type> {
     let Ctor = <typeof Schema>this.constructor;
-    keys = [...this.keys, ...(keys || [])];
-    fields = [...this.fields, ...(fields || [])];
+    keys = [...this.keys.map(k => k.attributes()), 
+      ...(keys || [])];
+    fields = [...this.fields.map(f => f.attributes()), 
+      ...(fields || [])];
     return new Ctor(keys, fields) as Schema<Type>;
   }
 
   configure(settings: ODataSettings) {
-    this.stringAsEnums = !!settings.stringAsEnum;
     this.fields.forEach(f => {
       if (f.type in settings.enums) {
         f.enum = settings.enums[f.type];
+        f.enumString = settings.stringAsEnum; 
       } else if (f.type in settings.schemas) {
         f.schema = settings.schemas[f.type] as Schema<any>;
       } else if (f.type in settings.models) {
@@ -64,94 +171,38 @@ export class Schema<Type> {
     });
   }
 
-  isEmpty() {
-    return Types.isEmpty(this.keys) && Types.isEmpty(this.fields);
+  toJSON(obj: Partial<Type>): PlainObject {
+    return Object.assign(obj, this.fields
+      .filter(f => f.name in obj)
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.toJSON(obj[f.name]) }), {}) 
+    );
   }
 
-  getField(name: string): Field {
-    return this.fields.find(f => f.name === name);
+  parse(obj: any, query?: ODataRequest<any>): Type {
+    return Object.assign(obj, this.fields
+      .filter(f => f.name in obj)
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.parse(obj[f.name], query) }), {})
+    ) as Type;
   }
 
-  resolveKey(attrs: PlainObject) {
+  parser<E>(name: string): Parser<E> {
+    return this.fields.find(f => f.name === name) as Parser<E>;
+  }
+
+  resolveKey(attrs: any) {
     let keys = this.keys
-      .map(key => [key.name, (key.resolve) ? key.resolve(attrs) : attrs[key.name]]);
+      .map(key => [key.name, key.resolve(attrs)]);
     let key = keys.length === 1 ?
       keys[0][1] :
       keys.reduce((acc, key) => Object.assign(acc, { [key[0]]: key[1] }), {});
     if (!Types.isEmpty(key))
       return key;
+    return attrs;
   }
 
-  isNew(attrs: PlainObject) {
-    return !this.resolveKey(attrs);
-  }
 
-  navigations(): Field[] {
-    return this.fields.filter(f => f.isNavigation);
-  }
-
-  properties(): Field[] {
-    return this.fields.filter(f => !f.isNavigation);
-  }
-
-  schemaForField<E>(name: string): Schema<E> {
-    let field = this.getField(name) as Field;
-    if (field) 
-      return field.schema as Schema<E>;
-  }
-
-  parse(field: Field, value: any, query?: ODataRequest<any>) {
-    if (value === null) return value;
-    if (field.enum) {
-      return field.isFlags ?
-        Enums.toFlags(field.enum, value) :
-        Enums.toValue(field.enum, value);
-    } else if (field.schema) {
-      return (Array.isArray(value) && field.isCollection) ?
-        value.map(v => field.schema.deserialize(v, query)) :
-        field.schema.deserialize(value, query);
-    } else if (field.ctor) {
-      if (!value)
-        value = field.isCollection ? [] : {};
-      return new field.ctor(value, query);
-    } else if (field.type in PARSERS) {
-      return (Array.isArray(value) && field.isCollection) ?
-        value.map(PARSERS[field.type]) :
-        PARSERS[field.type](value);
-    }
-    return value;
-  }
-
-  toJSON(field: Field, value: any) {
-    if (value === null) return value;
-    if (field.enum) {
-      return Enums.toString(field.enum, value);
-    } else if (field.ctor) {
-      return value.toJSON();
-    } else if (field.schema) {
-      return (Array.isArray(value) && field.isCollection) ?
-        value.map(v => field.schema.serialize(v)) :
-        field.schema.serialize(value);
-    }
-    return value;
-  }
-
-  serialize(obj: Partial<Type>): PlainObject {
-    return Object.assign(obj, this.fields
-      .filter(f => f.name in obj)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: this.toJSON(f, obj[f.name]) }), {}) 
-    );
-  }
-
-  deserialize(obj: PlainObject, query?: ODataRequest<any>): Type {
-    return Object.assign(obj, this.fields
-      .filter(f => f.name in obj)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: this.parse(f, obj[f.name], query) }), {})
-    ) as Type;
-  }
-
+          /*
   relationships(obj: Type, query: ODataRequest<any>) {
-    let parse = this.parse;
     (obj as any).relationships = {};
     this.navigations().forEach(field => {
       Object.defineProperty(obj, field.name, {
@@ -164,7 +215,7 @@ export class Schema<Type> {
               query.key(this.resolveKey());
             }
             let nav = query.navigationProperty<any>(field.name);
-            this.relationships[field.name] = parse(field, obj[field.name], nav);
+            this.relationships[field.name] = field.parse(obj[field.name], nav);
           }
           return this.relationships[field.name];
         },
@@ -174,7 +225,6 @@ export class Schema<Type> {
           if (!((value as any).query instanceof ODataEntityRequest))
             throw new Error(`Can't set ${value} to model`);
           this.relationships[field.name] = value;
-          /*
           let query = this._query.clone() as ODataQueryBuilder;
           query.entityKey(this.resolveKey());
           query.navigationProperty(field.name);
@@ -182,9 +232,10 @@ export class Schema<Type> {
             field.type, value !== null ? value.toJSON() : {}, query);
           this.setState(ModelState.Modified);
           this._relationships[field.name].setState(value !== null ? ModelState.Added : ModelState.Deleted);
-          */
         }
       });
     });
   }
+
+          */
 }

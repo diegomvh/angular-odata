@@ -31,17 +31,12 @@ export class Model {
     this.state = state;
   }
 
-  isNew() {
-    let Ctor = <typeof Model>this.constructor;
-    return Ctor.schema.isNew(this);
-  }
-
   assign(attrs: PlainObject, query: ODataRequest<any>) {
     this.query = query;
     let Ctor = <typeof Model>this.constructor;
     Object.assign(this, attrs);
-    Ctor.schema.deserialize(this, this.query.clone());
-    Ctor.schema.relationships(this, this.query.clone());
+    Ctor.schema.parse(this, this.query.clone());
+    //Ctor.schema.relationships(this, this.query.clone());
     return this;
   }
 
@@ -52,7 +47,7 @@ export class Model {
 
   toJSON(): PlainObject {
     let Ctor = <typeof Model>this.constructor;
-    return Ctor.schema.serialize(this);
+    return Ctor.schema.toJSON(this);
   }
 
   clone() {
@@ -63,7 +58,7 @@ export class Model {
   fetch(): Observable<this> {
     let query: ODataEntityRequest<Model> | ODataNavigationPropertyRequest<Model> = this.query.clone<Model>() as ODataEntityRequest<Model> | ODataNavigationPropertyRequest<Model>;
     if (query instanceof ODataEntityRequest) {
-      if (this.isNew())
+      if (query.isNew())
         throw new Error(`Can't fetch without entity key`);
       query.key(this.resolveKey());
     }
@@ -103,7 +98,7 @@ export class Model {
         ));
       }
     });
-    if (this.isNew()) {
+    if (query.isNew()) {
       obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.post(attrs as Model)));
     } else {
       let key = this.resolveKey();
@@ -116,9 +111,9 @@ export class Model {
   }
 
   destroy(): Observable<any> {
-    if (this.isNew())
-      throw new Error(`Can't destroy without entity key`);
     let query = this.query.clone() as ODataEntityRequest<Model>;
+    if (query.isNew())
+      throw new Error(`Can't destroy without entity key`);
     query.key(this.resolveKey());
     return query.delete(this[ODATA_ETAG]);
   }

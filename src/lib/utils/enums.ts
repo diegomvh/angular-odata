@@ -12,16 +12,20 @@ export const Enums = {
     return value.map(opcion => Enum[opcion]);
   },
 
-  toString<E>(Enum: E, value: any): string {
+  toEnum<E>(Enum: E, value: any): string {
+    return Enum[value];
+  },
+  
+  toEnums<E>(Enum: E, value: any): string[] {
     let opciones = Object.keys(Enum).filter(key => !isNaN(Number(Enum[key])));
     opciones.reverse();
     opciones = opciones.filter(name => {
       let opcion = Enum[name];
       return (opcion & value) === opcion;
     });
-    return opciones.join(", ");
+    return opciones;
   },
-  
+
   toFlags<E>(Enum: E, value: any): number {
     if (typeof value === "number") {
       return value;

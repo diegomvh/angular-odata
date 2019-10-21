@@ -1,4 +1,4 @@
-import { ODataRequest } from './request';
+import { ODataRequest } from '../request';
 import { Segments, Options, Select, Expand, Transform, Filter, OrderBy, GroupBy, PlainObject, EntityKey } from '../types';
 
 import { ODataRefRequest } from './ref';
@@ -10,7 +10,7 @@ import { Observable, empty } from 'rxjs';
 import { ODataEntitySet } from '../../odata-response';
 import { ODataCountRequest } from './count';
 import { ODataPropertyRequest } from './property';
-import { Schema } from '../schema';
+import { Schema, Parser } from '../schema';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Collection } from '../collection';
@@ -20,22 +20,22 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   static factory<E>(name: string, client: ODataClient, opts?: {
     segments?: ODataSegments,
     options?: ODataOptions,
-    schema?: Schema<E>
+    parser?: Parser<E>
   }
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let schema = opts && opts.schema || new Schema<E>();
+    let parser = opts && opts.parser || new Schema<E>();
 
     segments.segment(Segments.navigationProperty, name);
     options.keep(Options.format);
-    return new ODataNavigationPropertyRequest<E>(client, segments, options, schema);
+    return new ODataNavigationPropertyRequest<E>(client, segments, options, parser);
   }
 
   // Key
   key(opts?: EntityKey) {
     let segment = this.segments.last();
-    let key = (Types.isObject(opts) && !this.schema.isEmpty()) ? this.schema.resolveKey(opts as PlainObject) : opts;
+    let key = Types.isObject(opts)? this.parser.resolveKey(opts) : opts;
     //TODO: Que pasa si el esquema resuelve a vacio?
     return segment.option(Options.key, key);
   }
@@ -46,7 +46,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema
+      parser: this.parser
     });
   }
 
@@ -61,7 +61,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema.schemaForField<N>(name)
+      parser: this.parser.parser<N>(name)
     });
   }
 
@@ -71,7 +71,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema.schemaForField<P>(name)
+      parser: this.parser.parser<P>(name)
     });
   }
 
@@ -80,7 +80,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema
+      parser: this.parser
     });
   }
 
@@ -105,7 +105,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity' | 'entityset' | 'property',
+    responseType: 'entity' | 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -171,38 +171,74 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
   }
 
   // Custom
-  isCollection() {
-    let segment = this.segments.last();
-    return this.schema.getField(segment.name).isCollection;
+  single(options?: {
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+    withCount?: boolean
+  }): Observable<T> {
+    let query = this.clone<T>() as ODataNavigationPropertyRequest<T>;
+    return query
+      .get({ 
+        headers: options && options.headers,
+        params: options && options.params,
+        reportProgress: options && options.reportProgress,
+        responseType: 'entity', 
+        withCredentials: options && options.reportProgress});
   }
 
-  all(): Observable<T[]> {
+  collection(options?: {
+    size?: number,
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+    withCount?: boolean
+  }): Observable<Collection<T>> {
     let query = this.clone<T>() as ODataNavigationPropertyRequest<T>;
-    let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
-      if (options) {
-        if (options.skiptoken)
-          query.skiptoken(options.skiptoken);
-        else if (options.skip)
-          query.skip(options.skip);
-        if (options.top)
-          query.top(options.top);
+    let size = options.size || this.client.maxSize;
+    if (size)
+      query.top(size);
+    return query
+      .get({ 
+        headers: options && options.headers,
+        params: options && options.params,
+        reportProgress: options && options.reportProgress,
+        responseType: 'entityset', 
+        withCredentials: options && options.reportProgress,
+        withCount: true })
+      .pipe(map(entityset => new Collection<T>(entityset, query)));
+  }
+
+  all(options?: {
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    reportProgress?: boolean,
+    withCredentials?: boolean,
+    withCount?: boolean
+  }): Observable<T[]> {
+    let query = this.clone<T>() as ODataNavigationPropertyRequest<T>;
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }) => {
+      if (opts) {
+        if (opts.skiptoken)
+          query.skiptoken(opts.skiptoken);
+        else if (opts.skip)
+          query.skip(opts.skip);
+        if (opts.top)
+          query.top(opts.top);
       }
-      return query.get({ responseType: 'entityset' });
+      return query.get({ 
+        headers: options && options.headers,
+        params: options && options.params,
+        reportProgress: options && options.reportProgress,
+        responseType: 'entityset', 
+        withCredentials: options && options.reportProgress});
     }
     return fetch()
       .pipe(
         expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
         concatMap((resp: ODataEntitySet<T>) => resp.value),
         toArray());
-  }
-
-  collection(size?: number): Observable<Collection<T>> {
-    let query = this.clone<T>() as ODataNavigationPropertyRequest<T>;
-    size = size || this.client.maxSize;
-    if (size)
-      query.top(size);
-    return query
-      .get({ responseType: 'entityset', withCount: true })
-      .pipe(map(entityset => new Collection<T>(entityset, query)));
   }
 }

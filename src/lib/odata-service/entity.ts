@@ -4,12 +4,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { ODataEntitySet, ODataProperty } from '../odata-response';
-import { ODataEntitySetRequest, ODataEntityRequest } from '../odata-request';
+import { ODataEntitySetRequest, ODataEntityRequest, ODataNavigationPropertyRequest, ODataPropertyRequest, ODataActionRequest, ODataFunctionRequest } from '../odata-request';
 
 import { ODataClient, addEtag } from "../client";
 import { Collection } from '../odata-request/collection';
 import { ODataSettings } from '../settings';
-import { Schema } from '../odata-request/schema';
+import { ODataRefRequest } from '../odata-request/requests/ref';
 
 function addCount(
     options: {
@@ -36,11 +36,6 @@ export class ODataEntityService<T> {
 
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
-  protected _schema(): Schema<T> {
-    let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.client.schemaForType<T>(Ctor.entity) as Schema<T>;
-  }
-
   // Build requests
   public entities(): ODataEntitySetRequest<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
@@ -48,13 +43,45 @@ export class ODataEntityService<T> {
     return query;
   }
 
-  public entity(key?: number | string | Partial<T>): ODataEntityRequest<T> {
+  public entity(key?: Partial<T>): ODataEntityRequest<T> {
     return this.entities()
       .entity(key);
   }
 
-  public isNew(entity: Partial<T>) {
-    return this.entity(entity).isNew();
+  public navigationProperty<P>(entity: Partial<T>, name: string): ODataNavigationPropertyRequest<P> {
+    return this.entity(entity).navigationProperty<P>(name);
+  }
+
+  public property<P>(entity: Partial<T>, name: string): ODataPropertyRequest<P> {
+    return this.entity(entity).property<P>(name);
+  }
+
+  public ref<P>(entity: Partial<T>, name: string): ODataRefRequest {
+    return this.entity(entity).navigationProperty<P>(name).ref();
+  }
+
+  public action<R>(entity: Partial<T>, name: string, returnType: string): ODataActionRequest<R> {
+    let schema = this.client.schemaForType<R>(returnType);
+    return this.entity(entity).action<R>(name, schema);
+  }
+
+  public collectionAction<R>(name: string, returnType: string): ODataActionRequest<R> {
+    let schema = this.client.schemaForType<R>(returnType);
+    return this.entities().action<R>(name, schema);
+  }
+
+  public function<R>(entity: Partial<T>, name: string, params: any, returnType: string): ODataFunctionRequest<R> {
+    let schema = this.client.schemaForType<R>(returnType);
+    let query = this.entity(entity).function<R>(name, schema);
+    query.parameters(params);
+    return query;
+  }
+
+  public collectionFunction<R>(name: string, params: any, returnType: string): ODataFunctionRequest<R> {
+    let schema = this.client.schemaForType<R>(returnType);
+    let query = this.entities().function<R>(name, schema);
+    query.parameters(params);
+    return query;
   }
 
   // Entity Actions
@@ -89,7 +116,7 @@ export class ODataEntityService<T> {
   }
 
   public destroy(entity: T) {
-    let etag = this.client.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag(entity);
     return this.entity(entity)
       .delete({etag});
   }
@@ -106,13 +133,14 @@ export class ODataEntityService<T> {
   }
 
   public save(entity: T) {
-    if (this.isNew(entity))
+    let query = this.entity(entity);
+    if (query.isNew())
       return this.create(entity);
     else
       return this.update(entity);
   }
 
-  protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
+  protected _navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     responseType: 'entity',
@@ -120,7 +148,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
+  protected _navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     responseType: 'entityset',
@@ -129,7 +157,7 @@ export class ODataEntityService<T> {
     withCount?: boolean
   }): Observable<Collection<P>>;
 
-  protected navigationProperty<P>(entity: Partial<T>, name: string, options: {
+  protected _navigationProperty<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     responseType?: 'entity' | 'entityset',
@@ -147,7 +175,7 @@ export class ODataEntityService<T> {
     }
   }
 
-  protected property<P>(entity: Partial<T>, name: string, options: {
+  protected _property<P>(entity: Partial<T>, name: string, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
@@ -159,33 +187,36 @@ export class ODataEntityService<T> {
       .pipe(map(property => property.value));
   }
 
-  protected createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
+  protected _createRef<P>(entity: Partial<T>, name: string, target: ODataEntityRequest<P>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let etag = this.client.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag(entity);
     let nav = this.entity(entity).navigationProperty<P>(name);
     let ref = nav.ref();
+    return ref.post(target, options);
+    /*
     return (nav.isCollection()) ?
       ref.post(target, options) :
       ref.put(target, addEtag(options, etag));
+    */
   }
 
-  protected deleteRef<P>(entity: Partial<T>, name: string, options: {
+  protected _deleteRef<P>(entity: Partial<T>, name: string, options: {
     target?: ODataEntityRequest<P>,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<any> {
-    let etag = this.client.resolveEtag<T>(entity);
+    let etag = this.client.resolveEtag(entity);
     let ref = this.entity(entity).navigationProperty<P>(name).ref();
     return ref.delete(addEtag(options, etag));
   }
 
-  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -194,7 +225,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -203,7 +234,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P[]>;
 
-  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -212,7 +243,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected action<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _action<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -233,7 +264,7 @@ export class ODataEntityService<T> {
     }
   }
 
-  protected collectionAction<P>(name: string, data: any, options: {
+  protected _collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -242,7 +273,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected collectionAction<P>(name: string, data: any, options: {
+  protected _collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -251,7 +282,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<Collection<P>>;
 
-  protected collectionAction<P>(name: string, data: any, options: {
+  protected _collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -260,7 +291,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected collectionAction<P>(name: string, data: any, options: {
+  protected _collectionAction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -281,7 +312,7 @@ export class ODataEntityService<T> {
     }
   }
 
-  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -290,7 +321,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -299,7 +330,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<Collection<P>>;
 
-  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -308,7 +339,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected function<P>(entity: Partial<T>, name: string, data: any, options: {
+  protected _function<P>(entity: Partial<T>, name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -330,7 +361,7 @@ export class ODataEntityService<T> {
     }
   }
 
-  protected collectionFunction<P>(name: string, data: any, options: {
+  protected _collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -339,7 +370,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected collectionFunction<P>(name: string, data: any, options: {
+  protected _collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -348,7 +379,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P[]>;
 
-  protected collectionFunction<P>(name: string, data: any, options: {
+  protected _collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -357,7 +388,7 @@ export class ODataEntityService<T> {
     withCredentials?: boolean
   }): Observable<P>;
 
-  protected collectionFunction<P>(name: string, data: any, options: {
+  protected _collectionFunction<P>(name: string, data: any, options: {
     returnType: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },

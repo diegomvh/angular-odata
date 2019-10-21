@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { ODataEntitySet, ODataProperty } from './odata-response';
-import { ODataBatchRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest } from './odata-request';
+import { ODataBatchRequest, ODataMetadataRequest, ODataRequest, ODataEntitySetRequest, ODataSingletonRequest, PlainObject } from './odata-request';
 import { ODataSettings } from './settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT } from './constants';
 import { Schema } from './odata-request/schema';
@@ -69,8 +69,8 @@ export class ODataClient {
     return this.settings.maxSize;
   }
 
-  resolveEtag<T>(entity: Partial<T>): string {
-    return entity[ODATA_ETAG];
+  resolveEtag(attrs: PlainObject): string {
+    return attrs[ODATA_ETAG];
   }
 
   schemaForType<E>(type) {
@@ -88,12 +88,12 @@ export class ODataClient {
 
   singleton<T>(name: string, type?: string) {
     let schema = type? this.schemaForType<T>(type) as Schema<T> : null;
-    return ODataSingletonRequest.factory<T>(name, this, {schema});
+    return ODataSingletonRequest.factory<T>(name, this, {parser: schema});
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetRequest<T> {
     let schema = type? this.schemaForType<T>(type) as Schema<T> : null;
-    return ODataEntitySetRequest.factory<T>(name, this, {schema});
+    return ODataEntitySetRequest.factory<T>(name, this, {parser: schema});
   }
 
   mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
@@ -451,7 +451,7 @@ export class ODataClient {
 
     // Call http request
     let res$ = this.http.request(method, url, {
-      body: options.body,
+      body: query.serialize(options.body),
       headers: headers,
       observe: observe,
       params: params,

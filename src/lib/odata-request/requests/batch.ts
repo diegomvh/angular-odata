@@ -10,7 +10,7 @@ import { ODataOptions } from '../options';
 import { ODataBatchResponse } from '../../odata-response';
 import { map } from 'rxjs/operators';
 import { $BATCH } from '../../constants';
-import { ODataRequest } from './request';
+import { ODataRequest } from '../request';
 
 export class BatchRequest {
   public static readonly BOUNDARY_PREFIX_SUFFIX = '--';

@@ -6,13 +6,13 @@ import { ODataClient } from '../../client';
 import { Segments, Options, Select, Expand, PlainObject } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
-import { ODataRequest } from './request';
+import { ODataRequest } from '../request';
 
 import { ODataNavigationPropertyRequest } from './navigationproperty';
 import { ODataPropertyRequest } from './property';
 import { ODataActionRequest } from './action';
 import { ODataFunctionRequest } from './function';
-import { Schema } from '../schema';
+import { Schema, Parser } from '../schema';
 
 export class ODataSingletonRequest<T> extends ODataRequest<T> {
 
@@ -20,16 +20,16 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
   static factory<R>(name: string, client: ODataClient, opts?: {
     segments?: ODataSegments,
     options?: ODataOptions,
-    schema?: Schema<R>
+    parser?: Parser<R>
   }
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let schema = opts && opts.schema || new Schema<R>();
+    let parser = opts && opts.parser || new Schema<R>();
 
     segments.segment(Segments.singleton, name);
     options.keep(Options.format);
-    return new ODataSingletonRequest<R>(client, segments, options, schema);
+    return new ODataSingletonRequest<R>(client, segments, options, parser);
   }
 
   // Segments
@@ -39,7 +39,7 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema.schemaForField<N>(name)
+      parser: (this.parser as Schema<T>).parser<N>(name) as Parser<N>
     });
   }
 
@@ -49,27 +49,27 @@ export class ODataSingletonRequest<T> extends ODataRequest<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema: this.schema.schemaForField<P>(name)
+      parser: (this.parser as Schema<T>).parser<P>(name) as Parser<P>
     });
   }
 
-  action<A>(name: string, schema?: Schema<A>) {
+  action<A>(name: string, parser?: Parser<A>) {
     return ODataActionRequest.factory<A>(
       name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema
+      parser: parser
     });
   }
 
-  function<F>(name: string, schema?: Schema<F>) {
+  function<F>(name: string, parser?: Parser<F>) {
     return ODataFunctionRequest.factory<F>(
       name,
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      schema
+      parser
     });
   }
 

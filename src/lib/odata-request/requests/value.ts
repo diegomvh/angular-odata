@@ -1,28 +1,28 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataRequest } from './request';
+import { ODataRequest } from '../request';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
 import { Segments } from '../types';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../constants';
-import { Schema } from '../schema';
+import { Schema, Parser } from '../schema';
 
 export class ODataValueRequest<T> extends ODataRequest<T> {
   // Factory
   static factory<V>(service: ODataClient, opts?: {
       segments?: ODataSegments, 
       options?: ODataOptions,
-      schema?: Schema<V>}
+      parser?: Parser<V>}
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let schema = opts && opts.schema || new Schema<V>();
+    let parser = opts && opts.parser || new Schema<V>();
 
     segments.segment(Segments.value, $VALUE);
     options.clear();
-    return new ODataValueRequest<V>(service, segments, options, schema);
+    return new ODataValueRequest<V>(service, segments, options, parser);
   }
 
   get(options?: {

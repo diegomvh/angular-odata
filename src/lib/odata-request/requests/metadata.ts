@@ -1,7 +1,7 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataRequest } from './request';
+import { ODataRequest } from '../request';
 import { Segments } from '../types';
 import { ODataSegments } from '../segments';
 import { ODataOptions } from '../options';
@@ -9,22 +9,22 @@ import { ODataMetadata } from '../../odata-response';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../constants';
-import { Schema } from '../schema';
+import { Schema, Parser } from '../schema';
 
 export class ODataMetadataRequest extends ODataRequest<any> {
 
   static factory(service: ODataClient, opts?: {
       segments?: ODataSegments, 
       options?: ODataOptions,
-      schema?: Schema<any>}
+      parser?: Parser<any>}
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let schema = opts && opts.schema || new Schema<any>();
+    let parser = opts && opts.parser || new Schema<any>();
 
     segments.segment(Segments.metadata, $METADATA);
     options.clear();
-    return new ODataMetadataRequest(service, segments, options, schema);
+    return new ODataMetadataRequest(service, segments, options, parser);
   }
 
   get(options?: {
