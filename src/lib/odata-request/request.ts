@@ -11,10 +11,10 @@ export abstract class ODataRequest<Type> {
   public static readonly QUERY_SEPARATOR = '?';
 
   // VARIABLES
-  protected client: ODataClient;
-  protected segments: ODataSegments;
-  protected options: ODataOptions;
-  protected parser: Parser<Type> 
+   client: ODataClient;
+   segments: ODataSegments;
+   options: ODataOptions;
+   parser: Parser<Type> 
 
   constructor(
     client: ODataClient,
@@ -116,11 +116,11 @@ export abstract class ODataRequest<Type> {
   }
 
   clone<T>(
-    type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions): ODataRequest<T>; }
+    type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<Type>): ODataRequest<T>; }
   ): ODataRequest<T> {
     if (!type) 
-      type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions): ODataRequest<T>; };
-    return new type(this.client, this.segments.clone(), this.options.clone()) as ODataRequest<T>;
+      type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<Type>): ODataRequest<T>; };
+    return new type(this.client, this.segments.clone(), this.options.clone(), this.parser) as ODataRequest<T>;
   };
 
   toJSON() {
@@ -133,11 +133,12 @@ export abstract class ODataRequest<Type> {
   static fromJSON<T>(
     client: ODataClient, 
     json: {segments: any[], options: PlainObject},
-    type?: { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): ODataRequest<T>; }
+    type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<T>): ODataRequest<T>; },
+    parser?: Parser<T>
   ): ODataRequest<T> {
     if (!type) 
-      type = this.constructor as { new(service: ODataClient, segments?: ODataSegment[], options?: PlainObject): ODataRequest<T>; };
-    return new type(client, json.segments, json.options) as ODataRequest<T>;
+      type = this.constructor as { new(client: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<T>): ODataRequest<T>; };
+    return new type(client, new ODataSegments(json.segments || []), new ODataOptions(json.options || {}), parser) as ODataRequest<T>;
   }
 
   is(type: string) {

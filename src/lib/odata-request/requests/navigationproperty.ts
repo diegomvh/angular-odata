@@ -197,7 +197,7 @@ export class ODataNavigationPropertyRequest<T> extends ODataRequest<T> {
     withCount?: boolean
   }): Observable<Collection<T>> {
     let query = this.clone<T>() as ODataNavigationPropertyRequest<T>;
-    let size = options.size || this.client.maxSize;
+    let size = options && options.size || this.client.maxSize;
     if (size)
       query.top(size);
     return query
