@@ -116,7 +116,7 @@ class SchemaField<T> implements Field, Parser<T> {
     if (value === null) return value;
     if (this.enum) {
       return this.isFlags ?
-        Enums.toEnums(this.enum, value) :
+        Enums.toEnums(this.enum, value).join(", ") :
         Enums.toEnum(this.enum, value);
     } else if (this.ctor) {
       return value.toJSON();

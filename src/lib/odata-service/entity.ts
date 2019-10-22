@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { ODataEntitySet, ODataProperty } from '../odata-response';
-import { ODataEntitySetRequest, ODataEntityRequest, ODataNavigationPropertyRequest, ODataPropertyRequest, ODataActionRequest, ODataFunctionRequest } from '../odata-request';
+import { ODataEntitySetRequest, ODataEntityRequest, ODataNavigationPropertyRequest, ODataPropertyRequest, ODataActionRequest, ODataFunctionRequest, EntityKey } from '../odata-request';
 
 import { ODataClient, addEtag } from "../client";
 import { Collection } from '../odata-request/collection';
@@ -43,7 +43,7 @@ export class ODataEntityService<T> {
     return query;
   }
 
-  public entity(key?: Partial<T>): ODataEntityRequest<T> {
+  public entity(key?: EntityKey): ODataEntityRequest<T> {
     return this.entities()
       .entity(key);
   }

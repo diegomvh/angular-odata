@@ -43,7 +43,7 @@ export class ODataActionRequest<T> extends ODataRequest<T> {
     withCount?: boolean
   }): Observable<ODataEntitySet<T>>;
 
-  post(body: T, options: {
+  post(body: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
