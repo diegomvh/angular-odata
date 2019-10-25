@@ -1,9 +1,10 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { PlainObject, ODataRequest } from './odata-request';
-import { Model, ModelCollection } from './odata-model';
+import { ODataResource } from './resources';
+import { Model, ModelCollection } from './models';
 import { InjectionToken } from '@angular/core';
-import { Schema, Field, Key } from './odata-request/schema';
+import { Schema, Field, Key } from './schema';
+import { PlainObject } from './types';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -17,8 +18,8 @@ export interface ODataConfig {
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
   schemas?: {[type: string]: {base?: string, keys?: Key[], fields?: Field[] }},
-  models?: {[type: string]: { new(attrs: PlainObject, query: ODataRequest<any>): Model }},
-  collections?:{[type: string]: { new(models: PlainObject[], query: ODataRequest<any>): ModelCollection<Model> }},
+  models?: {[type: string]: { new(attrs: PlainObject, query: ODataResource<any>): Model }},
+  collections?:{[type: string]: { new(models: PlainObject[], query: ODataResource<any>): ModelCollection<Model> }},
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -32,8 +33,8 @@ export class ODataSettings {
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
   schemas?: {[type: string]: Schema<any> };
-  models?: {[type: string]: { new(attrs: PlainObject, query: ODataRequest<any>): Model }};
-  collections?:{[type: string]: { new(models: PlainObject[], query: ODataRequest<any>): ModelCollection<Model> }};
+  models?: {[type: string]: { new(attrs: PlainObject, query: ODataResource<any>): Model }};
+  collections?:{[type: string]: { new(models: PlainObject[], query: ODataResource<any>): ModelCollection<Model> }};
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {

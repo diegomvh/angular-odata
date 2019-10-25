@@ -1,17 +1,14 @@
-export * from './constants';
+export * from './types';
 export * from './settings';
-export * from './odata-request/schema';
+export * from './schema';
 export * from './client';
 export * from './module';
 
-// Requests
-export * from './odata-request/index';
-
-// Responses
-export * from './odata-response/index';
+// Resources
+export * from './resources/index';
 
 // Models
-export * from './odata-model/index';
+export * from './models/index';
 
 // Services
-export * from './odata-service/index';
+export * from './services/index';
