@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 import { ODataResource } from './resources';
 import { Model, ModelCollection } from './models';
 import { InjectionToken } from '@angular/core';
-import { Schema, Field, Key } from './schema';
+import { Schema, Field } from './schema';
 import { PlainObject } from './types';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
@@ -17,7 +17,7 @@ export interface ODataConfig {
   creation?: Date,
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
-  schemas?: {[type: string]: {base?: string, keys?: Key[], fields?: Field[] }},
+  schemas?: {[type: string]: {[name: string]: Field }},
   models?: {[type: string]: { new(attrs: PlainObject, query: ODataResource<any>): Model }},
   collections?:{[type: string]: { new(models: PlainObject[], query: ODataResource<any>): ModelCollection<Model> }},
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
@@ -51,22 +51,8 @@ export class ODataSettings {
     this.collections = config.collections || {};
 
     // Build schemas
-    // Bases
-    let bases = Object.entries(config.schemas || {})
-      .filter(([, config]) => !('base' in config));
-    // Descendants
-    let descendants = Object.entries(config.schemas || {})
-      .filter(([, config]) => 'base' in config);
-
-    let schemas = bases.reduce((acc, [type, config]) => 
-      Object.assign(acc, {[type]: new Schema(config.keys, config.fields)}), {});
-
-    while (descendants.length > 0) {
-      let descendant = descendants.find(([, config]) => config.base in schemas);
-      schemas[descendant[0]] = schemas[descendant[1].base].extend(descendant[1].keys, descendant[1].fields) as Schema<any>;
-      descendants = descendants.filter(d => d !== descendant);
-    }
-    this.schemas = schemas;
+    this.schemas = Object.entries(config.schemas || {})
+      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new Schema(config)}), {});
 
     // Set schema
     Object.entries(this.models)

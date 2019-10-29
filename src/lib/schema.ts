@@ -3,13 +3,7 @@ import { Types, Enums } from './utils';
 import { ODataResource } from './resources/requests';
 import { PlainObject } from './types';
 
-export interface Key {
-  name: string;
-  ref: string; 
-}
-
 export interface Field {
-  name: string;
   type: string;
   enum?: {[key: number]: string | number};
   schema?: Schema<any>;
@@ -17,6 +11,7 @@ export interface Field {
   enumString?: boolean;
   default?: any;
   maxLength?: number;
+  isKey?: boolean;
   isCollection?: boolean;
   isNullable?: boolean;
   isFlags?: boolean;
@@ -39,26 +34,6 @@ const PARSERS = {
   'Date': (value) => new Date(value),
 };
 
-class SchemaKey implements Key {
-  name: string;
-  ref: string;
-
-  constructor(key: Key) {
-    Object.assign(this, key);
-  }
-
-  attributes() {
-    return {
-      name: this.name,
-      ref: this.ref
-    }
-  }
-
-  resolve(attrs: PlainObject) {
-    return this.ref.split('/').reduce((acc, name) => acc[name], attrs);
-  }
-}
-
 class SchemaField<T> implements Field, Parser<T> {
   name: string;
   type: string;
@@ -68,6 +43,7 @@ class SchemaField<T> implements Field, Parser<T> {
   enumString?: boolean;
   default?: any;
   maxLength?: number;
+  isKey?: boolean;
   isCollection?: boolean;
   isNullable?: boolean;
   isFlags?: boolean;
@@ -79,15 +55,8 @@ class SchemaField<T> implements Field, Parser<T> {
     Object.assign(this, field);
   }
 
-  attributes() {
-    return {
-      name: this.name, type: this.type,
-      default: this.default, maxLength: this.maxLength,
-      isCollection: this.isCollection, isNullable: this.isNullable, isFlags: this.isFlags, 
-      isNavigation: this.isNavigation,
-      field: this.field,
-      ref: this.ref
-    }
+  resolve(value: any) {
+    return this.ref.split('/').reduce((acc, name) => acc[name], value);
   }
 
   parse(value: any, query?: ODataResource<any>) {
@@ -138,25 +107,15 @@ class SchemaField<T> implements Field, Parser<T> {
 }
 
 export class Schema<Type> implements Parser<Type> {
-  keys: SchemaKey[];
-  fields: SchemaField<any>[];
+  private fields: {[name: string]: SchemaField<any>};
 
-  constructor(keys?: Key[], fields?: Field[]) {
-    this.keys = (keys || []).map(k => new SchemaKey(k));
-    this.fields = (fields || []).map(f => new SchemaField(f));
-  }
-
-  extend<Type>(keys?: Key[], fields?: Field[]): Schema<Type> {
-    let Ctor = <typeof Schema>this.constructor;
-    keys = [...this.keys.map(k => k.attributes()), 
-      ...(keys || [])];
-    fields = [...this.fields.map(f => f.attributes()), 
-      ...(fields || [])];
-    return new Ctor(keys, fields) as Schema<Type>;
+  constructor(fields?: {[name: string]: Field}) {
+    this.fields = Object.entries(fields || {})
+      .reduce((acc, [name, f]) => Object.assign(acc, {[name]: new SchemaField(f)}), {});
   }
 
   configure(settings: ODataSettings) {
-    this.fields.forEach(f => {
+    Object.values(this.fields).forEach(f => {
       if (f.type in settings.enums) {
         f.enum = settings.enums[f.type];
         f.enumString = settings.stringAsEnum; 
@@ -172,26 +131,27 @@ export class Schema<Type> implements Parser<Type> {
   }
 
   toJSON(obj: Partial<Type>): PlainObject {
-    return Object.assign(obj, this.fields
-      .filter(f => f.name in obj)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.toJSON(obj[f.name]) }), {}) 
+    return Object.assign(obj, Object.entries(this.fields)
+      .filter(([name, f]) => name in obj)
+      .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.toJSON(obj[name]) }), {}) 
     );
   }
 
   parse(obj: any, query?: ODataResource<any>): Type {
-    return Object.assign(obj, this.fields
-      .filter(f => f.name in obj)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.parse(obj[f.name], query) }), {})
+    return Object.assign(obj, Object.entries(this.fields)
+      .filter(([name, f]) => name in obj)
+      .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.parse(obj[name], query) }), {})
     ) as Type;
   }
 
   parser<E>(name: string): Parser<E> {
-    return this.fields.find(f => f.name === name) as Parser<E>;
+    return this.fields[name] as Parser<E>;
   }
 
   resolveKey(attrs: any) {
-    let keys = this.keys
-      .map(key => [key.name, key.resolve(attrs)]);
+    let keys = Object.entries(this.fields)
+      .filter(([name, f]) => f.isKey)
+      .map(([name, f]) => [name, f.resolve(attrs)]);
     let key = keys.length === 1 ?
       keys[0][1] :
       keys.reduce((acc, key) => Object.assign(acc, { [key[0]]: key[1] }), {});
@@ -199,7 +159,6 @@ export class Schema<Type> implements Parser<Type> {
       return key;
     return attrs;
   }
-
 
           /*
   relationships(obj: Type, query: ODataRequest<any>) {
@@ -236,6 +195,5 @@ export class Schema<Type> implements Parser<Type> {
       });
     });
   }
-
-          */
+  */
 }
