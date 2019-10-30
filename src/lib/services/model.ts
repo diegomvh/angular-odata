@@ -1,27 +1,23 @@
-import { ODataClient } from '../client';
 import { Model, ModelCollection } from '../models';
 import { Injectable } from '@angular/core';
+import { ODataEntityService } from './entity';
 
 @Injectable()
-export class ODataModelService<T, M extends Model<T>, C extends ModelCollection<T, Model<T>>> {
+export class ODataModelService<T, M extends Model<T>, C extends ModelCollection<T, Model<T>>> extends ODataEntityService<T> {
   static set: string = "";
   static type: string = "";
   static model: string = "";
   static collection: string = ""; 
   
-  constructor(protected client: ODataClient) { }
-
   model(attrs?: T): M {
     let Ctor = <typeof ODataModelService>this.constructor;
-    let query = this.client.entitySet<T>(Ctor.set, Ctor.type).entity();
     let Model = this.client.modelForType(Ctor.model);
-    return new Model(attrs || {}, query) as M;
+    return new Model(attrs || {}, this.entity()) as M;
   }
 
   collection(models?: T[]): C {
     let Ctor = <typeof ODataModelService>this.constructor;
-    let query = this.client.entitySet<T>(Ctor.set, Ctor.type);
-    let Collection = this.client.collectionForType(Ctor.model);
-    return new Collection(models || [], query) as C;
+    let Collection = this.client.collectionForType(Ctor.collection);
+    return new Collection(models || [], this.entities()) as C;
   }
 }
