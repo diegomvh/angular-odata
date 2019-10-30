@@ -7,7 +7,6 @@ import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyRes
 
 import { ODataClient } from "../client";
 import { ODataCollection } from '../resources/responses/collection';
-import { ODataSettings } from '../settings';
 import { ODataRefResource } from '../resources/requests/ref';
 import { EntityKey } from '../types';
 

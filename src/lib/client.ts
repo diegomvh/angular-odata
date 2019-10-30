@@ -48,15 +48,15 @@ export class ODataClient {
     return attrs[ODATA_ETAG];
   }
 
-  schemaForType<E>(type) {
+  schemaForType<E>(type: string) {
     return this.settings.schemaForType(type) as Schema<E>;
   }
 
-  modelForType(type) {
+  modelForType(type: string) {
     return this.settings.modelForType(type) as typeof Model;
   }
 
-  collectionForType(type) {
+  collectionForType(type: string) {
     return this.settings.collectionForType(type) as typeof ModelCollection;
   }
 

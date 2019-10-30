@@ -59,17 +59,17 @@ export class ODataSettings {
       .forEach(schema => schema.configure(this));
   }
 
-  public schemaForType<E>(type): Schema<E> {
+  public schemaForType<E>(type: string): Schema<E> {
     if (type in this.schemas)
       return this.schemas[type] as Schema<E>;
   }
 
-  public modelForType(type): typeof Model {
+  public modelForType(type: string): typeof Model {
     if (type in this.models)
       return this.models[type] as typeof Model;
   }
 
-  public collectionForType(type): typeof ModelCollection {
+  public collectionForType(type: string): typeof ModelCollection {
     if (type in this.collections)
       return this.collections[type] as typeof ModelCollection;
   }
