@@ -18,8 +18,8 @@ export interface ODataConfig {
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
   schemas?: {[type: string]: {[name: string]: Field }},
-  models?: {[type: string]: { new(attrs: PlainObject, query: ODataResource<any>): Model }},
-  collections?:{[type: string]: { new(models: PlainObject[], query: ODataResource<any>): ModelCollection<Model> }},
+  models?: {[type: string]: typeof Model },
+  collections?:{[type: string]: typeof ModelCollection },
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -33,8 +33,8 @@ export class ODataSettings {
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
   schemas?: {[type: string]: Schema<any> };
-  models?: {[type: string]: { new(attrs: PlainObject, query: ODataResource<any>): Model }};
-  collections?:{[type: string]: { new(models: PlainObject[], query: ODataResource<any>): ModelCollection<Model> }};
+  models?: {[type: string]: typeof Model };
+  collections?:{[type: string]: typeof ModelCollection };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -54,12 +54,6 @@ export class ODataSettings {
     this.schemas = Object.entries(config.schemas || {})
       .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new Schema(config)}), {});
 
-    // Set schema
-    Object.entries(this.models)
-      .forEach(([type, model]) => {
-        (model as typeof Model).schema = this.schemas[type] as Schema<any>;
-      });
-
     // Configure
     Object.values(this.schemas)
       .forEach(schema => schema.configure(this));
@@ -68,6 +62,16 @@ export class ODataSettings {
   public schemaForType<E>(type): Schema<E> {
     if (type in this.schemas)
       return this.schemas[type] as Schema<E>;
+  }
+
+  public modelForType(type): typeof Model {
+    if (type in this.models)
+      return this.models[type] as typeof Model;
+  }
+
+  public collectionForType(type): typeof ModelCollection {
+    if (type in this.collections)
+      return this.collections[type] as typeof ModelCollection;
   }
 
 }

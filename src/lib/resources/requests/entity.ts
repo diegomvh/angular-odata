@@ -14,7 +14,7 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Schema, Parser } from '../../schema';
 
-export class ODataEntityRequest<T> extends ODataResource<T> {
+export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(client: ODataClient, opts?: {
     segments?: ODataSegments,
@@ -27,7 +27,7 @@ export class ODataEntityRequest<T> extends ODataResource<T> {
     let parser = opts && opts.parser || new Schema<E>();
 
     options.keep(Options.expand, Options.select, Options.format);
-    return new ODataEntityRequest<E>(client, segments, options, parser);
+    return new ODataEntityResource<E>(client, segments, options, parser);
   }
 
   // Key

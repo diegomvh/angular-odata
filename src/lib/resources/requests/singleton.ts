@@ -15,7 +15,7 @@ import { ODataFunctionResource } from './function';
 import { Schema, Parser } from '../../schema';
 import { ODataEntitySet } from '../responses';
 
-export class ODataSingletonRequest<T> extends ODataResource<T> {
+export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Factory
   static factory<R>(name: string, client: ODataClient, opts?: {
@@ -30,7 +30,7 @@ export class ODataSingletonRequest<T> extends ODataResource<T> {
 
     segments.segment(Segments.singleton, name);
     options.keep(Options.format);
-    return new ODataSingletonRequest<R>(client, segments, options, parser);
+    return new ODataSingletonResource<R>(client, segments, options, parser);
   }
 
   // Segments

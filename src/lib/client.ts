@@ -3,10 +3,11 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonRequest, ODataEntitySet, ODataProperty } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataEntitySet, ODataProperty } from './resources';
 import { ODataSettings } from './settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE } from './types';
 import { Schema } from './schema';
+import { Model, ModelCollection } from './models';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -51,6 +52,14 @@ export class ODataClient {
     return this.settings.schemaForType(type) as Schema<E>;
   }
 
+  modelForType(type) {
+    return this.settings.modelForType(type) as typeof Model;
+  }
+
+  collectionForType(type) {
+    return this.settings.collectionForType(type) as typeof ModelCollection;
+  }
+
   // Requests
   metadata(): ODataMetadataResource {
     return ODataMetadataResource.factory(this);
@@ -62,7 +71,7 @@ export class ODataClient {
 
   singleton<T>(name: string, type?: string) {
     let schema = type? this.schemaForType<T>(type) as Schema<T> : null;
-    return ODataSingletonRequest.factory<T>(name, this, {parser: schema});
+    return ODataSingletonResource.factory<T>(name, this, {parser: schema});
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {

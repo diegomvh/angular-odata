@@ -8,7 +8,7 @@ import { ODataClient } from '../../client';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject } from '../../types';
-import { ODataCountRequest } from './count';
+import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { Schema, Parser } from '../../schema';
 import { Types } from '../../utils/types';
@@ -39,6 +39,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     let key = Types.isObject(opts)? this.parser.resolveKey(opts) : opts;
     //TODO: Que pasa si el esquema resuelve a vacio?
     return segment.option(Options.key, key);
+  }
+
+  isNew() {
+    return !this.options.has(Options.key);
   }
 
   // Segments
@@ -77,7 +81,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   count() {
-    return ODataCountRequest.factory(
+    return ODataCountResource.factory(
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),

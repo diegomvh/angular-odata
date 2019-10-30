@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityRequest, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource } from '../resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource } from '../resources';
 
 import { ODataClient } from "../client";
 import { ODataCollection } from '../resources/responses/collection';
@@ -15,18 +15,18 @@ import { EntityKey } from '../types';
 @Injectable()
 export class ODataEntityService<T> {
   static set: string = "";
-  static entity: string = "";
+  static type: string = "";
 
-  constructor(protected client: ODataClient, protected settings: ODataSettings) { }
+  constructor(protected client: ODataClient) { }
 
   // Build requests
   public entities(): ODataEntitySetResource<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    let query = this.client.entitySet<T>(Ctor.set, Ctor.entity);
+    let query = this.client.entitySet<T>(Ctor.set, Ctor.type);
     return query;
   }
 
-  public entity(key?: EntityKey): ODataEntityRequest<T> {
+  public entity(key?: EntityKey): ODataEntityResource<T> {
     return this.entities()
       .entity(key);
   }

@@ -8,8 +8,8 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from '../options';
-import { ODataEntityRequest } from './entity';
-import { ODataCountRequest } from './count';
+import { ODataEntityResource } from './entity';
+import { ODataCountResource } from './count';
 import { EntityKey, PlainObject } from '../../types';
 import { ODataResource } from '../resource';
 import { Schema, Parser } from '../../schema';
@@ -35,7 +35,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   // Segments
   entity(key?: EntityKey) {
-    let entity = ODataEntityRequest.factory<T>(
+    let entity = ODataEntityResource.factory<T>(
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
@@ -68,7 +68,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   count() {
-    return ODataCountRequest.factory(
+    return ODataCountResource.factory(
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),

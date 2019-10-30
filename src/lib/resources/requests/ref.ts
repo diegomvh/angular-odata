@@ -6,7 +6,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataOptions, Options } from '../options';
 import { PlainObject } from '../../types';
 import { ODataClient } from '../../client';
-import { ODataEntityRequest } from './entity';
+import { ODataEntityResource } from './entity';
 import { $REF, ODATA_ID, $ID } from '../../types';
 import { Parser, Schema } from '../../schema';
 
@@ -27,7 +27,7 @@ export class ODataRefResource extends ODataResource<any> {
   }
 
   // Client Requests
-  post(target: ODataEntityRequest<any>, options?: {
+  post(target: ODataEntityResource<any>, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -44,7 +44,7 @@ export class ODataRefResource extends ODataResource<any> {
     });
   }
 
-  put(target: ODataEntityRequest<any>, options?: {
+  put(target: ODataEntityResource<any>, options?: {
     etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
@@ -65,7 +65,7 @@ export class ODataRefResource extends ODataResource<any> {
 
   delete(options?: {
     etag?: string, 
-    target?: ODataEntityRequest<any>, 
+    target?: ODataEntityResource<any>, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -92,7 +92,7 @@ export class ODataRefResource extends ODataResource<any> {
   }
 
   // Custom
-  add(target: ODataEntityRequest<any>, options?: {
+  add(target: ODataEntityResource<any>, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -100,7 +100,7 @@ export class ODataRefResource extends ODataResource<any> {
     return this.post(target, options);
   }
 
-  set(target: ODataEntityRequest<any>, options?: {
+  set(target: ODataEntityResource<any>, options?: {
     etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
@@ -112,7 +112,7 @@ export class ODataRefResource extends ODataResource<any> {
 
   remove(options?: {
     etag?: string, 
-    target?: ODataEntityRequest<any>, 
+    target?: ODataEntityResource<any>, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,

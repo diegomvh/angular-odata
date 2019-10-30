@@ -7,9 +7,9 @@ import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, OData
 import { Model } from './model';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 
-export class ModelCollection<M extends Model> implements Iterable<M> {
+export class ModelCollection<T, M extends Model<T>> implements Iterable<M> {
   static model: typeof Model = null;
-  query: ODataResource<any>;
+  query: ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>;
   models: M[];
 
   state: {
@@ -19,17 +19,17 @@ export class ModelCollection<M extends Model> implements Iterable<M> {
     records?: number,
   };
 
-  constructor(models: PlainObject[], query: ODataResource<any>) {
+  constructor(models: T[], query: ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>) {
     this.models = this.parse(models, query);
     this.state = {
       records: this.models.length
     };
   }
 
-  parse(models: PlainObject[], query: ODataResource<any>) {
+  parse(models: T[], query: ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>) {
     this.query = query
     let Ctor = <typeof ModelCollection>this.constructor;
-    return models.map(model => new Ctor.model(model, this.query.clone()) as M);
+    return models.map(model => new Ctor.model(model, (this.query.clone() as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>).entity()) as M);
   }
 
   toJSON() {
@@ -50,16 +50,16 @@ export class ModelCollection<M extends Model> implements Iterable<M> {
     }
   }
 
-  assign(entitySet: ODataEntitySet<Model>, query: ODataResource<any>) {
+  assign(entitySet: ODataEntitySet<T>, query: ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>) {
     this.state.records = entitySet.count;
     this.state.size = entitySet.value.length;
     this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.models = this.parse(entitySet.value, (query as ODataEntitySetResource<Model>).entity());
+    this.models = this.parse(entitySet.value, query);
     return this;
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntitySetResource<Model> | ODataNavigationPropertyResource<Model> = this.query.clone<Model>() as ODataEntitySetResource<Model> | ODataNavigationPropertyResource<Model>;
+    let query: ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> = this.query.clone<T>() as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>;
     if (!this.state.page)
       this.state.page = 1;
     if (this.state.size) {
@@ -104,26 +104,26 @@ export class ModelCollection<M extends Model> implements Iterable<M> {
 
   // Mutate query
   select(select?: Select) {
-    return (this.query as ODataEntitySetResource<Model>).select(select);
+    return (this.query as ODataEntitySetResource<T>).select(select);
   }
 
   filter(filter?: Filter) {
-    return (this.query as ODataEntitySetResource<Model>).filter(filter);
+    return (this.query as ODataEntitySetResource<T>).filter(filter);
   }
 
   search(search?: string) {
-    return (this.query as ODataEntitySetResource<Model>).search(search);
+    return (this.query as ODataEntitySetResource<T>).search(search);
   }
 
   orderBy(orderBy?: OrderBy) {
-    return (this.query as ODataEntitySetResource<Model>).orderBy(orderBy);
+    return (this.query as ODataEntitySetResource<T>).orderBy(orderBy);
   }
 
   expand(expand?: Expand) {
-    return (this.query as ODataEntitySetResource<Model>).expand(expand);
+    return (this.query as ODataEntitySetResource<T>).expand(expand);
   }
 
   groupBy(groupBy?: GroupBy) {
-    return (this.query as ODataEntitySetResource<Model>).groupBy(groupBy);
+    return (this.query as ODataEntitySetResource<T>).groupBy(groupBy);
   }
 }
