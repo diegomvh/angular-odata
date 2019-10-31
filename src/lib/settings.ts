@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataResource } from './resources';
-import { Model, ModelCollection } from './models';
+import { ODataModel, ODataModelCollection } from './models';
 import { InjectionToken } from '@angular/core';
 import { Schema, Field } from './schema';
 import { PlainObject } from './types';
@@ -18,8 +18,8 @@ export interface ODataConfig {
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
   schemas?: {[type: string]: {[name: string]: Field }},
-  models?: {[type: string]: typeof Model },
-  collections?:{[type: string]: typeof ModelCollection },
+  models?: {[type: string]: typeof ODataModel },
+  collections?:{[type: string]: typeof ODataModelCollection },
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -33,8 +33,8 @@ export class ODataSettings {
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
   schemas?: {[type: string]: Schema<any> };
-  models?: {[type: string]: typeof Model };
-  collections?:{[type: string]: typeof ModelCollection };
+  models?: {[type: string]: typeof ODataModel };
+  collections?:{[type: string]: typeof ODataModelCollection };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -64,14 +64,14 @@ export class ODataSettings {
       return this.schemas[type] as Schema<E>;
   }
 
-  public modelForType(type: string): typeof Model {
+  public modelForType(type: string): typeof ODataModel {
     if (type in this.models)
-      return this.models[type] as typeof Model;
+      return this.models[type] as typeof ODataModel;
   }
 
-  public collectionForType(type: string): typeof ModelCollection {
+  public collectionForType(type: string): typeof ODataModelCollection {
     if (type in this.collections)
-      return this.collections[type] as typeof ModelCollection;
+      return this.collections[type] as typeof ODataModelCollection;
   }
 
 }

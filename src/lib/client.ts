@@ -7,7 +7,7 @@ import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySe
 import { ODataSettings } from './settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE } from './types';
 import { Schema } from './schema';
-import { Model, ModelCollection } from './models';
+import { ODataModel, ODataModelCollection } from './models';
 
 export type ODataObserve = 'body' | 'events' | 'response';
 
@@ -53,11 +53,11 @@ export class ODataClient {
   }
 
   modelForType(type: string) {
-    return this.settings.modelForType(type) as typeof Model;
+    return this.settings.modelForType(type) as typeof ODataModel;
   }
 
   collectionForType(type: string) {
-    return this.settings.collectionForType(type) as typeof ModelCollection;
+    return this.settings.collectionForType(type) as typeof ODataModelCollection;
   }
 
   // Requests
