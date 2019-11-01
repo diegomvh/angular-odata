@@ -18,35 +18,35 @@ enum State {
 
 export class ODataModel {
   // Statics
-  query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
-  state: State;
-  relationships: { [name: string]: ODataModel | ODataModelCollection<ODataModel> }
+  _query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
+  _state: State;
+  _relationships: { [name: string]: ODataModel | ODataModelCollection<ODataModel> }
 
   constructor(entity: any, query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>) {
     this.assign(entity, query);
   }
 
   setState(state: State) {
-    this.state = state;
+    this._state = state;
   }
 
   assign(entity: any, query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>) {
     Object.assign(this, entity);
-    this.query = query;
+    this._query = query;
     return this;
   }
 
   toJSON(): PlainObject {
-    return this.query.getParser().toJSON(this as any);
+    return this._query.getParser().toJSON(this as any);
   }
 
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toJSON(), this.query.clone() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>);
+    return new Ctor(this.toJSON(), this._query.clone() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>);
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntityResource<any> | ODataNavigationPropertyResource<any> = this.query.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
+    let query: ODataEntityResource<any> | ODataNavigationPropertyResource<any> = this._query.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
     query.key(this);
     if (query.isNew())
       throw new Error(`Can't fetch without entity key`);
@@ -56,13 +56,13 @@ export class ODataModel {
       );
   }
 
-  private save(): Observable<this> {
-    let query = this.query.clone() as ODataEntityResource<any>;
+  save(): Observable<this> {
+    let query = this._query.clone() as ODataEntityResource<any>;
     let obs$ = of(this.toJSON());
-    let changes = Object.keys(this.relationships)
-      .filter(k => this.relationships[k] === null || this.relationships[k] instanceof ODataModel);
+    let changes = Object.keys(this._relationships)
+      .filter(k => this._relationships[k] === null || this._relationships[k] instanceof ODataModel);
     changes.forEach(name => {
-      let model = this.relationships[name] as ODataModel;
+      let model = this._relationships[name] as ODataModel;
       let q = query.clone() as ODataEntityResource<any>;
       q.key(this);
       let ref = q.navigationProperty(name).ref();
@@ -76,7 +76,7 @@ export class ODataModel {
         ));
       } else {
         // Create
-        let target = model.query.clone() as ODataEntityResource<any>;
+        let target = model._query.clone() as ODataEntityResource<any>;
         target.key(model)
         obs$ = obs$.pipe(switchMap((attrs: PlainObject) =>
           ref.put(target, attrs[ODATA_ETAG])
@@ -98,7 +98,7 @@ export class ODataModel {
   }
 
   destroy(): Observable<any> {
-    let query = this.query.clone() as ODataEntityResource<any>;
+    let query = this._query.clone() as ODataEntityResource<any>;
     if (query.isNew())
       throw new Error(`Can't destroy without entity key`);
     query.key(this);
@@ -107,10 +107,10 @@ export class ODataModel {
 
   // Mutate query
   select(select?: string | string[]) {
-    return (this.query as ODataEntityResource<any>).select(select);
+    return (this._query as ODataEntityResource<any>).select(select);
   }
 
   expand(expand?: Expand) {
-    return (this.query as ODataEntityResource<any>).expand(expand);
+    return (this._query as ODataEntityResource<any>).expand(expand);
   }
 }

@@ -74,7 +74,7 @@ class SchemaField<T> implements Field, Parser<T> {
           value.map(v => new this.model(v, mq)) :
           new this.model(value, mq);
       }
-      if (this.collection)
+      if (this.isCollection && this.collection)
         value = new this.collection(value, (query as ODataNavigationPropertyResource<any>).clone<any>());
       return value;
     } else if (this.type in PARSERS) {
