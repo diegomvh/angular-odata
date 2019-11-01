@@ -30,12 +30,6 @@ export class ODataModel {
     this._state = state;
   }
 
-  assign(entity: any, query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>) {
-    Object.assign(this, entity);
-    this._query = query;
-    return this;
-  }
-
   toJSON(): PlainObject {
     return this._query.getParser().toJSON(this as any);
   }
@@ -45,19 +39,24 @@ export class ODataModel {
     return new Ctor(this.toJSON(), this._query.clone() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>);
   }
 
+  assign(entity: any, query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>) {
+    Object.assign(this, entity);
+    this._query = query;
+    return this;
+  }
+
   fetch(): Observable<this> {
     let query: ODataEntityResource<any> | ODataNavigationPropertyResource<any> = this._query.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
     query.key(this);
     if (query.isNew())
       throw new Error(`Can't fetch without entity key`);
     return query.get({responseType: 'entity'})
-      .pipe(
-        map(entity => entity ? this.assign(entity, query) : this)
-      );
+      .pipe( map(entity => entity ? this.assign(entity, query) : this) );
   }
 
   save(): Observable<this> {
     let query = this._query.clone() as ODataEntityResource<any>;
+    /*
     let obs$ = of(this.toJSON());
     let changes = Object.keys(this._relationships)
       .filter(k => this._relationships[k] === null || this._relationships[k] instanceof ODataModel);
@@ -86,15 +85,15 @@ export class ODataModel {
         ));
       }
     });
+    */
     if (query.isNew()) {
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.post(attrs)));
+      return query.post(this)
+        .pipe( map(entity => entity ? this.assign(entity, query) : this) );
     } else {
       query.key(this);
-      obs$ = obs$.pipe(switchMap((attrs: PlainObject) => query.put(attrs, attrs[ODATA_ETAG])));
+      return query.put(this)
+        .pipe( map(entity => entity ? this.assign(entity, query) : this) );
     }
-    return obs$.pipe(
-      map(attrs => { console.log(attrs); this.assign(attrs, query); return this; })
-    );
   }
 
   destroy(): Observable<any> {

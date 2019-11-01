@@ -1,10 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { ODataResource } from './resources';
 import { ODataModel, ODataModelCollection } from './models';
 import { InjectionToken } from '@angular/core';
 import { Schema, Field } from './schema';
-import { PlainObject } from './types';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -42,7 +40,7 @@ export class ODataSettings {
     this.metadataUrl = config.metadataUrl || `${config.baseUrl}$metadata`;
     this.withCredentials = config.withCredentials || false;
     this.stringAsEnum = config.stringAsEnum || false;
-    this.maxSize = config.maxSize || 20;
+    this.maxSize = config.maxSize;
     this.creation = config.creation || new Date();
     this.errorHandler = config.errorHandler || null;
 

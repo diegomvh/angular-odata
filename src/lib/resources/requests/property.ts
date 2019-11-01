@@ -37,6 +37,16 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
   }
 
+  property<P>(name: string) {
+    return ODataPropertyResource.factory<P>(
+      name,
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      parser: this.parser.parser<P>(name)
+    });
+  }
+
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},

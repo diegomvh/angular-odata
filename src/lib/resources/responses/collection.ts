@@ -4,7 +4,7 @@ import { ODataEntitySet } from './entityset';
 import { ODataEntitySetResource, ODataNavigationPropertyResource } from '../requests';
 
 export class ODataCollection<E> implements Iterable<E> {
-  private query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>;
+  private _query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>;
   entities: E[];
 
   state: {
@@ -16,12 +16,13 @@ export class ODataCollection<E> implements Iterable<E> {
 
   constructor(entityset: ODataEntitySet<E>, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
     this.entities = entityset.value;
-    this.query = query;
-    this.setState({
-      records: entityset.count, 
-      page: 1, 
-      size: entityset.skip || entityset.value.length
-    });
+    this._query = query;
+    let records = entityset.count;
+    let size = (query.skip().value() || entityset.skip || entityset.value.length);
+    let skip = (query.skip().value() || entityset.skip || 0);
+    let page = (query.top().value()) ? 
+      Math.ceil(skip / query.top().value()) + 1 : 1;
+    this.setState({ records, page, size });
   }
 
   private setState(state: {records?: number, page?: number, size?: number}) {
@@ -49,14 +50,14 @@ export class ODataCollection<E> implements Iterable<E> {
     }
   }
 
-  private fetch(): Observable<this> {
+  fetch(): Observable<this> {
     if (this.state.size) {
-      this.query.top(this.state.size);
+      this._query.top(this.state.size);
       let skip = this.state.size * (this.state.page - 1);
       if (skip)
-        this.query.skip(skip);
+        this._query.skip(skip);
     }
-    return this.query.get({ responseType: 'entityset'})
+    return this._query.get({ responseType: 'entityset'})
       .pipe(
         map(set => {
           if (set) {

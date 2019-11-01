@@ -439,11 +439,24 @@ export class ODataClient {
       .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
 
     let fromBody = (body: any) => parser.toJSON(body);
-    let toEntity = (body: any) => Object.assign(extractMetadata(body), parser.parse(body, query));
-    let toEntitySet = (body: any) => new ODataEntitySet<any>(
-        Object.assign(extractMetadata(body), { [VALUE]: (body[VALUE] || []).map(v => parser.parse(v, query)) }));
-    let toProperty = (body: any) => new ODataProperty<any>(
-        Object.assign(extractMetadata(body), { [VALUE]: body[VALUE] && parser.parse(body[VALUE], query) }));
+
+    let toEntity = (body: any) => {
+      let metadata = extractMetadata(body);
+      let value = parser.parse(body, query);
+      return Object.assign(value, metadata);
+    };
+
+    let toEntitySet = (body: any) => {
+      let metadata = extractMetadata(body);
+      let value = (body[VALUE] || []).map(v => parser.parse(v, (query as ODataEntitySetResource<any>).entity(v)));
+      return new ODataEntitySet<any>(Object.assign({[VALUE]: value}, metadata));
+    }
+
+    let toProperty = (body: any) => {
+      let metadata = extractMetadata(body);
+      let value = parser.parse(body[VALUE], query);
+      return new ODataProperty<any>(Object.assign({[VALUE]: value}, metadata));
+    }
 
     // Call http request
     let res$ = this.http.request(method, url, {

@@ -65,17 +65,19 @@ class SchemaField<T> implements Field, Parser<T> {
         Enums.toFlags(this.enum, value) :
         Enums.toValue(this.enum, value);
     } else if (this.schema) {
+      query = this.isNavigation ? 
+        (query as ODataEntityResource<any>).navigationProperty<any>(this.name) :
+        (query as ODataEntityResource<any>).property<any>(this.name);
       value = (Array.isArray(value) && this.isCollection) ?
         value.map(v => this.schema.parse(v, query)) :
         this.schema.parse(value, query);
       if (this.model) {
-        let mq = (query as ODataNavigationPropertyResource<any>).entity();
         value = (Array.isArray(value) && this.isCollection) ?
-          value.map(v => new this.model(v, mq)) :
-          new this.model(value, mq);
+          value.map(v => new this.model(v, query.clone<any>())) :
+          new this.model(value, query.clone<any>());
       }
       if (this.isCollection && this.collection)
-        value = new this.collection(value, (query as ODataNavigationPropertyResource<any>).clone<any>());
+        value = new this.collection(value, query.clone<any>());
       return value;
     } else if (this.type in PARSERS) {
       return (Array.isArray(value) && this.isCollection) ?
@@ -155,7 +157,7 @@ export class Schema<Type> implements Parser<Type> {
       .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.parse(obj[name], query) }), {})
     );
     if (this.model) {
-      return new this.model(attrs, (query as ODataEntitySetResource<any>).entity());
+      return new this.model(attrs, query);
     }
     return attrs;
   }

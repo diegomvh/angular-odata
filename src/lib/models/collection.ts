@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataEntitySet } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataEntitySet, ODataCollection } from '../resources';
 
 import { ODataModel } from './model';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
@@ -19,22 +19,17 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   constructor(models: M[], query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
     this._models = models;
     this._query = query;
-    this.setState({
-      records: this._models.length, 
-      page: 1, 
-      size: this._models.length
-    });
   }
 
-  private setState(state: {records?: number, page?: number, size?: number}) {
+  private setState(state: {records?: number, page?: number, size?: number, pages?: number}) {
     if (state.records)
       this._state.records = state.records;
     if (state.page)
       this._state.page = state.page;
-    if (state.size) {
+    if (state.size)
       this._state.size = state.size;
-      this._state.pages = Math.ceil(this._state.records / this._state.size);
-    }
+    if (state.pages)
+      this._state.pages = state.pages;
   }
 
   toJSON() {
@@ -55,10 +50,10 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
   }
 
-  assign(entitySet: ODataEntitySet<any>, query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
-    let size = entitySet.skip ? entitySet.skip : entitySet.value.length;
-    this.setState({records: entitySet.count, size});
-    this._models = entitySet.value;
+  assign(collection: ODataCollection<any>, query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
+    this.setState(collection.state);
+    this._models = collection.entities;
+    this._query = query;
     return this;
   }
 
@@ -70,9 +65,9 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
       query.top(this._state.size);
       query.skip(this._state.size * (this._state.page - 1));
     }
-    return query.get({ responseType: 'entityset', withCount: true })
+    return query.collection()
       .pipe(
-        map(set => set ? this.assign(set, query) : this)
+        map(col => col ? this.assign(col, query) : this)
       );
   }
 
