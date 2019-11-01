@@ -1,11 +1,11 @@
 import { ODataSettings } from './settings';
 import { Types, Enums } from './utils';
-import { ODataResource } from './resources/requests';
+import { ODataResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityResource, ODataEntitySetResource } from './resources/requests';
 import { PlainObject } from './types';
 
 export interface Field {
   type: string;
-  enum?: {[key: number]: string | number};
+  enum?: { [key: number]: string | number };
   schema?: Schema<any>;
   ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataResource<any>): any };
   enumString?: boolean;
@@ -28,18 +28,16 @@ export interface Parser<T> {
 }
 
 const PARSERS = {
-  'string': (value) => String(value),
-  'number': (value) => Number(value),
-  'boolean': (value) => Boolean(value),
   'Date': (value) => new Date(value),
 };
 
 class SchemaField<T> implements Field, Parser<T> {
   name: string;
   type: string;
-  enum?: {[key: number]: string | number};
+  enum?: { [key: number]: string | number };
   schema?: Schema<any>;
-  ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataResource<any>): T };
+  model?: { new(...any): any };
+  collection?: { new(...any): any };
   enumString?: boolean;
   default?: any;
   maxLength?: number;
@@ -51,7 +49,8 @@ class SchemaField<T> implements Field, Parser<T> {
   field?: string;
   ref?: string;
 
-  constructor(field: Field) {
+  constructor(name: string, field: Field) {
+    this.name = name;
     Object.assign(this, field);
   }
 
@@ -66,13 +65,18 @@ class SchemaField<T> implements Field, Parser<T> {
         Enums.toFlags(this.enum, value) :
         Enums.toValue(this.enum, value);
     } else if (this.schema) {
-      return (Array.isArray(value) && this.isCollection) ?
+      value = (Array.isArray(value) && this.isCollection) ?
         value.map(v => this.schema.parse(v, query)) :
         this.schema.parse(value, query);
-    } else if (this.ctor) {
-      if (!value)
-        value = this.isCollection ? [] : {};
-      return new this.ctor(value, query);
+      if (this.model) {
+        let mq = (query as ODataNavigationPropertyResource<any>).entity();
+        value = (Array.isArray(value) && this.isCollection) ?
+          value.map(v => new this.model(v, mq)) :
+          new this.model(value, mq);
+      }
+      if (this.collection)
+        value = new this.collection(value, (query as ODataNavigationPropertyResource<any>).clone<any>());
+      return value;
     } else if (this.type in PARSERS) {
       return (Array.isArray(value) && this.isCollection) ?
         value.map(PARSERS[this.type]) :
@@ -87,7 +91,9 @@ class SchemaField<T> implements Field, Parser<T> {
       return this.isFlags ?
         Enums.toEnums(this.enum, value).join(", ") :
         Enums.toEnum(this.enum, value);
-    } else if (this.ctor) {
+    } else if (this.model) {
+      return value.toJSON();
+    } else if (this.collection) {
       return value.toJSON();
     } else if (this.schema) {
       return (Array.isArray(value) && this.isCollection) ?
@@ -107,41 +113,51 @@ class SchemaField<T> implements Field, Parser<T> {
 }
 
 export class Schema<Type> implements Parser<Type> {
-  private fields: {[name: string]: SchemaField<any>};
+  private fields: { [name: string]: SchemaField<any> };
+  model?: { new(...any): any };
 
-  constructor(fields?: {[name: string]: Field}) {
+  constructor(fields?: { [name: string]: Field }) {
     this.fields = Object.entries(fields || {})
-      .reduce((acc, [name, f]) => Object.assign(acc, {[name]: new SchemaField(f)}), {});
+      .reduce((acc, [name, f]) => Object.assign(acc, { [name]: new SchemaField(name, f) }), {});
   }
 
-  configure(settings: ODataSettings) {
+  configure(type: string, settings: ODataSettings) {
+    if (type in settings.models) {
+      this.model = settings.models[type];
+    }
     Object.values(this.fields).forEach(f => {
       if (f.type in settings.enums) {
         f.enum = settings.enums[f.type];
-        f.enumString = settings.stringAsEnum; 
-      } else if (f.type in settings.schemas) {
-        f.schema = settings.schemas[f.type] as Schema<any>;
-      } else if (f.type in settings.models) {
-        f.ctor = settings.models[f.type];
+        f.enumString = settings.stringAsEnum;
       }
-      else if (f.type in settings.collections) {
-        f.ctor = settings.collections[f.type];
+      if (f.type in settings.schemas) {
+        f.schema = settings.schemas[f.type] as Schema<any>;
+      }
+      if (f.type in settings.models) {
+        f.model = settings.models[f.type];
+      }
+      if (f.type in settings.collections) {
+        f.collection = settings.collections[f.type];
       }
     });
   }
 
-  toJSON(obj: Partial<Type>): PlainObject {
+  toJSON(obj: Partial<Type>): any {
     return Object.assign(obj, Object.entries(this.fields)
       .filter(([name, f]) => name in obj)
-      .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.toJSON(obj[name]) }), {}) 
+      .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.toJSON(obj[name]) }), {})
     );
   }
 
   parse(obj: any, query?: ODataResource<any>): Type {
-    return Object.assign(obj, Object.entries(this.fields)
+    let attrs = Object.assign(obj, Object.entries(this.fields)
       .filter(([name, f]) => name in obj)
       .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.parse(obj[name], query) }), {})
-    ) as Type;
+    );
+    if (this.model) {
+      return new this.model(attrs, (query as ODataEntitySetResource<any>).entity());
+    }
+    return attrs;
   }
 
   parser<E>(name: string): Parser<E> {
@@ -160,40 +176,40 @@ export class Schema<Type> implements Parser<Type> {
     return attrs;
   }
 
-          /*
-  relationships(obj: Type, query: ODataRequest<any>) {
-    (obj as any).relationships = {};
-    this.navigations().forEach(field => {
-      Object.defineProperty(obj, field.name, {
-        get() {
-          if (!(field.name in this.relationships)) {
-            let query: ODataEntityRequest<Type> | ODataNavigationPropertyRequest<Type> = this.query.clone();
-            if (query instanceof ODataEntityRequest) {
-              if (this.isNew())
-                throw new Error(`Can't resolve ${field.name} relation from new entity`);
-              query.key(this.resolveKey());
-            }
-            let nav = query.navigationProperty<any>(field.name);
-            this.relationships[field.name] = field.parse(obj[field.name], nav);
-          }
-          return this.relationships[field.name];
-        },
-        set(value: Type | null) {
-          if (field.isCollection)
-            throw new Error(`Can't set ${field.name} to collection, use add`);
-          if (!((value as any).query instanceof ODataEntityRequest))
-            throw new Error(`Can't set ${value} to model`);
-          this.relationships[field.name] = value;
-          let query = this._query.clone() as ODataQueryBuilder;
-          query.entityKey(this.resolveKey());
-          query.navigationProperty(field.name);
-          this._relationships[field.name] = this._context.createInstance(
-            field.type, value !== null ? value.toJSON() : {}, query);
-          this.setState(ModelState.Modified);
-          this._relationships[field.name].setState(value !== null ? ModelState.Added : ModelState.Deleted);
-        }
-      });
-    });
+  /*
+relationships(obj: Type, query: ODataRequest<any>) {
+(obj as any).relationships = {};
+this.navigations().forEach(field => {
+Object.defineProperty(obj, field.name, {
+get() {
+  if (!(field.name in this.relationships)) {
+    let query: ODataEntityRequest<Type> | ODataNavigationPropertyRequest<Type> = this.query.clone();
+    if (query instanceof ODataEntityRequest) {
+      if (this.isNew())
+        throw new Error(`Can't resolve ${field.name} relation from new entity`);
+      query.key(this.resolveKey());
+    }
+    let nav = query.navigationProperty<any>(field.name);
+    this.relationships[field.name] = field.parse(obj[field.name], nav);
   }
-  */
+  return this.relationships[field.name];
+},
+set(value: Type | null) {
+  if (field.isCollection)
+    throw new Error(`Can't set ${field.name} to collection, use add`);
+  if (!((value as any).query instanceof ODataEntityRequest))
+    throw new Error(`Can't set ${value} to model`);
+  this.relationships[field.name] = value;
+  let query = this._query.clone() as ODataQueryBuilder;
+  query.entityKey(this.resolveKey());
+  query.navigationProperty(field.name);
+  this._relationships[field.name] = this._context.createInstance(
+    field.type, value !== null ? value.toJSON() : {}, query);
+  this.setState(ModelState.Modified);
+  this._relationships[field.name].setState(value !== null ? ModelState.Added : ModelState.Deleted);
+}
+});
+});
+}
+*/
 }

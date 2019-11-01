@@ -18,8 +18,8 @@ export interface ODataConfig {
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
   schemas?: {[type: string]: {[name: string]: Field }},
-  models?: {[type: string]: typeof ODataModel },
-  collections?:{[type: string]: typeof ODataModelCollection },
+  models?: {[type: string]: { new(...any): ODataModel} };
+  collections?:{[type: string]: { new(...any): ODataModelCollection<ODataModel> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -33,8 +33,8 @@ export class ODataSettings {
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
   schemas?: {[type: string]: Schema<any> };
-  models?: {[type: string]: typeof ODataModel };
-  collections?:{[type: string]: typeof ODataModelCollection };
+  models?: {[type: string]: { new(...any): ODataModel} };
+  collections?:{[type: string]: { new(...any): ODataModelCollection<ODataModel> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -55,8 +55,8 @@ export class ODataSettings {
       .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new Schema(config)}), {});
 
     // Configure
-    Object.values(this.schemas)
-      .forEach(schema => schema.configure(this));
+    Object.entries(this.schemas)
+      .forEach(([type, schema]) => schema.configure(type, this));
   }
 
   public schemaForType<E>(type: string): Schema<E> {

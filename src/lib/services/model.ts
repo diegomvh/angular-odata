@@ -9,8 +9,6 @@ import { ODataClient } from '../client';
 export class ODataModelService<M extends ODataModel, C extends ODataModelCollection<ODataModel>> {
   static set: string = "";
   static type: string = "";
-  static model: string = "";
-  static collection: string = ""; 
 
   constructor(protected client: ODataClient) { }
 
@@ -28,13 +26,13 @@ export class ODataModelService<M extends ODataModel, C extends ODataModelCollect
   
   model(attrs?: any): M {
     let Ctor = <typeof ODataModelService>this.constructor;
-    let Model = this.client.modelForType(Ctor.model);
+    let Model = this.client.modelForType(Ctor.type);
     return new Model(attrs || {}, this.entity()) as M;
   }
 
   collection(models?: any[]): C {
     let Ctor = <typeof ODataModelService>this.constructor;
-    let Collection = this.client.collectionForType(Ctor.collection);
+    let Collection = this.client.collectionForType(Ctor.type);
     return new Collection(models || [], this.entities()) as C;
   }
 }

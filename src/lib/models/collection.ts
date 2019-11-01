@@ -7,28 +7,35 @@ import { ODataModel } from './model';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
-  static model: typeof ODataModel = null;
   query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>;
   models: M[];
 
   state: {
-    page?: number,
-    pages?: number,
-    size?: number,
     records?: number,
-  };
+    size?: number,
+    page?: number,
+    pages?: number
+  } = {};
 
-  constructor(models: any[], query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
-    this.models = this.parse(models, query);
-    this.state = {
-      records: this.models.length
-    };
+  constructor(models: M[], query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
+    this.models = models;
+    this.query = query;
+    this.setState({
+      records: this.models.length, 
+      page: 1, 
+      size: this.models.length
+    });
   }
 
-  parse(models: any[], query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
-    this.query = query
-    let Ctor = <typeof ODataModelCollection>this.constructor;
-    return models.map(model => new Ctor.model(model, (this.query.clone() as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>).entity()) as M);
+  private setState(state: {records?: number, page?: number, size?: number}) {
+    if (state.records)
+      this.state.records = state.records;
+    if (state.page)
+      this.state.page = state.page;
+    if (state.size) {
+      this.state.size = state.size;
+      this.state.pages = Math.ceil(this.state.records / this.state.size);
+    }
   }
 
   toJSON() {
@@ -50,10 +57,9 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   }
 
   assign(entitySet: ODataEntitySet<any>, query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
-    this.state.records = entitySet.count;
-    this.state.size = entitySet.value.length;
-    this.state.pages = Math.ceil(this.state.records / this.state.size);
-    this.models = this.parse(entitySet.value, query);
+    let size = entitySet.skip ? entitySet.skip : entitySet.value.length;
+    this.setState({records: entitySet.count, size});
+    this.models = entitySet.value;
     return this;
   }
 
@@ -71,34 +77,30 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
       );
   }
 
-  getPage(page: number) {
+  page(page: number) {
     this.state.page = page;
     return this.fetch();
   }
 
-  getFirstPage() {
-    return this.getPage(1);
+  size(size: number) {
+    this.setState({size});
+    return this.page(1);
   }
 
-  getPreviousPage() {
-    return (this.state.page) ? this.getPage(this.state.page - 1) : this.fetch();
+  firstPage() {
+    return this.page(1);
   }
 
-  getNextPage() {
-    return (this.state.page) ? this.getPage(this.state.page + 1) : this.fetch();
+  previousPage() {
+    return (this.state.page) ? this.page(this.state.page - 1) : this.fetch();
   }
 
-  getLastPage() {
-    return (this.state.pages) ? this.getPage(this.state.pages) : this.fetch();
+  nextPage() {
+    return (this.state.page) ? this.page(this.state.page + 1) : this.fetch();
   }
 
-  setPageSize(size: number) {
-    this.state.size = size;
-    if (this.state.records) {
-      this.state.pages = Math.ceil(this.state.records / this.state.size);
-      if (this.state.page > this.state.pages)
-        this.state.page = this.state.pages;
-    }
+  lastPage() {
+    return (this.state.pages) ? this.page(this.state.pages) : this.fetch();
   }
 
   // Mutate query

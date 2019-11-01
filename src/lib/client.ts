@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataEntitySet, ODataProperty } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataEntitySet, ODataProperty, ODataEntityResource } from './resources';
 import { ODataSettings } from './settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE } from './types';
 import { Schema } from './schema';
@@ -439,11 +439,11 @@ export class ODataClient {
       .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
 
     let fromBody = (body: any) => parser.toJSON(body);
-    let toEntity = (body: any) => Object.assign(extractMetadata(body), parser.parse(body));
+    let toEntity = (body: any) => Object.assign(extractMetadata(body), parser.parse(body, query));
     let toEntitySet = (body: any) => new ODataEntitySet<any>(
-        Object.assign(extractMetadata(body), { [VALUE]: (body[VALUE] || []).map(v => parser.parse(v)) }));
+        Object.assign(extractMetadata(body), { [VALUE]: (body[VALUE] || []).map(v => parser.parse(v, query)) }));
     let toProperty = (body: any) => new ODataProperty<any>(
-        Object.assign(extractMetadata(body), { [VALUE]: body[VALUE] && parser.parse(body[VALUE]) }));
+        Object.assign(extractMetadata(body), { [VALUE]: body[VALUE] && parser.parse(body[VALUE], query) }));
 
     // Call http request
     let res$ = this.http.request(method, url, {

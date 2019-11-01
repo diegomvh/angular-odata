@@ -15,8 +15,8 @@ export class ODataCollection<E> implements Iterable<E> {
   } = {};
 
   constructor(entityset: ODataEntitySet<E>, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
-    this.query = query;
     this.entities = entityset.value;
+    this.query = query;
     this.setState({
       records: entityset.count, 
       page: 1, 
@@ -34,6 +34,7 @@ export class ODataCollection<E> implements Iterable<E> {
       this.state.pages = Math.ceil(this.state.records / this.state.size);
     }
   }
+
   // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;

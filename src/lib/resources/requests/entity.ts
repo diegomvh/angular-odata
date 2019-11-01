@@ -39,7 +39,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   isNew() {
-    return !this.options.has(Options.key);
+    let segment = this.segments.last();
+    return !segment.option(Options.key).value();
   }
 
   // Segments
