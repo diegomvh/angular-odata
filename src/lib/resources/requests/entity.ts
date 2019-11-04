@@ -33,9 +33,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   // Key
   key(opts?: EntityKey) {
     let segment = this.segments.last();
+    if (!segment)
+      throw new Error(`EntityResourse dosn't have segment for key`);
+    if (typeof(opts) === "undefined")
+      return segment.option(Options.key);
+    
     let key = Types.isObject(opts) ? this.parser.resolveKey(opts) : opts;
-    //TODO: Que pasa si el esquema resuelve a vacio?
-    return segment.option(Options.key, key);
+    return segment.option(Options.key, Types.isEmpty(key) ? opts : key);
   }
 
   isNew() {
