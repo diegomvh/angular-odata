@@ -5,8 +5,8 @@ import { map, catchError } from 'rxjs/operators';
 
 import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataEntitySet, ODataProperty, ODataEntityResource } from './resources';
 import { ODataSettings } from './settings';
-import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE } from './types';
-import { Schema } from './schema';
+import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE, ODATA_CONTEXT } from './types';
+import { Schema, Parser } from './schema';
 import { ODataModel, ODataModelCollection } from './models';
 
 export type ODataObserve = 'body' | 'events' | 'response';
@@ -58,6 +58,19 @@ export class ODataClient {
 
   collectionForType(type: string) {
     return this.settings.collectionForType(type) as typeof ODataModelCollection;
+  }
+
+  queryForContext(query: ODataResource<any>, attrs: any) {
+    let ctx = attrs[ODATA_CONTEXT] as string;
+    ctx = ctx.substr(ctx.indexOf("#") + 1);
+    if (query instanceof ODataEntitySetResource)
+      return query.entity(attrs);
+    else if (ctx.startsWith("Collection(") && ctx.endsWith(")")) {
+      let type = ctx.substr(11, ctx.length - 12);
+      let schema = type ? this.schemaForType<any>(type) as Schema<any> : null;
+      return ODataEntityResource.factory<any>(this, {parser: schema});
+    }
+    return query.clone<any>();
   }
 
   // Requests
@@ -434,28 +447,18 @@ export class ODataClient {
     // Parser
     let parser = query.getParser();
 
-    let extractMetadata = (body: any) => Object.keys(body)
-      .filter(k => k.startsWith("@odata"))
-      .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
-
     let fromBody = (body: any) => parser.toJSON(body);
 
     let toEntity = (body: any) => {
-      let metadata = extractMetadata(body);
-      let value = parser.parse(body, query);
-      return Object.assign(value, metadata);
-    };
-
-    let toEntitySet = (body: any) => {
-      let metadata = extractMetadata(body);
-      let value = parser.parse(body[VALUE], query);
-      return new ODataEntitySet<any>(Object.assign({[VALUE]: value}, metadata));
+      return parser.parse(body, this.queryForContext(query, body));
     }
-
+    let toEntitySet = (body: any) => {
+      body[VALUE] = parser.parse(body[VALUE], this.queryForContext(query, body));
+      return new ODataEntitySet<any>(body);
+    }
     let toProperty = (body: any) => {
-      let metadata = extractMetadata(body);
-      let value = parser.parse(body[VALUE], query);
-      return new ODataProperty<any>(Object.assign({[VALUE]: value}, metadata));
+      body[VALUE] = parser.parse(body[VALUE], this.queryForContext(query, body));
+      return new ODataProperty<any>(body);
     }
 
     // Call http request
