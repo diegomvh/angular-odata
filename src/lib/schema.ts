@@ -65,7 +65,7 @@ class SchemaField<T> implements Field, Parser<T> {
         Enums.toFlags(this.enum, value) :
         Enums.toValue(this.enum, value);
     } else if (this.schema) {
-      query = this.isNavigation ? 
+      query = this.isNavigation ?
         (query as ODataEntityResource<any>).navigationProperty<any>(this.name) :
         (query as ODataEntityResource<any>).property<any>(this.name);
       value = (Array.isArray(value) && this.isCollection) ?
@@ -144,22 +144,31 @@ export class Schema<Type> implements Parser<Type> {
     });
   }
 
-  toJSON(obj: Partial<Type>): any {
-    return Object.assign(obj, Object.entries(this.fields)
+  toJSON(objs: any): any {
+    let _toJSON = (obj) => Object.assign(obj, Object.entries(this.fields)
       .filter(([name, f]) => name in obj)
       .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.toJSON(obj[name]) }), {})
     );
+    return Array.isArray(objs) ? 
+      objs.map(obj => _toJSON(obj)) :
+      _toJSON(objs);
   }
 
-  parse(obj: any, query?: ODataResource<any>): Type {
-    let attrs = Object.assign(obj, Object.entries(this.fields)
-      .filter(([name, f]) => name in obj)
-      .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.parse(obj[name], query) }), {})
-    );
-    if (this.model) {
-      return new this.model(attrs, query);
-    }
-    return attrs;
+  parse(objs: any, query?: ODataResource<any>): any {
+    let _parse = (obj, q) =>
+      Object.assign(obj, Object.entries(this.fields)
+        .filter(([name, f]) => name in obj)
+        .reduce((acc, [name, f]) => Object.assign(acc, { [name]: f.parse(obj[name], q) }), {})
+      );
+    return Array.isArray(objs) ?
+      objs.map(obj => {
+        let entityQuery = (query as ODataEntitySetResource<any>).entity(obj);
+        let attrs = _parse(obj, entityQuery);
+        return (this.model) ?
+          new this.model(attrs, entityQuery) :
+          attrs;
+      }) :
+      _parse(objs, query);
   }
 
   parser<E>(name: string): Parser<E> {

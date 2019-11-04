@@ -448,7 +448,7 @@ export class ODataClient {
 
     let toEntitySet = (body: any) => {
       let metadata = extractMetadata(body);
-      let value = (body[VALUE] || []).map(v => parser.parse(v, (query as ODataEntitySetResource<any>).entity(v)));
+      let value = parser.parse(body[VALUE], query);
       return new ODataEntitySet<any>(Object.assign({[VALUE]: value}, metadata));
     }
 
