@@ -111,11 +111,11 @@ class SchemaField<T> implements Field, Parser<T> {
   }
 
   parser<E>(name: string): Parser<E> {
-    return this.schema ? this.schema.parser(name) : new Schema<E>();
+    return this.schema.parser(name);
   }
 
   resolveKey(attrs: any) {
-    return this.schema ? this.schema.resolveKey(attrs) : attrs;
+    return this.schema.resolveKey(attrs);
   }
 }
 
@@ -192,7 +192,6 @@ export class Schema<Type> implements Parser<Type> {
       keys.reduce((acc, key) => Object.assign(acc, { [key[0]]: key[1] }), {});
     if (!Types.isEmpty(key))
       return key;
-    return attrs;
   }
 
   isComplex() {
