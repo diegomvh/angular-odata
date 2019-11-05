@@ -62,6 +62,7 @@ class SchemaField<T> implements Field, Parser<T> {
   parse(value: any, query?: ODataResource<any>) {
     if (value === null) return value;
     if (this.enum) {
+      //TODO: enumString
       return this.isFlags ?
         Enums.toFlags(this.enum, value) :
         Enums.toValue(this.enum, value);
@@ -91,9 +92,12 @@ class SchemaField<T> implements Field, Parser<T> {
   toJSON(value: any) {
     if (value === null) return value;
     if (this.enum) {
-      return this.isFlags ?
-        Enums.toEnums(this.enum, value).join(", ") :
-        Enums.toEnum(this.enum, value);
+      let enums = this.isFlags ?
+        Enums.toEnums(this.enum, value) :
+        [Enums.toEnum(this.enum, value)];
+      if (!this.enumString)
+        enums = enums.map(e => `${this.type}'${e}'`);
+      return enums.join(", ");
     } else if (this.model) {
       return value.toJSON();
     } else if (this.collection) {
