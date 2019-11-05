@@ -34,15 +34,16 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   // Key
-  key(opts?: EntityKey) {
+  key(key?: EntityKey) {
     let segment = this.segments.last();
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
-    if (typeof(opts) === "undefined")
+    if (typeof(key) === "undefined")
       return segment.option(Options.key);
     
-    let key = Types.isObject(opts) ? this.parser.resolveKey(opts) : opts;
-    return segment.option(Options.key, Types.isEmpty(key) ? opts : key);
+    if (Types.isObject(key))
+      key = this.parser.resolveKey(key);
+    return segment.option(Options.key, key);
   }
 
   isNew() {

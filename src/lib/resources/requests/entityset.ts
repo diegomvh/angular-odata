@@ -16,6 +16,7 @@ import { Schema, Parser } from '../../schema';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses/collection';
 import { ODataEntitySet } from '../responses';
+import { Types } from '../../utils';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -41,7 +42,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       options: this.options.clone(),
       parser: this.parser
     });
-    if (key) {
+    if (!Types.isEmpty(key)) {
       entity.key(key);
     }
     return entity;
