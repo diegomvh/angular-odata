@@ -5,11 +5,11 @@ export const Enums = {
 
   toValues<E>(Enum: E, value: any): number[] {
     if (typeof value === 'string'){
-      value = value.split(", ")
-    } else { 
-      value = [value];
+      return value.split(", ").map(opcion => Enum[opcion]);
+    } else if (typeof value === 'number') {
+      return Object.values(Enum).filter(v => typeof v === "number" && (value & v) === v);
     }
-    return value.map(opcion => Enum[opcion]);
+    return [value];
   },
 
   toEnum<E>(Enum: E, value: any): string {
@@ -17,19 +17,21 @@ export const Enums = {
   },
   
   toEnums<E>(Enum: E, value: any): string[] {
-    let opciones = Object.keys(Enum).filter(key => !isNaN(Number(Enum[key])));
-    opciones.reverse();
-    opciones = opciones.filter(name => {
-      let opcion = Enum[name];
-      return (opcion & value) === opcion;
-    });
-    return opciones;
+    if (typeof value === 'number') {
+      return Object.values(Enum)
+        .filter(v => typeof v === "string" && (Enum[name] & value) === Enum[name]);
+    }
+    return [value.toString()];
   },
 
   toFlags<E>(Enum: E, value: any): number {
-    if (typeof value === "number") {
-      return value;
+    if (typeof value === "string") {
+      return this.toValues(Enum, value).reduce((flags, value) => flags | value, 0);
     }
-    return this.toValues(Enum, value).reduce((flags, value) => flags | value, 0);
+    return Number(value);
+  },
+
+  toString<E>(Enum: E, value: any): string {
+    return this.toEnums(Enum, value).join(", ");
   }
 }
