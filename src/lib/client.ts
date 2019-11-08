@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataEntitySet, ODataProperty, ODataEntityResource } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataEntitySet, ODataProperty, ODataEntityResource, ODataFunctionResource, ODataActionResource } from './resources';
 import { ODataSettings } from './settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE, ODATA_CONTEXT } from './types';
 import { Schema, Parser } from './schema';
@@ -61,14 +61,22 @@ export class ODataClient {
   }
 
   queryForContext(query: ODataResource<any>, attrs: any) {
-    let ctx = attrs[ODATA_CONTEXT] as string;
-    ctx = ctx.substr(ctx.indexOf("#") + 1);
     if (query instanceof ODataEntitySetResource)
       return query.entity(attrs);
-    else if (ctx.startsWith("Collection(") && ctx.endsWith(")")) {
-      let type = ctx.substr(11, ctx.length - 12);
-      let schema = type ? this.schemaForType<any>(type) as Schema<any> : null;
-      return ODataEntityResource.factory<any>(this, {parser: schema});
+    if (query instanceof ODataFunctionResource || query instanceof ODataActionResource) {
+      // It depends on the defined return scheme and context
+      let ctx = attrs[ODATA_CONTEXT] as string;
+      ctx = ctx.substr(ctx.indexOf("#") + 1);
+      if (ctx.startsWith("Collection(") && ctx.endsWith(")")) {
+        let type = ctx.substr(11, ctx.length - 12);
+        let schema = type ? this.schemaForType<any>(type) as Schema<any> : null;
+        return ODataEntityResource.factory<any>(this, {parser: schema});
+      } else if (ctx.endsWith("$entity")) {
+        let parser = query.getParser();
+        let type = parser.type;
+        let eset = ctx.split(/(\w+)/)[1];
+        return this.entitySet(eset, type).entity(attrs);
+      }
     }
     return query.clone<any>();
   }
