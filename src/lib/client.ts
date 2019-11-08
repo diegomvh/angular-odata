@@ -5,7 +5,7 @@ import { map, catchError } from 'rxjs/operators';
 
 import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataEntitySet, ODataProperty, ODataEntityResource, ODataFunctionResource, ODataActionResource } from './resources';
 import { ODataSettings } from './settings';
-import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE, ODATA_CONTEXT } from './types';
+import { ODATA_ETAG, IF_MATCH_HEADER, $COUNT, PlainObject, VALUE, ODATA_CONTEXT, ODATA_TYPE } from './types';
 import { Schema, Parser } from './schema';
 import { ODataModel, ODataModelCollection } from './models';
 
@@ -73,7 +73,9 @@ export class ODataClient {
         return ODataEntityResource.factory<any>(this, {parser: schema});
       } else if (ctx.endsWith("$entity")) {
         let parser = query.getParser();
-        let type = parser.type;
+        let type = (ODATA_TYPE in attrs)? 
+          (attrs[ODATA_TYPE] as string).substr(1) :
+          parser.type;
         let eset = ctx.split(/(\w+)/)[1];
         return this.entitySet(eset, type).entity(attrs);
       }

@@ -3,6 +3,7 @@ export type PlainObject = { [property: string]: any };
 
 // CONSTANTS
 export const ODATA_CONTEXT = '@odata.context';
+export const ODATA_TYPE = '@odata.type';
 export const ODATA_ETAG = '@odata.etag';
 export const ODATA_ID = '@odata.id';
 export const ODATA_COUNT = '@odata.count';
