@@ -175,7 +175,7 @@ export class Schema<Type> implements Parser<Type> {
   }
 
   parser<E>(name: string): Parser<E> {
-    return this.fields[name] as Parser<E>;
+    return this.fields.find(f => f.name === name) as Parser<E>;
   }
 
   resolveKey(attrs: any) {
