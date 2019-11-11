@@ -19,14 +19,14 @@ export const Enums = {
   toEnums<E>(Enum: E, value: any): string[] {
     if (typeof value === 'number') {
       return Object.values(Enum)
-        .filter(v => typeof v === "string" && (Enum[name] & value) === Enum[name]);
+        .filter(e => typeof e === "string" && (Enum[e] & value) === Enum[e]);
     }
     return [value.toString()];
   },
 
   toFlags<E>(Enum: E, value: any): number {
     if (typeof value === "string") {
-      return this.toValues(Enum, value).reduce((flags, value) => flags | value, 0);
+      return this.toValues(Enum, value).reduce((flags, v) => flags | v, 0);
     }
     return Number(value);
   },

@@ -70,15 +70,10 @@ class SchemaField<T> implements Field, Parser<T> {
       query = this.isNavigation ?
         (query as ODataEntityResource<any>).navigationProperty<any>(this.name) :
         (query as ODataEntityResource<any>).property<any>(this.name);
-      value = (Array.isArray(value) && this.isCollection) ?
-        value.map(v => this.schema.parse(v, query.clone<any>())) :
-        this.schema.parse(value, query.clone<any>());
+      value = this.schema.parse(value, query);
       if (this.model) {
-        value = (Array.isArray(value) && this.isCollection) ?
-          value.map(v => new this.model(v, query.clone<any>())) :
-          new this.model(value, query.clone<any>());
-      }
-      if (this.isCollection && this.collection)
+        value = new this.model(value, query.clone<any>());
+      } else if (this.collection)
         value = new this.collection(value, query.clone<any>());
       return value;
     } else if (this.type in PARSERS) {
