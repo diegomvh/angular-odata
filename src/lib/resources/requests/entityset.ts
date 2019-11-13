@@ -78,13 +78,13 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   // Client requests
-  post(body: T, options?: {
+  post(entity: T, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.post(body, {
+    return super.post(this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,

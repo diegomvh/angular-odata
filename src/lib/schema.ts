@@ -23,7 +23,7 @@ export interface Field {
 export interface Parser<T> {
   type: string;
   parse(value: any, query?: ODataResource<any>): T;
-  toJSON(value: T): any;
+  toJSON(value: T | Partial<T>): any;
   parser<E>(name: string): Parser<E>;
   resolveKey(attrs: any);
 }

@@ -41,7 +41,7 @@ export abstract class ODataResource<Type> {
     return this.client.get(this, options as any);
   }
 
-  protected post(body: Type|null, options: {
+  protected post(body: any|null, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
     params?: HttpParams|{[param: string]: string | string[]},
@@ -53,7 +53,7 @@ export abstract class ODataResource<Type> {
     return this.client.post(this, body, options as any);
   }
 
-  protected patch(body: Partial<Type>|null, options: {
+  protected patch(body: any|null, options: {
     etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
@@ -66,7 +66,7 @@ export abstract class ODataResource<Type> {
     return this.client.patch(this, body, options as any);
   }
 
-  protected put(body: Type|null, options: {
+  protected put(body: any|null, options: {
     etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: ODataObserve,
@@ -108,7 +108,7 @@ export abstract class ODataResource<Type> {
     return this.parser.parse(attrs, resource || this.clone()) as Type;
   }
 
-  serialize(obj: Type): any {
+  serialize(obj: Type | Partial<Type>): any {
     return this.parser.toJSON(obj);
   }
 

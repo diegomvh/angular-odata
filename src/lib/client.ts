@@ -411,7 +411,7 @@ export class ODataClient {
   }): Observable<any>;
 
   request(method: string, resource?: ODataResource<any>, options: {
-    body?: any,
+    body?: any | null,
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
@@ -453,16 +453,12 @@ export class ODataClient {
     if (withCredentials === undefined)
       withCredentials = this.settings.withCredentials;
 
-    let toBodyOrNull = (attrs: any): any | null => {
-      if (attrs) 
-        return resource.serialize(attrs);
-      return null;
-    }
     let toEntityOrNull = (body: any): any | null  => {
       if (body)
         return resource.deserialize(body, this.newResourceForContext(resource, body));
       return null;
     }
+
     let toEntitySetOrNull = (body: any): ODataEntitySet<any> | null => {
       if (body != null) {
         body[VALUE] = resource.deserialize(body[VALUE], this.newResourceForContext(resource, body));
@@ -470,6 +466,7 @@ export class ODataClient {
       }
       return null;
     }
+
     let toPropertyOrNull = (body: any): ODataProperty<any> | null => {
       if (body != null) {
         body[VALUE] = resource.deserialize(body[VALUE], this.newResourceForContext(resource, body));
@@ -480,7 +477,7 @@ export class ODataClient {
 
     // Call http request
     let res$ = this.http.request(method, url, {
-      body: toBodyOrNull(options.body),
+      body: options.body,
       headers: headers,
       observe: observe,
       params: params,

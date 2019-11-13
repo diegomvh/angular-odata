@@ -105,13 +105,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  post(body: T, options?: {
+  post(entity: T, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.post(body, {
+    return super.post(this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -121,14 +121,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  put(body: T, options?: {
+  put(entity: T, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.put(body, {
+    return super.put(this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
@@ -139,14 +139,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  patch(body: Partial<T>, options?: {
+  patch(entity: Partial<T>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.patch(body, {
+    return super.patch(this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
