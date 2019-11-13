@@ -31,7 +31,7 @@ export class ODataModel {
   }
 
   toJSON(): PlainObject {
-    return this._query.getParser().toJSON(this as any);
+    return this._query.serialize(this);
   }
 
   clone() {

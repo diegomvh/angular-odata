@@ -60,10 +60,10 @@ export class ODataClient {
     return this.settings.collectionForType(type) as typeof ODataModelCollection;
   }
 
-  queryForContext(query: ODataResource<any>, attrs: any) {
-    if (query instanceof ODataEntitySetResource)
-      return query.entity(attrs);
-    if (query instanceof ODataFunctionResource || query instanceof ODataActionResource) {
+  newResourceForContext(resource: ODataResource<any>, attrs: any) {
+    if (resource instanceof ODataEntitySetResource)
+      return resource.entity(attrs);
+    if (resource instanceof ODataFunctionResource || resource instanceof ODataActionResource) {
       // It depends on the defined return scheme and context
       let ctx = attrs[ODATA_CONTEXT] as string;
       ctx = ctx.substr(ctx.indexOf("#") + 1);
@@ -72,15 +72,14 @@ export class ODataClient {
         let schema = type ? this.schemaForType<any>(type) as Schema<any> : null;
         return ODataEntityResource.factory<any>(this, {parser: schema});
       } else if (ctx.endsWith("$entity")) {
-        let parser = query.getParser();
         let type = (ODATA_TYPE in attrs)? 
           (attrs[ODATA_TYPE] as string).substr(1) :
-          parser.type;
+          resource.type();
         let eset = ctx.split(/(\w+)/)[1];
         return this.entitySet(eset, type).entity(attrs);
       }
     }
-    return query.clone<any>();
+    return resource.clone<any>();
   }
 
   // Requests
@@ -134,13 +133,13 @@ export class ODataClient {
     return base;
   }
 
-  createEndpointUrl(query) {
+  createEndpointUrl(resource) {
     const serviceRoot = this.serviceRoot();
-    return `${serviceRoot}${query.path()}`
+    return `${serviceRoot}${resource.path()}`
   }
 
   // Request headers, get, post, put, patch... etc
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -149,7 +148,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -158,7 +157,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -167,7 +166,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -175,7 +174,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -184,7 +183,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -193,7 +192,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -203,7 +202,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<any>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -213,7 +212,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<any>>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -223,7 +222,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<any>>>;
 
-  request<R>(method: string, req: ODataResource<any>, options: {
+  request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -233,7 +232,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<R>>;
 
-  request<R>(method: string, req: ODataResource<any>, options: {
+  request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -243,7 +242,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<R>>>;
 
-  request<R>(method: string, req: ODataResource<any>, options: {
+  request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -253,7 +252,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<R>>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -262,7 +261,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -271,7 +270,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -280,7 +279,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -290,7 +289,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -300,7 +299,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  request(method: string, req: ODataResource<any>, options: {
+  request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -310,7 +309,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  request<R>(method: string, req: ODataResource<any>, options: {
+  request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -320,7 +319,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<R>>;
 
-  request<R>(method: string, req: ODataResource<any>, options: {
+  request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -330,7 +329,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<R>>>;
 
-  request<R>(method: string, req: ODataResource<any>, options: {
+  request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
@@ -340,7 +339,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<R>>>;
 
-  request(method: string, req: ODataResource<any>, options?: {
+  request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -350,7 +349,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  request(method: string, req: ODataResource<any>, options?: {
+  request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -360,7 +359,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  request(method: string, req: ODataResource<any>, options?: {
+  request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -370,7 +369,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  request<R>(method: string, req: ODataResource<any>, options?: {
+  request<R>(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -380,7 +379,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<R>;
 
-  request<R>(method: string, req: ODataResource<any>, options?: {
+  request<R>(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -390,7 +389,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<R>>;
 
-  request<R>(method: string, req: ODataResource<any>, options?: {
+  request<R>(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -400,7 +399,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<R>>;
 
-  request(method: string, req: ODataResource<any>, options?: {
+  request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -411,7 +410,7 @@ export class ODataClient {
     withCount?: boolean
   }): Observable<any>;
 
-  request(method: string, query?: ODataResource<any>, options: {
+  request(method: string, resource?: ODataResource<any>, options: {
     body?: any,
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -424,7 +423,7 @@ export class ODataClient {
   } = {}): Observable<any> {
 
     // The Url
-    const url = this.createEndpointUrl(query);
+    const url = this.createEndpointUrl(resource);
 
     let observe = <'body' | 'events' | 'response'>options.observe;
 
@@ -440,40 +439,48 @@ export class ODataClient {
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);
 
     // Params
-    let queryParams = query.params();
+    let resourceParams = resource.params();
     let customParams = {};
 
     // With Count ?
     if (options.responseType === 'entityset' && options.withCount)
       customParams[$COUNT] = 'true';
 
-    let params = this.mergeHttpParams(queryParams, options.params, customParams);
+    let params = this.mergeHttpParams(resourceParams, options.params, customParams);
 
     // Credentials ?
     let withCredentials = options.withCredentials;
     if (withCredentials === undefined)
       withCredentials = this.settings.withCredentials;
 
-    // Parser
-    let parser = query.getParser();
-
-    let fromBody = (body: any) => parser.toJSON(body);
-
-    let toEntity = (body: any) => {
-      return parser.parse(body, this.queryForContext(query, body));
+    let toBodyOrNull = (attrs: any): any | null => {
+      if (attrs) 
+        return resource.serialize(attrs);
+      return null;
     }
-    let toEntitySet = (body: any) => {
-      body[VALUE] = parser.parse(body[VALUE], this.queryForContext(query, body));
-      return new ODataEntitySet<any>(body);
+    let toEntityOrNull = (body: any): any | null  => {
+      if (body)
+        return resource.deserialize(body, this.newResourceForContext(resource, body));
+      return null;
     }
-    let toProperty = (body: any) => {
-      body[VALUE] = parser.parse(body[VALUE], this.queryForContext(query, body));
-      return new ODataProperty<any>(body);
+    let toEntitySetOrNull = (body: any): ODataEntitySet<any> | null => {
+      if (body != null) {
+        body[VALUE] = resource.deserialize(body[VALUE], this.newResourceForContext(resource, body));
+        return new ODataEntitySet<any>(body);
+      }
+      return null;
+    }
+    let toPropertyOrNull = (body: any): ODataProperty<any> | null => {
+      if (body != null) {
+        body[VALUE] = resource.deserialize(body[VALUE], this.newResourceForContext(resource, body));
+        return new ODataProperty<any>(body);
+      }
+      return null;
     }
 
     // Call http request
     let res$ = this.http.request(method, url, {
-      body: options.body && fromBody(options.body) || options.body,
+      body: toBodyOrNull(options.body),
       headers: headers,
       observe: observe,
       params: params,
@@ -494,17 +501,17 @@ export class ODataClient {
       case 'body':
         switch (options.responseType) {
           case 'entity':
-            return res$.pipe(map((body: any) => body && toEntity(body) || body));
+            return res$.pipe(map((body: any) => toEntityOrNull(body)));
           case 'entityset':
-            return res$.pipe(map((body: any) => body && toEntitySet(body) || body));
+            return res$.pipe(map((body: any) => toEntitySetOrNull(body)));
           case 'property':
-            return res$.pipe(map((body: any) => body && toProperty(body) || body));
+            return res$.pipe(map((body: any) => toPropertyOrNull(body)));
         }
       case 'response':
         switch (options.responseType) {
           case 'entity':
             return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: res.body && toEntity(res.body) || res.body,
+              body: toEntityOrNull(res.body),
               headers: res.headers,
               status: res.status,
               statusText: res.statusText,
@@ -513,7 +520,7 @@ export class ODataClient {
             ));
           case 'entityset':
             return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: res.body && toEntitySet(res.body) || res.body,
+              body: toEntitySetOrNull(res.body),
               headers: res.headers,
               status: res.status,
               statusText: res.statusText,
@@ -522,7 +529,7 @@ export class ODataClient {
             ));
           case 'property':
             return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: res.body && toProperty(res.body) || res.body,
+              body: toPropertyOrNull(res.body),
               headers: res.headers,
               status: res.status,
               statusText: res.statusText,
@@ -534,7 +541,7 @@ export class ODataClient {
     return res$;
   }
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -543,7 +550,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -552,7 +559,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -561,7 +568,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -570,7 +577,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -579,7 +586,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -588,7 +595,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -598,7 +605,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -608,7 +615,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -618,7 +625,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -628,7 +635,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -638,7 +645,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<T>>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -648,7 +655,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<T>>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -657,7 +664,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -666,7 +673,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -675,7 +682,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -685,7 +692,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -695,7 +702,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -705,7 +712,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -715,7 +722,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -725,7 +732,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<T>>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -735,7 +742,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<T>>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -745,7 +752,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -755,7 +762,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  delete(req: ODataResource<any>, options?: {
+  delete(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -765,7 +772,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -775,7 +782,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -785,7 +792,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<T>>;
 
-  delete<T>(req: ODataResource<any>, options?: {
+  delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -795,7 +802,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  delete(req: ODataResource<any>, options: {
+  delete(resource: ODataResource<any>, options: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
@@ -804,10 +811,10 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('DELETE', req, options as any);
+    return this.request<any>('DELETE', resource, options as any);
   }
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -815,7 +822,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -823,7 +830,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -831,7 +838,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -839,7 +846,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -847,7 +854,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -855,7 +862,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -864,7 +871,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -873,7 +880,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -882,7 +889,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  get<T>(req: ODataResource<any>, options: {
+  get<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -891,7 +898,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
 
-  get<T>(req: ODataResource<any>, options: {
+  get<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -900,7 +907,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<T>>>;
 
-  get<T>(req: ODataResource<any>, options: {
+  get<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -909,7 +916,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<T>>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -917,7 +924,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -925,7 +932,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -933,7 +940,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -942,7 +949,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -951,7 +958,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -960,7 +967,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  get<T>(req: ODataResource<any>, options: {
+  get<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -969,7 +976,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
 
-  get<T>(req: ODataResource<any>, options: {
+  get<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -978,7 +985,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<T>>>;
 
-  get<T>(req: ODataResource<any>, options: {
+  get<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -987,7 +994,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<T>>>;
 
-  get(req: ODataResource<any>, options?: {
+  get(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -996,7 +1003,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  get(req: ODataResource<any>, options?: {
+  get(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1005,7 +1012,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  get(req: ODataResource<any>, options?: {
+  get(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1014,7 +1021,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  get<T>(req: ODataResource<any>, options?: {
+  get<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1023,7 +1030,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  get<T>(req: ODataResource<any>, options?: {
+  get<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1032,7 +1039,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<T>>;
 
-  get<T>(req: ODataResource<any>, options?: {
+  get<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1041,7 +1048,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  get(req: ODataResource<any>, options: {
+  get(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1049,10 +1056,10 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('GET', req, options as any);
+    return this.request<any>('GET', resource, options as any);
   }
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1060,7 +1067,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1068,7 +1075,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1076,7 +1083,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1084,7 +1091,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1092,7 +1099,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1100,7 +1107,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1109,7 +1116,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1118,7 +1125,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1127,7 +1134,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  head<T>(req: ODataResource<any>, options: {
+  head<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1136,7 +1143,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
 
-  head<T>(req: ODataResource<any>, options: {
+  head<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1145,7 +1152,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<T>>>;
 
-  head<T>(req: ODataResource<any>, options: {
+  head<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1154,7 +1161,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<T>>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1162,7 +1169,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1170,7 +1177,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1178,7 +1185,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1187,7 +1194,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1196,7 +1203,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1205,7 +1212,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  head<T>(req: ODataResource<any>, options: {
+  head<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1214,7 +1221,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
 
-  head<T>(req: ODataResource<any>, options: {
+  head<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1223,7 +1230,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<T>>>;
 
-  head<T>(req: ODataResource<any>, options: {
+  head<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1232,7 +1239,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<T>>>;
 
-  head(req: ODataResource<any>, options?: {
+  head(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1241,7 +1248,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  head(req: ODataResource<any>, options?: {
+  head(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1250,7 +1257,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  head(req: ODataResource<any>, options?: {
+  head(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1259,7 +1266,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  head<T>(req: ODataResource<any>, options?: {
+  head<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1268,7 +1275,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  head<T>(req: ODataResource<any>, options?: {
+  head<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1277,7 +1284,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<T>>;
 
-  head<T>(req: ODataResource<any>, options?: {
+  head<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1286,7 +1293,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  head(req: ODataResource<any>, options: {
+  head(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1294,22 +1301,22 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('HEAD', req, options as any);
+    return this.request<any>('HEAD', resource, options as any);
   }
 
-  jsonp(req: ODataResource<any>, callbackParam: string): Observable<Object>;
+  jsonp(resource: ODataResource<any>, callbackParam: string): Observable<Object>;
 
-  jsonp<T>(req: ODataResource<any>, callbackParam: string): Observable<T>;
+  jsonp<T>(resource: ODataResource<any>, callbackParam: string): Observable<T>;
 
-  jsonp<T>(req: ODataResource<any>, callbackParam: string): Observable<T> {
-    return this.request<any>('JSONP', req, {
+  jsonp<T>(resource: ODataResource<any>, callbackParam: string): Observable<T> {
+    return this.request<any>('JSONP', resource, {
       params: new HttpParams().append(callbackParam, 'JSONP_CALLBACK'),
       observe: 'body',
       responseType: 'json',
     });
   }
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1317,7 +1324,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1325,7 +1332,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1333,7 +1340,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1341,7 +1348,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1349,7 +1356,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1357,7 +1364,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1366,7 +1373,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1375,7 +1382,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1384,7 +1391,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1393,7 +1400,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1402,7 +1409,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1411,7 +1418,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  options<T>(req: ODataResource<any>, options: {
+  options<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1420,7 +1427,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
 
-  options<T>(req: ODataResource<any>, options: {
+  options<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1429,7 +1436,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<T>>>;
 
-  options<T>(req: ODataResource<any>, options: {
+  options<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1438,7 +1445,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<T>>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1446,7 +1453,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1454,7 +1461,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1462,7 +1469,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1471,7 +1478,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1480,7 +1487,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1489,7 +1496,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  options<T>(req: ODataResource<any>, options: {
+  options<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1498,7 +1505,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
 
-  options<T>(req: ODataResource<any>, options: {
+  options<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1507,7 +1514,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<T>>>;
 
-  options<T>(req: ODataResource<any>, options: {
+  options<T>(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1516,7 +1523,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<T>>>;
 
-  options(req: ODataResource<any>, options?: {
+  options(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1525,7 +1532,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  options(req: ODataResource<any>, options?: {
+  options(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1534,7 +1541,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  options(req: ODataResource<any>, options?: {
+  options(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1543,7 +1550,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  options<T>(req: ODataResource<any>, options?: {
+  options<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1552,7 +1559,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  options<T>(req: ODataResource<any>, options?: {
+  options<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1561,7 +1568,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<T>>;
 
-  options<T>(req: ODataResource<any>, options?: {
+  options<T>(resource: ODataResource<any>, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1570,7 +1577,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  options(req: ODataResource<any>, options: {
+  options(resource: ODataResource<any>, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1578,10 +1585,10 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('OPTIONS', req, options as any);
+    return this.request<any>('OPTIONS', resource, options as any);
   }
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1590,7 +1597,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1599,7 +1606,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1608,7 +1615,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1617,7 +1624,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1626,7 +1633,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1635,7 +1642,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1645,7 +1652,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1655,7 +1662,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1665,7 +1672,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1675,7 +1682,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1685,7 +1692,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<T>>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -1695,7 +1702,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<T>>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1704,7 +1711,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1713,7 +1720,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1722,7 +1729,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1732,7 +1739,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1742,7 +1749,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1752,7 +1759,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1762,7 +1769,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1772,7 +1779,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<T>>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -1782,7 +1789,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<T>>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1792,7 +1799,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1802,7 +1809,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  patch(req: ODataResource<any>, body: any | null, options?: {
+  patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1812,7 +1819,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1822,7 +1829,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1832,7 +1839,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<T>>;
 
-  patch<T>(req: ODataResource<any>, body: any | null, options?: {
+  patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -1842,7 +1849,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  patch(req: ODataResource<any>, body: any | null, options: {
+  patch(resource: ODataResource<any>, body: any | null, options: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
@@ -1851,10 +1858,10 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PATCH', req, addBody(options, body));
+    return this.request<any>('PATCH', resource, addBody(options, body));
   }
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1862,7 +1869,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1870,7 +1877,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1878,7 +1885,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1886,7 +1893,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1894,7 +1901,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1902,7 +1909,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1911,7 +1918,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1920,7 +1927,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1929,7 +1936,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options: {
+  post<T>(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1938,7 +1945,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options: {
+  post<T>(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1947,7 +1954,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<T>>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options: {
+  post<T>(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1956,7 +1963,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<T>>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1964,7 +1971,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1972,7 +1979,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1980,7 +1987,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1989,7 +1996,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1998,7 +2005,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2007,7 +2014,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options: {
+  post<T>(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2016,7 +2023,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options: {
+  post<T>(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2025,7 +2032,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<T>>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options: {
+  post<T>(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2034,7 +2041,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<T>>>;
 
-  post(req: ODataResource<any>, body: any | null, options?: {
+  post(resource: ODataResource<any>, body: any | null, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2043,7 +2050,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  post(req: ODataResource<any>, body: any | null, options?: {
+  post(resource: ODataResource<any>, body: any | null, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2052,7 +2059,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  post(req: ODataResource<any>, body: any | null, options?: {
+  post(resource: ODataResource<any>, body: any | null, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2061,7 +2068,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options?: {
+  post<T>(resource: ODataResource<any>, body: any | null, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2070,7 +2077,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options?: {
+  post<T>(resource: ODataResource<any>, body: any | null, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2079,7 +2086,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<T>>;
 
-  post<T>(req: ODataResource<any>, body: any | null, options?: {
+  post<T>(resource: ODataResource<any>, body: any | null, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2088,7 +2095,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  post(req: ODataResource<any>, body: any | null, options: {
+  post(resource: ODataResource<any>, body: any | null, options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2096,10 +2103,10 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('POST', req, addBody(options, body));
+    return this.request<any>('POST', resource, addBody(options, body));
   }
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2108,7 +2115,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2117,7 +2124,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<Blob>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2126,7 +2133,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<string>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2135,7 +2142,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2144,7 +2151,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2153,7 +2160,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2163,7 +2170,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<Object>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2173,7 +2180,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<Object>>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2183,7 +2190,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<Object>>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2193,7 +2200,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpEvent<T>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2202,7 +2209,7 @@ export class ODataClient {
     responseType?: 'entityset', withCredentials?: boolean,
   }): Observable<HttpEvent<ODataEntitySet<T>>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
@@ -2211,7 +2218,7 @@ export class ODataClient {
     responseType?: 'property', withCredentials?: boolean,
   }): Observable<HttpEvent<ODataProperty<T>>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2220,7 +2227,7 @@ export class ODataClient {
     responseType: 'arraybuffer', withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2229,7 +2236,7 @@ export class ODataClient {
     responseType: 'blob', withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2238,7 +2245,7 @@ export class ODataClient {
     responseType: 'text', withCredentials?: boolean,
   }): Observable<HttpResponse<string>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2248,7 +2255,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<Object>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2258,7 +2265,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<Object>>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2268,7 +2275,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<Object>>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2278,7 +2285,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<T>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2288,7 +2295,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataEntitySet<T>>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
@@ -2298,7 +2305,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<HttpResponse<ODataProperty<T>>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2308,7 +2315,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2318,7 +2325,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<Object>>;
 
-  put(req: ODataResource<any>, body: any | null, options?: {
+  put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2328,7 +2335,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<Object>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -2337,7 +2344,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<T>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2347,7 +2354,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataEntitySet<T>>;
 
-  put<T>(req: ODataResource<any>, body: any | null, options?: {
+  put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
@@ -2357,7 +2364,7 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataProperty<T>>;
 
-  put(req: ODataResource<any>, body: any | null, options: {
+  put(resource: ODataResource<any>, body: any | null, options: {
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: ODataObserve,
@@ -2366,6 +2373,6 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'entity' | 'entityset' | 'property',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PUT', req, addBody(options, body));
+    return this.request<any>('PUT', resource, addBody(options, body));
   }
 }

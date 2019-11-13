@@ -92,6 +92,10 @@ export abstract class ODataResource<Type> {
     return this.client.delete(this, options as any);
   }
 
+  type(): string {
+    return this.parser.type;
+  }
+
   path(): string {
     return this.segments.path();
   }
@@ -100,16 +104,12 @@ export abstract class ODataResource<Type> {
     return this.options.params();
   }
 
-  getParser(): Parser<Type> {
-    return this.parser;
+  deserialize(attrs: any, resource?: ODataResource<any>): Type {
+    return this.parser.parse(attrs, resource || this.clone()) as Type;
   }
 
   serialize(obj: Type): any {
-    return obj ? this.parser.toJSON(obj) : obj as any;
-  }
-
-  deserialize(attrs: any): Type {
-    return attrs ? this.parser.parse(attrs, this.clone()) : attrs as Type;
+    return this.parser.toJSON(obj);
   }
 
   toString(): string {
