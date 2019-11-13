@@ -116,7 +116,8 @@ class SchemaField<T> implements Field, Parser<T> {
 
 export class Schema<Type> implements Parser<Type> {
   type: string;
-  private fields: SchemaField<any>[];
+  fields: SchemaField<any>[];
+  get keys() { return this.fields.filter(f => f.isKey); }
   model?: { new(...any): any };
 
   constructor(fields?: { [name: string]: Field }) {
@@ -179,12 +180,10 @@ export class Schema<Type> implements Parser<Type> {
   }
 
   resolveKey(attrs: any) {
-    let keys = this.fields
-      .filter(f => f.isKey)
-      .map(f => [f.name, f.resolve(attrs)]);
-    let key = keys.length === 1 ?
-      keys[0][1] :
-      keys.reduce((acc, key) => Object.assign(acc, { [key[0]]: key[1] }), {});
+    let key = this.keys
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {});
+    if (Object.keys(key).length === 1)
+      key = Object.values(key)[0];
     if (!Types.isEmpty(key))
       return key;
   }
