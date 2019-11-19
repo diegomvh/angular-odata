@@ -106,11 +106,11 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     if (options && options.withCount)
       params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
 
-    let res$ = super.get({
+    let res$ = this.client.get<T>(this, {
       headers: options.headers,
       observe: 'body',
       params: options.params,
-      responseType: options.responseType,
+      responseType: 'json',
       reportProgress: options.reportProgress,
       withCredentials: options.withCredentials
     });
@@ -131,7 +131,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.post(this.serialize(entity), {
+    return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -148,7 +148,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.put(this.serialize(entity), {
+    return this.client.put<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
@@ -166,7 +166,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.patch(this.serialize(entity), {
+    return this.client.patch<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
@@ -184,7 +184,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.delete({
+    return this.client.delete<T>(this, {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',

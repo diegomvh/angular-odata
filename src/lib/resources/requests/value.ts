@@ -31,7 +31,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
   }): Observable<T> {
-    return super.get({
+    return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,

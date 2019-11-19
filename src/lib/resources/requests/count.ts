@@ -30,7 +30,7 @@ export class ODataCountResource extends ODataResource<number> {
     reportProgress?: boolean,
     withCredentials?: boolean,
   }): Observable<number> {
-    return super.get({
+    return this.client.get<number>(this, {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,

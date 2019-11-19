@@ -10,6 +10,7 @@ import { PlainObject, $COUNT } from '../../types';
 import { Schema, Parser } from '../../schema';
 import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
+import { ODataEntityResource } from './entity';
 
 export class ODataFunctionResource<T> extends ODataResource<T> {
 
@@ -26,6 +27,11 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     segments.segment(Segments.functionCall, name);
     options.keep(Options.format);
     return new ODataFunctionResource<R>(service, segments, options, parser);
+  }
+
+  deserialize(body: any): T {
+    let query = ODataEntityResource.factory(this.client, {parser: this.parser});
+    return this.parser.parse(body, query) as T;
   }
 
   // Parameters
@@ -71,11 +77,11 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     if (options && options.withCount)
       params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
 
-    let res$ = super.get({
+    let res$ = this.client.get<T>(this,{
       headers: options.headers,
       observe: 'body',
       params: params,
-      responseType: options.responseType,
+      responseType: 'json',
       reportProgress: options.reportProgress,
       withCredentials: options.withCredentials
     });

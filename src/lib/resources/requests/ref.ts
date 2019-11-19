@@ -34,7 +34,7 @@ export class ODataRefResource extends ODataResource<any> {
     withCredentials?: boolean
   }): Observable<any> {
     let related = this.client.createEndpointUrl(target);
-    return super.post({[ODATA_ID]: related}, {
+    return this.client.post(this, {[ODATA_ID]: related}, {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -52,7 +52,7 @@ export class ODataRefResource extends ODataResource<any> {
     withCredentials?: boolean
   }): Observable<any> {
     let related = this.client.createEndpointUrl(target);
-    return super.put({[ODATA_ID]: related}, {
+    return this.client.put(this, {[ODATA_ID]: related}, {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
@@ -75,7 +75,7 @@ export class ODataRefResource extends ODataResource<any> {
       let related = this.client.createEndpointUrl(options.target);
       this.custom({[$ID]: related});
     }
-    return super.delete({
+    return this.client.delete(this, {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',

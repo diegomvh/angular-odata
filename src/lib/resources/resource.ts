@@ -30,7 +30,7 @@ export abstract class ODataResource<Type> {
   }
 
   // Client Requests
-  protected get(options: {
+  protected _get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams|{[param: string]: string | string[]},
@@ -41,7 +41,7 @@ export abstract class ODataResource<Type> {
     return this.client.get(this, options as any);
   }
 
-  protected post(body: any|null, options: {
+  protected _post(body: any|null, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams|{[param: string]: string | string[]},
@@ -52,7 +52,7 @@ export abstract class ODataResource<Type> {
     return this.client.post(this, body, options as any);
   }
 
-  protected patch(body: any|null, options: {
+  protected _patch(body: any|null, options: {
     etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body' | 'events' | 'response',
@@ -64,7 +64,7 @@ export abstract class ODataResource<Type> {
     return this.client.patch(this, body, options as any);
   }
 
-  protected put(body: any|null, options: {
+  protected _put(body: any|null, options: {
     etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body' | 'events' | 'response',
@@ -76,7 +76,7 @@ export abstract class ODataResource<Type> {
     return this.client.put(this, body, options as any);
   }
 
-  protected delete(options: {
+  protected _delete(options: {
     etag?: string, 
     headers?: HttpHeaders | {[header: string]: string | string[]},
     observe?: 'body' | 'events' | 'response',
@@ -104,17 +104,21 @@ export abstract class ODataResource<Type> {
     return this.parser.toJSON(obj);
   }
 
-  deserializeSingle(body: any, resource?: ODataResource<any>): Type {
-    return this.parser.parse(body, resource || this.clone()) as Type;
+  deserialize(body: any): Type {
+    return this.parser.parse(body, this.clone()) as Type;
   }
 
-  deserializeCollection(body: any, resource?: ODataResource<any>): ODataCollection<Type> {
-    body[VALUE] = this.parser.parse(body[VALUE], resource || this.clone()) as Type;
+  deserializeSingle(body: any): Type {
+    return this.deserialize(body);
+  }
+
+  deserializeCollection(body: any): ODataCollection<Type> {
+    body[VALUE] = this.deserialize(body[VALUE]);
     return new ODataCollection<any>(body);
   }
 
-  deserializeValue(body: any, resource?: ODataResource<any>): ODataValue<Type> {
-    body[VALUE] = this.parser.parse(body[VALUE], resource || this.clone()) as Type;
+  deserializeValue(body: any): ODataValue<Type> {
+    body[VALUE] = this.deserialize(body[VALUE]);
     return new ODataValue<any>(body);
   }
 
@@ -156,4 +160,3 @@ export abstract class ODataResource<Type> {
     return this.segments.last().type === type;
   }
 }
-

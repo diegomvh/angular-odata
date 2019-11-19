@@ -52,7 +52,7 @@ export class ODataClient {
     return this.settings.collectionForType(type) as typeof ODataModelCollection;
   }
 
-  newResourceForContext(resource: ODataResource<any>, attrs: any) {
+  _newResourceForContext(resource: ODataResource<any>, attrs: any) {
     if (resource instanceof ODataEntitySetResource)
       return resource.entity(attrs);
     if (resource instanceof ODataFunctionResource || resource instanceof ODataActionResource) {
@@ -1865,6 +1865,7 @@ export class ODataClient {
   }): Observable<Object>;
 
   put<T>(resource: ODataResource<any>, body: any | null, options?: {
+    etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },

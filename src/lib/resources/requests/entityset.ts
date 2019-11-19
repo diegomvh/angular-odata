@@ -33,6 +33,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return new ODataEntitySetResource<E>(service, segments, options, parser);
   }
 
+  deserialize(body: any): T {
+    return this.parser.parse(body, this.entity()) as T;
+  }
+
   // Segments
   entity(key?: EntityKey) {
     let entity = ODataEntityResource.factory<T>(
@@ -83,7 +87,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.post(this.serialize(entity), {
+    return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -105,7 +109,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     if (options && options.withCount)
       params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
 
-    return super.get({
+    return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
       params: params,

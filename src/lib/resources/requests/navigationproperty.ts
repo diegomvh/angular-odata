@@ -125,11 +125,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     if (options && options.withCount)
       params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
 
-    let res$ = super.get({
+    let res$ = this.client.get<T>(this, {
       headers: options.headers,
       observe: 'body',
       params: params,
-      responseType: options.responseType,
+      responseType: 'json',
       reportProgress: options.reportProgress,
       withCredentials: options.withCredentials
     });

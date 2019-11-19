@@ -96,7 +96,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
   }): Observable<T> {
-    return super.get({
+    return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -112,7 +112,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.post(this.serialize(entity), {
+    return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
@@ -129,7 +129,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.put(this.serialize(entity), {
+    return this.client.put<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
@@ -147,7 +147,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.patch(this.serialize(entity), {
+    return this.client.patch<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',
@@ -165,7 +165,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
   }): Observable<T> {
-    return super.delete({
+    return this.client.delete<T>(this, {
       etag: options && options.etag,
       headers: options && options.headers,
       observe: 'body',

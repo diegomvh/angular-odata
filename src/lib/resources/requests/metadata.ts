@@ -32,7 +32,7 @@ export class ODataMetadataResource extends ODataResource<any> {
     reportProgress?: boolean,
     withCredentials?: boolean,
   }): Observable<ODataMetadata> {
-    return super.get({
+    return this.client.get(this, {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
