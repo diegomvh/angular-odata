@@ -13,6 +13,7 @@ import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Schema, Parser } from '../../schema';
+import { map } from 'rxjs/operators';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -99,10 +100,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    });
+    }).pipe(map(body => this.deserializeSingle(body)));
   }
 
   post(entity: T, options?: {
@@ -115,10 +116,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    });
+    }).pipe(map(body => this.deserializeSingle(body)));
   }
 
   put(entity: T, options?: {
@@ -133,10 +134,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    });
+    }).pipe(map(body => this.deserializeSingle(body)));
   }
 
   patch(entity: Partial<T>, options?: {
@@ -151,10 +152,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    });
+    }).pipe(map(body => this.deserializeSingle(body)));
   }
 
   delete(options?: {
@@ -169,7 +170,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });

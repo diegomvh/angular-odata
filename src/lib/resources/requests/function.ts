@@ -6,9 +6,10 @@ import { ODataCollection } from '../responses/collection';
 import { ODataSegments, Segments } from '../segments';
 import { ODataOptions, Options } from '../options';
 import { ODataClient } from '../../client';
-import { PlainObject } from '../../types';
+import { PlainObject, $COUNT } from '../../types';
 import { Schema, Parser } from '../../schema';
 import { ODataValue } from '../responses';
+import { map } from 'rxjs/operators';
 
 export class ODataFunctionResource<T> extends ODataResource<T> {
 
@@ -65,14 +66,27 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<any> {
-    return super.get({
+
+    let params = options && options.params;
+    if (options && options.withCount)
+      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
+
+    let res$ = super.get({
       headers: options.headers,
       observe: 'body',
-      params: options.params,
+      params: params,
       responseType: options.responseType,
       reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials,
-      withCount: options.withCount
+      withCredentials: options.withCredentials
     });
+    switch (options.responseType) {
+      case 'entity':
+        return res$.pipe(map((body: any) => this.deserializeSingle(body)));
+      case 'entityset':
+        return res$.pipe(map((body: any) => this.deserializeCollection(body)));
+      case 'property':
+        return res$.pipe(map((body: any) => this.deserializeValue(body)));
+    }
+    return res$;
   }
 }

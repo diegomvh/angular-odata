@@ -7,7 +7,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, empty } from 'rxjs';
-import { EntityKey, PlainObject } from '../../types';
+import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { Schema, Parser } from '../../schema';
@@ -120,15 +120,26 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<any> {
-    return super.get({
+
+    let params = options && options.params;
+    if (options && options.withCount)
+      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
+
+    let res$ = super.get({
       headers: options.headers,
       observe: 'body',
-      params: options.params,
+      params: params,
       responseType: options.responseType,
       reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials,
-      withCount: options.withCount
+      withCredentials: options.withCredentials
     });
+    switch (options.responseType) {
+      case 'entity':
+        return res$.pipe(map((body: any) => this.deserializeSingle(body)));
+      case 'entityset':
+        return res$.pipe(map((body: any) => this.deserializeCollection(body)));
+    }
+    return res$;
   }
 
   // Options
@@ -188,8 +199,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<T> {
-    let query = this.clone<T>() as ODataNavigationPropertyResource<T>;
-    return query
+    return this
       .get({ 
         headers: options && options.headers,
         params: options && options.params,
@@ -199,26 +209,20 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   collection(options?: {
-    size?: number,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<ODataCollection<T>> {
-    let query = this.clone<T>() as ODataNavigationPropertyResource<T>;
-    let size = options && options.size || this.client.maxSize;
-    if (size)
-      query.top(size);
-    return query
+    return this
       .get({ 
         headers: options && options.headers,
         params: options && options.params,
         reportProgress: options && options.reportProgress,
         responseType: 'entityset', 
         withCredentials: options && options.reportProgress,
-        withCount: true })
-      .pipe(map(entityset => new ODataCollection<T>(entityset)));
+        withCount: true });
   }
 
   all(options?: {

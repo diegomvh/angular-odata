@@ -38,7 +38,7 @@ export class ODataRefResource extends ODataResource<any> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });
@@ -57,7 +57,7 @@ export class ODataRefResource extends ODataResource<any> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });
@@ -80,7 +80,7 @@ export class ODataRefResource extends ODataResource<any> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });

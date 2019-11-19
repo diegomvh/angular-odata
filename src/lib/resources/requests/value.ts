@@ -7,6 +7,7 @@ import { ODataOptions } from '../options';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
 import { Schema, Parser } from '../../schema';
+import { map } from 'rxjs/operators';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   // Factory
@@ -37,7 +38,6 @@ export class ODataValueResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    });
+    }).pipe(map(body => this.deserializeSingle(body)));
   }
-
 }

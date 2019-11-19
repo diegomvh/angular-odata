@@ -9,6 +9,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
 import { Schema, Parser } from '../../schema';
 import { ODataValue } from '../responses';
+import { map } from 'rxjs/operators';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -57,9 +58,9 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'property',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    });
+    }).pipe(map(body => this.deserializeValue(body)));
   }
 }

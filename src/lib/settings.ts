@@ -11,7 +11,6 @@ export interface ODataConfig {
   metadataUrl?: string,
   withCredentials?: boolean,
   stringAsEnum?: boolean,
-  maxSize?: number,
   creation?: Date,
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
@@ -26,7 +25,6 @@ export class ODataSettings {
   metadataUrl?: string;
   withCredentials?: boolean;
   stringAsEnum?: boolean;
-  maxSize?: number;
   creation?: Date;
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
@@ -40,7 +38,6 @@ export class ODataSettings {
     this.metadataUrl = config.metadataUrl || `${config.baseUrl}$metadata`;
     this.withCredentials = config.withCredentials || false;
     this.stringAsEnum = config.stringAsEnum || false;
-    this.maxSize = config.maxSize;
     this.creation = config.creation || new Date();
     this.errorHandler = config.errorHandler || null;
 

@@ -10,7 +10,7 @@ import { ODataFunctionResource } from './function';
 import { ODataOptions } from '../options';
 import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
-import { EntityKey, PlainObject } from '../../types';
+import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataResource } from '../resource';
 import { Schema, Parser } from '../../schema';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
@@ -87,10 +87,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       headers: options && options.headers,
       observe: 'body',
       params: options && options.params,
-      responseType: 'entity',
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    });
+    }).pipe(map(body => this.deserializeSingle(body)));
   }
 
   get(options?: {
@@ -100,15 +100,19 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     withCredentials?: boolean
     withCount?: boolean
   }): Observable<ODataCollection<T>> {
+
+    let params = options && options.params;
+    if (options && options.withCount)
+      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
+
     return super.get({
       headers: options && options.headers,
       observe: 'body',
-      params: options && options.params,
-      responseType: 'entityset',
+      params: params,
+      responseType: 'json',
       reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials,
-      withCount: options && options.withCount
-    });
+      withCredentials: options && options.withCredentials
+    }).pipe(map(body => this.deserializeCollection(body)));
   }
 
   // Options
@@ -162,17 +166,16 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   // Custom
   all(): Observable<T[]> {
-    let query = this.clone<T>() as ODataEntitySetResource<T>;
     let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
       if (options) {
         if (options.skiptoken)
-          query.skiptoken(options.skiptoken);
+          this.skiptoken(options.skiptoken);
         else if (options.skip)
-          query.skip(options.skip);
+          this.skip(options.skip);
         if (options.top)
-          query.top(options.top);
+          this.top(options.top);
       }
-      return query.get();
+      return this.get();
     }
     return fetch()
       .pipe(
