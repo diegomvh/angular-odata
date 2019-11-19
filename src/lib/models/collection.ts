@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataEntitySet, ODataCollection } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataCollection } from '../resources';
 
 import { ODataModel } from './model';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
@@ -50,22 +50,22 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
   }
 
-  assign(collection: ODataCollection<any>, query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
-    this.setState(collection.state);
-    this._models = collection.entities;
+  assign(collection: ODataCollection<any>, query: ODataEntitySetResource<any>) {
+    this.setState({records: collection.count, size: collection.skip});
+    this._models = collection.value;
     this._query = query;
     return this;
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any> = this._query.clone<any>() as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>;
+    let query: ODataEntitySetResource<any> = this._query.clone<any>() as ODataEntitySetResource<any>;
     if (!this._state.page)
       this._state.page = 1;
     if (this._state.size) {
       query.top(this._state.size);
       query.skip(this._state.size * (this._state.page - 1));
     }
-    return query.collection()
+    return query.get()
       .pipe(
         map(col => col ? this.assign(col, query) : this)
       );

@@ -13,8 +13,7 @@ import { ODataPropertyResource } from './property';
 import { Schema, Parser } from '../../schema';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollection } from '../responses/collection';
-import { ODataEntitySet } from '../responses';
+import { ODataCollection } from '../responses';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -111,7 +110,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataEntitySet<T>>;
+  }): Observable<ODataCollection<T>>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -219,7 +218,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         responseType: 'entityset', 
         withCredentials: options && options.reportProgress,
         withCount: true })
-      .pipe(map(entityset => new ODataCollection<T>(entityset, query)));
+      .pipe(map(entityset => new ODataCollection<T>(entityset)));
   }
 
   all(options?: {
@@ -248,8 +247,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
-        concatMap((resp: ODataEntitySet<T>) => resp.value),
+        expand((resp: ODataCollection<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
+        concatMap((resp: ODataCollection<T>) => resp.value),
         toArray());
   }
 }

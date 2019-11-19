@@ -2,13 +2,13 @@ import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataEntitySet } from '../responses/entityset';
+import { ODataCollection } from '../responses/collection';
 import { ODataSegments, Segments } from '../segments';
 import { ODataOptions, Options } from '../options';
 import { ODataClient } from '../../client';
 import { PlainObject } from '../../types';
 import { Schema, Parser } from '../../schema';
-import { ODataProperty } from '../responses';
+import { ODataValue } from '../responses';
 
 export class ODataFunctionResource<T> extends ODataResource<T> {
 
@@ -47,7 +47,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataEntitySet<T>>;
+  }): Observable<ODataCollection<T>>;
 
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -55,7 +55,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'property',
     withCredentials?: boolean,
-  }): Observable<ODataProperty<T>>;
+  }): Observable<ODataValue<T>>;
 
   get(options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

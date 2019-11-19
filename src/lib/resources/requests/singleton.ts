@@ -13,7 +13,7 @@ import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { Schema, Parser } from '../../schema';
-import { ODataEntitySet } from '../responses';
+import { ODataCollection } from '../responses';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -90,7 +90,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataEntitySet<T>>;
+  }): Observable<ODataCollection<T>>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },

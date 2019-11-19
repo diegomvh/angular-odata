@@ -14,8 +14,7 @@ import { EntityKey, PlainObject } from '../../types';
 import { ODataResource } from '../resource';
 import { Schema, Parser } from '../../schema';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollection } from '../responses/collection';
-import { ODataEntitySet } from '../responses';
+import { ODataCollection } from '../responses';
 import { Types } from '../../utils';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
@@ -100,7 +99,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
     withCount?: boolean
-  }): Observable<ODataEntitySet<T>> {
+  }): Observable<ODataCollection<T>> {
     return super.get({
       headers: options && options.headers,
       observe: 'body',
@@ -177,18 +176,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand((resp: ODataEntitySet<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
-        concatMap((resp: ODataEntitySet<T>) => resp.value),
+        expand((resp: ODataCollection<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
+        concatMap((resp: ODataCollection<T>) => resp.value),
         toArray());
-  }
-
-  collection(size?: number): Observable<ODataCollection<T>> {
-    let query = this.clone<T>() as ODataEntitySetResource<T>;
-    size = size || this.client.maxSize;
-    if (size)
-      query.top(size);
-    return query
-      .get({ withCount: true })
-      .pipe(map(entityset => new ODataCollection<T>(entityset, query)));
   }
 }

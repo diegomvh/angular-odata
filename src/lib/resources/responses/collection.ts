@@ -1,99 +1,42 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ODataEntitySet } from './entityset';
-import { ODataEntitySetResource, ODataNavigationPropertyResource } from '../requests';
+import { ODATA_COUNT, ODATA_NEXTLINK, ENTITYSET_VALUE } from '../../types';
 
-export class ODataCollection<E> implements Iterable<E> {
-  private _query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>;
-  entities: E[];
+export class ODataCollection<T> {
+  [ENTITYSET_VALUE]: T[];
 
-  state: {
-    records?: number,
-    size?: number,
-    page?: number,
-    pages?: number
-  } = {};
-
-  constructor(entityset: ODataEntitySet<E>, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
-    this.entities = entityset.value;
-    this._query = query;
-    let records = entityset.count;
-    let size = (query.skip().value() || entityset.skip || entityset.value.length);
-    let skip = (query.skip().value() || entityset.skip || 0);
-    let page = (query.top().value()) ? 
-      Math.ceil(skip / query.top().value()) + 1 : 1;
-    this.setState({ records, page, size });
+  constructor(data: {[ENTITYSET_VALUE]: T[]}) {
+    Object.assign(this, data);
   }
 
-  private setState(state: {records?: number, page?: number, size?: number}) {
-    if (state.records)
-      this.state.records = state.records;
-    if (state.page)
-      this.state.page = state.page;
-    if (state.size) {
-      this.state.size = state.size;
-      this.state.pages = Math.ceil(this.state.records / this.state.size);
-    }
+  get count(): number {
+    return this[ODATA_COUNT] as number;
   }
 
-  // Iterable
+  get nextLink(): string {
+    return decodeURIComponent(this[ODATA_NEXTLINK]) as string;
+  }
+
+  get skip(): number {
+    let match = (this.nextLink || "").match(/\$skip=(\d+)/);
+    if (match) return Number(match[1]);
+    match = (this.nextLink || "").match(/\$skiptoken=(\d+)/);
+    if (match) return Number(match[1]);
+  }
+
+  get skiptoken(): string {
+    let match = (this.nextLink || "").match(/\$skiptoken=([\d\w\s]+)/);
+    if (match) return match[1];
+  }
+  
   public [Symbol.iterator]() {
     let pointer = 0;
-    let entities = this.entities;
+    let models = this[ENTITYSET_VALUE];
     return {
-      next(): IteratorResult<E> {
+      next(): IteratorResult<T> {
         return {
-          done: pointer === entities.length,
-          value: entities[pointer++]
+          done: pointer === models.length,
+          value: models[pointer++]
         };
       }
     }
   }
-
-  fetch(): Observable<this> {
-    if (this.state.size) {
-      this._query.top(this.state.size);
-      let skip = this.state.size * (this.state.page - 1);
-      if (skip)
-        this._query.skip(skip);
-    }
-    return this._query.get({ responseType: 'entityset'})
-      .pipe(
-        map(set => {
-          if (set) {
-            if (set.skip) {
-              this.setState({size: set.skip});
-            }
-            this.entities = set.value;
-          }
-          return this;
-        }));
-  }
-
-  page(page: number) {
-    this.setState({page});
-    return this.fetch();
-  }
-
-  size(size: number) {
-    this.setState({size});
-    return this.page(1);
-  }
-
-  firstPage() {
-    return this.page(1);
-  }
-
-  previousPage() {
-    return (this.state.page) ? this.page(this.state.page - 1) : this.fetch();
-  }
-
-  nextPage() {
-    return (this.state.page) ? this.page(this.state.page + 1) : this.fetch();
-  }
-
-  lastPage() {
-    return (this.state.pages) ? this.page(this.state.pages) : this.fetch();
-  }
-
 }

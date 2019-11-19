@@ -8,7 +8,7 @@ import { ODataOptions } from '../options';
 import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
 import { Schema, Parser } from '../../schema';
-import { ODataProperty } from '../responses';
+import { ODataValue } from '../responses';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -52,7 +52,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<ODataProperty<T>> {
+  }): Observable<ODataValue<T>> {
     return super.get({
       headers: options && options.headers,
       observe: 'body',

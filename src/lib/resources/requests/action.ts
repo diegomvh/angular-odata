@@ -1,13 +1,13 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySet } from '../responses/entityset';
+import { ODataCollection } from '../responses/collection';
 import { ODataSegments, Segments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Schema, Parser } from '../../schema';
-import { ODataProperty } from '../responses';
+import { ODataValue } from '../responses';
 
 export class ODataActionResource<T> extends ODataResource<T> {
   // Factory
@@ -40,7 +40,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataEntitySet<T>>;
+  }): Observable<ODataCollection<T>>;
 
   post(body: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -48,7 +48,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'property',
     withCredentials?: boolean,
-  }): Observable<ODataProperty<T>>;
+  }): Observable<ODataValue<T>>;
 
   post(body: any, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

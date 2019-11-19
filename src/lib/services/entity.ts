@@ -3,10 +3,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource } from '../resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataCollection } from '../resources';
 
 import { ODataClient } from "../client";
-import { ODataCollection } from '../resources/responses/collection';
 import { ODataRefResource } from '../resources/requests/ref';
 import { EntityKey } from '../types';
 
@@ -69,7 +68,7 @@ export class ODataEntityService<T> {
   // Entity Actions
   public fetchCollection(): Observable<ODataCollection<T>> {
     return this.entities()
-      .collection();
+      .get();
   }
 
   public fetchAll(): Observable<T[]> {

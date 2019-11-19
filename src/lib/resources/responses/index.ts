@@ -1,5 +1,4 @@
-export * from './collection';
 export * from './batch';
-export * from './entityset';
-export * from './property';
+export * from './collection';
+export * from './value';
 export * from './metadata';
