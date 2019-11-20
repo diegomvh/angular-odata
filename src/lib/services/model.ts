@@ -7,7 +7,7 @@ import { ODataClient } from '../client';
 
 @Injectable()
 export class ODataModelService<M extends ODataModel, C extends ODataModelCollection<ODataModel>> {
-  static set: string = "";
+  static path: string = "";
   static type: string = "";
 
   constructor(protected client: ODataClient) { }
@@ -15,7 +15,7 @@ export class ODataModelService<M extends ODataModel, C extends ODataModelCollect
   // Build requests
   public entities(): ODataEntitySetResource<any> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    let query = this.client.entitySet<any>(Ctor.set, Ctor.type);
+    let query = this.client.entitySet<any>(Ctor.path, Ctor.type);
     return query;
   }
 

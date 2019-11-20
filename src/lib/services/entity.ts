@@ -12,7 +12,7 @@ import { EntityKey } from '../types';
 
 @Injectable()
 export class ODataEntityService<T> {
-  static set: string = "";
+  static path: string = "";
   static type: string = "";
 
   constructor(protected client: ODataClient) { }
@@ -20,7 +20,7 @@ export class ODataEntityService<T> {
   // Build requests
   public entities(): ODataEntitySetResource<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    let query = this.client.entitySet<T>(Ctor.set, Ctor.type);
+    let query = this.client.entitySet<T>(Ctor.path, Ctor.type);
     return query;
   }
 
