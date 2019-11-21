@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
 
-import { ODataConfig, ODataSettings, ODATA_CONFIG } from './settings';
+import { ODataConfig, ODataSettings, ODATA_CONFIG } from './models/settings';
 import { ODataClient } from './client';
 
 export function createSettings(config: ODataConfig) {

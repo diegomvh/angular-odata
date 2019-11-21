@@ -6,7 +6,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
-import { Schema, Parser } from '../../schema';
+import { ODataSchema, Parser } from '../../models/schema';
 import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
@@ -21,7 +21,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new Schema<R>();
+    let parser = opts && opts.parser || new ODataSchema<R>();
 
     segments.segment(Segments.actionCall, name);
     options.clear();

@@ -1,8 +1,9 @@
+import { InjectionToken } from '@angular/core';
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { ODataModel, ODataModelCollection } from './models';
-import { InjectionToken } from '@angular/core';
-import { Schema, Field } from './schema';
+import { ODataSchema, Field } from './schema';
+import { ODataModel } from './model';
+import { ODataModelCollection } from './collection';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -28,7 +29,7 @@ export class ODataSettings {
   creation?: Date;
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
-  schemas?: {[type: string]: Schema<any> };
+  schemas?: {[type: string]: ODataSchema<any> };
   models?: {[type: string]: { new(...any): ODataModel} };
   collections?:{[type: string]: { new(...any): ODataModelCollection<ODataModel> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
@@ -47,16 +48,16 @@ export class ODataSettings {
 
     // Build schemas
     this.schemas = Object.entries(config.schemas || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new Schema(config)}), {});
+      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataSchema(config)}), {});
 
     // Configure
     Object.entries(this.schemas)
       .forEach(([type, schema]) => schema.configure(type, this));
   }
 
-  public schemaForType<E>(type: string): Schema<E> {
+  public schemaForType<E>(type: string): ODataSchema<E> {
     if (type in this.schemas)
-      return this.schemas[type] as Schema<E>;
+      return this.schemas[type] as ODataSchema<E>;
   }
 
   public modelForType(type: string): typeof ODataModel {

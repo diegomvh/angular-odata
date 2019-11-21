@@ -3,12 +3,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataCollection } from '../resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataCollection } from './resources';
 
-import { ODataClient } from "../client";
-import { ODataRefResource } from '../resources/requests/ref';
-import { EntityKey } from '../types';
-
+import { ODataClient } from "./client";
+import { ODataRefResource } from './resources/requests/ref';
+import { EntityKey } from './types';
+import { ODataModel, ODataModelCollection } from './models';
 
 @Injectable()
 export class ODataEntityService<T> {
@@ -18,15 +18,26 @@ export class ODataEntityService<T> {
   constructor(protected client: ODataClient) { }
 
   // Build requests
-  public entities(): ODataEntitySetResource<T> {
+  public entities(): ODataEntitySetResource<any> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    let query = this.client.entitySet<T>(Ctor.path, Ctor.type);
-    return query;
+    return this.client.entitySet<any>(Ctor.path, Ctor.type);
   }
 
-  public entity(key?: EntityKey): ODataEntityResource<T> {
+  public entity(key?: EntityKey): ODataEntityResource<any> {
     return this.entities()
       .entity(key);
+  }
+
+  model<M extends ODataModel>(attrs?: any): M {
+    let Ctor = <typeof ODataEntityService>this.constructor;
+    let Model = this.client.modelForType(Ctor.type);
+    return new Model(attrs || {}, this.entity()) as M;
+  }
+
+  collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
+    let Ctor = <typeof ODataEntityService>this.constructor;
+    let Collection = this.client.collectionForType(Ctor.type);
+    return new Collection(models || [], this.entities()) as C;
   }
 
   public navigationProperty<P>(entity: Partial<T>, name: string): ODataNavigationPropertyResource<P> {

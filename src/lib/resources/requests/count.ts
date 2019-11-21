@@ -6,7 +6,7 @@ import { ODataOptions, Options } from '../options';
 import { ODataResource } from '../resource';
 import { ODataClient } from '../../client';
 import { $COUNT } from '../../types';
-import { Schema, Parser } from '../../schema';
+import { ODataSchema, Parser } from '../../models/schema';
 
 export class ODataCountResource extends ODataResource<number> {
   // Factory
@@ -17,7 +17,7 @@ export class ODataCountResource extends ODataResource<number> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new Schema<any>();
+    let parser = opts && opts.parser || new ODataSchema<any>();
 
     segments.segment(Segments.count, $COUNT);
     options.keep(Options.filter, Options.search);

@@ -1,14 +1,12 @@
 export * from './types';
-export * from './settings';
-export * from './schema';
+export * from './models/settings';
+export * from './models/schema';
 export * from './client';
 export * from './module';
-
-// Resources
-export * from './resources/index';
 
 // Models
 export * from './models/index';
 
-// Services
-export * from './services/index';
+// Resources
+export * from './resources/index';
+

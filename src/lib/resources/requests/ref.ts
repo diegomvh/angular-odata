@@ -8,7 +8,7 @@ import { PlainObject } from '../../types';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { $REF, ODATA_ID, $ID } from '../../types';
-import { Parser, Schema } from '../../schema';
+import { Parser, ODataSchema } from '../../models/schema';
 
 export class ODataRefResource extends ODataResource<any> {
   // Factory
@@ -19,7 +19,7 @@ export class ODataRefResource extends ODataResource<any> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new Schema<any>();
+    let parser = opts && opts.parser || new ODataSchema<any>();
 
     segments.segment(Segments.ref, $REF);
     options.clear();

@@ -1,12 +1,12 @@
 import { ODataSettings } from './settings';
-import { Types, Enums } from './utils';
-import { ODataResource, ODataEntityResource } from './resources/requests';
-import { PlainObject } from './types';
+import { Types, Enums } from '../utils';
+import { ODataResource, ODataEntityResource } from '../resources/requests';
+import { PlainObject } from '../types';
 
 export interface Field {
   type: string;
   enum?: { [key: number]: string | number };
-  schema?: Schema<any>;
+  schema?: ODataSchema<any>;
   ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataResource<any>): any };
   enumString?: boolean;
   default?: any;
@@ -32,11 +32,11 @@ const PARSERS = {
   'Date': (value) => new Date(value),
 };
 
-class SchemaField<T> implements Field, Parser<T> {
+class ODataSchemaField<T> implements Field, Parser<T> {
   name: string;
   type: string;
   enum?: { [key: number]: string | number };
-  schema?: Schema<any>;
+  schema?: ODataSchema<any>;
   model?: { new(...any): any };
   collection?: { new(...any): any };
   enumString?: boolean;
@@ -114,15 +114,15 @@ class SchemaField<T> implements Field, Parser<T> {
   }
 }
 
-export class Schema<Type> implements Parser<Type> {
+export class ODataSchema<Type> implements Parser<Type> {
   type: string;
-  fields: SchemaField<any>[];
+  fields: ODataSchemaField<any>[];
   get keys() { return this.fields.filter(f => f.isKey); }
   model?: { new(...any): any };
 
   constructor(fields?: { [name: string]: Field }) {
     this.fields = Object.entries(fields || {})
-      .map(([name, f]) => new SchemaField(name, f));
+      .map(([name, f]) => new ODataSchemaField(name, f));
   }
 
   configure(type: string, settings: ODataSettings) {
@@ -136,7 +136,7 @@ export class Schema<Type> implements Parser<Type> {
         f.enumString = settings.stringAsEnum;
       }
       if (f.type in settings.schemas) {
-        f.schema = settings.schemas[f.type] as Schema<any>;
+        f.schema = settings.schemas[f.type] as ODataSchema<any>;
       }
       if (f.type in settings.models) {
         f.model = settings.models[f.type];

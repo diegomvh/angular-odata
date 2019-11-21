@@ -12,7 +12,7 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { Schema, Parser } from '../../schema';
+import { ODataSchema, Parser } from '../../models/schema';
 import { ODataCollection } from '../responses';
 import { map } from 'rxjs/operators';
 
@@ -27,7 +27,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new Schema<R>();
+    let parser = opts && opts.parser || new ODataSchema<R>();
 
     segments.segment(Segments.singleton, name);
     options.keep(Options.format);
@@ -41,7 +41,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: (this.parser as Schema<T>).parser<N>(name) as Parser<N>
+      parser: (this.parser as ODataSchema<T>).parser<N>(name) as Parser<N>
     });
   }
 
@@ -51,7 +51,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: (this.parser as Schema<T>).parser<P>(name) as Parser<P>
+      parser: (this.parser as ODataSchema<T>).parser<P>(name) as Parser<P>
     });
   }
 

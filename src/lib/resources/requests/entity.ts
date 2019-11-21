@@ -12,7 +12,7 @@ import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
-import { Schema, Parser } from '../../schema';
+import { ODataSchema, Parser } from '../../models/schema';
 import { map } from 'rxjs/operators';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
@@ -25,7 +25,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new Schema<E>();
+    let parser = opts && opts.parser || new ODataSchema<E>();
 
     options.keep(Options.expand, Options.select, Options.format);
     return new ODataEntityResource<E>(client, segments, options, parser);

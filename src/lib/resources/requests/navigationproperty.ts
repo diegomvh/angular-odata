@@ -10,7 +10,7 @@ import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { Schema, Parser } from '../../schema';
+import { ODataSchema, Parser } from '../../models/schema';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses';
@@ -25,7 +25,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new Schema<E>();
+    let parser = opts && opts.parser || new ODataSchema<E>();
 
     segments.segment(Segments.navigationProperty, name);
     options.keep(Options.format);

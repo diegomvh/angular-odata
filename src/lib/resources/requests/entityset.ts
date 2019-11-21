@@ -12,7 +12,7 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataResource } from '../resource';
-import { Schema, Parser } from '../../schema';
+import { ODataSchema, Parser } from '../../models/schema';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses';
 import { Types } from '../../utils';
@@ -26,7 +26,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new Schema<E>();
+    let parser = opts && opts.parser || new ODataSchema<E>();
 
     segments.segment(Segments.entitySet, name);
     options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);

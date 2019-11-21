@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataCollection, ODataValue, ODataEntityResource, ODataFunctionResource, ODataActionResource } from './resources';
-import { ODataSettings } from './settings';
+import { ODataSettings } from './models/settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, PlainObject, ODATA_CONTEXT, ODATA_TYPE } from './types';
-import { Schema } from './schema';
+import { ODataSchema } from './models/schema';
 import { ODataModel, ODataModelCollection } from './models';
 
 export const addBody = <T>(
@@ -36,12 +36,25 @@ export const addBody = <T>(
 export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
+  serviceRoot(): string {
+    let base = this.settings.baseUrl;
+    if (!base.endsWith('/')) {
+      base += '/';
+    }
+    return base;
+  }
+
+  createEndpointUrl(resource: ODataResource<any>) {
+    const serviceRoot = this.serviceRoot();
+    return `${serviceRoot}${resource.path()}`;
+  }
+
   resolveEtag(attrs: PlainObject): string {
     return attrs[ODATA_ETAG];
   }
 
-  schemaForType<E>(type: string) {
-    return this.settings.schemaForType(type) as Schema<E>;
+  schemaForType<T>(type: string) {
+    return this.settings.schemaForType(type) as ODataSchema<T>;
   }
 
   modelForType(type: string) {
@@ -61,7 +74,7 @@ export class ODataClient {
       ctx = ctx.substr(ctx.indexOf("#") + 1);
       if (ctx.startsWith("Collection(") && ctx.endsWith(")")) {
         let type = ctx.substr(11, ctx.length - 12);
-        let schema = type ? this.schemaForType<any>(type) as Schema<any> : null;
+        let schema = type ? this.schemaForType<any>(type) as ODataSchema<any> : null;
         return ODataEntityResource.factory<any>(this, {parser: schema});
       } else if (ctx.endsWith("$entity")) {
         let type = (ODATA_TYPE in attrs)? 
@@ -84,15 +97,30 @@ export class ODataClient {
   }
 
   singleton<T>(name: string, type?: string) {
-    let schema = type? this.schemaForType<T>(type) as Schema<T> : null;
+    let schema = type? this.schemaForType<T>(type) as ODataSchema<T> : null;
     return ODataSingletonResource.factory<T>(name, this, {parser: schema});
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    let schema = type? this.schemaForType<T>(type) as Schema<T> : null;
+    let schema = type? this.schemaForType<T>(type) as ODataSchema<T> : null;
     return ODataEntitySetResource.factory<T>(name, this, {parser: schema});
   }
 
+  // Unbound Action
+  action<T>(name: string, returnType: string): ODataActionResource<T> {
+    let schema = this.schemaForType<T>(returnType);
+    return ODataActionResource.factory(name, this, {parser: schema});
+  }
+
+  // Unbound Function
+  function<T>(name: string, params: any, returnType: string): ODataFunctionResource<T> {
+    let schema = this.schemaForType<T>(returnType);
+    let query = ODataFunctionResource.factory(name, this, {parser: schema});
+    query.parameters(params);
+    return query;
+  }
+
+  //Merge Headers
   mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
     let attrs = {};
     headers.forEach(header => {
@@ -105,6 +133,7 @@ export class ODataClient {
     return new HttpHeaders(attrs);
   }
 
+  //Merge Params
   mergeHttpParams(...params: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
     let attrs = {};
     params.forEach(param => {
@@ -115,19 +144,6 @@ export class ODataClient {
         attrs = Object.assign(attrs, param);
     });
     return new HttpParams({ fromObject: attrs });
-  }
-
-  serviceRoot(): string {
-    let base = this.settings.baseUrl;
-    if (!base.endsWith('/')) {
-      base += '/';
-    }
-    return base;
-  }
-
-  createEndpointUrl(resource) {
-    const serviceRoot = this.serviceRoot();
-    return `${serviceRoot}${resource.path()}`
   }
 
   // Request headers, get, post, put, patch... etc

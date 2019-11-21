@@ -5,7 +5,7 @@ import { ODataOptions } from './options';
 import { PlainObject, VALUE } from '../types';
 import { ODataSegments } from './segments';
 import { ODataClient } from '../client';
-import { Schema, Parser } from '../schema';
+import { ODataSchema, Parser } from '../models/schema';
 import { ODataCollection, ODataValue } from './responses';
 
 export abstract class ODataResource<Type> {
@@ -26,7 +26,7 @@ export abstract class ODataResource<Type> {
     this.client = client;
     this.segments = segments || new ODataSegments();
     this.options = options || new ODataOptions();
-    this.parser = parser || new Schema<Type>();
+    this.parser = parser || new ODataSchema<Type>();
   }
 
   // Client Requests
