@@ -41,7 +41,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: (this.parser as ODataSchema<T>).parser<N>(name) as Parser<N>
+      parser: this.parser.parserFor<N>(name)
     });
   }
 
@@ -51,7 +51,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: (this.parser as ODataSchema<T>).parser<P>(name) as Parser<P>
+      parser: this.parser.parserFor<P>(name)
     });
   }
 

@@ -24,12 +24,26 @@ export interface Parser<T> {
   type: string;
   parse(value: any, query?: ODataResource<any>): T;
   toJSON(value: T | Partial<T>): any;
-  parser<E>(name: string): Parser<E>;
+  parserFor<E>(name: string): Parser<E>;
   resolveKey(attrs: any);
 }
 
-const PARSERS = {
-  'Date': (value) => new Date(value),
+const PARSERS: {[name: string]: Parser<any>} = {
+  'Date': <Parser<Date>>{
+    type: 'Date',
+    parse(value: any, query?: ODataResource<any>) {
+      return Array.isArray(value) ?
+        value.map(v => new Date(v)) :
+        new Date(value);
+    },
+    toJSON(value: Date) { 
+      return Array.isArray(value) ?
+        value.map(v => new Date(v)) :
+        new Date(value);
+    },
+    parserFor<E>(name: string) { },
+    resolveKey(attrs: any) {}
+  },
 };
 
 class ODataSchemaField<T> implements Field, Parser<T> {
@@ -77,9 +91,7 @@ class ODataSchemaField<T> implements Field, Parser<T> {
         value = new this.collection(value, query.clone<any>());
       return value;
     } else if (this.type in PARSERS) {
-      return (Array.isArray(value) && this.isCollection) ?
-        value.map(PARSERS[this.type]) :
-        PARSERS[this.type](value);
+      return PARSERS[this.type].parse(value);
     }
     return value;
   }
@@ -98,15 +110,15 @@ class ODataSchemaField<T> implements Field, Parser<T> {
     } else if (this.collection) {
       return value.toJSON();
     } else if (this.schema) {
-      return (Array.isArray(value) && this.isCollection) ?
-        value.map(v => this.schema.toJSON(v)) :
-        this.schema.toJSON(value);
+      return this.schema.toJSON(value);
+    } else if (this.type in PARSERS) {
+      return PARSERS[this.type].toJSON(value);
     }
     return value;
   }
 
-  parser<E>(name: string): Parser<E> {
-    return this.schema.parser(name);
+  parserFor<E>(name: string): Parser<E> {
+    return this.schema.parserFor(name);
   }
 
   resolveKey(attrs: any) {
@@ -175,7 +187,7 @@ export class ODataSchema<Type> implements Parser<Type> {
       _parse(objs, query);
   }
 
-  parser<E>(name: string): Parser<E> {
+  parserFor<E>(name: string): Parser<E> {
     return this.fields.find(f => f.name === name) as Parser<E>;
   }
 

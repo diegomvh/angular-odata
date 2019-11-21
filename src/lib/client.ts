@@ -53,7 +53,8 @@ export class ODataClient {
     return attrs[ODATA_ETAG];
   }
 
-  schemaForType<T>(type: string) {
+  parserForType<T>(type: string) {
+    //TODO: if type === Date or other primitive type
     return this.settings.schemaForType(type) as ODataSchema<T>;
   }
 
@@ -74,7 +75,7 @@ export class ODataClient {
       ctx = ctx.substr(ctx.indexOf("#") + 1);
       if (ctx.startsWith("Collection(") && ctx.endsWith(")")) {
         let type = ctx.substr(11, ctx.length - 12);
-        let schema = type ? this.schemaForType<any>(type) as ODataSchema<any> : null;
+        let schema = type ? this.parserForType<any>(type) as ODataSchema<any> : null;
         return ODataEntityResource.factory<any>(this, {parser: schema});
       } else if (ctx.endsWith("$entity")) {
         let type = (ODATA_TYPE in attrs)? 
@@ -97,25 +98,25 @@ export class ODataClient {
   }
 
   singleton<T>(name: string, type?: string) {
-    let schema = type? this.schemaForType<T>(type) as ODataSchema<T> : null;
-    return ODataSingletonResource.factory<T>(name, this, {parser: schema});
+    let parser = type? this.parserForType<T>(type) as ODataSchema<T> : null;
+    return ODataSingletonResource.factory<T>(name, this, {parser});
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    let schema = type? this.schemaForType<T>(type) as ODataSchema<T> : null;
-    return ODataEntitySetResource.factory<T>(name, this, {parser: schema});
+    let parser = type? this.parserForType<T>(type) as ODataSchema<T> : null;
+    return ODataEntitySetResource.factory<T>(name, this, {parser});
   }
 
   // Unbound Action
   action<T>(name: string, returnType: string): ODataActionResource<T> {
-    let schema = this.schemaForType<T>(returnType);
-    return ODataActionResource.factory(name, this, {parser: schema});
+    let parser = this.parserForType<T>(returnType);
+    return ODataActionResource.factory(name, this, {parser});
   }
 
   // Unbound Function
   function<T>(name: string, params: any, returnType: string): ODataFunctionResource<T> {
-    let schema = this.schemaForType<T>(returnType);
-    let query = ODataFunctionResource.factory(name, this, {parser: schema});
+    let parser = this.parserForType<T>(returnType);
+    let query = ODataFunctionResource.factory(name, this, {parser});
     query.parameters(params);
     return query;
   }

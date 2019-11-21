@@ -28,13 +28,13 @@ export class ODataEntityService<T> {
       .entity(key);
   }
 
-  model<M extends ODataModel>(attrs?: any): M {
+  public model<M extends ODataModel>(attrs?: any): M {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Model = this.client.modelForType(Ctor.type);
     return new Model(attrs || {}, this.entity()) as M;
   }
 
-  collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
+  public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Collection = this.client.collectionForType(Ctor.type);
     return new Collection(models || [], this.entities()) as C;
@@ -53,24 +53,24 @@ export class ODataEntityService<T> {
   }
 
   public action<R>(entity: Partial<T>, name: string, returnType: string): ODataActionResource<R> {
-    let schema = this.client.schemaForType<R>(returnType);
+    let schema = this.client.parserForType<R>(returnType);
     return this.entity(entity).action<R>(name, schema);
   }
 
   public collectionAction<R>(name: string, returnType: string): ODataActionResource<R> {
-    let schema = this.client.schemaForType<R>(returnType);
+    let schema = this.client.parserForType<R>(returnType);
     return this.entities().action<R>(name, schema);
   }
 
   public function<R>(entity: Partial<T>, name: string, params: any, returnType: string): ODataFunctionResource<R> {
-    let schema = this.client.schemaForType<R>(returnType);
+    let schema = this.client.parserForType<R>(returnType);
     let query = this.entity(entity).function<R>(name, schema);
     query.parameters(params);
     return query;
   }
 
   public collectionFunction<R>(name: string, params: any, returnType: string): ODataFunctionResource<R> {
-    let schema = this.client.schemaForType<R>(returnType);
+    let schema = this.client.parserForType<R>(returnType);
     let query = this.entities().function<R>(name, schema);
     query.parameters(params);
     return query;

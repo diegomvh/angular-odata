@@ -36,7 +36,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     let segment = this.segments.last();
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
-    if (typeof(key) === "undefined")
+    if (Types.isUndefined(key))
       return segment.option(Options.key);
     
     if (Types.isObject(key))
@@ -56,7 +56,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parser<N>(name)
+      parser: this.parser.parserFor<N>(name)
     });
   }
 
@@ -66,7 +66,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parser<P>(name)
+      parser: this.parser.parserFor<P>(name)
     });
   }
 

@@ -44,7 +44,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parser<P>(name)
+      parser: this.parser.parserFor<P>(name)
     });
   }
 
