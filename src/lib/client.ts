@@ -108,16 +108,17 @@ export class ODataClient {
   }
 
   // Unbound Action
-  action<T>(name: string, returnType: string): ODataActionResource<T> {
-    let parser = this.parserForType<T>(returnType);
+  action<T>(name: string, returnType?: string): ODataActionResource<T> {
+    let parser = returnType? this.parserForType<T>(returnType) as ODataSchema<T> : null;
     return ODataActionResource.factory(name, this, {parser});
   }
 
   // Unbound Function
-  function<T>(name: string, params: any, returnType: string): ODataFunctionResource<T> {
-    let parser = this.parserForType<T>(returnType);
+  function<T>(name: string, params: any | null, returnType?: string): ODataFunctionResource<T> {
+    let parser = returnType? this.parserForType<T>(returnType) as ODataSchema<T> : null;
     let query = ODataFunctionResource.factory(name, this, {parser});
-    query.parameters(params);
+    if (params)
+      query.parameters(params);
     return query;
   }
 
