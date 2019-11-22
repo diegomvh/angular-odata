@@ -39,35 +39,35 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     return this.segments.last().option(Options.parameters, opts);
   }
 
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType: 'entity',
+    responseType?: 'entity',
     withCredentials?: boolean,
   }): Observable<T>;
 
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType: 'entityset',
+    responseType?: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<ODataCollection<T>>;
 
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType: 'property',
+    responseType?: 'property',
     withCredentials?: boolean,
   }): Observable<ODataValue<T>>;
 
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType: 'entity'|'entityset'|'property',
+    responseType?: 'entity'|'entityset'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -78,20 +78,22 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
       params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
 
     let res$ = this.client.get<T>(this,{
-      headers: options.headers,
+      headers: options && options.headers,
       observe: 'body',
       params: params,
       responseType: 'json',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
     });
-    switch (options.responseType) {
-      case 'entity':
-        return res$.pipe(map((body: any) => this.deserializeSingle(body)));
-      case 'entityset':
-        return res$.pipe(map((body: any) => this.deserializeCollection(body)));
-      case 'property':
-        return res$.pipe(map((body: any) => this.deserializeValue(body)));
+    if (options && options.responseType) {
+      switch (options.responseType) {
+        case 'entity':
+          return res$.pipe(map((body: any) => this.deserializeSingle(body)));
+        case 'entityset':
+          return res$.pipe(map((body: any) => this.deserializeCollection(body)));
+        case 'property':
+          return res$.pipe(map((body: any) => this.deserializeValue(body)));
+      }
     }
     return res$;
   }
