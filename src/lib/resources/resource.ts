@@ -16,77 +16,18 @@ export abstract class ODataResource<Type> {
    protected client: ODataClient;
    protected segments: ODataSegments;
    protected options: ODataOptions;
-   protected parser: Parser<Type> 
+   protected parser: Parser<Type> | null;
 
   constructor(
     client: ODataClient,
     segments?: ODataSegments,
     options?: ODataOptions,
-    parser?: Parser<Type>
+    parser?: Parser<Type> | null
   ) {
     this.client = client;
     this.segments = segments || new ODataSegments();
     this.options = options || new ODataOptions();
-    this.parser = parser || new ODataSchema<Type>();
-  }
-
-  // Client Requests
-  protected _get(options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe?: 'body' | 'events' | 'response',
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
-    withCredentials?: boolean
-  } = {}): Observable<any> {
-    return this.client.get(this, options as any);
-  }
-
-  protected _post(body: any|null, options: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe?: 'body' | 'events' | 'response',
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
-    withCredentials?: boolean
-  } = {}): Observable<any> {
-    return this.client.post(this, body, options as any);
-  }
-
-  protected _patch(body: any|null, options: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe?: 'body' | 'events' | 'response',
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
-    withCredentials?: boolean
-  } = {}): Observable<any> {
-    return this.client.patch(this, body, options as any);
-  }
-
-  protected _put(body: any|null, options: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe?: 'body' | 'events' | 'response',
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
-    withCredentials?: boolean
-  } = {}): Observable<any> {
-    return this.client.put(this, body, options as any);
-  }
-
-  protected _delete(options: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    observe?: 'body' | 'events' | 'response',
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'text'|'json'|'entity'|'entityset'|'property',
-    withCredentials?: boolean
-  } = {}): Observable<any> {
-    return this.client.delete(this, options as any);
+    this.parser = parser;
   }
 
   type(): string {
@@ -105,23 +46,24 @@ export abstract class ODataResource<Type> {
     return this.parser.toJSON(obj);
   }
 
-  deserialize(body: any): Type {
-    return this.parser.parse(body, this.clone()) as Type;
+  deserialize(attrs: any): Type {
+    return this.parser.parse(attrs, this.clone()) as Type;
   }
 
-  deserializeSingle(body: any): Type {
+  toSingle(body: any): Type {
     return this.deserialize(body);
   }
 
-  deserializeCollection(body: any): ODataCollection<Type> {
+  toCollection(body: any): ODataCollection<Type> {
     body[VALUE] = this.deserialize(body[VALUE]);
     return new ODataCollection<any>(body);
   }
 
-  deserializeValue(body: any): ODataValue<Type> {
+  toValue(body: any): ODataValue<Type> {
     body[VALUE] = this.deserialize(body[VALUE]);
     return new ODataValue<any>(body);
   }
+
 
   toString(): string {
     let path = this.path();

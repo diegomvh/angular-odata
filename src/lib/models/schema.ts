@@ -107,7 +107,7 @@ export class ODataSchema<Type> implements Parser<Type> {
   get keys() { return this.fields.filter(f => f.isKey); }
   model?: { new(...any): any };
 
-  constructor(fields?: { [name: string]: Field }) {
+  constructor(fields: { [name: string]: Field }) {
     this.fields = Object.entries(fields || {})
       .map(([name, f]) => new ODataSchemaField(name, f));
   }

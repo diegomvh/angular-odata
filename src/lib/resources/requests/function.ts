@@ -7,7 +7,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataOptions, Options } from '../options';
 import { ODataClient } from '../../client';
 import { PlainObject, $COUNT } from '../../types';
-import { ODataSchema, Parser } from '../../models';
+import { Parser } from '../../models';
 import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataEntityResource } from './entity';
@@ -22,7 +22,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new ODataSchema<R>();
+    let parser = opts && opts.parser || null;
 
     segments.segment(Segments.functionCall, name);
     options.keep(Options.format);
@@ -88,11 +88,11 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     if (options && options.responseType) {
       switch (options.responseType) {
         case 'entity':
-          return res$.pipe(map((body: any) => this.deserializeSingle(body)));
+          return res$.pipe(map((body: any) => this.toSingle(body)));
         case 'entityset':
-          return res$.pipe(map((body: any) => this.deserializeCollection(body)));
+          return res$.pipe(map((body: any) => this.toCollection(body)));
         case 'property':
-          return res$.pipe(map((body: any) => this.deserializeValue(body)));
+          return res$.pipe(map((body: any) => this.toValue(body)));
       }
     }
     return res$;

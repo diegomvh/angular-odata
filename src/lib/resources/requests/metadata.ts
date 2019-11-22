@@ -7,7 +7,7 @@ import { ODataOptions } from '../options';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../types';
-import { ODataSchema, Parser } from '../../models';
+import { Parser } from '../../models';
 import { ODataMetadata } from '../responses';
 
 export class ODataMetadataResource extends ODataResource<any> {
@@ -19,7 +19,7 @@ export class ODataMetadataResource extends ODataResource<any> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new ODataSchema<any>();
+    let parser = opts && opts.parser || null;
 
     segments.segment(Segments.metadata, $METADATA);
     options.clear();

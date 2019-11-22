@@ -6,7 +6,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
-import { ODataSchema, Parser } from '../../models';
+import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
 
 export class ODataValueResource<T> extends ODataResource<T> {
@@ -18,7 +18,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new ODataSchema<V>();
+    let parser = opts && opts.parser || null;
 
     segments.segment(Segments.value, $VALUE);
     options.clear();
@@ -38,6 +38,6 @@ export class ODataValueResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.deserializeSingle(body)));
+    }).pipe(map(body => this.toSingle(body)));
   }
 }

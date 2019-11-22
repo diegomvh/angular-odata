@@ -7,7 +7,7 @@ import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySe
 import { ODataSettings } from './models/settings';
 import { ODATA_ETAG, IF_MATCH_HEADER, PlainObject, ODATA_CONTEXT, ODATA_TYPE } from './types';
 import { ODataSchema } from './models/schema';
-import { ODataModel, ODataModelCollection } from './models';
+import { ODataModel, ODataModelCollection, PARSERS, Parser } from './models';
 
 export const addBody = <T>(
   options: {
@@ -53,9 +53,12 @@ export class ODataClient {
     return attrs[ODATA_ETAG];
   }
 
-  parserForType<T>(type: string) {
-    //TODO: if type === Date or other primitive type
-    return this.settings.schemaForType(type) as ODataSchema<T>;
+  parserForType<T>(type: string): Parser<T> | null {
+    let parser = this.settings.schemaForType(type) as Parser<T>;
+    if (!parser && type in PARSERS) {
+      parser = PARSERS[type];
+    }
+    return parser;
   }
 
   modelForType(type: string) {

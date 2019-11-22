@@ -12,7 +12,7 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { ODataSchema, Parser } from '../../models';
+import { Parser } from '../../models';
 import { ODataCollection } from '../responses';
 import { map } from 'rxjs/operators';
 
@@ -27,7 +27,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new ODataSchema<R>();
+    let parser = opts && opts.parser || null;
 
     segments.segment(Segments.singleton, name);
     options.keep(Options.format);
@@ -116,11 +116,11 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
     switch (options.responseType) {
       case 'entity':
-        return res$.pipe(map((body: any) => this.deserializeSingle(body)));
+        return res$.pipe(map((body: any) => this.toSingle(body)));
       case 'entityset':
-        return res$.pipe(map((body: any) => this.deserializeCollection(body)));
+        return res$.pipe(map((body: any) => this.toCollection(body)));
       case 'property':
-        return res$.pipe(map((body: any) => this.deserializeValue(body)));
+        return res$.pipe(map((body: any) => this.toValue(body)));
     }
     return res$;
   }

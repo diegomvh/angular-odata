@@ -10,7 +10,7 @@ import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { ODataSchema, Parser } from '../../models';
+import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses';
@@ -25,7 +25,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new ODataSchema<E>();
+    let parser = opts && opts.parser || null;
 
     segments.segment(Segments.navigationProperty, name);
     options.keep(Options.format);
@@ -135,9 +135,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     });
     switch (options.responseType) {
       case 'entity':
-        return res$.pipe(map((body: any) => this.deserializeSingle(body)));
+        return res$.pipe(map((body: any) => this.toSingle(body)));
       case 'entityset':
-        return res$.pipe(map((body: any) => this.deserializeCollection(body)));
+        return res$.pipe(map((body: any) => this.toCollection(body)));
     }
     return res$;
   }

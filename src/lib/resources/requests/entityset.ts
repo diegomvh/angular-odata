@@ -12,7 +12,7 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataResource } from '../resource';
-import { ODataSchema, Parser } from '../../models';
+import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses';
 import { Types } from '../../utils';
@@ -26,7 +26,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   ) {
     let segments = opts && opts.segments || new ODataSegments();
     let options = opts && opts.options || new ODataOptions();
-    let parser = opts && opts.parser || new ODataSchema<E>();
+    let parser = opts && opts.parser || null;
 
     segments.segment(Segments.entitySet, name);
     options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);
@@ -94,7 +94,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.deserializeSingle(body)));
+    }).pipe(map(body => this.toSingle(body)));
   }
 
   get(options?: {
@@ -116,7 +116,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.deserializeCollection(body)));
+    }).pipe(map(body => this.toCollection(body)));
   }
 
   // Options
