@@ -12,7 +12,7 @@ import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
-import { ODataSchema, Parser } from '../../models/schema';
+import { ODataSchema, Parser } from '../../models';
 import { map } from 'rxjs/operators';
 
 export class ODataEntityResource<T> extends ODataResource<T> {

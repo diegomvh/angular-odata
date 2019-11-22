@@ -7,7 +7,7 @@ import { ODataResource } from '../resource';
 import { ODataOptions } from '../options';
 import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
-import { ODataSchema, Parser } from '../../models/schema';
+import { ODataSchema, Parser } from '../../models';
 import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
 

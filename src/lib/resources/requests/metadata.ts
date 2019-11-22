@@ -7,7 +7,7 @@ import { ODataOptions } from '../options';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../types';
-import { ODataSchema, Parser } from '../../models/schema';
+import { ODataSchema, Parser } from '../../models';
 import { ODataMetadata } from '../responses';
 
 export class ODataMetadataResource extends ODataResource<any> {

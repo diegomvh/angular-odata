@@ -12,7 +12,7 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { ODataSchema, Parser } from '../../models/schema';
+import { ODataSchema, Parser } from '../../models';
 import { ODataCollection } from '../responses';
 import { map } from 'rxjs/operators';
 

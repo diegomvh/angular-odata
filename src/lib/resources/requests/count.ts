@@ -6,7 +6,7 @@ import { ODataOptions, Options } from '../options';
 import { ODataResource } from '../resource';
 import { ODataClient } from '../../client';
 import { $COUNT } from '../../types';
-import { ODataSchema, Parser } from '../../models/schema';
+import { ODataSchema, Parser } from '../../models';
 
 export class ODataCountResource extends ODataResource<number> {
   // Factory

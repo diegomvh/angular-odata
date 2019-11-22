@@ -1,12 +1,13 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataOptions } from './options';
 import { PlainObject, VALUE } from '../types';
-import { ODataSegments } from './segments';
 import { ODataClient } from '../client';
-import { ODataSchema, Parser } from '../models/schema';
+import { ODataSchema, Parser } from '../models';
+
+import { ODataSegments } from './segments';
 import { ODataCollection, ODataValue } from './responses';
+import { ODataOptions } from './options';
 
 export abstract class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';

@@ -12,7 +12,7 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataResource } from '../resource';
-import { ODataSchema, Parser } from '../../models/schema';
+import { ODataSchema, Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses';
 import { Types } from '../../utils';

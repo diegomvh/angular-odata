@@ -8,7 +8,7 @@ import { PlainObject } from '../../types';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { $REF, ODATA_ID, $ID } from '../../types';
-import { Parser, ODataSchema } from '../../models/schema';
+import { Parser, ODataSchema } from '../../models';
 
 export class ODataRefResource extends ODataResource<any> {
   // Factory
