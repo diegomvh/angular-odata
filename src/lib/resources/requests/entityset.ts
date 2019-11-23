@@ -16,6 +16,7 @@ import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses';
 import { Types } from '../../utils';
+import { ODataSingle } from '../responses/single';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -31,10 +32,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     segments.segment(Segments.entitySet, name);
     options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);
     return new ODataEntitySetResource<E>(service, segments, options, parser);
-  }
-
-  deserialize(body: any): T {
-    return this.parser.parse(body, this.entity()) as T;
   }
 
   // Segments
@@ -86,7 +83,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<T> {
+  }): Observable<ODataSingle<T>> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',

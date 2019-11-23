@@ -2,7 +2,7 @@ import { ODataResource } from '../resources/requests';
 
 export interface Parser<T> {
   type: string;
-  parse(value: any, query?: ODataResource<any>): T;
+  parse(value: any): T;
   toJSON(value: T | Partial<T>): any;
   parserFor<E>(name: string): Parser<E>;
   resolveKey(attrs: any);
@@ -11,7 +11,7 @@ export interface Parser<T> {
 export const PARSERS: {[name: string]: Parser<any>} = {
   'Date': <Parser<Date>>{
     type: 'Date',
-    parse(value: any, query?: ODataResource<any>) {
+    parse(value: any) {
       return Array.isArray(value) ?
         value.map(v => new Date(v)) :
         new Date(value);

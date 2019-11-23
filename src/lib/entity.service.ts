@@ -9,6 +9,7 @@ import { ODataClient } from "./client";
 import { ODataRefResource } from './resources/requests/ref';
 import { EntityKey } from './types';
 import { ODataModel, ODataModelCollection } from './models';
+import { ODataSingle } from './resources/responses/single';
 
 @Injectable()
 export class ODataEntityService<T> {
@@ -18,12 +19,12 @@ export class ODataEntityService<T> {
   constructor(protected client: ODataClient) { }
 
   // Build requests
-  public entities(): ODataEntitySetResource<any> {
+  public entities(): ODataEntitySetResource<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.client.entitySet<any>(Ctor.path, Ctor.type);
+    return this.client.entitySet<T>(Ctor.path, Ctor.type);
   }
 
-  public entity(key?: EntityKey): ODataEntityResource<any> {
+  public entity(key?: EntityKey): ODataEntityResource<T> {
     return this.entities()
       .entity(key);
   }
@@ -91,34 +92,33 @@ export class ODataEntityService<T> {
       .all();
   }
 
-  public fetchOne(entity: Partial<T>): Observable<T> {
+  public fetchOne(entity: Partial<T>): Observable<ODataSingle<T>> {
     return this.entity(entity)
       .get();
   }
 
-  public create(entity: T): Observable<T> {
+  public create(entity: T): Observable<ODataSingle<T>> {
     return this.entities()
       .post(entity);
   }
 
-  public update(entity: T): Observable<T> {
+  public update(entity: T, etag?: string): Observable<ODataSingle<T>> {
     return this.entity(entity)
-      .put(entity);
+      .put(entity, {etag});
   }
 
-  public assign(entity: Partial<T>) {
+  public assign(entity: Partial<T>, etag?: string) {
     return this.entity(entity)
-      .patch(entity);
+      .patch(entity, {etag});
   }
 
-  public destroy(entity: T) {
-    let etag = this.client.resolveEtag(entity);
+  public destroy(entity: T, etag?: string) {
     return this.entity(entity)
       .delete({etag});
   }
 
   // Shortcuts
-  public fetchOrCreate(entity: Partial<T>): Observable<T> {
+  public fetchOrCreate(entity: Partial<T>): Observable<ODataSingle<T>> {
     return this.fetchOne(entity)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)

@@ -8,6 +8,7 @@ import { ODataSchema, Parser } from '../models';
 import { ODataSegments } from './segments';
 import { ODataCollection, ODataValue } from './responses';
 import { ODataOptions } from './options';
+import { ODataSingle } from './responses/single';
 
 export abstract class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -47,11 +48,12 @@ export abstract class ODataResource<Type> {
   }
 
   deserialize(attrs: any): Type {
-    return this.parser.parse(attrs, this.clone()) as Type;
+    return this.parser.parse(attrs) as Type;
   }
 
-  toSingle(body: any): Type {
-    return this.deserialize(body);
+  toSingle(body: any): ODataSingle<Type> {
+    body = this.deserialize(body);
+    return new ODataSingle<any>(body);
   }
 
   toCollection(body: any): ODataCollection<Type> {

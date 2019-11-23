@@ -1,10 +1,14 @@
-import { ODATA_COUNT, ODATA_NEXTLINK, ENTITYSET_VALUE } from '../../types';
+import { ODATA_COUNT, ODATA_NEXTLINK, VALUE } from '../../types';
 
 export class ODataCollection<T> {
-  [ENTITYSET_VALUE]: T[];
+  [VALUE]: T[];
 
-  constructor(data: {[ENTITYSET_VALUE]: T[]}) {
-    Object.assign(this, data);
+  constructor(data: {[VALUE]: T[]}) {
+    let keys = Object.keys(data);
+    let metadata = keys.filter(k => k.startsWith("@odata"))
+      .reduce((acc, k) => Object.assign(acc, {[k]: data[k]}), {});
+    Object.assign(this, metadata);
+    this[VALUE] = data[VALUE];
   }
 
   get count(): number {
@@ -29,7 +33,7 @@ export class ODataCollection<T> {
   
   public [Symbol.iterator]() {
     let pointer = 0;
-    let models = this[ENTITYSET_VALUE];
+    let models = this[VALUE];
     return {
       next(): IteratorResult<T> {
         return {

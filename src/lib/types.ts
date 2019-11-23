@@ -22,5 +22,3 @@ export const $COUNT = '$count';
 export const IF_MATCH_HEADER = 'If-Match';
 
 export const VALUE = 'value';
-export const PROPERTY_VALUE = VALUE;
-export const ENTITYSET_VALUE = VALUE;

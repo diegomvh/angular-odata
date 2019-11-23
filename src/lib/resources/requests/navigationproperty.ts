@@ -14,6 +14,7 @@ import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollection } from '../responses';
+import { ODataSingle } from '../responses/single';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -101,7 +102,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
-  }): Observable<T>;
+  }): Observable<ODataSingle<T>>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -198,7 +199,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<T> {
+  }): Observable<ODataSingle<T>> {
     return this
       .get({ 
         headers: options && options.headers,

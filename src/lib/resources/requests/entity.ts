@@ -14,6 +14,7 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
+import { ODataSingle } from '../responses/single';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -95,7 +96,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<T> {
+  }): Observable<ODataSingle<T>> {
     return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
@@ -111,7 +112,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<T> {
+  }): Observable<ODataSingle<T>> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -128,7 +129,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<T> {
+  }): Observable<ODataSingle<T>> {
     return this.client.put<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
@@ -146,7 +147,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<T> {
+  }): Observable<ODataSingle<T>> {
     return this.client.patch<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,

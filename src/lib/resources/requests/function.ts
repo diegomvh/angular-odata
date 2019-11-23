@@ -10,6 +10,7 @@ import { PlainObject, $COUNT } from '../../types';
 import { Parser } from '../../models';
 import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
+import { ODataSingle } from '../responses/single';
 
 export class ODataFunctionResource<T> extends ODataResource<T> {
 
@@ -39,7 +40,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType?: 'entity',
     withCredentials?: boolean,
-  }): Observable<T>;
+  }): Observable<ODataSingle<T>>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

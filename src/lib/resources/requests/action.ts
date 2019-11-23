@@ -10,6 +10,7 @@ import { Parser } from '../../models';
 import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
+import { ODataSingle } from '../responses/single';
 
 export class ODataActionResource<T> extends ODataResource<T> {
   // Factory
@@ -33,7 +34,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
-  }): Observable<T>;
+  }): Observable<ODataSingle<T>>;
 
   post(body?: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

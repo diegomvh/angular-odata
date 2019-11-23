@@ -8,6 +8,7 @@ import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
+import { ODataSingle } from '../responses/single';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   // Factory
@@ -30,7 +31,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<T> {
+  }): Observable<ODataSingle<T>> {
     return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',

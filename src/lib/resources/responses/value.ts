@@ -1,9 +1,13 @@
-import { PROPERTY_VALUE } from '../../types';
+import { VALUE } from '../../types';
 
 export class ODataValue<T> {
-  [PROPERTY_VALUE]: T;
+  [VALUE]: T;
 
-  constructor(data: {[PROPERTY_VALUE]: T}) {
-    Object.assign(this, data);
+  constructor(data: {[VALUE]: T}) {
+    let keys = Object.keys(data);
+    let metadata = keys.filter(k => k.startsWith("@odata"))
+      .reduce((acc, k) => Object.assign(acc, {[k]: data[k]}), {});
+    Object.assign(this, metadata);
+    this[VALUE] = data[VALUE];
   }
 }
