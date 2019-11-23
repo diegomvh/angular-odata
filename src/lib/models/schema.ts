@@ -1,14 +1,13 @@
 import { Parser, PARSERS } from './parser';
 import { ODataSettings } from './settings';
 import { Types, Enums } from '../utils';
-import { ODataResource, ODataEntityResource } from '../resources/requests';
 import { PlainObject } from '../types';
 
 export interface Field {
   type: string;
   enum?: { [key: number]: string | number };
   schema?: ODataSchema<any>;
-  ctor?: { new(attrs: PlainObject | PlainObject[], query: ODataResource<any>): any };
+  ctor?: { new(attrs: PlainObject | PlainObject[]): any };
   enumString?: boolean;
   default?: any;
   maxLength?: number;
@@ -48,7 +47,7 @@ class ODataSchemaField<T> implements Field, Parser<T> {
     return this.ref.split('/').reduce((acc, name) => acc[name], value);
   }
 
-  parse(value: any, query?: ODataResource<any>) {
+  parse(value: any) {
     if (value === null) return value;
     if (this.enum) {
       //TODO: enumString
@@ -56,14 +55,11 @@ class ODataSchemaField<T> implements Field, Parser<T> {
         Enums.toFlags(this.enum, value) :
         Enums.toValue(this.enum, value);
     } else if (this.schema) {
-      query = this.isNavigation ?
-        (query as ODataEntityResource<any>).navigationProperty<any>(this.name) :
-        (query as ODataEntityResource<any>).property<any>(this.name);
-      value = this.schema.parse(value, query);
+      value = this.schema.parse(value);
       if (this.model) {
-        value = new this.model(value, query.clone<any>());
+        value = new this.model(value);
       } else if (this.collection)
-        value = new this.collection(value, query.clone<any>());
+        value = new this.collection(value);
       return value;
     } else if (this.type in PARSERS) {
       return PARSERS[this.type].parse(value);
@@ -108,7 +104,7 @@ export class ODataSchema<Type> implements Parser<Type> {
   model?: { new(...any): any };
 
   constructor(fields: { [name: string]: Field }) {
-    this.fields = Object.entries(fields || {})
+    this.fields = Object.entries(fields)
       .map(([name, f]) => new ODataSchemaField(name, f));
   }
 
@@ -144,22 +140,20 @@ export class ODataSchema<Type> implements Parser<Type> {
       _toJSON(objs);
   }
 
-  parse(objs: any, query?: ODataResource<any>): any {
-    let _parse = (obj, q) =>
+  parse(objs: any): any {
+    let _parse = (obj) =>
       Object.assign(obj, this.fields
         .filter(f => f.name in obj)
-        .reduce((acc, f) => Object.assign(acc, { [f.name]: f.parse(obj[f.name], q) }), {})
+        .reduce((acc, f) => Object.assign(acc, { [f.name]: f.parse(obj[f.name]) }), {})
       );
     return Array.isArray(objs) ?
       objs.map(obj => {
-        if (!this.isComplex())
-          (query as ODataEntityResource<any>).key(obj);
-        let attrs = _parse(obj, query);
+        let attrs = _parse(obj);
         return (this.model) ?
-          new this.model(attrs, query) :
+          new this.model(attrs) :
           attrs;
       }) :
-      _parse(objs, query);
+      _parse(objs);
   }
 
   parserFor<E>(name: string): Parser<E> {
@@ -180,6 +174,10 @@ export class ODataSchema<Type> implements Parser<Type> {
   }
 
   /*
+      query = this.isNavigation ?
+        (query as ODataEntityResource<any>).navigationProperty<any>(this.name) :
+        (query as ODataEntityResource<any>).property<any>(this.name);
+
 relationships(obj: Type, query: ODataRequest<any>) {
 (obj as any).relationships = {};
 this.navigations().forEach(field => {

@@ -7,7 +7,7 @@ import { ODataModel } from './model';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
-  _query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>;
+  _query: ODataResource<any> | null;
   _models: M[];
   _state: {
     records?: number,
@@ -16,9 +16,8 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     pages?: number
   } = {};
 
-  constructor(models: M[], query: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>) {
+  constructor(models: M[]) {
     this._models = models;
-    this._query = query;
   }
 
   private setState(state: {records?: number, page?: number, size?: number, pages?: number}) {
@@ -50,11 +49,14 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
   }
 
-  assign(collection: ODataCollection<any>, query: ODataEntitySetResource<any>) {
+  assign(collection: ODataCollection<any>) {
     this.setState({records: collection.count, size: collection.skip});
     this._models = collection.value;
-    this._query = query;
     return this;
+  }
+
+  attach(query: ODataResource<any>){
+    this._query = query;
   }
 
   fetch(): Observable<this> {
@@ -67,7 +69,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
     return query.get()
       .pipe(
-        map(col => col ? this.assign(col, query) : this)
+        map(col => col ? this.assign(col) : this)
       );
   }
 

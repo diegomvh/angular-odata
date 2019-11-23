@@ -1,7 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand } from '../resources';
+import { ODataEntityResource, Expand, ODataResource } from '../resources';
 
 import { ODataModelCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
@@ -18,12 +18,12 @@ enum State {
 
 export class ODataModel {
   // Statics
-  _query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
+  _query: ODataResource<any> | null;
   _state: State;
   _relationships: { [name: string]: ODataModel | ODataModelCollection<ODataModel> }
 
-  constructor(entity: any, query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>) {
-    this.assign(entity, query);
+  constructor(entity: any) {
+    this.assign(entity);
   }
 
   setState(state: State) {
@@ -36,11 +36,17 @@ export class ODataModel {
 
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toJSON(), this._query.clone() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>);
+    let model = new Ctor(this.toJSON());
+    if (this._query)
+      model.attach(this._query.clone() as ODataResource<any>);
   }
 
-  assign(entity: any, query: ODataEntityResource<any> | ODataNavigationPropertyResource<any>) {
+  assign(entity: any) {
     Object.assign(this, entity);
+    return this;
+  }
+
+  attach(query: ODataResource<any>) {
     this._query = query;
     return this;
   }
@@ -51,7 +57,7 @@ export class ODataModel {
     if (query.isNew())
       throw new Error(`Can't fetch without entity key`);
     return query.get({responseType: 'entity'})
-      .pipe( map(entity => entity ? this.assign(entity, query) : this) );
+      .pipe( map(entity => entity ? this.assign(entity) : this) );
   }
 
   save(): Observable<this> {
@@ -88,11 +94,11 @@ export class ODataModel {
     */
     if (query.isNew()) {
       return query.post(this)
-        .pipe( map(entity => entity ? this.assign(entity, query) : this) );
+        .pipe( map(entity => entity ? this.assign(entity) : this) );
     } else {
       query.key(this);
       return query.put(this)
-        .pipe( map(entity => entity ? this.assign(entity, query) : this) );
+        .pipe( map(entity => entity ? this.assign(entity) : this) );
     }
   }
 

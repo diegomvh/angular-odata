@@ -31,13 +31,17 @@ export class ODataEntityService<T> {
   public model<M extends ODataModel>(attrs?: any): M {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Model = this.client.modelForType(Ctor.type);
-    return new Model(attrs || {}, this.entity()) as M;
+    let model = new Model(attrs || {}) as M;
+    model.attach(this.entity());
+    return model;
   }
 
   public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Collection = this.client.collectionForType(Ctor.type);
-    return new Collection(models || [], this.entities()) as C;
+    let collection = new Collection(models || []) as C;
+    collection.attach(this.entities());
+    return collection;
   }
 
   public navigationProperty<P>(entity: Partial<T>, name: string): ODataNavigationPropertyResource<P> {
