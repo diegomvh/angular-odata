@@ -1,5 +1,3 @@
-import { ODataResource } from '../resources/requests';
-
 export interface Parser<T> {
   type: string;
   parse(value: any): T;

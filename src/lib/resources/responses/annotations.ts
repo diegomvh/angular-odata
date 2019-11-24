@@ -1,5 +1,29 @@
 import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_ANNOTATION_PREFIX } from '../../types';
 
+/*
+  _newResourceForContext(resource: ODataResource<any>, attrs: any) {
+    if (resource instanceof ODataEntitySetResource)
+      return resource.entity(attrs);
+    if (resource instanceof ODataFunctionResource || resource instanceof ODataActionResource) {
+      // It depends on the defined return scheme and context
+      let ctx = attrs[ODATA_CONTEXT] as string;
+      ctx = ctx.substr(ctx.indexOf("#") + 1);
+      if (ctx.startsWith("Collection(") && ctx.endsWith(")")) {
+        let type = ctx.substr(11, ctx.length - 12);
+        let schema = type ? this.parserForType<any>(type) as ODataSchema<any> : null;
+        return ODataEntityResource.factory<any>(this, {parser: schema});
+      } else if (ctx.endsWith("$entity")) {
+        let type = (ODATA_TYPE in attrs)? 
+          (attrs[ODATA_TYPE] as string).substr(1) :
+          resource.type();
+        let eset = ctx.split(/(\w+)/)[1];
+        return this.entitySet(eset, type).entity(attrs);
+      }
+    }
+    return resource.clone<any>();
+  }
+  */
+
 export class ODataAnnotations {
   constructor(body: any) {
     Object.keys(body)

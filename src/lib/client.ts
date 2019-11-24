@@ -49,10 +49,6 @@ export class ODataClient {
     return `${serviceRoot}${resource.path()}`;
   }
 
-  resolveEtag(attrs: PlainObject): string {
-    return attrs[ODATA_ETAG];
-  }
-
   parserForType<T>(type: string): Parser<T> | null {
     let parser = this.settings.schemaForType(type) as Parser<T>;
     if (!parser && type in PARSERS) {
@@ -67,28 +63,6 @@ export class ODataClient {
 
   collectionForType(type: string) {
     return this.settings.collectionForType(type) as typeof ODataModelCollection;
-  }
-
-  _newResourceForContext(resource: ODataResource<any>, attrs: any) {
-    if (resource instanceof ODataEntitySetResource)
-      return resource.entity(attrs);
-    if (resource instanceof ODataFunctionResource || resource instanceof ODataActionResource) {
-      // It depends on the defined return scheme and context
-      let ctx = attrs[ODATA_CONTEXT] as string;
-      ctx = ctx.substr(ctx.indexOf("#") + 1);
-      if (ctx.startsWith("Collection(") && ctx.endsWith(")")) {
-        let type = ctx.substr(11, ctx.length - 12);
-        let schema = type ? this.parserForType<any>(type) as ODataSchema<any> : null;
-        return ODataEntityResource.factory<any>(this, {parser: schema});
-      } else if (ctx.endsWith("$entity")) {
-        let type = (ODATA_TYPE in attrs)? 
-          (attrs[ODATA_TYPE] as string).substr(1) :
-          resource.type();
-        let eset = ctx.split(/(\w+)/)[1];
-        return this.entitySet(eset, type).entity(attrs);
-      }
-    }
-    return resource.clone<any>();
   }
 
   // Requests
@@ -325,12 +299,9 @@ export class ODataClient {
     // The Url
     const url = this.createEndpointUrl(resource);
 
-    // Etag
-    let etag = options.etag || options.body && options.body[ODATA_ETAG];
-
     let customHeaders = {};
-    if (typeof (etag) === 'string')
-      customHeaders[IF_MATCH_HEADER] = etag;
+    if (typeof (options.etag) === 'string')
+      customHeaders[IF_MATCH_HEADER] = options.etag;
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);
 
     // Params
