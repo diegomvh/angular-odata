@@ -12,8 +12,9 @@
     "odata",
     "odata v4",
     "typescript",
-    "angular",
-    "angular6"
+    "api",
+    "@angular",
+    "angular"
   ],
   "peerDependencies": {
     "@angular/common": "^8.2.8",
