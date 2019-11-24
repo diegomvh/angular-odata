@@ -1,16 +1,14 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataCollection } from '../responses/collection';
 import { ODataSegments, Segments } from '../segments';
 import { ODataOptions } from '../options';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Parser } from '../../models';
-import { ODataValue } from '../responses';
+import { ODataValue, ODataCollection, ODataSingle } from '../responses';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
-import { ODataSingle } from '../responses/single';
 
 export class ODataActionResource<T> extends ODataResource<T> {
   // Factory

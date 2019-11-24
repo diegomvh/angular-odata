@@ -13,9 +13,8 @@ import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { Parser } from '../../models';
-import { ODataCollection } from '../responses';
+import { ODataCollection, ODataSingle } from '../responses';
 import { map } from 'rxjs/operators';
-import { ODataSingle } from '../responses/single';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 

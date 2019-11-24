@@ -13,8 +13,7 @@ import { ODataPropertyResource } from './property';
 import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollection } from '../responses';
-import { ODataSingle } from '../responses/single';
+import { ODataCollection, ODataSingle } from '../responses';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -252,7 +251,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand((resp: ODataCollection<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
+        expand((resp: ODataCollection<T>) => (resp.annotations.skip || resp.annotations.skiptoken) ? fetch(resp.annotations) : empty()),
         concatMap((resp: ODataCollection<T>) => resp.value),
         toArray());
   }

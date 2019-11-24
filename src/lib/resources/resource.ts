@@ -1,14 +1,14 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { PlainObject, VALUE } from '../types';
+import { PlainObject, VALUE, ODATA_ANNOTATION_PREFIX } from '../types';
 import { ODataClient } from '../client';
 import { ODataSchema, Parser } from '../models';
 
 import { ODataSegments } from './segments';
-import { ODataCollection, ODataValue } from './responses';
+import { ODataCollection, ODataValue, ODataSingle } from './responses';
 import { ODataOptions } from './options';
-import { ODataSingle } from './responses/single';
+import { ODataAnnotations } from './responses/annotations';
 
 export abstract class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -47,25 +47,27 @@ export abstract class ODataResource<Type> {
     return this.parser.toJSON(obj);
   }
 
-  deserialize(attrs: any): Type {
-    return this.parser.parse(attrs) as Type;
+  deserialize(attrs: any): Type | Type[] {
+    return this.parser.parse(attrs) as Type | Type[];
   }
 
   toSingle(body: any): ODataSingle<Type> {
-    body = this.deserialize(body);
-    return new ODataSingle<any>(body);
+    let attrs = Object.keys(body).filter(k => !k.startsWith(ODATA_ANNOTATION_PREFIX))
+      .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
+    let single: ODataSingle<Type> = <any>this.deserialize(attrs);
+    single.annotations = new ODataAnnotations(body);
+    return single;
   }
 
   toCollection(body: any): ODataCollection<Type> {
-    body[VALUE] = this.deserialize(body[VALUE]);
-    return new ODataCollection<any>(body);
+    let value = <any>this.deserialize(body[VALUE]);
+    return {value, annotations: new ODataAnnotations(body)};
   }
 
   toValue(body: any): ODataValue<Type> {
-    body[VALUE] = this.deserialize(body[VALUE]);
-    return new ODataValue<any>(body);
+    let value = <any>this.deserialize(body[VALUE]);
+    return {value, annotations: new ODataAnnotations(body)};
   }
-
 
   toString(): string {
     let path = this.path();

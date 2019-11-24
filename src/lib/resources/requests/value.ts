@@ -8,7 +8,7 @@ import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataSingle } from '../responses/single';
+import { ODataSingle } from '../responses';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   // Factory

@@ -2,7 +2,7 @@ import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataCollection } from '../responses/collection';
+import { ODataCollection, ODataSingle } from '../responses/base';
 import { ODataSegments, Segments } from '../segments';
 import { ODataOptions, Options } from '../options';
 import { ODataClient } from '../../client';
@@ -10,7 +10,6 @@ import { PlainObject, $COUNT } from '../../types';
 import { Parser } from '../../models';
 import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
-import { ODataSingle } from '../responses/single';
 
 export class ODataFunctionResource<T> extends ODataResource<T> {
 

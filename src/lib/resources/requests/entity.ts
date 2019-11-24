@@ -1,5 +1,6 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { PlainObject, EntityKey } from '../../types';
 
@@ -13,8 +14,7 @@ import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Parser } from '../../models';
-import { map } from 'rxjs/operators';
-import { ODataSingle } from '../responses/single';
+import { ODataSingle } from '../responses';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory

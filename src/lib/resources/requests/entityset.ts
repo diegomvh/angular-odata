@@ -14,9 +14,8 @@ import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollection } from '../responses';
+import { ODataCollection, ODataSingle } from '../responses';
 import { Types } from '../../utils';
-import { ODataSingle } from '../responses/single';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -180,7 +179,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand((resp: ODataCollection<T>) => (resp.skip || resp.skiptoken) ? fetch(resp) : empty()),
+        expand((resp: ODataCollection<T>) => (resp.annotations.skip || resp.annotations.skiptoken) ? fetch(resp.annotations) : empty()),
         concatMap((resp: ODataCollection<T>) => resp.value),
         toArray());
   }

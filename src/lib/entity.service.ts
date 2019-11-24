@@ -3,13 +3,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataCollection } from './resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataCollection, ODataSingle } from './resources';
 
 import { ODataClient } from "./client";
 import { ODataRefResource } from './resources/requests/ref';
 import { EntityKey } from './types';
 import { ODataModel, ODataModelCollection } from './models';
-import { ODataSingle } from './resources/responses/single';
 
 @Injectable()
 export class ODataEntityService<T> {

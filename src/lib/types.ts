@@ -1,7 +1,8 @@
 export type EntityKey = string | number | PlainObject;
 export type PlainObject = { [property: string]: any };
 
-// CONSTANTS
+// ANNOTATIONS
+export const ODATA_ANNOTATION_PREFIX = '@odata';
 export const ODATA_CONTEXT = '@odata.context';
 export const ODATA_TYPE = '@odata.type';
 export const ODATA_ETAG = '@odata.etag';
