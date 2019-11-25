@@ -198,9 +198,11 @@ export class OptionHandler<T> {
 
   unset(name: string) {
     delete this.assertObject()[name];
-    this.o[this.t] = this.o[this.t].filter(v => !Types.isEmpty(v));
-    if (this.o[this.t].length === 1)
-      this.o[this.t] = this.o[this.t][0];
+    if (Array.isArray(this.o[this.t])) {
+      this.o[this.t] = this.o[this.t].filter(v => !Types.isEmpty(v));
+      if (this.o[this.t].length === 1)
+        this.o[this.t] = this.o[this.t][0];
+    }
   }
 
   has(name: string) {
