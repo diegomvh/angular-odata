@@ -6,7 +6,7 @@ import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, OData
 import { ODataModel } from './model';
 
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
-  _query: ODataResource<any> | null;
+  _resource: ODataResource<any> | null;
   _models: M[];
   _state: {
     records?: number,
@@ -55,11 +55,11 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   }
 
   attach(query: ODataResource<any>){
-    this._query = query;
+    this._resource = query;
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntitySetResource<any> = this._query.clone<any>() as ODataEntitySetResource<any>;
+    let query: ODataEntitySetResource<any> = this._resource.clone<any>() as ODataEntitySetResource<any>;
     if (!this._state.page)
       this._state.page = 1;
     if (this._state.size) {
@@ -100,26 +100,26 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
 
   // Mutate query
   select(select?: Select) {
-    return (this._query as ODataEntitySetResource<any>).select(select);
+    return (this._resource as ODataEntitySetResource<any>).select(select);
   }
 
-  filter(filter?: Filter) {
-    return (this._query as ODataEntitySetResource<any>).filter(filter);
+  filter(filter?: Filter<M>) {
+    return (this._resource as ODataEntitySetResource<any>).filter(filter);
   }
 
   search(search?: string) {
-    return (this._query as ODataEntitySetResource<any>).search(search);
+    return (this._resource as ODataEntitySetResource<any>).search(search);
   }
 
   orderBy(orderBy?: OrderBy) {
-    return (this._query as ODataEntitySetResource<any>).orderBy(orderBy);
+    return (this._resource as ODataEntitySetResource<any>).orderBy(orderBy);
   }
 
-  expand(expand?: Expand) {
-    return (this._query as ODataEntitySetResource<any>).expand(expand);
+  expand(expand?: Expand<M>) {
+    return (this._resource as ODataEntitySetResource<any>).expand(expand);
   }
 
   groupBy(groupBy?: GroupBy) {
-    return (this._query as ODataEntitySetResource<any>).groupBy(groupBy);
+    return (this._resource as ODataEntitySetResource<any>).groupBy(groupBy);
   }
 }

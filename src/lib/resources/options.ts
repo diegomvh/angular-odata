@@ -6,9 +6,14 @@ import { PlainObject, EntityKey } from '../types';
 
 export type Select = string | string[];
 export type OrderBy = string | string[];
-export type Filter = string | PlainObject | Array<string | PlainObject>;
-export type NestedExpandOptions = { [key: string]: Partial<ExpandQueryOptions>; };
-export type Expand = string | NestedExpandOptions | Array<string | NestedExpandOptions>;
+export type NestedFilterOptions<T> = { 
+  [P in keyof T]?: PlainObject;
+};
+export type Filter<T> = string | NestedFilterOptions<T> | Array<string | NestedFilterOptions<T>>;
+export type NestedExpandOptions<T> = { 
+  [P in keyof T]?: Partial<ExpandQueryOptions<T[P]>>;
+};
+export type Expand<T> = string | NestedExpandOptions<T> | Array<string | NestedExpandOptions<T>>;
 export enum StandardAggregateMethods {
   sum = "sum",
   min = "min",
@@ -18,30 +23,21 @@ export enum StandardAggregateMethods {
 }
 export type Aggregate = { [propertyName: string]: { with: StandardAggregateMethods, as: string } } | string;
 
-export interface ExpandQueryOptions {
+export interface ExpandQueryOptions<T> {
   select: string | string[];
-  filter: Filter;
+  filter: Filter<T>;
   orderBy: string | string[];
   top: number;
-  expand: Expand;
+  expand: Expand<T>;
 }
 export interface Transform {
   aggregate?: Aggregate | Aggregate[];
-  filter?: Filter;
+  filter?: Filter<any>;
   groupBy?: GroupBy;
 }
 export interface GroupBy {
   properties: string[];
   transform?: Transform;
-}
-export interface QueryOptions extends ExpandQueryOptions {
-  search: string;
-  transform: PlainObject | PlainObject[];
-  skip: number;
-  key: EntityKey; 
-  action: string;
-  func: string | { [functionName: string]: { [parameterName: string]: any } };
-  format: string;
 }
 
 export enum Options {

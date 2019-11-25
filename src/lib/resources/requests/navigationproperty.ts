@@ -13,7 +13,6 @@ import { ODataPropertyResource } from './property';
 import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataMetadata } from '../responses';
 import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
@@ -148,8 +147,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.options.option<Select>(Options.select, opts);
   }
 
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(Options.expand, opts);
   }
 
   transform(opts?: Transform) {
@@ -160,8 +159,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.options.option<string>(Options.search, opts);
   }
 
-  filter(opts?: Filter) {
-    return this.options.option<Filter>(Options.filter, opts);
+  filter(opts?: Filter<T>) {
+    return this.options.option<Filter<T>>(Options.filter, opts);
   }
 
   groupBy(opts?: GroupBy) {

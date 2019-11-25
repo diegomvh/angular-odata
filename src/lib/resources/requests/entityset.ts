@@ -120,8 +120,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return this.options.option<Select>(Options.select, opts);
   }
 
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(Options.expand, opts);
   }
 
   transform(opts?: Transform) {
@@ -132,8 +132,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return this.options.option<string>(Options.search, opts);
   }
 
-  filter(opts?: Filter) {
-    return this.options.option<Filter>(Options.filter, opts);
+  filter(opts?: Filter<T>) {
+    return this.options.option<Filter<T>>(Options.filter, opts);
   }
 
   groupBy(opts?: GroupBy) {

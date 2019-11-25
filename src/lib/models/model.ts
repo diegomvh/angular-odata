@@ -18,7 +18,7 @@ enum State {
 
 export class ODataModel {
   // Statics
-  _query: ODataResource<any> | null;
+  _resource: ODataResource<any> | null;
   _state: State;
   _relationships: { [name: string]: ODataModel | ODataModelCollection<ODataModel> }
 
@@ -31,14 +31,14 @@ export class ODataModel {
   }
 
   toJSON(): PlainObject {
-    return this._query.serialize(this);
+    return this._resource.serialize(this);
   }
 
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
     let model = new Ctor(this.toJSON());
-    if (this._query)
-      model.attach(this._query.clone() as ODataResource<any>);
+    if (this._resource)
+      model.attach(this._resource.clone() as ODataResource<any>);
   }
 
   assign(entity: any) {
@@ -47,12 +47,12 @@ export class ODataModel {
   }
 
   attach(query: ODataResource<any>) {
-    this._query = query;
+    this._resource = query;
     return this;
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntityResource<any> | ODataNavigationPropertyResource<any> = this._query.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
+    let query: ODataEntityResource<any> | ODataNavigationPropertyResource<any> = this._resource.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
     query.key(this);
     if (query.isNew())
       throw new Error(`Can't fetch without entity key`);
@@ -61,7 +61,7 @@ export class ODataModel {
   }
 
   save(): Observable<this> {
-    let query = this._query.clone() as ODataEntityResource<any>;
+    let query = this._resource.clone() as ODataEntityResource<any>;
     /*
     let obs$ = of(this.toJSON());
     let changes = Object.keys(this._relationships)
@@ -103,7 +103,7 @@ export class ODataModel {
   }
 
   destroy(): Observable<any> {
-    let query = this._query.clone() as ODataEntityResource<any>;
+    let query = this._resource.clone() as ODataEntityResource<any>;
     if (query.isNew())
       throw new Error(`Can't destroy without entity key`);
     query.key(this);
@@ -112,10 +112,10 @@ export class ODataModel {
 
   // Mutate query
   select(select?: string | string[]) {
-    return (this._query as ODataEntityResource<any>).select(select);
+    return (this._resource as ODataEntityResource<any>).select(select);
   }
 
-  expand(expand?: Expand) {
-    return (this._query as ODataEntityResource<any>).expand(expand);
+  expand(expand?: Expand<ODataModel>) {
+    return (this._resource as ODataEntityResource<any>).expand(expand);
   }
 }
