@@ -147,7 +147,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSingle<T>> {
+  }): Observable<T> {
     return this.client.patch<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
@@ -156,7 +156,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toSingle(body)));
+    });
   }
 
   delete(options?: {

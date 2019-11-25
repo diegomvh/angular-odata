@@ -55,18 +55,18 @@ export abstract class ODataResource<Type> {
     let attrs = Object.keys(body).filter(k => !k.startsWith(ODATA_ANNOTATION_PREFIX))
       .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
     let single: ODataSingle<Type> = <any>this.deserialize(attrs);
-    single.annotations = new ODataAnnotations(body);
+    single._odata = new ODataAnnotations(body);
     return single;
   }
 
   toCollection(body: any): ODataCollection<Type> {
     let value = <any>this.deserialize(body[VALUE]);
-    return {value, annotations: new ODataAnnotations(body)};
+    return {value, _odata: new ODataAnnotations(body)};
   }
 
   toValue(body: any): ODataValue<Type> {
     let value = <any>this.deserialize(body[VALUE]);
-    return {value, annotations: new ODataAnnotations(body)};
+    return {value, _odata: new ODataAnnotations(body)};
   }
 
   toString(): string {

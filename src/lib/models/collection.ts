@@ -50,7 +50,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   }
 
   assign(collection: ODataCollection<any>) {
-    this.setState({records: collection.annotations.count, size: collection.annotations.skip});
+    this.setState({records: collection._odata.count, size: collection._odata.skip});
     this._models = collection.value;
     return this;
   }

@@ -251,7 +251,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand((resp: ODataCollection<T>) => (resp.annotations.skip || resp.annotations.skiptoken) ? fetch(resp.annotations) : empty()),
+        expand((resp: ODataCollection<T>) => (resp._odata.skip || resp._odata.skiptoken) ? fetch(resp._odata) : empty()),
         concatMap((resp: ODataCollection<T>) => resp.value),
         toArray());
   }

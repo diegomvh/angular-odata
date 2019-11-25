@@ -17,9 +17,9 @@ export class ODataVCollection<E> implements Iterable<E> {
   constructor(col: ODataCollection<E>, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
     this.entities = col.value;
     this._query = query;
-    let records = col.annotations.count;
-    let size = (query.skip().value() || col.annotations.skip || col.value.length);
-    let skip = (query.skip().value() || col.annotations.skip || 0);
+    let records = col._odata.count;
+    let size = (query.skip().value() || col._odata.skip || col.value.length);
+    let skip = (query.skip().value() || col._odata.skip || 0);
     let page = (query.top().value()) ? 
       Math.ceil(skip / query.top().value()) + 1 : 1;
     this.setState({ records, page, size });
@@ -61,8 +61,8 @@ export class ODataVCollection<E> implements Iterable<E> {
       .pipe(
         map(set => {
           if (set) {
-            if (set.annotations.skip) {
-              this.setState({size: set.annotations.skip});
+            if (set._odata.skip) {
+              this.setState({size: set._odata.skip});
             }
             this.entities = set.value;
           }
