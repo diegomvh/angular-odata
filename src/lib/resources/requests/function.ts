@@ -2,14 +2,13 @@ import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataCollection, ODataSingle } from '../responses/base';
 import { ODataSegments, Segments } from '../segments';
 import { ODataOptions, Options } from '../options';
 import { ODataClient } from '../../client';
 import { PlainObject, $COUNT } from '../../types';
 import { Parser } from '../../models';
-import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
+import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataFunctionResource<T> extends ODataResource<T> {
 
@@ -39,7 +38,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType?: 'entity',
     withCredentials?: boolean,
-  }): Observable<ODataSingle<T>>;
+  }): Observable<[T, ODataAnnotations]>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -48,7 +47,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     responseType?: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataCollection<T>>;
+  }): Observable<[T[], ODataAnnotations]>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -56,7 +55,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType?: 'property',
     withCredentials?: boolean,
-  }): Observable<ODataValue<T>>;
+  }): Observable<[T, ODataAnnotations]>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

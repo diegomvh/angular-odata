@@ -13,8 +13,8 @@ import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { Parser } from '../../models';
-import { ODataCollection, ODataSingle } from '../responses';
 import { map } from 'rxjs/operators';
+import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -82,7 +82,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
-  }): Observable<ODataSingle<T>>;
+  }): Observable<[T, ODataAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -91,7 +91,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataCollection<T>>;
+  }): Observable<[T[], ODataAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },

@@ -1,12 +1,8 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
 import { PlainObject, VALUE, ODATA_ANNOTATION_PREFIX } from '../types';
 import { ODataClient } from '../client';
-import { ODataSchema, Parser } from '../models';
+import { Parser } from '../models';
 
 import { ODataSegments } from './segments';
-import { ODataCollection, ODataValue, ODataSingle } from './responses';
 import { ODataOptions } from './options';
 import { ODataAnnotations } from './responses/annotations';
 
@@ -44,29 +40,25 @@ export abstract class ODataResource<Type> {
   }
 
   serialize(obj: Type | Partial<Type>): any {
-    return this.parser.toJSON(obj);
+    return this.parser !== null ? this.parser.toJSON(obj) : obj;
   }
 
   deserialize(attrs: any): Type | Type[] {
-    return this.parser.parse(attrs) as Type | Type[];
+    return this.parser !== null ? this.parser.parse(attrs) : attrs;
   }
 
-  toSingle(body: any): ODataSingle<Type> {
+  toSingle(body: any): [Type, ODataAnnotations] {
     let attrs = Object.keys(body).filter(k => !k.startsWith(ODATA_ANNOTATION_PREFIX))
       .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
-    let single: ODataSingle<Type> = <any>this.deserialize(attrs);
-    single._odata = new ODataAnnotations(body);
-    return single;
+    return [<Type>this.deserialize(attrs), new ODataAnnotations(body)];
   }
 
-  toCollection(body: any): ODataCollection<Type> {
-    let value = <any>this.deserialize(body[VALUE]);
-    return {value, _odata: new ODataAnnotations(body)};
+  toCollection(body: any): [Type[], ODataAnnotations] {
+    return [<Type[]>this.deserialize(body[VALUE]), new ODataAnnotations(body)];
   }
 
-  toValue(body: any): ODataValue<Type> {
-    let value = <any>this.deserialize(body[VALUE]);
-    return {value, _odata: new ODataAnnotations(body)};
+  toValue(body: any): [Type, ODataAnnotations] {
+    return [<Type>this.deserialize(body[VALUE]), new ODataAnnotations(body)];
   }
 
   toString(): string {

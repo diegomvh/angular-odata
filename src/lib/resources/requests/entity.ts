@@ -14,7 +14,7 @@ import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Parser } from '../../models';
-import { ODataSingle } from '../responses';
+import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -96,7 +96,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<ODataSingle<T>> {
+  }): Observable<[T, ODataAnnotations]> {
     return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
@@ -112,7 +112,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSingle<T>> {
+  }): Observable<[T, ODataAnnotations]> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -129,7 +129,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSingle<T>> {
+  }): Observable<[T, ODataAnnotations]> {
     return this.client.put<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,

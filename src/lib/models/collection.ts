@@ -1,10 +1,9 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataCollection } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
-import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   _query: ODataResource<any> | null;
@@ -49,9 +48,9 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
   }
 
-  assign(collection: ODataCollection<any>) {
-    this.setState({records: collection._odata.count, size: collection._odata.skip});
-    this._models = collection.value;
+  assign(models: M[], odata: ODataAnnotations) {
+    this.setState({records: odata.count, size: odata.skip});
+    this._models = models;
     return this;
   }
 
@@ -69,7 +68,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
     return query.get()
       .pipe(
-        map(col => col ? this.assign(col) : this)
+        map(([models, odata]) => models ? this.assign(models, odata) : this)
       );
   }
 

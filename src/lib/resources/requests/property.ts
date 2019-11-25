@@ -8,8 +8,8 @@ import { ODataOptions } from '../options';
 import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
 import { Parser } from '../../models';
-import { ODataValue } from '../responses';
 import { map } from 'rxjs/operators';
+import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -53,7 +53,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<ODataValue<T>> {
+  }): Observable<[T, ODataAnnotations]> {
     return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',

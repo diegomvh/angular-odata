@@ -13,7 +13,8 @@ import { ODataPropertyResource } from './property';
 import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollection, ODataSingle } from '../responses';
+import { ODataMetadata } from '../responses';
+import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -101,7 +102,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
-  }): Observable<ODataSingle<T>>;
+  }): Observable<[T, ODataAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -110,7 +111,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataCollection<T>>;
+  }): Observable<[T[], ODataAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -198,7 +199,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataSingle<T>> {
+  }): Observable<[T, ODataAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -214,7 +215,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataCollection<T>> {
+  }): Observable<[T[], ODataAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -232,17 +233,16 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<T[]> {
-    let query = this.clone<T>() as ODataNavigationPropertyResource<T>;
-    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }) => {
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataAnnotations]> => {
       if (opts) {
         if (opts.skiptoken)
-          query.skiptoken(opts.skiptoken);
+          this.skiptoken(opts.skiptoken);
         else if (opts.skip)
-          query.skip(opts.skip);
+          this.skip(opts.skip);
         if (opts.top)
-          query.top(opts.top);
+          this.top(opts.top);
       }
-      return query.get({ 
+      return this.get({ 
         headers: options && options.headers,
         params: options && options.params,
         reportProgress: options && options.reportProgress,
@@ -251,8 +251,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand((resp: ODataCollection<T>) => (resp._odata.skip || resp._odata.skiptoken) ? fetch(resp._odata) : empty()),
-        concatMap((resp: ODataCollection<T>) => resp.value),
+        expand(([_, odata]) => (odata.skip || odata.skiptoken) ? fetch(odata) : empty()),
+        concatMap(([entities, _]) => entities),
         toArray());
   }
 }

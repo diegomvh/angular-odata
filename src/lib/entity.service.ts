@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataCollection, ODataSingle, ODataRefResource } from './resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataRefResource, ODataAnnotations } from './resources';
 
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
@@ -80,7 +80,7 @@ export class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public fetchCollection(): Observable<ODataCollection<T>> {
+  public fetchCollection(): Observable<[T[], ODataAnnotations]> {
     return this.entities()
       .get();
   }
@@ -90,17 +90,17 @@ export class ODataEntityService<T> {
       .all();
   }
 
-  public fetchOne(entity: Partial<T>): Observable<ODataSingle<T>> {
+  public fetchOne(entity: Partial<T>): Observable<[T, ODataAnnotations]> {
     return this.entity(entity)
       .get();
   }
 
-  public create(entity: T): Observable<ODataSingle<T>> {
+  public create(entity: T): Observable<[T, ODataAnnotations]> {
     return this.entities()
       .post(entity);
   }
 
-  public update(entity: T, etag?: string): Observable<ODataSingle<T>> {
+  public update(entity: T, etag?: string): Observable<[T, ODataAnnotations]> {
     return this.entity(entity)
       .put(entity, {etag});
   }
@@ -116,7 +116,7 @@ export class ODataEntityService<T> {
   }
 
   // Shortcuts
-  public fetchOrCreate(entity: Partial<T>): Observable<ODataSingle<T>> {
+  public fetchOrCreate(entity: Partial<T>): Observable<[T, ODataAnnotations]> {
     return this.fetchOne(entity)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)

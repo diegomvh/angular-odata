@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataEntitySetResource, ODataNavigationPropertyResource } from '../requests';
-import { ODataCollection } from './base';
+import { ODataAnnotations } from './annotations';
 
 export class ODataVCollection<E> implements Iterable<E> {
   private _query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>;
@@ -14,12 +14,12 @@ export class ODataVCollection<E> implements Iterable<E> {
     pages?: number
   } = {};
 
-  constructor(col: ODataCollection<E>, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
-    this.entities = col.value;
+  constructor(models: E[], odata: ODataAnnotations, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
+    this.entities = models;
     this._query = query;
-    let records = col._odata.count;
-    let size = (query.skip().value() || col._odata.skip || col.value.length);
-    let skip = (query.skip().value() || col._odata.skip || 0);
+    let records = odata.count;
+    let size = (query.skip().value() || odata.skip || models.length);
+    let skip = (query.skip().value() || odata.skip || 0);
     let page = (query.top().value()) ? 
       Math.ceil(skip / query.top().value()) + 1 : 1;
     this.setState({ records, page, size });
@@ -59,12 +59,12 @@ export class ODataVCollection<E> implements Iterable<E> {
     }
     return this._query.get({ responseType: 'entityset'})
       .pipe(
-        map(set => {
+        map(([set, odata]) => {
           if (set) {
-            if (set._odata.skip) {
-              this.setState({size: set._odata.skip});
+            if (odata.skip) {
+              this.setState({size: odata.skip});
             }
-            this.entities = set.value;
+            this.entities = set;
           }
           return this;
         }));

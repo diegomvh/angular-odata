@@ -14,8 +14,8 @@ import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollection, ODataSingle } from '../responses';
 import { Types } from '../../utils';
+import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -82,7 +82,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<ODataSingle<T>> {
+  }): Observable<[T, ODataAnnotations]> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -99,7 +99,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
     withCount?: boolean
-  }): Observable<ODataCollection<T>> {
+  }): Observable<[T[], ODataAnnotations]> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -179,8 +179,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand((resp: ODataCollection<T>) => (resp._odata.skip || resp._odata.skiptoken) ? fetch(resp._odata) : empty()),
-        concatMap((resp: ODataCollection<T>) => resp.value),
+        expand(([_, odata])  => (odata.skip || odata.skiptoken) ? fetch(odata) : empty()),
+        concatMap(([entities, _]) => entities),
         toArray());
   }
 }

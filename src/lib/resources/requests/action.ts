@@ -6,9 +6,10 @@ import { ODataOptions } from '../options';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Parser } from '../../models';
-import { ODataValue, ODataCollection, ODataSingle } from '../responses';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
+import { ODataMetadata } from '../responses';
+import { ODataAnnotations } from '../responses/annotations';
 
 export class ODataActionResource<T> extends ODataResource<T> {
   // Factory
@@ -32,7 +33,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
-  }): Observable<ODataSingle<T>>;
+  }): Observable<[T, ODataAnnotations]>;
 
   post(body?: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -41,7 +42,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     responseType?: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<ODataCollection<T>>;
+  }): Observable<[T[], ODataAnnotations]>;
 
   post(body?: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -49,7 +50,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'property',
     withCredentials?: boolean,
-  }): Observable<ODataValue<T>>;
+  }): Observable<[T, ODataAnnotations]>;
 
   post(body?: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
