@@ -7,10 +7,10 @@ import { ODataOptions, Options } from '../options';
 import { PlainObject } from '../../types';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
-import { $REF, ODATA_ID, $ID } from '../../types';
+import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
 import { Parser } from '../../models';
 
-export class ODataRefResource extends ODataResource<any> {
+export class ODataReferenceResource extends ODataResource<any> {
   // Factory
   static factory(service: ODataClient, opts?: {
       segments?: ODataSegments, 
@@ -21,9 +21,9 @@ export class ODataRefResource extends ODataResource<any> {
     let options = opts && opts.options || new ODataOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.ref, $REF);
+    segments.segment(Segments.ref, $REFERENCE);
     options.clear();
-    return new ODataRefResource(service, segments, options, parser);
+    return new ODataReferenceResource(service, segments, options, parser);
   }
 
   // Client Requests

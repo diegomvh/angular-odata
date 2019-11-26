@@ -116,11 +116,11 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
     switch (options.responseType) {
       case 'entity':
-        return res$.pipe(map((body: any) => this.toSingle(body)));
+        return res$.pipe(map((body: any) => this.fromSingleBody(body)));
       case 'entityset':
-        return res$.pipe(map((body: any) => this.toCollection(body)));
+        return res$.pipe(map((body: any) => this.fromCollectionBody(body)));
       case 'property':
-        return res$.pipe(map((body: any) => this.toValue(body)));
+        return res$.pipe(map((body: any) => this.fromValueBody(body)));
     }
     return res$;
   }
@@ -200,8 +200,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return this.options.option<Select>(Options.select, opts);
   }
 
-  expand(opts?: Expand<T>) {
-    return this.options.option<Expand<T>>(Options.expand, opts);
+  expand(opts?: Expand) {
+    return this.options.option<Expand>(Options.expand, opts);
   }
 
   format(opts?: string) {

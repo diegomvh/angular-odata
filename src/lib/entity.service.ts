@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataRefResource, ODataAnnotations } from './resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataAnnotations } from './resources';
 
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
@@ -51,8 +51,8 @@ export class ODataEntityService<T> {
     return this.entity(entity).property<P>(name);
   }
 
-  public ref<P>(entity: Partial<T>, name: string): ODataRefResource {
-    return this.entity(entity).navigationProperty<P>(name).ref();
+  public ref<P>(entity: Partial<T>, name: string): ODataReferenceResource {
+    return this.entity(entity).navigationProperty<P>(name).reference();
   }
 
   public action<R>(entity: Partial<T>, name: string, returnType: string): ODataActionResource<R> {

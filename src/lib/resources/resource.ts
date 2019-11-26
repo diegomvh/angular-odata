@@ -47,18 +47,18 @@ export abstract class ODataResource<Type> {
     return this.parser !== null ? this.parser.parse(attrs) : attrs;
   }
 
-  toSingle(body: any): [Type, ODataAnnotations] {
+  protected fromSingleBody(body: any): [Type, ODataAnnotations] {
     let attrs = Object.keys(body).filter(k => !k.startsWith(ODATA_ANNOTATION_PREFIX))
       .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
-    return [<Type>this.deserialize(attrs), new ODataAnnotations(body)];
+    return [<Type>this.deserialize(attrs), this.client.annotations(body)];
   }
 
-  toCollection(body: any): [Type[], ODataAnnotations] {
-    return [<Type[]>this.deserialize(body[VALUE]), new ODataAnnotations(body)];
+  protected fromCollectionBody(body: any): [Type[], ODataAnnotations] {
+    return [<Type[]>this.deserialize(body[VALUE]), this.client.annotations(body)];
   }
 
-  toValue(body: any): [Type, ODataAnnotations] {
-    return [<Type>this.deserialize(body[VALUE]), new ODataAnnotations(body)];
+  protected fromValueBody(body: any): [Type, ODataAnnotations] {
+    return [<Type>this.deserialize(body[VALUE]), this.client.annotations(body)];
   }
 
   toString(): string {

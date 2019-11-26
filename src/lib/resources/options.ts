@@ -6,14 +6,9 @@ import { PlainObject, EntityKey } from '../types';
 
 export type Select = string | string[];
 export type OrderBy = string | string[];
-export type NestedFilterOptions<T> = { 
-  [P in keyof T]?: PlainObject;
-};
-export type Filter<T> = string | NestedFilterOptions<T> | Array<string | NestedFilterOptions<T>>;
-export type NestedExpandOptions<T> = { 
-  [P in keyof T]?: Partial<ExpandQueryOptions<T[P]>>;
-};
-export type Expand<T> = string | NestedExpandOptions<T> | Array<string | NestedExpandOptions<T>>;
+export type Filter = string | PlainObject | Array<string | PlainObject>;
+export type NestedExpandOptions = { [field: string]: Partial<ExpandQueryOptions>; };
+export type Expand = string | NestedExpandOptions | Array<string | NestedExpandOptions>;
 export enum StandardAggregateMethods {
   sum = "sum",
   min = "min",
@@ -23,16 +18,16 @@ export enum StandardAggregateMethods {
 }
 export type Aggregate = { [propertyName: string]: { with: StandardAggregateMethods, as: string } } | string;
 
-export interface ExpandQueryOptions<T> {
+export interface ExpandQueryOptions {
   select: string | string[];
-  filter: Filter<T>;
+  filter: Filter;
   orderBy: string | string[];
   top: number;
-  expand: Expand<T>;
+  expand: Expand;
 }
 export interface Transform {
   aggregate?: Aggregate | Aggregate[];
-  filter?: Filter<any>;
+  filter?: Filter;
   groupBy?: GroupBy;
 }
 export interface GroupBy {

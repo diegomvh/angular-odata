@@ -15,6 +15,7 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Parser } from '../../models';
 import { ODataAnnotations } from '../responses/annotations';
+import { ODataMediaResource } from './media';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -51,6 +52,15 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   // Segments
+  media() {
+    return ODataMediaResource.factory<T>(
+      this.client, {
+      segments: this.segments.clone(),
+      options: this.options.clone(),
+      parser: this.parser
+    });
+  }
+
   navigationProperty<N>(name: string) {
     return ODataNavigationPropertyResource.factory<N>(
       name,
@@ -104,7 +114,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toSingle(body)));
+    }).pipe(map(body => this.fromSingleBody(body)));
   }
 
   post(entity: T, options?: {
@@ -120,7 +130,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toSingle(body)));
+    }).pipe(map(body => this.fromSingleBody(body)));
   }
 
   put(entity: T, options?: {
@@ -138,7 +148,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toSingle(body)));
+    }).pipe(map(body => this.fromSingleBody(body)));
   }
 
   patch(entity: Partial<T>, options?: {
@@ -182,8 +192,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return this.options.option<Select>(Options.select, opts);
   }
 
-  expand(opts?: Expand<T>) {
-    return this.options.option<Expand<T>>(Options.expand, opts);
+  expand(opts?: Expand) {
+    return this.options.option<Expand>(Options.expand, opts);
   }
 
   format(opts?: string) {

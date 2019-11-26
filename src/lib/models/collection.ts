@@ -103,7 +103,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     return (this._resource as ODataEntitySetResource<any>).select(select);
   }
 
-  filter(filter?: Filter<M>) {
+  filter(filter?: Filter) {
     return (this._resource as ODataEntitySetResource<any>).filter(filter);
   }
 
@@ -115,7 +115,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     return (this._resource as ODataEntitySetResource<any>).orderBy(orderBy);
   }
 
-  expand(expand?: Expand<M>) {
+  expand(expand?: Expand) {
     return (this._resource as ODataEntitySetResource<any>).expand(expand);
   }
 

@@ -115,7 +115,7 @@ export class ODataModel {
     return (this._resource as ODataEntityResource<any>).select(select);
   }
 
-  expand(expand?: Expand<ODataModel>) {
+  expand(expand?: Expand) {
     return (this._resource as ODataEntityResource<any>).expand(expand);
   }
 }

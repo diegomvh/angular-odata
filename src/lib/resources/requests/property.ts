@@ -61,6 +61,6 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toValue(body)));
+    }).pipe(map(body => this.fromValueBody(body)));
   }
 }

@@ -81,11 +81,11 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     if (options && options.responseType) {
       switch (options.responseType) {
         case 'entity':
-          return res$.pipe(map((body: any) => this.toSingle(body)));
+          return res$.pipe(map((body: any) => this.fromSingleBody(body)));
         case 'entityset':
-          return res$.pipe(map((body: any) => this.toCollection(body)));
+          return res$.pipe(map((body: any) => this.fromCollectionBody(body)));
         case 'property':
-          return res$.pipe(map((body: any) => this.toValue(body)));
+          return res$.pipe(map((body: any) => this.fromValueBody(body)));
       }
     }
     return res$;

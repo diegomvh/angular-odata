@@ -7,6 +7,6 @@ export * from './function';
 export * from './metadata';
 export * from './navigationproperty';
 export * from './property';
-export * from './ref';
+export * from './reference';
 export * from './singleton';
 export * from './value';
