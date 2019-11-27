@@ -8,7 +8,7 @@ import { ODataClient } from '../../client';
 import { PlainObject, $COUNT } from '../../types';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataAnnotations } from '../responses/annotations';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
 
 export class ODataFunctionResource<T> extends ODataResource<T> {
 
@@ -38,7 +38,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType?: 'entity',
     withCredentials?: boolean,
-  }): Observable<[T, ODataAnnotations]>;
+  }): Observable<[T, ODataEntityAnnotations]>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -47,7 +47,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     responseType?: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataAnnotations]>;
+  }): Observable<[T[], ODataCollectionAnnotations]>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -55,7 +55,7 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType?: 'property',
     withCredentials?: boolean,
-  }): Observable<[T, ODataAnnotations]>;
+  }): Observable<[T, ODataPropertyAnnotations]>;
 
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -81,11 +81,11 @@ export class ODataFunctionResource<T> extends ODataResource<T> {
     if (options && options.responseType) {
       switch (options.responseType) {
         case 'entity':
-          return res$.pipe(map((body: any) => this.fromSingleBody(body)));
+          return res$.pipe(map((body: any) => this.toEntity(body)));
         case 'entityset':
-          return res$.pipe(map((body: any) => this.fromCollectionBody(body)));
+          return res$.pipe(map((body: any) => this.toCollection(body)));
         case 'property':
-          return res$.pipe(map((body: any) => this.fromValueBody(body)));
+          return res$.pipe(map((body: any) => this.toProperty(body)));
       }
     }
     return res$;

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataEntitySetResource, ODataNavigationPropertyResource } from '../requests';
-import { ODataAnnotations } from './annotations';
+import { ODataAnnotations, ODataCollectionAnnotations } from './annotations';
 
 export class ODataVCollection<E> implements Iterable<E> {
   private _query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>;
@@ -14,7 +14,7 @@ export class ODataVCollection<E> implements Iterable<E> {
     pages?: number
   } = {};
 
-  constructor(models: E[], odata: ODataAnnotations, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
+  constructor(models: E[], odata: ODataCollectionAnnotations, query: ODataEntitySetResource<E> | ODataNavigationPropertyResource<E>) {
     this.entities = models;
     this._query = query;
     let records = odata.count;

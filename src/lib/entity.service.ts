@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataAnnotations } from './resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataCollectionAnnotations, ODataEntityAnnotations } from './resources';
 
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
@@ -80,7 +80,7 @@ export class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public fetchCollection(): Observable<[T[], ODataAnnotations]> {
+  public fetchCollection(): Observable<[T[], ODataCollectionAnnotations]> {
     return this.entities()
       .get();
   }
@@ -90,17 +90,17 @@ export class ODataEntityService<T> {
       .all();
   }
 
-  public fetchOne(entity: Partial<T>): Observable<[T, ODataAnnotations]> {
+  public fetchOne(entity: Partial<T>): Observable<[T, ODataEntityAnnotations]> {
     return this.entity(entity)
       .get();
   }
 
-  public create(entity: T): Observable<[T, ODataAnnotations]> {
+  public create(entity: T): Observable<[T, ODataEntityAnnotations]> {
     return this.entities()
       .post(entity);
   }
 
-  public update(entity: T, etag?: string): Observable<[T, ODataAnnotations]> {
+  public update(entity: T, etag?: string): Observable<[T, ODataEntityAnnotations]> {
     return this.entity(entity)
       .put(entity, {etag});
   }
@@ -116,7 +116,7 @@ export class ODataEntityService<T> {
   }
 
   // Shortcuts
-  public fetchOrCreate(entity: Partial<T>): Observable<[T, ODataAnnotations]> {
+  public fetchOrCreate(entity: Partial<T>): Observable<[T, ODataEntityAnnotations]> {
     return this.fetchOne(entity)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)

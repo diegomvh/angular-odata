@@ -15,7 +15,7 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataAnnotations } from '../responses/annotations';
+import { ODataEntityAnnotations, ODataCollectionAnnotations } from '../responses';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -82,7 +82,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<[T, ODataAnnotations]> {
+  }): Observable<[T, ODataEntityAnnotations]> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -90,7 +90,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.fromSingleBody(body)));
+    }).pipe(map(body => this.toEntity(body)));
   }
 
   get(options?: {
@@ -99,7 +99,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
     withCount?: boolean
-  }): Observable<[T[], ODataAnnotations]> {
+  }): Observable<[T[], ODataCollectionAnnotations]> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -112,7 +112,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.fromCollectionBody(body)));
+    }).pipe(map(body => this.toCollection(body)));
   }
 
   // Options

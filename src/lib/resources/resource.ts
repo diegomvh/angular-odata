@@ -1,10 +1,10 @@
-import { PlainObject, VALUE, ODATA_ANNOTATION_PREFIX } from '../types';
+import { PlainObject, VALUE, ODATA_ANNOTATION_PREFIX, entityAttributes, odataAnnotations } from '../types';
 import { ODataClient } from '../client';
 import { Parser } from '../models';
 
 import { ODataSegments } from './segments';
 import { ODataOptions } from './options';
-import { ODataAnnotations } from './responses/annotations';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataAnnotations, ODataPropertyAnnotations } from './responses';
 
 export abstract class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -47,18 +47,17 @@ export abstract class ODataResource<Type> {
     return this.parser !== null ? this.parser.parse(attrs) : attrs;
   }
 
-  protected fromSingleBody(body: any): [Type, ODataAnnotations] {
-    let attrs = Object.keys(body).filter(k => !k.startsWith(ODATA_ANNOTATION_PREFIX))
-      .reduce((acc, k) => Object.assign(acc, {[k]: body[k]}), {});
-    return [<Type>this.deserialize(attrs), this.client.annotations(body)];
+  protected toEntity(body: any): [Type, ODataEntityAnnotations] {
+    let attrs = entityAttributes(body);
+    return [<Type>this.deserialize(attrs), ODataEntityAnnotations.factory(body)];
   }
 
-  protected fromCollectionBody(body: any): [Type[], ODataAnnotations] {
-    return [<Type[]>this.deserialize(body[VALUE]), this.client.annotations(body)];
+  protected toCollection(body: any): [Type[], ODataCollectionAnnotations] {
+    return [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(body)];
   }
 
-  protected fromValueBody(body: any): [Type, ODataAnnotations] {
-    return [<Type>this.deserialize(body[VALUE]), this.client.annotations(body)];
+  protected toProperty(body: any): [Type, ODataPropertyAnnotations] {
+    return [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(body)];
   }
 
   toString(): string {

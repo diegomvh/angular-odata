@@ -13,7 +13,7 @@ import { ODataPropertyResource } from './property';
 import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataAnnotations } from '../responses/annotations';
+import { ODataCollectionAnnotations, ODataEntityAnnotations } from '../responses';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -101,7 +101,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     responseType: 'entity',
     withCredentials?: boolean,
-  }): Observable<[T, ODataAnnotations]>;
+  }): Observable<[T, ODataEntityAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -110,7 +110,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     responseType: 'entityset',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataAnnotations]>;
+  }): Observable<[T[], ODataCollectionAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -135,9 +135,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     });
     switch (options.responseType) {
       case 'entity':
-        return res$.pipe(map((body: any) => this.fromSingleBody(body)));
+        return res$.pipe(map((body: any) => this.toEntity(body)));
       case 'entityset':
-        return res$.pipe(map((body: any) => this.fromCollectionBody(body)));
+        return res$.pipe(map((body: any) => this.toCollection(body)));
     }
     return res$;
   }
@@ -198,7 +198,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T, ODataAnnotations]> {
+  }): Observable<[T, ODataEntityAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -214,7 +214,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataAnnotations]> {
+  }): Observable<[T[], ODataCollectionAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -232,7 +232,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<T[]> {
-    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataAnnotations]> => {
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataCollectionAnnotations]> => {
       if (opts) {
         if (opts.skiptoken)
           this.skiptoken(opts.skiptoken);

@@ -14,8 +14,8 @@ import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Parser } from '../../models';
-import { ODataAnnotations } from '../responses/annotations';
 import { ODataMediaResource } from './media';
+import { ODataEntityAnnotations } from '../responses';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -106,7 +106,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<[T, ODataAnnotations]> {
+  }): Observable<[T, ODataEntityAnnotations]> {
     return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
@@ -114,7 +114,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.fromSingleBody(body)));
+    }).pipe(map(body => this.toEntity(body)));
   }
 
   post(entity: T, options?: {
@@ -122,7 +122,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<[T, ODataAnnotations]> {
+  }): Observable<[T, ODataEntityAnnotations]> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -130,7 +130,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.fromSingleBody(body)));
+    }).pipe(map(body => this.toEntity(body)));
   }
 
   put(entity: T, options?: {
@@ -139,7 +139,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     withCredentials?: boolean
-  }): Observable<[T, ODataAnnotations]> {
+  }): Observable<[T, ODataEntityAnnotations]> {
     return this.client.put<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
@@ -148,7 +148,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.fromSingleBody(body)));
+    }).pipe(map(body => this.toEntity(body)));
   }
 
   patch(entity: Partial<T>, options?: {

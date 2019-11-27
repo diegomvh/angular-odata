@@ -45,7 +45,35 @@ export const $REF = '$ref';
 export const $VALUE = '$value';
 export const $COUNT = '$count';
 
-// HEADERS
+// HTTP HEADERS
 export const IF_MATCH_HEADER = 'If-Match';
+export const CONTENT_TYPE = 'Content-Type';
+export const HTTP11 = 'HTTP/1.1';
+export const ODATA_VERSION = 'OData-Version';
+export const ACCEPT = 'Accept';
+
+// HTTP HEADER VALUES
+export const APPLICATION_JSON = 'application/json';
+export const APPLICATION_HTTP = 'application/http';
+export const TEXT_PLAIN = 'text/plain';
+export const ODATA_MINIMAL = 'odata.metadata=minimal';
+export const ODATA_FULL = 'odata.metadata=full';
+export const ODATA_NONE = 'odata.metadata=none';
+export const VERSION_4_0 = '4.0';
+export const MULTIPART_MIXED = 'multipart/mixed';
+export const MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
+export const CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';
+export const CONTENT_ID = 'Content-ID';
+
+export const NEWLINE = '\r\n';
 
 export const VALUE = 'value';
+
+export const odataAnnotations = (value: any) => Object.keys(value)
+  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) !== -1)
+  .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
+
+export const entityAttributes = (value: any) => Object.keys(value)
+  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1)
+  .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
+

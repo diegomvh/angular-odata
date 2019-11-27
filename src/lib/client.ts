@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataAnnotations } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER } from './types';
 import { ODataSchema } from './models/schema';
@@ -63,10 +63,6 @@ export class ODataClient {
 
   collectionForType(type: string) {
     return this.settings.collectionForType(type) as typeof ODataModelCollection;
-  }
-
-  annotations(data: any) {
-    return new ODataAnnotations(data);
   }
 
   // Requests
