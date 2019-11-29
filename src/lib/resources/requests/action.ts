@@ -30,7 +30,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType: 'entity',
+    responseType?: 'entity',
     withCredentials?: boolean,
   }): Observable<[T, ODataEntityAnnotations]>;
 
@@ -47,7 +47,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType: 'property',
+    responseType?: 'property',
     withCredentials?: boolean,
   }): Observable<[T, ODataPropertyAnnotations]>;
 
