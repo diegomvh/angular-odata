@@ -11,6 +11,12 @@ If you are using OData with Angular please check also my other related project, 
 npm i angular-odata
 ```
 
+## Demo:
+
+Full examples of the library:
+
+ - [TripPinEntity](https://github.com/diegomvh/TripPinEntity)
+
 ## Usage:
 
 1) Add module to your project
@@ -94,7 +100,11 @@ import { ODataClient, ODATA_ETAG } from 'angular-odata';
 })
 export class AppComponent {
   title = 'TripPin';
-  constructor(odata: ODataClient) {
+  constructor(private odata: ODataClient) {
+    this.queries();
+  }
+
+  queries() {
     let airports = this.odata.entitySet<Airport>("Airports");
 
     // Fetch set
@@ -108,10 +118,6 @@ export class AppComponent {
     airport.get().subscribe(console.log);
 
     // Filter
-    airports.filter({Location: {Address: {contains: 'San Francisco'}}});
-    airports.get().subscribe(console.log);
-
-    // Change Filter
     airports.filter({Location: {City: {CountryRegion: "United States"}}});
     airports.get().subscribe(console.log);
 
@@ -122,17 +128,11 @@ export class AppComponent {
     // Remove filter
     airports.filter().clear();
 
-    this.odata.entitySet<Person>("People").get().subscribe(console.log);
-    this.odata.entitySet<Person>("People").entity("javieralfred").get().subscribe(console.log);
-
     let people = this.odata.entitySet<Person>("People");
 
     // Expand
     people.expand({Friends: {}, Trips: {expand: {PlanItems: {}, Photos: {}}}});
     people.get({withCount: true}).subscribe(console.log);
-
-    people.expand({Trips: {select: ["TripId", "Name"]}});
-    people.get().subscribe(console.log);
   }
 }
 ```
@@ -151,9 +151,9 @@ export interface Person {
   UserName: string;
   FirstName: string;
   LastName: string;
-  Emails: string[];
-  AddressInfo: Location[];
-  Gender: PersonGender;
+  Emails?: string[];
+  AddressInfo?: Location[];
+  Gender?: PersonGender;
   Concurrency: number;
   Friends?: Person[];
   Trips?: Trip[];
@@ -161,16 +161,16 @@ export interface Person {
 }
 
 export const PersonSchema = {
-  UserName: {type: 'string', isKey: true, ref: 'UserName'},
-  FirstName: {type: 'string'},
-  LastName: {type: 'string'},
-  Emails: {type: 'string', isCollection: true},
-  AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', isCollection: true},
-  Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender', isFlags: false},
-  Concurrency: {type: 'number'},
-  Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', isNullable: true, isCollection: true, isNavigation: true},
-  Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', isNullable: true, isCollection: true, isNavigation: true},
-  Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', isNullable: true, isNavigation: true}
+  UserName: {type: 'string', key: true, ref: 'UserName', nullable: false},
+  FirstName: {type: 'string', nullable: false},
+  LastName: {type: 'string', nullable: false},
+  Emails: {type: 'string', many: true},
+  AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', many: true},
+  Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender', flags: false},
+  Concurrency: {type: 'number', nullable: false},
+  Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', many: true, navigation: true},
+  Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', many: true, navigation: true},
+  Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', navigation: true}
 };
 ```
 
@@ -186,14 +186,8 @@ import { Person, PersonSchema } from './person.entity';
 
 @Injectable()
 export class PeopleService extends ODataEntityService<Person> {
-  static set: string = 'People';
+  static path: string = 'People';
   static type: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
-  
-  // Actions
-  
-  // Functions
-  
-  // Navigations
 }
 ```
 
@@ -214,30 +208,29 @@ export class AppComponent {
   constructor(
     private people: PeopleService
   ) {
-    this.fetchPeople();
+    this.show('scottketchum');
   }
 
-  fetchPeople() {
-    // Fetch all
-    this.people.entities().collection().toPromise()
-      .then(col => {
-        // Change collection size
-        return col.size(4).toPromise();
-      })
-      .then(col => {
-        console.log([...col.entities]);
-        console.log(col);
-        return col.nextPage().toPromise();
-      })
-      .then(col => {
-        console.log([...col.entities]);
-        console.log(col);
-        return col.nextPage().toPromise();
-      })
-      .then(col => {
-        console.log([...col.entities]);
-        console.log(col);
-        return col.nextPage().toPromise();
+  show(name: string) {
+    let person = this.people.entity({UserName: name});
+    person.expand({
+      Friends: {}, 
+      Trips: {
+        expand: {
+          Photos: {}, 
+          PlanItems: {}
+        }
+      }, 
+      Photo: {}
+    });
+    person.get()
+      .subscribe(([person, ]) => {
+        this.person = person;
+        if (person.Photo) {
+          let media = this.photos.entity(person.Photo).media();
+          media.blob().subscribe(console.log);
+        }
+        this.display = true;
       });
   }
 }
@@ -246,13 +239,6 @@ export class AppComponent {
 5) Again, if you using OData to TypeScript import the service from generated source and use.
 
 For a deep query customizations the library use `odata-query` as a builder.
-
-Full examples of the library:
-
- - [TripPin](https://github.com/diegomvh/TripPin)
- - [TripPinEntity](https://github.com/diegomvh/TripPinEntity)
- - [TripPinModel](https://github.com/diegomvh/TripPinModel)
-
 
 ## Base on implementation of odata-v4-ng
  - [OData service for Angular](https://github.com/riccardomariani/odata-v4-ng)
