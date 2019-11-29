@@ -11,11 +11,11 @@ export interface Field {
   enumString?: boolean;
   default?: any;
   maxLength?: number;
-  isKey?: boolean;
-  isCollection?: boolean;
-  isNullable?: boolean;
-  isFlags?: boolean;
-  isNavigation?: boolean;
+  key?: boolean;
+  many?: boolean;
+  nullable?: boolean;
+  flags?: boolean;
+  navigation?: boolean;
   field?: string;
   ref?: string;
 }
@@ -30,11 +30,11 @@ class ODataSchemaField<T> implements Field, Parser<T> {
   enumString?: boolean;
   default?: any;
   maxLength?: number;
-  isKey?: boolean;
-  isCollection?: boolean;
-  isNullable?: boolean;
-  isFlags?: boolean;
-  isNavigation?: boolean;
+  key?: boolean;
+  many?: boolean;
+  nullable?: boolean;
+  flags?: boolean;
+  navigation?: boolean;
   field?: string;
   ref?: string;
 
@@ -51,7 +51,7 @@ class ODataSchemaField<T> implements Field, Parser<T> {
     if (value === null) return value;
     if (this.enum) {
       //TODO: enumString
-      return this.isFlags ?
+      return this.flags ?
         Enums.toFlags(this.enum, value) :
         Enums.toValue(this.enum, value);
     } else if (this.schema) {
@@ -70,7 +70,7 @@ class ODataSchemaField<T> implements Field, Parser<T> {
   toJSON(value: any) {
     if (value === null) return value;
     if (this.enum) {
-      let enums = this.isFlags ?
+      let enums = this.flags ?
         Enums.toEnums(this.enum, value) :
         [Enums.toEnum(this.enum, value)];
       if (!this.enumString)
@@ -100,7 +100,7 @@ class ODataSchemaField<T> implements Field, Parser<T> {
 export class ODataSchema<Type> implements Parser<Type> {
   type: string;
   fields: ODataSchemaField<any>[];
-  get keys() { return this.fields.filter(f => f.isKey); }
+  get keys() { return this.fields.filter(f => f.key); }
   model?: { new(...any): any };
 
   constructor(fields: { [name: string]: Field }) {
@@ -170,7 +170,7 @@ export class ODataSchema<Type> implements Parser<Type> {
   }
 
   isComplex() {
-    return this.fields.every(f => !f.isKey);
+    return this.fields.every(f => !f.key);
   }
 
   /*
