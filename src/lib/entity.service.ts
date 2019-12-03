@@ -7,7 +7,7 @@ import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyRes
 
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
-import { ODataModel, ODataModelCollection } from './models';
+import { ODataModel, ODataModelCollection, ODataSchema } from './models';
 
 @Injectable()
 export class ODataEntityService<T> {
@@ -55,26 +55,26 @@ export class ODataEntityService<T> {
     return this.entity(entity).navigationProperty<P>(name).reference();
   }
 
-  public action<R>(entity: Partial<T>, name: string, returnType: string): ODataActionResource<R> {
-    let schema = this.client.parserForType<R>(returnType);
-    return this.entity(entity).action<R>(name, schema);
+  public action<R>(entity: Partial<T>, name: string, returnType?: string): ODataActionResource<R> {
+    let parser = returnType? this.client.parserForType<R>(returnType) as ODataSchema<R> : null;
+    return this.entity(entity).action<R>(name, parser);
   }
 
-  public collectionAction<R>(name: string, returnType: string): ODataActionResource<R> {
-    let schema = this.client.parserForType<R>(returnType);
-    return this.entities().action<R>(name, schema);
+  public collectionAction<R>(name: string, returnType?: string): ODataActionResource<R> {
+    let parser = returnType? this.client.parserForType<R>(returnType) as ODataSchema<R> : null;
+    return this.entities().action<R>(name, parser);
   }
 
-  public function<R>(entity: Partial<T>, name: string, params: any, returnType: string): ODataFunctionResource<R> {
-    let schema = this.client.parserForType<R>(returnType);
-    let query = this.entity(entity).function<R>(name, schema);
+  public function<R>(entity: Partial<T>, name: string, params: any, returnType?: string): ODataFunctionResource<R> {
+    let parser = returnType? this.client.parserForType<R>(returnType) as ODataSchema<R> : null;
+    let query = this.entity(entity).function<R>(name, parser);
     query.parameters(params);
     return query;
   }
 
-  public collectionFunction<R>(name: string, params: any, returnType: string): ODataFunctionResource<R> {
-    let schema = this.client.parserForType<R>(returnType);
-    let query = this.entities().function<R>(name, schema);
+  public collectionFunction<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
+    let parser = returnType? this.client.parserForType<R>(returnType) as ODataSchema<R> : null;
+    let query = this.entities().function<R>(name, parser);
     query.parameters(params);
     return query;
   }

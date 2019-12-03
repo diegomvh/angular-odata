@@ -19,7 +19,7 @@ export abstract class ODataResource<Type> {
     client: ODataClient,
     segments?: ODataSegments,
     options?: ODataOptions,
-    parser?: Parser<Type> | null
+    parser?: Parser<Type>
   ) {
     this.client = client;
     this.segments = segments || new ODataSegments();
@@ -40,11 +40,11 @@ export abstract class ODataResource<Type> {
   }
 
   serialize(obj: Type | Partial<Type>): any {
-    return this.parser !== null ? this.parser.toJSON(obj) : obj;
+    return this.parser ? this.parser.toJSON(obj) : obj;
   }
 
   deserialize(attrs: any): Type | Type[] {
-    return this.parser !== null ? this.parser.parse(attrs) : attrs;
+    return this.parser ? this.parser.parse(attrs) : attrs;
   }
 
   protected toEntity(body: any): [Type, ODataEntityAnnotations] {
