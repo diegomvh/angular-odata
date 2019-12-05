@@ -56,10 +56,11 @@ class ODataSchemaField<T> implements Field, Parser<T> {
         Enums.toValue(this.enum, value);
     } else if (this.schema) {
       value = this.schema.parse(value);
-      if (this.model) {
-        value = new this.model(value);
-      } else if (this.collection)
+      if (this.collection) {
         value = new this.collection(value);
+      } else if (this.model) {
+        value = new this.model(value);
+      }
       return value;
     } else if (this.type in PARSERS) {
       return PARSERS[this.type].parse(value);
@@ -76,9 +77,9 @@ class ODataSchemaField<T> implements Field, Parser<T> {
       if (!this.enumString)
         enums = enums.map(e => `${this.type}'${e}'`);
       return enums.join(", ");
-    } else if (this.model) {
-      return value.toJSON();
     } else if (this.collection) {
+      return value.toJSON();
+    } else if (this.model) {
       return value.toJSON();
     } else if (this.schema) {
       return this.schema.toJSON(value);

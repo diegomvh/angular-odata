@@ -1,12 +1,12 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataAnnotations, ODataCollectionAnnotations } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataAnnotations, ODataCollectionAnnotations, ODataEntityResource, ODataNavigationPropertyResource } from '../resources';
 
 import { ODataModel } from './model';
 
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
-  _resource: ODataResource<any> | null;
+  _resource: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any> | null;
   _models: M[];
   _state: {
     records?: number,
@@ -48,28 +48,27 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
   }
 
-  assign(models: M[], col: ODataCollectionAnnotations) {
-    this.setState({records: col.count, size: col.skip});
-    this._models = models;
-    return this;
-  }
-
-  attach(query: ODataResource<any>){
-    this._resource = query;
+  attach(resource: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>){
+    this._resource = resource;
+    this._models.forEach(m => m.attach(this._resource.entity()));
   }
 
   fetch(): Observable<this> {
-    let query: ODataEntitySetResource<any> = this._resource.clone<any>() as ODataEntitySetResource<any>;
+    let resource = this._resource.clone() as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>;
     if (!this._state.page)
       this._state.page = 1;
     if (this._state.size) {
-      query.top(this._state.size);
-      query.skip(this._state.size * (this._state.page - 1));
+      resource.top(this._state.size);
+      resource.skip(this._state.size * (this._state.page - 1));
     }
-    return query.get()
+    return resource.get({withCount: true, responseType: 'entityset'})
       .pipe(
-        map(([models, col]) => models ? this.assign(models, col) : this)
-      );
+        map(([models, col]) => {
+          this.setState({records: col.count, size: col.skip});
+          this._models = models;
+          this.attach(resource);
+          return this;
+        }));
   }
 
   page(page: number) {
