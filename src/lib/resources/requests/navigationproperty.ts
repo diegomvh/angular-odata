@@ -10,7 +10,7 @@ import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { Parser } from '../../models';
+import { Parser, ODataModel, ODataSchema, ODataModelCollection } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollectionAnnotations, ODataEntityAnnotations } from '../responses';
@@ -50,6 +50,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return !segment.option(Options.key).value();
   }
 
+  entity(opts?: EntityKey) {
+    this.key(opts);
+    return this;
+  }
+
   // Segments
   reference() {
     return ODataReferenceResource.factory(
@@ -58,11 +63,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       options: this.options.clone(),
       parser: this.parser
     });
-  }
-
-  entity(opts?: EntityKey) {
-    this.key(opts);
-    return this;
   }
 
   navigationProperty<N>(name: string) {
@@ -253,5 +253,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         expand(([_, odata]) => (odata.skip || odata.skiptoken) ? fetch(odata) : empty()),
         concatMap(([entities, _]) => entities),
         toArray());
+  }
+
+  relationships(model: ODataModel) {
+    model._relationships = {};
   }
 }

@@ -7,9 +7,10 @@ import { ODataResource } from '../resource';
 import { ODataOptions } from '../options';
 import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
-import { Parser } from '../../models';
+import { Parser, ODataModel } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataAnnotations, ODataPropertyAnnotations } from '../responses';
+import { ODataPropertyAnnotations, ODataCollectionAnnotations } from '../responses';
+import { EntityKey, $COUNT } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -26,6 +27,10 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     segments.segment(Segments.property, name);
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options, parser);
+  }
+
+  entity(opts?: EntityKey) {
+    return this;
   }
 
   // Segments
@@ -48,19 +53,54 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
   }
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
+  get(options: {
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    reportProgress?: boolean,
+    responseType: 'property',
+    withCredentials?: boolean,
+  }): Observable<[T, ODataPropertyAnnotations]>;
+
+  get(options: {
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    reportProgress?: boolean,
+    responseType: 'entityset',
+    withCredentials?: boolean,
+    withCount?: boolean
+  }): Observable<[T[], ODataCollectionAnnotations]>;
+
+  get(options: {
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    responseType: 'property' | 'entityset',
     reportProgress?: boolean,
     withCredentials?: boolean,
-  }): Observable<[T, ODataPropertyAnnotations]> {
-    return this.client.get<T>(this, {
-      headers: options && options.headers,
+    withCount?: boolean
+  }): Observable<any> {
+
+    let params = options && options.params;
+    if (options && options.withCount)
+      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
+
+    let res$ = this.client.get<T>(this, {
+      headers: options.headers,
       observe: 'body',
-      params: options && options.params,
+      params: params,
       responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toProperty(body)));
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
+    switch (options.responseType) {
+      case 'property':
+        return res$.pipe(map((body: any) => this.toProperty(body)));
+      case 'entityset':
+        return res$.pipe(map((body: any) => this.toCollection(body)));
+    }
+    return res$;
+  }
+
+  relationships(model: ODataModel) {
+    model._relationships = {};
   }
 }

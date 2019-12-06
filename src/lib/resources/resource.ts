@@ -1,6 +1,6 @@
 import { PlainObject, VALUE, ODATA_ANNOTATION_PREFIX, entityAttributes, odataAnnotations } from '../types';
 import { ODataClient } from '../client';
-import { Parser } from '../models';
+import { Parser, ODataSchema, ODataModel, ODataModelCollection } from '../models';
 
 import { ODataSegments } from './segments';
 import { ODataOptions } from './options';
@@ -97,4 +97,5 @@ export abstract class ODataResource<Type> {
   is(type: string) {
     return this.segments.last().type === type;
   }
+
 }

@@ -15,8 +15,8 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     pages?: number
   } = {};
 
-  constructor(models: M[]) {
-    this._models = models;
+  constructor(models?: M[]) {
+    this._models = models || [];
   }
 
   private setState(state: {records?: number, page?: number, size?: number, pages?: number}) {
@@ -50,7 +50,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
 
   attach(resource: ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>){
     this._resource = resource;
-    this._models.forEach(m => m.attach(this._resource.entity()));
+    this._models.forEach(m => m.attach(this._resource.entity(m)));
   }
 
   fetch(): Observable<this> {
@@ -64,6 +64,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     return resource.get({withCount: true, responseType: 'entityset'})
       .pipe(
         map(([models, col]) => {
+          console.log(models);
           this.setState({records: col.count, size: col.skip});
           this._models = models;
           this.attach(resource);

@@ -13,7 +13,7 @@ import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
-import { Parser } from '../../models';
+import { Parser, ODataModel, ODataSchema, ODataModelCollection } from '../../models';
 import { ODataMediaResource } from './media';
 import { ODataEntityAnnotations } from '../responses';
 
@@ -202,5 +202,30 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   custom(opts?: PlainObject) {
     return this.options.option<PlainObject>(Options.custom, opts);
+  }
+
+  relationships(model: ODataModel) {
+    model._relationships = {};
+    var schema = this.parser as ODataSchema<T>;
+    schema.fields.forEach(field => {
+      if (model[field.name] instanceof ODataModel || model[field.name] instanceof ODataModelCollection)
+        model[field.name].attach(field.navigation ? this.navigationProperty(field.name) : this.property(field.name));
+      if (field.navigation) {
+        model._relationships[field.name] = model[field.name] || (field.many ? new field.collection() : new field.model());
+        model._relationships[field.name].attach(this.navigationProperty(field.name));
+        Object.defineProperty(model, field.name, {
+          get() {
+            return this._relationships[field.name];
+          },
+          set(value: ODataModel | null) {
+            if (field.many)
+              throw new Error(`Can't set ${field.name} to collection, use add`);
+            if (!(value instanceof ODataModel))
+              throw new Error(`Can't set ${value} to model`);
+            this._relationships[field.name] = value;
+          }
+        });
+      }
+    });
   }
 }

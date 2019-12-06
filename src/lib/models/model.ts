@@ -1,7 +1,7 @@
-import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand, ODataResource } from '../resources';
+import { ODataEntityResource, Expand } from '../resources';
 
 import { ODataModelCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
@@ -43,6 +43,7 @@ export class ODataModel {
 
   attach(resource: ODataEntityResource<any> | ODataNavigationPropertyResource<any>) {
     this._resource = resource;
+    resource.relationships(this);
   }
 
   fetch(): Observable<this> {
