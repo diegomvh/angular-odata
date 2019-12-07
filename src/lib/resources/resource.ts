@@ -47,17 +47,22 @@ export abstract class ODataResource<Type> {
     return this.parser ? this.parser.parse(attrs) : attrs;
   }
 
-  protected toEntity(body: any): [Type, ODataEntityAnnotations] {
-    let attrs = entityAttributes(body);
-    return [<Type>this.deserialize(attrs), ODataEntityAnnotations.factory(body)];
+  protected toEntity(body: any): [Type | null, ODataEntityAnnotations | null] {
+    return body ? 
+      [<Type>this.deserialize(entityAttributes(body)), ODataEntityAnnotations.factory(body)] :
+      [null, null];
   }
 
-  protected toCollection(body: any): [Type[], ODataCollectionAnnotations] {
-    return [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(body)];
+  protected toCollection(body: any): [Type[] | null, ODataCollectionAnnotations | null] {
+    return body ? 
+      [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(body)] :
+      [null, null];
   }
 
-  protected toProperty(body: any): [Type, ODataPropertyAnnotations] {
-    return [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(body)];
+  protected toProperty(body: any): [Type | null, ODataPropertyAnnotations | null] {
+    return body ? 
+      [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(body)] :
+      [null, null];
   }
 
   toString(): string {

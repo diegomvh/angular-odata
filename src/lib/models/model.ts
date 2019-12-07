@@ -1,13 +1,16 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand, ODataPropertyResource } from '../resources';
+import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations } from '../resources';
 
 import { ODataModelCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 import { ODATA_ETAG } from '../types';
 import { PlainObject } from '../types';
 import { ODataSettings } from './settings';
+
+type ODataModelResource<T> = ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
+type ODataModelAnnotations = ODataEntityAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
 
 enum State {
   Added,
@@ -19,20 +22,29 @@ enum State {
 
 export class ODataModel {
   _settings: ODataSettings; 
-  _resource: ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
+  _resource: ODataModelResource<any>;
+  _annotations: ODataModelAnnotations;
   _state: State;
   _relationships: { [name: string]: ODataModel | ODataModelCollection<ODataModel> }
 
-  constructor(entity: any | null, resource: ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>, settings: ODataSettings) {
+  constructor(
+    entity: any | null, 
+    annots: ODataModelAnnotations | null,
+    resource: ODataModelResource<any>, 
+    settings: ODataSettings
+  ) {
     this._settings = settings;
-    this.assign(entity || {}, resource);
+    this.assign(entity || {}, annots, resource);
   }
 
   private setState(state: State) {
     this._state = state;
   }
 
-  private assign(entity: any, resource: ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>) {
+  private assign(entity: any, 
+    annots: ODataModelAnnotations, 
+    resource: ODataModelResource<any>): this {
+    this._annotations = annots;
     this._resource = resource;
     this._relationships = {};
     var schema = this._settings.schemaForType(this._resource.type());
@@ -42,12 +54,17 @@ export class ODataModel {
         Object.defineProperty(this, field.name, {
           get() {
             if (!(field.name in this._relationships)) {
-              let resource: ODataEntityResource<any> | ODataNavigationPropertyResource<any> = this._resource.clone();
+              let resource: ODataModelResource<any> = this._resource.clone();
               if (resource instanceof ODataEntityResource && resource.isNew()) {
                 throw new Error(`Can't resolve ${field.name} relation from new entity`);
               }
-              let nav = resource.navigationProperty<any>(field.name);
-              this._relationships[field.name] = new Klass(field.parse(entity[field.name] || null), nav, this._settings);
+              let nav = (resource as ODataEntityResource<any>).navigationProperty<any>(field.name);
+              this._relationships[field.name] = new Klass(
+                field.parse(entity[field.name] || null), 
+                this._annotations.related(field.name),
+                nav, 
+                this._settings
+              );
             }
             return this._relationships[field.name];
           },
@@ -61,11 +78,17 @@ export class ODataModel {
           }
         });
       } else if (Klass) {
-        this[field.name] = new Klass(entity[field.name], resource.property(field.name), this._settings);
+        this[field.name] = new Klass(
+          entity[field.name], 
+          <any>this._annotations.property(field.name), 
+          resource.property(field.name), 
+          this._settings
+        );
       } else if (entity[field.name] !== undefined) {
         this[field.name] = entity[field.name];
       }
     });
+    return this;
   }
 
   toJSON(): PlainObject {
@@ -75,20 +98,19 @@ export class ODataModel {
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
     let resource = this._resource.clone() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
-    return new Ctor(this.toJSON(), resource, this._settings);
+    return new Ctor(this.toJSON(), this._annotations.clone(), resource, this._settings);
   }
 
-  fetch(): Observable<this> {
-    let resource: ODataEntityResource<any> | ODataNavigationPropertyResource<any> = this._resource.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
-    resource.key(this);
-    if (resource.isNew())
-      throw new Error(`Can't fetch without entity key`);
+  fetch(): Observable<this | null> {
+    let resource: ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any> = this._resource.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
+    if (resource instanceof ODataEntityResource) {
+      resource.key(this);
+      if (resource.isNew())
+        throw new Error(`Can't fetch without entity key`);
+    }
     return resource.get({responseType: 'entity'})
       .pipe( 
-        map(([entity, ]) => {
-          this.assign(entity, resource);
-          return this;
-        }));
+        map(([entity, annots]) => entity ? this.assign(entity, annots, resource) : null));
   }
 
   save(): Observable<this> {
@@ -125,15 +147,15 @@ export class ODataModel {
     */
     if (resource.isNew()) {
       return resource.post(this)
-        .pipe(map(([entity, ]) => {
-          this.assign(entity, resource);
+        .pipe(map(([entity, annots]) => {
+          this.assign(entity, annots, resource);
           return this;
         }) );
     } else {
       resource.key(this);
       return resource.put(this)
-        .pipe( map(([entity, ]) => {
-          this.assign(entity, resource);
+        .pipe( map(([entity, annots]) => {
+          this.assign(entity, annots, resource);
           return this;
         }) );
     }

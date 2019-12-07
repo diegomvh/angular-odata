@@ -30,14 +30,14 @@ export class ODataEntityService<T> {
   public model<M extends ODataModel>(attrs?: any): M {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Model = this.client.modelForType(Ctor.type);
-    let model = new Model(attrs || null, this.entity(), this.settings) as M;
+    let model = new Model(attrs || null, ODataEntityAnnotations.factory({}), this.entity(), this.settings) as M;
     return model;
   }
 
   public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Collection = this.client.collectionForType(Ctor.type);
-    let collection = new Collection(models || null, this.entities(), this.settings) as C;
+    let collection = new Collection(models || null, ODataCollectionAnnotations.factory({}), this.entities(), this.settings) as C;
     return collection;
   }
 

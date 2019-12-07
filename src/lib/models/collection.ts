@@ -1,14 +1,18 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataResource, ODataAnnotations, ODataCollectionAnnotations, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations } from '../resources';
 
 import { ODataModel } from './model';
 import { ODataSettings } from './settings';
 
+type ODataModelCollectionResource<T> = ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
+type ODataModelCollectionAnnotations = ODataCollectionAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
+
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   _settings: ODataSettings; 
-  _resource: ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
+  _resource: ODataModelCollectionResource<any>;
+  _annotations: ODataModelCollectionAnnotations;
   _models: M[];
   _state: {
     records?: number,
@@ -17,26 +21,30 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     pages?: number
   } = {};
 
-  constructor(models: M[] | null, resource: ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>, settings: ODataSettings) {
+  constructor(models: M[] | null, annots: ODataCollectionAnnotations | null, resource: ODataModelCollectionResource<any>, settings: ODataSettings) {
     this._settings = settings;
-    this.assign(models || [], resource);
+    this.assign(models || [], annots, resource);
   }
 
-  private setState(state: {records?: number, page?: number, size?: number, pages?: number}) {
-    if (state.records)
-      this._state.records = state.records;
-    if (state.page)
-      this._state.page = state.page;
-    if (state.size)
-      this._state.size = state.size;
-    if (state.pages)
-      this._state.pages = state.pages;
+  private setAnnotations(annots: ODataCollectionAnnotations) {
+    this._annotations = annots;
+    if (annots.skip && annots.count) {
+      this._state.records = annots.count;
+      this._state.size = annots.skip;
+      this._state.pages = Math.ceil(this._state.records / this._state.size);
+    };
   }
 
-  private assign(models: any[], resource: ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>) {
+  private assign(models: any[], annots: ODataModelCollectionAnnotations, resource: ODataModelCollectionResource<any>) {
+    this.setAnnotations(annots as ODataCollectionAnnotations)
     this._resource = resource;
     let Klass = this._settings.modelForType(this._resource.type());
-    this._models = models.map(model => new Klass(model, this._resource.entity(model), this._settings) as M);
+    this._models = models.map(model => new Klass(
+      model, 
+      ODataEntityAnnotations.factory(model),
+      this._resource.entity(model), 
+      this._settings
+    ) as M);
   }
 
   toJSON() {
@@ -67,9 +75,8 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     }
     return resource.get({withCount: true, responseType: 'entityset'})
       .pipe(
-        map(([models, col]) => {
-          this.setState({records: col.count, size: col.skip});
-          this.assign(models, resource);
+        map(([models, annots]) => {
+          this.assign(models, annots, resource);
           return this;
         }));
   }
@@ -80,7 +87,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   }
 
   size(size: number) {
-    this.setState({size});
+    this._state.size = size;
     return this.page(1);
   }
 

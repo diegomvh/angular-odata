@@ -3,10 +3,9 @@ import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_ANNOTATION_PREFIX, ODATA
 export class ODataAnnotations {
   constructor(protected value: {[name: string]: any }) { }
 
-  static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataAnnotations(annotations);
-  }
+  clone(): ODataAnnotations {
+    return new ODataAnnotations(this.value);
+  };
 
   get context(): string {
     if (ODATA_CONTEXT in this.value)
@@ -26,9 +25,18 @@ export class ODataAnnotations {
       .reduce((acc, key) => Object.assign(acc, {[key.substr(name.length)]: this.value[key]}), {});
     return new ODataPropertyAnnotations(annotations);
   }
+
+  static factory(data: any) {
+    let annotations = odataAnnotations(data);
+    return new ODataAnnotations(annotations);
+  }
 }
 
 export class ODataRelatedAnnotations extends ODataAnnotations {
+  clone(): ODataRelatedAnnotations {
+    return new ODataRelatedAnnotations(this.value);
+  };
+
   get associationLink(): string {
     if (ODATA_ASSOCIATIONLINK in this.value)
       return decodeURIComponent(this.value[ODATA_ASSOCIATIONLINK] as string);
@@ -41,22 +49,25 @@ export class ODataRelatedAnnotations extends ODataAnnotations {
 }
 
 export class ODataPropertyAnnotations extends ODataAnnotations {
-  static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataPropertyAnnotations(annotations);
-  }
+  clone(): ODataPropertyAnnotations {
+    return new ODataPropertyAnnotations(this.value);
+  };
 
   get type(): string {
     if (ODATA_TYPE in this.value)
       return this.value[ODATA_TYPE] as string;
   }
+
+  static factory(data: any) {
+    let annotations = odataAnnotations(data);
+    return new ODataPropertyAnnotations(annotations);
+  }
 }
 
 export class ODataEntityAnnotations extends ODataAnnotations {
-  static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataEntityAnnotations(annotations);
-  }
+  clone(): ODataEntityAnnotations {
+    return new ODataEntityAnnotations(this.value);
+  };
 
   get type() {
     if (ODATA_TYPE in this.value)
@@ -107,13 +118,17 @@ export class ODataEntityAnnotations extends ODataAnnotations {
     if (ODATA_MEDIA_CONTENTTYPE in this.value)
       return this.value[ODATA_MEDIA_CONTENTTYPE] as string;
   }
+
+  static factory(data: any) {
+    let annotations = odataAnnotations(data);
+    return new ODataEntityAnnotations(annotations);
+  }
 }
 
 export class ODataCollectionAnnotations extends ODataAnnotations {
-  static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataCollectionAnnotations(annotations);
-  }
+  clone(): ODataCollectionAnnotations {
+    return new ODataCollectionAnnotations(this.value);
+  };
 
   get readLink(): string {
     if (ODATA_READLINK in this.value)
@@ -145,5 +160,10 @@ export class ODataCollectionAnnotations extends ODataAnnotations {
   get skiptoken(): string {
     let match = (this.nextLink || "").match(/\$skiptoken=([\d\w\s]+)/);
     if (match) return match[1];
+  }
+
+  static factory(data: any) {
+    let annotations = odataAnnotations(data);
+    return new ODataCollectionAnnotations(annotations);
   }
 }
