@@ -31,12 +31,12 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     if (annots.skip && annots.count) {
       this._state.records = annots.count;
       this._state.size = annots.skip;
-      this._state.pages = Math.ceil(this._state.records / this._state.size);
+      this._state.pages = Math.ceil(annots.count / annots.skip);
     };
   }
 
   private assign(models: any[], annots: ODataModelCollectionAnnotations, resource: ODataModelCollectionResource<any>) {
-    this.setAnnotations(annots as ODataCollectionAnnotations)
+    this.setAnnotations(annots as ODataCollectionAnnotations);
     this._resource = resource;
     let Klass = this._settings.modelForType(this._resource.type());
     this._models = models.map(model => new Klass(
@@ -105,6 +105,10 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
 
   lastPage() {
     return (this._state.pages) ? this.page(this._state.pages) : this.fetch();
+  }
+
+  count() {
+    return (this._resource as ODataEntitySetResource<any>).count().get();
   }
 
   // Mutate query
