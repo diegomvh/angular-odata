@@ -97,5 +97,4 @@ export abstract class ODataResource<Type> {
   is(type: string) {
     return this.segments.last().type === type;
   }
-
 }

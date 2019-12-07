@@ -254,8 +254,4 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         concatMap(([entities, _]) => entities),
         toArray());
   }
-
-  relationships(model: ODataModel) {
-    model._relationships = {};
-  }
 }

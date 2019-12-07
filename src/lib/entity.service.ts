@@ -7,14 +7,14 @@ import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyRes
 
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
-import { ODataModel, ODataModelCollection, ODataSchema } from './models';
+import { ODataModel, ODataModelCollection, ODataSchema, ODataSettings } from './models';
 
 @Injectable()
 export class ODataEntityService<T> {
   static path: string = "";
   static type: string = "";
 
-  constructor(protected client: ODataClient) { }
+  constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
   // Build requests
   public entities(): ODataEntitySetResource<T> {
@@ -30,16 +30,14 @@ export class ODataEntityService<T> {
   public model<M extends ODataModel>(attrs?: any): M {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Model = this.client.modelForType(Ctor.type);
-    let model = new Model(attrs || {}) as M;
-    model.attach(this.entity());
+    let model = new Model(attrs || null, this.entity(), this.settings) as M;
     return model;
   }
 
   public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
     let Ctor = <typeof ODataEntityService>this.constructor;
     let Collection = this.client.collectionForType(Ctor.type);
-    let collection = new Collection(models || []) as C;
-    collection.attach(this.entities());
+    let collection = new Collection(models || null, this.entities(), this.settings) as C;
     return collection;
   }
 

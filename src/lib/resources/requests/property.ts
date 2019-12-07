@@ -99,8 +99,4 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     }
     return res$;
   }
-
-  relationships(model: ODataModel) {
-    model._relationships = {};
-  }
 }

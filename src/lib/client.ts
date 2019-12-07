@@ -332,51 +332,6 @@ export class ODataClient {
         catchError(this.settings.errorHandler)
       );
     }
-
-    /*
-    // ODataResponse
-    switch (options.observe || 'body') {
-      case 'body':
-        switch (options.responseType) {
-          case 'entity':
-            return res$.pipe(map((body: any) => toEntityOrNull(body)));
-          case 'entityset':
-            return res$.pipe(map((body: any) => toEntitySetOrNull(body)));
-          case 'property':
-            return res$.pipe(map((body: any) => toPropertyOrNull(body)));
-        }
-      case 'response':
-        switch (options.responseType) {
-          case 'entity':
-            return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: toEntityOrNull(res.body),
-              headers: res.headers,
-              status: res.status,
-              statusText: res.statusText,
-              url: res.url
-            })
-            ));
-          case 'entityset':
-            return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: toEntitySetOrNull(res.body),
-              headers: res.headers,
-              status: res.status,
-              statusText: res.statusText,
-              url: res.url
-            })
-            ));
-          case 'property':
-            return res$.pipe(map((res: HttpResponse<any>) => new HttpResponse<any>({
-              body: toPropertyOrNull(res.body),
-              headers: res.headers,
-              status: res.status,
-              statusText: res.statusText,
-              url: res.url
-            })
-            ));
-        }
-    }
-    */
     return res$;
   }
 
