@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { ODataSchema, Field } from './schema';
 import { ODataModel } from './model';
 import { ODataModelCollection } from './collection';
+import { Parser, PARSERS } from './parser';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -58,6 +59,14 @@ export class ODataSettings {
   public schemaForType<E>(type: string): ODataSchema<E> {
     if (type in this.schemas)
       return this.schemas[type] as ODataSchema<E>;
+  }
+
+  public parserForType<T>(type: string): Parser<T> {
+    let parser = this.schemaForType(type) as Parser<T>;
+    if (!parser && type in PARSERS) {
+      parser = PARSERS[type];
+    }
+    return parser;
   }
 
   public modelForType(type: string): typeof ODataModel {

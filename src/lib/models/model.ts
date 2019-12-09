@@ -1,13 +1,15 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations } from '../resources';
+import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataFunctionResource, ODataActionResource } from '../resources';
 
 import { ODataModelCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 import { ODATA_ETAG } from '../types';
 import { PlainObject } from '../types';
 import { ODataSettings } from './settings';
+import { ODataSchema } from './schema';
+import { Parser } from './parser';
 
 type ODataModelResource<T> = ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
 type ODataModelAnnotations = ODataEntityAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
@@ -45,8 +47,7 @@ export class ODataModel {
     annots: ODataModelAnnotations, 
     resource: ODataModelResource<any>): this {
     this._annotations = annots;
-    this._resource = resource;
-    this._relationships = {};
+    this.attach(resource);
     var schema = this._settings.schemaForType(this._resource.type());
     schema.fields.forEach(field => {
       let Klass = field.many ? this._settings.collectionForType(field.type) : this._settings.modelForType(field.type);
@@ -58,11 +59,10 @@ export class ODataModel {
               if (resource instanceof ODataEntityResource && resource.isNew()) {
                 throw new Error(`Can't resolve ${field.name} relation from new entity`);
               }
-              let nav = (resource as ODataEntityResource<any>).navigationProperty<any>(field.name);
               this._relationships[field.name] = new Klass(
                 field.parse(entity[field.name] || null), 
                 this._annotations.related(field.name),
-                nav, 
+                (resource as ODataEntityResource<any>).navigationProperty<any>(field.name), 
                 this._settings
               );
             }
@@ -89,6 +89,13 @@ export class ODataModel {
       }
     });
     return this;
+  }
+
+  attach(resource: ODataModelResource<any>) {
+    if (this._resource && this._resource.type() !== resource.type())
+      throw new Error(`Can't attach resource from distinct type`);
+    this._resource = resource;
+    this._relationships = {};
   }
 
   toJSON(): PlainObject {
@@ -163,10 +170,32 @@ export class ODataModel {
 
   destroy(): Observable<any> {
     let resource = this._resource.clone() as ODataEntityResource<any>;
-    if (resource.isNew())
-      throw new Error(`Can't destroy without entity key`);
-    resource.key(this);
-    return resource.delete(this[ODATA_ETAG]);
+    if (resource instanceof ODataEntityResource) {
+      resource.key(this);
+      if (!resource.isNew()) {
+        let etag = (this._annotations as ODataEntityAnnotations).etag;
+        return resource.delete({etag});
+      }
+    }
+    throw new Error(`Can't destroy without entity and key`);
+  }
+
+  // Custom
+  protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
+    if (this._resource instanceof ODataEntityResource) {
+      let parser = returnType? this._settings.parserForType<R>(returnType) as Parser<R> : null;
+      let func = this._resource.function<R>(name, parser);
+      func.parameters(params);
+      return func;
+    }
+  }
+
+  protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
+    if (this._resource instanceof ODataEntityResource) {
+      let parser = returnType? this._settings.parserForType<R>(returnType) as Parser<R> : null;
+      let action = this._resource.action<R>(name, parser);
+      return action;
+    }
   }
 
   // Mutate query

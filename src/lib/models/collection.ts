@@ -1,10 +1,11 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource } from '../resources';
 
 import { ODataModel } from './model';
 import { ODataSettings } from './settings';
+import { Parser } from './parser';
 
 type ODataModelCollectionResource<T> = ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
 type ODataModelCollectionAnnotations = ODataCollectionAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
@@ -109,6 +110,24 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
 
   count() {
     return (this._resource as ODataEntitySetResource<any>).count().get();
+  }
+
+  // Custom
+  protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
+    if (this._resource instanceof ODataEntitySetResource) {
+      let parser = returnType? this._settings.parserForType<R>(returnType) as Parser<R> : null;
+      let func = this._resource.function<R>(name, parser);
+      func.parameters(params);
+      return func;
+    }
+  }
+
+  protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
+    if (this._resource instanceof ODataEntitySetResource) {
+      let parser = returnType? this._settings.parserForType<R>(returnType) as Parser<R> : null;
+      let action = this._resource.action<R>(name, parser);
+      return action;
+    }
   }
 
   // Mutate query

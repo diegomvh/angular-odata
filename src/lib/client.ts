@@ -50,11 +50,7 @@ export class ODataClient {
   }
 
   parserForType<T>(type: string): Parser<T> | null {
-    let parser = this.settings.schemaForType(type) as Parser<T>;
-    if (!parser && type in PARSERS) {
-      parser = PARSERS[type];
-    }
-    return parser;
+    return this.settings.parserForType(type) as Parser<T>;
   }
 
   modelForType(type: string) {
