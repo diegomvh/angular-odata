@@ -38,7 +38,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
 
   private assign(models: any[], annots: ODataModelCollectionAnnotations, resource: ODataModelCollectionResource<any>) {
     this.setAnnotations(annots as ODataCollectionAnnotations);
-    this._resource = resource;
+    this.attach(resource);
     let Klass = this._settings.modelForType(this._resource.type());
     this._models = models.map(model => new Klass(
       model, 
@@ -46,6 +46,13 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
       this._resource.entity(model), 
       this._settings
     ) as M);
+  }
+
+  attach(resource: ODataModelCollectionResource<any>): this {
+    if (this._resource && this._resource.type() !== resource.type())
+      throw new Error(`Can't attach resource from distinct type`);
+    this._resource = resource;
+    return this;
   }
 
   toJSON() {

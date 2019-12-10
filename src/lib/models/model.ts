@@ -50,7 +50,7 @@ export class ODataModel {
     this.attach(resource);
     var schema = this._settings.schemaForType(this._resource.type());
     schema.fields.forEach(field => {
-      let Klass = field.many ? this._settings.collectionForType(field.type) : this._settings.modelForType(field.type);
+      let Klass = field.collection ? this._settings.collectionForType(field.type) : this._settings.modelForType(field.type);
       if (field.navigation) {
         Object.defineProperty(this, field.name, {
           get() {
@@ -69,7 +69,7 @@ export class ODataModel {
             return this._relationships[field.name];
           },
           set(value: ODataModel | null) {
-            if (field.many)
+            if (field.collection)
               throw new Error(`Can't set ${field.name} to collection, use add`);
             if (!(value._resource instanceof ODataEntityResource))
               throw new Error(`Can't set ${value} to model`);
@@ -91,11 +91,12 @@ export class ODataModel {
     return this;
   }
 
-  attach(resource: ODataModelResource<any>) {
+  attach(resource: ODataModelResource<any>): this {
     if (this._resource && this._resource.type() !== resource.type())
       throw new Error(`Can't attach resource from distinct type`);
     this._resource = resource;
     this._relationships = {};
+    return this;
   }
 
   toJSON(): PlainObject {

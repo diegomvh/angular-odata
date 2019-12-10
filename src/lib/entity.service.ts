@@ -16,7 +16,7 @@ export class ODataEntityService<T> {
 
   constructor(protected client: ODataClient, protected settings: ODataSettings) { }
 
-  // Build requests
+  // Build resources
   public entities(): ODataEntitySetResource<T> {
     let Ctor = <typeof ODataEntityService>this.constructor;
     return this.client.entitySet<T>(Ctor.path, Ctor.type);
@@ -25,20 +25,6 @@ export class ODataEntityService<T> {
   public entity(key?: EntityKey): ODataEntityResource<T> {
     return this.entities()
       .entity(key);
-  }
-
-  public model<M extends ODataModel>(attrs?: any): M {
-    let Ctor = <typeof ODataEntityService>this.constructor;
-    let Model = this.client.modelForType(Ctor.type);
-    let model = new Model(attrs || null, ODataEntityAnnotations.factory({}), this.entity(), this.settings) as M;
-    return model;
-  }
-
-  public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
-    let Ctor = <typeof ODataEntityService>this.constructor;
-    let Collection = this.client.collectionForType(Ctor.type);
-    let collection = new Collection(models || null, ODataCollectionAnnotations.factory({}), this.entities(), this.settings) as C;
-    return collection;
   }
 
   public navigationProperty<P>(entity: Partial<T>, name: string): ODataNavigationPropertyResource<P> {
@@ -75,6 +61,29 @@ export class ODataEntityService<T> {
     let query = this.entities().function<R>(name, parser);
     query.parameters(params);
     return query;
+  }
+
+  // Models and Collections
+  public model<M extends ODataModel>(attrs?: any): M {
+    let Ctor = <typeof ODataEntityService>this.constructor;
+    let Model = this.client.modelForType(Ctor.type);
+    let model = new Model(attrs || null, ODataEntityAnnotations.factory({}), this.entity(), this.settings) as M;
+    return model;
+  }
+
+  public attachModel(model: ODataModel) {
+    return model.attach(this.entity());
+  }
+
+  public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
+    let Ctor = <typeof ODataEntityService>this.constructor;
+    let Collection = this.client.collectionForType(Ctor.type);
+    let collection = new Collection(models || null, ODataCollectionAnnotations.factory({}), this.entities(), this.settings) as C;
+    return collection;
+  }
+
+  public attachCollection(collection: ODataModelCollection<any>) {
+    return collection.attach(this.entities());
   }
 
   // Entity Actions
