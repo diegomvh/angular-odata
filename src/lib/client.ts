@@ -3,11 +3,11 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataEntityAnnotations, ODataEntityResource, ODataCollectionAnnotations } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER } from './types';
 import { ODataSchema } from './models/schema';
-import { ODataModel, ODataModelCollection, PARSERS, Parser } from './models';
+import { ODataModel, ODataModelCollection, Parser, ODataModelAnnotations, ODataModelCollectionAnnotations, ODataModelCollectionResource, ODataModelResource } from './models';
 
 export const addBody = <T>(
   options: {
@@ -53,12 +53,14 @@ export class ODataClient {
     return this.settings.parserForType(type) as Parser<T>;
   }
 
-  modelForType(type: string) {
-    return this.settings.modelForType(type) as typeof ODataModel;
+  modelForType<M extends ODataModel>(attrs: any, annots: ODataModelAnnotations, resource: ODataModelResource<any>, type: string): M {
+    let Model = this.settings.modelForType(type) as typeof ODataModel;
+    return new Model(attrs || null, annots, resource, this) as M;
   }
 
-  collectionForType(type: string) {
-    return this.settings.collectionForType(type) as typeof ODataModelCollection;
+  collectionForType<C extends ODataModelCollection<ODataModel>>(models: any, annots: ODataModelCollectionAnnotations, resource: ODataModelCollectionResource<any>, type: string) {
+    let Collection = this.settings.collectionForType(type) as typeof ODataModelCollection;
+    return new Collection(models || null, annots, resource, this) as C;
   }
 
   // Requests

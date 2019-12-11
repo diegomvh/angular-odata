@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource } from '../resources';
 
 import { ODataModel } from './model';
-import { ODataSettings } from './settings';
 import { Parser } from './parser';
+import { ODataClient } from '../client';
 
-type ODataModelCollectionResource<T> = ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
-type ODataModelCollectionAnnotations = ODataCollectionAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
+export type ODataModelCollectionResource<T> = ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
+export type ODataModelCollectionAnnotations = ODataCollectionAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
 
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
-  _settings: ODataSettings; 
+  _client: ODataClient; 
   _resource: ODataModelCollectionResource<any>;
   _annotations: ODataModelCollectionAnnotations;
   _models: M[];
@@ -22,8 +22,8 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     pages?: number
   } = {};
 
-  constructor(models: M[] | null, annots: ODataCollectionAnnotations | null, resource: ODataModelCollectionResource<any>, settings: ODataSettings) {
-    this._settings = settings;
+  constructor(models: M[] | null, annots: ODataModelCollectionAnnotations | null, resource: ODataModelCollectionResource<any>, client: ODataClient) {
+    this._client = client;
     this.assign(models || [], annots, resource);
   }
 
@@ -39,13 +39,14 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   private assign(models: any[], annots: ODataModelCollectionAnnotations, resource: ODataModelCollectionResource<any>) {
     this.setAnnotations(annots as ODataCollectionAnnotations);
     this.attach(resource);
-    let Klass = this._settings.modelForType(this._resource.type());
-    this._models = models.map(model => new Klass(
-      model, 
-      ODataEntityAnnotations.factory(model),
-      this._resource.entity(model), 
-      this._settings
-    ) as M);
+    this._models = models.map(model => 
+      this._client.modelForType(
+        model, 
+        ODataEntityAnnotations.factory(model),
+        (this._resource as ODataEntitySetResource<any>).entity(model), 
+        this._resource.type()
+      )
+    );
   }
 
   attach(resource: ODataModelCollectionResource<any>): this {
@@ -122,7 +123,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   // Custom
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
     if (this._resource instanceof ODataEntitySetResource) {
-      let parser = returnType? this._settings.parserForType<R>(returnType) as Parser<R> : null;
+      let parser = returnType? this._client.parserForType<R>(returnType) as Parser<R> : null;
       let func = this._resource.function<R>(name, parser);
       func.parameters(params);
       return func;
@@ -131,7 +132,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
 
   protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
     if (this._resource instanceof ODataEntitySetResource) {
-      let parser = returnType? this._settings.parserForType<R>(returnType) as Parser<R> : null;
+      let parser = returnType? this._client.parserForType<R>(returnType) as Parser<R> : null;
       let action = this._resource.action<R>(name, parser);
       return action;
     }

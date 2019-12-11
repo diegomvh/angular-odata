@@ -66,25 +66,21 @@ export class ODataEntityService<T> {
   // Models and Collections
   public model<M extends ODataModel>(attrs?: any): M {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    let Model = this.client.modelForType(Ctor.type);
-    let model = new Model(attrs || null, ODataEntityAnnotations.factory({}), this.entity(), this.settings) as M;
-    return model;
-  }
-
-  public attachModel(model: ODataModel) {
-    return model.attach(this.entity());
+    return this.client.modelForType<M>(attrs, ODataEntityAnnotations.factory(attrs), this.entity(), Ctor.type);
   }
 
   public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    let Collection = this.client.collectionForType(Ctor.type);
-    let collection = new Collection(models || null, ODataCollectionAnnotations.factory({}), this.entities(), this.settings) as C;
-    return collection;
+    return this.client.collectionForType(models, ODataCollectionAnnotations.factory(models), this.entities(), Ctor.type);
   }
 
-  public attachCollection(collection: ODataModelCollection<any>) {
-    return collection.attach(this.entities());
+  public attach(instance: ODataModel | ODataModelCollection<ODataModel>) {
+    if (instance instanceof ODataModel)
+      return instance.attach(this.entity());
+    if (instance instanceof ODataModelCollection)
+      return instance.attach(this.entities());
   }
+
 
   // Entity Actions
   public fetchCollection(): Observable<[T[], ODataCollectionAnnotations]> {
