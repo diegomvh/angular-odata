@@ -66,12 +66,22 @@ export class ODataEntityService<T> {
   // Models and Collections
   public model<M extends ODataModel>(attrs?: any): M {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.client.modelForType<M>(attrs, ODataEntityAnnotations.factory(attrs), this.entity(), Ctor.type);
+    return this.client.modelForType<M>(
+      attrs, 
+      ODataEntityAnnotations.factory(attrs || {}), 
+      this.entity(), 
+      Ctor.type
+    );
   }
 
-  public collection<C extends ODataModelCollection<ODataModel>>(models?: any[]): C {
+  public collection<C extends ODataModelCollection<ODataModel>>(models?: any): C {
     let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.client.collectionForType(models, ODataCollectionAnnotations.factory(models), this.entities(), Ctor.type);
+    return this.client.collectionForType(
+      models, 
+      ODataCollectionAnnotations.factory(models || {}), 
+      this.entities(), 
+      Ctor.type
+    );
   }
 
   public attach(instance: ODataModel | ODataModelCollection<ODataModel>) {

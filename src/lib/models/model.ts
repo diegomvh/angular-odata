@@ -52,8 +52,8 @@ export class ODataModel {
     schema.fields.forEach(field => {
       let value = field.parse(entity[field.name] || null);
       let modelFactory = (annots, resource) => field.collection ?
-        this._client.collectionForType( value, annots, resource, field.type) :
-        this._client.modelForType( value, annots, resource, field.type);
+        this._client.collectionForType(value, annots, resource, field.type) :
+        this._client.modelForType(value, annots, resource, field.type);
       if (field.navigation) {
         Object.defineProperty(this, field.name, {
           get() {
@@ -78,12 +78,12 @@ export class ODataModel {
             this.setState(State.Modified);
           }
         });
-      } else if (Types.isObject(value)) {
+      } else if (field.schema) {
         this[field.name] = modelFactory(
           <any>this._annotations.property(field.name),
           resource.property(field.name)
         );
-      } else if (value) {
+      } else {
         this[field.name] = value;
       }
     });
