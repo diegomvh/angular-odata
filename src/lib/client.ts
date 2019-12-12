@@ -53,14 +53,14 @@ export class ODataClient {
     return this.settings.parserForType(type) as Parser<T>;
   }
 
-  modelForType<M extends ODataModel>(attrs: any, annots: ODataModelAnnotations, resource: ODataModelResource<any>, type: string): M {
+  modelForType<M extends ODataModel>(attrs: any, annots: ODataModelAnnotations, resource: ODataResource<any>, type: string): M {
     let Model = this.settings.modelForType(type) as typeof ODataModel;
-    return new Model(attrs || null, annots, resource, this) as M;
+    return new Model(attrs || null, annots, resource as ODataEntityResource<any>, this) as M;
   }
 
-  collectionForType<C extends ODataModelCollection<ODataModel>>(models: any, annots: ODataModelCollectionAnnotations, resource: ODataModelCollectionResource<any>, type: string) {
+  collectionForType<C extends ODataModelCollection<ODataModel>>(models: any, annots: ODataModelCollectionAnnotations, resource: ODataResource<any>, type: string) {
     let Collection = this.settings.collectionForType(type) as typeof ODataModelCollection;
-    return new Collection(models || null, annots, resource, this) as C;
+    return new Collection(models || null, annots, resource as ODataEntitySetResource<any>, this) as C;
   }
 
   // Requests
