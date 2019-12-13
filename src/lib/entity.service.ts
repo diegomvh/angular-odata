@@ -138,4 +138,13 @@ export class ODataEntityService<T> {
           return throwError(error);
       }));
   }
+
+  public save(entity: T) {
+    let query = this.entity(entity);
+    // There are no guarantees that the instance exists on the server
+    if (query.hasKey())
+      return this.update(entity);
+    else
+      return this.create(entity);
+  }
 }
