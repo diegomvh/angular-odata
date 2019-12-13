@@ -7,14 +7,14 @@ import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyRes
 
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
-import { ODataModel, ODataModelCollection, ODataSchema, ODataSettings } from './models';
+import { ODataModel, ODataModelCollection, ODataSchema } from './models';
 
 @Injectable()
 export class ODataEntityService<T> {
   static path: string = "";
   static type: string = "";
 
-  constructor(protected client: ODataClient, protected settings: ODataSettings) { }
+  constructor(protected client: ODataClient) { }
 
   // Build resources
   public entities(): ODataEntitySetResource<T> {
