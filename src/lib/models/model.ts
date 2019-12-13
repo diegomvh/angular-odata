@@ -14,19 +14,10 @@ import { Types } from '../utils/types';
 export type ODataModelResource<T> = ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
 export type ODataModelAnnotations = ODataEntityAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
 
-enum State {
-  Added,
-  Modified,
-  Deleted,
-  Unchanged,
-  Detached
-}
-
 export class ODataModel {
   _client: ODataClient;
   _resource: ODataModelResource<any>;
   _annotations: ODataModelAnnotations;
-  _state: State;
   _relationships: { [name: string]: ODataModel | ODataModelCollection<ODataModel> }
 
   constructor(
@@ -39,18 +30,10 @@ export class ODataModel {
     this.assign(entity || {}, annots, resource);
   }
 
-  private setState(state: State) {
-    this._state = state;
-  }
-
-  private assign(entity: any,
-    annots: ODataModelAnnotations,
-    resource: ODataModelResource<any>): this {
-    this._annotations = annots;
-    this.attach(resource);
+  fromEntity(entity: any): this {
     var schema = this._client.parserForType(this._resource.type()) as ODataSchema<any>;
     schema.fields.forEach(field => {
-      let value = field.parse(entity[field.name] || null);
+      let value = entity[field.name];
       let modelFactory = (annots, resource) => field.collection ?
         this._client.collectionForType(value, annots, resource, field.type) :
         this._client.modelForType(value, annots, resource, field.type);
@@ -58,8 +41,9 @@ export class ODataModel {
         Object.defineProperty(this, field.name, {
           get() {
             if (!(field.name in this._relationships)) {
-              let resource: ODataModelResource<any> = this._resource.clone();
-              if (resource instanceof ODataEntityResource && resource.isNew()) {
+              let resource: ODataEntityResource<any> = this._resource.clone();
+              resource.key(this);
+              if (!this._annotations.context) {
                 throw new Error(`Can't resolve ${field.name} relation from new entity`);
               }
               this._relationships[field.name] = modelFactory(
@@ -75,18 +59,39 @@ export class ODataModel {
             if (!(value._resource instanceof ODataEntityResource))
               throw new Error(`Can't set ${value} to model`);
             this._relationships[field.name] = value;
-            this.setState(State.Modified);
           }
         });
       } else if (field.schema) {
         this[field.name] = modelFactory(
           <any>this._annotations.property(field.name),
-          resource.property(field.name)
+          this._resource.property(field.name)
         );
-      } else {
+      } else if (value !== undefined) {
         this[field.name] = value;
       }
     });
+    return this;
+  }
+
+  toEntity() {
+    let entity = {};
+    let schema = this._client.parserForType(this._resource.type()) as ODataSchema<any>;
+    schema.fields.forEach(field => {
+      if (field.navigation) {
+        if (field.name in this._relationships)
+          entity[field.name] = this._relationships[field.name].toJSON();
+      } else if (field.schema) {
+        if (this[field.name] !== undefined)
+          entity[field.name] = this[field.name].toJSON();
+      } else if (this[field.name] !== undefined) {
+        entity[field.name] = this[field.name];
+      }
+    }, {});
+    return entity;
+  }
+
+  annotate(annots: ODataModelAnnotations): this {
+    this._annotations = annots;
     return this;
   }
 
@@ -96,6 +101,13 @@ export class ODataModel {
     this._resource = resource;
     this._relationships = {};
     return this;
+  }
+
+  assign(entity: any,
+    annots: ODataModelAnnotations,
+    resource: ODataModelResource<any>
+  ): this {
+    return this.annotate(annots).attach(resource).fromEntity(entity);
   }
 
   toJSON(): PlainObject {
@@ -112,7 +124,7 @@ export class ODataModel {
     let resource: ODataEntityResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any> = this._resource.clone<any>() as ODataEntityResource<any> | ODataNavigationPropertyResource<any>;
     if (resource instanceof ODataEntityResource) {
       resource.key(this);
-      if (resource.isNew())
+      if (resource.key())
         throw new Error(`Can't fetch without entity key`);
     }
     return resource.get({ responseType: 'entity' })
@@ -152,15 +164,15 @@ export class ODataModel {
       }
     });
     */
-    if (resource.isNew()) {
-      return resource.post(this)
+    if (this._annotations.context) {
+      resource.key(this);
+      return resource.put(this.toEntity())
         .pipe(map(([entity, annots]) => {
           this.assign(entity, annots, resource);
           return this;
         }));
     } else {
-      resource.key(this);
-      return resource.put(this)
+      return resource.post(this.toEntity())
         .pipe(map(([entity, annots]) => {
           this.assign(entity, annots, resource);
           return this;
@@ -172,7 +184,7 @@ export class ODataModel {
     let resource = this._resource.clone() as ODataEntityResource<any>;
     if (resource instanceof ODataEntityResource) {
       resource.key(this);
-      if (!resource.isNew()) {
+      if (resource.hasKey()) {
         let etag = (this._annotations as ODataEntityAnnotations).etag;
         return resource.delete({ etag });
       }
@@ -185,7 +197,7 @@ export class ODataModel {
     let resource = this._resource.clone() as ODataEntityResource<any>;
     if (resource instanceof ODataEntityResource) {
       resource.key(this);
-      if (!resource.isNew()) {
+      if (resource.hasKey()) {
         let parser = returnType ? this._client.parserForType<R>(returnType) as Parser<R> : null;
         var func = resource.function<R>(name, parser);
         func.parameters(params);
@@ -198,7 +210,7 @@ export class ODataModel {
     let resource = this._resource.clone() as ODataEntityResource<any>;
     if (resource instanceof ODataEntityResource) {
       resource.key(this);
-      if (!resource.isNew()) {
+      if (resource.hasKey()) {
         let parser = returnType ? this._client.parserForType<R>(returnType) as Parser<R> : null;
         return resource.action<R>(name, parser);
       }

@@ -138,12 +138,4 @@ export class ODataEntityService<T> {
           return throwError(error);
       }));
   }
-
-  public save(entity: T) {
-    let query = this.entity(entity);
-    if (query.isNew())
-      return this.create(entity);
-    else
-      return this.update(entity);
-  }
 }
