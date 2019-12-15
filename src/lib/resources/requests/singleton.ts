@@ -14,7 +14,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -55,7 +55,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
   }
 
-  action<A>(name: string, parser?: Parser<A>) {
+  action<A>(name: string, type?: string) {
+    let parser = this.client.parserForType<A>(type) as Parser<A>;
     return ODataActionResource.factory<A>(
       name,
       this.client, {
@@ -65,7 +66,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
   }
 
-  function<F>(name: string, parser?: Parser<F>) {
+  function<F>(name: string, type?: string) {
+    let parser = this.client.parserForType<F>(type) as Parser<F>;
     return ODataFunctionResource.factory<F>(
       name,
       this.client, {
@@ -88,10 +90,10 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'entityset',
+    responseType: 'entities'
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  }): Observable<[T[], ODataEntitiesAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -105,7 +107,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity' | 'entityset' | 'property',
+    responseType: 'entity' | 'entities' | 'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -126,8 +128,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     switch (options.responseType) {
       case 'entity':
         return res$.pipe(map((body: any) => this.toEntity(body)));
-      case 'entityset':
-        return res$.pipe(map((body: any) => this.toCollection(body)));
+      case 'entities':
+        return res$.pipe(map((body: any) => this.toEntities(body)));
       case 'property':
         return res$.pipe(map((body: any) => this.toProperty(body)));
     }

@@ -9,7 +9,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
 import { Parser, ODataModel } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataPropertyAnnotations, ODataCollectionAnnotations } from '../responses';
+import { ODataPropertyAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -29,7 +29,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return new ODataPropertyResource<P>(client, segments, options, parser);
   }
 
-  entity(opts?: EntityKey) {
+  entity(opts?: EntityKey<T>) {
     return this;
   }
 
@@ -65,15 +65,15 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'entityset',
+    responseType: 'entities',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  }): Observable<[T[], ODataEntitiesAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'property' | 'entityset',
+    responseType: 'property' | 'entities',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -94,8 +94,8 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     switch (options.responseType) {
       case 'property':
         return res$.pipe(map((body: any) => this.toProperty(body)));
-      case 'entityset':
-        return res$.pipe(map((body: any) => this.toCollection(body)));
+      case 'entities':
+        return res$.pipe(map((body: any) => this.toEntities(body)));
     }
     return res$;
   }

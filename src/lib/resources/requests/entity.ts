@@ -34,7 +34,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   // Key
-  key(key?: EntityKey) {
+  key(key?: EntityKey<T>) {
     let segment = this.segments.last();
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
@@ -80,7 +80,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  action<A>(name: string, parser?: Parser<A>) {
+  action<A>(name: string, type?: string) {
+    let parser = this.client.parserForType<A>(type) as Parser<A>;
     return ODataActionResource.factory<A>(
       name,
       this.client, {
@@ -90,7 +91,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  function<F>(name: string, parser?: Parser<F>) {
+  function<F>(name: string, type?: string) {
+    let parser = this.client.parserForType<F>(type) as Parser<F>;
     return ODataFunctionResource.factory<F>(
       name,
       this.client, {

@@ -15,7 +15,7 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataEntityAnnotations, ODataCollectionAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -34,7 +34,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   // Segments
-  entity(key?: EntityKey) {
+  entity(key?: EntityKey<T>) {
     let entity = ODataEntityResource.factory<T>(
       this.client, {
       segments: this.segments.clone(),
@@ -99,7 +99,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
     withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]> {
+  }): Observable<[T[], ODataEntitiesAnnotations]> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -112,7 +112,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       responseType: 'json',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toCollection(body)));
+    }).pipe(map(body => this.toEntities(body)));
   }
 
   // Options

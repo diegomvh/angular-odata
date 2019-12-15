@@ -8,7 +8,7 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses';
 
 export class ODataActionResource<T> extends ODataResource<T> {
   // Factory
@@ -38,10 +38,10 @@ export class ODataActionResource<T> extends ODataResource<T> {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
-    responseType?: 'entityset',
+    responseType?: 'entities',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  }): Observable<[T[], ODataEntitiesAnnotations]>;
 
   post(body?: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -54,7 +54,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
   post(body?: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'entity'|'entityset'|'property',
+    responseType?: 'entity'|'entities'|'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -76,8 +76,8 @@ export class ODataActionResource<T> extends ODataResource<T> {
       switch (options.responseType) {
         case 'entity':
           return res$.pipe(map((body: any) => this.toEntity(body)));
-        case 'entityset':
-          return res$.pipe(map((body: any) => this.toCollection(body)));
+        case 'entities':
+          return res$.pipe(map((body: any) => this.toEntities(body)));
         case 'property':
           return res$.pipe(map((body: any) => this.toProperty(body)));
       }
