@@ -19,7 +19,7 @@ export interface Field {
   ref?: string;
 }
 
-class ODataSchemaField<T> implements Field, Parser<T> {
+export class ODataSchemaField<T> implements Field, Parser<T> {
   name: string;
   type: string;
   enum?: { [key: number]: string | number };

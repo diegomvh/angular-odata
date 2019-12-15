@@ -1,19 +1,16 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
 import { Parser } from './parser';
 import { ODataClient } from '../client';
 
-export type ODataModelCollectionResource<T> = ODataEntitySetResource<any> | ODataPropertyResource<any> | ODataNavigationPropertyResource<any>;
-export type ODataModelCollectionAnnotations = ODataCollectionAnnotations | ODataPropertyAnnotations | ODataRelatedAnnotations;
-
 export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
   _client: ODataClient; 
-  _resource: ODataModelCollectionResource<any>;
-  _annotations: ODataModelCollectionAnnotations;
+  _resource: ODataResource<any>;
+  _annotations: ODataAnnotations;
   _models: M[];
   _state: {
     records?: number,
@@ -22,37 +19,26 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     pages?: number
   } = {};
 
-  constructor(models: M[] | null, annots: ODataModelCollectionAnnotations | null, resource: ODataModelCollectionResource<any>, client: ODataClient) {
-    this._client = client;
-    this.assign(models || [], annots, resource);
+  constructor(models?: M[]) {
+    this._models = models || [];
   }
 
-  private setAnnotations(annots: ODataCollectionAnnotations) {
-    this._annotations = annots;
-    if (annots.skip && annots.count) {
-      this._state.records = annots.count;
-      this._state.size = annots.skip;
-      this._state.pages = Math.ceil(annots.count / annots.skip);
-    };
-  }
-
-  private assign(models: any[], annots: ODataModelCollectionAnnotations, resource: ODataModelCollectionResource<any>) {
-    this.setAnnotations(annots as ODataCollectionAnnotations);
-    this.attach(resource);
-    this._models = models.map(model => 
-      this._client.modelForType(
-        model, 
-        ODataEntityAnnotations.factory(model),
-        (this._resource as ODataEntitySetResource<any>).entity(model), 
-        this._resource.type()
-      )
-    );
-  }
-
-  attach(resource: ODataModelCollectionResource<any>): this {
-    if (this._resource && this._resource.type() !== resource.type())
-      throw new Error(`Can't attach resource from distinct type`);
+  attach(entities: any[], resource?: ODataResource<any>, annots?: ODataAnnotations): this {
     this._resource = resource;
+    this._annotations = annots;
+    if (annots instanceof ODataEntitiesAnnotations) {
+      if (annots.skip && annots.count) {
+        this._state.records = annots.count;
+        this._state.size = annots.skip;
+        this._state.pages = Math.ceil(annots.count / annots.skip);
+      };
+    }
+    if (this._resource) {
+      this._models = entities.map(model => 
+        (this._resource as ODataEntitySetResource<any>).entity(model).toModel(model, ODataEntityAnnotations.factory(model)) as M);
+    } else {
+      this._models = entities;
+    }
     return this;
   }
 
@@ -82,12 +68,9 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
       resource.top(this._state.size);
       resource.skip(this._state.size * (this._state.page - 1));
     }
-    return resource.get({withCount: true, responseType: 'entityset'})
+    return resource.get({withCount: true, responseType: 'entities'})
       .pipe(
-        map(([models, annots]) => {
-          this.assign(models, annots, resource);
-          return this;
-        }));
+        map(([entities, annots]) => this.attach(entities, resource, annots)));
   }
 
   page(page: number) {

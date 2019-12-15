@@ -3,11 +3,11 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataEntityAnnotations, ODataEntityResource, ODataCollectionAnnotations } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataEntityAnnotations, ODataEntityResource, ODataEntitiesAnnotations, ODataResource } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER } from './types';
 import { ODataSchema } from './models/schema';
-import { ODataModel, ODataModelCollection, Parser, ODataModelAnnotations, ODataModelCollectionAnnotations, ODataModelCollectionResource, ODataModelResource } from './models';
+import { ODataModel, ODataModelCollection, Parser } from './models';
 
 export const addBody = <T>(
   options: {
@@ -53,14 +53,14 @@ export class ODataClient {
     return this.settings.parserForType(type) as Parser<T>;
   }
 
-  modelForType<M extends ODataModel>(attrs: any, annots: ODataModelAnnotations, resource: ODataResource<any>, type: string): M {
+  modelForType<M extends ODataModel>(type: string): M {
     let Model = this.settings.modelForType(type) as typeof ODataModel;
-    return new Model(attrs || null, annots, resource as ODataEntityResource<any>, this) as M;
+    return new Model() as M;
   }
 
-  collectionForType<C extends ODataModelCollection<ODataModel>>(models: any, annots: ODataModelCollectionAnnotations, resource: ODataResource<any>, type: string) {
+  collectionForType<C extends ODataModelCollection<ODataModel>>(type: string) {
     let Collection = this.settings.collectionForType(type) as typeof ODataModelCollection;
-    return new Collection(models || null, annots, resource as ODataEntitySetResource<any>, this) as C;
+    return new Collection() as C;
   }
 
   // Requests

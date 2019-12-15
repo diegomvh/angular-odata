@@ -1,10 +1,10 @@
-import { PlainObject, VALUE, ODATA_ANNOTATION_PREFIX, entityAttributes, odataAnnotations } from '../types';
+import { PlainObject, VALUE, entityAttributes } from '../types';
 import { ODataClient } from '../client';
 import { Parser, ODataSchema, ODataModel, ODataModelCollection } from '../models';
 
 import { ODataSegments } from './segments';
 import { ODataOptions } from './options';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataAnnotations, ODataPropertyAnnotations } from './responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
 
 export abstract class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -31,6 +31,10 @@ export abstract class ODataResource<Type> {
     return this.parser.type;
   }
 
+  schema() {
+    return this.client.parserForType(this.type()) as ODataSchema<any>;
+  }
+
   path(): string {
     return this.segments.path();
   }
@@ -53,9 +57,9 @@ export abstract class ODataResource<Type> {
       [null, null];
   }
 
-  protected toCollection(body: any): [Type[] | null, ODataCollectionAnnotations | null] {
+  protected toEntities(body: any): [Type[] | null, ODataEntitiesAnnotations | null] {
     return body ? 
-      [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(body)] :
+      [<Type[]>this.deserialize(body[VALUE]), ODataEntitiesAnnotations.factory(body)] :
       [null, null];
   }
 
@@ -63,6 +67,15 @@ export abstract class ODataResource<Type> {
     return body ? 
       [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(body)] :
       [null, null];
+  }
+
+  // Model
+  toModel<M extends ODataModel>(entity?: any, annots?: ODataAnnotations): M {
+    return this.client.modelForType<M>(this.type()).attach(entity || {}, this, annots);
+  }
+
+  toCollection<C extends ODataModelCollection<ODataModel>>(entities?: any, annots?: ODataAnnotations): C {
+    return this.client.collectionForType<C>(this.type()).attach(entities || [], this, annots);
   }
 
   toString(): string {
