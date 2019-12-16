@@ -1,10 +1,10 @@
 import { PlainObject, VALUE, entityAttributes } from '../types';
 import { ODataClient } from '../client';
-import { Parser, ODataSchema, ODataModel, ODataModelCollection } from '../models';
+import { Parser, ODataSchema, ODataModel, ODataCollection } from '../models';
 
 import { ODataSegments } from './segments';
 import { ODataOptions } from './options';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
 
 export abstract class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -57,25 +57,25 @@ export abstract class ODataResource<Type> {
       [null, null];
   }
 
-  protected toEntities(body: any): [Type[] | null, ODataEntitiesAnnotations | null] {
+  protected toEntities(body: any): [Type[] | null, ODataCollectionAnnotations | null] {
     return body ? 
-      [<Type[]>this.deserialize(body[VALUE]), ODataEntitiesAnnotations.factory(body)] :
+      [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(body)] :
       [null, null];
   }
 
-  protected toProperty(body: any): [Type | null, ODataPropertyAnnotations | null] {
+  protected toValue(body: any): [Type | null, ODataPropertyAnnotations | null] {
     return body ? 
       [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(body)] :
       [null, null];
   }
 
   // Model
-  toModel<M extends ODataModel>(entity?: any, annots?: ODataAnnotations): M {
-    return this.client.modelForType<M>(this.type()).attach(entity || {}, this, annots);
+  toModel<M extends ODataModel<Type>>(entity?: Type, annots?: ODataAnnotations): M {
+    return this.client.modelForType<M>(this.type()).attach(entity || {} as Type, this, annots);
   }
 
-  toCollection<C extends ODataModelCollection<ODataModel>>(entities?: any, annots?: ODataAnnotations): C {
-    return this.client.collectionForType<C>(this.type()).attach(entities || [], this, annots);
+  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities?: Type[], annots?: ODataAnnotations): C {
+    return this.client.collectionForType<C>(this.type()).attach(entities || [] as Type[], this, annots);
   }
 
   toString(): string {

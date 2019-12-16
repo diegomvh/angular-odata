@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../resources';
+import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataCollectionAnnotations, ODataEntityAnnotations } from '../resources';
 
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
@@ -62,7 +62,7 @@ export class ODataEntityService<T> {
   }
 
   // Entity Actions
-  public fetchCollection(): Observable<[T[], ODataEntitiesAnnotations]> {
+  public fetchCollection(): Observable<[T[], ODataCollectionAnnotations]> {
     return this.entities()
       .get();
   }
@@ -106,5 +106,9 @@ export class ODataEntityService<T> {
         else
           return throwError(error);
       }));
+  }
+
+  public save(entity: T) {
+    return !this.entity(entity).hasKey() ? this.create(entity) : this.update(entity);
   }
 }

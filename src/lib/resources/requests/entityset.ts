@@ -15,7 +15,7 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataCollectionAnnotations } from '../responses';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -99,7 +99,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean
     withCount?: boolean
-  }): Observable<[T[], ODataEntitiesAnnotations]> {
+  }): Observable<[T[], ODataCollectionAnnotations]> {
 
     let params = options && options.params;
     if (options && options.withCount)

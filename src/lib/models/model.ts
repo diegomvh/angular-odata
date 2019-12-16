@@ -3,20 +3,20 @@ import { map, throwIfEmpty } from 'rxjs/operators';
 
 import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
-import { ODataModelCollection } from './collection';
+import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 import { PlainObject } from '../types';
 
-export class ODataModel {
+export class ODataModel<T> {
   _resource: ODataResource<any>;
   _annotations: ODataAnnotations;
-  _relationships: { [name: string]: ODataModel | ODataModelCollection<ODataModel> }
+  _relationships: { [name: string]: ODataModel<any> | ODataCollection<any, ODataModel<any>> }
 
   constructor(attrs?: any, resource?: ODataResource<any>) {
     this.attach(attrs || {}, resource);
   }
 
-  attach(entity: any, resource?: ODataResource<any>, annots?: ODataAnnotations): this {
+  attach(entity: T, resource?: ODataResource<T>, annots?: ODataAnnotations): this {
     this._resource = resource;
     this._annotations = annots;
     this._relationships = {};
@@ -39,7 +39,7 @@ export class ODataModel {
                 }
                 return this._relationships[field.name];
               },
-              set(value: ODataModel | null) {
+              set(value: ODataModel<any> | null) {
                 if (field.collection)
                   throw new Error(`Can't set ${field.name} to collection, use add`);
                 if (!(value._resource instanceof ODataEntityResource))
@@ -81,7 +81,7 @@ export class ODataModel {
         entity[field.name] = this[field.name];
       }
     });
-    return this._resource.serialize(entity);
+    return entity;
   }
 
   clone() {

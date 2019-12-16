@@ -10,10 +10,10 @@ import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { Parser, ODataModel, ODataSchema, ODataModelCollection } from '../../models';
+import { Parser, ODataModel, ODataSchema, ODataCollection } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
+import { ODataCollectionAnnotations, ODataEntityAnnotations } from '../responses';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -109,7 +109,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     responseType: 'entities',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataEntitiesAnnotations]>;
+  }): Observable<[T[], ODataCollectionAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -213,7 +213,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataEntitiesAnnotations]> {
+  }): Observable<[T[], ODataCollectionAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -231,7 +231,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<T[]> {
-    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataEntitiesAnnotations]> => {
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataCollectionAnnotations]> => {
       if (opts) {
         if (opts.skiptoken)
           this.skiptoken(opts.skiptoken);

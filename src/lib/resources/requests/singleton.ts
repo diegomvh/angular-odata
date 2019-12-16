@@ -14,7 +14,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -93,7 +93,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     responseType: 'entities'
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataEntitiesAnnotations]>;
+  }): Observable<[T[], ODataCollectionAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -131,7 +131,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       case 'entities':
         return res$.pipe(map((body: any) => this.toEntities(body)));
       case 'property':
-        return res$.pipe(map((body: any) => this.toProperty(body)));
+        return res$.pipe(map((body: any) => this.toValue(body)));
     }
     return res$;
   }

@@ -8,7 +8,7 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
 
 export class ODataActionResource<T> extends ODataResource<T> {
   // Factory
@@ -41,7 +41,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
     responseType?: 'entities',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataEntitiesAnnotations]>;
+  }): Observable<[T[], ODataCollectionAnnotations]>;
 
   post(body?: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -79,7 +79,7 @@ export class ODataActionResource<T> extends ODataResource<T> {
         case 'entities':
           return res$.pipe(map((body: any) => this.toEntities(body)));
         case 'property':
-          return res$.pipe(map((body: any) => this.toProperty(body)));
+          return res$.pipe(map((body: any) => this.toValue(body)));
       }
     }
     return res$;

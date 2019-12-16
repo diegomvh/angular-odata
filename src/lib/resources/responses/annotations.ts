@@ -125,9 +125,9 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   }
 }
 
-export class ODataEntitiesAnnotations extends ODataAnnotations {
-  clone(): ODataEntitiesAnnotations {
-    return new ODataEntitiesAnnotations(this.value);
+export class ODataCollectionAnnotations extends ODataAnnotations {
+  clone(): ODataCollectionAnnotations {
+    return new ODataCollectionAnnotations(this.value);
   };
 
   get readLink(): string {
@@ -164,6 +164,6 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
 
   static factory(data: any) {
     let annotations = odataAnnotations(data);
-    return new ODataEntitiesAnnotations(annotations);
+    return new ODataCollectionAnnotations(annotations);
   }
 }

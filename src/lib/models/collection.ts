@@ -1,13 +1,13 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
 import { Parser } from './parser';
 import { ODataClient } from '../client';
 
-export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
+export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   _client: ODataClient; 
   _resource: ODataResource<any>;
   _annotations: ODataAnnotations;
@@ -23,10 +23,10 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
     this._models = models || [];
   }
 
-  attach(entities: any[], resource?: ODataResource<any>, annots?: ODataAnnotations): this {
+  attach(entities: T[], resource?: ODataResource<T>, annots?: ODataAnnotations): this {
     this._resource = resource;
     this._annotations = annots;
-    if (annots instanceof ODataEntitiesAnnotations) {
+    if (annots instanceof ODataCollectionAnnotations) {
       if (annots.skip && annots.count) {
         this._state.records = annots.count;
         this._state.size = annots.skip;
@@ -37,7 +37,7 @@ export class ODataModelCollection<M extends ODataModel> implements Iterable<M> {
       this._models = entities.map(model => 
         (this._resource as ODataEntitySetResource<any>).entity(model).toModel(model, ODataEntityAnnotations.factory(model)) as M);
     } else {
-      this._models = entities;
+      this._models = entities.map(e => <any>e as M);
     }
     return this;
   }

@@ -3,7 +3,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataSchema, Field } from './schema';
 import { ODataModel } from './model';
-import { ODataModelCollection } from './collection';
+import { ODataCollection } from './collection';
 import { Parser, PARSERS } from './parser';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
@@ -17,8 +17,8 @@ export interface ODataConfig {
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
   schemas?: {[type: string]: {[name: string]: Field }},
-  models?: {[type: string]: { new(...any): ODataModel} };
-  collections?:{[type: string]: { new(...any): ODataModelCollection<ODataModel> } };
+  models?: {[type: string]: { new(...any): ODataModel<any>} };
+  collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -31,8 +31,8 @@ export class ODataSettings {
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
   schemas?: {[type: string]: ODataSchema<any> };
-  models?: {[type: string]: { new(...any): ODataModel} };
-  collections?:{[type: string]: { new(...any): ODataModelCollection<ODataModel> } };
+  models?: {[type: string]: { new(...any): ODataModel<any>} };
+  collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
@@ -74,9 +74,9 @@ export class ODataSettings {
       return this.models[type] as typeof ODataModel;
   }
 
-  public collectionForType(type: string): typeof ODataModelCollection {
+  public collectionForType(type: string): typeof ODataCollection {
     if (type in this.collections)
-      return this.collections[type] as typeof ODataModelCollection;
+      return this.collections[type] as typeof ODataCollection;
   }
 
 }

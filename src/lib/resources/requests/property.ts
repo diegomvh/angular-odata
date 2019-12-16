@@ -9,7 +9,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
 import { Parser, ODataModel } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataPropertyAnnotations, ODataEntitiesAnnotations } from '../responses';
+import { ODataPropertyAnnotations, ODataCollectionAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -68,7 +68,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     responseType: 'entities',
     withCredentials?: boolean,
     withCount?: boolean
-  }): Observable<[T[], ODataEntitiesAnnotations]>;
+  }): Observable<[T[], ODataCollectionAnnotations]>;
 
   get(options: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -93,7 +93,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
     switch (options.responseType) {
       case 'property':
-        return res$.pipe(map((body: any) => this.toProperty(body)));
+        return res$.pipe(map((body: any) => this.toValue(body)));
       case 'entities':
         return res$.pipe(map((body: any) => this.toEntities(body)));
     }
