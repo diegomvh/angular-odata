@@ -23,7 +23,6 @@ Full examples of the library:
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { throwError } from 'rxjs';
 
 import { ODataModule } from 'angular-odata';
 
@@ -43,7 +42,7 @@ or build settings through a factory function.
 import { NgModule } from '@angular/core';
 import { throwError } from 'rxjs';
 
-import { ODataSettings } from 'angular-odata';
+import { ODataModule, ODataSettings } from 'angular-odata';
 
 export function oDataSettingsFactory() {
   return new ODataSettings({
@@ -71,9 +70,8 @@ If you choose using [OData to TypeScript](https://github.com/diegomvh/Od2Ts), im
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { throwError } from 'rxjs';
 
-import { ODataContext } from 'angular-odata';
+import { ODataModule } from 'angular-odata';
 import { TripPinConfig, TripPinModule } from './trippin';
 
 @NgModule({
