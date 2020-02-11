@@ -17,8 +17,9 @@
     "angular"
   ],
   "peerDependencies": {
-    "@angular/common": "^8.2.8",
-    "@angular/core": "^8.2.8",
+    "@angular/common": "^9.0.0",
+    "@angular/core": "^9.0.0",
+    "tslib": "^1.10.0",
     "uuid": "^3.3.3",
     "odata-query": "^5.6.0"
   }
