@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ODataConfig, ODataSettings, ODATA_CONFIG } from './models/settings';
 import { ODataClient } from './client';

@@ -1,6 +1,5 @@
 export * from './types';
 export * from './client';
-export * from './services/entity';
 export * from './module';
 
 // Models
