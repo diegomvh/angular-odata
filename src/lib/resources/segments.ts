@@ -40,15 +40,19 @@ export class ODataSegments {
         switch (segment.type) {
           case Segments.functionCall:
             let parameters = segment.options[Options.parameters];
-            return (parameters ? 
-              buildQuery({ func: { [segment.name]: parameters } }) : 
+            return (parameters ?
+              buildQuery({ func: { [segment.name]: parameters } }) :
               buildQuery(segment.name)
             ).slice(1);
           default:
             let key = segment.options[Options.key];
-            if (typeof(key) === 'string' && !(key.charAt(0) === key.charAt(key.length-1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) key = `'${key}'`;
-            return segment.name + (key ? buildQuery({key}) : "");
-          }
+            if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
+              key = `${key}`;
+            } else if (typeof (key) === 'string' && !(key.charAt(0) === key.charAt(key.length - 1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) {
+              key = `'${key}'`;
+            }
+            return segment.name + (key ? buildQuery({ key }) : "");
+        }
       });
     return segments.join(ODataSegments.PATHSEP);
   }
@@ -62,8 +66,8 @@ export class ODataSegments {
   }
 
   find(type: string, name?: string) {
-    return this.segments.find(s => 
-      s.type === type && 
+    return this.segments.find(s =>
+      s.type === type &&
       (Types.isUndefined(name) || s.name === name));
   }
 
