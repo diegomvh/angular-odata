@@ -105,19 +105,18 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Custom
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      let parser = returnType? this._client.parserForType<R>(returnType) as Parser<R> : null;
-      let func = this._resource.function<R>(name, parser);
+    let resource = this._resource.clone() as ODataEntitySetResource<any>;
+    if (resource instanceof ODataEntitySetResource) {
+      var func = resource.function<R>(name, returnType);
       func.parameters(params);
       return func;
     }
   }
 
   protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      let parser = returnType? this._client.parserForType<R>(returnType) as Parser<R> : null;
-      let action = this._resource.action<R>(name, parser);
-      return action;
+    let resource = this._resource.clone() as ODataEntitySetResource<any>;
+    if (resource instanceof ODataEntitySetResource) {
+      return resource.action<R>(name, returnType);
     }
   }
 

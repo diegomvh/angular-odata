@@ -44,8 +44,7 @@ export class ODataEntityService<T> {
   }
 
   public collectionAction<R>(name: string, returnType?: string): ODataActionResource<R> {
-    let parser = returnType? this.client.parserForType<R>(returnType) as ODataSchema<R> : null;
-    return this.entities().action<R>(name, parser);
+    return this.entities().action<R>(name, returnType);
   }
 
   public function<R>(key: EntityKey<T>, name: string, params: any, returnType?: string): ODataFunctionResource<R> {
@@ -55,8 +54,7 @@ export class ODataEntityService<T> {
   }
 
   public collectionFunction<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
-    let parser = returnType? this.client.parserForType<R>(returnType) as ODataSchema<R> : null;
-    let query = this.entities().function<R>(name, parser);
+    let query = this.entities().function<R>(name, returnType);
     query.parameters(params);
     return query;
   }

@@ -47,7 +47,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return entity;
   }
 
-  action<A>(name: string, parser?: Parser<A>) {
+  action<A>(name: string, type?: string) {
+    let parser = this.client.parserForType<A>(type) as Parser<A>;
     return ODataActionResource.factory<A>(
       name,
       this.client, {
@@ -57,7 +58,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     });
   }
 
-  function<F>(name: string, parser?: Parser<F>) {
+  function<F>(name: string, type?: string) {
+    let parser = this.client.parserForType<F>(type) as Parser<F>;
     return ODataFunctionResource.factory<F>(
       name,
       this.client, {
