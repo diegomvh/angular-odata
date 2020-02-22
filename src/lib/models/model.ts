@@ -27,10 +27,10 @@ export class ODataModel<T> {
                 if (!this._resource.hasKey()) {
                   throw new Error(`Can't resolve ${field.name} relation from new entity`);
                 }
-                  let nav = (this._resource as ODataEntityResource<any>).navigationProperty<any>(field.name);
-                  let annots = this._annotations ? this._annotations.related(field.name) : undefined;
-                  let rel = field.collection ? nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
-                  this._relationships[field.name] = rel;
+                let nav = (this._resource as ODataEntityResource<any>).navigationProperty<any>(field.name);
+                let annots = this._annotations ? this._annotations.related(field.name) : undefined;
+                let rel = field.collection ? nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
+                this._relationships[field.name] = rel;
               }
               return this._relationships[field.name];
             },
@@ -121,14 +121,15 @@ export class ODataModel<T> {
   }
 
   fetch(): Observable<this | null> {
-    if (this._resource instanceof ODataEntityResource) {
+    if (this._resource instanceof ODataEntityResource || this._resource instanceof ODataNavigationPropertyResource) {
       this._resource.key(this);
-      if (!this._resource.hasKey())
-        throw new Error(`Can't fetch without entity key`);
+      if (this._resource.hasKey()) {
+        return (this._resource as ODataNavigationPropertyResource<any>).get({ responseType: 'entity' })
+          .pipe(
+            map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+          }
     }
-    return (this._resource as ODataNavigationPropertyResource<any>).get({ responseType: 'entity' })
-      .pipe(
-        map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+    throw new Error(`Can't fetch without resource or entity key`);
   }
 
   save(): Observable<this> {
@@ -173,38 +174,37 @@ export class ODataModel<T> {
   }
 
   destroy(): Observable<any> {
-    let resource = this._resource.clone() as ODataEntityResource<any>;
-    if (resource instanceof ODataEntityResource) {
-      resource.key(this);
-      if (resource.hasKey()) {
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this);
+      if (this._resource.hasKey()) {
         let etag = (this._annotations as ODataEntityAnnotations).etag;
-        return resource.delete({ etag });
+        return this._resource.delete({ etag });
       }
     }
-    throw new Error(`Can't destroy without entity and key`);
+    throw new Error(`Can't destroy without resource or entity key`);
   }
 
   // Custom
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
-    let resource = this._resource.clone() as ODataEntityResource<any>;
-    if (resource instanceof ODataEntityResource) {
-      resource.key(this);
-      if (resource.hasKey()) {
-        var func = resource.function<R>(name, returnType);
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this);
+      if (this._resource.hasKey()) {
+        var func = this._resource.function<R>(name, returnType);
         func.parameters(params);
         return func;
       }
     }
+    throw new Error(`Can't function without resource or entity key`);
   }
 
   protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
-    let resource = this._resource.clone() as ODataEntityResource<any>;
-    if (resource instanceof ODataEntityResource) {
-      resource.key(this);
-      if (resource.hasKey()) {
-        return resource.action<R>(name, returnType);
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this);
+      if (this._resource.hasKey()) {
+        return this._resource.action<R>(name, returnType);
       }
     }
+    throw new Error(`Can't action without resource or entity key`);
   }
 
   // Mutate query

@@ -9,9 +9,9 @@ import { ODataClient } from '../client';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   _entities: T[];
+  _models: M[];
   _resource: ODataResource<any>;
   _annotations: ODataAnnotations;
-  _models: M[];
   _state: {
     records?: number,
     size?: number,
@@ -35,10 +35,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       };
     }
     if (this._resource) {
-      this._models = entities.map(model => 
-        (this._resource as ODataEntitySetResource<any>).entity(model).toModel(model, ODataEntityAnnotations.factory(model)) as M);
+      this._models = this._entities.map(entity => 
+        (this._resource as ODataEntitySetResource<any>).entity().toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
     } else {
-      this._models = entities.map(e => <any>e as M);
+      this._models = this._entities.map(e => <any>e as M);
     }
     return this;
   }
