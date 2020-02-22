@@ -21,6 +21,7 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
     return this.client.entitySet<T>(Ctor.path, Ctor.type);
   }
 
+  // Models
   public createModel(attrs?: T): M {
     return this.entities().entity().toModel<M>(attrs);
   }
@@ -42,5 +43,14 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
   public fetchOne(key?: EntityKey<T>): Observable<M> {
     let resource = this.entities().entity(key);
     return resource.get().pipe(map(([entity, annots]) => resource.toModel(entity, annots)))
+  }
+
+  // Tools
+  public attachModel(model: M): M {
+    return model.attach(this.entities().entity());
+  }
+
+  public attachCollection(model: M): M {
+    return model.attach(this.entities());
   }
 }

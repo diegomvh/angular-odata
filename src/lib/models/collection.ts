@@ -8,7 +8,7 @@ import { Parser } from './parser';
 import { ODataClient } from '../client';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
-  _client: ODataClient; 
+  _entities: T[];
   _resource: ODataResource<any>;
   _annotations: ODataAnnotations;
   _models: M[];
@@ -19,12 +19,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     pages?: number
   } = {};
 
-  constructor(models?: M[]) {
-    this._models = models || [];
+  attach(resource: ODataResource<T>) {
+    this._resource = resource;
+    return this;
   }
 
-  attach(entities: T[], resource?: ODataResource<T>, annots?: ODataAnnotations): this {
-    this._resource = resource;
+  populate(entities: T[], annots?: ODataAnnotations): this {
+    this._entities = entities;
     this._annotations = annots;
     if (annots instanceof ODataCollectionAnnotations) {
       if (annots.skip && annots.count) {
@@ -61,16 +62,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   fetch(): Observable<this> {
-    let resource = this._resource.clone() as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>;
     if (!this._state.page)
       this._state.page = 1;
     if (this._state.size) {
-      resource.top(this._state.size);
-      resource.skip(this._state.size * (this._state.page - 1));
+      (this._resource as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>).top(this._state.size);
+      (this._resource as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>).skip(this._state.size * (this._state.page - 1));
     }
-    return resource.get({withCount: true, responseType: 'entities'})
+    return (this._resource as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>).get({withCount: true, responseType: 'entities'})
       .pipe(
-        map(([entities, annots]) => this.attach(entities, resource, annots)));
+        map(([entities, annots]) => this.populate(entities, annots)));
   }
 
   page(page: number) {
