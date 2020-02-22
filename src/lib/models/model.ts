@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
+import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select } from '../resources';
 
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
@@ -9,11 +9,11 @@ import { PlainObject } from '../types';
 
 export class ODataModel<T> {
   _entity: T;
-  _resource: ODataResource<any>;
+  _resource: ODataResource<T>;
   _annotations: ODataAnnotations;
   _relationships: { [name: string]: ODataModel<any> | ODataCollection<any, ODataModel<any>> }
 
-  attach(resource: ODataResource<any>) {
+  attach(resource: ODataResource<T>) {
     if (this._resource && this._resource.type() !== resource.type())
       throw new Error(`Can't reattach ${resource.type()} with ${this._resource.type()}`);
     if (!this._resource) {
@@ -27,7 +27,7 @@ export class ODataModel<T> {
                 if (!this._resource.hasKey()) {
                   throw new Error(`Can't resolve ${field.name} relation from new entity`);
                 }
-                let nav = (this._resource as ODataEntityResource<any>).navigationProperty<any>(field.name);
+                let nav = (this._resource as ODataEntityResource<T>).navigationProperty<T>(field.name);
                 let annots = this._annotations ? this._annotations.related(field.name) : undefined;
                 let rel = field.collection ? nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
                 this._relationships[field.name] = rel;
@@ -69,7 +69,7 @@ export class ODataModel<T> {
     let complexes = entries
       .filter(([k, v, f]) => f && !f.navigation && f.schema)
       .reduce((acc, [k, v, f]) => {
-        let prop = (this._resource as ODataEntityResource<any>).property(f.name);
+        let prop = (this._resource as ODataEntityResource<T>).property(f.name);
         let annots = this._annotations ? this._annotations.related(f.name) : undefined;
         let complex = f.collection ? prop.toCollection(this._entity[f.name], annots) : prop.toModel(this._entity[f.name], annots);
         return Object.assign(acc, {[k]: complex});
@@ -94,8 +94,8 @@ export class ODataModel<T> {
   }
   */
 
-  toJSON() {
-    let entity = {};
+  toJSON() : T {
+    let entity = {} as T;
     let schema = this._resource.schema();
     schema.fields.forEach(field => {
       if (field.schema) {
@@ -124,7 +124,7 @@ export class ODataModel<T> {
     if (this._resource instanceof ODataEntityResource || this._resource instanceof ODataNavigationPropertyResource) {
       this._resource.key(this);
       if (this._resource.hasKey()) {
-        return (this._resource as ODataNavigationPropertyResource<any>).get({ responseType: 'entity' })
+        return (this._resource as ODataNavigationPropertyResource<T>).get({ responseType: 'entity' })
           .pipe(
             map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
           }
@@ -164,8 +164,8 @@ export class ODataModel<T> {
     });
     */
     if (this._annotations && this._annotations.context) {
-      (this._resource as ODataEntityResource<any>).key(this);
-      return (this._resource as ODataEntityResource<any>).put(this.toJSON())
+      (this._resource as ODataEntityResource<T>).key(this.toJSON());
+      return (this._resource as ODataEntityResource<T>).put(this.toJSON())
         .pipe(map(([entity, annots]) => this.populate(entity, annots)));
     } else {
       return (this._resource as ODataEntityResource<any>).post(this.toJSON())
@@ -208,11 +208,11 @@ export class ODataModel<T> {
   }
 
   // Mutate query
-  select(select?: string | string[]) {
-    return (this._resource as ODataEntityResource<any>).select(select);
+  select(select?: Select<T>) {
+    return (this._resource as ODataEntityResource<T>).select(select);
   }
 
-  expand(expand?: Expand) {
-    return (this._resource as ODataEntityResource<any>).expand(expand);
+  expand(expand?: Expand<T>) {
+    return (this._resource as ODataEntityResource<T>).expand(expand);
   }
 }

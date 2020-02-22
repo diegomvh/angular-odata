@@ -10,7 +10,7 @@ import { ODataClient } from '../client';
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   _entities: T[];
   _models: M[];
-  _resource: ODataResource<any>;
+  _resource: ODataResource<T>;
   _annotations: ODataAnnotations;
   _state: {
     records?: number,
@@ -36,7 +36,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     }
     if (this._resource) {
       this._models = this._entities.map(entity => 
-        (this._resource as ODataEntitySetResource<any>).entity().toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
+        (this._resource as ODataEntitySetResource<T>).entity().toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
     } else {
       this._models = this._entities.map(e => <any>e as M);
     }
@@ -65,10 +65,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (!this._state.page)
       this._state.page = 1;
     if (this._state.size) {
-      (this._resource as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>).top(this._state.size);
-      (this._resource as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>).skip(this._state.size * (this._state.page - 1));
+      (this._resource as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>).top(this._state.size);
+      (this._resource as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>).skip(this._state.size * (this._state.page - 1));
     }
-    return (this._resource as ODataEntitySetResource<any> | ODataNavigationPropertyResource<any>).get({withCount: true, responseType: 'entities'})
+    return (this._resource as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>).get({withCount: true, responseType: 'entities'})
       .pipe(
         map(([entities, annots]) => this.populate(entities, annots)));
   }
@@ -121,27 +121,27 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Mutate query
-  select(select?: Select) {
-    return (this._resource as ODataEntitySetResource<any>).select(select);
+  select(select?: Select<T>) {
+    return (this._resource as ODataEntitySetResource<T>).select(select);
   }
 
-  filter(filter?: Filter) {
-    return (this._resource as ODataEntitySetResource<any>).filter(filter);
+  filter(filter?: Filter<T>) {
+    return (this._resource as ODataEntitySetResource<T>).filter(filter);
   }
 
   search(search?: string) {
-    return (this._resource as ODataEntitySetResource<any>).search(search);
+    return (this._resource as ODataEntitySetResource<T>).search(search);
   }
 
-  orderBy(orderBy?: OrderBy) {
-    return (this._resource as ODataEntitySetResource<any>).orderBy(orderBy);
+  orderBy(orderBy?: OrderBy<T>) {
+    return (this._resource as ODataEntitySetResource<T>).orderBy(orderBy);
   }
 
-  expand(expand?: Expand) {
-    return (this._resource as ODataEntitySetResource<any>).expand(expand);
+  expand(expand?: Expand<T>) {
+    return (this._resource as ODataEntitySetResource<T>).expand(expand);
   }
 
-  groupBy(groupBy?: GroupBy) {
-    return (this._resource as ODataEntitySetResource<any>).groupBy(groupBy);
+  groupBy(groupBy?: GroupBy<T>) {
+    return (this._resource as ODataEntitySetResource<T>).groupBy(groupBy);
   }
 }

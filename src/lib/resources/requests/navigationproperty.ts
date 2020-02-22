@@ -142,32 +142,32 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   // Options
-  select(opts?: Select) {
-    return this.options.option<Select>(Options.select, opts);
+  select(opts?: Select<T>) {
+    return this.options.option<Select<T>>(Options.select, opts);
   }
 
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(Options.expand, opts);
   }
 
-  transform(opts?: Transform) {
-    return this.options.option<Transform>(Options.transform, opts);
+  transform(opts?: Transform<T>) {
+    return this.options.option<Transform<T>>(Options.transform, opts);
   }
 
   search(opts?: string) {
     return this.options.option<string>(Options.search, opts);
   }
 
-  filter(opts?: Filter) {
-    return this.options.option<Filter>(Options.filter, opts);
+  filter(opts?: Filter<T>) {
+    return this.options.option<Filter<T>>(Options.filter, opts);
   }
 
-  groupBy(opts?: GroupBy) {
+  groupBy(opts?: GroupBy<T>) {
     return this.options.option(Options.groupBy, opts);
   }
 
-  orderBy(opts?: OrderBy) {
-    return this.options.option<OrderBy>(Options.orderBy, opts);
+  orderBy(opts?: OrderBy<T>) {
+    return this.options.option<OrderBy<T>>(Options.orderBy, opts);
   }
 
   format(opts?: string) {

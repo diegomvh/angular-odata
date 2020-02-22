@@ -189,12 +189,12 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   // Options
-  select(opts?: Select) {
-    return this.options.option<Select>(Options.select, opts);
+  select(opts?: Select<T>) {
+    return this.options.option<Select<T>>(Options.select, opts);
   }
 
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(Options.expand, opts);
   }
 
   format(opts?: string) {
