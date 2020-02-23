@@ -158,8 +158,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.options.option<string>(Options.search, opts);
   }
 
-  filter(opts?: Filter<T>) {
-    return this.options.option<Filter<T>>(Options.filter, opts);
+  filter(opts?: Filter) {
+    return this.options.option<Filter>(Options.filter, opts);
   }
 
   groupBy(opts?: GroupBy<T>) {

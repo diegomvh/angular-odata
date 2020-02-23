@@ -125,7 +125,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this._resource as ODataEntitySetResource<T>).select(select);
   }
 
-  filter(filter?: Filter<T>) {
+  filter(filter?: Filter) {
     return (this._resource as ODataEntitySetResource<T>).filter(filter);
   }
 

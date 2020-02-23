@@ -4,10 +4,14 @@ import { Types } from '../utils/types';
 
 import { PlainObject, EntityKey } from '../types';
 
-export type Select<T> = keyof T | (keyof T)[];
-export type OrderBy<T> = keyof T | keyof T[];
-export type Filter<T> = string | PlainObject | Array<string | PlainObject>;
-export type Expand<T> = string | ExpandQueryOptions<T> | Array<string | ExpandQueryOptions<T>>;
+export type OrderByOptions<T> = {
+  field: T,
+  order?: 'asc' | 'desc'
+};
+export type Select<T> = string | keyof T | Array<keyof T>;
+export type OrderBy<T> = string | keyof T | OrderByOptions<keyof T> | Array<keyof T | OrderByOptions<keyof T>>;
+export type Filter = string | PlainObject | Array<string | PlainObject>;
+export type Expand<T> = string | {[P in keyof T]?: ExpandOptions<any> } | Array<keyof T>;
 export enum StandardAggregateMethods {
   sum = "sum",
   min = "min",
@@ -17,19 +21,19 @@ export enum StandardAggregateMethods {
 }
 export type Aggregate = { [propertyName: string]: { with: StandardAggregateMethods, as: string } } | string;
 
-export interface ExpandQueryOptions<T> {
+export type ExpandOptions<T> = {
   select?: Select<T>;
-  filter?: Filter<T>;
+  filter?: Filter;
   orderBy?: OrderBy<T>;
   top?: number;
-  expand?: Expand<any>;
+  expand?: Expand<T>;
 }
-export interface Transform<T> {
+export type Transform<T> = {
   aggregate?: Aggregate | Aggregate[];
-  filter?: Filter<T>;
+  filter?: Filter;
   groupBy?: GroupBy<T>;
 }
-export interface GroupBy<T> {
+export type GroupBy<T> = {
   properties: string[];
   transform?: Transform<T>;
 }
