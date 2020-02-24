@@ -25,12 +25,12 @@ export type ExpandOptions<T> = {
   expand?: Expand<T>;
 }
 export type Transform<T> = {
-  aggregate?: Aggregate | Aggregate[];
+  aggregate?: Aggregate | Array<Aggregate>;
   filter?: Filter;
   groupBy?: GroupBy<T>;
 }
 export type GroupBy<T> = {
-  properties: string[];
+  properties: Array<keyof T>;
   transform?: Transform<T>;
 }
 
