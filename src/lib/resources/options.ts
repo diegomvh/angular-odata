@@ -4,12 +4,8 @@ import { Types } from '../utils/types';
 
 import { PlainObject, EntityKey } from '../types';
 
-export type OrderByOptions<T> = {
-  field: T,
-  order?: 'asc' | 'desc'
-};
 export type Select<T> = string | keyof T | Array<keyof T>;
-export type OrderBy<T> = string | keyof T | OrderByOptions<keyof T> | Array<keyof T | OrderByOptions<keyof T>>;
+export type OrderBy<T> = string | keyof T | [ keyof T, 'asc' | 'desc' ] | Array<keyof T | [ keyof T, 'asc' | 'desc' ]>;
 export type Filter = string | PlainObject | Array<string | PlainObject>;
 export type Expand<T> = string | {[P in keyof T]?: ExpandOptions<any> } | Array<keyof T>;
 export enum StandardAggregateMethods {
@@ -19,7 +15,7 @@ export enum StandardAggregateMethods {
   average = "average",
   countdistinct = "countdistinct",
 }
-export type Aggregate = { [propertyName: string]: { with: StandardAggregateMethods, as: string } } | string;
+export type Aggregate = string | { [propertyName: string]: { with: StandardAggregateMethods, as: string } };
 
 export type ExpandOptions<T> = {
   select?: Select<T>;
