@@ -53,11 +53,11 @@ export enum Options {
 
 const orderByFieldMapper = (value: any) => (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
 const expandOptionsMapper = (value: any) => {
-  if (value.orderBy && Types.isArray(value.orderBy)) {
-    value.orderBy = orderByFieldMapper(value.orderBy);
+  if (Options.orderBy in value && Types.isArray(value[Options.orderBy])) {
+    value[Options.orderBy] = value[Options.orderBy].map(orderByFieldMapper);
   }
-  if (value.expand && Types.isObject(value.expand)) {
-    value.expand = Object.entries(value.expand).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
+  if (Options.expand in value && Types.isObject(value[Options.expand])) {
+    value[Options.expand] = Object.entries(value[Options.expand]).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
   }
   return value;
 }
@@ -167,7 +167,7 @@ export class OptionHandler<T> {
   // Array
   push(value: T) {
     if (!Types.isArray(this.o[this.t]))
-      this.o[this.t] = [this.o[this.t]];
+      this.o[this.t] = this.o[this.t] !== undefined ? [this.o[this.t]] : [];
     this.o[this.t].push(value);
   }
 
