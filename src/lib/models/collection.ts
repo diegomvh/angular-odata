@@ -36,15 +36,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     }
     if (this._resource) {
       this._models = this._entities.map(entity => 
-        (this._resource as ODataEntitySetResource<T>).entity().toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
+        (this._resource as ODataEntitySetResource<T>).entity(entity).toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
     } else {
       this._models = this._entities.map(e => <any>e as M);
     }
     return this;
   }
 
-  toJSON() {
-    return this._models.map(model => model.toJSON());
+  toEntities() {
+    return this._models.map(model => model.toEntity());
   }
 
   // Iterable

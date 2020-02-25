@@ -5,7 +5,6 @@ import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotati
 
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
-import { PlainObject } from '../types';
 
 export class ODataModel<T> {
   _entity: T;
@@ -23,7 +22,7 @@ export class ODataModel<T> {
           Object.defineProperty(this, field.name, {
             get() {
               if (!(field.name in this._relationships)) {
-                this._resource.key(this);
+                this._resource.key(this.toEntity());
                 if (!this._resource.hasKey()) {
                   throw new Error(`Can't resolve ${field.name} relation from new entity`);
                 }
@@ -94,18 +93,19 @@ export class ODataModel<T> {
   }
   */
 
-  toJSON() : T {
+  toEntity() : T {
     let entity = {} as T;
     let schema = this._resource.schema();
     schema.fields.forEach(field => {
       if (field.schema) {
         if (field.navigation) {
           if (field.name in this._relationships) {
-            entity[field.name] = this._relationships[field.name].toJSON();
+            var rel = this._relationships[field.name];
+            entity[field.name] = (rel instanceof ODataModel)? rel.toEntity() : rel.toEntities();
           }
         } else {
           if (this[field.name] !== undefined) {
-            entity[field.name] = this[field.name].toJSON();
+            entity[field.name] = this[field.name].toEntity();
           }
         }
       } else if (this[field.name] !== undefined) {
@@ -117,24 +117,30 @@ export class ODataModel<T> {
 
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return (new Ctor()).attach(this._resource.clone()).populate(this.toJSON(), this._annotations);
+    return (new Ctor()).attach(this._resource.clone()).populate(this.toEntity(), this._annotations);
   }
 
   fetch(): Observable<this | null> {
-    if (this._resource instanceof ODataEntityResource || this._resource instanceof ODataNavigationPropertyResource) {
-      this._resource.key(this);
+    if (!this._resource) {
+      throw new Error(`Can't fetch without resource`);
+    } else if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this.toEntity());
       if (this._resource.hasKey()) {
-        return (this._resource as ODataNavigationPropertyResource<T>).get({ responseType: 'entity' })
+        return this._resource.get()
           .pipe(
             map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
-          }
+      }
+      throw new Error(`Can't fetch entity without entity key`);
+    } else if (this._resource instanceof ODataNavigationPropertyResource) {
+      return this._resource.get({ responseType: 'entity' })
+        .pipe(
+          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
     }
-    throw new Error(`Can't fetch without resource or entity key`);
   }
 
   save(): Observable<this> {
     /*
-    let obs$ = of(this.toJSON());
+    let obs$ = of(this.toEntity());
     let changes = Object.keys(this._relationships)
       .filter(k => this._relationships[k] === null || this._relationships[k] instanceof ODataModel);
     changes.forEach(name => {
@@ -164,18 +170,18 @@ export class ODataModel<T> {
     });
     */
     if (this._annotations && this._annotations.context) {
-      (this._resource as ODataEntityResource<T>).key(this.toJSON());
-      return (this._resource as ODataEntityResource<T>).put(this.toJSON())
+      (this._resource as ODataEntityResource<T>).key(this.toEntity());
+      return (this._resource as ODataEntityResource<T>).put(this.toEntity())
         .pipe(map(([entity, annots]) => this.populate(entity, annots)));
     } else {
-      return (this._resource as ODataEntityResource<any>).post(this.toJSON())
+      return (this._resource as ODataEntityResource<any>).post(this.toEntity())
         .pipe(map(([entity, annots]) => this.populate(entity, annots)));
     }
   }
 
   destroy(): Observable<any> {
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
+      this._resource.key(this.toEntity());
       if (this._resource.hasKey()) {
         let etag = (this._annotations as ODataEntityAnnotations).etag;
         return this._resource.delete({ etag });
@@ -187,7 +193,7 @@ export class ODataModel<T> {
   // Custom
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
+      this._resource.key(this.toEntity());
       if (this._resource.hasKey()) {
         var func = this._resource.function<R>(name, returnType);
         func.parameters(params);
@@ -199,7 +205,7 @@ export class ODataModel<T> {
 
   protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
+      this._resource.key(this.toEntity());
       if (this._resource.hasKey()) {
         return this._resource.action<R>(name, returnType);
       }

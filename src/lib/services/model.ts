@@ -47,7 +47,7 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
 
   // Tools
   public attachModel(model: M): M {
-    return model.attach(this.entities().entity());
+    return model.attach(this.entities().entity(model.toEntity()));
   }
 
   public attachCollection(model: M): M {
