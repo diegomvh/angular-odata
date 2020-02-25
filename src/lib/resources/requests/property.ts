@@ -7,7 +7,7 @@ import { ODataResource } from '../resource';
 import { ODataOptions } from '../options';
 import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
-import { Parser, ODataModel } from '../../models';
+import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
 import { ODataPropertyAnnotations, ODataCollectionAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';

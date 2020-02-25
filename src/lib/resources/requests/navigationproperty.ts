@@ -10,7 +10,7 @@ import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { Parser, ODataModel, ODataSchema, ODataCollection } from '../../models';
+import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollectionAnnotations, ODataEntityAnnotations } from '../responses';

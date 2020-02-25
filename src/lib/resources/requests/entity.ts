@@ -13,7 +13,7 @@ import { ODataSegments } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
-import { Parser, ODataModel, ODataSchema, ODataCollection } from '../../models';
+import { Parser } from '../../models';
 import { ODataMediaResource } from './media';
 import { ODataEntityAnnotations } from '../responses';
 

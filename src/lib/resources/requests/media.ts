@@ -7,7 +7,6 @@ import { ODataOptions } from '../options';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
 import { Parser } from '../../models';
-import { map } from 'rxjs/operators';
 
 export class ODataMediaResource<T> extends ODataResource<T> {
   // Factory
