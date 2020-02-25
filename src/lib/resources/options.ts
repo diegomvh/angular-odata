@@ -53,13 +53,23 @@ export enum Options {
 
 const orderByFieldMapper = (value: any) => (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
 const expandOptionsMapper = (value: any) => {
-  if (Options.orderBy in value && Types.isArray(value[Options.orderBy])) {
-    value[Options.orderBy] = value[Options.orderBy].map(orderByFieldMapper);
-  }
-  if (Options.expand in value && Types.isObject(value[Options.expand])) {
-    value[Options.expand] = Object.entries(value[Options.expand]).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
-  }
-  return value;
+  return [
+    Options.select,
+    Options.filter,
+    Options.orderBy,
+    Options.top,
+    Options.expand]
+    .filter(key => !Types.isEmpty(value[key]))
+    .map(key => {
+      if (Options.orderBy === key && Types.isArray(value[key])) {
+        return [key, value[key].map(orderByFieldMapper)];
+      }
+      if (Options.expand === key && Types.isObject(value[key])) {
+        return [key, Object.entries(value[key]).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {})];
+      }
+      return [key, value[key]];
+    })
+    .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {});
 }
 
 const queryOptionsBuilder = (key, value): string => {
@@ -89,7 +99,7 @@ export class ODataOptions {
 
   // Params
   params(): PlainObject {
-    let odata = [
+    let params = [
       Options.select,
       Options.filter,
       Options.search,
@@ -110,8 +120,8 @@ export class ODataOptions {
       }, {});
     // TODO: Add query builder Skiptoken support
     if (Options.skiptoken in this.options)
-      odata['$skiptoken'] = this.options[Options.skiptoken];
-    return Object.assign(odata, this.options[Options.custom] || {});
+      params['$skiptoken'] = this.options[Options.skiptoken];
+    return Object.assign(params, this.options[Options.custom] || {});
   }
 
   toJSON() {
