@@ -19,10 +19,29 @@ export enum Segments {
   actionCall = 'actionCall'
 }
 
-export interface ODataSegment {
+export type ODataSegment = {
   type: string;
   name: string;
   options: PlainObject;
+}
+
+const querySegmentsBuilder = (segment: ODataSegment): string => {
+  switch (segment.type) {
+    case Segments.functionCall:
+      let parameters = segment.options[Options.parameters];
+      return (parameters ?
+        buildQuery({ func: { [segment.name]: parameters } }) :
+        buildQuery(segment.name)
+      ).slice(1);
+    default:
+      let key = segment.options[Options.key];
+      if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
+        key = `${key}`;
+      } else if (typeof (key) === 'string' && !(key.charAt(0) === key.charAt(key.length - 1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) {
+        key = `'${key}'`;
+      }
+      return segment.name + (key ? buildQuery({ key }) : "");
+  }
 }
 
 export class ODataSegments {
@@ -35,26 +54,9 @@ export class ODataSegments {
   }
 
   path(): string {
-    let segments = this.segments
-      .map(segment => {
-        switch (segment.type) {
-          case Segments.functionCall:
-            let parameters = segment.options[Options.parameters];
-            return (parameters ?
-              buildQuery({ func: { [segment.name]: parameters } }) :
-              buildQuery(segment.name)
-            ).slice(1);
-          default:
-            let key = segment.options[Options.key];
-            if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
-              key = `${key}`;
-            } else if (typeof (key) === 'string' && !(key.charAt(0) === key.charAt(key.length - 1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) {
-              key = `'${key}'`;
-            }
-            return segment.name + (key ? buildQuery({ key }) : "");
-        }
-      });
-    return segments.join(ODataSegments.PATHSEP);
+    let pathChunks = this.segments
+      .map(querySegmentsBuilder);
+    return pathChunks.join(ODataSegments.PATHSEP);
   }
 
   toJSON() {
