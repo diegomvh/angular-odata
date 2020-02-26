@@ -9,7 +9,7 @@ import { ODataSegments, Segments } from '../segments';
 import { ODataClient } from '../../client';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataPropertyAnnotations, ODataCollectionAnnotations } from '../responses';
+import { ODataPropertyAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -29,7 +29,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return new ODataPropertyResource<P>(client, segments, options, parser);
   }
 
-  entity(opts?: EntityKey<T>) {
+  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
     return this;
   }
 

@@ -3,14 +3,27 @@ import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, O
 export class ODataAnnotations {
   constructor(protected value: {[name: string]: any }) { }
 
-  clone(): ODataAnnotations {
-    return new ODataAnnotations(this.value);
-  };
+  static factory(data: any) {
+    return new ODataAnnotations(odataAnnotations(data));
+  }
 
+  // Context
   get context(): string {
     if (ODATA_CONTEXT in this.value)
       return this.value[ODATA_CONTEXT] as string;
   }
+
+  get entitySet(): string {
+    if (this.context) {
+      let index = this.context.lastIndexOf("#");
+      return this.context.substr(index + 1);
+    }
+  }
+
+  // Methods
+  clone(): ODataAnnotations {
+    return new ODataAnnotations(this.value);
+  };
 
   related(name: string) {
     let annotations = Object.keys(this.value)
@@ -26,10 +39,6 @@ export class ODataAnnotations {
     return new ODataPropertyAnnotations(annotations);
   }
 
-  static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataAnnotations(annotations);
-  }
 }
 
 export class ODataRelatedAnnotations extends ODataAnnotations {
@@ -59,8 +68,7 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 
   static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataPropertyAnnotations(annotations);
+    return new ODataPropertyAnnotations(odataAnnotations(data));
   }
 }
 
@@ -120,8 +128,7 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   }
 
   static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataEntityAnnotations(annotations);
+    return new ODataEntityAnnotations(odataAnnotations(data));
   }
 }
 
@@ -163,7 +170,6 @@ export class ODataCollectionAnnotations extends ODataAnnotations {
   }
 
   static factory(data: any) {
-    let annotations = odataAnnotations(data);
-    return new ODataCollectionAnnotations(annotations);
+    return new ODataCollectionAnnotations(odataAnnotations(data));
   }
 }

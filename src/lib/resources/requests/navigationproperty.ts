@@ -13,7 +13,7 @@ import { ODataPropertyResource } from './property';
 import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollectionAnnotations, ODataEntityAnnotations } from '../responses';
+import { ODataCollectionAnnotations, ODataEntityAnnotations, ODataAnnotations } from '../responses';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -49,7 +49,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.key().value() !== undefined;
   }
 
-  entity(opts?: EntityKey<T>) {
+  entity(opts?: EntityKey<T>, annots?: ODataAnnotations) {
     this.key(opts);
     return this;
   }

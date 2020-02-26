@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { ODataEntitySetResource, ODataEntityResource } from '../resources';
 
@@ -40,7 +39,7 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
   }
 
   public fetchModel(key?: EntityKey<T>): Observable<M> {
-    return this.model().fetch();
+    return this.model(key as Partial<T>).fetch();
   }
 
   public attach(value: M): M;

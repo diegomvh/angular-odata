@@ -133,7 +133,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       case 'property':
         return res$.pipe(map((body: any) => this.toValue(body)));
     }
-    return res$;
   }
 
   post(entity: T, options?: {

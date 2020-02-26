@@ -3,10 +3,18 @@ import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
 import { map } from 'rxjs/operators';
-import { $COUNT } from '../../types';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
+import { $COUNT, EntityKey } from '../../types';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from '../responses';
+import { Types } from '../../utils';
 
 export class ODataCallableResource<T> extends ODataResource<T> {
+  // Segments
+  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
+    if (annots instanceof ODataCollectionAnnotations) {
+      return this.client.entitySet(annots.entitySet, this.type()).entity(key);
+    }
+  }
+
   //POST
   post(body: any | null, options: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
@@ -66,7 +74,7 @@ export class ODataCallableResource<T> extends ODataResource<T> {
     }
     return res$;
   }
-  
+
   //GET
   get(options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},

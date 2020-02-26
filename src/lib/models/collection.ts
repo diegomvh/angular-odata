@@ -41,7 +41,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     }
     const entityMapper = (entity) => {
       if (this._resource instanceof ODataEntitySetResource) {
-        return this._resource.entity(entity).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+      } else if (this._resource instanceof ODataFunctionResource) {
+        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
       }
     }
     this._models = entities.map(entityMapper);

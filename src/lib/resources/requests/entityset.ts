@@ -15,7 +15,7 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataEntityAnnotations, ODataCollectionAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -34,7 +34,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   // Segments
-  entity(key?: EntityKey<T>) {
+  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
     let entity = ODataEntityResource.factory<T>(
       this.client, {
       segments: this.segments.clone(),
