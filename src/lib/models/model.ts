@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, NEVER } from 'rxjs';
 import { map, throwIfEmpty } from 'rxjs/operators';
 
 import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select } from '../resources';
@@ -108,28 +108,23 @@ export class ODataModel<T> {
   }
 
   fetch(): Observable<this | null> {
+    let obs$: Observable<any>;
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this.toEntity());
-      if (this._resource.hasKey()) {
-        return this._resource.get()
-          .pipe(
-            map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
-      }
-      throw new Error(`Can't fetch entity without entity key`);
+      if (!this._resource.hasKey())
+        throw new Error(`Can't fetch entity without entity key`);
+      obs$ = this._resource.get();
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      return this._resource.get({ responseType: 'entity' })
-        .pipe(
-          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+      obs$ = this._resource.get({ responseType: 'entity' });
     } else if (this._resource instanceof ODataPropertyResource) {
-      return this._resource.get({ responseType: 'property' })
-        .pipe(
-          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+      obs$ = this._resource.get({ responseType: 'property' });
     } else if (this._resource instanceof ODataFunctionResource) {
-      return this._resource.get({ responseType: 'entity' })
-        .pipe(
-          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+      obs$ = this._resource.get({ responseType: 'entity' });
     }
-    throw new Error("Go fuck yourself");
+    if (!obs$)
+      throw new Error("Not Yet!");
+    return obs$.pipe(
+      map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
   }
 
   save(): Observable<this> {

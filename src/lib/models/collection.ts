@@ -92,7 +92,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         .pipe(
           map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
     }
-    throw new Error("Go fuck yourself");
+    throw new Error("Not Yet!");
   }
 
   page(page: number) {
