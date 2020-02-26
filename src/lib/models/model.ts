@@ -112,7 +112,7 @@ export class ODataModel<T> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this.toEntity());
       if (!this._resource.hasKey())
-        throw new Error(`Can't fetch entity without entity key`);
+        throw new Error(`Can't fetch entity without key`);
       obs$ = this._resource.get();
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       obs$ = this._resource.get({ responseType: 'entity' });
@@ -158,25 +158,29 @@ export class ODataModel<T> {
       }
     });
     */
-    if (this._annotations && this._annotations.context) {
-      (this._resource as ODataEntityResource<T>).key(this.toEntity());
-      return (this._resource as ODataEntityResource<T>).put(this.toEntity())
-        .pipe(map(([entity, annots]) => this.populate(entity, annots)));
-    } else {
-      return (this._resource as ODataEntityResource<any>).post(this.toEntity())
-        .pipe(map(([entity, annots]) => this.populate(entity, annots)));
+    let obs$: Observable<any>;
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this.toEntity());
+      if (this._resource.hasKey()) {
+        let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
+        obs$ = this._resource.put(this.toEntity(), {etag});
+      } else {
+        obs$ = this._resource.post(this.toEntity());
+      }
+      return obs$.pipe(map(([entity, annots]) => this.populate(entity, annots)));
     }
+    throw new Error(`Can't save`);
   }
 
   destroy(): Observable<any> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this.toEntity());
-      if (this._resource.hasKey()) {
-        let etag = (this._annotations as ODataEntityAnnotations).etag;
-        return this._resource.delete({ etag });
-      }
+      if (!this._resource.hasKey())
+        throw new Error(`Can't destroy entity without key`);
+      let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
+      return this._resource.delete({ etag });
     }
-    throw new Error(`Can't destroy without resource or entity key`);
+    throw new Error(`Can't destroy`);
   }
 
   // Custom
