@@ -39,8 +39,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._state.pages = Math.ceil(annots.count / annots.skip);
       };
     }
-    this._models = this._entities.map(entity => 
-      (this._resource as ODataEntitySetResource<T>).entity(entity).toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
+    const entityMapper = (entity) => {
+      if (this._resource instanceof ODataEntitySetResource) {
+        return this._resource.entity(entity).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+      }
+    }
+    this._models = entities.map(entityMapper);
     return this;
   }
 
@@ -65,13 +69,28 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   fetch(): Observable<this> {
     if (!this._state.page)
       this._state.page = 1;
-    if (this._state.size) {
-      (this._resource as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>).top(this._state.size);
-      (this._resource as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>).skip(this._state.size * (this._state.page - 1));
-    }
-    return (this._resource as ODataEntitySetResource<T> | ODataNavigationPropertyResource<T>).get({withCount: true, responseType: 'entities'})
+    if (this._resource instanceof ODataEntitySetResource) {
+      if (this._state.size) {
+        this._resource.top(this._state.size);
+        this._resource.skip(this._state.size * (this._state.page - 1));
+      }
+      return this._resource.get({withCount: true})
       .pipe(
         map(([entities, annots]) => this.populate(entities, annots)));
+    } else if (this._resource instanceof ODataNavigationPropertyResource) {
+      if (this._state.size) {
+        this._resource.top(this._state.size);
+        this._resource.skip(this._state.size * (this._state.page - 1));
+      }
+      return this._resource.get({withCount: true, responseType: 'entities' })
+        .pipe(
+          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+    } else if (this._resource instanceof ODataFunctionResource) {
+      return this._resource.get({ responseType: 'entities' })
+        .pipe(
+          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+    }
+    throw new Error("Go fuck yourself");
   }
 
   page(page: number) {

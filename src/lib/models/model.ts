@@ -108,9 +108,7 @@ export class ODataModel<T> {
   }
 
   fetch(): Observable<this | null> {
-    if (!this._resource) {
-      throw new Error(`Can't fetch without resource`);
-    } else if (this._resource instanceof ODataEntityResource) {
+    if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this.toEntity());
       if (this._resource.hasKey()) {
         return this._resource.get()
@@ -122,7 +120,16 @@ export class ODataModel<T> {
       return this._resource.get({ responseType: 'entity' })
         .pipe(
           map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+    } else if (this._resource instanceof ODataPropertyResource) {
+      return this._resource.get({ responseType: 'property' })
+        .pipe(
+          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+    } else if (this._resource instanceof ODataFunctionResource) {
+      return this._resource.get({ responseType: 'entity' })
+        .pipe(
+          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
     }
+    throw new Error("Go fuck yourself");
   }
 
   save(): Observable<this> {

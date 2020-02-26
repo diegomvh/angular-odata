@@ -39,12 +39,13 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
     return this.collection().fetch();
   }
 
-  public fetchOne(key?: EntityKey<T>): Observable<M> {
+  public fetchModel(key?: EntityKey<T>): Observable<M> {
     return this.model().fetch();
   }
 
-  // Tools
-  public attach(value: M | C): M | C {
+  public attach(value: M): M;
+  public attach(value: C): C;
+  public attach(value: any): any {
     if (value instanceof ODataModel) {
       return value.attach(this.entities().entity(value.toEntity()));
     } else if (value instanceof ODataCollection) {

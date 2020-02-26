@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataEntityAnnotations, ODataEntityResource, ODataCollectionAnnotations, ODataResource } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER } from './types';
 import { ODataSchema } from './models/schema';
