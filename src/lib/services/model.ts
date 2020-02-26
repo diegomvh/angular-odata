@@ -27,27 +27,20 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
   }
 
   // Models
-  public model(entity?: T): M {
+  public model(entity?: Partial<T>): M {
     return this.entity(entity).toModel<M>(entity);
   }
 
-  public collection(models?: T[]): C {
+  public collection(models?: Partial<T>[]): C {
     return this.entities().toCollection<C>(models);
   }
 
   public fetchCollection(): Observable<C> {
-    let resource = this.entities();
-    return resource.get().pipe(map(([entities, annots]) => resource.toCollection<C>(entities, annots)));
-  }
-
-  public fetchAll(): Observable<C> {
-    let resource = this.entities();
-    return resource.all().pipe(map(models => resource.toCollection<C>(models)));
+    return this.collection().fetch();
   }
 
   public fetchOne(key?: EntityKey<T>): Observable<M> {
-    let resource = this.entities().entity(key);
-    return resource.get().pipe(map(([entity, annots]) => resource.toModel<M>(entity, annots)))
+    return this.model().fetch();
   }
 
   // Tools

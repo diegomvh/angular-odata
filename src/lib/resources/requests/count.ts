@@ -8,7 +8,7 @@ import { ODataClient } from '../../client';
 import { $COUNT } from '../../types';
 import { Parser } from '../../models';
 
-export class ODataCountResource extends ODataResource<number> {
+export class ODataCountResource extends ODataResource<any> {
   // Factory
   static factory(service: ODataClient, opts?: {
       segments?: ODataSegments, 

@@ -17,7 +17,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     pages?: number
   } = {};
 
-  constructor(resource: ODataResource<T>, entities?: T[], annots?: ODataAnnotations) {
+  constructor(resource: ODataResource<T>, entities?: Partial<T>[], annots?: ODataAnnotations) {
     this._resource = resource;
     this.populate((entities || []) as T[], annots || null);
   }

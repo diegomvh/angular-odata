@@ -12,7 +12,7 @@ export class ODataModel<T> {
   _annotations: ODataAnnotations | null;
   _relationships: { [name: string]: ODataModel<any> | ODataCollection<any, ODataModel<any>> }
 
-  constructor(resource: ODataResource<T>, entity?: T, annots?: ODataAnnotations) {
+  constructor(resource: ODataResource<T>, entity?: Partial<T>, annots?: ODataAnnotations) {
     this._resource = resource;
     this._resource.schema().fields
       .filter(field => field.schema && field.navigation)
