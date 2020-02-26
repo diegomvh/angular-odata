@@ -53,14 +53,12 @@ export class ODataClient {
     return this.settings.parserForType(type) as Parser<T>;
   }
 
-  modelForType<M extends ODataModel<any>>(type: string): M {
-    let Model = this.settings.modelForType(type) as typeof ODataModel;
-    return new Model() as M;
+  modelForType(type: string): typeof ODataModel {
+    return this.settings.modelForType(type) as typeof ODataModel;
   }
 
-  collectionForType<C extends ODataCollection<any, ODataModel<any>>>(type: string) {
-    let Collection = this.settings.collectionForType(type) as typeof ODataCollection;
-    return new Collection() as C;
+  collectionForType(type: string): typeof ODataCollection {
+    return this.settings.collectionForType(type) as typeof ODataCollection;
   }
 
   // Requests

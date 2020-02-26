@@ -4,14 +4,12 @@ import { Observable } from 'rxjs';
 import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
-import { Parser } from './parser';
-import { ODataClient } from '../client';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
+  _resource: ODataResource<T>;
   _entities: T[];
   _models: M[];
-  _resource: ODataResource<T>;
-  _annotations: ODataAnnotations;
+  _annotations: ODataAnnotations | null;
   _state: {
     records?: number,
     size?: number,
@@ -19,12 +17,19 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     pages?: number
   } = {};
 
+  constructor(resource: ODataResource<T>, entities?: T[], annots?: ODataAnnotations) {
+    this._resource = resource;
+    this.populate((entities || []) as T[], annots || null);
+  }
+
   attach(resource: ODataResource<T>) {
+    if (this._resource && this._resource.type() !== resource.type())
+      throw new Error(`Can't reattach ${resource.type()} with ${this._resource.type()}`);
     this._resource = resource;
     return this;
   }
 
-  populate(entities: T[], annots?: ODataAnnotations): this {
+  private populate(entities: T[], annots?: ODataAnnotations): this {
     this._entities = entities;
     this._annotations = annots;
     if (annots instanceof ODataCollectionAnnotations) {
@@ -34,12 +39,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._state.pages = Math.ceil(annots.count / annots.skip);
       };
     }
-    if (this._resource) {
-      this._models = this._entities.map(entity => 
-        (this._resource as ODataEntitySetResource<T>).entity(entity).toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
-    } else {
-      this._models = this._entities.map(e => <any>e as M);
-    }
+    this._models = this._entities.map(entity => 
+      (this._resource as ODataEntitySetResource<T>).entity(entity).toModel(entity, ODataEntityAnnotations.factory(entity)) as M);
     return this;
   }
 

@@ -7,47 +7,50 @@ import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 
 export class ODataModel<T> {
-  _entity: T;
   _resource: ODataResource<T>;
-  _annotations: ODataAnnotations;
+  _entity: T;
+  _annotations: ODataAnnotations | null;
   _relationships: { [name: string]: ODataModel<any> | ODataCollection<any, ODataModel<any>> }
 
-  attach(resource: ODataResource<T>) {
-    if (this._resource && this._resource.type() !== resource.type())
-      throw new Error(`Can't reattach ${resource.type()} with ${this._resource.type()}`);
-    if (!this._resource) {
-      resource.schema().fields
-        .filter(field => field.schema && field.navigation)
-        .forEach(field => {
-          Object.defineProperty(this, field.name, {
-            get() {
-              if (!(field.name in this._relationships)) {
-                this._resource.key(this.toEntity());
-                if (!this._resource.hasKey()) {
-                  throw new Error(`Can't resolve ${field.name} relation from new entity`);
-                }
-                let nav = (this._resource as ODataEntityResource<T>).navigationProperty<T>(field.name);
-                let annots = this._annotations ? this._annotations.related(field.name) : undefined;
-                let rel = field.collection ? nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
-                this._relationships[field.name] = rel;
+  constructor(resource: ODataResource<T>, entity?: T, annots?: ODataAnnotations) {
+    this._resource = resource;
+    this._resource.schema().fields
+      .filter(field => field.schema && field.navigation)
+      .forEach(field => {
+        Object.defineProperty(this, field.name, {
+          get() {
+            if (!(field.name in this._relationships)) {
+              this._resource.key(this.toEntity());
+              if (!this._resource.hasKey()) {
+                throw new Error(`Can't resolve ${field.name} relation from new entity`);
               }
-              return this._relationships[field.name];
-            },
-            set(value: ODataModel<any> | null) {
-              if (field.collection)
-                throw new Error(`Can't set ${field.name} to collection, use add`);
-              if (!(value._resource instanceof ODataEntityResource))
-                throw new Error(`Can't set ${value} to model`);
-              this._relationships[field.name] = value;
+              let nav = (this._resource as ODataEntityResource<T>).navigationProperty<T>(field.name);
+              let annots = this._annotations !== null ? this._annotations.related(field.name) : undefined;
+              let rel = field.collection ? nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
+              this._relationships[field.name] = rel;
             }
-          });
+            return this._relationships[field.name];
+          },
+          set(value: ODataModel<any> | null) {
+            if (field.collection)
+              throw new Error(`Can't set ${field.name} to collection, use add`);
+            if (!(value._resource instanceof ODataEntityResource))
+              throw new Error(`Can't set ${value} to model`);
+            this._relationships[field.name] = value;
+          }
         });
-    }
+      });
+    this.populate((entity || {}) as T, annots || null);
+  }
+
+  attach(resource: ODataResource<T>) {
+    if (this._resource.type() !== resource.type())
+      throw new Error(`Can't reattach ${resource.type()} with ${this._resource.type()}`);
     this._resource = resource;
     return this;
   }
 
-  populate(entity: T, annots?: ODataAnnotations) {
+  private populate(entity: T, annots?: ODataAnnotations | null) {
     this._entity = entity;
     this._annotations = annots;
     this._relationships = {};
@@ -69,29 +72,13 @@ export class ODataModel<T> {
       .filter(([k, v, f]) => f && !f.navigation && f.schema)
       .reduce((acc, [k, v, f]) => {
         let prop = (this._resource as ODataEntityResource<T>).property(f.name);
-        let annots = this._annotations ? this._annotations.related(f.name) : undefined;
+        let annots = this._annotations !== null ? this._annotations.related(f.name) : undefined;
         let complex = f.collection ? prop.toCollection(this._entity[f.name], annots) : prop.toModel(this._entity[f.name], annots);
         return Object.assign(acc, {[k]: complex});
       } , {});
     Object.assign(this, complexes);
     return this;
   }
-  /*
-  attach(resource: ODataResource<T>): this {
-    if (!this._resource) {
-          } else {
-          }
-        } else if (this._entity[field.name] !== undefined) {
-          this[field.name] = this._entity[field.name];
-        }
-      });
-      this._resource = resource;
-    } else {
-      Object.assign(this, entity);
-    }
-    return this;
-  }
-  */
 
   toEntity() : T {
     let entity = {} as T;
@@ -117,7 +104,7 @@ export class ODataModel<T> {
 
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return (new Ctor()).attach(this._resource.clone()).populate(this.toEntity(), this._annotations);
+    return (new Ctor(this._resource.clone(), this.toEntity(), this._annotations));
   }
 
   fetch(): Observable<this | null> {

@@ -71,11 +71,13 @@ export abstract class ODataResource<Type> {
 
   // Model
   toModel<M extends ODataModel<Type>>(entity?: Type, annots?: ODataAnnotations): M {
-    return this.client.modelForType<M>(this.type()).attach(this).populate(entity || {} as Type, annots);
+    let Model = this.client.modelForType(this.type());
+    return new Model(this, entity, annots) as M;
   }
 
   toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities?: Type[], annots?: ODataAnnotations): C {
-    return this.client.collectionForType<C>(this.type()).attach(this).populate(entities || [] as Type[], annots);
+    let Collection = this.client.collectionForType(this.type());
+    return new Collection(this, entities, annots) as C;
   }
 
   toString(): string {
