@@ -52,22 +52,23 @@ export enum Options {
 }
 
 const orderByFieldMapper = (value: any) => (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
-const expandOptionsMapper = (value: any) => {
+const expandOptionsMapper = (options: any) => {
   return [
     Options.select,
     Options.filter,
     Options.orderBy,
     Options.top,
     Options.expand]
-    .filter(key => !Types.isEmpty(value[key]))
+    .filter(key => !Types.isEmpty(options[key]))
     .map(key => {
-      if (Options.orderBy === key && Types.isArray(value[key])) {
-        return [key, value[key].map(orderByFieldMapper)];
+      let value = options[key];
+      if (Options.orderBy === key && Types.isArray(value)) {
+        value = value.map(orderByFieldMapper);
       }
-      if (Options.expand === key && Types.isObject(value[key])) {
-        return [key, Object.entries(value[key]).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {})];
+      if (Options.expand === key && Types.isObject(value) && !Types.isArray(value)) {
+        value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
       }
-      return [key, value[key]];
+      return [key, value];
     })
     .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {});
 }
