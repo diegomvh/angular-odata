@@ -1,29 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, ODataEntityResource } from '../resources';
-
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
 import { ODataModel, ODataCollection } from '../models';
+import { ODataBaseService } from './base';
 
 @Injectable()
-export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollection<T, M>> {
-  static path: string = "";
-  static type: string = "";
-
-  constructor(protected client: ODataClient) { }
-
-  // Build resources
-  public entities(): ODataEntitySetResource<T> {
-    let Ctor = <typeof ODataModelService>this.constructor;
-    return this.client.entitySet<T>(Ctor.path, Ctor.type);
-  }
-
-  public entity(key?: EntityKey<T>): ODataEntityResource<T> {
-    return this.entities()
-      .entity(key);
-  }
+export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollection<T, M>> extends ODataBaseService<T> {
+  constructor(protected client: ODataClient) { super(client); }
 
   // Models
   public model(entity?: Partial<T>): M {

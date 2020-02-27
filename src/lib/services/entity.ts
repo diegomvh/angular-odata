@@ -3,29 +3,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataEntitySetResource, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataCollectionAnnotations, ODataEntityAnnotations } from '../resources';
+import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataCollectionAnnotations, ODataEntityAnnotations } from '../resources';
 
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
-import { ODataSchema } from '../models';
+import { ODataBaseService } from './base';
 
 @Injectable()
-export class ODataEntityService<T> {
-  static path: string = "";
-  static type: string = "";
-
-  constructor(protected client: ODataClient) { }
-
-  // Build resources
-  public entities(): ODataEntitySetResource<T> {
-    let Ctor = <typeof ODataEntityService>this.constructor;
-    return this.client.entitySet<T>(Ctor.path, Ctor.type);
-  }
-
-  public entity(key?: EntityKey<T>): ODataEntityResource<T> {
-    return this.entities()
-      .entity(key);
-  }
+export class ODataEntityService<T> extends ODataBaseService<T> {
+  constructor(protected client: ODataClient) { super(client); }
 
   public navigationProperty<P>(key: EntityKey<T>, name: string): ODataNavigationPropertyResource<P> {
     return this.entity(key).navigationProperty<P>(name);
@@ -107,6 +93,6 @@ export class ODataEntityService<T> {
   }
 
   public save(entity: T) {
-    return !this.entity(entity).hasKey() ? this.create(entity) : this.update(entity);
+    return this.entity(entity).hasKey() ? this.update(entity) : this.create(entity);
   }
 }
