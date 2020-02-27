@@ -7,7 +7,7 @@ import { PlainObject } from '../types';
 export type Select<T> = string | keyof T | Array<keyof T>;
 export type OrderBy<T> = string | keyof T | [ keyof T, 'asc' | 'desc' ] | Array<keyof T | [ keyof T, 'asc' | 'desc' ]>;
 export type Filter = string | PlainObject | Array<string | PlainObject>;
-export type Expand<T> = string | {[P in keyof T]?: ExpandOptions<any> } | Array<keyof T>;
+export type Expand<T> = string | Array<keyof T> | {[P in keyof T]?: (T[P] extends Array<infer E> ? ExpandOptions<E> : ExpandOptions<T[P]>) };
 export enum StandardAggregateMethods {
   sum = "sum",
   min = "min",
@@ -22,7 +22,7 @@ export type ExpandOptions<T> = {
   filter?: Filter;
   orderBy?: OrderBy<T>;
   top?: number;
-  expand?: Expand<any>;
+  expand?: Expand<T>;
 }
 export type Transform<T> = {
   aggregate?: Aggregate | Array<Aggregate>;
