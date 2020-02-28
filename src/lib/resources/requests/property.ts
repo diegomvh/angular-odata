@@ -97,6 +97,5 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       case 'entities':
         return res$.pipe(map((body: any) => this.toEntities(body)));
     }
-    return res$;
   }
 }

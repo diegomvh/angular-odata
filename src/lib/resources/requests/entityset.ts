@@ -168,16 +168,17 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   // Custom
   all(): Observable<T[]> {
+    let res = this.clone() as ODataEntitySetResource<T>;
     let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
       if (options) {
         if (options.skiptoken)
-          this.skiptoken(options.skiptoken);
+          res.skiptoken(options.skiptoken);
         else if (options.skip)
-          this.skip(options.skip);
+          res.skip(options.skip);
         if (options.top)
-          this.top(options.top);
+          res.top(options.top);
       }
-      return this.get();
+      return res.get();
     }
     return fetch()
       .pipe(

@@ -138,7 +138,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       case 'entities':
         return res$.pipe(map((body: any) => this.toEntities(body)));
     }
-    return res$;
   }
 
   // Options
@@ -191,39 +190,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   // Custom
-  single(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T, ODataEntityAnnotations]> {
-    return this
-      .get({ 
-        headers: options && options.headers,
-        params: options && options.params,
-        reportProgress: options && options.reportProgress,
-        responseType: 'entity', 
-        withCredentials: options && options.reportProgress});
-  }
-
-  collection(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]> {
-    return this
-      .get({ 
-        headers: options && options.headers,
-        params: options && options.params,
-        reportProgress: options && options.reportProgress,
-        responseType: 'entities', 
-        withCredentials: options && options.reportProgress,
-        withCount: true });
-  }
-
   all(options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
@@ -231,16 +197,17 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<T[]> {
+    let res = this.clone() as ODataNavigationPropertyResource<T>;
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataCollectionAnnotations]> => {
       if (opts) {
         if (opts.skiptoken)
-          this.skiptoken(opts.skiptoken);
+          res.skiptoken(opts.skiptoken);
         else if (opts.skip)
-          this.skip(opts.skip);
+          res.skip(opts.skip);
         if (opts.top)
-          this.top(opts.top);
+          res.top(opts.top);
       }
-      return this.get({ 
+      return res.get({ 
         headers: options && options.headers,
         params: options && options.params,
         reportProgress: options && options.reportProgress,
