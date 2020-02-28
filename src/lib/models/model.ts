@@ -101,10 +101,12 @@ export class ODataModel<T> {
     return entity;
   }
 
+  /*
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
     return (new Ctor(this._resource.clone(), this.toEntity(), this._annotations));
   }
+  */
 
   fetch(): Observable<this | null> {
     let obs$: Observable<any>;
@@ -126,8 +128,8 @@ export class ODataModel<T> {
       map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
   }
 
-  private _save(): Observable<this> {
     /*
+  private _save(): Observable<this> {
     let obs$ = of(this.toEntity());
     let changes = Object.keys(this._relationships)
       .filter(k => this._relationships[k] === null || this._relationships[k] instanceof ODataModel);
@@ -156,7 +158,6 @@ export class ODataModel<T> {
         ));
       }
     });
-    */
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
@@ -170,6 +171,7 @@ export class ODataModel<T> {
     }
     throw new Error(`Can't save`);
   }
+    */
 
   create(): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
@@ -212,23 +214,23 @@ export class ODataModel<T> {
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
-      if (this._resource.hasKey()) {
-        var func = this._resource.function<R>(name, returnType);
-        func.parameters(params);
-        return func;
-      }
+      if (!this._resource.hasKey()) 
+        throw new Error(`Can't function without key`);
+      var func = this._resource.function<R>(name, returnType);
+      func.parameters(params);
+      return func;
     }
-    throw new Error(`Can't function without resource or entity key`);
+    throw new Error(`Can't function without EntityResource`);
   }
 
   protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
-      if (this._resource.hasKey()) {
-        return this._resource.action<R>(name, returnType);
-      }
+      if (!this._resource.hasKey()) 
+        throw new Error(`Can't action without key`);
+      return this._resource.action<R>(name, returnType);
     }
-    throw new Error(`Can't action without resource or entity key`);
+    throw new Error(`Can't action without EntityResource`);
   }
 
   // Mutate query

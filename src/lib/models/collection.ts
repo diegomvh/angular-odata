@@ -38,6 +38,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._state.size = annots.skip;
         this._state.pages = Math.ceil(annots.count / annots.skip);
       };
+    } else {
+      this._state.records = entities.length;
+      this._state.size = entities.length;
+      this._state.pages = 1;
     }
     const entityMapper = (entity) => {
       if (this._resource instanceof ODataEntitySetResource) {
@@ -68,7 +72,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     }
   }
 
+  // Requests
   fetch(): Observable<this> {
+    let obs$: Observable<any>;
     if (!this._state.page)
       this._state.page = 1;
     if (this._resource instanceof ODataEntitySetResource) {
@@ -76,24 +82,39 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._resource.top(this._state.size);
         this._resource.skip(this._state.size * (this._state.page - 1));
       }
-      return this._resource.get({withCount: true})
-      .pipe(
-        map(([entities, annots]) => this.populate(entities, annots)));
+      obs$ = this._resource.get({ withCount: true });
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       if (this._state.size) {
         this._resource.top(this._state.size);
         this._resource.skip(this._state.size * (this._state.page - 1));
       }
-      return this._resource.get({withCount: true, responseType: 'entities' })
-        .pipe(
-          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+      obs$ = this._resource.get({ withCount: true, responseType: 'entities' });
     } else if (this._resource instanceof ODataFunctionResource) {
-      return this._resource.get({ responseType: 'entities' })
-        .pipe(
-          map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
+      obs$ = this._resource.get({ responseType: 'entities' });
     }
-    throw new Error("Not Yet!");
+    if (!obs$)
+      throw new Error("Not Yet!");
+    return obs$.pipe(
+      map(([entities, annots]) => this.populate(entities, annots)));
   }
+
+  all(): Observable<this> {
+    let obs$: Observable<any>;
+    if (!this._state.page)
+      this._state.page = 1;
+    if (this._resource instanceof ODataEntitySetResource) {
+      obs$ = this._resource.all();
+    } else if (this._resource instanceof ODataNavigationPropertyResource) {
+      obs$ = this._resource.all();
+    }
+    if (!obs$)
+      throw new Error("Not Yet!");
+    return obs$.pipe(
+      map(entities => this.populate(entities)));
+  }
+
+  add(model: M) { }
+  remove(model: M) { }
 
   page(page: number) {
     this._state.page = page;
@@ -127,19 +148,19 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Custom
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
-    let resource = this._resource.clone() as ODataEntitySetResource<any>;
-    if (resource instanceof ODataEntitySetResource) {
-      var func = resource.function<R>(name, returnType);
+    if (this._resource instanceof ODataEntitySetResource) {
+      var func = this._resource.function<R>(name, returnType);
       func.parameters(params);
       return func;
     }
+    throw new Error(`Can't function without EntitySetResource`);
   }
 
   protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
-    let resource = this._resource.clone() as ODataEntitySetResource<any>;
-    if (resource instanceof ODataEntitySetResource) {
-      return resource.action<R>(name, returnType);
+    if (this._resource instanceof ODataEntitySetResource) {
+      return this._resource.action<R>(name, returnType);
     }
+    throw new Error(`Can't action without EntitySetResource`);
   }
 
   // Mutate query
