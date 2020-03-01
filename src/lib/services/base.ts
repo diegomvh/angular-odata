@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
-
 import { ODataEntitySetResource, ODataEntityResource } from '../resources';
 
 import { ODataClient } from "../client";
