@@ -190,12 +190,42 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   // Custom
+  single(options?: {
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<[T, ODataEntityAnnotations]> {
+    return this
+      .get({ 
+        headers: options && options.headers,
+        params: options && options.params,
+        responseType: 'entity', 
+        reportProgress: options && options.reportProgress,
+        withCredentials: options && options.withCredentials});
+  }
+
+  collection(options?: {
+    headers?: HttpHeaders | { [header: string]: string | string[] },
+    params?: HttpParams | { [param: string]: string | string[] },
+    reportProgress?: boolean,
+    withCredentials?: boolean
+  }): Observable<[T[], ODataCollectionAnnotations]> {
+    return this
+      .get({ 
+        headers: options && options.headers,
+        params: options && options.params,
+        responseType: 'entities', 
+        reportProgress: options && options.reportProgress,
+        withCredentials: options && options.withCredentials,
+        withCount: true });
+  }
+
   all(options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
+    withCredentials?: boolean
   }): Observable<T[]> {
     let res = this.clone() as ODataNavigationPropertyResource<T>;
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataCollectionAnnotations]> => {
@@ -212,7 +242,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         params: options && options.params,
         reportProgress: options && options.reportProgress,
         responseType: 'entities', 
-        withCredentials: options && options.reportProgress});
+        withCredentials: options && options.withCredentials});
     }
     return fetch()
       .pipe(
