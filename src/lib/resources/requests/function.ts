@@ -9,6 +9,7 @@ import { ODataCallableResource } from './callable';
 import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Types } from '../../utils';
 
 export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
@@ -28,8 +29,14 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   }
 
   // Parameters
-  parameters(opts?: PlainObject) {
-    return this.segments.last().option(Options.parameters, opts);
+  parameters(params?: PlainObject) {
+    let segment = this.segments.last();
+    if (!segment)
+      throw new Error(`FunctionResourse dosn't have segment`);
+    if (Types.isUndefined(params))
+      return segment.option(Options.parameters);
+    
+    return segment.option(Options.parameters, params);
   }
 
   //GET
