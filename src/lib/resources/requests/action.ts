@@ -49,8 +49,7 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'property',
-    withCredentials?: boolean,
-    withCount?: boolean
+    withCredentials?: boolean
   }): Observable<[T, ODataPropertyAnnotations]>;
 
   post(body: any | null, options?: {
