@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   _resource: ODataResource<T>;
@@ -49,6 +50,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       } else if (this._resource instanceof ODataFunctionResource) {
         return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
       } else if (this._resource instanceof ODataNavigationPropertyResource) {
+        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+      } else if (this._resource instanceof ODataPropertyResource) {
         return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
       }
     }
@@ -171,7 +174,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this._resource as ODataEntitySetResource<any>).count().get();
   }
 
-  // Custom
+  // Functions
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
     if (this._resource instanceof ODataEntitySetResource) {
       var func = this._resource.function<R>(name, returnType);
@@ -181,11 +184,72 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     throw new Error(`Can't function without EntitySetResource`);
   }
 
+  protected callFunction<R>(name: string, params: any | null, 
+    responseType: 'value' | 'model' | 'collection', 
+    returnType?: string, options?: {
+      headers?: HttpHeaders | {[header: string]: string | string[]},
+      params?: HttpParams|{[param: string]: string | string[]},
+      reportProgress?: boolean,
+      withCredentials?: boolean,
+      withCount?: boolean
+    }): Observable<any> {
+      let ops = <any>{
+        headers: options && options.headers,
+        params: options && options.params,
+        responseType: responseType === 'value' ? 'property' : 
+          responseType === 'model' ? 'entity' : 'entities',
+        reportProgress: options && options.reportProgress,
+        withCredentials: options && options.withCredentials,
+        withCount: options && options.withCount
+      }
+      let res = this.function<R>(name, params, returnType);
+      let res$ = res.get(ops) as Observable<any>;
+      switch (responseType) {
+        case 'value':
+          return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
+        case 'model':
+          return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
+        case 'collection':
+          return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
+      }
+  }
+
+  // Actions
   protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
     if (this._resource instanceof ODataEntitySetResource) {
       return this._resource.action<R>(name, returnType);
     }
     throw new Error(`Can't action without EntitySetResource`);
+  }
+
+  protected callAction<R>(name: string, body: any | null, 
+    responseType: 'value' | 'model' | 'collection', 
+    returnType?: string, options?: {
+      headers?: HttpHeaders | {[header: string]: string | string[]},
+      params?: HttpParams|{[param: string]: string | string[]},
+      reportProgress?: boolean,
+      withCredentials?: boolean,
+      withCount?: boolean
+    }): Observable<any> {
+      let ops = <any>{
+        headers: options && options.headers,
+        params: options && options.params,
+        responseType: responseType === 'value' ? 'property' : 
+          responseType === 'model' ? 'entity' : 'entities',
+        reportProgress: options && options.reportProgress,
+        withCredentials: options && options.withCredentials,
+        withCount: options && options.withCount
+      }
+      let res = this.action<R>(name, returnType);
+      let res$ = res.post(body, ops) as Observable<any>;
+      switch (responseType) {
+        case 'value':
+          return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
+        case 'model':
+          return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
+        case 'collection':
+          return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
+      }
   }
 
   // Mutate query
