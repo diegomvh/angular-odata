@@ -27,15 +27,15 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
   }
 
   //POST
-  post(body: any | null, options: {
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'entity',
-    withCredentials?: boolean,
+    withCredentials?: boolean
   }): Observable<[T, ODataEntityAnnotations]>;
 
-  post(body?: any | null, options?: {
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -44,15 +44,16 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
     withCount?: boolean
   }): Observable<[T[], ODataCollectionAnnotations]>;
 
-  post(body?: any | null, options?: {
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'property',
     withCredentials?: boolean,
+    withCount?: boolean
   }): Observable<[T, ODataPropertyAnnotations]>;
 
-  post(body?: any | null, options?: {
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     responseType?: 'entity'|'entities'|'property',

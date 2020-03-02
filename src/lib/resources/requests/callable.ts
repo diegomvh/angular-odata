@@ -9,5 +9,4 @@ export class ODataCallableResource<T> extends ODataResource<T> {
       return this.client.entitySet(annots.entitySet, this.type()).entity(key);
     }
   }
-
 }

@@ -5,6 +5,7 @@ import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotati
 
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class ODataModel<T> {
   _resource: ODataResource<T>;
@@ -211,7 +212,7 @@ export class ODataModel<T> {
   }
 
   // Custom
-  protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
+  protected function<R, Rm>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey()) 
@@ -223,15 +224,93 @@ export class ODataModel<T> {
     throw new Error(`Can't function without EntityResource`);
   }
 
-  protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
+  protected action<R>(name: string, body: any | null, 
+    responseType: 'value', 
+    returnType?: string, options?: {
+      headers?: HttpHeaders | {[header: string]: string | string[]},
+      params?: HttpParams|{[param: string]: string | string[]},
+      reportProgress?: boolean,
+      withCredentials?: boolean,
+      withCount?: boolean
+    }): Observable<R>;
+
+  protected action<R, Rm extends ODataModel<R>>(name: string, body: any | null, 
+    responseType: 'model', 
+    returnType?: string, options?: {
+      headers?: HttpHeaders | {[header: string]: string | string[]},
+      params?: HttpParams|{[param: string]: string | string[]},
+      reportProgress?: boolean,
+      withCredentials?: boolean,
+      withCount?: boolean
+    }): Observable<Rm>;
+
+  protected action<R, Rm extends ODataModel<R>, Rc extends ODataCollection<R, Rm>>(name: string, body: any | null, 
+    responseType: 'collection', 
+    returnType?: string, options?: {
+      headers?: HttpHeaders | {[header: string]: string | string[]},
+      params?: HttpParams|{[param: string]: string | string[]},
+      reportProgress?: boolean,
+      withCredentials?: boolean,
+      withCount?: boolean
+    }): Observable<Rc>;
+
+  protected action<R, Rm extends ODataModel<R>, Rc extends ODataCollection<R, Rm>>(name: string, body: any | null, 
+    responseType: 'value' | 'model' | 'collection', 
+    returnType?: string, options?: {
+      headers?: HttpHeaders | {[header: string]: string | string[]},
+      params?: HttpParams|{[param: string]: string | string[]},
+      reportProgress?: boolean,
+      withCredentials?: boolean,
+      withCount?: boolean
+    }): Observable<any> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey()) 
         throw new Error(`Can't action without key`);
-      return this._resource.action<R>(name, returnType);
+      let res = this._resource.action<R>(name, returnType);
+      switch (responseType) {
+        case 'value':
+          return res.post(body, {
+            headers: options && options.headers,
+            params: options && options.params,
+            responseType: 'property',
+            reportProgress: options && options.reportProgress,
+            withCredentials: options && options.withCredentials,
+            withCount: options && options.withCount
+          }).pipe(map(([value, ]) => value));
+        case 'model':
+          return res.post(body, {
+            headers: options && options.headers,
+            params: options && options.params,
+            responseType: 'entity',
+            reportProgress: options && options.reportProgress,
+            withCredentials: options && options.withCredentials
+          }).pipe(map(([entity, annots]) => res.toModel<Rm>(entity, annots)));
+        case 'collection':
+          return res.post(body, {
+            headers: options && options.headers,
+            params: options && options.params,
+            responseType: 'entities',
+            reportProgress: options && options.reportProgress,
+            withCredentials: options && options.withCredentials,
+            withCount: options && options.withCount
+          }).pipe(map(([entities, annots]) => res.toCollection<Rc>(entities, annots)));
+      }
     }
     throw new Error(`Can't action without EntityResource`);
   }
+
+  /*
+  protected set<R>(model: ODataModel<any> | null, name: string): ODataActionResource<R> {
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this);
+      if (!this._resource.hasKey()) 
+        throw new Error(`Can't action without key`);
+      return this._resource.navigationProperty<R>(name).reference();
+    }
+    throw new Error(`Can't action without EntityResource`);
+  }
+*/
 
   // Mutate query
   select(select?: Select<T>) {

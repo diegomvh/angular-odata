@@ -71,7 +71,7 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
     if (options && options.withCount)
       params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
 
-    let res$ = this.client.get<T>(this,{
+    let res$ = this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
       params: params,

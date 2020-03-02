@@ -21,10 +21,6 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
     return this.entity(key).property<P>(name);
   }
 
-  public ref<P>(key: EntityKey<T>, name: string): ODataReferenceResource {
-    return this.entity(key).navigationProperty<P>(name).reference();
-  }
-
   public action<R>(key: EntityKey<T>, name: string, returnType?: string): ODataActionResource<R> {
     return this.entity(key).action<R>(name, returnType);
   }
