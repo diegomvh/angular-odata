@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
@@ -47,6 +47,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (this._resource instanceof ODataEntitySetResource) {
         return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
       } else if (this._resource instanceof ODataFunctionResource) {
+        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+      } else if (this._resource instanceof ODataNavigationPropertyResource) {
         return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
       }
     }
@@ -113,8 +115,31 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       map(entities => this.populate(entities)));
   }
 
-  add(model: M) { }
-  remove(model: M) { }
+  add(model: M): Observable<this> { 
+    let obs$: Observable<any>;
+    if (this._resource instanceof ODataEntitySetResource) {
+      obs$ = model.save();
+    } else if (this._resource instanceof ODataNavigationPropertyResource) {
+      let ref = this._resource.reference();
+      obs$ = ref.add(model._resource as ODataEntityResource<T>);
+    }
+    if (!obs$)
+      throw new Error("Not Yet!");
+    return obs$.pipe(map(() => this));
+  }
+
+  remove(model: M) { 
+    let obs$: Observable<any>;
+    if (this._resource instanceof ODataEntitySetResource) {
+      obs$ = model.destroy();
+    } else if (this._resource instanceof ODataNavigationPropertyResource) {
+      let ref = this._resource.reference();
+      obs$ = ref.remove({ target: model._resource as ODataEntityResource<T> });
+    }
+    if (!obs$)
+      throw new Error("Not Yet!");
+    return obs$.pipe(map(() => this));
+  }
 
   page(page: number) {
     this._state.page = page;
