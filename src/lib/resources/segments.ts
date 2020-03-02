@@ -31,7 +31,7 @@ const querySegmentsBuilder = (segment: ODataSegment): string => {
       let parameters = segment.options[Options.parameters];
       return (parameters ?
         buildQuery({ func: { [segment.name]: parameters } }) :
-        buildQuery(segment.name)
+        buildQuery({ func: segment.name })
       ).slice(1);
     default:
       let key = segment.options[Options.key];
