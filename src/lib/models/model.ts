@@ -1,11 +1,10 @@
-import { Observable, NEVER } from 'rxjs';
-import { map, throwIfEmpty } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select } from '../resources';
+import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select } from '../resources';
 
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class ODataModel<T> {
   _resource: ODataResource<T>;
@@ -21,14 +20,11 @@ export class ODataModel<T> {
         Object.defineProperty(this, field.name, {
           get() {
             if (!(field.name in this._relationships)) {
-              this._resource.key(this);
-              if (!this._resource.hasKey()) {
-                throw new Error(`Can't resolve ${field.name} relation from new entity`);
-              }
-              let nav = (this._resource as ODataEntityResource<T>).navigationProperty<T>(field.name);
-              let annots = this._annotations !== null ? this._annotations.related(field.name) : undefined;
-              let rel = field.collection ? nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
-              this._relationships[field.name] = rel;
+              let nav = (this as ODataModel<T>).navigationProperty<any>(field.name);
+              let annots = this._annotations !== null ? 
+                this._annotations.related(field.name) : undefined;
+              this._relationships[field.name] = field.collection ? 
+                nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
             }
             return this._relationships[field.name];
           },
@@ -60,18 +56,18 @@ export class ODataModel<T> {
       .map(([key, value]) => [key, value, schema.fields.find(f => f.name === key)]);
       //Attributes
     let attrs = entries
-      .filter(([k, v, f]) => f)
-      .reduce((acc, [k, v, f]) => Object.assign(acc, {[k]: v}), {});
+      .filter(([,, f]) => f)
+      .reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
     Object.assign(this, attrs);
       //Others
     let others = entries
-      .filter(([k, v, f]) => !f)
-      .reduce((acc, [k, v, f]) => Object.assign(acc, {[k]: v}), {});
+      .filter(([,, f]) => !f)
+      .reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
     Object.assign(this, others);
       //Complexes
     let complexes = entries
-      .filter(([k, v, f]) => f && !f.navigation && f.schema)
-      .reduce((acc, [k, v, f]) => {
+      .filter(([,, f]) => f && !f.navigation && f.schema)
+      .reduce((acc, [k,, f]) => {
         let prop = (this._resource as ODataEntityResource<T>).property(f.name);
         let annots = this._annotations !== null ? this._annotations.related(f.name) : undefined;
         let complex = f.collection ? prop.toCollection(this._entity[f.name], annots) : prop.toModel(this._entity[f.name], annots);
@@ -234,17 +230,27 @@ export class ODataModel<T> {
     throw new Error(`Can't action without EntityResource`);
   }
 
-  /*
-  protected set<R>(model: ODataModel<any> | null, name: string): ODataActionResource<R> {
+  protected navigationProperty<P>(name: string): ODataNavigationPropertyResource<P> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey()) 
-        throw new Error(`Can't action without key`);
-      return this._resource.navigationProperty<R>(name).reference();
+        throw new Error(`Can't navigation without key`);
+      return this._resource.navigationProperty<P>(name);
     }
-    throw new Error(`Can't action without EntityResource`);
+    throw new Error(`Can't navigation without EntityResource`);
   }
-*/
+
+  protected set<R, Rm extends ODataModel<R>>(name: string, model: Rm | null): Observable<this> {
+    if (this._resource instanceof ODataEntityResource) {
+      let ref = this.navigationProperty<R>(name).reference();
+      let etag = (this._annotations as ODataEntityAnnotations).etag;
+      if (model instanceof ODataModel) {
+        return ref.set(model._resource as ODataEntityResource<R>, { etag });
+      } else if (model === null)
+        return ref.remove({etag});
+    } 
+    throw new Error(`Can't navigation without EntityResource`);
+  }
 
   // Mutate query
   select(select?: Select<T>) {
