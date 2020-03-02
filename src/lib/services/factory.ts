@@ -4,7 +4,7 @@ import { ODataClient } from "../client";
 import { ODataEntityService } from './entity';
 
 @Injectable()
-export class ODataServiceFactory<T> {
+export class ODataServiceFactory {
   constructor(protected client: ODataClient) { }
 
   create<T>(path: string, type?: string): ODataEntityService<T> {
