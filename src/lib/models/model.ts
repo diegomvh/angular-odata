@@ -152,7 +152,7 @@ export class ODataModel<T> {
     throw new Error(`Can't destroy`);
   }
 
-  // Custom
+  // Functions
   protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
@@ -265,7 +265,8 @@ export class ODataModel<T> {
       throw new Error(`Can't set ${field.name} to collection, use add`);
     let ref = this.navigationProperty<R>(name).reference();
     let etag = (this._annotations as ODataEntityAnnotations).etag;
-    this._relationships[field.name] = model;
+    // TODO: change the resource of a model 
+    delete this._relationships[field.name];
     if (model instanceof ODataModel) {
       return ref.set(model._resource as ODataEntityResource<R>, { etag });
     } else if (model === null)
