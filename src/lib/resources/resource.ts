@@ -98,6 +98,7 @@ export abstract class ODataResource<Type> {
 
   toJSON() {
     return {
+      type: this.type(),
       segments: this.segments.toJSON(),
       options: this.options.toJSON()
     }
