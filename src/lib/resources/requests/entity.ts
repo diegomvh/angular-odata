@@ -8,8 +8,8 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
-import { ODataOptions, Options, Expand, Select } from '../options';
-import { ODataSegments } from '../segments';
+import { ODataQueryOptions, QueryOptionTypes, Expand, Select } from '../options';
+import { ODataPathSegments, SegmentOptionTypes } from '../segments';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
@@ -20,16 +20,16 @@ import { ODataEntityAnnotations } from '../responses';
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(client: ODataClient, opts?: {
-    segments?: ODataSegments,
-    options?: ODataOptions,
+    segments?: ODataPathSegments,
+    options?: ODataQueryOptions,
     parser?: Parser<E>
   }
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    options.keep(Options.expand, Options.select, Options.format);
+    options.keep(QueryOptionTypes.expand, QueryOptionTypes.select, QueryOptionTypes.format);
     return new ODataEntityResource<E>(client, segments, options, parser);
   }
 
@@ -39,11 +39,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (Types.isUndefined(key))
-      return segment.option(Options.key);
+      return segment.option(SegmentOptionTypes.key);
     
     if (Types.isObject(key))
       key = this.parser.resolveKey(key);
-    return segment.option(Options.key, key);
+    return segment.option(SegmentOptionTypes.key, key);
   }
 
   hasKey() {
@@ -190,18 +190,18 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   // Options
   select(opts?: Select<T>) {
-    return this.options.option<Select<T>>(Options.select, opts);
+    return this.options.option<Select<T>>(QueryOptionTypes.select, opts);
   }
 
   expand(opts?: Expand<T>) {
-    return this.options.option<Expand<T>>(Options.expand, opts);
+    return this.options.option<Expand<T>>(QueryOptionTypes.expand, opts);
   }
 
   format(opts?: string) {
-    return this.options.option<string>(Options.format, opts);
+    return this.options.option<string>(QueryOptionTypes.format, opts);
   }
 
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(Options.custom, opts);
+    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 }

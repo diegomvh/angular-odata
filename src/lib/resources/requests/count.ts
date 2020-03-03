@@ -1,8 +1,8 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataSegments, Segments } from '../segments';
-import { ODataOptions, Options } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../segments';
+import { ODataQueryOptions, QueryOptionTypes } from '../options';
 import { ODataResource } from '../resource';
 import { ODataClient } from '../../client';
 import { $COUNT } from '../../types';
@@ -11,16 +11,16 @@ import { Parser } from '../../models';
 export class ODataCountResource extends ODataResource<any> {
   // Factory
   static factory(service: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
+      segments?: ODataPathSegments, 
+      options?: ODataQueryOptions,
       parser?: Parser<any>}
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.count, $COUNT);
-    options.keep(Options.filter, Options.search);
+    segments.segment(SegmentTypes.count, $COUNT);
+    options.keep(QueryOptionTypes.filter, QueryOptionTypes.search);
     return new ODataCountResource(service, segments, options, parser);
   }
 

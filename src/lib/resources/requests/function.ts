@@ -1,7 +1,7 @@
 import { HttpParams, HttpHeaders } from '@angular/common/http';
 
-import { ODataSegments, Segments } from '../segments';
-import { ODataOptions, Options } from '../options';
+import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../segments';
+import { ODataQueryOptions, QueryOptionTypes } from '../options';
 import { ODataClient } from '../../client';
 import { PlainObject, $COUNT } from '../../types';
 import { Parser } from '../../models';
@@ -15,16 +15,16 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
   // Factory
   static factory<R>(name: string, service: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
+      segments?: ODataPathSegments, 
+      options?: ODataQueryOptions,
       parser?: Parser<R>}
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.functionCall, name);
-    options.keep(Options.format);
+    segments.segment(SegmentTypes.functionCall, name);
+    options.keep(QueryOptionTypes.format);
     return new ODataFunctionResource<R>(service, segments, options, parser);
   }
 
@@ -34,9 +34,9 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
     if (!segment)
       throw new Error(`FunctionResourse dosn't have segment`);
     if (Types.isUndefined(params))
-      return segment.option(Options.parameters);
+      return segment.option(SegmentOptionTypes.parameters);
     
-    return segment.option(Options.parameters, params);
+    return segment.option(SegmentOptionTypes.parameters, params);
   }
 
   //GET

@@ -2,8 +2,8 @@ import { PlainObject, VALUE, entityAttributes } from '../types';
 import { ODataClient } from '../client';
 import { Parser, ODataSchema, ODataModel, ODataCollection } from '../models';
 
-import { ODataSegments } from './segments';
-import { ODataOptions } from './options';
+import { ODataPathSegments } from './segments';
+import { ODataQueryOptions } from './options';
 import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
 
 export abstract class ODataResource<Type> {
@@ -11,19 +11,19 @@ export abstract class ODataResource<Type> {
 
   // VARIABLES
    protected client: ODataClient;
-   protected segments: ODataSegments;
-   protected options: ODataOptions;
+   protected segments: ODataPathSegments;
+   protected options: ODataQueryOptions;
    protected parser: Parser<Type> | null;
 
   constructor(
     client: ODataClient,
-    segments?: ODataSegments,
-    options?: ODataOptions,
+    segments?: ODataPathSegments,
+    options?: ODataQueryOptions,
     parser?: Parser<Type>
   ) {
     this.client = client;
-    this.segments = segments || new ODataSegments();
-    this.options = options || new ODataOptions();
+    this.segments = segments || new ODataPathSegments();
+    this.options = options || new ODataQueryOptions();
     this.parser = parser;
   }
 
@@ -83,35 +83,35 @@ export abstract class ODataResource<Type> {
   toString(): string {
     let path = this.path();
     let queryString = Object.entries(this.params())
-      .map(e => `${e[0]}${ODataOptions.VALUE_SEPARATOR}${e[1]}`)
-      .join(ODataOptions.PARAM_SEPARATOR);
+      .map(e => `${e[0]}${ODataQueryOptions.VALUE_SEPARATOR}${e[1]}`)
+      .join(ODataQueryOptions.PARAM_SEPARATOR);
     return queryString ? `${path}${ODataResource.QUERY_SEPARATOR}${queryString}` : path
   }
 
   clone<T>(
-    type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<Type>): ODataResource<T>; }
+    type?: { new(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions, parser: Parser<Type>): ODataResource<T>; }
   ): ODataResource<T> {
     if (!type) 
-      type = this.constructor as { new(service: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<Type>): ODataResource<T>; };
+      type = this.constructor as { new(service: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions, parser: Parser<Type>): ODataResource<T>; };
     return new type(this.client, this.segments.clone(), this.options.clone(), this.parser) as ODataResource<T>;
   };
 
   toJSON() {
     return {
       segments: this.segments.toJSON(),
-      params: this.options.toJSON()
+      options: this.options.toJSON()
     }
   }
 
   static fromJSON<T>(
     client: ODataClient, 
     json: {segments: any[], options: PlainObject},
-    type?: { new(client: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<T>): ODataResource<T>; },
+    type?: { new(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions, parser: Parser<T>): ODataResource<T>; },
     parser?: Parser<T>
   ): ODataResource<T> {
     if (!type) 
-      type = this.constructor as { new(client: ODataClient, segments: ODataSegments, options: ODataOptions, parser: Parser<T>): ODataResource<T>; };
-    return new type(client, new ODataSegments(json.segments || []), new ODataOptions(json.options || {}), parser) as ODataResource<T>;
+      type = this.constructor as { new(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions, parser: Parser<T>): ODataResource<T>; };
+    return new type(client, new ODataPathSegments(json.segments || []), new ODataQueryOptions(json.options || {}), parser) as ODataResource<T>;
   }
 
   is(type: string) {

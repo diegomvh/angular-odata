@@ -1,9 +1,9 @@
 import { ODataResource } from '../resource';
-import { Options, Select, Expand, Transform, Filter, OrderBy, GroupBy } from '../options';
+import { QueryOptionTypes, Select, Expand, Transform, Filter, OrderBy, GroupBy } from '../options';
 
 import { ODataReferenceResource } from './reference';
-import { ODataOptions } from '../options';
-import { ODataSegments, Segments } from '../segments';
+import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../segments';
 import { ODataClient } from '../../client';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, empty } from 'rxjs';
@@ -18,17 +18,17 @@ import { ODataCollectionAnnotations, ODataEntityAnnotations, ODataAnnotations } 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(name: string, client: ODataClient, opts?: {
-    segments?: ODataSegments,
-    options?: ODataOptions,
+    segments?: ODataPathSegments,
+    options?: ODataQueryOptions,
     parser?: Parser<E>
   }
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.navigationProperty, name);
-    options.keep(Options.format);
+    segments.segment(SegmentTypes.navigationProperty, name);
+    options.keep(QueryOptionTypes.format);
     return new ODataNavigationPropertyResource<E>(client, segments, options, parser);
   }
 
@@ -38,11 +38,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (Types.isUndefined(key))
-      return segment.option(Options.key);
+      return segment.option(SegmentOptionTypes.key);
     
     if (Types.isObject(key))
       key = this.parser.resolveKey(key);
-    return segment.option(Options.key, key);
+    return segment.option(SegmentOptionTypes.key, key);
   }
 
   hasKey() {
@@ -142,51 +142,51 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   // Options
   select(opts?: Select<T>) {
-    return this.options.option<Select<T>>(Options.select, opts);
+    return this.options.option<Select<T>>(QueryOptionTypes.select, opts);
   }
 
   expand(opts?: Expand<T>) {
-    return this.options.option<Expand<T>>(Options.expand, opts);
+    return this.options.option<Expand<T>>(QueryOptionTypes.expand, opts);
   }
 
   transform(opts?: Transform<T>) {
-    return this.options.option<Transform<T>>(Options.transform, opts);
+    return this.options.option<Transform<T>>(QueryOptionTypes.transform, opts);
   }
 
   search(opts?: string) {
-    return this.options.option<string>(Options.search, opts);
+    return this.options.option<string>(QueryOptionTypes.search, opts);
   }
 
   filter(opts?: Filter) {
-    return this.options.option<Filter>(Options.filter, opts);
+    return this.options.option<Filter>(QueryOptionTypes.filter, opts);
   }
 
   groupBy(opts?: GroupBy<T>) {
-    return this.options.option(Options.groupBy, opts);
+    return this.options.option(QueryOptionTypes.groupBy, opts);
   }
 
   orderBy(opts?: OrderBy<T>) {
-    return this.options.option<OrderBy<T>>(Options.orderBy, opts);
+    return this.options.option<OrderBy<T>>(QueryOptionTypes.orderBy, opts);
   }
 
   format(opts?: string) {
-    return this.options.option<string>(Options.format, opts);
+    return this.options.option<string>(QueryOptionTypes.format, opts);
   }
 
   top(opts?: number) {
-    return this.options.option<number>(Options.top, opts);
+    return this.options.option<number>(QueryOptionTypes.top, opts);
   }
 
   skip(opts?: number) {
-    return this.options.option<number>(Options.skip, opts);
+    return this.options.option<number>(QueryOptionTypes.skip, opts);
   }
 
   skiptoken(opts?: string) {
-    return this.options.option<string>(Options.skiptoken, opts);
+    return this.options.option<string>(QueryOptionTypes.skiptoken, opts);
   }
 
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(Options.custom, opts);
+    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 
   // Custom

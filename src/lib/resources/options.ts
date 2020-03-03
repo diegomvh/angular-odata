@@ -34,8 +34,8 @@ export type GroupBy<T> = {
   transform?: Transform<T>;
 }
 
-export enum Options {
-  key = 'key',
+export enum QueryOptionTypes {
+  // System options
   select = 'select',
   filter = 'filter',
   search = 'search',
@@ -47,25 +47,29 @@ export enum Options {
   skiptoken = 'skiptoken',
   expand = 'expand',
   format = 'format',
-  parameters = 'parameters',
-  custom = 'custom'
+  // Custom options
+  custom = 'custom',
+  // Parameter aliases
+  aliases = 'aliases'
 }
 
-const orderByFieldMapper = (value: any) => (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
+const orderByFieldMapper = (value: any) => 
+  (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
+
 const expandOptionsMapper = (options: any) => {
   return [
-    Options.select,
-    Options.filter,
-    Options.orderBy,
-    Options.top,
-    Options.expand]
+    QueryOptionTypes.select,
+    QueryOptionTypes.filter,
+    QueryOptionTypes.orderBy,
+    QueryOptionTypes.top,
+    QueryOptionTypes.expand]
     .filter(key => !Types.isEmpty(options[key]))
     .map(key => {
       let value = options[key];
-      if (Options.orderBy === key && Types.isArray(value)) {
+      if (QueryOptionTypes.orderBy === key && Types.isArray(value)) {
         value = value.map(orderByFieldMapper);
       }
-      if (Options.expand === key && Types.isObject(value) && !Types.isArray(value)) {
+      if (QueryOptionTypes.expand === key && Types.isObject(value) && !Types.isArray(value)) {
         value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
       }
       return [key, value];
@@ -75,19 +79,20 @@ const expandOptionsMapper = (options: any) => {
 
 const queryOptionsBuilder = (key, value): string => {
   switch (key) {
-    case Options.orderBy:
+    case QueryOptionTypes.orderBy:
       if (Types.isArray(value)) {
         value = value.map(orderByFieldMapper);
       }
       break;
-    case Options.expand:
+    case QueryOptionTypes.expand:
       if (Types.isObject(value))
         value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
       break;
   }
   return buildQuery({ [key]: value });
 }
-export class ODataOptions {
+
+export class ODataQueryOptions {
   // URL QUERY PARTS
   public static readonly PARAM_SEPARATOR = '&';
   public static readonly VALUE_SEPARATOR = '=';
@@ -101,28 +106,34 @@ export class ODataOptions {
   // Params
   params(): PlainObject {
     let params = [
-      Options.select,
-      Options.filter,
-      Options.search,
-      Options.groupBy,
-      Options.transform,
-      Options.orderBy,
-      Options.top,
-      Options.skip,
-      Options.expand,
-      Options.format]
+      QueryOptionTypes.select,
+      QueryOptionTypes.filter,
+      QueryOptionTypes.search,
+      QueryOptionTypes.groupBy,
+      QueryOptionTypes.transform,
+      QueryOptionTypes.orderBy,
+      QueryOptionTypes.top,
+      QueryOptionTypes.skip,
+      QueryOptionTypes.expand,
+      QueryOptionTypes.format]
       .filter(key => !Types.isEmpty(this.options[key]))
       .map(key => queryOptionsBuilder(key, this.options[key]))
       .reduce((acc, param: string) => {
-        let index = param.indexOf(ODataOptions.VALUE_SEPARATOR);
+        let index = param.indexOf(ODataQueryOptions.VALUE_SEPARATOR);
         let name = param.substr(1, index - 1);
         let values = param.substr(index + 1);
         return Object.assign(acc, {[name]: values});
       }, {});
     // TODO: Add query builder Skiptoken support
-    if (Options.skiptoken in this.options)
-      params['$skiptoken'] = this.options[Options.skiptoken];
-    return Object.assign(params, this.options[Options.custom] || {});
+    if (QueryOptionTypes.skiptoken in this.options)
+      params['$skiptoken'] = this.options[QueryOptionTypes.skiptoken];
+    // Custom
+    let custom = this.options[QueryOptionTypes.custom] || {};
+    Object.assign(params, custom);
+    // Aliases
+    let aliases = this.options[QueryOptionTypes.aliases] || {};
+    Object.assign(params, aliases);
+    return params;
   }
 
   toJSON() {
@@ -130,27 +141,27 @@ export class ODataOptions {
   }
 
   clone() {
-    return new ODataOptions(this.toJSON());
+    return new ODataQueryOptions(this.toJSON());
   }
 
   // Option Handler
-  option<T>(type: Options, opts?: T) {
+  option<T>(type: QueryOptionTypes, opts?: T) {
     if (!Types.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type);
   }
 
-  has(type: Options) {
+  has(type: QueryOptionTypes) {
     return !Types.isUndefined(this.options[type]);
   }
 
-  remove(...types: Options[]) {
+  remove(...types: QueryOptionTypes[]) {
     types.forEach(type => this.option(type).clear());
   }
 
-  keep(...types: Options[]) {
+  keep(...types: QueryOptionTypes[]) {
     this.options = Object.keys(this.options)
-      .filter((k: Options) => types.indexOf(k) !== -1)
+      .filter((k: QueryOptionTypes) => types.indexOf(k) !== -1)
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
@@ -160,7 +171,7 @@ export class ODataOptions {
 }
 
 export class OptionHandler<T> {
-  constructor(private o: PlainObject, private t: Options) { }
+  constructor(private o: PlainObject, private t: QueryOptionTypes) { }
 
   get name() {
     return this.t;

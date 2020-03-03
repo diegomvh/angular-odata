@@ -4,8 +4,8 @@ import { Observable, of } from 'rxjs';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
-import { ODataSegments, Segments } from '../segments';
-import { ODataOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../segments';
+import { ODataQueryOptions } from '../options';
 import { map } from 'rxjs/operators';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID } from '../../types';
 import { ODataResource } from '../resource';
@@ -62,7 +62,7 @@ export class ODataBatchResource extends ODataResource<any> {
   private changesetBoundary: string;
   private changesetID: number;
 
-  constructor(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
+  constructor(service: ODataClient, segments?: ODataPathSegments, options?: ODataQueryOptions) {
     super(service, segments, options);
     this.requests = [];
     this.batchBoundary = BatchRequest.BATCH_PREFIX + uuidv4();
@@ -70,11 +70,11 @@ export class ODataBatchResource extends ODataResource<any> {
     this.changesetID = 1;
   }
 
-  static factory(service: ODataClient, segments?: ODataSegments, options?: ODataOptions) {
-    segments = segments || new ODataSegments();
-    options = options || new ODataOptions();
+  static factory(service: ODataClient, segments?: ODataPathSegments, options?: ODataQueryOptions) {
+    segments = segments || new ODataPathSegments();
+    options = options || new ODataQueryOptions();
 
-    segments.segment(Segments.batch, $BATCH);
+    segments.segment(SegmentTypes.batch, $BATCH);
     options.clear();
     return new ODataBatchResource(service, segments, options);
   }

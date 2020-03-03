@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { ODataValueResource } from './value';
 
 import { ODataResource } from '../resource';
-import { ODataOptions } from '../options';
-import { ODataSegments, Segments } from '../segments';
+import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../segments';
 import { ODataClient } from '../../client';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
@@ -16,15 +16,15 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   // Factory
   static factory<P>(name: string, client: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
+      segments?: ODataPathSegments, 
+      options?: ODataQueryOptions,
       parser?: Parser<P>}
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.property, name);
+    segments.segment(SegmentTypes.property, name);
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options, parser);
   }
