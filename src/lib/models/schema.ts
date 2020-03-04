@@ -1,7 +1,6 @@
 import { Parser, PARSERS } from './parser';
 import { ODataSettings } from './settings';
 import { Types, Enums } from '../utils';
-import { PlainObject } from '../types';
 
 export interface Field {
   type: string;

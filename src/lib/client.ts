@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource, ODataSegment, SegmentOptionTypes, ODataQueryOptions, ODataPathSegments, SegmentTypes, QueryOptionTypes, ODataEntityResource } from './resources';
 import { ODataSettings } from './models/settings';
-import { IF_MATCH_HEADER } from './types';
+import { IF_MATCH_HEADER, PlainObject } from './types';
 import { ODataSchema } from './models/schema';
 import { ODataModel, ODataCollection, Parser } from './models';
 
@@ -59,6 +59,22 @@ export class ODataClient {
 
   collectionForType(type: string): typeof ODataCollection {
     return this.settings.collectionForType(type) as typeof ODataCollection;
+  }
+
+  fromJSON<T>(json: {type: string | null, segments: any[], options: PlainObject}): ODataResource<T> {
+    let parser = json.type? this.parserForType<T>(json.type) as ODataSchema<T> : null;
+    let last = json.segments[json.segments.length - 1];
+    let klass = last.type;
+    let Ctor = (last.type === SegmentTypes.entitySet && SegmentOptionTypes.key in last.options) ? ODataEntityResource :
+      {
+        [SegmentTypes.metadata]: ODataMetadataResource,
+        [SegmentTypes.batch]: ODataBatchResource,
+        [SegmentTypes.singleton]: ODataSingletonResource,
+        [SegmentTypes.entitySet]: ODataEntitySetResource,
+        [SegmentTypes.actionCall]: ODataActionResource,
+        [SegmentTypes.functionCall]: ODataFunctionResource
+      }[last.type];
+    return new Ctor(this, json.segments, json.options, parser) as ODataResource<T>;
   }
 
   // Requests

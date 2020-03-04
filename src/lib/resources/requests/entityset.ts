@@ -19,7 +19,7 @@ import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataAnnotations } 
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
-  static factory<E>(name: string, service: ODataClient, opts?: {
+  static factory<E>(name: string, client: ODataClient, opts?: {
       segments?: ODataPathSegments, 
       options?: ODataQueryOptions,
       parser?: Parser<E>}
@@ -30,7 +30,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
     segments.segment(SegmentTypes.entitySet, name);
     options.keep(QueryOptionTypes.filter, QueryOptionTypes.orderBy, QueryOptionTypes.skip, QueryOptionTypes.transform, QueryOptionTypes.top, QueryOptionTypes.search, QueryOptionTypes.format);
-    return new ODataEntitySetResource<E>(service, segments, options, parser);
+    return new ODataEntitySetResource<E>(client, segments, options, parser);
   }
 
   // Segments

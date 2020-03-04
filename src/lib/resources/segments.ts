@@ -3,6 +3,7 @@ import buildQuery from 'odata-query';
 import { Types } from '../utils/types';
 import { PlainObject } from '../types';
 import { OptionHandler } from './options';
+import { isoStringToDate } from '../utils/dates';
 
 export enum SegmentTypes {
   batch = 'batch',
@@ -65,7 +66,12 @@ export class ODataPathSegments {
   }
 
   toJSON() {
-    return this.segments.map(segment => ({ type: segment.type, name: segment.name, options: Object.assign({}, segment.options) }));
+    return this.segments.map(segment => { 
+      let type = segment.type;
+      let name = segment.name
+      let options = isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
+      return {type, name, options};
+    });
   }
 
   clone() {

@@ -3,6 +3,7 @@ import buildQuery from 'odata-query';
 import { Types } from '../utils/types';
 
 import { PlainObject } from '../types';
+import { isoStringToDate } from '../utils/dates';
 
 export type Select<T> = string | keyof T | Array<keyof T>;
 export type OrderBy<T> = string | keyof T | [ keyof T, 'asc' | 'desc' ] | Array<keyof T | [ keyof T, 'asc' | 'desc' ]>;
@@ -53,6 +54,22 @@ export enum QueryOptionTypes {
   aliases = 'aliases'
 }
 
+export type QueryOptions<T> = {
+  [QueryOptionTypes.select]?: Select<T>;
+  [QueryOptionTypes.filter]?: Filter; 
+  [QueryOptionTypes.search]?: string;
+  [QueryOptionTypes.groupBy]?: GroupBy<T>;
+  [QueryOptionTypes.transform]?: Transform<T>;
+  [QueryOptionTypes.orderBy]?: OrderBy<T>;
+  [QueryOptionTypes.top]?: number;
+  [QueryOptionTypes.skip]?: number;
+  [QueryOptionTypes.skiptoken]?: string;
+  [QueryOptionTypes.expand]?: Expand<T>;
+  [QueryOptionTypes.format]?: string;
+  [QueryOptionTypes.custom]?: PlainObject;
+  [QueryOptionTypes.aliases]?: PlainObject;
+}
+
 const orderByFieldMapper = (value: any) => 
   (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
 
@@ -97,7 +114,7 @@ export class ODataQueryOptions {
   public static readonly PARAM_SEPARATOR = '&';
   public static readonly VALUE_SEPARATOR = '=';
 
-  options?: PlainObject
+  options?: PlainObject;
 
   constructor(options?: PlainObject) {
     this.options = options || {};
@@ -137,7 +154,7 @@ export class ODataQueryOptions {
   }
 
   toJSON() {
-    return Object.assign({}, this.options);
+    return isoStringToDate(JSON.parse(JSON.stringify(this.options)));
   }
 
   clone() {
