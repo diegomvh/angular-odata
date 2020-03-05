@@ -1,4 +1,12 @@
 export const Enums = {
+  keys<E>(Enum: E) {
+    return Object.keys(Enum).filter(k => typeof Enum[k] === 'number');
+  },
+  
+  values<E>(Enum: E) {
+    return Object.keys(Enum).filter(k => typeof Enum[k] === 'string');
+  },
+
   toValue<E>(Enum: E, value: any): number[] {
     return Enum[value];
   },
