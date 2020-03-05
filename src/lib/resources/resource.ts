@@ -5,6 +5,8 @@ import { Parser, ODataSchema, ODataModel, ODataCollection } from '../models';
 import { ODataPathSegments } from './segments';
 import { ODataQueryOptions } from './options';
 import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
+import { Type } from '@angular/core';
+import { Types } from '../utils';
 
 export abstract class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -97,11 +99,14 @@ export abstract class ODataResource<Type> {
   };
 
   toJSON() {
-    return {
-      type: this.type(),
-      segments: this.segments.toJSON(),
-      options: this.options.toJSON()
-    }
+    let json = <any>{ path: this.segments.toJSON() };
+    let type = this.type();
+    if (!Types.isNullOrUndefined(type))
+      json.type = type;
+    let options = this.options.toJSON();
+    if (!Types.isEmpty(options))
+      json.query = options;
+    return json;
   }
 
   is(type: string) {

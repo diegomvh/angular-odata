@@ -56,7 +56,7 @@ export class ODataPathSegments {
   protected segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments = segments || [];
+    this.segments = (segments || []).map(({type, name, options}) => ({type, name, options: options || {}}));
   }
 
   path(): string {
@@ -67,10 +67,11 @@ export class ODataPathSegments {
 
   toJSON() {
     return this.segments.map(segment => { 
-      let type = segment.type;
-      let name = segment.name
+      let json = <any>{ type: segment.type, name: segment.name };
       let options = isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
-      return {type, name, options};
+      if (!Types.isEmpty(options))
+        json.options = options;
+      return json; 
     });
   }
 

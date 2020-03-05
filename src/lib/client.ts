@@ -61,11 +61,10 @@ export class ODataClient {
     return this.settings.collectionForType(type) as typeof ODataCollection;
   }
 
-  fromJSON<T>(json: {type: string | null, segments: any[], options: PlainObject}): ODataResource<T> {
+  fromJSON<T>(json: {type: string | null, path: any[], query: PlainObject}): ODataResource<T> {
     let parser = json.type? this.parserForType<T>(json.type) as ODataSchema<T> : null;
-    let last = json.segments[json.segments.length - 1];
-    let klass = last.type;
-    let Ctor = (last.type === SegmentTypes.entitySet && SegmentOptionTypes.key in last.options) ? ODataEntityResource :
+    let lastSegment = json.path[json.path.length - 1];
+    let Ctor = (lastSegment.type === SegmentTypes.entitySet && lastSegment.options && SegmentOptionTypes.key in lastSegment.options) ? ODataEntityResource :
       {
         [SegmentTypes.metadata]: ODataMetadataResource,
         [SegmentTypes.batch]: ODataBatchResource,
@@ -73,8 +72,8 @@ export class ODataClient {
         [SegmentTypes.entitySet]: ODataEntitySetResource,
         [SegmentTypes.actionCall]: ODataActionResource,
         [SegmentTypes.functionCall]: ODataFunctionResource
-      }[last.type];
-    return new Ctor(this, json.segments, json.options, parser) as ODataResource<T>;
+      }[lastSegment.type];
+    return new Ctor(this, json.path, json.query, parser) as ODataResource<T>;
   }
 
   // Requests
