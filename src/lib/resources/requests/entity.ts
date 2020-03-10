@@ -66,7 +66,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parserFor<N>(name)
+      parser: this.parser ? this.parser.parserFor<N>(name) : null
     });
   }
 
@@ -76,7 +76,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parserFor<P>(name)
+      parser: this.parser ? this.parser.parserFor<P>(name) : null
     });
   }
 
