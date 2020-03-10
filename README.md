@@ -98,39 +98,58 @@ import { ODataClient, ODATA_ETAG } from 'angular-odata';
 })
 export class AppComponent {
   title = 'TripPin';
-  constructor(private odata: ODataClient) {
+  constructor(private factory: ODataServiceFactory) {
     this.queries();
   }
 
   queries() {
-    let airports = this.odata.entitySet<Airport>("Airports");
+    // Use OData Service Factory
+    let airportsService = this.factory.create<Airport>("Airports");
+
+    let airports = airportsService.entities();
 
     // Fetch set
-    airports.get().subscribe(console.log);
+    airports.all()
+      .subscribe(aports => console.log("All: ", aports));
 
     // Fetch with count
-    airports.get({withCount: true}).subscribe(console.log);
+    airports.get({withCount: true})
+      .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
 
     // Fetch by key
     let airport = airports.entity("CYYZ");
-    airport.get().subscribe(console.log);
+    airport.get()
+      .subscribe(([aport, annots]) => console.log("Airport: ", aport, "Annotations: ", annots));
 
     // Filter
     airports.filter({Location: {City: {CountryRegion: "United States"}}});
-    airports.get().subscribe(console.log);
+    airports.get()
+      .subscribe(([aports, annots]) => console.log("Airports of United States: ", aports, "Annotations: ", annots));
 
     // Add filter
     airports.filter().push({Location: {City: {Region: "California"}}});
-    airports.get().subscribe(console.log);
+    airports.get()
+      .subscribe(([aports, annots]) => console.log("Airports in California: ", aports, "Annotations: ", annots));
 
     // Remove filter
     airports.filter().clear();
+    airports.get()
+      .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
 
-    let people = this.odata.entitySet<Person>("People");
+    let people = peopleService.entities();
 
     // Expand
-    people.expand({Friends: {}, Trips: {expand: {PlanItems: {}, Photos: {}}}});
-    people.get({withCount: true}).subscribe(console.log);
+    people.expand({
+      Friends: { 
+        expand: { Friends: { select: ['AddressInfo']}} 
+      }, 
+      Trips: { select: ['Name', 'Tags'] },
+    });
+    people.get({withCount: true})
+      .subscribe(([peop, annots]) => console.log("People with Friends and Trips: ", peop, "Annotations: ", annots));
+
+    // Remove Expand
+    people.expand().clear();
   }
 }
 ```
@@ -203,9 +222,7 @@ import { PeopleService } from './trippin';
 })
 export class AppComponent {
   title = 'TripPinEntity';
-  constructor(
-    private people: PeopleService
-  ) {
+  constructor(private people: PeopleService) {
     this.show('scottketchum');
   }
 
