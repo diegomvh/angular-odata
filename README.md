@@ -105,6 +105,7 @@ export class AppComponent {
   queries() {
     // Use OData Service Factory
     let airportsService = this.factory.create<Airport>("Airports");
+    let peopleService = this.factory.create<Person>("People");
 
     let airports = airportsService.entities();
 
