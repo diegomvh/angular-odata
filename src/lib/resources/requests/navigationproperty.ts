@@ -1,34 +1,34 @@
 import { ODataResource } from '../resource';
-import { Options, Select, Expand, Transform, Filter, OrderBy, GroupBy } from '../options';
+import { QueryOptionTypes, Select, Expand, Transform, Filter, OrderBy, GroupBy } from '../options';
 
 import { ODataReferenceResource } from './reference';
-import { ODataOptions } from '../options';
-import { ODataSegments, Segments } from '../segments';
+import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../segments';
 import { ODataClient } from '../../client';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { Parser, ODataModel, ODataSchema, ODataCollection } from '../../models';
+import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollectionAnnotations, ODataEntityAnnotations } from '../responses';
+import { ODataCollectionAnnotations, ODataEntityAnnotations, ODataAnnotations } from '../responses';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(name: string, client: ODataClient, opts?: {
-    segments?: ODataSegments,
-    options?: ODataOptions,
+    segments?: ODataPathSegments,
+    options?: ODataQueryOptions,
     parser?: Parser<E>
   }
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.navigationProperty, name);
-    options.keep(Options.format);
+    segments.segment(SegmentTypes.navigationProperty, name);
+    options.keep(QueryOptionTypes.format);
     return new ODataNavigationPropertyResource<E>(client, segments, options, parser);
   }
 
@@ -38,18 +38,18 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (Types.isUndefined(key))
-      return segment.option(Options.key);
+      return segment.option(SegmentOptionTypes.key);
     
     if (Types.isObject(key))
       key = this.parser.resolveKey(key);
-    return segment.option(Options.key, key);
+    return segment.option(SegmentOptionTypes.key, key);
   }
 
   hasKey() {
     return this.key().value() !== undefined;
   }
 
-  entity(opts?: EntityKey<T>) {
+  entity(opts?: EntityKey<T>, annots?: ODataAnnotations) {
     this.key(opts);
     return this;
   }
@@ -70,7 +70,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parserFor<N>(name)
+      parser: this.parser ? this.parser.parserFor<N>(name) : null
     });
   }
 
@@ -80,7 +80,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parserFor<P>(name)
+      parser: this.parser ? this.parser.parserFor<P>(name) : null
     });
   }
 
@@ -138,56 +138,55 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       case 'entities':
         return res$.pipe(map((body: any) => this.toEntities(body)));
     }
-    return res$;
   }
 
   // Options
-  select(opts?: Select) {
-    return this.options.option<Select>(Options.select, opts);
+  select(opts?: Select<T>) {
+    return this.options.option<Select<T>>(QueryOptionTypes.select, opts);
   }
 
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(QueryOptionTypes.expand, opts);
   }
 
-  transform(opts?: Transform) {
-    return this.options.option<Transform>(Options.transform, opts);
+  transform(opts?: Transform<T>) {
+    return this.options.option<Transform<T>>(QueryOptionTypes.transform, opts);
   }
 
   search(opts?: string) {
-    return this.options.option<string>(Options.search, opts);
+    return this.options.option<string>(QueryOptionTypes.search, opts);
   }
 
   filter(opts?: Filter) {
-    return this.options.option<Filter>(Options.filter, opts);
+    return this.options.option<Filter>(QueryOptionTypes.filter, opts);
   }
 
-  groupBy(opts?: GroupBy) {
-    return this.options.option(Options.groupBy, opts);
+  groupBy(opts?: GroupBy<T>) {
+    return this.options.option(QueryOptionTypes.groupBy, opts);
   }
 
-  orderBy(opts?: OrderBy) {
-    return this.options.option<OrderBy>(Options.orderBy, opts);
+  orderBy(opts?: OrderBy<T>) {
+    return this.options.option<OrderBy<T>>(QueryOptionTypes.orderBy, opts);
   }
 
   format(opts?: string) {
-    return this.options.option<string>(Options.format, opts);
+    return this.options.option<string>(QueryOptionTypes.format, opts);
   }
 
   top(opts?: number) {
-    return this.options.option<number>(Options.top, opts);
+    return this.options.option<number>(QueryOptionTypes.top, opts);
   }
 
   skip(opts?: number) {
-    return this.options.option<number>(Options.skip, opts);
+    return this.options.option<number>(QueryOptionTypes.skip, opts);
   }
 
   skiptoken(opts?: string) {
-    return this.options.option<string>(Options.skiptoken, opts);
+    return this.options.option<string>(QueryOptionTypes.skiptoken, opts);
   }
 
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(Options.custom, opts);
+    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 
   // Custom
@@ -195,32 +194,30 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
+    withCredentials?: boolean
   }): Observable<[T, ODataEntityAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
         params: options && options.params,
-        reportProgress: options && options.reportProgress,
         responseType: 'entity', 
-        withCredentials: options && options.reportProgress});
+        reportProgress: options && options.reportProgress,
+        withCredentials: options && options.withCredentials});
   }
 
   collection(options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
+    withCredentials?: boolean
   }): Observable<[T[], ODataCollectionAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
         params: options && options.params,
-        reportProgress: options && options.reportProgress,
         responseType: 'entities', 
-        withCredentials: options && options.reportProgress,
+        reportProgress: options && options.reportProgress,
+        withCredentials: options && options.withCredentials,
         withCount: true });
   }
 
@@ -228,24 +225,24 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
+    withCredentials?: boolean
   }): Observable<T[]> {
+    let res = this.clone() as ODataNavigationPropertyResource<T>;
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataCollectionAnnotations]> => {
       if (opts) {
         if (opts.skiptoken)
-          this.skiptoken(opts.skiptoken);
+          res.skiptoken(opts.skiptoken);
         else if (opts.skip)
-          this.skip(opts.skip);
+          res.skip(opts.skip);
         if (opts.top)
-          this.top(opts.top);
+          res.top(opts.top);
       }
-      return this.get({ 
+      return res.get({ 
         headers: options && options.headers,
         params: options && options.params,
         reportProgress: options && options.reportProgress,
         responseType: 'entities', 
-        withCredentials: options && options.reportProgress});
+        withCredentials: options && options.withCredentials});
     }
     return fetch()
       .pipe(

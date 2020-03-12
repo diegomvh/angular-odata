@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 
 import { PlainObject, $COUNT } from '../../types';
 import { ODataClient } from '../../client';
-import { Options, Select, Expand } from '../options';
-import { ODataSegments, Segments } from '../segments';
-import { ODataOptions } from '../options';
+import { QueryOptionTypes, Select, Expand } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../segments';
+import { ODataQueryOptions } from '../options';
 import { ODataResource } from '../resource';
 
 import { ODataNavigationPropertyResource } from './navigationproperty';
@@ -20,17 +20,17 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Factory
   static factory<R>(name: string, client: ODataClient, opts?: {
-    segments?: ODataSegments,
-    options?: ODataOptions,
+    segments?: ODataPathSegments,
+    options?: ODataQueryOptions,
     parser?: Parser<R>
   }
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.singleton, name);
-    options.keep(Options.format);
+    segments.segment(SegmentTypes.singleton, name);
+    options.keep(QueryOptionTypes.format);
     return new ODataSingletonResource<R>(client, segments, options, parser);
   }
 
@@ -41,7 +41,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parserFor<N>(name)
+      parser: this.parser ? this.parser.parserFor<N>(name) : null
     });
   }
 
@@ -51,7 +51,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parserFor<P>(name)
+      parser: this.parser ? this.parser.parserFor<P>(name) : null
     });
   }
 
@@ -133,7 +133,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       case 'property':
         return res$.pipe(map((body: any) => this.toValue(body)));
     }
-    return res$;
   }
 
   post(entity: T, options?: {
@@ -207,19 +206,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   // Options
-  select(opts?: Select) {
-    return this.options.option<Select>(Options.select, opts);
+  select(opts?: Select<T>) {
+    return this.options.option<Select<T>>(QueryOptionTypes.select, opts);
   }
 
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(QueryOptionTypes.expand, opts);
   }
 
   format(opts?: string) {
-    return this.options.option<string>(Options.format, opts);
+    return this.options.option<string>(QueryOptionTypes.format, opts);
   }
 
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(Options.custom, opts);
+    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 }

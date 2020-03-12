@@ -2,13 +2,13 @@ import buildQuery from 'odata-query';
 
 import { Types } from '../utils/types';
 
-import { PlainObject, EntityKey } from '../types';
+import { PlainObject } from '../types';
+import { isoStringToDate } from '../utils/dates';
 
-export type Select = string | string[];
-export type OrderBy = string | string[];
+export type Select<T> = string | keyof T | Array<keyof T>;
+export type OrderBy<T> = string | keyof T | [ keyof T, 'asc' | 'desc' ] | Array<keyof T | [ keyof T, 'asc' | 'desc' ]>;
 export type Filter = string | PlainObject | Array<string | PlainObject>;
-export type NestedExpandOptions = { [field: string]: Partial<ExpandQueryOptions>; };
-export type Expand = string | NestedExpandOptions | Array<string | NestedExpandOptions>;
+export type Expand<T> = string | Array<keyof T> | {[P in keyof T]?: (T[P] extends Array<infer E> ? ExpandOptions<E> : ExpandOptions<T[P]>) };
 export enum StandardAggregateMethods {
   sum = "sum",
   min = "min",
@@ -16,27 +16,27 @@ export enum StandardAggregateMethods {
   average = "average",
   countdistinct = "countdistinct",
 }
-export type Aggregate = { [propertyName: string]: { with: StandardAggregateMethods, as: string } } | string;
+export type Aggregate = string | { [propertyName: string]: { with: StandardAggregateMethods, as: string } };
 
-export interface ExpandQueryOptions {
-  select: string | string[];
-  filter: Filter;
-  orderBy: string | string[];
-  top: number;
-  expand: Expand;
-}
-export interface Transform {
-  aggregate?: Aggregate | Aggregate[];
+export type ExpandOptions<T> = {
+  select?: Select<T>;
   filter?: Filter;
-  groupBy?: GroupBy;
+  orderBy?: OrderBy<T>;
+  top?: number;
+  expand?: Expand<T>;
 }
-export interface GroupBy {
-  properties: string[];
-  transform?: Transform;
+export type Transform<T> = {
+  aggregate?: Aggregate | Array<Aggregate>;
+  filter?: Filter;
+  groupBy?: GroupBy<T>;
+}
+export type GroupBy<T> = {
+  properties: Array<keyof T>;
+  transform?: Transform<T>;
 }
 
-export enum Options {
-  key = 'key',
+export enum QueryOptionTypes {
+  // System options
   select = 'select',
   filter = 'filter',
   search = 'search',
@@ -48,16 +48,73 @@ export enum Options {
   skiptoken = 'skiptoken',
   expand = 'expand',
   format = 'format',
-  parameters = 'parameters',
-  custom = 'custom'
+  // Custom options
+  custom = 'custom',
+  // Parameter aliases
+  aliases = 'aliases'
 }
 
-export class ODataOptions {
+export type QueryOptions<T> = {
+  [QueryOptionTypes.select]?: Select<T>;
+  [QueryOptionTypes.filter]?: Filter; 
+  [QueryOptionTypes.search]?: string;
+  [QueryOptionTypes.groupBy]?: GroupBy<T>;
+  [QueryOptionTypes.transform]?: Transform<T>;
+  [QueryOptionTypes.orderBy]?: OrderBy<T>;
+  [QueryOptionTypes.top]?: number;
+  [QueryOptionTypes.skip]?: number;
+  [QueryOptionTypes.skiptoken]?: string;
+  [QueryOptionTypes.expand]?: Expand<T>;
+  [QueryOptionTypes.format]?: string;
+  [QueryOptionTypes.custom]?: PlainObject;
+  [QueryOptionTypes.aliases]?: PlainObject;
+}
+
+const orderByFieldMapper = (value: any) => 
+  (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
+
+const expandOptionsMapper = (options: any) => {
+  return [
+    QueryOptionTypes.select,
+    QueryOptionTypes.filter,
+    QueryOptionTypes.orderBy,
+    QueryOptionTypes.top,
+    QueryOptionTypes.expand]
+    .filter(key => !Types.isEmpty(options[key]))
+    .map(key => {
+      let value = options[key];
+      if (QueryOptionTypes.orderBy === key && Types.isArray(value)) {
+        value = value.map(orderByFieldMapper);
+      }
+      if (QueryOptionTypes.expand === key && Types.isObject(value) && !Types.isArray(value)) {
+        value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
+      }
+      return [key, value];
+    })
+    .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {});
+}
+
+const queryOptionsBuilder = (key, value): string => {
+  switch (key) {
+    case QueryOptionTypes.orderBy:
+      if (Types.isArray(value)) {
+        value = value.map(orderByFieldMapper);
+      }
+      break;
+    case QueryOptionTypes.expand:
+      if (Types.isObject(value))
+        value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
+      break;
+  }
+  return buildQuery({ [key]: value });
+}
+
+export class ODataQueryOptions {
   // URL QUERY PARTS
   public static readonly PARAM_SEPARATOR = '&';
   public static readonly VALUE_SEPARATOR = '=';
 
-  options?: PlainObject
+  options?: PlainObject;
 
   constructor(options?: PlainObject) {
     this.options = options || {};
@@ -65,57 +122,63 @@ export class ODataOptions {
 
   // Params
   params(): PlainObject {
-    let odata = [
-      Options.select,
-      Options.filter,
-      Options.search,
-      Options.groupBy,
-      Options.transform,
-      Options.orderBy,
-      Options.top,
-      Options.skip,
-      Options.expand,
-      Options.format]
+    let params = [
+      QueryOptionTypes.select,
+      QueryOptionTypes.filter,
+      QueryOptionTypes.search,
+      QueryOptionTypes.groupBy,
+      QueryOptionTypes.transform,
+      QueryOptionTypes.orderBy,
+      QueryOptionTypes.top,
+      QueryOptionTypes.skip,
+      QueryOptionTypes.expand,
+      QueryOptionTypes.format]
       .filter(key => !Types.isEmpty(this.options[key]))
-      .map(key => buildQuery({ [key]: this.options[key] }))
+      .map(key => queryOptionsBuilder(key, this.options[key]))
       .reduce((acc, param: string) => {
-        let index = param.indexOf(ODataOptions.VALUE_SEPARATOR);
+        let index = param.indexOf(ODataQueryOptions.VALUE_SEPARATOR);
         let name = param.substr(1, index - 1);
         let values = param.substr(index + 1);
         return Object.assign(acc, {[name]: values});
       }, {});
     // TODO: Add query builder Skiptoken support
-    if (Options.skiptoken in this.options)
-      odata['$skiptoken'] = this.options[Options.skiptoken];
-    return Object.assign(odata, this.options[Options.custom] || {});
+    if (QueryOptionTypes.skiptoken in this.options)
+      params['$skiptoken'] = this.options[QueryOptionTypes.skiptoken];
+    // Custom
+    let custom = this.options[QueryOptionTypes.custom] || {};
+    Object.assign(params, custom);
+    // Aliases
+    let aliases = this.options[QueryOptionTypes.aliases] || {};
+    Object.assign(params, aliases);
+    return params;
   }
 
   toJSON() {
-    return Object.assign({}, this.options);
+    return isoStringToDate(JSON.parse(JSON.stringify(this.options)));
   }
 
   clone() {
-    return new ODataOptions(this.toJSON());
+    return new ODataQueryOptions(this.toJSON());
   }
 
   // Option Handler
-  option<T>(type: Options, opts?: T) {
+  option<T>(type: QueryOptionTypes, opts?: T) {
     if (!Types.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type);
   }
 
-  has(type: Options) {
+  has(type: QueryOptionTypes) {
     return !Types.isUndefined(this.options[type]);
   }
 
-  remove(...types: Options[]) {
+  remove(...types: QueryOptionTypes[]) {
     types.forEach(type => this.option(type).clear());
   }
 
-  keep(...types: Options[]) {
+  keep(...types: QueryOptionTypes[]) {
     this.options = Object.keys(this.options)
-      .filter((k: Options) => types.indexOf(k) !== -1)
+      .filter((k: QueryOptionTypes) => types.indexOf(k) !== -1)
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
@@ -125,7 +188,7 @@ export class ODataOptions {
 }
 
 export class OptionHandler<T> {
-  constructor(private o: PlainObject, private t: Options) { }
+  constructor(private o: PlainObject, private t: QueryOptionTypes) { }
 
   get name() {
     return this.t;
@@ -143,7 +206,7 @@ export class OptionHandler<T> {
   // Array
   push(value: T) {
     if (!Types.isArray(this.o[this.t]))
-      this.o[this.t] = [this.o[this.t]];
+      this.o[this.t] = this.o[this.t] !== undefined ? [this.o[this.t]] : [];
     this.o[this.t].push(value);
   }
 
@@ -165,7 +228,7 @@ export class OptionHandler<T> {
   private assertObject(): PlainObject {
     if (Types.isObject(this.o[this.t]) && !Types.isArray(this.o[this.t]))
       return this.o[this.t];
-    else if (!Types.isUndefined(this.o[this.t]) && !Array.isArray(this.o[this.t])) {
+    else if (!Types.isUndefined(this.o[this.t]) && !Types.isArray(this.o[this.t])) {
       this.o[this.t] = [this.o[this.t]];
       let obj = this.o[this.t].find(v => Types.isObject(v));
       if (!obj) {
@@ -182,14 +245,14 @@ export class OptionHandler<T> {
   }
 
   get(name: string): T {
-    if (!Array.isArray(this.o[this.t])) {
+    if (!Types.isArray(this.o[this.t])) {
       return this.o[this.t][name];
     }
   }
 
   unset(name: string) {
     delete this.assertObject()[name];
-    if (Array.isArray(this.o[this.t])) {
+    if (Types.isArray(this.o[this.t])) {
       this.o[this.t] = this.o[this.t].filter(v => !Types.isEmpty(v));
       if (this.o[this.t].length === 1)
         this.o[this.t] = this.o[this.t][0];

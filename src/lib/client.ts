@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataEntityAnnotations, ODataEntityResource, ODataCollectionAnnotations, ODataResource } from './resources';
+import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource, ODataSegment, SegmentOptionTypes, ODataQueryOptions, ODataPathSegments, SegmentTypes, QueryOptionTypes, ODataEntityResource } from './resources';
 import { ODataSettings } from './models/settings';
-import { IF_MATCH_HEADER } from './types';
+import { IF_MATCH_HEADER, PlainObject } from './types';
 import { ODataSchema } from './models/schema';
 import { ODataModel, ODataCollection, Parser } from './models';
 
@@ -53,14 +53,27 @@ export class ODataClient {
     return this.settings.parserForType(type) as Parser<T>;
   }
 
-  modelForType<M extends ODataModel<any>>(type: string): M {
-    let Model = this.settings.modelForType(type) as typeof ODataModel;
-    return new Model() as M;
+  modelForType(type: string): typeof ODataModel {
+    return this.settings.modelForType(type) as typeof ODataModel;
   }
 
-  collectionForType<C extends ODataCollection<any, ODataModel<any>>>(type: string) {
-    let Collection = this.settings.collectionForType(type) as typeof ODataCollection;
-    return new Collection() as C;
+  collectionForType(type: string): typeof ODataCollection {
+    return this.settings.collectionForType(type) as typeof ODataCollection;
+  }
+
+  fromJSON<T>(json: {type: string | null, path: any[], query: PlainObject}): ODataResource<T> {
+    let parser = json.type? this.parserForType<T>(json.type) as ODataSchema<T> : null;
+    let lastSegment = json.path[json.path.length - 1];
+    let Ctor = (lastSegment.type === SegmentTypes.entitySet && lastSegment.options && SegmentOptionTypes.key in lastSegment.options) ? ODataEntityResource :
+      {
+        [SegmentTypes.metadata]: ODataMetadataResource,
+        [SegmentTypes.batch]: ODataBatchResource,
+        [SegmentTypes.singleton]: ODataSingletonResource,
+        [SegmentTypes.entitySet]: ODataEntitySetResource,
+        [SegmentTypes.actionCall]: ODataActionResource,
+        [SegmentTypes.functionCall]: ODataFunctionResource
+      }[lastSegment.type];
+    return new Ctor(this, json.path, json.query, parser) as ODataResource<T>;
   }
 
   // Requests

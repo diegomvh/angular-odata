@@ -3,6 +3,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ODataConfig, ODataSettings, ODATA_CONFIG } from './models/settings';
 import { ODataClient } from './client';
+import { ODataServiceFactory } from './services/factory';
 
 export function createSettings(config: ODataConfig) {
   return new ODataSettings(config);
@@ -10,7 +11,7 @@ export function createSettings(config: ODataConfig) {
 
 @NgModule({
   imports: [HttpClientModule],
-  providers: [ODataClient]
+  providers: [ODataClient, ODataServiceFactory]
 })
 export class ODataModule {
   public static forRoot(config: ODataConfig): ModuleWithProviders {
@@ -23,7 +24,8 @@ export class ODataModule {
           useFactory: createSettings,
           deps: [ODATA_CONFIG]
         },
-        ODataClient
+        ODataClient,
+        ODataServiceFactory
       ]
     };
   }

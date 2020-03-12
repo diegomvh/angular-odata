@@ -1,7 +1,18 @@
 import { Parser, PARSERS } from './parser';
 import { ODataSettings } from './settings';
 import { Types, Enums } from '../utils';
-import { PlainObject } from '../types';
+
+type Select<T> = Array<keyof T>;
+type Order<T> = Array<keyof T>;
+type Expand<T> = {[P in keyof T]?: JsonSchemaConfig<T[P]> };
+
+type ExpandOptions<T> = {
+  select?: Select<T>;
+  order?: Order<T>;
+  expand?: Expand<T>;
+}
+
+type JsonSchemaConfig<T> = ExpandOptions<T>; 
 
 export interface Field {
   type: string;
@@ -44,6 +55,7 @@ export class ODataSchemaField<T> implements Field, Parser<T> {
     return this.ref.split('/').reduce((acc, name) => acc[name], value);
   }
 
+  // Deserialize
   parse(value: any) {
     if (value === null) return value;
     if (this.enum) {
@@ -59,6 +71,7 @@ export class ODataSchemaField<T> implements Field, Parser<T> {
     return value;
   }
 
+  // Serialize
   toJSON(value: any) {
     if (value === null) return value;
     if (this.enum) {
@@ -74,6 +87,25 @@ export class ODataSchemaField<T> implements Field, Parser<T> {
       return PARSERS[this.type].toJSON(value);
     }
     return value;
+  }
+
+  // Json Schema
+  toJsonSchema(options: ExpandOptions<T> = {}) {
+    let property = this.schema ? this.schema.toJsonSchema(options) : <any>{
+      title: `The ${this.name} field`,
+      type: this.enum ? "string" : this.schema ? "object" : this.type
+    };
+    if (this.maxLength)
+      property.maxLength = this.maxLength;
+    if (this.enum)
+      property.enum = Enums.keys(this.enum);
+    if (this.collection)
+      property = {
+        type: "array", 
+        items: property,
+        additionalItems: false
+      };
+    return property;
   }
 
   parserFor<E>(name: string): Parser<E> {
@@ -112,6 +144,19 @@ export class ODataSchema<Type> implements Parser<Type> {
     });
   }
 
+  // Deserialize
+  parse(objs: any): any {
+    let _parse = (obj) =>
+      Object.assign(obj, this.fields
+        .filter(f => f.name in obj)
+        .reduce((acc, f) => Object.assign(acc, { [f.name]: f.parse(obj[f.name]) }), {})
+      );
+    return Array.isArray(objs) ?
+      objs.map(obj => _parse(obj)) :
+      _parse(objs);
+  }
+
+  // Serialize
   toJSON(objs: any): any {
     let _toJSON = (obj) => Object.assign(obj, this.fields
       .filter(f => f.name in obj)
@@ -122,15 +167,19 @@ export class ODataSchema<Type> implements Parser<Type> {
       _toJSON(objs);
   }
 
-  parse(objs: any): any {
-    let _parse = (obj) =>
-      Object.assign(obj, this.fields
-        .filter(f => f.name in obj)
-        .reduce((acc, f) => Object.assign(acc, { [f.name]: f.parse(obj[f.name]) }), {})
-      );
-    return Array.isArray(objs) ?
-      objs.map(obj => _parse(obj)) :
-      _parse(objs);
+  // Json Schema
+  toJsonSchema(config: JsonSchemaConfig<Type> = {}) {
+    let properties = this.fields
+      .filter(f => (!f.navigation || (config.expand && f.name in config.expand)) && (!config.select || (<string[]>config.select).indexOf(f.name) !== -1))
+      .map(f => ({[f.name]: f.toJsonSchema(config[f.name])}))
+      .reduce((acc, v) => Object.assign(acc, v), {});
+    return {
+      title: `The ${this.type} schema`,
+      type: "object",
+      description: `The ${this.type} configuration`,
+      properties: properties,
+      required: this.fields.filter(f => !f.nullable).map(f => f.name)
+    };
   }
 
   parserFor<E>(name: string): Parser<E> {

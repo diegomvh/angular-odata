@@ -1,40 +1,41 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataSegments, Segments } from '../segments';
-import { ODataOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../segments';
+import { ODataQueryOptions } from '../options';
 import { ODataClient } from '../../client';
-import { ODataResource } from '../resource';
 import { Parser } from '../../models';
+import { ODataCallableResource } from './callable';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
 
-export class ODataActionResource<T> extends ODataResource<T> {
+export class ODataActionResource<T> extends ODataCallableResource<T> {
   // Factory
   static factory<R>(name: string, client: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
+      segments?: ODataPathSegments, 
+      options?: ODataQueryOptions,
       parser?: Parser<R>}
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.actionCall, name);
+    segments.segment(SegmentTypes.actionCall, name);
     options.clear();
     return new ODataActionResource<R>(client, segments, options, parser);
   }
 
-  post(body: any | null, options: {
+  //POST
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'entity',
-    withCredentials?: boolean,
+    withCredentials?: boolean
   }): Observable<[T, ODataEntityAnnotations]>;
 
-  post(body?: any | null, options?: {
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
@@ -43,15 +44,15 @@ export class ODataActionResource<T> extends ODataResource<T> {
     withCount?: boolean
   }): Observable<[T[], ODataCollectionAnnotations]>;
 
-  post(body?: any | null, options?: {
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     reportProgress?: boolean,
     responseType?: 'property',
-    withCredentials?: boolean,
+    withCredentials?: boolean
   }): Observable<[T, ODataPropertyAnnotations]>;
 
-  post(body?: any | null, options?: {
+  post(body: any | null, options?: {
     headers?: HttpHeaders | {[header: string]: string | string[]},
     params?: HttpParams|{[param: string]: string | string[]},
     responseType?: 'entity'|'entities'|'property',
@@ -84,4 +85,5 @@ export class ODataActionResource<T> extends ODataResource<T> {
     }
     return res$;
   }
+
 }

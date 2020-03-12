@@ -1,13 +1,13 @@
 import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, empty } from 'rxjs';
 
-import { Options, Expand, Select, Transform, Filter, GroupBy, OrderBy } from '../options';
+import { QueryOptionTypes, Expand, Select, Transform, Filter, GroupBy, OrderBy } from '../options';
 import { ODataClient } from '../../client';
-import { ODataSegments, Segments } from '../segments';
+import { ODataPathSegments, SegmentTypes } from '../segments';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { ODataOptions } from '../options';
+import { ODataQueryOptions } from '../options';
 import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
@@ -15,26 +15,26 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataEntityAnnotations, ODataCollectionAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
-  static factory<E>(name: string, service: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
+  static factory<E>(name: string, client: ODataClient, opts?: {
+      segments?: ODataPathSegments, 
+      options?: ODataQueryOptions,
       parser?: Parser<E>}
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.entitySet, name);
-    options.keep(Options.filter, Options.orderBy, Options.skip, Options.transform, Options.top, Options.search, Options.format);
-    return new ODataEntitySetResource<E>(service, segments, options, parser);
+    segments.segment(SegmentTypes.entitySet, name);
+    options.keep(QueryOptionTypes.filter, QueryOptionTypes.orderBy, QueryOptionTypes.skip, QueryOptionTypes.transform, QueryOptionTypes.top, QueryOptionTypes.search, QueryOptionTypes.format);
+    return new ODataEntitySetResource<E>(client, segments, options, parser);
   }
 
   // Segments
-  entity(key?: EntityKey<T>) {
+  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
     let entity = ODataEntityResource.factory<T>(
       this.client, {
       segments: this.segments.clone(),
@@ -47,7 +47,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return entity;
   }
 
-  action<A>(name: string, parser?: Parser<A>) {
+  action<A>(name: string, type?: string) {
+    let parser = this.client.parserForType<A>(type) as Parser<A>;
     return ODataActionResource.factory<A>(
       name,
       this.client, {
@@ -57,7 +58,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     });
   }
 
-  function<F>(name: string, parser?: Parser<F>) {
+  function<F>(name: string, type?: string) {
+    let parser = this.client.parserForType<F>(type) as Parser<F>;
     return ODataFunctionResource.factory<F>(
       name,
       this.client, {
@@ -116,66 +118,67 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   // Options
-  select(opts?: Select) {
-    return this.options.option<Select>(Options.select, opts);
+  select(opts?: Select<T>) {
+    return this.options.option<Select<T>>(QueryOptionTypes.select, opts);
   }
 
-  expand(opts?: Expand) {
-    return this.options.option<Expand>(Options.expand, opts);
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(QueryOptionTypes.expand, opts);
   }
 
-  transform(opts?: Transform) {
-    return this.options.option<Transform>(Options.transform, opts);
+  transform(opts?: Transform<T>) {
+    return this.options.option<Transform<T>>(QueryOptionTypes.transform, opts);
   }
 
   search(opts?: string) {
-    return this.options.option<string>(Options.search, opts);
+    return this.options.option<string>(QueryOptionTypes.search, opts);
   }
 
   filter(opts?: Filter) {
-    return this.options.option<Filter>(Options.filter, opts);
+    return this.options.option<Filter>(QueryOptionTypes.filter, opts);
   }
 
-  groupBy(opts?: GroupBy) {
-    return this.options.option(Options.groupBy, opts);
+  groupBy(opts?: GroupBy<T>) {
+    return this.options.option(QueryOptionTypes.groupBy, opts);
   }
 
-  orderBy(opts?: OrderBy) {
-    return this.options.option<OrderBy>(Options.orderBy, opts);
+  orderBy(opts?: OrderBy<T>) {
+    return this.options.option<OrderBy<T>>(QueryOptionTypes.orderBy, opts);
   }
 
   format(opts?: string) {
-    return this.options.option<string>(Options.format, opts);
+    return this.options.option<string>(QueryOptionTypes.format, opts);
   }
 
   top(opts?: number) {
-    return this.options.option<number>(Options.top, opts);
+    return this.options.option<number>(QueryOptionTypes.top, opts);
   }
 
   skip(opts?: number) {
-    return this.options.option<number>(Options.skip, opts);
+    return this.options.option<number>(QueryOptionTypes.skip, opts);
   }
 
   skiptoken(opts?: string) {
-    return this.options.option<string>(Options.skiptoken, opts);
+    return this.options.option<string>(QueryOptionTypes.skiptoken, opts);
   }
   
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(Options.custom, opts);
+    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 
   // Custom
   all(): Observable<T[]> {
+    let res = this.clone() as ODataEntitySetResource<T>;
     let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
       if (options) {
         if (options.skiptoken)
-          this.skiptoken(options.skiptoken);
+          res.skiptoken(options.skiptoken);
         else if (options.skip)
-          this.skip(options.skip);
+          res.skip(options.skip);
         if (options.top)
-          this.top(options.top);
+          res.top(options.top);
       }
-      return this.get();
+      return res.get();
     }
     return fetch()
       .pipe(

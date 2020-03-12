@@ -2,9 +2,10 @@ import buildQuery from 'odata-query';
 
 import { Types } from '../utils/types';
 import { PlainObject } from '../types';
-import { Options, OptionHandler } from './options';
+import { OptionHandler } from './options';
+import { isoStringToDate } from '../utils/dates';
 
-export enum Segments {
+export enum SegmentTypes {
   batch = 'batch',
   metadata = 'metadata',
   entitySet = 'entitySet',
@@ -19,50 +20,63 @@ export enum Segments {
   actionCall = 'actionCall'
 }
 
-export interface ODataSegment {
+export enum SegmentOptionTypes {
+  key = 'key',
+  parameters = 'parameters'
+}
+
+export type ODataSegment = {
   type: string;
   name: string;
   options: PlainObject;
 }
 
-export class ODataSegments {
+const pathSegmentsBuilder = (segment: ODataSegment): string => {
+  switch (segment.type) {
+    case SegmentTypes.functionCall:
+      let parameters = segment.options[SegmentOptionTypes.parameters];
+      return (parameters ?
+        buildQuery({ func: { [segment.name]: parameters } }) :
+        buildQuery({ func: segment.name })
+      ).slice(1);
+    default:
+      let key = segment.options[SegmentOptionTypes.key];
+      if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
+        key = `${key}`;
+      } else if (typeof (key) === 'string' && !(key.charAt(0) === key.charAt(key.length - 1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) {
+        key = `'${key}'`;
+      }
+      return segment.name + (key ? buildQuery({ key }) : "");
+  }
+}
+
+export class ODataPathSegments {
   public static readonly PATHSEP = '/';
 
   protected segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments = segments || [];
+    this.segments = (segments || []).map(({type, name, options}) => ({type, name, options: options || {}}));
   }
 
   path(): string {
-    let segments = this.segments
-      .map(segment => {
-        switch (segment.type) {
-          case Segments.functionCall:
-            let parameters = segment.options[Options.parameters];
-            return (parameters ?
-              buildQuery({ func: { [segment.name]: parameters } }) :
-              buildQuery(segment.name)
-            ).slice(1);
-          default:
-            let key = segment.options[Options.key];
-            if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
-              key = `${key}`;
-            } else if (typeof (key) === 'string' && !(key.charAt(0) === key.charAt(key.length - 1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) {
-              key = `'${key}'`;
-            }
-            return segment.name + (key ? buildQuery({ key }) : "");
-        }
-      });
-    return segments.join(ODataSegments.PATHSEP);
+    let pathChunks = this.segments
+      .map(pathSegmentsBuilder);
+    return pathChunks.join(ODataPathSegments.PATHSEP);
   }
 
   toJSON() {
-    return this.segments.map(segment => ({ type: segment.type, name: segment.name, options: Object.assign({}, segment.options) }));
+    return this.segments.map(segment => { 
+      let json = <any>{ type: segment.type, name: segment.name };
+      let options = isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
+      if (!Types.isEmpty(options))
+        json.options = options;
+      return json; 
+    });
   }
 
   clone() {
-    return new ODataSegments(this.toJSON());
+    return new ODataPathSegments(this.toJSON());
   }
 
   find(type: string, name?: string) {
@@ -110,9 +124,9 @@ export class SegmentHandler {
   }
 
   // Option Handler
-  option<T>(type: Options, opts?: T) {
+  option<T>(type: SegmentOptionTypes, opts?: T) {
     if (!Types.isUndefined(opts))
       this.options[type] = opts;
-    return new OptionHandler<T>(this.options, type);
+    return new OptionHandler<T>(this.options, type as any);
   }
 }

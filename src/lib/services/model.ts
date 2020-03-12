@@ -1,46 +1,39 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { ODataEntitySetResource } from '../resources';
 
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
 import { ODataModel, ODataCollection } from '../models';
+import { ODataBaseService } from './base';
 
 @Injectable()
-export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollection<T, M>> {
-  static path: string = "";
-  static type: string = "";
+export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollection<T, M>> extends ODataBaseService<T> {
+  constructor(protected client: ODataClient) { super(client); }
 
-  constructor(protected client: ODataClient) { }
-
-  // Build resources
-  public entities(): ODataEntitySetResource<T> {
-    let Ctor = <typeof ODataModelService>this.constructor;
-    return this.client.entitySet<T>(Ctor.path, Ctor.type);
+  // Models
+  public model(entity?: Partial<T>): M {
+    return this.entity(entity).toModel<M>(entity);
   }
 
-  public createModel(attrs?: T): M {
-    return this.entities().entity().toModel<M>(attrs);
-  }
-
-  public createCollection(models?: T[]): C {
+  public collection(models?: Partial<T>[]): C {
     return this.entities().toCollection<C>(models);
   }
 
   public fetchCollection(): Observable<C> {
-    let resource = this.entities();
-    return resource.get().pipe(map(([entities, annots]) => resource.toCollection(entities, annots)));
+    return this.collection().fetch();
   }
 
-  public fetchAll(): Observable<C> {
-    let resource = this.entities();
-    return resource.all().pipe(map(models => resource.toCollection(models)));
+  public fetchModel(key?: EntityKey<T>): Observable<M> {
+    return this.model(key as Partial<T>).fetch();
   }
 
-  public fetchOne(key?: EntityKey<T>): Observable<M> {
-    let resource = this.entities().entity(key);
-    return resource.get().pipe(map(([entity, annots]) => resource.toModel(entity, annots)))
+  public attach(value: M): M;
+  public attach(value: C): C;
+  public attach(value: any): any {
+    if (value instanceof ODataModel) {
+      return value.attach(this.entities().entity(value.toEntity()));
+    } else if (value instanceof ODataCollection) {
+      return value.attach(this.entities());
+    }
   }
 }

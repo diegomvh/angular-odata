@@ -4,32 +4,32 @@ import { Observable } from 'rxjs';
 import { ODataValueResource } from './value';
 
 import { ODataResource } from '../resource';
-import { ODataOptions } from '../options';
-import { ODataSegments, Segments } from '../segments';
+import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../segments';
 import { ODataClient } from '../../client';
-import { Parser, ODataModel } from '../../models';
+import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataPropertyAnnotations, ODataCollectionAnnotations } from '../responses';
+import { ODataPropertyAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
   // Factory
   static factory<P>(name: string, client: ODataClient, opts?: {
-      segments?: ODataSegments, 
-      options?: ODataOptions,
+      segments?: ODataPathSegments, 
+      options?: ODataQueryOptions,
       parser?: Parser<P>}
   ) {
-    let segments = opts && opts.segments || new ODataSegments();
-    let options = opts && opts.options || new ODataOptions();
+    let segments = opts && opts.segments || new ODataPathSegments();
+    let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
 
-    segments.segment(Segments.property, name);
+    segments.segment(SegmentTypes.property, name);
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options, parser);
   }
 
-  entity(opts?: EntityKey<T>) {
+  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
     return this;
   }
 
@@ -49,7 +49,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.segments.clone(),
       options: this.options.clone(),
-      parser: this.parser.parserFor<P>(name)
+      parser: this.parser ? this.parser.parserFor<P>(name) : null
     });
   }
 
@@ -97,6 +97,5 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       case 'entities':
         return res$.pipe(map((body: any) => this.toEntities(body)));
     }
-    return res$;
   }
 }
