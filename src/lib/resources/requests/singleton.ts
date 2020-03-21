@@ -78,36 +78,36 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   // Client Requests
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'entity',
+    responseType?: 'entity',
     withCredentials?: boolean,
   }): Observable<[T, ODataEntityAnnotations]>;
 
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'entities'
+    responseType?: 'entities'
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<[T[], ODataCollectionAnnotations]>;
 
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'property',
+    responseType?: 'property',
     withCredentials?: boolean,
     withCount?: boolean
   }): Observable<[T, ODataPropertyAnnotations]>;
 
-  get(options: {
+  get(options?: {
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity' | 'entities' | 'property',
+    responseType?: 'entity' | 'entities' | 'property',
     reportProgress?: boolean,
     withCredentials?: boolean,
     withCount?: boolean
@@ -118,21 +118,24 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
 
     let res$ = this.client.get<T>(this, {
-      headers: options.headers,
+      headers: options && options.headers,
       observe: 'body',
-      params: options.params,
+      params: params,
       responseType: 'json',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
     });
-    switch (options.responseType) {
-      case 'entity':
-        return res$.pipe(map((body: any) => this.toEntity(body)));
-      case 'entities':
-        return res$.pipe(map((body: any) => this.toEntities(body)));
-      case 'property':
-        return res$.pipe(map((body: any) => this.toValue(body)));
+    if (options && options.responseType) {
+      switch (options.responseType) {
+        case 'entity':
+          return res$.pipe(map((body: any) => this.toEntity(body)));
+        case 'entities':
+          return res$.pipe(map((body: any) => this.toEntities(body)));
+        case 'property':
+          return res$.pipe(map((body: any) => this.toValue(body)));
+      }
     }
+    return res$;
   }
 
   post(entity: T, options?: {
