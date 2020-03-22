@@ -1,11 +1,10 @@
 import { ODataResource } from '../resource';
-import { QueryOptionTypes, Select, Expand, Transform, Filter, OrderBy, GroupBy } from '../options';
+import { QueryOptionTypes, Select, Expand, Transform, Filter, OrderBy, GroupBy } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
-import { ODataQueryOptions } from '../options';
-import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../segments';
+import { ODataQueryOptions } from '../query-options';
+import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../path-segments';
 import { ODataClient } from '../../client';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, empty } from 'rxjs';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
 import { ODataCountResource } from './count';
@@ -14,6 +13,7 @@ import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollectionAnnotations, ODataEntityAnnotations, ODataAnnotations } from '../responses';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -94,31 +94,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   // Client requests
-  get(options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    responseType: 'entity',
-    withCredentials?: boolean,
-  }): Observable<[T, ODataEntityAnnotations]>;
+  get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  get(options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    responseType: 'entities',
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
 
-  get(options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'entity' | 'entities',
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<any> {
+  get(options: HttpEntityOptions & HttpEntitiesOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -190,12 +170,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   // Custom
-  single(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<[T, ODataEntityAnnotations]> {
+  single(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -205,12 +180,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         withCredentials: options && options.withCredentials});
   }
 
-  collection(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]> {
+  collection(options?: HttpOptions): Observable<[T[], ODataCollectionAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -221,12 +191,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         withCount: true });
   }
 
-  all(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<T[]> {
+  all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone() as ODataNavigationPropertyResource<T>;
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataCollectionAnnotations]> => {
       if (opts) {

@@ -1,4 +1,3 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -8,14 +7,15 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
-import { ODataQueryOptions, QueryOptionTypes, Expand, Select } from '../options';
-import { ODataPathSegments, SegmentOptionTypes } from '../segments';
+import { ODataQueryOptions, QueryOptionTypes, Expand, Select } from '../query-options';
+import { ODataPathSegments, SegmentOptionTypes } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Parser } from '../../models';
 import { ODataMediaResource } from './media';
 import { ODataEntityAnnotations } from '../responses';
+import { HttpOptions } from '../http-options';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -102,12 +102,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  get(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<[T, ODataEntityAnnotations]> {
+  get(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',
@@ -118,12 +113,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     }).pipe(map(body => this.toEntity(body)));
   }
 
-  post(entity: T, options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<[T, ODataEntityAnnotations]> {
+  post(entity: T, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -134,13 +124,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     }).pipe(map(body => this.toEntity(body)));
   }
 
-  put(entity: T, options?: {
-    etag?: string,
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<[T, ODataEntityAnnotations]> {
+  put(entity: T, options?: HttpOptions & { etag?: string }): Observable<[T, ODataEntityAnnotations]> {
     return this.client.put<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
@@ -152,13 +136,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     }).pipe(map(body => this.toEntity(body)));
   }
 
-  patch(entity: Partial<T>, options?: {
-    etag?: string,
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<T> {
+  patch(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
     return this.client.patch<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
@@ -170,13 +148,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  delete(options?: {
-    etag?: string,
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<T> {
+  delete(options?: HttpOptions & { etag?: string }): Observable<T> {
     return this.client.delete<T>(this, {
       etag: options && options.etag,
       headers: options && options.headers,

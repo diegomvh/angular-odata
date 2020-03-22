@@ -1,15 +1,16 @@
-import { HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { v4 as uuidv4 } from 'uuid';
 import { Observable, of } from 'rxjs';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { map } from 'rxjs/operators';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID } from '../../types';
 import { ODataResource } from '../resource';
 import { ODataBatch } from '../responses';
+import { HttpOptions } from '../http-options';
+import { HttpHeaders } from '@angular/common/http';
 
 export enum RequestMethod {
   Get,
@@ -29,10 +30,7 @@ class BatchRequest {
   constructor(
     public method: RequestMethod,
     public odataQuery: ODataResource<any>,
-    public options?: {
-      body?: any,
-      headers?: HttpHeaders|{[header: string]: string | string[]},
-    }) { }
+    public options?: HttpOptions & { body?: any }) { }
 
   getHeaders(method: RequestMethod): string {
     let res = '';
@@ -79,20 +77,12 @@ export class ODataBatchResource extends ODataResource<any> {
     return new ODataBatchResource(service, segments, options);
   }
 
-  add(method: RequestMethod, query: ODataResource<any>, options?: {
-    body?: any,
-    headers?: HttpHeaders|{[header: string]: string | string[]},
-  }): ODataBatchResource {
+  add(method: RequestMethod, query: ODataResource<any>, options?: HttpOptions & { body?: any }): ODataBatchResource {
     this.requests.push(new BatchRequest(method, query, options));
     return this;
   }
 
-  execute(options?: {
-    headers?: HttpHeaders|{[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<ODataBatch> {
+  execute(options: HttpOptions = {}): Observable<ODataBatch> {
 
     let headers = this.client.mergeHttpHeaders(options.headers, {
       [ODATA_VERSION]: VERSION_4_0,

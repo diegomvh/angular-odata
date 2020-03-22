@@ -2,7 +2,7 @@ import buildQuery from 'odata-query';
 
 import { Types } from '../utils/types';
 import { PlainObject } from '../types';
-import { OptionHandler } from './options';
+import { OptionHandler } from './query-options';
 import { isoStringToDate } from '../utils/dates';
 
 export enum SegmentTypes {

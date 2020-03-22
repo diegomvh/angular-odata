@@ -1,11 +1,10 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { PlainObject, $COUNT } from '../../types';
 import { ODataClient } from '../../client';
-import { QueryOptionTypes, Select, Expand } from '../options';
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions } from '../options';
+import { QueryOptionTypes, Select, Expand } from '../query-options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
 
 import { ODataNavigationPropertyResource } from './navigationproperty';
@@ -15,6 +14,7 @@ import { ODataFunctionResource } from './function';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
 import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
+import { HttpOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpEntityOptions } from '../http-options';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -78,40 +78,13 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   // Client Requests
-  get(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    responseType?: 'entity',
-    withCredentials?: boolean,
-  }): Observable<[T, ODataEntityAnnotations]>;
+  get(options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  get(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    responseType?: 'entities'
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options?: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
 
-  get(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    responseType?: 'property',
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T, ODataPropertyAnnotations]>;
+  get(options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 
-  get(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    responseType?: 'entity' | 'entities' | 'property',
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<any> {
+  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -138,12 +111,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return res$;
   }
 
-  post(entity: T, options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<T> {
+  post(entity: T, options?: HttpOptions): Observable<T> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -154,13 +122,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
   }
 
-  put(entity: T, options?: {
-    etag?: string,
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<T> {
+  put(entity: T, options?: HttpOptions & { etag?: string }): Observable<T> {
     return this.client.put<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
@@ -172,13 +134,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
   }
 
-  patch(entity: Partial<T>, options?: {
-    etag?: string,
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<T> {
+  patch(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
     return this.client.patch<T>(this, this.serialize(entity), {
       etag: options && options.etag,
       headers: options && options.headers,
@@ -190,13 +146,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
   }
 
-  delete(options?: {
-    etag?: string,
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<T> {
+  delete(options?: HttpOptions & { etag?: string }): Observable<T> {
     return this.client.delete<T>(this, {
       etag: options && options.etag,
       headers: options && options.headers,

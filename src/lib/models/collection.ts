@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   _resource: ODataResource<T>;
@@ -63,6 +63,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this._models.map(model => model.toEntity());
   }
 
+  clone() {
+    let Ctor = <typeof ODataCollection>this.constructor;
+    return (new Ctor(this._resource.clone(), this.toEntities(), this._annotations)) as ODataCollection<T, ODataModel<T>>;
+  }
+
   // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;
@@ -78,7 +83,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Requests
-  fetch(): Observable<this> {
+  fetch(options?: HttpOptions): Observable<this> {
+    let opts = <HttpEntitiesOptions>{
+      headers: options && options.headers,
+      params: options && options.params,
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    }
     let obs$: Observable<any>;
     if (!this._state.page)
       this._state.page = 1;
@@ -87,15 +98,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._resource.top(this._state.size);
         this._resource.skip(this._state.size * (this._state.page - 1));
       }
-      obs$ = this._resource.get({ withCount: true });
+      obs$ = this._resource.get(Object.assign(opts, { withCount: true }));
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       if (this._state.size) {
         this._resource.top(this._state.size);
         this._resource.skip(this._state.size * (this._state.page - 1));
       }
-      obs$ = this._resource.get({ withCount: true, responseType: 'entities' });
+      obs$ = this._resource.get(Object.assign(opts, { withCount: true, responseType: 'entities' }));
     } else if (this._resource instanceof ODataFunctionResource) {
-      obs$ = this._resource.get({ responseType: 'entities' });
+      obs$ = this._resource.get(Object.assign(opts, { responseType: 'entities' }));
     }
     if (!obs$)
       throw new Error("Not Yet!");
@@ -186,13 +197,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   protected callFunction<R>(name: string, params: any | null, 
     responseType: 'value' | 'model' | 'collection', 
-    returnType?: string, options?: {
-      headers?: HttpHeaders | {[header: string]: string | string[]},
-      params?: HttpParams|{[param: string]: string | string[]},
-      reportProgress?: boolean,
-      withCredentials?: boolean,
-      withCount?: boolean
-    }): Observable<any> {
+    returnType?: string, options?: HttpOptions): Observable<any> {
       let ops = <any>{
         headers: options && options.headers,
         params: options && options.params,
@@ -200,7 +205,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
           responseType === 'model' ? 'entity' : 'entities',
         reportProgress: options && options.reportProgress,
         withCredentials: options && options.withCredentials,
-        withCount: options && options.withCount
+        withCount: responseType === 'collection'
       }
       let res = this.function<R>(name, params, returnType);
       let res$ = res.get(ops) as Observable<any>;
@@ -224,13 +229,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   protected callAction<R>(name: string, body: any | null, 
     responseType: 'value' | 'model' | 'collection', 
-    returnType?: string, options?: {
-      headers?: HttpHeaders | {[header: string]: string | string[]},
-      params?: HttpParams|{[param: string]: string | string[]},
-      reportProgress?: boolean,
-      withCredentials?: boolean,
-      withCount?: boolean
-    }): Observable<any> {
+    returnType?: string, options?: HttpOptions): Observable<any> {
       let ops = <any>{
         headers: options && options.headers,
         params: options && options.params,
@@ -238,7 +237,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
           responseType === 'model' ? 'entity' : 'entities',
         reportProgress: options && options.reportProgress,
         withCredentials: options && options.withCredentials,
-        withCount: options && options.withCount
+        withCount: responseType === 'collection' 
       }
       let res = this.action<R>(name, returnType);
       let res$ = res.post(body, ops) as Observable<any>;

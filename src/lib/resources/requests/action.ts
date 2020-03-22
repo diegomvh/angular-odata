@@ -1,14 +1,14 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { Parser } from '../../models';
 import { ODataCallableResource } from './callable';
 import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions } from '../http-options';
 
 export class ODataActionResource<T> extends ODataCallableResource<T> {
   // Factory
@@ -27,39 +27,13 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
   }
 
   //POST
-  post(body: any | null, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'entity',
-    withCredentials?: boolean
-  }): Observable<[T, ODataEntityAnnotations]>;
+  post(body: any | null, options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  post(body: any | null, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'entities',
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  post(body: any | null, options?: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
 
-  post(body: any | null, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'property',
-    withCredentials?: boolean
-  }): Observable<[T, ODataPropertyAnnotations]>;
+  post(body: any | null, options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 
-  post(body: any | null, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'entity'|'entities'|'property',
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<any> {
+  post(body: any | null, options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)

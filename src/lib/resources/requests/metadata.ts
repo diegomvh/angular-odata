@@ -1,14 +1,14 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../types';
 import { Parser } from '../../models';
 import { ODataMetadata } from '../responses';
+import { HttpOptions } from '../http-options';
 
 export class ODataMetadataResource extends ODataResource<any> {
 
@@ -26,12 +26,7 @@ export class ODataMetadataResource extends ODataResource<any> {
     return new ODataMetadataResource(service, segments, options, parser);
   }
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<ODataMetadata> {
+  get(options?: HttpOptions): Observable<ODataMetadata> {
     return this.client.get(this, {
       headers: options && options.headers,
       observe: 'body',

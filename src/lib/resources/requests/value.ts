@@ -1,13 +1,13 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
+import { HttpOptions } from '../http-options';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   // Factory
@@ -25,12 +25,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
     return new ODataValueResource<V>(service, segments, options, parser);
   }
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<T> {
+  get(options?: HttpOptions): Observable<T> {
     return this.client.get<T>(this, {
       headers: options && options.headers,
       observe: 'body',

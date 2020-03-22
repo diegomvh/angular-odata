@@ -1,12 +1,12 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
 import { Parser } from '../../models';
+import { HttpOptions } from '../http-options';
 
 export class ODataMediaResource<T> extends ODataResource<T> {
   // Factory
@@ -24,13 +24,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     return new ODataMediaResource<V>(service, segments, options, parser);
   }
 
-  arraybuffer(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    observe?: 'body',
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<ArrayBuffer> {
+  arraybuffer(options?: HttpOptions): Observable<ArrayBuffer> {
     return this.client.get(this, {
       headers: options && options.headers,
       observe: 'body',
@@ -41,13 +35,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     });
   }
 
-  blob(options?: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    observe?: 'body',
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<Blob> {
+  blob(options?: HttpOptions): Observable<Blob> {
     return this.client.get(this, {
       headers: options && options.headers,
       observe: 'body',

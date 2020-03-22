@@ -1,14 +1,13 @@
 import { PlainObject, VALUE, entityAttributes } from '../types';
 import { ODataClient } from '../client';
 import { Parser, ODataSchema, ODataModel, ODataCollection } from '../models';
-
-import { ODataPathSegments } from './segments';
-import { ODataQueryOptions } from './options';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
-import { Type } from '@angular/core';
 import { Types } from '../utils';
 
-export abstract class ODataResource<Type> {
+import { ODataPathSegments } from './path-segments';
+import { ODataQueryOptions } from './query-options';
+import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
+
+export class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
 
   // VARIABLES
@@ -90,12 +89,9 @@ export abstract class ODataResource<Type> {
     return queryString ? `${path}${ODataResource.QUERY_SEPARATOR}${queryString}` : path
   }
 
-  clone<T>(
-    type?: { new(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions, parser: Parser<Type>): ODataResource<T>; }
-  ): ODataResource<T> {
-    if (!type) 
-      type = this.constructor as { new(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions, parser: Parser<Type>): ODataResource<T>; };
-    return new type(this.client, this.segments.clone(), this.options.clone(), this.parser) as ODataResource<T>;
+  clone(): ODataResource<Type> {
+    let Ctor = <typeof ODataResource>this.constructor;
+    return (new Ctor(this.client, this.segments.clone(), this.options.clone(), this.parser)) as ODataResource<Type>;
   };
 
   toJSON() {

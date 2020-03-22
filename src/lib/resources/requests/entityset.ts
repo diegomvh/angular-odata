@@ -1,13 +1,12 @@
-import { HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, empty } from 'rxjs';
 
-import { QueryOptionTypes, Expand, Select, Transform, Filter, GroupBy, OrderBy } from '../options';
+import { QueryOptionTypes, Expand, Select, Transform, Filter, GroupBy, OrderBy } from '../query-options';
 import { ODataClient } from '../../client';
-import { ODataPathSegments, SegmentTypes } from '../segments';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { ODataQueryOptions } from '../options';
+import { ODataQueryOptions } from '../query-options';
 import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey, PlainObject, $COUNT } from '../../types';
@@ -16,6 +15,7 @@ import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
+import { HttpOptions } from '../http-options';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
@@ -79,12 +79,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   // Client requests
-  post(entity: T, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<[T, ODataEntityAnnotations]> {
+  post(entity: T, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this.client.post<T>(this, this.serialize(entity), {
       headers: options && options.headers,
       observe: 'body',
@@ -95,13 +90,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }).pipe(map(body => this.toEntity(body)));
   }
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-    withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]> {
+  get(options?: HttpOptions & { withCount?: boolean }): Observable<[T[], ODataCollectionAnnotations]> {
 
     let params = options && options.params;
     if (options && options.withCount)

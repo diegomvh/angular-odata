@@ -1,16 +1,16 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataValueResource } from './value';
 
 import { ODataResource } from '../resource';
-import { ODataQueryOptions } from '../options';
-import { ODataPathSegments, SegmentTypes } from '../segments';
+import { ODataQueryOptions } from '../query-options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataClient } from '../../client';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
 import { ODataPropertyAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';
+import { HttpPropertyOptions, HttpEntitiesOptions } from '../http-options';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -53,31 +53,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
   }
 
-  get(options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    responseType: 'property',
-    withCredentials?: boolean,
-  }): Observable<[T, ODataPropertyAnnotations]>;
+  get(options: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 
-  get(options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    reportProgress?: boolean,
-    responseType: 'entities',
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
 
-  get(options: {
-    headers?: HttpHeaders | { [header: string]: string | string[] },
-    params?: HttpParams | { [param: string]: string | string[] },
-    responseType: 'property' | 'entities',
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<any> {
+  get(options: HttpPropertyOptions & HttpEntitiesOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)

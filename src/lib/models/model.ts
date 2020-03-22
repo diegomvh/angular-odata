@@ -5,7 +5,7 @@ import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotati
 
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
-import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpOptions, HttpEntityOptions, HttpPropertyOptions } from '../resources/http-options';
 
 export class ODataModel<T> {
   _resource: ODataResource<T>;
@@ -88,26 +88,30 @@ export class ODataModel<T> {
     return entity;
   }
 
-  /*
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return (new Ctor(this._resource.clone(), this.toEntity(), this._annotations));
+    return (new Ctor(this._resource.clone(), this.toEntity(), this._annotations)) as ODataModel<T>;
   }
-  */
 
-  fetch(): Observable<this | null> {
+  fetch(options?: HttpOptions): Observable<this | null> {
+    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+      headers: options && options.headers,
+      params: options && options.params,
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    }
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey())
         throw new Error(`Can't fetch entity without key`);
-      obs$ = this._resource.get();
+      obs$ = this._resource.get(opts);
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      obs$ = this._resource.get({ responseType: 'entity' });
+      obs$ = this._resource.get(Object.assign(opts, { responseType: 'entity' }));
     } else if (this._resource instanceof ODataPropertyResource) {
-      obs$ = this._resource.get({ responseType: 'property' });
+      obs$ = this._resource.get(Object.assign(opts, { responseType: 'property' }));
     } else if (this._resource instanceof ODataFunctionResource) {
-      obs$ = this._resource.get({ responseType: 'entity' });
+      obs$ = this._resource.get(Object.assign(opts, { responseType: 'entity' }));
     }
     if (!obs$)
       throw new Error("Not Yet!");
@@ -115,39 +119,57 @@ export class ODataModel<T> {
       map(([entity, annots]) => entity ? this.populate(entity, annots) : null));
   }
 
-  create(): Observable<this> {
+  create(options?: HttpOptions): Observable<this> {
+    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+      headers: options && options.headers,
+      params: options && options.params,
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    }
     if (this._resource instanceof ODataEntityResource) {
-      return this._resource.post(this.toEntity()).pipe(map(([entity, annots]) => this.populate(entity, annots)));
+      return this._resource.post(this.toEntity(), opts).pipe(map(([entity, annots]) => this.populate(entity, annots)));
     }
     throw new Error(`Can't create`);
   }
 
-  update(): Observable<this> {
+  update(options?: HttpOptions): Observable<this> {
+    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+      headers: options && options.headers,
+      params: options && options.params,
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    }
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey()) 
         throw new Error(`Can't update entity without key`);
       let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
-      return this._resource.put(this.toEntity(), {etag}).pipe(map(([entity, annots]) => this.populate(entity, annots)));
+      return this._resource.put(this.toEntity(), Object.assign(opts, {etag})).pipe(map(([entity, annots]) => this.populate(entity, annots)));
     }
     throw new Error(`Can't update`);
   }
   
-  save(): Observable<this> {
+  save(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
-      return this._resource.hasKey() ? this.update() : this.create();
+      return this._resource.hasKey() ? this.update(options) : this.create(options);
     }
     throw new Error(`Can't save`);
   }
 
-  destroy(): Observable<any> {
+  destroy(options?: HttpOptions): Observable<null> {
+    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+      headers: options && options.headers,
+      params: options && options.params,
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials
+    }
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey())
         throw new Error(`Can't destroy entity without key`);
       let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
-      return this._resource.delete({ etag });
+      return this._resource.delete(Object.assign(opts, { etag }));
     }
     throw new Error(`Can't destroy`);
   }
@@ -167,13 +189,7 @@ export class ODataModel<T> {
 
   protected callFunction<R>(name: string, params: any | null, 
     responseType: 'value' | 'model' | 'collection', 
-    returnType?: string, options?: {
-      headers?: HttpHeaders | {[header: string]: string | string[]},
-      params?: HttpParams|{[param: string]: string | string[]},
-      reportProgress?: boolean,
-      withCredentials?: boolean,
-      withCount?: boolean
-    }): Observable<any> {
+    returnType?: string, options?: HttpOptions): Observable<any> {
       let ops = <any>{
         headers: options && options.headers,
         params: options && options.params,
@@ -181,7 +197,7 @@ export class ODataModel<T> {
           responseType === 'model' ? 'entity' : 'entities',
         reportProgress: options && options.reportProgress,
         withCredentials: options && options.withCredentials,
-        withCount: options && options.withCount
+        withCount: responseType === 'collection' 
       }
       let res = this.function<R>(name, params, returnType);
       let res$ = res.get(ops) as Observable<any>;
@@ -208,13 +224,7 @@ export class ODataModel<T> {
 
   protected callAction<R>(name: string, body: any | null, 
     responseType: 'value' | 'model' | 'collection', 
-    returnType?: string, options?: {
-      headers?: HttpHeaders | {[header: string]: string | string[]},
-      params?: HttpParams|{[param: string]: string | string[]},
-      reportProgress?: boolean,
-      withCredentials?: boolean,
-      withCount?: boolean
-    }): Observable<any> {
+    returnType?: string, options?: HttpOptions): Observable<any> {
       let ops = <any>{
         headers: options && options.headers,
         params: options && options.params,
@@ -222,7 +232,7 @@ export class ODataModel<T> {
           responseType === 'model' ? 'entity' : 'entities',
         reportProgress: options && options.reportProgress,
         withCredentials: options && options.withCredentials,
-        withCount: options && options.withCount
+        withCount: responseType === 'collection' 
       }
       let res = this.action<R>(name, returnType);
       let res$ = res.post(body, ops) as Observable<any>;

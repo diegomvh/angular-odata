@@ -1,12 +1,12 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions, QueryOptionTypes } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
 import { ODataResource } from '../resource';
 import { ODataClient } from '../../client';
 import { $COUNT } from '../../types';
 import { Parser } from '../../models';
+import { HttpOptions } from '../http-options';
 
 export class ODataCountResource extends ODataResource<any> {
   // Factory
@@ -24,12 +24,7 @@ export class ODataCountResource extends ODataResource<any> {
     return new ODataCountResource(service, segments, options, parser);
   }
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-  }): Observable<number> {
+  get(options?: HttpOptions): Observable<number> {
     return this.client.get<number>(this, {
       headers: options && options.headers,
       observe: 'body',

@@ -1,14 +1,14 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentTypes } from '../segments';
-import { ODataQueryOptions, QueryOptionTypes } from '../options';
+import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
 import { PlainObject } from '../../types';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
 import { Parser } from '../../models';
+import { HttpOptions } from '../http-options';
 
 export class ODataReferenceResource extends ODataResource<any> {
   // Factory
@@ -27,12 +27,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   }
 
   // Client Requests
-  post(target: ODataEntityResource<any>, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<any> {
+  post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     let related = this.client.createEndpointUrl(target);
     return this.client.post(this, {[ODATA_ID]: related}, {
       headers: options && options.headers,
@@ -44,13 +39,7 @@ export class ODataReferenceResource extends ODataResource<any> {
     });
   }
 
-  put(target: ODataEntityResource<any>, options?: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<any> {
+  put(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any> {
     let related = this.client.createEndpointUrl(target);
     return this.client.put(this, {[ODATA_ID]: related}, {
       etag: options && options.etag,
@@ -63,14 +52,7 @@ export class ODataReferenceResource extends ODataResource<any> {
     });
   }
 
-  delete(options?: {
-    etag?: string, 
-    target?: ODataEntityResource<any>, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<any> {
+  delete(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
     if (options && options.target) {
       let related = this.client.createEndpointUrl(options.target);
       this.custom({[$ID]: related});
@@ -92,32 +74,15 @@ export class ODataReferenceResource extends ODataResource<any> {
   }
 
   // Custom
-  add(target: ODataEntityResource<any>, options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean}): Observable<any> {
+  add(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     return this.post(target, options);
   }
 
-  set(target: ODataEntityResource<any>, options?: {
-    etag?: string, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<any>  {
+  set(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any>  {
     return this.put(target, options);
   }
 
-  remove(options?: {
-    etag?: string, 
-    target?: ODataEntityResource<any>, 
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    withCredentials?: boolean
-  }): Observable<any> {
+  remove(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
     return this.delete(options);
   }
 }

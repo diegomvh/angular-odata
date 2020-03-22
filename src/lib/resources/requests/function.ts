@@ -1,7 +1,5 @@
-import { HttpParams, HttpHeaders } from '@angular/common/http';
-
-import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../segments';
-import { ODataQueryOptions, QueryOptionTypes } from '../options';
+import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../path-segments';
+import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
 import { ODataClient } from '../../client';
 import { PlainObject, $COUNT } from '../../types';
 import { Parser } from '../../models';
@@ -10,6 +8,7 @@ import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnota
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Types } from '../../utils';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions } from '../http-options';
 
 export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
@@ -40,39 +39,13 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   }
 
   //GET
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'entity',
-    withCredentials?: boolean,
-  }): Observable<[T, ODataEntityAnnotations]>;
+  get(options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'entities',
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options?: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    reportProgress?: boolean,
-    responseType?: 'property',
-    withCredentials?: boolean,
-  }): Observable<[T, ODataPropertyAnnotations]>;
+  get(options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 
-  get(options?: {
-    headers?: HttpHeaders | {[header: string]: string | string[]},
-    params?: HttpParams|{[param: string]: string | string[]},
-    responseType?: 'entity'|'entities'|'property',
-    reportProgress?: boolean,
-    withCredentials?: boolean,
-    withCount?: boolean
-  }): Observable<any> {
+  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)
