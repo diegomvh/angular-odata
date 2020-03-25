@@ -34,7 +34,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   // Key
   key(key?: EntityKey<T>) {
-    let segment = this.segments.last();
+    let segment = this.pathSegments.last();
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (Types.isUndefined(key))
@@ -58,8 +58,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   reference() {
     return ODataReferenceResource.factory(
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser
     });
   }
@@ -68,8 +68,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataNavigationPropertyResource.factory<N>(
       name,
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser ? this.parser.parserFor<N>(name) : null
     });
   }
@@ -78,8 +78,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser ? this.parser.parserFor<P>(name) : null
     });
   }
@@ -87,8 +87,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   count() {
     return ODataCountResource.factory(
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser
     });
   }
@@ -122,51 +122,51 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   // Options
   select(opts?: Select<T>) {
-    return this.options.option<Select<T>>(QueryOptionTypes.select, opts);
+    return this.queryOptions.option<Select<T>>(QueryOptionTypes.select, opts);
   }
 
   expand(opts?: Expand<T>) {
-    return this.options.option<Expand<T>>(QueryOptionTypes.expand, opts);
+    return this.queryOptions.option<Expand<T>>(QueryOptionTypes.expand, opts);
   }
 
   transform(opts?: Transform<T>) {
-    return this.options.option<Transform<T>>(QueryOptionTypes.transform, opts);
+    return this.queryOptions.option<Transform<T>>(QueryOptionTypes.transform, opts);
   }
 
   search(opts?: string) {
-    return this.options.option<string>(QueryOptionTypes.search, opts);
+    return this.queryOptions.option<string>(QueryOptionTypes.search, opts);
   }
 
   filter(opts?: Filter) {
-    return this.options.option<Filter>(QueryOptionTypes.filter, opts);
+    return this.queryOptions.option<Filter>(QueryOptionTypes.filter, opts);
   }
 
   groupBy(opts?: GroupBy<T>) {
-    return this.options.option(QueryOptionTypes.groupBy, opts);
+    return this.queryOptions.option(QueryOptionTypes.groupBy, opts);
   }
 
   orderBy(opts?: OrderBy<T>) {
-    return this.options.option<OrderBy<T>>(QueryOptionTypes.orderBy, opts);
+    return this.queryOptions.option<OrderBy<T>>(QueryOptionTypes.orderBy, opts);
   }
 
   format(opts?: string) {
-    return this.options.option<string>(QueryOptionTypes.format, opts);
+    return this.queryOptions.option<string>(QueryOptionTypes.format, opts);
   }
 
   top(opts?: number) {
-    return this.options.option<number>(QueryOptionTypes.top, opts);
+    return this.queryOptions.option<number>(QueryOptionTypes.top, opts);
   }
 
   skip(opts?: number) {
-    return this.options.option<number>(QueryOptionTypes.skip, opts);
+    return this.queryOptions.option<number>(QueryOptionTypes.skip, opts);
   }
 
   skiptoken(opts?: string) {
-    return this.options.option<string>(QueryOptionTypes.skiptoken, opts);
+    return this.queryOptions.option<string>(QueryOptionTypes.skiptoken, opts);
   }
 
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
+    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 
   // Custom

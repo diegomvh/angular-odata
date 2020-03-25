@@ -37,8 +37,8 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   value() {
     return ODataValueResource.factory<T>(
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser
     });
   }
@@ -47,8 +47,8 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser ? this.parser.parserFor<P>(name) : null
     });
   }

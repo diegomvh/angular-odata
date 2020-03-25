@@ -29,7 +29,7 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
   // Parameters
   parameters(params?: PlainObject) {
-    let segment = this.segments.last();
+    let segment = this.pathSegments.last();
     if (!segment)
       throw new Error(`FunctionResourse dosn't have segment`);
     if (Types.isUndefined(params))

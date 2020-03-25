@@ -1,23 +1,11 @@
-import { Parser, PARSERS } from './parser';
+import { Parser, PARSERS, JsonSchemaConfig, JsonSchemaExpandOptions } from './parser';
 import { ODataSettings } from './settings';
 import { Types, Enums } from '../utils';
 
-type Select<T> = Array<keyof T>;
-type Order<T> = Array<keyof T>;
-type Expand<T> = {[P in keyof T]?: JsonSchemaConfig<T[P]> };
-
-type ExpandOptions<T> = {
-  select?: Select<T>;
-  order?: Order<T>;
-  expand?: Expand<T>;
-}
-
-type JsonSchemaConfig<T> = ExpandOptions<T>; 
-
-export interface Field {
+export type Field = {
   type: string;
   enum?: { [key: number]: string | number };
-  schema?: ODataSchema<any>;
+  parser?: Parser<any>;
   enumString?: boolean;
   default?: any;
   maxLength?: number;
@@ -30,11 +18,18 @@ export interface Field {
   ref?: string;
 }
 
-export class ODataSchemaField<T> implements Field, Parser<T> {
+export type Meta = {
+  type?: string;
+  baseType?: string;
+  path: string;
+  fields: { [name: string]: Field }
+}
+
+export class ODataEntityField<T> implements Field, Parser<T> {
   name: string;
   type: string;
   enum?: { [key: number]: string | number };
-  schema?: ODataSchema<any>;
+  parser?: Parser<any>;
   enumString?: boolean;
   default?: any;
   maxLength?: number;
@@ -63,8 +58,8 @@ export class ODataSchemaField<T> implements Field, Parser<T> {
       return this.flags ?
         Enums.toFlags(this.enum, value) :
         Enums.toValue(this.enum, value);
-    } else if (this.schema) {
-      return this.schema.parse(value);
+    } else if (this.parser) {
+      return this.parser.parse(value);
     } else if (this.type in PARSERS) {
       return PARSERS[this.type].parse(value);
     }
@@ -81,8 +76,8 @@ export class ODataSchemaField<T> implements Field, Parser<T> {
       if (!this.enumString)
         enums = enums.map(e => `${this.type}'${e}'`);
       return enums.join(", ");
-    } else if (this.schema) {
-      return this.schema.toJSON(value);
+    } else if (this.parser) {
+      return this.parser.toJSON(value);
     } else if (this.type in PARSERS) {
       return PARSERS[this.type].toJSON(value);
     }
@@ -90,10 +85,10 @@ export class ODataSchemaField<T> implements Field, Parser<T> {
   }
 
   // Json Schema
-  toJsonSchema(options: ExpandOptions<T> = {}) {
-    let property = this.schema ? this.schema.toJsonSchema(options) : <any>{
+  toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
+    let property = this.parser ? this.parser.toJsonSchema(options) : <any>{
       title: `The ${this.name} field`,
-      type: this.enum ? "string" : this.schema ? "object" : this.type
+      type: this.enum ? "string" : this.parser ? "object" : this.type
     };
     if (this.maxLength)
       property.maxLength = this.maxLength;
@@ -109,37 +104,28 @@ export class ODataSchemaField<T> implements Field, Parser<T> {
   }
 
   parserFor<E>(name: string): Parser<E> {
-    return this.schema.parserFor(name);
+    return this.parser.parserFor(name);
   }
 
   resolveKey(attrs: any) {
-    return this.schema.resolveKey(attrs);
+    return this.parser.resolveKey(attrs);
   }
 }
 
-export class ODataSchema<Type> implements Parser<Type> {
+export class ODataEntityParser<Type> implements Parser<Type> {
   type: string;
-  fields: ODataSchemaField<any>[];
+  fields: ODataEntityField<any>[];
   get keys() { return this.fields.filter(f => f.key); }
-  model?: { new(...any): any };
 
-  constructor(fields: { [name: string]: Field }) {
-    this.fields = Object.entries(fields)
-      .map(([name, f]) => new ODataSchemaField(name, f));
+  constructor(fields: ODataEntityField<any>[]) {
+    this.fields = fields;
   }
 
-  configure(type: string, settings: ODataSettings) {
+  configure(type: string, base: Parser<any>, parsers: {[name: string]: Parser<any>}) {
     this.type = type;
-    if (this.type in settings.models) {
-      this.model = settings.models[this.type];
-    }
     this.fields.forEach(f => {
-      if (f.type in settings.enums) {
-        f.enum = settings.enums[f.type];
-        f.enumString = settings.stringAsEnum;
-      }
-      if (f.type in settings.schemas) {
-        f.schema = settings.schemas[f.type] as ODataSchema<any>;
+      if (f.type in parsers) {
+        f.parser = parsers[f.type];
       }
     });
   }
@@ -194,8 +180,49 @@ export class ODataSchema<Type> implements Parser<Type> {
     if (!Types.isEmpty(key))
       return key;
   }
+}
 
-  isComplex() {
-    return this.fields.every(f => !f.key);
+export class ODataEntityOptions<Type> {
+  type: string;
+  baseType: string;
+  path: string;
+  fields: ODataEntityField<any>[];
+  parser?: ODataEntityParser<Type>;
+  base?: ODataEntityOptions<any>;
+  model?: { new(...any): any };
+  collection?: { new(...any): any };
+
+  constructor(meta: Meta) {
+    this.type = meta.type;
+    this.baseType = meta.baseType;
+    this.path = meta.path;
+    this.fields = Object.entries(meta.fields)
+      .map(([name, f]) => new ODataEntityField(name, f));
+  }
+
+  configure(type: string, settings: ODataSettings) {
+    if (this.type !== type)
+      throw new Error(`Can't configure ${this.type} with ${type}`);
+    this.type = type;
+    if (this.type in settings.models) {
+      this.model = settings.models[this.type];
+    }
+    if (this.type in settings.collections) {
+      this.collection = settings.collections[this.type];
+    }
+    if (this.baseType in settings.options) {
+      this.base = settings.options[this.baseType] as ODataEntityOptions<any>;
+    }
+    this.fields.forEach(f => {
+      if (f.type in settings.enums) {
+        f.enum = settings.enums[f.type];
+        f.enumString = settings.stringAsEnum;
+      }
+    });
+    this.parser = new ODataEntityParser<Type>(this.fields);
+    let parsers = Object.entries(settings.options)
+      .map(([k, o]) => ({[k]: o.parser}))
+      .reduce((acc, p) => Object.assign(acc, p), {});
+    this.parser.configure(this.type, this.base && this.base.parser, parsers);
   }
 }

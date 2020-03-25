@@ -251,7 +251,16 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       }
   }
 
-  // Mutate query
+  // Collection tools like backbone :)
+  where(predicate: (m: M) => boolean) {
+    return this._models.filter(predicate);
+  }
+
+  map(predicate: (m: M) => any) {
+    return this._models.map(predicate);
+  }
+
+  // Mutate query options
   select(select?: Select<T>) {
     return (this._resource as ODataEntitySetResource<T>).select(select);
   }

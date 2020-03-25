@@ -6,8 +6,8 @@ import { catchError } from 'rxjs/operators';
 import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource, ODataSegment, SegmentOptionTypes, ODataQueryOptions, ODataPathSegments, SegmentTypes, QueryOptionTypes, ODataEntityResource } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, PlainObject } from './types';
-import { ODataSchema } from './models/schema';
 import { ODataModel, ODataCollection, Parser } from './models';
+import { ODataEntityOptions } from './models/options';
 
 export const addBody = <T>(
   options: {
@@ -49,6 +49,14 @@ export class ODataClient {
     return `${serviceRoot}${resource.path()}`;
   }
 
+  optionsForType<T>(type: string): ODataEntityOptions<T> | null {
+    return this.settings.optionsForType(type) as ODataEntityOptions<T>;
+  }
+
+  pathForType<T>(type: string): string | null {
+    return this.settings.pathForType(type) as string;
+  }
+
   parserForType<T>(type: string): Parser<T> | null {
     return this.settings.parserForType(type) as Parser<T>;
   }
@@ -62,7 +70,7 @@ export class ODataClient {
   }
 
   fromJSON<T>(json: {type: string | null, path: any[], query: PlainObject}): ODataResource<T> {
-    let parser = json.type? this.parserForType<T>(json.type) as ODataSchema<T> : null;
+    let parser = json.type? this.parserForType<T>(json.type) : null;
     let lastSegment = json.path[json.path.length - 1];
     let Ctor = (lastSegment.type === SegmentTypes.entitySet && lastSegment.options && SegmentOptionTypes.key in lastSegment.options) ? ODataEntityResource :
       {
@@ -86,24 +94,24 @@ export class ODataClient {
   }
 
   singleton<T>(name: string, type?: string) {
-    let parser = type? this.parserForType<T>(type) as ODataSchema<T> : null;
+    let parser = type? this.parserForType<T>(type) : null;
     return ODataSingletonResource.factory<T>(name, this, {parser});
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    let parser = type? this.parserForType<T>(type) as ODataSchema<T> : null;
+    let parser = type? this.parserForType<T>(type) : null;
     return ODataEntitySetResource.factory<T>(name, this, {parser});
   }
 
   // Unbound Action
   action<T>(name: string, returnType?: string): ODataActionResource<T> {
-    let parser = returnType? this.parserForType<T>(returnType) as ODataSchema<T> : null;
+    let parser = returnType? this.parserForType<T>(returnType) : null;
     return ODataActionResource.factory(name, this, {parser});
   }
 
   // Unbound Function
   function<T>(name: string, params: any | null, returnType?: string): ODataFunctionResource<T> {
-    let parser = returnType? this.parserForType<T>(returnType) as ODataSchema<T> : null;
+    let parser = returnType? this.parserForType<T>(returnType) : null;
     let query = ODataFunctionResource.factory(name, this, {parser});
     if (params)
       query.parameters(params);

@@ -1,6 +1,6 @@
 import { PlainObject, VALUE, entityAttributes } from '../types';
 import { ODataClient } from '../client';
-import { Parser, ODataSchema, ODataModel, ODataCollection } from '../models';
+import { Parser, ODataModel, ODataCollection } from '../models';
 import { Types } from '../utils';
 
 import { ODataPathSegments } from './path-segments';
@@ -12,8 +12,8 @@ export class ODataResource<Type> {
 
   // VARIABLES
    protected client: ODataClient;
-   protected segments: ODataPathSegments;
-   protected options: ODataQueryOptions;
+   protected pathSegments: ODataPathSegments;
+   protected queryOptions: ODataQueryOptions;
    protected parser: Parser<Type> | null;
 
   constructor(
@@ -23,8 +23,8 @@ export class ODataResource<Type> {
     parser?: Parser<Type>
   ) {
     this.client = client;
-    this.segments = segments || new ODataPathSegments();
-    this.options = options || new ODataQueryOptions();
+    this.pathSegments = segments || new ODataPathSegments();
+    this.queryOptions = options || new ODataQueryOptions();
     this.parser = parser;
   }
 
@@ -32,16 +32,16 @@ export class ODataResource<Type> {
     return this.parser && this.parser.type;
   }
 
-  schema() {
-    return this.client.parserForType(this.type()) as ODataSchema<any>;
+  options() {
+    return this.client.optionsForType(this.type());
   }
 
   path(): string {
-    return this.segments.path();
+    return this.pathSegments.path();
   }
 
   params(): PlainObject {
-    return this.options.params();
+    return this.queryOptions.params();
   }
 
   serialize(obj: Type | Partial<Type>): any {
@@ -91,21 +91,21 @@ export class ODataResource<Type> {
 
   clone(): ODataResource<Type> {
     let Ctor = <typeof ODataResource>this.constructor;
-    return (new Ctor(this.client, this.segments.clone(), this.options.clone(), this.parser)) as ODataResource<Type>;
+    return (new Ctor(this.client, this.pathSegments.clone(), this.queryOptions.clone(), this.parser)) as ODataResource<Type>;
   };
 
   toJSON() {
-    let json = <any>{ path: this.segments.toJSON() };
+    let json = <any>{ path: this.pathSegments.toJSON() };
     let type = this.type();
     if (!Types.isNullOrUndefined(type))
       json.type = type;
-    let options = this.options.toJSON();
+    let options = this.queryOptions.toJSON();
     if (!Types.isEmpty(options))
       json.query = options;
     return json;
   }
 
   is(type: string) {
-    return this.segments.last().type === type;
+    return this.pathSegments.last().type === type;
   }
 }

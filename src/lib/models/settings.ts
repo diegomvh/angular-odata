@@ -1,10 +1,10 @@
 import { InjectionToken } from '@angular/core';
 import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { ODataSchema, Field } from './schema';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
 import { Parser, PARSERS } from './parser';
+import { Meta, ODataEntityOptions } from './options';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -16,7 +16,7 @@ export interface ODataConfig {
   creation?: Date,
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
-  schemas?: {[type: string]: {[name: string]: Field }},
+  metas?: {[type: string]: Meta },
   models?: {[type: string]: { new(...any): ODataModel<any>} };
   collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
@@ -30,7 +30,7 @@ export class ODataSettings {
   creation?: Date;
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
-  schemas?: {[type: string]: ODataSchema<any> };
+  options?: {[type: string]: ODataEntityOptions<any> };
   models?: {[type: string]: { new(...any): ODataModel<any>} };
   collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
@@ -48,25 +48,30 @@ export class ODataSettings {
     this.collections = config.collections || {};
 
     // Build schemas
-    this.schemas = Object.entries(config.schemas || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataSchema(config)}), {});
+    this.options = Object.entries(config.metas || {})
+      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataEntityOptions(config)}), {});
 
     // Configure
-    Object.entries(this.schemas)
+    Object.entries(this.options)
       .forEach(([type, schema]) => schema.configure(type, this));
   }
 
-  public schemaForType<E>(type: string): ODataSchema<E> {
-    if (type in this.schemas)
-      return this.schemas[type] as ODataSchema<E>;
+  public optionsForType<E>(type: string): ODataEntityOptions<E> {
+    if (type in this.options)
+      return this.options[type] as ODataEntityOptions<E>;
+  }
+
+  public pathForType<T>(type: string): string {
+    let options = this.optionsForType(type) as ODataEntityOptions<T>;
+    return options && options.path;
   }
 
   public parserForType<T>(type: string): Parser<T> {
-    let parser = this.schemaForType(type) as Parser<T>;
-    if (!parser && type in PARSERS) {
-      parser = PARSERS[type];
+    let options = this.optionsForType(type);
+    if (!options && type in PARSERS) {
+      return PARSERS[type];
     }
-    return parser;
+    return options.parser as Parser<T>;
   }
 
   public modelForType(type: string): typeof ODataModel {

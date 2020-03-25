@@ -15,8 +15,8 @@ export class ODataModel<T> {
 
   constructor(resource: ODataResource<T>, entity?: Partial<T>, annots?: ODataAnnotations) {
     this._resource = resource;
-    this._resource.schema().fields
-      .filter(field => field.schema && field.navigation)
+    this._resource.options().fields
+      .filter(field => field.navigation)
       .forEach(field => {
         Object.defineProperty(this, field.name, {
           get() {
@@ -41,9 +41,9 @@ export class ODataModel<T> {
     this._entity = entity;
     this._annotations = annots;
     this._relationships = {};
-    let schema = this._resource.schema();
+    let options = this._resource.options();
     let entries = Object.entries(entity)
-      .map(([key, value]) => [key, value, schema.fields.find(f => f.name === key)]);
+      .map(([key, value]) => [key, value, options.fields.find(f => f.name === key)]);
       //Attributes
     let attrs = entries
       .filter(([,, f]) => f)
@@ -69,9 +69,9 @@ export class ODataModel<T> {
 
   toEntity() : T {
     let entity = {} as T;
-    let schema = this._resource.schema();
-    schema.fields.forEach(field => {
-      if (field.schema) {
+    let options = this._resource.options();
+    options.fields.forEach(field => {
+      if (field.parser) {
         if (field.navigation) {
           if (field.name in this._relationships) {
             let rel = this._relationships[field.name];
@@ -258,7 +258,7 @@ export class ODataModel<T> {
   }
 
   protected getNavigationProperty(name: string): ODataModel<any> | ODataCollection<any, ODataModel<any>> {
-    let field = this._resource.schema().fields.find(f => f.name === name);
+    let field = this._resource.options().fields.find(f => f.name === name);
     if (!(name in this._relationships)) {
       let nav = this.navigationProperty<any>(field.name);
       let annots = this._annotations !== null ? 
@@ -270,7 +270,7 @@ export class ODataModel<T> {
   }
 
   protected setNavigationProperty<R, Rm extends ODataModel<R>>(name: string, model: Rm | null): Observable<this> {
-    let field = this._resource.schema().fields.find(f => f.name === name);
+    let field = this._resource.options().fields.find(f => f.name === name);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
     let ref = this.navigationProperty<R>(name).reference();

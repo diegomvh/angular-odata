@@ -70,7 +70,7 @@ export class ODataReferenceResource extends ODataResource<any> {
 
   //Options
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
+    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 
   // Custom

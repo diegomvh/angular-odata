@@ -35,7 +35,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   // Key
   key(key?: EntityKey<T>) {
-    let segment = this.segments.last();
+    let segment = this.pathSegments.last();
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (Types.isUndefined(key))
@@ -54,8 +54,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   media() {
     return ODataMediaResource.factory<T>(
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser
     });
   }
@@ -64,8 +64,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataNavigationPropertyResource.factory<N>(
       name,
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser ? this.parser.parserFor<N>(name) : null
     });
   }
@@ -74,8 +74,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: this.parser ? this.parser.parserFor<P>(name) : null
     });
   }
@@ -85,8 +85,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataActionResource.factory<A>(
       name,
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser: parser
     });
   }
@@ -96,8 +96,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataFunctionResource.factory<F>(
       name,
       this.client, {
-      segments: this.segments.clone(),
-      options: this.options.clone(),
+      segments: this.pathSegments.clone(),
+      options: this.queryOptions.clone(),
       parser
     });
   }
@@ -162,18 +162,18 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   // Options
   select(opts?: Select<T>) {
-    return this.options.option<Select<T>>(QueryOptionTypes.select, opts);
+    return this.queryOptions.option<Select<T>>(QueryOptionTypes.select, opts);
   }
 
   expand(opts?: Expand<T>) {
-    return this.options.option<Expand<T>>(QueryOptionTypes.expand, opts);
+    return this.queryOptions.option<Expand<T>>(QueryOptionTypes.expand, opts);
   }
 
   format(opts?: string) {
-    return this.options.option<string>(QueryOptionTypes.format, opts);
+    return this.queryOptions.option<string>(QueryOptionTypes.format, opts);
   }
 
   custom(opts?: PlainObject) {
-    return this.options.option<PlainObject>(QueryOptionTypes.custom, opts);
+    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 }
