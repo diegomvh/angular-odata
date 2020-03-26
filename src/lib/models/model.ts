@@ -15,7 +15,7 @@ export class ODataModel<T> {
 
   constructor(resource: ODataResource<T>, entity?: Partial<T>, annots?: ODataAnnotations) {
     this._resource = resource;
-    this._resource.options().fields
+    this._resource.meta().fields
       .filter(field => field.navigation)
       .forEach(field => {
         Object.defineProperty(this, field.name, {
@@ -41,7 +41,7 @@ export class ODataModel<T> {
     this._entity = entity;
     this._annotations = annots;
     this._relationships = {};
-    let options = this._resource.options();
+    let options = this._resource.meta();
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, options.fields.find(f => f.name === key)]);
       //Attributes
@@ -69,7 +69,7 @@ export class ODataModel<T> {
 
   toEntity() : T {
     let entity = {} as T;
-    let options = this._resource.options();
+    let options = this._resource.meta();
     options.fields.forEach(field => {
       if (field.parser) {
         if (field.navigation) {
@@ -258,7 +258,7 @@ export class ODataModel<T> {
   }
 
   protected getNavigationProperty(name: string): ODataModel<any> | ODataCollection<any, ODataModel<any>> {
-    let field = this._resource.options().fields.find(f => f.name === name);
+    let field = this._resource.meta().fields.find(f => f.name === name);
     if (!(name in this._relationships)) {
       let nav = this.navigationProperty<any>(field.name);
       let annots = this._annotations !== null ? 
@@ -270,7 +270,7 @@ export class ODataModel<T> {
   }
 
   protected setNavigationProperty<R, Rm extends ODataModel<R>>(name: string, model: Rm | null): Observable<this> {
-    let field = this._resource.options().fields.find(f => f.name === name);
+    let field = this._resource.meta().fields.find(f => f.name === name);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
     let ref = this.navigationProperty<R>(name).reference();

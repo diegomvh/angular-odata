@@ -32,8 +32,8 @@ export class ODataResource<Type> {
     return this.parser && this.parser.type;
   }
 
-  options() {
-    return this.client.optionsForType(this.type());
+  meta() {
+    return this.client.metaForType(this.type());
   }
 
   path(): string {

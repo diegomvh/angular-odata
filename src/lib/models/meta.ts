@@ -19,13 +19,13 @@ export type Field = {
 }
 
 export type Meta = {
-  type?: string;
+  type: string;
   baseType?: string;
-  path: string;
+  path?: string;
   fields: { [name: string]: Field }
 }
 
-export class ODataEntityField<T> implements Field, Parser<T> {
+export class ODataField<T> implements Field, Parser<T> {
   name: string;
   type: string;
   enum?: { [key: number]: string | number };
@@ -112,18 +112,24 @@ export class ODataEntityField<T> implements Field, Parser<T> {
   }
 }
 
-export class ODataEntityParser<Type> implements Parser<Type> {
+export class ODataParser<Type> implements Parser<Type> {
   type: string;
-  fields: ODataEntityField<any>[];
+  base: Parser<any>;
+  fields: ODataField<any>[];
   get keys() { return this.fields.filter(f => f.key); }
 
-  constructor(fields: ODataEntityField<any>[]) {
+  constructor(fields: ODataField<any>[]) {
     this.fields = fields;
   }
 
   configure(type: string, base: Parser<any>, parsers: {[name: string]: Parser<any>}) {
     this.type = type;
+    this.base = base;
     this.fields.forEach(f => {
+      if (f.type in settings.enums) {
+        f.enum = settings.enums[f.type];
+        f.enumString = settings.stringAsEnum;
+      }
       if (f.type in parsers) {
         f.parser = parsers[f.type];
       }
@@ -132,6 +138,8 @@ export class ODataEntityParser<Type> implements Parser<Type> {
 
   // Deserialize
   parse(objs: any): any {
+    if (this.base)
+      objs = this.base.parse(objs);
     let _parse = (obj) =>
       Object.assign(obj, this.fields
         .filter(f => f.name in obj)
@@ -144,6 +152,8 @@ export class ODataEntityParser<Type> implements Parser<Type> {
 
   // Serialize
   toJSON(objs: any): any {
+    if (this.base)
+      objs = this.base.toJSON(objs);
     let _toJSON = (obj) => Object.assign(obj, this.fields
       .filter(f => f.name in obj)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.toJSON(obj[f.name]) }), {})
@@ -182,13 +192,12 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 }
 
-export class ODataEntityOptions<Type> {
+export class ODataMeta<Type> {
   type: string;
   baseType: string;
   path: string;
-  fields: ODataEntityField<any>[];
-  parser?: ODataEntityParser<Type>;
-  base?: ODataEntityOptions<any>;
+  parser?: ODataParser<Type>;
+  base?: ODataMeta<any>;
   model?: { new(...any): any };
   collection?: { new(...any): any };
 
@@ -196,8 +205,9 @@ export class ODataEntityOptions<Type> {
     this.type = meta.type;
     this.baseType = meta.baseType;
     this.path = meta.path;
-    this.fields = Object.entries(meta.fields)
-      .map(([name, f]) => new ODataEntityField(name, f));
+    let fields = Object.entries(meta.fields)
+      .map(([name, f]) => new ODataField(name, f));
+    this.parser = new ODataParser<Type>(fields);
   }
 
   configure(type: string, settings: ODataSettings) {
@@ -210,17 +220,10 @@ export class ODataEntityOptions<Type> {
     if (this.type in settings.collections) {
       this.collection = settings.collections[this.type];
     }
-    if (this.baseType in settings.options) {
-      this.base = settings.options[this.baseType] as ODataEntityOptions<any>;
+    if (this.baseType in settings.metas) {
+      this.base = settings.metas[this.baseType] as ODataMeta<any>;
     }
-    this.fields.forEach(f => {
-      if (f.type in settings.enums) {
-        f.enum = settings.enums[f.type];
-        f.enumString = settings.stringAsEnum;
-      }
-    });
-    this.parser = new ODataEntityParser<Type>(this.fields);
-    let parsers = Object.entries(settings.options)
+    let parsers = Object.entries(settings.metas)
       .map(([k, o]) => ({[k]: o.parser}))
       .reduce((acc, p) => Object.assign(acc, p), {});
     this.parser.configure(this.type, this.base && this.base.parser, parsers);

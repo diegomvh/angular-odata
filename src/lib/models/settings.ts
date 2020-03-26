@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
 import { Parser, PARSERS } from './parser';
-import { Meta, ODataEntityOptions } from './options';
+import { Meta, ODataMeta } from './meta';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -30,7 +30,7 @@ export class ODataSettings {
   creation?: Date;
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
-  options?: {[type: string]: ODataEntityOptions<any> };
+  metas?: {[type: string]: ODataMeta<any> };
   models?: {[type: string]: { new(...any): ODataModel<any>} };
   collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
@@ -48,26 +48,26 @@ export class ODataSettings {
     this.collections = config.collections || {};
 
     // Build schemas
-    this.options = Object.entries(config.metas || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataEntityOptions(config)}), {});
+    this.metas = Object.entries(config.metas || {})
+      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataMeta(config)}), {});
 
     // Configure
-    Object.entries(this.options)
+    Object.entries(this.metas)
       .forEach(([type, schema]) => schema.configure(type, this));
   }
 
-  public optionsForType<E>(type: string): ODataEntityOptions<E> {
-    if (type in this.options)
-      return this.options[type] as ODataEntityOptions<E>;
+  public metaForType<E>(type: string): ODataMeta<E> {
+    if (type in this.metas)
+      return this.metas[type] as ODataMeta<E>;
   }
 
   public pathForType<T>(type: string): string {
-    let options = this.optionsForType(type) as ODataEntityOptions<T>;
-    return options && options.path;
+    let meta = this.metaForType(type) as ODataMeta<T>;
+    return meta && meta.path;
   }
 
   public parserForType<T>(type: string): Parser<T> {
-    let options = this.optionsForType(type);
+    let options = this.metaForType(type);
     if (!options && type in PARSERS) {
       return PARSERS[type];
     }

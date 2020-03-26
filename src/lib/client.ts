@@ -7,7 +7,7 @@ import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODat
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, PlainObject } from './types';
 import { ODataModel, ODataCollection, Parser } from './models';
-import { ODataEntityOptions } from './models/options';
+import { ODataMeta } from './models/meta';
 
 export const addBody = <T>(
   options: {
@@ -49,8 +49,8 @@ export class ODataClient {
     return `${serviceRoot}${resource.path()}`;
   }
 
-  optionsForType<T>(type: string): ODataEntityOptions<T> | null {
-    return this.settings.optionsForType(type) as ODataEntityOptions<T>;
+  metaForType<T>(type: string): ODataMeta<T> | null {
+    return this.settings.metaForType(type) as ODataMeta<T>;
   }
 
   pathForType<T>(type: string): string | null {
