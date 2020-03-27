@@ -5,6 +5,7 @@ import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, OData
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
+import { entityAttributes, odataAnnotations } from '../types';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   _resource: ODataResource<T>;
@@ -33,24 +34,21 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private populate(entities: T[], annots?: ODataAnnotations): this {
     this._entities = entities;
     this._annotations = annots;
-    if (annots instanceof ODataCollectionAnnotations && annots.skip && annots.count) {
-      this._state.records = annots.count;
-      this._state.size = annots.skip;
-      this._state.pages = Math.ceil(annots.count / annots.skip);
-    } else {
-      this._state.records = entities.length;
-      this._state.size = entities.length;
-      this._state.pages = 1;
-    }
-    const entityMapper = (entity) => {
+    
+    this._state.records = (annots instanceof ODataCollectionAnnotations && annots.count) ? annots.count : entities.length;
+    this._state.size = (annots instanceof ODataCollectionAnnotations && annots.skip) ? annots.skip : entities.length;
+    this._state.pages = (this._state.records && this._state.size) ? Math.ceil(this._state.records / this._state.size) : 1;
+    const entityMapper = (value) => {
+      let entity = entityAttributes(value);
+      let eannots = ODataEntityAnnotations.factory(odataAnnotations(value));
       if (this._resource instanceof ODataEntitySetResource) {
-        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
       } else if (this._resource instanceof ODataFunctionResource) {
-        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
       } else if (this._resource instanceof ODataNavigationPropertyResource) {
-        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
       } else if (this._resource instanceof ODataPropertyResource) {
-        return this._resource.entity(entity, annots).toModel(entity, ODataEntityAnnotations.factory(entity)) as M;
+        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
       }
     }
     this._models = entities.map(entityMapper);
