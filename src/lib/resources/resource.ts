@@ -61,14 +61,14 @@ export class ODataResource<Type> {
   }
 
   toEntities(body: any): [Type[] | null, ODataCollectionAnnotations | null] {
-    let annots = odataAnnotations(body[VALUE]);
+    let annots = odataAnnotations(body);
     return body ? 
       [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(annots)] :
       [null, null];
   }
 
   toValue(body: any): [Type | null, ODataPropertyAnnotations | null] {
-    let annots = odataAnnotations(body[VALUE]);
+    let annots = odataAnnotations(body);
     return body ? 
       [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(annots)] :
       [null, null];
