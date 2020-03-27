@@ -6,6 +6,8 @@ import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotati
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 import { HttpOptions, HttpEntityOptions, HttpPropertyOptions } from '../resources/http-options';
+import { entityAttributes, odataAnnotations } from '../types';
+import { ODataField } from './meta';
 
 export class ODataModel<T> {
   _resource: ODataResource<T>;
@@ -37,6 +39,18 @@ export class ODataModel<T> {
     return this;
   }
 
+  private related<R>(resource: ODataResource<R>, f: ODataField<any>) {
+    let value = this._entity[f.name];
+    if (f.collection) {
+      let annots = this._annotations !== null ? this._annotations.related(f.name) : undefined;
+      return resource.toCollection(value, annots);
+    } else {
+      let entity = entityAttributes(value);
+      let annots = ODataEntityAnnotations.factory(odataAnnotations(value));
+      return resource.toModel(entity, annots);
+    }
+  }
+
   private populate(entity: T, annots?: ODataAnnotations | null) {
     this._entity = entity;
     this._annotations = annots;
@@ -61,8 +75,7 @@ export class ODataModel<T> {
       .filter(([,, f]) => f && !f.navigation && f.schema)
       .reduce((acc, [k,, f]) => {
         let prop = (this._resource as ODataEntityResource<T>).property(f.name);
-        let annots = this._annotations !== null ? this._annotations.related(f.name) : undefined;
-        let complex = f.collection ? prop.toCollection(this._entity[f.name], annots) : prop.toModel(this._entity[f.name], annots);
+        let complex = this.related(prop, f);
         return Object.assign(acc, {[k]: complex});
       } , {});
     //console.log(complexes);
@@ -263,10 +276,7 @@ export class ODataModel<T> {
     let field = this._resource.meta().fields().find(f => f.name === name);
     if (!(name in this._relationships)) {
       let nav = this.navigationProperty<any>(field.name);
-      let annots = this._annotations !== null ? 
-        this._annotations.related(name) : undefined;
-      this._relationships[field.name] = field.collection ? 
-        nav.toCollection(this._entity[field.name], annots) : nav.toModel(this._entity[field.name], annots);
+      this._relationships[field.name] = this.related(nav, field);
     }
     return this._relationships[field.name];
   }

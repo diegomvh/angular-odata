@@ -1,4 +1,4 @@
-import { PlainObject, VALUE, entityAttributes } from '../types';
+import { PlainObject, VALUE, entityAttributes, odataAnnotations } from '../types';
 import { ODataClient } from '../client';
 import { Parser, ODataModel, ODataCollection } from '../models';
 import { Types } from '../utils';
@@ -53,20 +53,24 @@ export class ODataResource<Type> {
   }
 
   toEntity(body: any): [Type | null, ODataEntityAnnotations | null] {
+    let entity = entityAttributes(body);
+    let annots = odataAnnotations(body);
     return body ? 
-      [<Type>this.deserialize(entityAttributes(body)), ODataEntityAnnotations.factory(body)] :
+      [<Type>this.deserialize(entity), ODataEntityAnnotations.factory(annots)] :
       [null, null];
   }
 
   toEntities(body: any): [Type[] | null, ODataCollectionAnnotations | null] {
+    let annots = odataAnnotations(body[VALUE]);
     return body ? 
-      [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(body)] :
+      [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(annots)] :
       [null, null];
   }
 
   toValue(body: any): [Type | null, ODataPropertyAnnotations | null] {
+    let annots = odataAnnotations(body[VALUE]);
     return body ? 
-      [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(body)] :
+      [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(annots)] :
       [null, null];
   }
 
