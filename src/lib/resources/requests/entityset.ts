@@ -124,7 +124,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   filter(opts?: Filter) {
-    return this.queryOptions.option<Filter>(QueryOptionTypes.filter, opts);
+    return this.queryOptions.option(QueryOptionTypes.filter, opts);
   }
 
   groupBy(opts?: GroupBy<T>) {
@@ -132,27 +132,27 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   orderBy(opts?: OrderBy<T>) {
-    return this.queryOptions.option<OrderBy<T>>(QueryOptionTypes.orderBy, opts);
+    return this.queryOptions.option(QueryOptionTypes.orderBy, opts);
   }
 
   format(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionTypes.format, opts);
+    return this.queryOptions.option(QueryOptionTypes.format, opts);
   }
 
   top(opts?: number) {
-    return this.queryOptions.option<number>(QueryOptionTypes.top, opts);
+    return this.queryOptions.option(QueryOptionTypes.top, opts);
   }
 
   skip(opts?: number) {
-    return this.queryOptions.option<number>(QueryOptionTypes.skip, opts);
+    return this.queryOptions.option(QueryOptionTypes.skip, opts);
   }
 
   skiptoken(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionTypes.skiptoken, opts);
+    return this.queryOptions.option(QueryOptionTypes.skiptoken, opts);
   }
   
   custom(opts?: PlainObject) {
-    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
+    return this.queryOptions.option(QueryOptionTypes.custom, opts);
   }
 
   // Custom

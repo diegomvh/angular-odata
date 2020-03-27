@@ -33,12 +33,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private populate(entities: T[], annots?: ODataAnnotations): this {
     this._entities = entities;
     this._annotations = annots;
-    if (annots instanceof ODataCollectionAnnotations) {
-      if (annots.skip && annots.count) {
-        this._state.records = annots.count;
-        this._state.size = annots.skip;
-        this._state.pages = Math.ceil(annots.count / annots.skip);
-      };
+    if (annots instanceof ODataCollectionAnnotations && annots.skip && annots.count) {
+      this._state.records = annots.count;
+      this._state.size = annots.skip;
+      this._state.pages = Math.ceil(annots.count / annots.skip);
     } else {
       this._state.records = entities.length;
       this._state.size = entities.length;
@@ -129,7 +127,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       map(entities => this.populate(entities)));
   }
 
-  add(model: M): Observable<this> { 
+  add(model: M): Observable<this> {
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntitySetResource) {
       obs$ = model.save();
@@ -142,7 +140,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$.pipe(map(() => this));
   }
 
-  remove(model: M) { 
+  remove(model: M) {
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntitySetResource) {
       obs$ = model.destroy();
@@ -195,28 +193,28 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     throw new Error(`Can't function without EntitySetResource`);
   }
 
-  protected callFunction<R>(name: string, params: any | null, 
-    responseType: 'value' | 'model' | 'collection', 
+  protected callFunction<R>(name: string, params: any | null,
+    responseType: 'value' | 'model' | 'collection',
     returnType?: string, options?: HttpOptions): Observable<any> {
-      let ops = <any>{
-        headers: options && options.headers,
-        params: options && options.params,
-        responseType: responseType === 'value' ? 'property' : 
-          responseType === 'model' ? 'entity' : 'entities',
-        reportProgress: options && options.reportProgress,
-        withCredentials: options && options.withCredentials,
-        withCount: responseType === 'collection'
-      }
-      let res = this.function<R>(name, params, returnType);
-      let res$ = res.get(ops) as Observable<any>;
-      switch (responseType) {
-        case 'value':
-          return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
-        case 'model':
-          return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
-        case 'collection':
-          return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
-      }
+    let ops = <any>{
+      headers: options && options.headers,
+      params: options && options.params,
+      responseType: responseType === 'value' ? 'property' :
+        responseType === 'model' ? 'entity' : 'entities',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials,
+      withCount: responseType === 'collection'
+    }
+    let res = this.function<R>(name, params, returnType);
+    let res$ = res.get(ops) as Observable<any>;
+    switch (responseType) {
+      case 'value':
+        return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value,]) => value));
+      case 'model':
+        return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
+      case 'collection':
+        return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
+    }
   }
 
   // Actions
@@ -227,32 +225,32 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     throw new Error(`Can't action without EntitySetResource`);
   }
 
-  protected callAction<R>(name: string, body: any | null, 
-    responseType: 'value' | 'model' | 'collection', 
+  protected callAction<R>(name: string, body: any | null,
+    responseType: 'value' | 'model' | 'collection',
     returnType?: string, options?: HttpOptions): Observable<any> {
-      let ops = <any>{
-        headers: options && options.headers,
-        params: options && options.params,
-        responseType: responseType === 'value' ? 'property' : 
-          responseType === 'model' ? 'entity' : 'entities',
-        reportProgress: options && options.reportProgress,
-        withCredentials: options && options.withCredentials,
-        withCount: responseType === 'collection' 
-      }
-      let res = this.action<R>(name, returnType);
-      let res$ = res.post(body, ops) as Observable<any>;
-      switch (responseType) {
-        case 'value':
-          return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
-        case 'model':
-          return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
-        case 'collection':
-          return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
-      }
+    let ops = <any>{
+      headers: options && options.headers,
+      params: options && options.params,
+      responseType: responseType === 'value' ? 'property' :
+        responseType === 'model' ? 'entity' : 'entities',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials,
+      withCount: responseType === 'collection'
+    }
+    let res = this.action<R>(name, returnType);
+    let res$ = res.post(body, ops) as Observable<any>;
+    switch (responseType) {
+      case 'value':
+        return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value,]) => value));
+      case 'model':
+        return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
+      case 'collection':
+        return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
+    }
   }
 
-  // Collection tools like backbone :)
-  where(predicate: (m: M) => boolean) {
+  // Array like
+  filter(predicate: (m: M) => boolean): M[] {
     return this._models.filter(predicate);
   }
 
@@ -260,28 +258,20 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this._models.map(predicate);
   }
 
-  // Mutate query options
-  select(select?: Select<T>) {
-    return (this._resource as ODataEntitySetResource<T>).select(select);
+  at(index: number): M {
+    return this._models[index >= 0 ? index : this._models.length - index];
   }
 
-  filter(filter?: Filter) {
-    return (this._resource as ODataEntitySetResource<T>).filter(filter);
-  }
-
-  search(search?: string) {
-    return (this._resource as ODataEntitySetResource<T>).search(search);
-  }
-
-  orderBy(orderBy?: OrderBy<T>) {
-    return (this._resource as ODataEntitySetResource<T>).orderBy(orderBy);
-  }
-
-  expand(expand?: Expand<T>) {
-    return (this._resource as ODataEntitySetResource<T>).expand(expand);
-  }
-
-  groupBy(groupBy?: GroupBy<T>) {
-    return (this._resource as ODataEntitySetResource<T>).groupBy(groupBy);
+  // Query options
+  get query() {
+    let resource = this._resource as ODataEntitySetResource<T>;
+    return {
+      select(select?: Select<T>) { return resource.select(select); },
+      filter(filter?: Filter) { return resource.filter(filter); },
+      search(search?: string) { return resource.search(search); },
+      orderBy(orderBy?: OrderBy<T>) { return resource.orderBy(orderBy); },
+      expand(expand?: Expand<T>) { return resource.expand(expand); },
+      groupBy(groupBy?: GroupBy<T>) { return resource.groupBy(groupBy); },
+    }
   }
 }

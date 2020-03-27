@@ -53,8 +53,8 @@ export class ODataClient {
     return this.settings.metaForType(type) as ODataMeta<T>;
   }
 
-  pathForType<T>(type: string): string | null {
-    return this.settings.pathForType(type) as string;
+  setForType<T>(type: string): string | null {
+    return this.settings.setForType(type) as string;
   }
 
   parserForType<T>(type: string): Parser<T> | null {

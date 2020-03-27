@@ -19,9 +19,9 @@ export type Field = {
 }
 
 export type Meta = {
-  type: string;
-  baseType?: string;
-  path?: string;
+  type?: string;
+  base?: string;
+  set?: string;
   fields: { [name: string]: Field }
 }
 
@@ -114,32 +114,37 @@ export class ODataField<T> implements Field, Parser<T> {
 
 export class ODataParser<Type> implements Parser<Type> {
   type: string;
-  base: Parser<any>;
+  base: string;
+  parent: ODataParser<any>;
   fields: ODataField<any>[];
-  get keys() { return this.fields.filter(f => f.key); }
 
-  constructor(fields: ODataField<any>[]) {
-    this.fields = fields;
+  constructor(meta: Meta) {
+    this.type = meta.type;
+    this.base = meta.base;
+    this.fields = Object.entries(meta.fields)
+      .map(([name, f]) => new ODataField(name, f));
   }
 
-  configure(type: string, base: Parser<any>, parsers: {[name: string]: Parser<any>}) {
+  configure(type: string, settings: ODataSettings) {
     this.type = type;
-    this.base = base;
+    if (this.base in settings.metas) {
+      this.parent = settings.metas[this.base].parser;
+    }
     this.fields.forEach(f => {
       if (f.type in settings.enums) {
         f.enum = settings.enums[f.type];
         f.enumString = settings.stringAsEnum;
       }
-      if (f.type in parsers) {
-        f.parser = parsers[f.type];
+      if (f.type in settings.metas) {
+        f.parser = settings.metas[f.type].parser;
       }
     });
   }
 
   // Deserialize
   parse(objs: any): any {
-    if (this.base)
-      objs = this.base.parse(objs);
+    if (this.parent)
+      objs = this.parent.parse(objs);
     let _parse = (obj) =>
       Object.assign(obj, this.fields
         .filter(f => f.name in obj)
@@ -152,8 +157,8 @@ export class ODataParser<Type> implements Parser<Type> {
 
   // Serialize
   toJSON(objs: any): any {
-    if (this.base)
-      objs = this.base.toJSON(objs);
+    if (this.parent)
+      objs = this.parent.toJSON(objs);
     let _toJSON = (obj) => Object.assign(obj, this.fields
       .filter(f => f.name in obj)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.toJSON(obj[f.name]) }), {})
@@ -182,8 +187,13 @@ export class ODataParser<Type> implements Parser<Type> {
     return this.fields.find(f => f.name === name) as Parser<E>;
   }
 
+  keys() { 
+    let keys = (this.parent) ? this.keys() : [];
+    return [...keys, ...this.fields.filter(f => f.key)];
+  }
+
   resolveKey(attrs: any) {
-    let key = this.keys
+    let key = this.keys()
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {});
     if (Object.keys(key).length === 1)
       key = Object.values(key)[0];
@@ -194,20 +204,18 @@ export class ODataParser<Type> implements Parser<Type> {
 
 export class ODataMeta<Type> {
   type: string;
-  baseType: string;
-  path: string;
+  base: string;
+  set: string;
   parser?: ODataParser<Type>;
-  base?: ODataMeta<any>;
+  parent?: ODataMeta<any>;
   model?: { new(...any): any };
   collection?: { new(...any): any };
 
   constructor(meta: Meta) {
     this.type = meta.type;
-    this.baseType = meta.baseType;
-    this.path = meta.path;
-    let fields = Object.entries(meta.fields)
-      .map(([name, f]) => new ODataField(name, f));
-    this.parser = new ODataParser<Type>(fields);
+    this.base = meta.base;
+    this.set = meta.set;
+    this.parser = new ODataParser<Type>(meta);
   }
 
   configure(type: string, settings: ODataSettings) {
@@ -220,12 +228,19 @@ export class ODataMeta<Type> {
     if (this.type in settings.collections) {
       this.collection = settings.collections[this.type];
     }
-    if (this.baseType in settings.metas) {
-      this.base = settings.metas[this.baseType] as ODataMeta<any>;
+    if (this.base in settings.metas) {
+      this.parent = settings.metas[this.base];
     }
-    let parsers = Object.entries(settings.metas)
-      .map(([k, o]) => ({[k]: o.parser}))
-      .reduce((acc, p) => Object.assign(acc, p), {});
-    this.parser.configure(this.type, this.base && this.base.parser, parsers);
+    this.parser.configure(type, settings);
+  }
+
+  fields(include_parents: boolean = true): ODataField<any>[] {
+    let parser = this.parser as ODataParser<any>;
+    let fields = [];
+    while (parser) {
+      fields = [...parser.fields, ...fields];
+      parser = parser.parent;
+    }
+    return fields;
   }
 }

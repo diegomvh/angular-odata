@@ -61,9 +61,9 @@ export class ODataSettings {
       return this.metas[type] as ODataMeta<E>;
   }
 
-  public pathForType<T>(type: string): string {
+  public setForType<T>(type: string): string {
     let meta = this.metaForType(type) as ODataMeta<T>;
-    return meta && meta.path;
+    return meta && meta.set;
   }
 
   public parserForType<T>(type: string): Parser<T> {

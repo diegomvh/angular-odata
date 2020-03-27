@@ -6,7 +6,7 @@ import { PlainObject } from '../types';
 import { isoStringToDate } from '../utils/dates';
 
 export type Select<T> = string | keyof T | Array<keyof T>;
-export type OrderBy<T> = string | keyof T | [ keyof T, 'asc' | 'desc' ] | Array<keyof T | [ keyof T, 'asc' | 'desc' ]> | {[P in keyof T]?: OrderBy<T[P]>};
+export type OrderBy<T> = string | keyof T | [ keyof T, 'asc' | 'desc' ] | Array<keyof T | [ keyof T, 'asc' | 'desc' ]>;
 export type Filter = string | PlainObject | Array<string | PlainObject>;
 export type Expand<T> = string | Array<keyof T> | {[P in keyof T]?: (T[P] extends Array<infer E> ? ExpandOptions<E> : ExpandOptions<T[P]>) };
 export enum StandardAggregateMethods {
