@@ -188,7 +188,7 @@ export class ODataParser<Type> implements Parser<Type> {
   }
 
   keys() { 
-    let keys = (this.parent) ? this.keys() : [];
+    let keys = (this.parent) ? this.parent.keys() : [];
     return [...keys, ...this.fields.filter(f => f.key)];
   }
 
