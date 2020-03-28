@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select, ODataPropertyAnnotations, ODataCollectionAnnotations } from '../resources';
@@ -8,6 +8,7 @@ import { ODataNavigationPropertyResource } from '../resources/requests/navigatio
 import { HttpOptions, HttpEntityOptions, HttpPropertyOptions } from '../resources/http-options';
 import { entityAttributes, odataAnnotations } from '../types';
 import { ODataField } from './meta';
+import { ODataCallableResource } from '../resources/requests/callable';
 
 export class ODataModel<T> {
   _resource: ODataResource<T>;
@@ -189,41 +190,72 @@ export class ODataModel<T> {
     throw new Error(`Can't destroy`);
   }
 
+  // Callable
+  protected call<R>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'value', 
+    options?: HttpOptions
+  ): Observable<R>;
+
+  protected call<R, M extends ODataModel<R>>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'model', 
+    options?: HttpOptions
+  ): Observable<M>;
+
+  protected call<R, M extends ODataModel<R>, C extends ODataCollection<R, M>>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'collection', 
+    options?: HttpOptions
+  ): Observable<C>;
+
+  protected call(
+    callable: ODataCallableResource<any>, 
+    args: any | null, 
+    responseType: 'value' | 'model' | 'collection', 
+    options?: HttpOptions
+  ): Observable<any> {
+    let ops = <any>{
+      headers: options && options.headers,
+      params: options && options.params,
+      responseType: responseType === 'value' ? 'property' : 
+        responseType === 'model' ? 'entity' : 'entities',
+      reportProgress: options && options.reportProgress,
+      withCredentials: options && options.withCredentials,
+      withCount: responseType === 'collection' 
+    }
+    let res$: Observable<any> = NEVER;
+    if (callable instanceof ODataFunctionResource) {
+      if (args)
+        callable.parameters(args);
+      res$ = callable.get(ops) as Observable<any>;
+    } else if (callable instanceof ODataActionResource) {
+      res$ = callable.post(args, ops) as Observable<any>;
+    } else {
+      throw new Error(`Can't call resource`);
+    }
+    switch (responseType) {
+      case 'value':
+        return (res$ as Observable<[any, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
+      case 'model':
+        return (res$ as Observable<[any, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => callable.toModel<ODataModel<any>>(entity, annots)));
+      case 'collection':
+        return (res$ as Observable<[any[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(entities, annots)));
+    }
+  }
+
   // Functions
-  protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
+  protected function<R>(name: string, returnType?: string): ODataFunctionResource<R> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey()) 
         throw new Error(`Can't function without key`);
-      var func = this._resource.function<R>(name, returnType);
-      func.parameters(params);
-      return func;
+      return this._resource.function<R>(name, returnType);
     }
     throw new Error(`Can't function without EntityResource`);
-  }
-
-  protected callFunction<R>(name: string, params: any | null, 
-    responseType: 'value' | 'model' | 'collection', 
-    returnType?: string, options?: HttpOptions): Observable<any> {
-      let ops = <any>{
-        headers: options && options.headers,
-        params: options && options.params,
-        responseType: responseType === 'value' ? 'property' : 
-          responseType === 'model' ? 'entity' : 'entities',
-        reportProgress: options && options.reportProgress,
-        withCredentials: options && options.withCredentials,
-        withCount: responseType === 'collection' 
-      }
-      let res = this.function<R>(name, params, returnType);
-      let res$ = res.get(ops) as Observable<any>;
-      switch (responseType) {
-        case 'value':
-          return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
-        case 'model':
-          return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
-        case 'collection':
-          return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
-      }
   }
 
   // Actions
@@ -237,30 +269,6 @@ export class ODataModel<T> {
     throw new Error(`Can't action without EntityResource`);
   }
 
-  protected callAction<R>(name: string, body: any | null, 
-    responseType: 'value' | 'model' | 'collection', 
-    returnType?: string, options?: HttpOptions): Observable<any> {
-      let ops = <any>{
-        headers: options && options.headers,
-        params: options && options.params,
-        responseType: responseType === 'value' ? 'property' : 
-          responseType === 'model' ? 'entity' : 'entities',
-        reportProgress: options && options.reportProgress,
-        withCredentials: options && options.withCredentials,
-        withCount: responseType === 'collection' 
-      }
-      let res = this.action<R>(name, returnType);
-      let res$ = res.post(body, ops) as Observable<any>;
-      switch (responseType) {
-        case 'value':
-          return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
-        case 'model':
-          return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
-        case 'collection':
-          return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
-      }
-  }
-
   // Navigation Properties === References
   protected navigationProperty<P>(name: string): ODataNavigationPropertyResource<P> {
     if (this._resource instanceof ODataEntityResource) {
@@ -272,25 +280,25 @@ export class ODataModel<T> {
     throw new Error(`Can't navigation without EntityResource`);
   }
 
-  protected getNavigationProperty(name: string): ODataModel<any> | ODataCollection<any, ODataModel<any>> {
+  protected getNavigationProperty<P>(name: string): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     let field = this._resource.meta().fields().find(f => f.name === name);
     if (!(name in this._relationships)) {
-      let nav = this.navigationProperty<any>(field.name);
+      let nav = this.navigationProperty<P>(field.name);
       this._relationships[field.name] = this.related(nav, field);
     }
     return this._relationships[field.name];
   }
 
-  protected setNavigationProperty<R, Rm extends ODataModel<R>>(name: string, model: Rm | null): Observable<this> {
+  protected setNavigationProperty<P, Pm extends ODataModel<P>>(name: string, model: Pm | null): Observable<this> {
     let field = this._resource.meta().fields().find(f => f.name === name);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
-    let ref = this.navigationProperty<R>(name).reference();
+    let ref = this.navigationProperty<P>(name).reference();
     let etag = (this._annotations as ODataEntityAnnotations).etag;
     // TODO: change the resource of a model 
     delete this._relationships[field.name];
     if (model instanceof ODataModel) {
-      return ref.set(model._resource as ODataEntityResource<R>, { etag });
+      return ref.set(model._resource as ODataEntityResource<P>, { etag });
     } else if (model === null)
       return ref.remove({etag});
   }
