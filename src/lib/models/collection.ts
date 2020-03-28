@@ -1,11 +1,12 @@
 import { map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, NEVER } from 'rxjs';
 
 import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
 import { entityAttributes, odataAnnotations } from '../types';
+import { ODataCallableResource } from '../resources/requests/callable';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   _resource: ODataResource<T>;
@@ -181,38 +182,69 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this._resource as ODataEntitySetResource<any>).count().get();
   }
 
-  // Functions
-  protected function<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      var func = this._resource.function<R>(name, returnType);
-      func.parameters(params);
-      return func;
-    }
-    throw new Error(`Can't function without EntitySetResource`);
-  }
+  // Callable
+  protected call<R>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'value', 
+    options?: HttpOptions
+  ): Observable<R>;
 
-  protected callFunction<R>(name: string, params: any | null,
-    responseType: 'value' | 'model' | 'collection',
-    returnType?: string, options?: HttpOptions): Observable<any> {
+  protected call<R, M extends ODataModel<R>>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'model', 
+    options?: HttpOptions
+  ): Observable<M>;
+
+  protected call<R, M extends ODataModel<R>, C extends ODataCollection<R, M>>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'collection', 
+    options?: HttpOptions
+  ): Observable<C>;
+
+  protected call(
+    callable: ODataCallableResource<any>, 
+    args: any | null, 
+    responseType: 'value' | 'model' | 'collection', 
+    options?: HttpOptions
+  ): Observable<any> {
     let ops = <any>{
       headers: options && options.headers,
       params: options && options.params,
-      responseType: responseType === 'value' ? 'property' :
+      responseType: responseType === 'value' ? 'property' : 
         responseType === 'model' ? 'entity' : 'entities',
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials,
-      withCount: responseType === 'collection'
+      withCount: responseType === 'collection' 
     }
-    let res = this.function<R>(name, params, returnType);
-    let res$ = res.get(ops) as Observable<any>;
+    let res$: Observable<any> = NEVER;
+    if (callable instanceof ODataFunctionResource) {
+      if (args)
+        callable.parameters(args);
+      res$ = callable.get(ops) as Observable<any>;
+    } else if (callable instanceof ODataActionResource) {
+      res$ = callable.post(args, ops) as Observable<any>;
+    } else {
+      throw new Error(`Can't call resource`);
+    }
     switch (responseType) {
       case 'value':
-        return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value,]) => value));
+        return (res$ as Observable<[any, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
       case 'model':
-        return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
+        return (res$ as Observable<[any, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => callable.toModel<ODataModel<any>>(entity, annots)));
       case 'collection':
-        return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
+        return (res$ as Observable<[any[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(entities, annots)));
     }
+  }
+
+  // Functions
+  protected function<R>(name: string, returnType?: string): ODataFunctionResource<R> {
+    if (this._resource instanceof ODataEntitySetResource) {
+      return this._resource.function<R>(name, returnType);
+    }
+    throw new Error(`Can't function without EntitySetResource`);
   }
 
   // Actions
@@ -221,30 +253,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       return this._resource.action<R>(name, returnType);
     }
     throw new Error(`Can't action without EntitySetResource`);
-  }
-
-  protected callAction<R>(name: string, body: any | null,
-    responseType: 'value' | 'model' | 'collection',
-    returnType?: string, options?: HttpOptions): Observable<any> {
-    let ops = <any>{
-      headers: options && options.headers,
-      params: options && options.params,
-      responseType: responseType === 'value' ? 'property' :
-        responseType === 'model' ? 'entity' : 'entities',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials,
-      withCount: responseType === 'collection'
-    }
-    let res = this.action<R>(name, returnType);
-    let res$ = res.post(body, ops) as Observable<any>;
-    switch (responseType) {
-      case 'value':
-        return (res$ as Observable<[R, ODataPropertyAnnotations]>).pipe(map(([value,]) => value));
-      case 'model':
-        return (res$ as Observable<[R, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => res.toModel<ODataModel<R>>(entity, annots)));
-      case 'collection':
-        return (res$ as Observable<[R[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => res.toCollection<ODataCollection<R, ODataModel<R>>>(entities, annots)));
-    }
   }
 
   // Array like
