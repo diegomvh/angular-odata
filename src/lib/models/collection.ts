@@ -34,7 +34,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private populate(entities: T[], annots?: ODataAnnotations): this {
     this._entities = entities;
     this._annotations = annots;
-    
+
     this._state.records = (annots instanceof ODataCollectionAnnotations && annots.count) ? annots.count : entities.length;
     this._state.size = (annots instanceof ODataCollectionAnnotations && annots.skip) ? annots.skip : entities.length;
     this._state.pages = (this._state.records && this._state.size) ? Math.ceil(this._state.records / this._state.size) : 1;
