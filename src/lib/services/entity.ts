@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, NEVER } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataCollectionAnnotations, ODataEntityAnnotations } from '../resources';
+import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataCollectionAnnotations, ODataEntityAnnotations, HttpOptions, ODataPropertyAnnotations } from '../resources';
 
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
 import { ODataBaseService } from './base';
+import { ODataCallableResource } from '../resources/requests/callable';
 
 @Injectable()
 export class ODataEntityService<T> extends ODataBaseService<T> {
@@ -39,6 +40,46 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
     let query = this.entities().function<R>(name, returnType);
     query.parameters(params);
     return query;
+  }
+
+  // Callable
+  protected call<R>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'property', 
+    options?: HttpOptions
+  ): Observable<[R, ODataPropertyAnnotations]>;
+
+  protected call<R>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'entity', 
+    options?: HttpOptions
+  ): Observable<[R, ODataEntityAnnotations]>;
+
+  protected call<R>(
+    callable: ODataCallableResource<R>, 
+    args: any | null, 
+    responseType: 'entities', 
+    options?: HttpOptions
+  ): Observable<[R[], ODataCollectionAnnotations]>;
+
+  protected call(
+    callable: ODataCallableResource<any>, 
+    args: any | null, 
+    responseType: 'property' | 'entity' | 'entities', 
+    options?: HttpOptions
+  ): Observable<any> {
+    let ops = Object.assign<any, HttpOptions>({ responseType }, options || {});
+    if (callable instanceof ODataFunctionResource) {
+      if (args)
+        callable.parameters(args);
+      return callable.get(ops) as Observable<any>;
+    } else if (callable instanceof ODataActionResource) {
+      return callable.post(args, ops) as Observable<any>;
+    } else {
+      throw new Error(`Can't call resource`);
+    }
   }
 
   // Entity Actions
