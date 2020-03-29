@@ -184,7 +184,12 @@ export class ODataParser<Type> implements Parser<Type> {
   }
 
   parserFor<E>(name: string): Parser<E> {
-    return this.fields.find(f => f.name === name) as Parser<E>;
+    let parser: Parser<E>;
+    if (this.parent)
+      parser = this.parent.parserFor(name);
+    if (!parser)
+      parser = this.fields.find(f => f.name === name) as Parser<E>;
+    return parser; 
   }
 
   keys() { 
@@ -239,6 +244,8 @@ export class ODataMeta<Type> {
     let fields = [];
     while (parser) {
       fields = [...parser.fields, ...fields];
+      if (!include_parents)
+        break;
       parser = parser.parent;
     }
     return fields;

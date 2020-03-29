@@ -77,11 +77,13 @@ export class ODataSettings {
   public modelForType(type: string): typeof ODataModel {
     if (type in this.models)
       return this.models[type] as typeof ODataModel;
+    return ODataModel;
   }
 
   public collectionForType(type: string): typeof ODataCollection {
     if (type in this.collections)
       return this.collections[type] as typeof ODataCollection;
+    return ODataCollection;
   }
 
 }
