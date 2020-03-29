@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable, of, NEVER } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, ODataToEntityResource } from '../resources';
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
@@ -42,14 +42,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     const entityMapper = (value) => {
       let entity = entityAttributes(value);
       let eannots = ODataEntityAnnotations.factory(odataAnnotations(value));
-      if (this._resource instanceof ODataEntitySetResource) {
-        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
-      } else if (this._resource instanceof ODataFunctionResource) {
-        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
-      } else if (this._resource instanceof ODataNavigationPropertyResource) {
-        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
-      } else if (this._resource instanceof ODataPropertyResource) {
-        return this._resource.entity(value, annots).toModel(entity, eannots) as M;
+      if ("entity" in this._resource) {
+        let res = this._resource as ODataToEntityResource<T>;
+        return res.entity(value, annots).toModel(entity, eannots) as M;
       }
     }
     this._models = entities.map(entityMapper);
@@ -126,6 +121,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       map(entities => this.populate(entities)));
   }
 
+  // Mutate
   add(model: M): Observable<this> {
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntitySetResource) {
@@ -152,6 +148,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$.pipe(map(() => this));
   }
 
+  // Pagination
   page(page: number) {
     this._state.page = page;
     return this.fetch();
@@ -178,6 +175,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this._state.pages) ? this.page(this._state.pages) : this.fetch();
   }
 
+  // Count
   count() {
     return (this._resource as ODataEntitySetResource<any>).count().get();
   }

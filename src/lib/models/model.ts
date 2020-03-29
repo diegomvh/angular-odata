@@ -41,11 +41,14 @@ export class ODataModel<T> {
   }
 
   private related<R>(resource: ODataResource<R>, f: ODataField<any>) {
+    console.log(resource);
     let value = this._entity[f.name];
     if (f.collection) {
+      value = value || [];
       let annots = this._annotations !== null ? this._annotations.related(f.name) : undefined;
       return resource.toCollection(value, annots);
     } else {
+      value = value || {};
       let entity = entityAttributes(value);
       let annots = ODataEntityAnnotations.factory(odataAnnotations(value));
       return resource.toModel(entity, annots);
