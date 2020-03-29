@@ -2,8 +2,7 @@ import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
-import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
-import { PlainObject } from '../../types';
+import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
@@ -66,11 +65,6 @@ export class ODataReferenceResource extends ODataResource<any> {
       reportProgress: options && options.reportProgress,
       withCredentials: options && options.withCredentials
     });
-  }
-
-  //Options
-  custom(opts?: PlainObject) {
-    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 
   // Custom

@@ -158,7 +158,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
   }
 
-  // Options
+  // Query
   select(opts?: Select<T>) {
     return this.queryOptions.option<Select<T>>(QueryOptionTypes.select, opts);
   }

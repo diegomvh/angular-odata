@@ -11,8 +11,9 @@ import { map } from 'rxjs/operators';
 import { ODataPropertyAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';
 import { HttpPropertyOptions, HttpEntitiesOptions } from '../http-options';
+import { ODataToEntityResource } from './entity';
 
-export class ODataPropertyResource<T> extends ODataResource<T> {
+export class ODataPropertyResource<T> extends ODataResource<T> implements ODataToEntityResource<T> {
 
   // Factory
   static factory<P>(name: string, client: ODataClient, opts?: {

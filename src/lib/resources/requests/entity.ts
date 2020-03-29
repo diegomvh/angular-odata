@@ -14,8 +14,12 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { Parser } from '../../models';
 import { ODataMediaResource } from './media';
-import { ODataEntityAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';
+
+export interface ODataToEntityResource<T> {
+  entity(key?: EntityKey<T>, annots?: ODataAnnotations);
+}
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -160,7 +164,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
 
-  // Options
+  // Query
   select(opts?: Select<T>) {
     return this.queryOptions.option<Select<T>>(QueryOptionTypes.select, opts);
   }
@@ -171,9 +175,5 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   format(opts?: string) {
     return this.queryOptions.option<string>(QueryOptionTypes.format, opts);
-  }
-
-  custom(opts?: PlainObject) {
-    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 }

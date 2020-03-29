@@ -4,7 +4,7 @@ import { Parser, ODataModel, ODataCollection } from '../models';
 import { Types } from '../utils';
 
 import { ODataPathSegments } from './path-segments';
-import { ODataQueryOptions } from './query-options';
+import { ODataQueryOptions, QueryOptionTypes } from './query-options';
 import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
 
 export class ODataResource<Type> {
@@ -112,4 +112,10 @@ export class ODataResource<Type> {
   is(type: string) {
     return this.pathSegments.last().type === type;
   }
+
+  // Query
+  custom(opts?: PlainObject) {
+    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
+  }
+
 }

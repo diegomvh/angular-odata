@@ -14,8 +14,9 @@ import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataCollectionAnnotations, ODataEntityAnnotations, ODataAnnotations } from '../responses';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
+import { ODataToEntityResource } from './entity';
 
-export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
+export class ODataNavigationPropertyResource<T> extends ODataResource<T> implements ODataToEntityResource<T> {
   // Factory
   static factory<E>(name: string, client: ODataClient, opts?: {
     segments?: ODataPathSegments,
@@ -49,8 +50,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.key().value() !== undefined;
   }
 
-  entity(opts?: EntityKey<T>, annots?: ODataAnnotations) {
-    this.key(opts);
+  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
+    this.key(key);
     return this;
   }
 
