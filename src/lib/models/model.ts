@@ -310,7 +310,7 @@ export class ODataModel<T> {
   }
 
   // Query options
-  get query() {
+  get _query() {
     let resource = this.resource as ODataEntityResource<T>;
     return {
       select(select?: Select<T>) { return resource.select(select); },

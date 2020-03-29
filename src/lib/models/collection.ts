@@ -267,7 +267,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Query options
-  get query() {
+  get _query() {
     let resource = this.resource as ODataEntitySetResource<T>;
     return {
       select(select?: Select<T>) { return resource.select(select); },
