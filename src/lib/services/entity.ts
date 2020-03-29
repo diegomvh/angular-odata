@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, NEVER } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataCollectionAnnotations, ODataEntityAnnotations, HttpOptions, ODataPropertyAnnotations } from '../resources';
+import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataEntitiesAnnotations, ODataEntityAnnotations, HttpOptions, ODataPropertyAnnotations } from '../resources';
 
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
@@ -62,7 +62,7 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
     args: any | null, 
     responseType: 'entities', 
     options?: HttpOptions
-  ): Observable<[R[], ODataCollectionAnnotations]>;
+  ): Observable<[R[], ODataEntitiesAnnotations]>;
 
   protected call(
     callable: ODataCallableResource<any>, 
@@ -83,7 +83,7 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
   }
 
   // Entity Actions
-  public fetchCollection(): Observable<[T[], ODataCollectionAnnotations]> {
+  public fetchCollection(): Observable<[T[], ODataEntitiesAnnotations]> {
     return this.entities()
       .get();
   }

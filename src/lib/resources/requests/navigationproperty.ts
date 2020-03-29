@@ -12,7 +12,7 @@ import { ODataPropertyResource } from './property';
 import { Parser } from '../../models';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataCollectionAnnotations, ODataEntityAnnotations, ODataAnnotations } from '../responses';
+import { ODataEntitiesAnnotations, ODataEntityAnnotations, ODataAnnotations } from '../responses';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
 import { ODataToEntityResource } from './entity';
 
@@ -97,7 +97,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> impleme
   // Client requests
   get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  get(options: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
   get(options: HttpEntityOptions & HttpEntitiesOptions): Observable<any> {
 
@@ -181,7 +181,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> impleme
         withCredentials: options && options.withCredentials});
   }
 
-  collection(options?: HttpOptions): Observable<[T[], ODataCollectionAnnotations]> {
+  collection(options?: HttpOptions): Observable<[T[], ODataEntitiesAnnotations]> {
     return this
       .get({ 
         headers: options && options.headers,
@@ -194,7 +194,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> impleme
 
   all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone() as ODataNavigationPropertyResource<T>;
-    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataCollectionAnnotations]> => {
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataEntitiesAnnotations]> => {
       if (opts) {
         if (opts.skiptoken)
           res.skiptoken(opts.skiptoken);

@@ -14,7 +14,7 @@ import { ODataResource } from '../resource';
 import { Parser } from '../../models';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> implements ODataToEntityResource<T>  {
@@ -89,7 +89,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> implements OData
     }).pipe(map(body => this.toEntity(body)));
   }
 
-  get(options?: HttpOptions & { withCount?: boolean }): Observable<[T[], ODataCollectionAnnotations]> {
+  get(options?: HttpOptions & { withCount?: boolean }): Observable<[T[], ODataEntitiesAnnotations]> {
 
     let params = options && options.params;
     if (options && options.withCount)

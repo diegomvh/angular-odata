@@ -13,7 +13,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses';
 import { HttpOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpEntityOptions } from '../http-options';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
@@ -80,7 +80,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   // Client Requests
   get(options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  get(options?: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
   get(options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 

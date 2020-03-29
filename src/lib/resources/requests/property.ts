@@ -8,7 +8,7 @@ import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataClient } from '../../client';
 import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
-import { ODataPropertyAnnotations, ODataCollectionAnnotations, ODataAnnotations } from '../responses';
+import { ODataPropertyAnnotations, ODataEntitiesAnnotations, ODataAnnotations } from '../responses';
 import { EntityKey, $COUNT } from '../../types';
 import { HttpPropertyOptions, HttpEntitiesOptions } from '../http-options';
 import { ODataToEntityResource } from './entity';
@@ -56,7 +56,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> implements ODataT
 
   get(options: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 
-  get(options: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
   get(options: HttpPropertyOptions & HttpEntitiesOptions): Observable<any> {
 

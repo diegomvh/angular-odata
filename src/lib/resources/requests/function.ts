@@ -4,7 +4,7 @@ import { ODataClient } from '../../client';
 import { PlainObject, $COUNT } from '../../types';
 import { Parser } from '../../models';
 import { ODataCallableResource } from './callable';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Types } from '../../utils';
@@ -41,7 +41,7 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   //GET
   get(options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  get(options?: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
+  get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
   get(options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 

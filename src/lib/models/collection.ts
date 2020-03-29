@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable, of, NEVER } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataCollectionAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, ODataToEntityResource } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, ODataToEntityResource } from '../resources';
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
@@ -36,8 +36,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.entities = entities;
     this.annotations = annots;
 
-    this.state.records = (annots instanceof ODataCollectionAnnotations && annots.count) ? annots.count : entities.length;
-    this.state.size = (annots instanceof ODataCollectionAnnotations && annots.skip) ? annots.skip : entities.length;
+    this.state.records = (annots instanceof ODataEntitiesAnnotations && annots.count) ? annots.count : entities.length;
+    this.state.size = (annots instanceof ODataEntitiesAnnotations && annots.skip) ? annots.skip : entities.length;
     this.state.pages = (this.state.records && this.state.size) ? Math.ceil(this.state.records / this.state.size) : 1;
     const entityMapper = (value) => {
       let entity = entityAttributes(value);
@@ -233,7 +233,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       case 'model':
         return (res$ as Observable<[any, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => callable.toModel<ODataModel<any>>(entity, annots)));
       case 'collection':
-        return (res$ as Observable<[any[], ODataCollectionAnnotations]>).pipe(map(([entities, annots]) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(entities, annots)));
+        return (res$ as Observable<[any[], ODataEntitiesAnnotations]>).pipe(map(([entities, annots]) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(entities, annots)));
     }
   }
 

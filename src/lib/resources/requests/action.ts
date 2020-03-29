@@ -5,7 +5,7 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { Parser } from '../../models';
 import { ODataCallableResource } from './callable';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { map } from 'rxjs/operators';
 import { $COUNT } from '../../types';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions } from '../http-options';
@@ -29,7 +29,7 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
   //POST
   post(body: any | null, options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
 
-  post(body: any | null, options?: HttpEntitiesOptions): Observable<[T[], ODataCollectionAnnotations]>;
+  post(body: any | null, options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
   post(body: any | null, options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
 

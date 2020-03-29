@@ -5,7 +5,7 @@ import { Types } from '../utils';
 
 import { ODataPathSegments } from './path-segments';
 import { ODataQueryOptions, QueryOptionTypes } from './query-options';
-import { ODataEntityAnnotations, ODataCollectionAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations, ODataAnnotations } from './responses';
 
 export class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -60,10 +60,10 @@ export class ODataResource<Type> {
       [null, null];
   }
 
-  toEntities(body: any): [Type[] | null, ODataCollectionAnnotations | null] {
+  toEntities(body: any): [Type[] | null, ODataEntitiesAnnotations | null] {
     let annots = odataAnnotations(body);
     return body ? 
-      [<Type[]>this.deserialize(body[VALUE]), ODataCollectionAnnotations.factory(annots)] :
+      [<Type[]>this.deserialize(body[VALUE]), ODataEntitiesAnnotations.factory(annots)] :
       [null, null];
   }
 
