@@ -42,46 +42,6 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
     return query;
   }
 
-  // Callable
-  protected call<R>(
-    callable: ODataCallableResource<R>, 
-    args: any | null, 
-    responseType: 'property', 
-    options?: HttpOptions
-  ): Observable<[R, ODataPropertyAnnotations]>;
-
-  protected call<R>(
-    callable: ODataCallableResource<R>, 
-    args: any | null, 
-    responseType: 'entity', 
-    options?: HttpOptions
-  ): Observable<[R, ODataEntityAnnotations]>;
-
-  protected call<R>(
-    callable: ODataCallableResource<R>, 
-    args: any | null, 
-    responseType: 'entities', 
-    options?: HttpOptions
-  ): Observable<[R[], ODataEntitiesAnnotations]>;
-
-  protected call(
-    callable: ODataCallableResource<any>, 
-    args: any | null, 
-    responseType: 'property' | 'entity' | 'entities', 
-    options?: HttpOptions
-  ): Observable<any> {
-    let ops = Object.assign<any, HttpOptions>({ responseType }, options || {});
-    if (callable instanceof ODataFunctionResource) {
-      if (args)
-        callable.parameters(args);
-      return callable.get(ops) as Observable<any>;
-    } else if (callable instanceof ODataActionResource) {
-      return callable.post(args, ops) as Observable<any>;
-    } else {
-      throw new Error(`Can't call resource`);
-    }
-  }
-
   // Entity Actions
   public fetchCollection(): Observable<[T[], ODataEntitiesAnnotations]> {
     return this.entities()

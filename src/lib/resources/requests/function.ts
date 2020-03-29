@@ -8,7 +8,7 @@ import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotati
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions } from '../http-options';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
 
 export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
@@ -70,5 +70,16 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
       }
     }
     return res$;
+  }
+
+  call(
+    args: any | null, 
+    responseType: 'property' | 'entity' | 'entities', 
+    options?: HttpOptions
+  ): Observable<any> {
+    let ops = Object.assign<any, HttpOptions>({ responseType }, options || {});
+    if (args)
+      this.parameters(args);
+    return this.get(ops) as Observable<any>;
   }
 }

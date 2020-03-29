@@ -218,31 +218,14 @@ export class ODataModel<T> {
     options?: HttpOptions
   ): Observable<C>;
 
-  protected call(
-    callable: ODataCallableResource<any>, 
+  protected call<R>(
+    callable: ODataCallableResource<R>, 
     args: any | null, 
     responseType: 'value' | 'model' | 'collection', 
     options?: HttpOptions
   ): Observable<any> {
-    let ops = <any>{
-      headers: options && options.headers,
-      params: options && options.params,
-      responseType: responseType === 'value' ? 'property' : 
-        responseType === 'model' ? 'entity' : 'entities',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials,
-      withCount: responseType === 'collection' 
-    }
-    let res$: Observable<any> = NEVER;
-    if (callable instanceof ODataFunctionResource) {
-      if (args)
-        callable.parameters(args);
-      res$ = callable.get(ops) as Observable<any>;
-    } else if (callable instanceof ODataActionResource) {
-      res$ = callable.post(args, ops) as Observable<any>;
-    } else {
-      throw new Error(`Can't call resource`);
-    }
+    let res$ = callable.call(args, (responseType === 'value') ? 'property' : 
+      responseType === 'model' ? 'entity' : 'entities', options);
     switch (responseType) {
       case 'value':
         return (res$ as Observable<[any, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
