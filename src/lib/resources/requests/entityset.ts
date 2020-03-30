@@ -33,6 +33,16 @@ export class ODataEntitySetResource<T> extends ODataResource<T> implements OData
     return new ODataEntitySetResource<E>(client, segments, options, parser);
   }
 
+  // EntitySet
+  entitySet(name?: string) {
+    let segment = this.pathSegments.segment(SegmentTypes.entitySet);
+    if (!segment)
+      throw new Error(`EntityResourse dosn't have segment for entitySet`);
+    if (!Types.isUndefined(name))
+      segment.name = name;
+    return segment.name;
+  }
+
   entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
     let entity = ODataEntityResource.factory<T>(
       this.client, {

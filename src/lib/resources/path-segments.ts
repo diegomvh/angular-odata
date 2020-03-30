@@ -96,7 +96,8 @@ export class ODataPathSegments {
       segment = { type, name, options: {} } as ODataSegment;
       this.segments.push(segment);
     }
-    return new SegmentHandler(segment);
+    if (segment)
+      return new SegmentHandler(segment);
   }
 
   has(type: string, name?: string) {
@@ -115,12 +116,16 @@ export class SegmentHandler {
     this.options = this.segment.options;
   }
 
+  get type() {
+    return this.segment.type;
+  }
+
   get name() {
     return this.segment.name;
   }
 
-  get type() {
-    return this.segment.type;
+  set name(value: string) {
+    this.segment.name = value;
   }
 
   // Option Handler

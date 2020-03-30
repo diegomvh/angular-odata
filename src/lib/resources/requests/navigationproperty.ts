@@ -38,16 +38,26 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> impleme
     let segment = this.pathSegments.last();
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
-    if (Types.isUndefined(key))
-      return segment.option(SegmentOptionTypes.key);
-    
-    if (Types.isObject(key))
-      key = this.parser.resolveKey(key);
-    return segment.option(SegmentOptionTypes.key, key);
+    if (!Types.isUndefined(key)) {
+      if (Types.isObject(key))
+        key = this.parser.resolveKey(key);
+      segment.option(SegmentOptionTypes.key, key);
+    }
+    return segment.option(SegmentOptionTypes.key).value();
   }
 
   hasKey() {
-    return this.key().value() !== undefined;
+    return this.key() !== undefined;
+  }
+
+  // EntitySet
+  entitySet(name?: string) {
+    let segment = this.pathSegments.segment(SegmentTypes.entitySet);
+    if (!segment)
+      throw new Error(`EntityResourse dosn't have segment for entitySet`);
+    if (!Types.isUndefined(name))
+      segment.name = name;
+    return segment.name;
   }
 
   entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
