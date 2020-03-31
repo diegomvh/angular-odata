@@ -55,7 +55,11 @@ export class ODataSettings {
 
     // Configure Parsers
     Object.entries(this.parsers)
-      .forEach(([type, parser]) => parser.configure(type, { stringAsEnum: this.stringAsEnum, enums: this.enums, parsers: this.parsers }));
+      .forEach(([type, parser]) => parser.configure(type, { 
+        stringAsEnum: this.stringAsEnum, 
+        enums: this.enums, 
+        parsers: this.parsers 
+      }));
 
     // Build metas
     this.metas = Object.entries(config.metas || {})
@@ -63,7 +67,12 @@ export class ODataSettings {
 
     // Configure Metas
     Object.entries(this.metas)
-      .forEach(([type, meta]) => meta.configure(type, {metas: this.metas}));
+      .forEach(([type, meta]) => meta.configure(type, {
+        parsers: this.parsers,
+        metas: this.metas, 
+        models: this.models, 
+        collections: this.collections
+      }));
   }
 
   public metaForType<E>(type: string): ODataMeta<E> {

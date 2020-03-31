@@ -27,16 +27,18 @@ export class ODataMeta<Type> {
     if (this.type && this.type !== type)
       throw new Error(`Can't configure ${this.type} with ${type}`);
     this.type = type;
-    if (this.type in settings.models) {
-      this.model = settings.models[this.type];
+    if (settings.parsers && this.type in settings.parsers) {
+      this.parser = settings.parsers[this.type] as ODataParser<Type>;
     }
-    if (this.type in settings.collections) {
-      this.collection = settings.collections[this.type];
-    }
-    if (this.base in settings.metas) {
+    if (settings.metas && this.base in settings.metas) {
       this.parent = settings.metas[this.base];
     }
-    this.parser = settings.parsers[this.type] as ODataParser<Type>;
+    if (settings.models && this.type in settings.models) {
+      this.model = settings.models[this.type];
+    }
+    if (settings.collections && this.type in settings.collections) {
+      this.collection = settings.collections[this.type];
+    }
   }
 
   fields(include_parents: boolean = true): ODataField<any>[] {

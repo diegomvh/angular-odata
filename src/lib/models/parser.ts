@@ -125,15 +125,15 @@ export class ODataParser<Type> implements Parser<Type> {
     parsers?: {[type: string]: ODataParser<any> }
   }) {
     this.type = type;
-    if (this.base in settings.parsers) {
+    if (settings.parsers && this.base in settings.parsers) {
       this.parent = settings.parsers[this.base];
     }
     this.fields.forEach(f => {
-      if (f.type in settings.enums) {
+      if (settings.enums && f.type in settings.enums) {
         f.enum = settings.enums[f.type];
         f.enumString = settings.stringAsEnum;
       }
-      if (f.type in settings.parsers) {
+      if (settings.parsers && f.type in settings.parsers) {
         f.parser = settings.parsers[f.type];
       }
     });

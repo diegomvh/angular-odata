@@ -20,17 +20,20 @@ Full examples of the library:
 
 ## Usage:
 
+### Simple usage: Service Factory
+
+In this mode the services are obtained from a factory and optionally we can use types for entities
+
 1) Add module to your project
 
 ```typescript
 import { NgModule } from '@angular/core';
-
 import { ODataModule } from 'angular-odata';
 
 @NgModule({
   imports: [
     ...
-    ODataModule.forRoot({baseUrl: "https://services.odata.org/V4/(S(xeajfggf01nqt3frz54nmwme))/TripPinServiceRW/"})
+    ODataModule.forRoot({baseUrl: "https://services.odata.org/V4/TripPinServiceRW/"})
     ...
   ]
 })
@@ -47,7 +50,7 @@ import { ODataModule, ODataSettings } from 'angular-odata';
 
 export function oDataSettingsFactory() {
   return new ODataSettings({
-    baseUrl: "https://services.odata.org/V4/(S(xeajfggf01nqt3frz54nmwme))/TripPinServiceRW/",
+    baseUrl: "https://services.odata.org/V4/TripPinServiceRW/",
     errorHandler: (error: HttpErrorResponse) => {
       return throwError(error);
     }
@@ -67,26 +70,7 @@ export function oDataSettingsFactory() {
 export class AppModule {}
 ```
 
-If you choose using [OData to TypeScript](https://github.com/diegomvh/Od2Ts), import the config from generated source.
-
-```typescript
-import { NgModule } from '@angular/core';
-
-import { ODataModule } from 'angular-odata';
-import { TripPinConfig, TripPinModule } from './trippin';
-
-@NgModule({
-  imports: [
-    ...
-    ODataModule.forRoot(Object.assign(TripPinConfig, {baseUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/' })),
-    TripPinModule
-  ]
-  ...
-})
-export class AppModule {}
-```
-
-2) Inject and use the ODataClient
+2) Inject and use the ODataServiceFactory
 
 ```typescript
 import { Component } from '@angular/core';
@@ -156,15 +140,17 @@ export class AppComponent {
 }
 ```
 
-3) Or build service for entity
+### Advanced usage: Create Custom Services
 
-3.1) The entity and schema
+In this mode, services are created using custom definitions and corresponding settings
+
+1) The entity and metadata
 
 ```typescript
 import { PersonGender } from './persongender.enum';
-import { Location, LocationSchema } from './location.entity';
-import { Photo, PhotoSchema } from './photo.entity';
-import { Trip, TripSchema } from './trip.entity';
+import { Location  } from './location.entity';
+import { Photo } from './photo.entity';
+import { Trip } from './trip.entity';
 
 export interface Person {
   UserName: string;
@@ -179,29 +165,58 @@ export interface Person {
   Photo?: Photo
 }
 
-export const PersonSchema = {
-  UserName: {type: 'string', key: true, ref: 'UserName', nullable: false},
-  FirstName: {type: 'string', nullable: false},
-  LastName: {type: 'string', nullable: false},
-  Emails: {type: 'string', many: true},
-  AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', many: true},
-  Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender', flags: false},
-  Concurrency: {type: 'number', nullable: false},
-  Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', many: true, navigation: true},
-  Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', many: true, navigation: true},
-  Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', navigation: true}
+export const PersonMeta = {
+  type: "Microsoft.OData.SampleService.Models.TripPin.Person",
+  set: "People",
+  fields: {
+    UserName: {type: 'string', key: true, ref: 'UserName', nullable: false},
+    FirstName: {type: 'string', nullable: false},
+    LastName: {type: 'string', nullable: false},
+    Emails: {type: 'string', collection: true},
+    AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', collection: true},
+    Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender', flags: false},
+    Concurrency: {type: 'number', nullable: false},
+    Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', collection: true, navigation: true},
+    Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', collection: true, navigation: true},
+    Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', navigation: true}
+  }
 };
 ```
 
-3.2) The service
+2) The config
+
+```typescript
+import { ODataConfig } from 'angular-odata';
+
+import ...
+import { PersonGender } from './Microsoft/OData/SampleService/Models/TripPin/persongender.enum';
+import { LocationMeta } from './Microsoft/OData/SampleService/Models/TripPin/location.meta';
+import { PhotoMeta } from './Microsoft/OData/SampleService/Models/TripPin/photo.meta';
+import { PersonMeta } from './Microsoft/OData/SampleService/Models/TripPin/person.meta';
+import { TripMeta } from './Microsoft/OData/SampleService/Models/TripPin/trip.meta';
+
+export const TripPinConfig: ODataConfig = {
+  baseUrl: 'https://services.odata.org/V4/TripPinServiceRW/',
+  enums: {
+    'Microsoft.OData.SampleService.Models.TripPin.PersonGender': PersonGender
+  },
+  metas: {
+    ...
+    'Microsoft.OData.SampleService.Models.TripPin.Location': LocationMeta,
+    'Microsoft.OData.SampleService.Models.TripPin.Photo': PhotoMeta,
+    'Microsoft.OData.SampleService.Models.TripPin.Person': PersonMeta,
+    'Microsoft.OData.SampleService.Models.TripPin.Trip': TripMeta
+  }
+}
+```
+
+3) The service
 
 ```typescript
 // Service
 import { Injectable } from '@angular/core';
-
 import { ODataEntityService } from 'angular-odata';
-
-import { Person, PersonSchema } from './person.entity';
+import { Person } from './person.entity';
 
 @Injectable()
 export class PeopleService extends ODataEntityService<Person> {
@@ -210,7 +225,27 @@ export class PeopleService extends ODataEntityService<Person> {
 }
 ```
 
-4) Inject and use the entity service
+4) Add module to your project
+
+```typescript
+import { NgModule } from '@angular/core';
+import { ODataModule } from 'angular-odata';
+import { TripPinConfig, PeopleService } from './trippin';
+
+@NgModule({
+  imports: [
+    ...
+    ODataModule.forRoot(TripPinConfig)
+    ...
+  ],
+  providers: [
+    PeopleService
+  ]
+})
+export class AppModule {}
+```
+
+5) Inject and use the entity service
 
 ```typescript
 import { Component } from '@angular/core';
@@ -247,20 +282,35 @@ export class AppComponent {
           let media = this.photos.entity(person.Photo).media();
           media.blob().subscribe(console.log);
         }
-        this.display = true;
       });
   }
 }
 ```
 
-5) Again, if you using OData to TypeScript import the service from generated source and use.
+### Advanced usage: OData Generator 
+
+1) If you choose using [OData Angular Generator](https://github.com/diegomvh/ODataApiGen), import the config and the module from generated source.
+
+```typescript
+import { NgModule } from '@angular/core';
+
+import { ODataModule } from 'angular-odata';
+import { TripPinConfig, TripPinModule } from './trippin';
+
+@NgModule({
+  imports: [
+    ...
+    ODataModule.forRoot(Object.assign(TripPinConfig, {baseUrl: 'https://services.odata.org/V4/TripPinServiceRW/' })),
+    TripPinModule
+  ]
+  ...
+})
+export class AppModule {}
+```
 
 For a deep query customizations the library use `odata-query` as a builder.
 
-## Base on implementation of odata-v4-ng
- - [OData service for Angular](https://github.com/riccardomariani/odata-v4-ng)
-
 ## Credits
 Angular OData is built using the following open source projects:
-- [OData service for Angular](https://github.com/riccardomariani/odata-v4-ng)
-- [OData v4 query builderMongoDb](https://github.com/techniq/odata-query)
+- [OData v4 query builder](https://github.com/techniq/odata-query)
+- [Generate RFC-compliant UUIDs in JavaScript](https://github.com/uuidjs/uuid)
