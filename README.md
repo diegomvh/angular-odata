@@ -16,6 +16,7 @@ npm i angular-odata
 Full examples of the library:
 
  - [TripPinEntity](https://github.com/diegomvh/TripPinEntity)
+ - [TripPinModel](https://github.com/diegomvh/TripPinModel)
 
 ## Usage:
 
