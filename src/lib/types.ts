@@ -79,3 +79,49 @@ export const entityAttributes = (value: any) => Object.keys(value)
   .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1)
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
+// JSON SCHEMA
+type JsonSchemaSelect<T> = Array<keyof T>;
+type JsonSchemaOrder<T> = Array<keyof T>;
+type JsonSchemaExpand<T> = {[P in keyof T]?: JsonSchemaConfig<T[P]> };
+
+export type JsonSchemaExpandOptions<T> = {
+  select?: JsonSchemaSelect<T>;
+  order?: JsonSchemaOrder<T>;
+  expand?: JsonSchemaExpand<T>;
+}
+
+export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>; 
+
+// SETTINGS AND PARSERS
+export type Field = {
+  type: string;
+  enum?: { [key: number]: string | number };
+  parser?: Parser<any>;
+  enumString?: boolean;
+  default?: any;
+  maxLength?: number;
+  key?: boolean;
+  collection?: boolean;
+  nullable?: boolean;
+  flags?: boolean;
+  navigation?: boolean;
+  field?: string;
+  ref?: string;
+}
+
+export type Parser<T> = {
+  type: string;
+  parse(value: any): T;
+  toJSON(value: T | Partial<T>): any;
+  toJsonSchema(config: JsonSchemaConfig<T>);
+  parserFor<E>(name: string): Parser<E>;
+  resolveKey(attrs: any);
+}
+
+export type Meta = {
+  type?: string;
+  base?: string;
+  set?: string;
+  fields: { [name: string]: Field }
+}
+

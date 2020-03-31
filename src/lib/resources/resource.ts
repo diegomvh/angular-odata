@@ -53,25 +53,22 @@ export class ODataResource<Type> {
   }
 
   toEntity(body: any): [Type | null, ODataEntityAnnotations | null] {
+    if (!body) return [null, null];
     let entity = entityAttributes(body);
     let annots = odataAnnotations(body);
-    return body ? 
-      [<Type>this.deserialize(entity), ODataEntityAnnotations.factory(annots)] :
-      [null, null];
+    return [<Type>this.deserialize(entity), ODataEntityAnnotations.factory(annots)];
   }
 
   toEntities(body: any): [Type[] | null, ODataEntitiesAnnotations | null] {
+    if (!body) return [null, null];
     let annots = odataAnnotations(body);
-    return body ? 
-      [<Type[]>this.deserialize(body[VALUE]), ODataEntitiesAnnotations.factory(annots)] :
-      [null, null];
+    return [<Type[]>this.deserialize(body[VALUE]), ODataEntitiesAnnotations.factory(annots)];
   }
 
   toValue(body: any): [Type | null, ODataPropertyAnnotations | null] {
+    if (!body) return [null, null];
     let annots = odataAnnotations(body);
-    return body ? 
-      [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(annots)] :
-      [null, null];
+    return [<Type>this.deserialize(body[VALUE]), ODataPropertyAnnotations.factory(annots)];
   }
 
   // Model

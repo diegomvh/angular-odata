@@ -7,8 +7,8 @@ import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 import { HttpOptions, HttpEntityOptions, HttpPropertyOptions } from '../resources/http-options';
 import { entityAttributes, odataAnnotations } from '../types';
-import { ODataField } from './meta';
 import { ODataCallableResource } from '../resources/requests/callable';
+import { ODataField } from './parser';
 
 export class ODataModel<T> {
   private _resource: ODataResource<T>;
@@ -79,7 +79,7 @@ export class ODataModel<T> {
     Object.assign(this, others);
       //Complexes
     let complexes = entries
-      .filter(([,, f]) => f && !f.navigation && f.schema)
+      .filter(([,, f]) => f && !f.navigation && f.parser)
       .reduce((acc, [k,, f]) => {
         let prop = (this._resource as ODataEntityResource<T>).property(f.name);
         let complex = this.related(prop, f);

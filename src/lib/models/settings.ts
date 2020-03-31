@@ -3,12 +3,13 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
-import { Parser, PARSERS } from './parser';
-import { Meta, ODataMeta } from './meta';
+import { Meta, Parser } from '../types';
+import { ODataMeta } from './meta';
+import { ODataParser, PARSERS } from './parser';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
-export interface ODataConfig {
+export type ODataConfig = {
   baseUrl: string,
   metadataUrl?: string,
   withCredentials?: boolean,
@@ -30,6 +31,7 @@ export class ODataSettings {
   creation?: Date;
   version?: string;
   enums?: {[type: string]: {[key: number]: string | number}};
+  parsers?: {[type: string]: ODataParser<any> };
   metas?: {[type: string]: ODataMeta<any> };
   models?: {[type: string]: { new(...any): ODataModel<any>} };
   collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
@@ -47,13 +49,21 @@ export class ODataSettings {
     this.models = config.models || {};
     this.collections = config.collections || {};
 
-    // Build schemas
+    // Build parsers
+    this.parsers = Object.entries(config.metas || {})
+      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataParser(config)}), {});
+
+    // Configure Parsers
+    Object.entries(this.parsers)
+      .forEach(([type, parser]) => parser.configure(type, this));
+
+    // Build metas
     this.metas = Object.entries(config.metas || {})
       .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataMeta(config)}), {});
 
-    // Configure
+    // Configure Metas
     Object.entries(this.metas)
-      .forEach(([type, schema]) => schema.configure(type, this));
+      .forEach(([type, meta]) => meta.configure(type, this));
   }
 
   public metaForType<E>(type: string): ODataMeta<E> {
