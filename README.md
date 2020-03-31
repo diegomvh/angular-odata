@@ -3,11 +3,13 @@
 A fluent API for querying, creating, updating and deleting OData resources in Angular.
 OData service for Angular.
 
-If you are using OData with Angular please check also my other related project, [OData to TypeScript Service Generator](https://github.com/diegomvh/Od2Ts)
+Please check also my other related project, [OData Angular Generator](https://github.com/diegomvh/ODataApiGen)
 
 ## Install:
 
 ```bash
+npm i uuid
+npm i odata-query
 npm i angular-odata
 ```
 
