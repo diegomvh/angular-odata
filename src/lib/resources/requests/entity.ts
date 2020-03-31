@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { PlainObject, EntityKey } from '../../types';
+import { PlainObject, EntityKey, Parser } from '../../types';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
@@ -12,7 +12,6 @@ import { ODataPathSegments, SegmentOptionTypes, SegmentTypes } from '../path-seg
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
-import { Parser } from '../../models';
 import { ODataMediaResource } from './media';
 import { ODataEntityAnnotations, ODataAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';

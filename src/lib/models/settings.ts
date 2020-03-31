@@ -5,7 +5,7 @@ import { ODataModel } from './model';
 import { ODataCollection } from './collection';
 import { Meta, Parser } from '../types';
 import { ODataMeta } from './meta';
-import { ODataParser, PARSERS } from './parser';
+import { ODataParser } from './parser';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -27,9 +27,9 @@ export class ODataSettings {
   baseUrl: string;
   metadataUrl?: string;
   withCredentials?: boolean;
-  stringAsEnum?: boolean;
   creation?: Date;
   version?: string;
+  stringAsEnum?: boolean;
   enums?: {[type: string]: {[key: number]: string | number}};
   parsers?: {[type: string]: ODataParser<any> };
   metas?: {[type: string]: ODataMeta<any> };
@@ -55,7 +55,7 @@ export class ODataSettings {
 
     // Configure Parsers
     Object.entries(this.parsers)
-      .forEach(([type, parser]) => parser.configure(type, this));
+      .forEach(([type, parser]) => parser.configure(type, { stringAsEnum: this.stringAsEnum, enums: this.enums, parsers: this.parsers }));
 
     // Build metas
     this.metas = Object.entries(config.metas || {})
@@ -63,7 +63,7 @@ export class ODataSettings {
 
     // Configure Metas
     Object.entries(this.metas)
-      .forEach(([type, meta]) => meta.configure(type, this));
+      .forEach(([type, meta]) => meta.configure(type, {metas: this.metas}));
   }
 
   public metaForType<E>(type: string): ODataMeta<E> {
@@ -77,11 +77,8 @@ export class ODataSettings {
   }
 
   public parserForType<T>(type: string): Parser<T> {
-    let options = this.metaForType(type);
-    if (!options && type in PARSERS) {
-      return PARSERS[type];
-    }
-    return options.parser as Parser<T>;
+    if (type in this.parsers)
+      return this.parsers[type] as ODataParser<T>;
   }
 
   public modelForType(type: string): typeof ODataModel {

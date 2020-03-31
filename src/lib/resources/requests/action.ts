@@ -3,11 +3,10 @@ import { Observable } from 'rxjs';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
-import { Parser } from '../../models';
 import { ODataCallableResource } from './callable';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { map } from 'rxjs/operators';
-import { $COUNT } from '../../types';
+import { $COUNT, Parser } from '../../types';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
 
 export class ODataActionResource<T> extends ODataCallableResource<T> {

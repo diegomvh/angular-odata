@@ -5,8 +5,8 @@ import { catchError } from 'rxjs/operators';
 
 import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource, ODataSegment, SegmentOptionTypes, ODataQueryOptions, ODataPathSegments, SegmentTypes, QueryOptionTypes, ODataEntityResource } from './resources';
 import { ODataSettings } from './models/settings';
-import { IF_MATCH_HEADER, PlainObject } from './types';
-import { ODataModel, ODataCollection, Parser } from './models';
+import { IF_MATCH_HEADER, PlainObject, Parser } from './types';
+import { ODataModel, ODataCollection } from './models';
 import { ODataMeta } from './models/meta';
 
 export const addBody = <T>(

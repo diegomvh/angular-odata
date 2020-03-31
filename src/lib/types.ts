@@ -109,7 +109,7 @@ export type Field = {
   ref?: string;
 }
 
-export type Parser<T> = {
+export interface Parser<T> {
   type: string;
   parse(value: any): T;
   toJSON(value: T | Partial<T>): any;

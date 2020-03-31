@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { PlainObject, $COUNT } from '../../types';
+import { PlainObject, $COUNT, Parser } from '../../types';
 import { ODataClient } from '../../client';
 import { QueryOptionTypes, Select, Expand } from '../query-options';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
@@ -11,7 +11,6 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { Parser } from '../../models';
 import { map } from 'rxjs/operators';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses';
 import { HttpOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpEntityOptions } from '../http-options';

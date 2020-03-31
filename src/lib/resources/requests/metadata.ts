@@ -5,8 +5,7 @@ import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
-import { $METADATA } from '../../types';
-import { Parser } from '../../models';
+import { $METADATA, Parser } from '../../types';
 import { ODataMetadata } from '../responses';
 import { HttpOptions } from '../http-options';
 

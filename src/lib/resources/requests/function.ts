@@ -1,8 +1,7 @@
 import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../path-segments';
 import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
 import { ODataClient } from '../../client';
-import { PlainObject, $COUNT } from '../../types';
-import { Parser } from '../../models';
+import { PlainObject, $COUNT, Parser } from '../../types';
 import { ODataCallableResource } from './callable';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { Observable } from 'rxjs';

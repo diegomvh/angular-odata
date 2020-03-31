@@ -4,8 +4,7 @@ import { ODataResource } from '../resource';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
-import { $VALUE } from '../../types';
-import { Parser } from '../../models';
+import { $VALUE, Parser } from '../../types';
 import { map } from 'rxjs/operators';
 import { HttpOptions } from '../http-options';
 

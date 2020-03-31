@@ -5,8 +5,7 @@ import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
-import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
-import { Parser } from '../../models';
+import { $REF as $REFERENCE, ODATA_ID, $ID, Parser } from '../../types';
 import { HttpOptions } from '../http-options';
 
 export class ODataReferenceResource extends ODataResource<any> {

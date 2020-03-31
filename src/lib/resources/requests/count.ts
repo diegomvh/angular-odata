@@ -4,8 +4,7 @@ import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
 import { ODataResource } from '../resource';
 import { ODataClient } from '../../client';
-import { $COUNT } from '../../types';
-import { Parser } from '../../models';
+import { $COUNT, Parser } from '../../types';
 import { HttpOptions } from '../http-options';
 
 export class ODataCountResource extends ODataResource<any> {

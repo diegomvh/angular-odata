@@ -1,6 +1,6 @@
-import { PlainObject, VALUE, entityAttributes, odataAnnotations } from '../types';
+import { PlainObject, VALUE, entityAttributes, odataAnnotations, Parser } from '../types';
 import { ODataClient } from '../client';
-import { Parser, ODataModel, ODataCollection } from '../models';
+import { ODataModel, ODataCollection } from '../models';
 import { Types } from '../utils';
 
 import { ODataPathSegments } from './path-segments';

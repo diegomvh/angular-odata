@@ -119,7 +119,11 @@ export class ODataParser<Type> implements Parser<Type> {
       .map(([name, f]) => new ODataField(name, f));
   }
 
-  configure(type: string, settings: ODataSettings) {
+  configure(type: string, settings: {
+    stringAsEnum?: boolean,
+    enums?: {[type: string]: {[key: number]: string | number}},
+    parsers?: {[type: string]: ODataParser<any> }
+  }) {
     this.type = type;
     if (this.base in settings.parsers) {
       this.parent = settings.parsers[this.base];
