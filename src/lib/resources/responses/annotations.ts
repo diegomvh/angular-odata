@@ -33,22 +33,6 @@ export class ODataAnnotations {
 
 }
 
-export class _ODataRelatedAnnotations extends ODataAnnotations {
-  clone(): _ODataRelatedAnnotations {
-    return new _ODataRelatedAnnotations(this.value);
-  };
-
-  get associationLink(): string {
-    if (ODATA_ASSOCIATIONLINK in this.value)
-      return decodeURIComponent(this.value[ODATA_ASSOCIATIONLINK] as string);
-  }
-
-  get navigationLink(): string {
-    if (ODATA_NAVIGATIONLINK in this.value)
-      return decodeURIComponent(this.value[ODATA_NAVIGATIONLINK] as string);
-  }
-}
-
 export class ODataValueAnnotations extends ODataAnnotations {
   clone(): ODataValueAnnotations {
     return new ODataValueAnnotations(this.value);
