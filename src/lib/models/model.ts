@@ -1,12 +1,26 @@
-import { Observable, NEVER } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select, ODataValueAnnotations, ODataEntitiesAnnotations } from '../resources';
+import { 
+  ODataResource, 
+  ODataEntityResource, 
+  ODataPropertyResource, 
+  ODataFunctionResource, 
+  ODataActionResource, 
+  ODataAnnotations, 
+  ODataEntityAnnotations, 
+  Expand, 
+  Select 
+} from '../resources';
 
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
-import { HttpOptions, HttpEntityOptions, HttpValueOptions } from '../resources/http-options';
-import { entityAttributes, odataAnnotations } from '../types';
+import { 
+  HttpOptions, 
+  HttpValueOptions,
+  HttpEntityOptions
+} from '../resources/http-options';
+import { VALUE } from '../types';
 import { ODataCallableResource } from '../resources/requests/callable';
 import { ODataField } from './parser';
 
@@ -47,10 +61,13 @@ export class ODataModel<T> {
   private related<R>(resource: ODataResource<R>, f: ODataField<any>) {
     let value = this._entity[f.name];
     if (f.collection) {
-      return resource.toCollection(value || []);
+      var annots = this._annotations.related(f.name);
+      // Merge value and annotations {value: []}
+      value = Object.assign(annots, {[VALUE]: value || []});
+      return resource.toCollection(value);
     } else {
       value = value || {};
-      return resource.toModel(value || {});
+      return resource.toModel(value);
     }
   }
 

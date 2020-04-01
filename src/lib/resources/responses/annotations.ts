@@ -19,10 +19,9 @@ export class ODataAnnotations {
   };
 
   related(name: string) {
-    let annotations = Object.keys(this.value)
+    return Object.keys(this.value)
       .filter(k => k.startsWith(name))
       .reduce((acc, key) => Object.assign(acc, {[key.substr(name.length)]: this.value[key]}), {});
-    return new ODataRelatedAnnotations(annotations);
   }
 
   property(name: string) {
@@ -34,9 +33,9 @@ export class ODataAnnotations {
 
 }
 
-export class ODataRelatedAnnotations extends ODataAnnotations {
-  clone(): ODataRelatedAnnotations {
-    return new ODataRelatedAnnotations(this.value);
+export class _ODataRelatedAnnotations extends ODataAnnotations {
+  clone(): _ODataRelatedAnnotations {
+    return new _ODataRelatedAnnotations(this.value);
   };
 
   get associationLink(): string {

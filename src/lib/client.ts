@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 
 import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource, ODataSegment, SegmentOptionTypes, ODataQueryOptions, ODataPathSegments, SegmentTypes, QueryOptionTypes, ODataEntityResource } from './resources';
 import { ODataSettings } from './models/settings';
-import { IF_MATCH_HEADER, PlainObject, Parser } from './types';
+import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT, ODATA_FULL } from './types';
 import { ODataModel, ODataCollection } from './models';
 import { ODataMeta } from './models/meta';
 
@@ -318,7 +318,7 @@ export class ODataClient {
     // The Url
     const url = this.createEndpointUrl(resource);
 
-    let customHeaders = {};
+    let customHeaders = {[ACCEPT]: ODATA_FULL};
     if (typeof (options.etag) === 'string')
       customHeaders[IF_MATCH_HEADER] = options.etag;
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);

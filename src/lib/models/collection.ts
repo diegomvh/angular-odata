@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
-import { Observable, of, NEVER } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataValueAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
@@ -9,7 +9,6 @@ import { ODataCallableResource } from '../resources/requests/callable';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   private _resource: ODataResource<T>;
-  private _entities: T[];
   private _annotations: ODataAnnotations | null;
   private _models: M[];
   private _state: {
@@ -32,7 +31,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   private populate(entities: T[], annots?: ODataAnnotations): this {
-    this._entities = entities;
     this._annotations = annots;
 
     this._state.records = (annots instanceof ODataEntitiesAnnotations && annots.count) ? annots.count : entities.length;
