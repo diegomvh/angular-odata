@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable, of, NEVER } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataValueAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';

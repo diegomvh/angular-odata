@@ -1,11 +1,11 @@
 import { Observable, NEVER } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select, ODataPropertyAnnotations, ODataEntitiesAnnotations } from '../resources';
+import { ODataEntityResource, Expand, ODataPropertyResource, ODataEntityAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, Select, ODataValueAnnotations, ODataEntitiesAnnotations } from '../resources';
 
 import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
-import { HttpOptions, HttpEntityOptions, HttpPropertyOptions } from '../resources/http-options';
+import { HttpOptions, HttpEntityOptions, HttpValueOptions } from '../resources/http-options';
 import { entityAttributes, odataAnnotations } from '../types';
 import { ODataCallableResource } from '../resources/requests/callable';
 import { ODataField } from './parser';
@@ -112,7 +112,7 @@ export class ODataModel<T> {
   }
 
   fetch(options?: HttpOptions): Observable<this | null> {
-    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+    let opts = <HttpEntityOptions & HttpValueOptions>{
       headers: options && options.headers,
       params: options && options.params,
       reportProgress: options && options.reportProgress,
@@ -127,7 +127,7 @@ export class ODataModel<T> {
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       obs$ = this._resource.get(Object.assign(opts, { responseType: 'entity' }));
     } else if (this._resource instanceof ODataPropertyResource) {
-      obs$ = this._resource.get(Object.assign(opts, { responseType: 'property' }));
+      obs$ = this._resource.get(Object.assign(opts, { responseType: 'value' }));
     } else if (this._resource instanceof ODataFunctionResource) {
       obs$ = this._resource.get(Object.assign(opts, { responseType: 'entity' }));
     }
@@ -138,7 +138,7 @@ export class ODataModel<T> {
   }
 
   create(options?: HttpOptions): Observable<this> {
-    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+    let opts = <HttpEntityOptions & HttpValueOptions>{
       headers: options && options.headers,
       params: options && options.params,
       reportProgress: options && options.reportProgress,
@@ -151,7 +151,7 @@ export class ODataModel<T> {
   }
 
   update(options?: HttpOptions): Observable<this> {
-    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+    let opts = <HttpEntityOptions & HttpValueOptions>{
       headers: options && options.headers,
       params: options && options.params,
       reportProgress: options && options.reportProgress,
@@ -176,7 +176,7 @@ export class ODataModel<T> {
   }
 
   destroy(options?: HttpOptions): Observable<null> {
-    let opts = <HttpEntityOptions & HttpPropertyOptions>{
+    let opts = <HttpEntityOptions & HttpValueOptions>{
       headers: options && options.headers,
       params: options && options.params,
       reportProgress: options && options.reportProgress,

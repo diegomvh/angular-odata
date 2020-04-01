@@ -4,10 +4,10 @@ import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataCallableResource } from './callable';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
 import { map } from 'rxjs/operators';
 import { $COUNT, Parser } from '../../types';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
 
 export class ODataActionResource<T> extends ODataCallableResource<T> {
   // Factory
@@ -30,9 +30,9 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
 
   post(body: any | null, options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
-  post(body: any | null, options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
+  post(body: any | null, options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
 
-  post(body: any | null, options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
+  post(body: any | null, options?: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -52,7 +52,7 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
           return res$.pipe(map((body: any) => this.toEntity(body)));
         case 'entities':
           return res$.pipe(map((body: any) => this.toEntities(body)));
-        case 'property':
+        case 'value':
           return res$.pipe(map((body: any) => this.toValue(body)));
       }
     }
@@ -61,7 +61,7 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
 
   call(
     args: any | null, 
-    responseType: 'property' | 'entity' | 'entities', 
+    responseType: 'json' | 'value' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any> {
     let ops = Object.assign<any, HttpOptions>({ responseType }, options || {});

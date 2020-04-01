@@ -3,11 +3,11 @@ import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
 import { ODataClient } from '../../client';
 import { PlainObject, $COUNT, Parser } from '../../types';
 import { ODataCallableResource } from './callable';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
 
 export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
@@ -42,9 +42,9 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
   get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
-  get(options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
+  get(options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
 
-  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
+  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -64,7 +64,7 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
           return res$.pipe(map((body: any) => this.toEntity(body)));
         case 'entities':
           return res$.pipe(map((body: any) => this.toEntities(body)));
-        case 'property':
+        case 'value':
           return res$.pipe(map((body: any) => this.toValue(body)));
       }
     }
@@ -73,7 +73,7 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
   call(
     args: any | null, 
-    responseType: 'property' | 'entity' | 'entities', 
+    responseType: 'json' | 'value' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any> {
     let ops = Object.assign<any, HttpOptions>({ responseType }, options || {});

@@ -12,8 +12,8 @@ import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { map } from 'rxjs/operators';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses';
-import { HttpOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpEntityOptions } from '../http-options';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses';
+import { HttpOptions, HttpEntitiesOptions, HttpValueOptions, HttpEntityOptions } from '../http-options';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -81,9 +81,9 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
-  get(options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
+  get(options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
 
-  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
+  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -103,7 +103,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
           return res$.pipe(map((body: any) => this.toEntity(body)));
         case 'entities':
           return res$.pipe(map((body: any) => this.toEntities(body)));
-        case 'property':
+        case 'value':
           return res$.pipe(map((body: any) => this.toValue(body)));
       }
     }

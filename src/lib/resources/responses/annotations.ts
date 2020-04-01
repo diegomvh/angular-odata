@@ -29,7 +29,7 @@ export class ODataAnnotations {
     let annotations = Object.keys(this.value)
       .filter(k => k.startsWith(name))
       .reduce((acc, key) => Object.assign(acc, {[key.substr(name.length)]: this.value[key]}), {});
-    return new ODataPropertyAnnotations(annotations);
+    return new ODataValueAnnotations(annotations);
   }
 
 }
@@ -50,9 +50,9 @@ export class ODataRelatedAnnotations extends ODataAnnotations {
   }
 }
 
-export class ODataPropertyAnnotations extends ODataAnnotations {
-  clone(): ODataPropertyAnnotations {
-    return new ODataPropertyAnnotations(this.value);
+export class ODataValueAnnotations extends ODataAnnotations {
+  clone(): ODataValueAnnotations {
+    return new ODataValueAnnotations(this.value);
   };
 
   get type(): string {
@@ -61,7 +61,7 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 
   static factory(data: any) {
-    return new ODataPropertyAnnotations(odataAnnotations(data));
+    return new ODataValueAnnotations(odataAnnotations(data));
   }
 }
 

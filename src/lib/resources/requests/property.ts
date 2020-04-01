@@ -7,9 +7,9 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataClient } from '../../client';
 import { map } from 'rxjs/operators';
-import { ODataPropertyAnnotations, ODataEntitiesAnnotations, ODataAnnotations } from '../responses';
+import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataAnnotations } from '../responses';
 import { $COUNT, Parser } from '../../types';
-import { HttpPropertyOptions, HttpEntitiesOptions } from '../http-options';
+import { HttpValueOptions, HttpEntitiesOptions } from '../http-options';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -48,11 +48,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
   }
 
-  get(options?: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
+  get(options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
 
   get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
-  get(options?: HttpPropertyOptions & HttpEntitiesOptions): Observable<any> {
+  get(options?: HttpValueOptions & HttpEntitiesOptions): Observable<any> {
 
     let params = options && options.params;
     if (options && options.withCount)
@@ -68,7 +68,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
     if (options && options.responseType) {
       switch (options.responseType) {
-        case 'property':
+        case 'value':
           return res$.pipe(map((body: any) => this.toValue(body)));
         case 'entities':
           return res$.pipe(map((body: any) => this.toEntities(body)));

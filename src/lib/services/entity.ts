@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, NEVER } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataEntitiesAnnotations, ODataEntityAnnotations, HttpOptions, ODataPropertyAnnotations } from '../resources';
+import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataEntitiesAnnotations, ODataEntityAnnotations, HttpOptions, ODataValueAnnotations } from '../resources';
 
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
