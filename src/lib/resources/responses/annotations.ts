@@ -1,4 +1,4 @@
-import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, ODATA_METADATAETAG, ODATA_MEDIA_EDITLINK, ODATA_MEDIA_ETAG, ODATA_MEDIA_READLINK, ODATA_MEDIA_CONTENTTYPE, ODATA_CONTEXT, ODATA_ID, ODATA_READLINK, ODATA_EDITLINK, ODATA_ASSOCIATIONLINK, ODATA_NAVIGATIONLINK, odataAnnotations } from '../../types';
+import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, ODATA_METADATAETAG, ODATA_MEDIA_EDITLINK, ODATA_MEDIA_ETAG, ODATA_MEDIA_READLINK, ODATA_MEDIA_CONTENTTYPE, ODATA_CONTEXT, ODATA_ID, ODATA_READLINK, ODATA_EDITLINK, ODATA_ASSOCIATIONLINK, ODATA_NAVIGATIONLINK, odataAnnotations, odataContext } from '../../types';
 
 export class ODataAnnotations {
   constructor(protected value: {[name: string]: any }) { }
@@ -8,16 +8,9 @@ export class ODataAnnotations {
   }
 
   // Context
-  get context(): string {
+  get context(): {set: string, type: string | null} {
     if (ODATA_CONTEXT in this.value)
-      return this.value[ODATA_CONTEXT] as string;
-  }
-
-  get entitySet(): string {
-    if (this.context) {
-      let index = this.context.lastIndexOf("#");
-      return this.context.substr(index + 1);
-    }
+      return odataContext(this.value[ODATA_CONTEXT]);
   }
 
   // Methods
@@ -77,7 +70,7 @@ export class ODataEntityAnnotations extends ODataAnnotations {
     return new ODataEntityAnnotations(this.value);
   };
 
-  get type() {
+  get type(): string {
     if (ODATA_TYPE in this.value)
       return this.value[ODATA_TYPE] as string;
   }

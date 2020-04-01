@@ -72,14 +72,24 @@ export class ODataResource<Type> {
   }
 
   // Model
-  toModel<M extends ODataModel<Type>>(entity?: Partial<Type>, annots?: ODataAnnotations): M {
+  protected buildModel<M extends ODataModel<Type>>(entity?: Partial<Type>, annots?: ODataAnnotations): M {
     let Model = this.client.modelForType(this.type());
     return new Model(this, entity, annots) as M;
   }
 
-  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities?: Partial<Type>[], annots?: ODataAnnotations): C {
+  toModel<M extends ODataModel<Type>>(body: any): M {
+    let [entity, annots] = this.toEntity(body);
+    return this.buildModel(entity, annots);
+  }
+
+  protected buildCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities?: Partial<Type>[], annots?: ODataAnnotations): C {
     let Collection = this.client.collectionForType(this.type());
     return new Collection(this, entities, annots) as C;
+  }
+
+  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(body: any): C {
+    let [entities, annots] = this.toEntities(body);
+    return this.buildCollection(entities, annots);
   }
 
   toString(): string {

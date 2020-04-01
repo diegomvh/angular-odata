@@ -47,14 +47,10 @@ export class ODataModel<T> {
   private related<R>(resource: ODataResource<R>, f: ODataField<any>) {
     let value = this._entity[f.name];
     if (f.collection) {
-      value = value || [];
-      let annots = this._annotations !== null ? this._annotations.related(f.name) : undefined;
-      return resource.toCollection(value, annots);
+      return resource.toCollection(value || []);
     } else {
       value = value || {};
-      let entity = entityAttributes(value);
-      let annots = ODataEntityAnnotations.factory(odataAnnotations(value));
-      return resource.toModel(entity, annots);
+      return resource.toModel(value || {});
     }
   }
 
@@ -224,15 +220,14 @@ export class ODataModel<T> {
     responseType: 'value' | 'model' | 'collection', 
     options?: HttpOptions
   ): Observable<any> {
-    let res$ = callable.call(args, (responseType === 'value') ? 'property' : 
-      responseType === 'model' ? 'entity' : 'entities', options);
+    let res$ = callable.call(args, 'json', options);
     switch (responseType) {
       case 'value':
-        return (res$ as Observable<[any, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
+        return res$.pipe(map((body: any) => callable.toValue(body)[0]));
       case 'model':
-        return (res$ as Observable<[any, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => callable.toModel<ODataModel<any>>(entity, annots)));
+        return res$.pipe(map((body: any) => callable.toModel<ODataModel<any>>(body)));
       case 'collection':
-        return (res$ as Observable<[any[], ODataEntitiesAnnotations]>).pipe(map(([entities, annots]) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(entities, annots)));
+        return res$.pipe(map((body: any) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(body)));
     }
   }
 

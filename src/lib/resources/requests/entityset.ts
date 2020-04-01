@@ -7,22 +7,23 @@ import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataQueryOptions } from '../query-options';
-import { ODataEntityResource, ODataToEntityResource } from './entity';
+import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
-import { EntityKey, PlainObject, $COUNT, Parser } from '../../types';
+import { EntityKey, $COUNT, Parser } from '../../types';
 import { ODataResource } from '../resource';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataAnnotations } from '../responses';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';
+import { ODataModel } from '../../models';
 
-export class ODataEntitySetResource<T> extends ODataResource<T> implements ODataToEntityResource<T>  {
+export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(name: string, client: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parser?: Parser<E>}
-  ) {
+    segments?: ODataPathSegments, 
+    options?: ODataQueryOptions,
+    parser?: Parser<E> 
+  }) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
     let parser = opts && opts.parser || null;
@@ -30,6 +31,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> implements OData
     segments.segment(SegmentTypes.entitySet, name);
     options.keep(QueryOptionTypes.filter, QueryOptionTypes.orderBy, QueryOptionTypes.skip, QueryOptionTypes.transform, QueryOptionTypes.top, QueryOptionTypes.search, QueryOptionTypes.format);
     return new ODataEntitySetResource<E>(client, segments, options, parser);
+  }
+
+  toModel<M extends ODataModel<T>>(body: any): M {
+    return this.entity(body).toModel(body);
   }
 
   // EntitySet
@@ -42,7 +47,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> implements OData
     return segment.name;
   }
 
-  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
+  entity(key?: EntityKey<T>) {
     let entity = ODataEntityResource.factory<T>(
       this.client, {
       segments: this.pathSegments.clone(),

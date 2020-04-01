@@ -1,7 +1,7 @@
 import { map } from 'rxjs/operators';
 import { Observable, of, NEVER } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations, ODataToEntityResource } from '../resources';
+import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataEntityAnnotations, ODataPropertyAnnotations, ODataRelatedAnnotations, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
@@ -39,15 +39,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this._state.records = (annots instanceof ODataEntitiesAnnotations && annots.count) ? annots.count : entities.length;
     this._state.size = (annots instanceof ODataEntitiesAnnotations && annots.skip) ? annots.skip : entities.length;
     this._state.pages = (this._state.records && this._state.size) ? Math.ceil(this._state.records / this._state.size) : 1;
-    const entityMapper = (value) => {
-      let entity = entityAttributes(value);
-      let eannots = ODataEntityAnnotations.factory(odataAnnotations(value));
-      if ("entity" in this._resource) {
-        let res = this._resource as ODataToEntityResource<T>;
-        return res.entity(value, annots).toModel(entity, eannots) as M;
-      }
-    }
-    this._models = entities.map(entityMapper);
+    this._models = entities.map(value => this._resource.toModel(value) as M);
     return this;
   }
 
@@ -202,38 +194,20 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     options?: HttpOptions
   ): Observable<C>;
 
-  protected call(
-    callable: ODataCallableResource<any>, 
+  protected call<R>(
+    callable: ODataCallableResource<R>, 
     args: any | null, 
     responseType: 'value' | 'model' | 'collection', 
     options?: HttpOptions
   ): Observable<any> {
-    let ops = <any>{
-      headers: options && options.headers,
-      params: options && options.params,
-      responseType: responseType === 'value' ? 'property' : 
-        responseType === 'model' ? 'entity' : 'entities',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials,
-      withCount: responseType === 'collection' 
-    }
-    let res$: Observable<any> = NEVER;
-    if (callable instanceof ODataFunctionResource) {
-      if (args)
-        callable.parameters(args);
-      res$ = callable.get(ops) as Observable<any>;
-    } else if (callable instanceof ODataActionResource) {
-      res$ = callable.post(args, ops) as Observable<any>;
-    } else {
-      throw new Error(`Can't call resource`);
-    }
+    let res$ = callable.call(args, 'json', options);
     switch (responseType) {
       case 'value':
-        return (res$ as Observable<[any, ODataPropertyAnnotations]>).pipe(map(([value, ]) => value));
+        return res$.pipe(map((body: any) => callable.toValue(body)[0]));
       case 'model':
-        return (res$ as Observable<[any, ODataEntityAnnotations]>).pipe(map(([entity, annots]) => callable.toModel<ODataModel<any>>(entity, annots)));
+        return res$.pipe(map((body: any) => callable.toModel<ODataModel<any>>(body)));
       case 'collection':
-        return (res$ as Observable<[any[], ODataEntitiesAnnotations]>).pipe(map(([entities, annots]) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(entities, annots)));
+        return res$.pipe(map((body: any) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(body)));
     }
   }
 

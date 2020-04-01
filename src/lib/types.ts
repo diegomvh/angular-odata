@@ -79,6 +79,14 @@ export const entityAttributes = (value: any) => Object.keys(value)
   .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1)
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
+export const odataContext = (context: string) => {
+  let index = context.lastIndexOf("#");
+  let parts = context.substr(index + 1).split("/");
+  let set = parts[0];
+  let type = parts.length > 3 ? parts[1] : null;
+  return { set, type };
+}
+
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
 type JsonSchemaOrder<T> = Array<keyof T>;

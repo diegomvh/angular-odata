@@ -16,10 +16,6 @@ import { ODataMediaResource } from './media';
 import { ODataEntityAnnotations, ODataAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';
 
-export interface ODataToEntityResource<T> {
-  entity(key?: EntityKey<T>, annots?: ODataAnnotations);
-}
-
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(client: ODataClient, opts?: {

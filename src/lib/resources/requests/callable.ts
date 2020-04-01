@@ -1,17 +1,19 @@
 import { ODataResource } from '../resource';
-import { EntityKey } from '../../types';
 import { ODataEntitiesAnnotations, ODataAnnotations, ODataEntityAnnotations, ODataPropertyAnnotations } from '../responses';
-import { ODataToEntityResource } from './entity';
 import { HttpOptions } from '../http-options';
 import { Observable } from 'rxjs';
 import { SegmentTypes } from '../path-segments';
 import { Types } from '../../utils';
+import { ODataModel } from '../../models/model';
+import { ODATA_CONTEXT, odataContext } from '../../types';
 
-export abstract class ODataCallableResource<T> extends ODataResource<T> implements ODataToEntityResource<T> {
-  entity(key?: EntityKey<T>, annots?: ODataAnnotations) {
-    if (annots instanceof ODataEntitiesAnnotations) {
-      return this.client.entitySet(annots.entitySet, this.type()).entity(key);
+export abstract class ODataCallableResource<T> extends ODataResource<T> {
+  toModel<M extends ODataModel<T>>(body: any): M {
+    if (ODATA_CONTEXT in body) {
+      let context = odataContext(body[ODATA_CONTEXT]);
+      return this.client.entitySet<T>(context.set, context.type || this.type()).toModel(body);
     }
+    return super.toModel(body);
   }
 
   // EntitySet
@@ -44,7 +46,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> implemen
 
   abstract call(
     args: any | null, 
-    responseType: 'property' | 'entity' | 'entities', 
+    responseType: 'json' | 'property' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any>;
 }
