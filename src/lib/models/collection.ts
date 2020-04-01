@@ -5,7 +5,6 @@ import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, OData
 
 import { ODataModel } from './model';
 import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
-import { entityAttributes, odataAnnotations } from '../types';
 import { ODataCallableResource } from '../resources/requests/callable';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {

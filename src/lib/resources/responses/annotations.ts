@@ -56,8 +56,10 @@ export class ODataValueAnnotations extends ODataAnnotations {
   };
 
   get type(): string {
-    if (ODATA_TYPE in this.value)
-      return this.value[ODATA_TYPE] as string;
+    if (ODATA_TYPE in this.value) {
+      let index = this.value[ODATA_TYPE].lastIndexOf("#");
+      return this.value[ODATA_TYPE].substr(index + 1);
+    }
   }
 
   static factory(data: any) {
@@ -71,8 +73,10 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   };
 
   get type(): string {
-    if (ODATA_TYPE in this.value)
-      return this.value[ODATA_TYPE] as string;
+    if (ODATA_TYPE in this.value) {
+      let index = this.value[ODATA_TYPE].lastIndexOf("#");
+      return this.value[ODATA_TYPE].substr(index + 1);
+    }
   }
 
   get id() {
