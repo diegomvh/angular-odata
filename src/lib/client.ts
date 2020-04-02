@@ -3,11 +3,23 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataBatchResource, ODataMetadataResource, ODataEntitySetResource, ODataSingletonResource, ODataFunctionResource, ODataActionResource, ODataResource, ODataSegment, SegmentOptionTypes, ODataQueryOptions, ODataPathSegments, SegmentTypes, QueryOptionTypes, ODataEntityResource } from './resources';
+import { 
+  ODataResource, 
+  ODataBatchResource, 
+  ODataMetadataResource, 
+  ODataEntitySetResource, 
+  ODataSingletonResource, 
+  ODataFunctionResource, 
+  ODataActionResource, 
+  ODataEntityResource,
+  SegmentOptionTypes, 
+  SegmentTypes, 
+} from './resources';
 import { ODataSettings } from './models/settings';
-import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT, ODATA_FULL } from './types';
+import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT } from './types';
 import { ODataModel, ODataCollection } from './models';
 import { ODataMeta } from './models/meta';
+import { Types } from './utils';
 
 export const addBody = <T>(
   options: {
@@ -53,7 +65,7 @@ export class ODataClient {
     return this.settings.metaForType(type) as ODataMeta<T>;
   }
 
-  setForType<T>(type: string): string | null {
+  setForType(type: string): string | null {
     return this.settings.setForType(type) as string;
   }
 
@@ -318,10 +330,15 @@ export class ODataClient {
     // The Url
     const url = this.createEndpointUrl(resource);
 
-    let customHeaders = {[ACCEPT]: `application/json;${ODATA_FULL}, text/plain, */*` };
+    let customHeaders = {};
     if (typeof (options.etag) === 'string')
       customHeaders[IF_MATCH_HEADER] = options.etag;
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);
+
+    // Metadata ?
+    let acceptMetadata = this.settings.acceptMetadata;
+    if (!Types.isUndefined(acceptMetadata))
+      headers = headers.append(ACCEPT, `application/json;odata.metadata=${acceptMetadata}, text/plain, */*`);
 
     // Params
     let resourceParams = resource.params();
@@ -331,7 +348,7 @@ export class ODataClient {
 
     // Credentials ?
     let withCredentials = options.withCredentials;
-    if (withCredentials === undefined)
+    if (Types.isUndefined(withCredentials))
       withCredentials = this.settings.withCredentials;
 
     // Call http request

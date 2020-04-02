@@ -13,6 +13,7 @@ export type ODataConfig = {
   baseUrl: string,
   metadataUrl?: string,
   withCredentials?: boolean,
+  acceptMetadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean,
   creation?: Date,
   version?: string,
@@ -27,6 +28,7 @@ export class ODataSettings {
   baseUrl: string;
   metadataUrl?: string;
   withCredentials?: boolean;
+  acceptMetadata?: 'minimal' | 'full' | 'none';
   creation?: Date;
   version?: string;
   stringAsEnum?: boolean;
@@ -41,6 +43,7 @@ export class ODataSettings {
     this.baseUrl = config.baseUrl;
     this.metadataUrl = config.metadataUrl || `${config.baseUrl}$metadata`;
     this.withCredentials = config.withCredentials || false;
+    this.acceptMetadata = config.acceptMetadata;
     this.stringAsEnum = config.stringAsEnum || false;
     this.creation = config.creation || new Date();
     this.errorHandler = config.errorHandler || null;
