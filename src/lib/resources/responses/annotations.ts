@@ -1,4 +1,22 @@
-import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, ODATA_METADATAETAG, ODATA_MEDIA_EDITLINK, ODATA_MEDIA_ETAG, ODATA_MEDIA_READLINK, ODATA_MEDIA_CONTENTTYPE, ODATA_CONTEXT, ODATA_ID, ODATA_READLINK, ODATA_EDITLINK, odataAnnotations, odataContext, ODATA_FUNCTION_PREFIX, ODATA_ANNOTATION_PREFIX } from '../../types';
+import { 
+  ODATA_ETAG, 
+  ODATA_COUNT, 
+  ODATA_NEXTLINK, 
+  ODATA_TYPE, 
+  ODATA_DELTALINK, 
+  ODATA_METADATAETAG, 
+  ODATA_MEDIA_EDITLINK, 
+  ODATA_MEDIA_ETAG, 
+  ODATA_MEDIA_READLINK, 
+  ODATA_MEDIA_CONTENTTYPE, 
+  ODATA_CONTEXT, 
+  ODATA_ID, 
+  ODATA_READLINK, 
+  ODATA_EDITLINK, 
+  ODATA_FUNCTION_PREFIX, 
+  ODATA_ANNOTATION_PREFIX,
+  odataAnnotations
+} from '../../types';
 
 export class ODataAnnotations {
   constructor(protected value: { [name: string]: any }) { }
@@ -8,9 +26,20 @@ export class ODataAnnotations {
   }
 
   // Context
+  private _context: any;
   get context(): { set: string, type: string | null } {
-    if (ODATA_CONTEXT in this.value)
-      return odataContext(this.value[ODATA_CONTEXT]);
+    if (!this._context) {
+      this._context = {};
+      if (ODATA_CONTEXT in this.value) {
+        let value = this.value[ODATA_CONTEXT];
+        let index = value.lastIndexOf("#");
+        let parts = value.substr(index + 1).split("/");
+        let set = parts[0];
+        let type = parts.length > 3 ? parts[1] : null;
+        this._context = { set, type };
+      }
+    }
+    return this._context;
   }
 
   private _functions: any;

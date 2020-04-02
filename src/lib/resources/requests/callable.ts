@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 import { SegmentTypes } from '../path-segments';
 import { Types } from '../../utils';
 import { ODataModel } from '../../models/model';
-import { ODATA_CONTEXT, odataContext } from '../../types';
+import { ODATA_CONTEXT } from '../../types';
 
 export abstract class ODataCallableResource<T> extends ODataResource<T> {
   toModel<M extends ODataModel<T>>(body: any): M {
     if (ODATA_CONTEXT in body) {
-      let context = odataContext(body[ODATA_CONTEXT]);
-      return this.client.entitySet<T>(context.set, context.type || this.type()).toModel(body);
+      let annots = ODataAnnotations.factory(body);
+      return this.client.entitySet<T>(annots.context.set, annots.context.type || this.type()).toModel(body);
     }
     return super.toModel(body);
   }

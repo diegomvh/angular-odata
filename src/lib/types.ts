@@ -59,9 +59,6 @@ export const ACCEPT = 'Accept';
 export const APPLICATION_JSON = 'application/json';
 export const APPLICATION_HTTP = 'application/http';
 export const TEXT_PLAIN = 'text/plain';
-export const ODATA_MINIMAL = 'odata.metadata=minimal';
-export const ODATA_FULL = 'odata.metadata=full';
-export const ODATA_NONE = 'odata.metadata=none';
 export const VERSION_4_0 = '4.0';
 export const MULTIPART_MIXED = 'multipart/mixed';
 export const MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
@@ -79,14 +76,6 @@ export const odataAnnotations = (value: any) => Object.keys(value)
 export const entityAttributes = (value: any) => Object.keys(value)
   .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
-
-export const odataContext = (context: string) => {
-  let index = context.lastIndexOf("#");
-  let parts = context.substr(index + 1).split("/");
-  let set = parts[0];
-  let type = parts.length > 3 ? parts[1] : null;
-  return { set, type };
-}
 
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
