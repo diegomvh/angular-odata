@@ -13,7 +13,7 @@ import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { ODataMediaResource } from './media';
-import { ODataEntityAnnotations, ODataAnnotations } from '../responses';
+import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';
 
 export class ODataEntityResource<T> extends ODataResource<T> {

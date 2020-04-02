@@ -1,20 +1,37 @@
-import { PlainObject, VALUE, entityAttributes, odataAnnotations, Parser } from '../types';
+import { 
+  PlainObject, 
+  VALUE, 
+  entityAttributes, 
+  odataAnnotations, 
+  Parser 
+} from '../types';
 import { ODataClient } from '../client';
-import { ODataModel, ODataCollection } from '../models';
+import { 
+  ODataModel, 
+  ODataCollection 
+} from '../models';
 import { Types } from '../utils';
 
 import { ODataPathSegments } from './path-segments';
-import { ODataQueryOptions, QueryOptionTypes } from './query-options';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations, ODataAnnotations } from './responses';
+import { 
+  ODataQueryOptions, 
+  QueryOptionTypes 
+} from './query-options';
+import { 
+  ODataAnnotations,
+  ODataValueAnnotations, 
+  ODataEntityAnnotations, 
+  ODataEntitiesAnnotations
+} from './responses';
 
 export class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
 
   // VARIABLES
-   protected client: ODataClient;
-   protected pathSegments: ODataPathSegments;
-   protected queryOptions: ODataQueryOptions;
-   protected parser: Parser<Type> | null;
+  protected client: ODataClient;
+  protected pathSegments: ODataPathSegments;
+  protected queryOptions: ODataQueryOptions;
+  protected parser: Parser<Type> | null;
 
   constructor(
     client: ODataClient,
@@ -44,54 +61,59 @@ export class ODataResource<Type> {
     return this.queryOptions.params();
   }
 
-  serialize(obj: Type | Partial<Type>): any {
+  protected applyType(type: string) {
+    this.parser = this.client.parserForType(type);
+  }
+
+  protected serialize(obj: Type | Partial<Type>): any {
     return this.parser ? this.parser.toJSON(obj) : obj;
   }
 
-  deserialize(attrs: any): Type | Type[] {
-    return this.parser ? this.parser.parse(attrs) : attrs;
+  protected deserialize<T>(value: any): T {
+    return this.parser ? this.parser.parse(value) : value;
   }
 
+  // to<Thing>
   toEntity(body: any): [Type | null, ODataEntityAnnotations | null] {
     if (!body) return [null, null];
-    let entity = entityAttributes(body);
-    let annots = odataAnnotations(body);
-    return [<Type>this.deserialize(entity), ODataEntityAnnotations.factory(annots)];
+    let annots = ODataEntityAnnotations.factory(odataAnnotations(body));
+    let type = (annots.context && annots.context.type) ? annots.context.type : annots.type;
+    if (!Types.isNullOrUndefined(type) && type !== this.type())
+      this.applyType(type);
+    let attrs = entityAttributes(body);
+    return [this.deserialize<Type>(attrs), annots];
   }
 
   toEntities(body: any): [Type[] | null, ODataEntitiesAnnotations | null] {
     if (!body) return [null, null];
-    let annots = odataAnnotations(body);
-    return [<Type[]>this.deserialize(body[VALUE]), ODataEntitiesAnnotations.factory(annots)];
+    let annots = ODataEntitiesAnnotations.factory(odataAnnotations(body));
+    let type = annots.context && annots.context.type || null;
+    if (!Types.isNullOrUndefined(type) && type !== this.type())
+      this.applyType(type);
+    let value = body[VALUE];
+    return [this.deserialize<Type[]>(value), annots];
   }
 
   toValue(body: any): [Type | null, ODataValueAnnotations | null] {
     if (!body) return [null, null];
-    let annots = odataAnnotations(body);
-    return [<Type>this.deserialize(body[VALUE]), ODataValueAnnotations.factory(annots)];
-  }
-
-  // Model
-  protected buildModel<M extends ODataModel<Type>>(entity: Partial<Type>, annots: ODataEntityAnnotations): M {
-    let Model = this.client.modelForType(annots.type || this.type());
-    return new Model(this, entity, annots) as M;
+    let annots = ODataValueAnnotations.factory(odataAnnotations(body));
+    let value = body[VALUE];
+    return [this.deserialize<Type>(value), annots];
   }
 
   toModel<M extends ODataModel<Type>>(body: any): M {
     let [entity, annots] = this.toEntity(body);
-    return this.buildModel(entity, annots);
-  }
-
-  protected buildCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], annots: ODataEntitiesAnnotations): C {
-    let Collection = this.client.collectionForType(this.type());
-    return new Collection(this, entities, annots) as C;
+    let Model = this.client.modelForType(this.type());
+    return new Model(this, entity, annots) as M;
   }
 
   toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(body: any): C {
     let [entities, annots] = this.toEntities(body);
-    return this.buildCollection(entities, annots);
+    let Collection = this.client.collectionForType(this.type());
+    return new Collection(this, entities, annots) as C;
   }
 
+  // Debug
   toString(): string {
     let path = this.path();
     let queryString = Object.entries(this.params())

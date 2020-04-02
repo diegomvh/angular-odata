@@ -1,4 +1,4 @@
-import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, ODATA_METADATAETAG, ODATA_MEDIA_EDITLINK, ODATA_MEDIA_ETAG, ODATA_MEDIA_READLINK, ODATA_MEDIA_CONTENTTYPE, ODATA_CONTEXT, ODATA_ID, ODATA_READLINK, ODATA_EDITLINK, ODATA_ASSOCIATIONLINK, ODATA_NAVIGATIONLINK, odataAnnotations, odataContext } from '../../types';
+import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, ODATA_METADATAETAG, ODATA_MEDIA_EDITLINK, ODATA_MEDIA_ETAG, ODATA_MEDIA_READLINK, ODATA_MEDIA_CONTENTTYPE, ODATA_CONTEXT, ODATA_ID, ODATA_READLINK, ODATA_EDITLINK, ODATA_ASSOCIATIONLINK, ODATA_NAVIGATIONLINK, odataAnnotations, odataContext, odataType } from '../../types';
 
 export class ODataAnnotations {
   constructor(protected value: {[name: string]: any }) { }
@@ -30,7 +30,6 @@ export class ODataAnnotations {
       .reduce((acc, key) => Object.assign(acc, {[key.substr(name.length)]: this.value[key]}), {});
     return new ODataValueAnnotations(annotations);
   }
-
 }
 
 export class ODataValueAnnotations extends ODataAnnotations {
@@ -38,15 +37,14 @@ export class ODataValueAnnotations extends ODataAnnotations {
     return new ODataValueAnnotations(this.value);
   };
 
-  get type(): string {
-    if (ODATA_TYPE in this.value) {
-      let index = this.value[ODATA_TYPE].lastIndexOf("#");
-      return this.value[ODATA_TYPE].substr(index + 1);
-    }
-  }
-
   static factory(data: any) {
     return new ODataValueAnnotations(odataAnnotations(data));
+  }
+
+  get type(): string {
+    if (ODATA_TYPE in this.value) {
+      return odataType(this.value[ODATA_TYPE]);
+    }
   }
 }
 
@@ -57,8 +55,7 @@ export class ODataEntityAnnotations extends ODataAnnotations {
 
   get type(): string {
     if (ODATA_TYPE in this.value) {
-      let index = this.value[ODATA_TYPE].lastIndexOf("#");
-      return this.value[ODATA_TYPE].substr(index + 1);
+      return odataType(this.value[ODATA_TYPE]);
     }
   }
 

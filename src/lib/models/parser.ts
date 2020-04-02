@@ -140,7 +140,7 @@ export class ODataParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  parse(objs: any): any {
+  parse(objs: any): Type | Type[] {
     if (this.parent)
       objs = this.parent.parse(objs);
     let _parse = (obj) =>

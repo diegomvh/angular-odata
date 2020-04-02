@@ -1,10 +1,27 @@
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { ODataEntitySetResource, Filter, Expand, GroupBy, Select, OrderBy, ODataEntityResource, ODataNavigationPropertyResource, ODataEntitiesAnnotations, ODataFunctionResource, ODataActionResource, ODataResource, ODataAnnotations } from '../resources';
+import {
+  ODataResource,
+  ODataEntitySetResource,
+  ODataEntityResource,
+  ODataNavigationPropertyResource,
+  ODataFunctionResource,
+  ODataActionResource,
+  ODataAnnotations,
+  ODataEntitiesAnnotations,
+  Filter,
+  Expand,
+  GroupBy,
+  Select,
+  OrderBy
+} from '../resources';
 
 import { ODataModel } from './model';
-import { HttpOptions, HttpEntitiesOptions } from '../resources/http-options';
+import {
+  HttpOptions,
+  HttpEntitiesOptions
+} from '../resources/http-options';
 import { ODataCallableResource } from '../resources/requests/callable';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
@@ -171,30 +188,30 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Callable
   protected call<R>(
-    callable: ODataCallableResource<R>, 
-    args: any | null, 
-    responseType: 'value', 
+    callable: ODataCallableResource<R>,
+    args: any | null,
+    responseType: 'value',
     options?: HttpOptions
   ): Observable<R>;
 
   protected call<R, M extends ODataModel<R>>(
-    callable: ODataCallableResource<R>, 
-    args: any | null, 
-    responseType: 'model', 
+    callable: ODataCallableResource<R>,
+    args: any | null,
+    responseType: 'model',
     options?: HttpOptions
   ): Observable<M>;
 
   protected call<R, M extends ODataModel<R>, C extends ODataCollection<R, M>>(
-    callable: ODataCallableResource<R>, 
-    args: any | null, 
-    responseType: 'collection', 
+    callable: ODataCallableResource<R>,
+    args: any | null,
+    responseType: 'collection',
     options?: HttpOptions
   ): Observable<C>;
 
   protected call<R>(
-    callable: ODataCallableResource<R>, 
-    args: any | null, 
-    responseType: 'value' | 'model' | 'collection', 
+    callable: ODataCallableResource<R>,
+    args: any | null,
+    responseType: 'value' | 'model' | 'collection',
     options?: HttpOptions
   ): Observable<any> {
     let res$ = callable.call(args, 'json', options);

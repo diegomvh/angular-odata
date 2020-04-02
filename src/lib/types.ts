@@ -87,6 +87,11 @@ export const odataContext = (context: string) => {
   return { set, type };
 }
 
+export const odataType = (type: string) => {
+  let index = type.lastIndexOf("#");
+  return type.substr(index + 1);
+}
+
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
 type JsonSchemaOrder<T> = Array<keyof T>;
@@ -119,7 +124,7 @@ export type Field = {
 
 export interface Parser<T> {
   type: string;
-  parse(value: any): T;
+  parse(value: any): any;
   toJSON(value: T | Partial<T>): any;
   toJsonSchema(config: JsonSchemaConfig<T>);
   parserFor<E>(name: string): Parser<E>;
