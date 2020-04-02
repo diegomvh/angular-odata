@@ -337,7 +337,7 @@ export class ODataClient {
 
     // Metadata ?
     let acceptMetadata = this.settings.acceptMetadata;
-    if (!Types.isUndefined(acceptMetadata))
+    if (!Types.isUndefined(acceptMetadata) && options.responseType === 'json' && options.observe === 'body')
       headers = headers.append(ACCEPT, `application/json;odata.metadata=${acceptMetadata}, text/plain, */*`);
 
     // Params
