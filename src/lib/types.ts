@@ -5,6 +5,7 @@ export type PlainObject = { [property: string]: any };
 
 // ANNOTATIONS
 export const ODATA_ANNOTATION_PREFIX = '@odata';
+export const ODATA_FUNCTION_PREFIX = '#';
 //odata.context: the context URL for a collection, entity, primitive value, or service document.
 export const ODATA_CONTEXT = '@odata.context';
 //odata.count: the total count of a collection of entities or collection of entity references, if requested.
@@ -72,11 +73,11 @@ export const NEWLINE = '\r\n';
 export const VALUE = 'value';
 
 export const odataAnnotations = (value: any) => Object.keys(value)
-  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) !== -1)
+  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
 export const entityAttributes = (value: any) => Object.keys(value)
-  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1)
+  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
 export const odataContext = (context: string) => {
@@ -85,11 +86,6 @@ export const odataContext = (context: string) => {
   let set = parts[0];
   let type = parts.length > 3 ? parts[1] : null;
   return { set, type };
-}
-
-export const odataType = (type: string) => {
-  let index = type.lastIndexOf("#");
-  return type.substr(index + 1);
 }
 
 // JSON SCHEMA

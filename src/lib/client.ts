@@ -318,7 +318,7 @@ export class ODataClient {
     // The Url
     const url = this.createEndpointUrl(resource);
 
-    let customHeaders = {[ACCEPT]: ODATA_FULL};
+    let customHeaders = {[ACCEPT]: `application/json;${ODATA_FULL}, text/plain, */*` };
     if (typeof (options.etag) === 'string')
       customHeaders[IF_MATCH_HEADER] = options.etag;
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);

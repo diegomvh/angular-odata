@@ -61,7 +61,7 @@ export class ODataModel<T> {
   private related<R>(resource: ODataResource<R>, f: ODataField<any>) {
     let value = this._entity[f.name];
     if (f.collection) {
-      var annots = this._annotations.related(f.name);
+      var annots = this._annotations.property(f.name);
       // Merge value and annotations {value: []}
       value = Object.assign(annots, {[VALUE]: value || []});
       return resource.toCollection(value);

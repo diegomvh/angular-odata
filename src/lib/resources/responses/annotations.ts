@@ -1,35 +1,58 @@
-import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, ODATA_METADATAETAG, ODATA_MEDIA_EDITLINK, ODATA_MEDIA_ETAG, ODATA_MEDIA_READLINK, ODATA_MEDIA_CONTENTTYPE, ODATA_CONTEXT, ODATA_ID, ODATA_READLINK, ODATA_EDITLINK, ODATA_ASSOCIATIONLINK, ODATA_NAVIGATIONLINK, odataAnnotations, odataContext, odataType } from '../../types';
+import { ODATA_ETAG, ODATA_COUNT, ODATA_NEXTLINK, ODATA_TYPE, ODATA_DELTALINK, ODATA_METADATAETAG, ODATA_MEDIA_EDITLINK, ODATA_MEDIA_ETAG, ODATA_MEDIA_READLINK, ODATA_MEDIA_CONTENTTYPE, ODATA_CONTEXT, ODATA_ID, ODATA_READLINK, ODATA_EDITLINK, odataAnnotations, odataContext, ODATA_FUNCTION_PREFIX, ODATA_ANNOTATION_PREFIX } from '../../types';
 
 export class ODataAnnotations {
-  constructor(protected value: {[name: string]: any }) { }
+  constructor(protected value: { [name: string]: any }) { }
 
   static factory(data: any) {
     return new ODataAnnotations(odataAnnotations(data));
   }
 
   // Context
-  get context(): {set: string, type: string | null} {
+  get context(): { set: string, type: string | null } {
     if (ODATA_CONTEXT in this.value)
       return odataContext(this.value[ODATA_CONTEXT]);
   }
 
-  // Methods
+  private _functions: any;
+  get functions() {
+    if (!this._functions) {
+      this._functions = Object.keys(this.value)
+        .filter(k => k.startsWith(ODATA_FUNCTION_PREFIX))
+        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: this.value[key] }), {});
+    }
+    return this._functions;
+  }
+
+  private _properties: any;
+  get properties() {
+    if (!this._properties) {
+      this._properties = Object.keys(this.value)
+        .filter(k => k.indexOf(ODATA_ANNOTATION_PREFIX) > 0)
+        .reduce((acc, key) => {
+          let name = key.substr(0, key.indexOf(ODATA_ANNOTATION_PREFIX));
+          if (!(name in acc)) {
+            acc[name] = {};
+          }
+          Object.assign(acc[name], { [key.substr(key.indexOf(ODATA_ANNOTATION_PREFIX))]: this.value[key] });
+          return acc;
+        }, {});
+    }
+    return this._properties;
+  }
+
+  // Method
   clone(): ODataAnnotations {
     return new ODataAnnotations(this.value);
   };
 
-  related(name: string) {
-    return Object.keys(this.value)
-      .filter(k => k.startsWith(name))
-      .reduce((acc, key) => Object.assign(acc, {[key.substr(name.length)]: this.value[key]}), {});
+  property(name: string) {
+    return this.properties[name];
   }
 
-  property(name: string) {
-    let annotations = Object.keys(this.value)
-      .filter(k => k.startsWith(name))
-      .reduce((acc, key) => Object.assign(acc, {[key.substr(name.length)]: this.value[key]}), {});
-    return new ODataValueAnnotations(annotations);
+  function(name: string) {
+    return this.functions[name];
   }
+
 }
 
 export class ODataValueAnnotations extends ODataAnnotations {
@@ -43,7 +66,7 @@ export class ODataValueAnnotations extends ODataAnnotations {
 
   get type(): string {
     if (ODATA_TYPE in this.value) {
-      return odataType(this.value[ODATA_TYPE]);
+      return this.value[ODATA_TYPE].substr(1);
     }
   }
 }
@@ -55,7 +78,7 @@ export class ODataEntityAnnotations extends ODataAnnotations {
 
   get type(): string {
     if (ODATA_TYPE in this.value) {
-      return odataType(this.value[ODATA_TYPE]);
+      return this.value[ODATA_TYPE].substr(1);
     }
   }
 
