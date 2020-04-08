@@ -18,7 +18,6 @@ import {
   QueryOptionTypes 
 } from './query-options';
 import { 
-  ODataAnnotations,
   ODataValueAnnotations, 
   ODataEntityAnnotations, 
   ODataEntitiesAnnotations

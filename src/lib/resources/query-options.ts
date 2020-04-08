@@ -6,7 +6,7 @@ import { PlainObject } from '../types';
 import { isoStringToDate } from '../utils/dates';
 
 export type Select<T> = string | keyof T | Array<keyof T>;
-export type OrderBy<T> = string | keyof T | [ keyof T, 'asc' | 'desc' ] | Array<keyof T | [ keyof T, 'asc' | 'desc' ]>;
+export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | { [P in keyof T]?: OrderBy<T[P]> };
 export type Filter = string | PlainObject | Array<string | PlainObject>;
 export type Expand<T> = string | Array<keyof T> | {[P in keyof T]?: (T[P] extends Array<infer E> ? ExpandOptions<E> : ExpandOptions<T[P]>) };
 export enum StandardAggregateMethods {
@@ -18,6 +18,7 @@ export enum StandardAggregateMethods {
 }
 export type Aggregate = string | { [propertyName: string]: { with: StandardAggregateMethods, as: string } };
 
+export type OrderByOptions<T> = keyof T | [ keyof T, 'asc' | 'desc' ];
 export type ExpandOptions<T> = {
   select?: Select<T>;
   filter?: Filter;
@@ -71,7 +72,16 @@ export type QueryOptions<T> = {
 }
 
 const orderByFieldMapper = (value: any) => 
-  (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(" ") : value;
+  (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(' ') : value;
+
+const orderByOptionsMapper = (value: any, prefix: string = '') => {
+  if (Types.isArray(value)) {
+    return value.map(orderByFieldMapper).map(v => `${prefix}${v}`);
+  } else if (Types.isObject(value)) {
+    return Object.entries(value).map(([k, v]) => orderByOptionsMapper(v, `${k}/`)).map(v => `${prefix}${v}`);
+  }
+  return `${prefix}${value}`;
+}
 
 const expandOptionsMapper = (options: any) => {
   return [
@@ -81,32 +91,21 @@ const expandOptionsMapper = (options: any) => {
     QueryOptionTypes.top,
     QueryOptionTypes.expand]
     .filter(key => !Types.isEmpty(options[key]))
-    .map(key => {
-      let value = options[key];
-      if (QueryOptionTypes.orderBy === key && Types.isArray(value)) {
-        value = value.map(orderByFieldMapper);
-      }
-      if (QueryOptionTypes.expand === key && Types.isObject(value) && !Types.isArray(value)) {
-        value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
-      }
-      return [key, value];
-    })
-    .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {});
+    .map(key => queryOptionsMapper(key, options[key]))
+    .reduce((acc, query) => Object.assign(acc, query), {});
 }
 
-const queryOptionsBuilder = (key, value): string => {
+const queryOptionsMapper = (key: string, value: any): {[key: string] : any} => {
   switch (key) {
     case QueryOptionTypes.orderBy:
-      if (Types.isArray(value)) {
-        value = value.map(orderByFieldMapper);
-      }
+      value = orderByOptionsMapper(value)
       break;
     case QueryOptionTypes.expand:
       if (Types.isObject(value))
         value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
       break;
   }
-  return buildQuery({ [key]: value });
+  return { [key]: value };
 }
 
 export class ODataQueryOptions {
@@ -134,7 +133,8 @@ export class ODataQueryOptions {
       QueryOptionTypes.expand,
       QueryOptionTypes.format]
       .filter(key => !Types.isEmpty(this.options[key]))
-      .map(key => queryOptionsBuilder(key, this.options[key]))
+      .map(key => queryOptionsMapper(key, this.options[key]))
+      .map(query => buildQuery(query))
       .reduce((acc, param: string) => {
         let index = param.indexOf(ODataQueryOptions.VALUE_SEPARATOR);
         let name = param.substr(1, index - 1);
