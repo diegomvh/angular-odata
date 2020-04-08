@@ -34,6 +34,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     page?: number,
     pages?: number
   } = {};
+  private resetState() {
+    this._state = {};
+  }
 
   constructor(resource: ODataResource<T>, entities?: Partial<T>[], annots?: ODataAnnotations) {
     this._resource = resource;
@@ -257,13 +260,30 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   // Query options
   get _query() {
     let resource = this._resource as ODataEntitySetResource<T>;
+    let col = this;
     return {
-      select(select?: Select<T>) { return resource.select(select); },
-      filter(filter?: Filter) { return resource.filter(filter); },
-      search(search?: string) { return resource.search(search); },
-      orderBy(orderBy?: OrderBy<T>) { return resource.orderBy(orderBy); },
-      expand(expand?: Expand<T>) { return resource.expand(expand); },
-      groupBy(groupBy?: GroupBy<T>) { return resource.groupBy(groupBy); },
+      select(select?: Select<T>) { 
+        return resource.select(select); 
+      },
+      filter(filter?: Filter) { 
+        col.resetState();
+        return resource.filter(filter); 
+      },
+      search(search?: string) { 
+        col.resetState();
+        return resource.search(search); 
+      },
+      orderBy(orderBy?: OrderBy<T>) { 
+        col.resetState();
+        return resource.orderBy(orderBy); 
+      },
+      expand(expand?: Expand<T>) { 
+        return resource.expand(expand); 
+      },
+      groupBy(groupBy?: GroupBy<T>) { 
+        col.resetState();
+        return resource.groupBy(groupBy); 
+      },
     }
   }
 }
