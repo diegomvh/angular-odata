@@ -20,14 +20,6 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
     return this.entities().toCollection<C>({[VALUE]: models || []});
   }
 
-  public fetchCollection(): Observable<C> {
-    return this.collection().fetch();
-  }
-
-  public fetchModel(key?: EntityKey<T>): Observable<M> {
-    return this.model(key as Partial<T>).fetch();
-  }
-
   public attach(value: M): M;
   public attach(value: C): C;
   public attach(value: any): any {
