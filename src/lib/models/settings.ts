@@ -19,8 +19,8 @@ export type ODataConfig = {
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
   metas?: {[type: string]: Meta },
-  models?: {[type: string]: { new(...any): ODataModel<any>} };
-  collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
+  models?: {[type: string]: any };
+  collections?:{[type: string]: any };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -35,8 +35,8 @@ export class ODataSettings {
   enums?: {[type: string]: {[key: number]: string | number}};
   parsers?: {[type: string]: ODataParser<any> };
   metas?: {[type: string]: ODataMeta<any> };
-  models?: {[type: string]: { new(...any): ODataModel<any>} };
-  collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } };
+  models?: {[type: string]: any };
+  collections?:{[type: string]: any };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: ODataConfig) {
