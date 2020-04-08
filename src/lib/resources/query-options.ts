@@ -204,40 +204,39 @@ export class OptionHandler<T> {
   }
 
   // Array
-  push(value: T) {
+  private assertArray(): Array<any> {
     if (!Types.isArray(this.o[this.t]))
-      this.o[this.t] = this.o[this.t] !== undefined ? [this.o[this.t]] : [];
-    this.o[this.t].push(value);
+      this.o[this.t] = !Types.isUndefined(this.o[this.t]) ? [this.o[this.t]] : [];
+    return this.o[this.t];
+  }
+
+  push(value: T) {
+    this.assertArray().push(value);
   }
 
   remove(value: T) {
-    if (Types.isArray(this.o[this.t])) {
-      this.o[this.t] = this.o[this.t].filter(v => v !== value);
-      if (this.o[this.t].length === 1)
-        this.o[this.t] = this.o[this.t][0];
-    }
+    this.o[this.t] = this.assertArray().filter(v => v !== value);
+    // If only one... down to value
+    if (this.o[this.t].length === 1)
+      this.o[this.t] = this.o[this.t][0];
   }
 
   at(index: number) {
-    if (Types.isArray(this.o[this.t])) {
-      return this.o[this.t][index];
-    }
+    return this.assertArray()[index];
   }
 
   // Hash map
   private assertObject(): PlainObject {
-    if (Types.isObject(this.o[this.t]) && !Types.isArray(this.o[this.t]))
+    if (!Types.isArray(this.o[this.t]) && Types.isObject(this.o[this.t])) {
       return this.o[this.t];
-    else if (!Types.isUndefined(this.o[this.t]) && !Types.isArray(this.o[this.t])) {
-      this.o[this.t] = [this.o[this.t]];
-      let obj = this.o[this.t].find(v => Types.isObject(v));
-      if (!obj) {
-        obj = {};
-        this.o[this.t].push(obj);
-      }
-      return obj;
     }
-    return (this.o[this.t] = {});
+    let arr = this.assertArray();
+    let obj = arr.find(v => Types.isObject(v));
+    if (!obj) {
+      obj = {};
+      arr.push(obj);
+    }
+    return obj;
   }
 
   set(name: string, value: T) {
