@@ -169,8 +169,4 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   format(opts?: string) {
     return this.queryOptions.option<string>(QueryOptionTypes.format, opts);
   }
-
-  custom(opts?: PlainObject) {
-    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
-  }
 }

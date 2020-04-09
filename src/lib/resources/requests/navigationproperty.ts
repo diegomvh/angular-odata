@@ -169,10 +169,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.queryOptions.option<string>(QueryOptionTypes.skiptoken, opts);
   }
 
-  custom(opts?: PlainObject) {
-    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
-  }
-
   // Custom
   single(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this
