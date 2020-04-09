@@ -284,6 +284,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         col.resetState();
         return resource.groupBy(groupBy); 
       },
+      alias(name: string, value?: any) {
+        return resource.alias(name, value);
+      }
     }
   }
 }

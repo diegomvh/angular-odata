@@ -308,8 +308,15 @@ export class ODataModel<T> {
   get _query() {
     let resource = this._resource as ODataEntityResource<T>;
     return {
-      select(select?: Select<T>) { return resource.select(select); },
-      expand(expand?: Expand<T>) { return resource.expand(expand); },
+      select(select?: Select<T>) { 
+        return resource.select(select); 
+      },
+      expand(expand?: Expand<T>) { 
+        return resource.expand(expand); 
+      },
+      alias(name: string, value?: any) {
+        return resource.alias(name, value);
+      }
     }
   }
 }
