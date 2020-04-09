@@ -154,6 +154,7 @@ export class ODataResource<Type> {
     return this.queryOptions.alias(name, value);
   }
 
+  // Base Requests
   protected request(
     method: string,
     options: HttpOptions & {
@@ -196,37 +197,41 @@ export class ODataResource<Type> {
     }
   }
 
-  protected get(
-    options: HttpOptions &
-    { responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+  protected get(options: HttpOptions & { 
+    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    withCount?: boolean
+  }): Observable<any> {
     return this.request('GET', options);
   }
 
-  protected post(
-    body: any | null,
-    options: HttpOptions &
-    { responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+  protected post(body: any | null, options: HttpOptions & { 
+    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    withCount?: boolean
+  }): Observable<any> {
     return this.request('POST', Object.assign(options, { body }));
   }
 
-  protected put(
-    body: any | null,
-    options: HttpOptions &
-    { etag?: string, responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+  protected put(body: any | null, options: HttpOptions & {
+    etag?: string, 
+    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    withCount?: boolean 
+  }): Observable<any> {
     return this.request('PUT', Object.assign(options, { body }));
   }
 
-  protected patch(
-    body: any | null,
-    options: HttpOptions &
-    { etag?: string, responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+  protected patch(body: any | null, options: HttpOptions & {
+    etag?: string, 
+    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    withCount?: boolean
+  }): Observable<any> {
     return this.request('PATCH', Object.assign(options, { body }));
   }
 
-  protected delete(
-    options: HttpOptions &
-    { etag?: string, responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
-
+  protected delete(options: HttpOptions & {
+    etag?: string, 
+    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    withCount?: boolean
+  }): Observable<any> {
     return this.request('DELETE', options);
   }
 }
