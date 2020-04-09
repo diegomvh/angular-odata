@@ -24,24 +24,14 @@ export class ODataMediaResource<T> extends ODataResource<T> {
   }
 
   arraybuffer(options?: HttpOptions): Observable<ArrayBuffer> {
-    return this.client.get(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'arraybuffer',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return this.request("GET", 
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'arraybuffer'}, options || {})
+    );
   }
 
   blob(options?: HttpOptions): Observable<Blob> {
-    return this.client.get(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'blob',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return this.request("GET", 
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'blob'}, options || {})
+    );
   }
 }

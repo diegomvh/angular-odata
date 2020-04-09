@@ -103,25 +103,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
   get(options: HttpEntityOptions & HttpEntitiesOptions): Observable<any> {
-
-    let params = options && options.params;
-    if (options && options.withCount)
-      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
-
-    let res$ = this.client.get<T>(this, {
-      headers: options.headers,
-      observe: 'body',
-      params: params,
-      responseType: 'json',
-      reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
-    });
-    switch (options.responseType) {
-      case 'entity':
-        return res$.pipe(map((body: any) => this.toEntity(body)));
-      case 'entities':
-        return res$.pipe(map((body: any) => this.toEntities(body)));
-    }
+    return super.get(options);
   }
 
   // Options

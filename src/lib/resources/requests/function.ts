@@ -38,37 +38,11 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   }
 
   //GET
-  get(options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
-
-  get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-
-  get(options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
-
-  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
-
-    let params = options && options.params;
-    if (options && options.withCount)
-      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
-
-    let res$ = this.client.get<T>(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
-    if (options && options.responseType) {
-      switch (options.responseType) {
-        case 'entity':
-          return res$.pipe(map((body: any) => this.toEntity(body)));
-        case 'entities':
-          return res$.pipe(map((body: any) => this.toEntities(body)));
-        case 'value':
-          return res$.pipe(map((body: any) => this.toValue(body)));
-      }
-    }
-    return res$;
+  get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
+  get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
+  get(options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
+  get(options: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
+    return super.get(options);
   }
 
   call(

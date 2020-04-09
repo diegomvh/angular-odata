@@ -26,37 +26,11 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
   }
 
   //POST
-  post(body: any | null, options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
-
-  post(body: any | null, options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-
-  post(body: any | null, options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
-
-  post(body: any | null, options?: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
-
-    let params = options && options.params;
-    if (options && options.withCount)
-      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
-
-    let res$ = this.client.post(this, body, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
-    if (options && options.responseType) {
-      switch (options.responseType) {
-        case 'entity':
-          return res$.pipe(map((body: any) => this.toEntity(body)));
-        case 'entities':
-          return res$.pipe(map((body: any) => this.toEntities(body)));
-        case 'value':
-          return res$.pipe(map((body: any) => this.toValue(body)));
-      }
-    }
-    return res$;
+  post(body: any | null, options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
+  post(body: any | null, options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
+  post(body: any | null, options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
+  post(body: any | null, options: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
+    return super.post(body, options);
   }
 
   call(

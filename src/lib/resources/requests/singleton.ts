@@ -77,84 +77,34 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   // Client Requests
-  get(options?: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
-
-  get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-
-  get(options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
-
-  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
-
-    let params = options && options.params;
-    if (options && options.withCount)
-      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
-
-    let res$ = this.client.get<T>(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
-    if (options && options.responseType) {
-      switch (options.responseType) {
-        case 'entity':
-          return res$.pipe(map((body: any) => this.toEntity(body)));
-        case 'entities':
-          return res$.pipe(map((body: any) => this.toEntities(body)));
-        case 'value':
-          return res$.pipe(map((body: any) => this.toValue(body)));
-      }
-    }
-    return res$;
+  get(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+    return super.get(
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+      );
   }
 
-  post(entity: T, options?: HttpOptions): Observable<T> {
-    return this.client.post<T>(this, this.serialize(entity), {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+  post(entity: T, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+    return super.post(this.serialize(entity),
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+    );
   }
 
-  put(entity: T, options?: HttpOptions & { etag?: string }): Observable<T> {
-    return this.client.put<T>(this, this.serialize(entity), {
-      etag: options && options.etag,
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+  put(entity: T, options?: HttpOptions & { etag?: string }): Observable<[T, ODataEntityAnnotations]> {
+    return super.put(this.serialize(entity),
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+    );
   }
 
   patch(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
-    return this.client.patch<T>(this, this.serialize(entity), {
-      etag: options && options.etag,
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return super.patch(this.serialize(entity),
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+    );
   }
 
   delete(options?: HttpOptions & { etag?: string }): Observable<T> {
-    return this.client.delete<T>(this, {
-      etag: options && options.etag,
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return super.delete(
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+    );
   }
 
   // Query

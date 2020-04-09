@@ -48,32 +48,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
   }
 
-  get(options?: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
+  get(options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
 
-  get(options?: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
+  get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
 
-  get(options?: HttpValueOptions & HttpEntitiesOptions): Observable<any> {
-
-    let params = options && options.params;
-    if (options && options.withCount)
-      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
-
-    let res$ = this.client.get<T>(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
-    if (options && options.responseType) {
-      switch (options.responseType) {
-        case 'value':
-          return res$.pipe(map((body: any) => this.toValue(body)));
-        case 'entities':
-          return res$.pipe(map((body: any) => this.toEntities(body)));
-      }
-    }
-    return res$;
+  get(options: HttpValueOptions & HttpEntitiesOptions): Observable<any> {
+    return super.get(options);
   }
 }

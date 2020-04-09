@@ -14,7 +14,7 @@ import { ODataResource } from '../resource';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
-import { HttpOptions } from '../http-options';
+import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from '../http-options';
 import { ODataModel } from '../../models';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
@@ -87,36 +87,21 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.parser
+      parser: this.client.parserForType<number>('number')
     });
   }
 
   // Client requests
   post(entity: T, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
-    return this.client.post<T>(this, this.serialize(entity), {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toEntity(body)));
+    return super.post(this.serialize(entity),
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+    );
   }
 
   get(options?: HttpOptions & { withCount?: boolean }): Observable<[T[], ODataEntitiesAnnotations]> {
-
-    let params = options && options.params;
-    if (options && options.withCount)
-      params = this.client.mergeHttpParams(params, {[$COUNT]: 'true'})
-
-    return this.client.get<T>(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.toEntities(body)));
+    return super.get(
+      Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+    );
   }
 
   // Query

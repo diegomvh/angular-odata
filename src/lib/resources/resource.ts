@@ -1,27 +1,31 @@
-import { 
-  PlainObject, 
-  VALUE, 
-  entityAttributes, 
-  odataAnnotations, 
-  Parser 
+import {
+  PlainObject,
+  VALUE,
+  entityAttributes,
+  odataAnnotations,
+  Parser,
+  $COUNT
 } from '../types';
 import { ODataClient } from '../client';
-import { 
-  ODataModel, 
-  ODataCollection 
+import {
+  ODataModel,
+  ODataCollection
 } from '../models';
 import { Types } from '../utils';
 
 import { ODataPathSegments } from './path-segments';
-import { 
-  ODataQueryOptions, 
-  QueryOptionTypes 
+import {
+  ODataQueryOptions,
+  QueryOptionTypes
 } from './query-options';
-import { 
-  ODataValueAnnotations, 
-  ODataEntityAnnotations, 
+import {
+  ODataValueAnnotations,
+  ODataEntityAnnotations,
   ODataEntitiesAnnotations
 } from './responses';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpOptions } from './http-options';
 
 export class ODataResource<Type> {
   public static readonly QUERY_SEPARATOR = '?';
@@ -150,4 +154,79 @@ export class ODataResource<Type> {
     return this.queryOptions.alias(name, value);
   }
 
+  protected request(
+    method: string,
+    options: HttpOptions & {
+      body?: any | null,
+      etag?: string,
+      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities',
+      withCount?: boolean
+    }): Observable<any> {
+
+    let params = options.params;
+    if (options.withCount)
+      params = this.client.mergeHttpParams(params, { [$COUNT]: 'true' })
+
+    let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 
+      ['value', 'entity', 'entities'].indexOf(options.responseType) !== -1 ? 
+        'json' : 
+        <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
+
+    let res$ = this.client.request(method, this, {
+      body: options.body,
+      etag: options.etag,
+      headers: options.headers,
+      observe: 'body',
+      params: params,
+      responseType: responseType,
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
+    switch (options.responseType) {
+      case 'entity':
+        return res$.pipe(map((body: any) => this.toEntity(body)));
+      case 'entities':
+        return res$.pipe(map((body: any) => this.toEntities(body)));
+      case 'value':
+        return res$.pipe(map((body: any) => this.toValue(body)));
+      case 'json':
+        return res$.pipe(map((body: any) => this.deserialize(body) as Type));
+      default:
+        return res$;
+    }
+  }
+
+  protected get(
+    options: HttpOptions &
+    { responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+    return this.request('GET', options);
+  }
+
+  protected post(
+    body: any | null,
+    options: HttpOptions &
+    { responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+    return this.request('POST', Object.assign(options, { body }));
+  }
+
+  protected put(
+    body: any | null,
+    options: HttpOptions &
+    { etag?: string, responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+    return this.request('PUT', Object.assign(options, { body }));
+  }
+
+  protected patch(
+    body: any | null,
+    options: HttpOptions &
+    { etag?: string, responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+    return this.request('PATCH', Object.assign(options, { body }));
+  }
+
+  protected delete(
+    options: HttpOptions &
+    { etag?: string, responseType?: 'json' | 'value' | 'entity' | 'entities', withCount?: boolean }): Observable<any> {
+
+    return this.request('DELETE', options);
+  }
 }

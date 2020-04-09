@@ -24,13 +24,8 @@ export class ODataCountResource extends ODataResource<any> {
   }
 
   get(options?: HttpOptions): Observable<number> {
-    return this.client.get<number>(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return this.get(
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
+    );
   }
 }
