@@ -169,7 +169,7 @@ export class ODataResource<Type> {
       params = this.client.mergeHttpParams(params, { [$COUNT]: 'true' })
 
     let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 
-      ['value', 'entity', 'entities'].indexOf(options.responseType) !== -1 ? 
+      (options.responseType && ['value', 'entity', 'entities'].indexOf(options.responseType) !== -1) ? 
         'json' : 
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
@@ -198,14 +198,14 @@ export class ODataResource<Type> {
   }
 
   protected get(options: HttpOptions & { 
-    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
     withCount?: boolean
   }): Observable<any> {
     return this.request('GET', options);
   }
 
   protected post(body: any | null, options: HttpOptions & { 
-    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
     withCount?: boolean
   }): Observable<any> {
     return this.request('POST', Object.assign(options, { body }));
@@ -213,7 +213,7 @@ export class ODataResource<Type> {
 
   protected put(body: any | null, options: HttpOptions & {
     etag?: string, 
-    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
     withCount?: boolean 
   }): Observable<any> {
     return this.request('PUT', Object.assign(options, { body }));
@@ -221,7 +221,7 @@ export class ODataResource<Type> {
 
   protected patch(body: any | null, options: HttpOptions & {
     etag?: string, 
-    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
     withCount?: boolean
   }): Observable<any> {
     return this.request('PATCH', Object.assign(options, { body }));
@@ -229,7 +229,7 @@ export class ODataResource<Type> {
 
   protected delete(options: HttpOptions & {
     etag?: string, 
-    responseType?: 'json' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
     withCount?: boolean
   }): Observable<any> {
     return this.request('DELETE', options);

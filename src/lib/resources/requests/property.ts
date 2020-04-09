@@ -7,9 +7,9 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataClient } from '../../client';
 import { map } from 'rxjs/operators';
-import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataAnnotations } from '../responses';
+import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataAnnotations, ODataEntityAnnotations } from '../responses';
 import { $COUNT, Parser } from '../../types';
-import { HttpValueOptions, HttpEntitiesOptions } from '../http-options';
+import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -48,11 +48,10 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     });
   }
 
-  get(options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
-
+  get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
   get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-
-  get(options: HttpValueOptions & HttpEntitiesOptions): Observable<any> {
+  get(options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
+  get(options: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
     return super.get(options);
   }
 }

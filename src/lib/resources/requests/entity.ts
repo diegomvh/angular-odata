@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-import { PlainObject, EntityKey, Parser } from '../../types';
+import { EntityKey, Parser } from '../../types';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
@@ -12,9 +11,9 @@ import { ODataPathSegments, SegmentOptionTypes, SegmentTypes } from '../path-seg
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
-import { ODataMediaResource } from './media';
 import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
+import { ODataValueResource } from './value';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -60,8 +59,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   // Segments
-  media() {
-    return ODataMediaResource.factory<T>(
+  value() {
+    return ODataValueResource.factory<T>(
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),

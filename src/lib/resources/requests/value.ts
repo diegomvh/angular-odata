@@ -5,7 +5,6 @@ import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { $VALUE, Parser } from '../../types';
-import { map } from 'rxjs/operators';
 import { HttpOptions } from '../http-options';
 
 export class ODataValueResource<T> extends ODataResource<T> {
@@ -24,14 +23,27 @@ export class ODataValueResource<T> extends ODataResource<T> {
     return new ODataValueResource<V>(service, segments, options, parser);
   }
 
-  get(options?: HttpOptions): Observable<T> {
-    return this.client.get<T>(this, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }).pipe(map(body => this.deserialize(body) as T));
+  arraybuffer(options?: HttpOptions): Observable<ArrayBuffer> {
+    return this.get( 
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'arraybuffer'}, options || {})
+    );
+  }
+
+  blob(options?: HttpOptions): Observable<Blob> {
+    return this.get( 
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'blob'}, options || {})
+    );
+  }
+
+  text(options?: HttpOptions): Observable<string> {
+    return this.get( 
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'text'}, options || {})
+    );
+  }
+
+  json(options?: HttpOptions): Observable<T> {
+    return this.get( 
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
+    );
   }
 }
