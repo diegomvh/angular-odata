@@ -27,27 +27,16 @@ export class ODataReferenceResource extends ODataResource<any> {
   // Client Requests
   post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     let related = this.client.createEndpointUrl(target);
-    return this.client.post(this, {[ODATA_ID]: related}, {
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return super.post({[ODATA_ID]: related},
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
+    );
   }
 
   put(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any> {
     let related = this.client.createEndpointUrl(target);
-    return this.client.put(this, {[ODATA_ID]: related}, {
-      etag: options && options.etag,
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return super.put({[ODATA_ID]: related},
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
+    );
   }
 
   delete(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
@@ -55,15 +44,9 @@ export class ODataReferenceResource extends ODataResource<any> {
       let related = this.client.createEndpointUrl(options.target);
       this.custom({[$ID]: related});
     }
-    return this.client.delete(this, {
-      etag: options && options.etag,
-      headers: options && options.headers,
-      observe: 'body',
-      params: options && options.params,
-      responseType: 'json',
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    });
+    return super.delete(
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
+    );
   }
 
   // Custom
