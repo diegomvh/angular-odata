@@ -1,9 +1,9 @@
 import buildQuery from 'odata-query';
 
-import { Types } from '../utils/types';
+import { Types, isoStringToDate } from '../utils/index';
 import { PlainObject } from '../types';
+
 import { OptionHandler } from './query-options';
-import { isoStringToDate } from '../utils/dates';
 
 export enum SegmentTypes {
   batch = 'batch',

@@ -1,9 +1,7 @@
 import buildQuery from 'odata-query';
 
-import { Types } from '../utils/types';
-
 import { PlainObject } from '../types';
-import { isoStringToDate } from '../utils/dates';
+import { isoStringToDate, Types, escapeIllegalChars } from '../utils/index';
 
 export type Select<T> = string | keyof T | Array<keyof T>;
 export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | { [P in keyof T]?: OrderBy<T[P]> };
@@ -108,6 +106,30 @@ const queryOptionsMapper = (key: string, value: any): {[key: string] : any} => {
   return { [key]: value };
 }
 
+const handleAliasValue = (value: any) => {
+  if (typeof value === 'string') {
+    return `'${escapeIllegalChars(value)}'`;
+  } else if (value instanceof Date) {
+    return value.toISOString();
+  } else if (value instanceof Number) {
+    return value;
+  } else if (Array.isArray(value)) {
+    // Double quote strings to keep them after `.join`
+    const arr = value.map(d => (typeof d === 'string' ? `'${d}'` : d));
+    return `[${arr.join(',')}]`;
+  } else {
+    switch (value && value.type) {
+      case 'guid':
+        return value.value;
+      case 'raw':
+        return value.value;
+      case 'binary':
+        return `binary'${value.value}'`;
+    }
+    return value;
+  }
+}
+
 export class ODataQueryOptions {
   // URL QUERY PARTS
   public static readonly PARAM_SEPARATOR = '&';
@@ -141,15 +163,22 @@ export class ODataQueryOptions {
         let values = param.substr(index + 1);
         return Object.assign(acc, {[name]: values});
       }, {});
+
     // TODO: Add query builder Skiptoken support
     if (QueryOptionTypes.skiptoken in this.options)
       params['$skiptoken'] = this.options[QueryOptionTypes.skiptoken];
+
     // Custom
-    let custom = this.options[QueryOptionTypes.custom] || {};
+    let custom = Object.entries(this.options[QueryOptionTypes.custom] || {})
+      .filter(([k, ]) => !k.startsWith("$"))
+      .reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
     Object.assign(params, custom);
+
     // Aliases
-    let aliases = this.options[QueryOptionTypes.aliases] || {};
+    let aliases = Object.entries(this.options[QueryOptionTypes.aliases] || {})
+      .reduce((acc, [k, v]) => Object.assign(acc, {[`@${k}`]: handleAliasValue(v)}), {});
     Object.assign(params, aliases);
+
     return params;
   }
 
@@ -168,6 +197,7 @@ export class ODataQueryOptions {
     return new OptionHandler<T>(this.options, type);
   }
 
+  // Query Options tools
   has(type: QueryOptionTypes) {
     return !Types.isUndefined(this.options[type]);
   }
@@ -182,6 +212,15 @@ export class ODataQueryOptions {
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
+  // Aliases
+  alias(name: string, value?: any): any {
+    var aliases = this.options[QueryOptionTypes.aliases] || (this.options[QueryOptionTypes.aliases] = {});
+    if (Types.isUndefined(value))
+      return aliases[name];
+    return (aliases[name] = value);
+  }
+
+  // Clear
   clear() {
     this.options = {};
   }
@@ -196,6 +235,13 @@ export class OptionHandler<T> {
 
   toJSON() {
     return this.o[this.t];
+  }
+
+  // Add alias
+  alias(name: string) {
+    var aliases = this.o[QueryOptionTypes.aliases] || (this.o[QueryOptionTypes.aliases] = {});
+    aliases[name] = null;
+    return {type: 'raw', value: `@${name}`};
   }
 
   // Primitive value

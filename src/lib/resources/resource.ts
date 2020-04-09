@@ -146,4 +146,8 @@ export class ODataResource<Type> {
     return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
   }
 
+  alias(name: string, value?: any) {
+    return this.queryOptions.alias(name, value);
+  }
+
 }
