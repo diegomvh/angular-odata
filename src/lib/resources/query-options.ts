@@ -169,9 +169,7 @@ export class ODataQueryOptions {
       params['$skiptoken'] = this.options[QueryOptionTypes.skiptoken];
 
     // Custom
-    let custom = Object.entries(this.options[QueryOptionTypes.custom] || {})
-      .filter(([k, ]) => !k.startsWith("$"))
-      .reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
+    let custom = this.options[QueryOptionTypes.custom] || {};
     Object.assign(params, custom);
 
     // Aliases
