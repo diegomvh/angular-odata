@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, NEVER } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { ODataNavigationPropertyResource, ODataPropertyResource, ODataActionResource, ODataFunctionResource, ODataReferenceResource, ODataEntitiesAnnotations, ODataEntityAnnotations, HttpOptions, ODataValueAnnotations } from '../resources';
-
-import { ODataClient } from "../client";
+import { 
+  ODataNavigationPropertyResource, 
+  ODataPropertyResource, 
+  ODataActionResource, 
+  ODataFunctionResource, 
+  ODataEntitiesAnnotations, 
+  ODataEntityAnnotations 
+} from '../resources';
 import { EntityKey } from '../types';
+import { ODataClient } from '../client';
+
 import { ODataBaseService } from './base';
-import { ODataCallableResource } from '../resources/requests/callable';
 
 @Injectable()
 export class ODataEntityService<T> extends ODataBaseService<T> {
@@ -30,16 +36,12 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
     return this.entities().action<R>(name, returnType);
   }
 
-  public function<R>(key: EntityKey<T>, name: string, params: any, returnType?: string): ODataFunctionResource<R> {
-    let query = this.entity(key).function<R>(name, returnType);
-    query.parameters(params);
-    return query;
+  public function<R>(key: EntityKey<T>, name: string, returnType?: string): ODataFunctionResource<R> {
+    return this.entity(key).function<R>(name, returnType);
   }
 
-  public collectionFunction<R>(name: string, params: any, returnType?: string): ODataFunctionResource<R> {
-    let query = this.entities().function<R>(name, returnType);
-    query.parameters(params);
-    return query;
+  public collectionFunction<R>(name: string, returnType?: string): ODataFunctionResource<R> {
+    return this.entities().function<R>(name, returnType);
   }
 
   // Entity Actions

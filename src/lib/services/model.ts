@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 import { ODataClient } from "../client";
-import { EntityKey, VALUE } from '../types';
+import { VALUE } from '../types';
 import { ODataModel, ODataCollection } from '../models';
+
 import { ODataBaseService } from './base';
 
 @Injectable()

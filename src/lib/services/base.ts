@@ -1,5 +1,4 @@
 import { ODataEntitySetResource, ODataEntityResource } from '../resources';
-
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
 

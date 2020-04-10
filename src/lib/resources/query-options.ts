@@ -99,7 +99,7 @@ const queryOptionsMapper = (key: string, value: any): {[key: string] : any} => {
       value = orderByOptionsMapper(value)
       break;
     case QueryOptionTypes.expand:
-      if (Types.isObject(value))
+      if (Types.isObject(value) && !Types.isArray(value))
         value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
       break;
   }

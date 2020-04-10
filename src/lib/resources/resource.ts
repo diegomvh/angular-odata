@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   PlainObject,
   VALUE,
@@ -23,8 +26,6 @@ import {
   ODataEntityAnnotations,
   ODataEntitiesAnnotations
 } from './responses';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { HttpOptions } from './http-options';
 
 export class ODataResource<Type> {
