@@ -249,12 +249,20 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this._models.filter(predicate);
   }
 
-  map(predicate: (m: M) => any) {
+  map(predicate: (m: M) => unknown) {
     return this._models.map(predicate);
   }
 
   at(index: number): M {
     return this._models[index >= 0 ? index : this._models.length - index];
+  }
+  
+  every(predicate: (m: M) => unknown): boolean {
+    return this._models.every(predicate);
+  }
+
+  some(predicate: (m: M) => unknown): boolean {
+    return this._models.every(predicate);
   }
 
   // Query options
