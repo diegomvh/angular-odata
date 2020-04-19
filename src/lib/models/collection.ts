@@ -26,21 +26,30 @@ import { ODataCallableResource } from '../resources/requests/callable';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   private _resource: ODataResource<T>;
-  private _annotations: ODataAnnotations | null;
+  private _annotations: ODataAnnotations;
+
   private _models: M[];
+  get models() {
+    return [...this._models];
+  }
+
   private _state: {
     records?: number,
     size?: number,
     page?: number,
     pages?: number
   } = {};
+  get state() {
+    return Object.assign({}, this._state);
+  }
   private resetState() {
     this._state = {};
   }
 
-  constructor(resource: ODataResource<T>, entities?: Partial<T>[], annots?: ODataAnnotations) {
-    this._resource = resource;
-    this.populate((entities || []) as T[], annots || null);
+  constructor(values?: any[], options: {resource?: ODataResource<T>, annotations?: ODataAnnotations} = {}) {
+    if (options.resource instanceof ODataResource)
+      this.attach(options.resource);
+    this.populate((values || []) as M[], options.annotations || null);
   }
 
   attach(resource: ODataResource<T>) {
@@ -50,13 +59,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this;
   }
 
-  private populate(entities: T[], annots?: ODataAnnotations): this {
+  protected populate(values: any[], annots?: ODataAnnotations): this {
     this._annotations = annots;
 
-    this._state.records = (annots instanceof ODataEntitiesAnnotations && annots.count) ? annots.count : entities.length;
-    this._state.size = (annots instanceof ODataEntitiesAnnotations && annots.skip) ? annots.skip : entities.length;
+    this._state.records = (annots instanceof ODataEntitiesAnnotations && annots.count) ? annots.count : values.length;
+    this._state.size = (annots instanceof ODataEntitiesAnnotations && annots.skip) ? annots.skip : values.length;
     this._state.pages = (this._state.records && this._state.size) ? Math.ceil(this._state.records / this._state.size) : 1;
-    this._models = entities.map(value => this._resource.toModel(value) as M);
+    this._models = this._resource ? (values as T[]).map(value => this._resource.toModel(value) as M) : values as M[];
     return this;
   }
 
@@ -66,7 +75,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   clone() {
     let Ctor = <typeof ODataCollection>this.constructor;
-    return (new Ctor(this._resource.clone(), this.toEntities(), this._annotations)) as ODataCollection<T, ODataModel<T>>;
+    return (new Ctor(this.models, {resource: this._resource.clone(), annotations:this._annotations})) as ODataCollection<T, ODataModel<T>>;
   }
 
   // Iterable
@@ -242,27 +251,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       return this._resource.action<R>(name, returnType);
     }
     throw new Error(`Can't action without EntitySetResource`);
-  }
-
-  // Array like
-  filter(predicate: (m: M) => boolean): M[] {
-    return this._models.filter(predicate);
-  }
-
-  map(predicate: (m: M) => unknown) {
-    return this._models.map(predicate);
-  }
-
-  at(index: number): M {
-    return this._models[index >= 0 ? index : this._models.length - index];
-  }
-  
-  every(predicate: (m: M) => unknown): boolean {
-    return this._models.every(predicate);
-  }
-
-  some(predicate: (m: M) => unknown): boolean {
-    return this._models.every(predicate);
   }
 
   // Query options

@@ -108,13 +108,13 @@ export class ODataResource<Type> {
   toModel<M extends ODataModel<Type>>(body: any): M {
     let [entity, annots] = this.toEntity(body);
     let Model = this.client.modelForType(this.type());
-    return new Model(this, entity, annots) as M;
+    return new Model(entity, {resource: this, annotations: annots}) as M;
   }
 
   toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(body: any): C {
     let [entities, annots] = this.toEntities(body);
     let Collection = this.client.collectionForType(this.type());
-    return new Collection(this, entities, annots) as C;
+    return new Collection(entities, {resource: this, annotations: annots}) as C;
   }
 
   // Debug
