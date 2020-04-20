@@ -46,7 +46,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this._state = {};
   }
 
-  constructor(values?: any[], options: {resource?: ODataResource<T>, annotations?: ODataAnnotations} = {}) {
+  constructor(values?: any[], options: { resource?: ODataResource<T>, annotations?: ODataAnnotations } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((values || []) as M[], options.annotations || null);
@@ -59,13 +59,21 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this;
   }
 
+  target() {
+    return this._resource.clone() as ODataResource<T>;
+  }
+
+  protected parse(values: any[]): M[] {
+    return (values as T[]).map(value => this._resource.toModel(value) as M);
+  }
+
   protected populate(values: any[], annots?: ODataAnnotations): this {
     this._annotations = annots;
 
     this._state.records = (annots instanceof ODataEntitiesAnnotations && annots.count) ? annots.count : values.length;
     this._state.size = (annots instanceof ODataEntitiesAnnotations && annots.skip) ? annots.skip : values.length;
     this._state.pages = (this._state.records && this._state.size) ? Math.ceil(this._state.records / this._state.size) : 1;
-    this._models = this._resource ? (values as T[]).map(value => this._resource.toModel(value) as M) : values as M[];
+    this._models = this._resource ? this.parse(values) : values as M[];
     return this;
   }
 
@@ -75,7 +83,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   clone() {
     let Ctor = <typeof ODataCollection>this.constructor;
-    return (new Ctor(this.models, {resource: this._resource.clone(), annotations:this._annotations})) as ODataCollection<T, ODataModel<T>>;
+    return (new Ctor(this.models, { resource: this._resource.clone(), annotations: this._annotations })) as ODataCollection<T, ODataModel<T>>;
   }
 
   // Iterable
@@ -254,35 +262,43 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Query options
-  get _query() {
-    let resource = this._resource as ODataEntitySetResource<T>;
-    let col = this;
-    return {
-      select(select?: Select<T>) { 
-        return resource.select(select); 
-      },
-      filter(filter?: Filter) { 
-        col.resetState();
-        return resource.filter(filter); 
-      },
-      search(search?: string) { 
-        col.resetState();
-        return resource.search(search); 
-      },
-      orderBy(orderBy?: OrderBy<T>) { 
-        col.resetState();
-        return resource.orderBy(orderBy); 
-      },
-      expand(expand?: Expand<T>) { 
-        return resource.expand(expand); 
-      },
-      groupBy(groupBy?: GroupBy<T>) { 
-        col.resetState();
-        return resource.groupBy(groupBy); 
-      },
-      alias(name: string, value?: any) {
-        return resource.alias(name, value);
-      }
-    }
+  select(select?: Select<T>) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    return (this._resource as ODataEntitySetResource<T>).select(select);
+  }
+  filter(filter?: Filter) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    this.resetState();
+    return (this._resource as ODataEntitySetResource<T>).filter(filter);
+  }
+  search(search?: string) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    this.resetState();
+    return (this._resource as ODataEntitySetResource<T>).search(search);
+  }
+  orderBy(orderBy?: OrderBy<T>) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    this.resetState();
+    return (this._resource as ODataEntitySetResource<T>).orderBy(orderBy);
+  }
+  expand(expand?: Expand<T>) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    return (this._resource as ODataEntitySetResource<T>).expand(expand);
+  }
+  groupBy(groupBy?: GroupBy<T>) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    this.resetState();
+    return (this._resource as ODataEntitySetResource<T>).groupBy(groupBy);
+  }
+  alias(name: string, value?: any) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    return (this._resource as ODataEntitySetResource<T>).alias(name, value);
   }
 }

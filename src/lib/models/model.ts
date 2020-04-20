@@ -43,17 +43,18 @@ export class ODataModel<T> {
     let first = !this._resource;
     this._resource = resource;
     if (first) {
-      let fields = this._resource.meta().fields().filter(field => field.navigation);
-      for (var field of fields) {
-        Object.defineProperty(this, field.name, {
-          get() {
-            return this.getNavigationProperty(field.name);
-          },
-          set(model: ODataModel<any> | null) {
-            return this.setNavigationProperty(field.name, model);
-          }
+      this._resource.meta().fields()
+        .filter(field => field.navigation)
+        .forEach(field => {
+          Object.defineProperty(this, field.name, {
+            get() {
+              return this.getNavigationProperty(field.name);
+            },
+            set(model: ODataModel<any> | null) {
+              return this.setNavigationProperty(field.name, model);
+            }
+          });
         });
-      }
       if (this._entity)
         this.populate(this._entity, this._annotations);
     }
@@ -64,6 +65,7 @@ export class ODataModel<T> {
     return this._resource.clone() as ODataResource<T>;
   }
 
+  // TODO: Move this to resource
   private related<R>(resource: ODataResource<R>, f: ODataField<any>) {
     let value = this._entity[f.name];
     if (f.collection) {
@@ -114,8 +116,7 @@ export class ODataModel<T> {
   toEntity(): T {
     if (this._resource) {
       let entity = {} as T;
-      let fields = this._resource.meta().fields();
-      for (var field of fields) {
+      this._resource.meta().fields().forEach(field => {
         if (field.parser) {
           if (field.navigation) {
             if (field.name in this._relationships) {
@@ -129,10 +130,10 @@ export class ODataModel<T> {
         } else if (this[field.name] !== undefined) {
           entity[field.name] = this[field.name];
         }
-      }
+      });
       return entity;
     } else {
-      let keys = Object.keys(this).filter(k => !(k.startsWith("_") && Types.isFunction(this[k])));
+      let keys = Object.keys(this).filter(k => !(k.startsWith("_") || Types.isFunction(this[k])));
       return keys.reduce((acc, k) => Object.assign(acc, { [k]: this[k] }), {}) as T;
     }
   }
@@ -318,19 +319,21 @@ export class ODataModel<T> {
       return ref.remove({ etag });
   }
 
-  // Query options
-  get _query() {
-    let resource = this._resource as ODataEntityResource<T>;
-    return {
-      select(select?: Select<T>) {
-        return resource.select(select);
-      },
-      expand(expand?: Expand<T>) {
-        return resource.expand(expand);
-      },
-      alias(name: string, value?: any) {
-        return resource.alias(name, value);
-      }
-    }
+  select(select?: Select<T>) {
+    if (!this._resource)
+      throw new Error("Can't select");
+    return (this._resource as ODataEntityResource<T>).select(select);
+  }
+
+  expand(expand?: Expand<T>) {
+    if (!this._resource)
+      throw new Error("Can't expand");
+    return (this._resource as ODataEntityResource<T>).expand(expand);
+  }
+
+  alias(name: string, value?: any) {
+    if (!this._resource)
+      throw new Error("Can't add alias");
+    return (this._resource as ODataEntityResource<T>).alias(name, value);
   }
 }

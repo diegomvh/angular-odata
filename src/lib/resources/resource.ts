@@ -12,7 +12,8 @@ import {
 import { ODataClient } from '../client';
 import {
   ODataModel,
-  ODataCollection
+  ODataCollection,
+  ODataField
 } from '../models';
 import { Types } from '../utils';
 
