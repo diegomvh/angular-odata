@@ -144,24 +144,21 @@ export class ODataModel<T> {
   }
 
   fetch(options?: HttpOptions): Observable<this | null> {
-    let opts = <HttpEntityOptions & HttpValueOptions>{
-      headers: options && options.headers,
-      params: options && options.params,
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey())
         throw new Error(`Can't fetch entity without key`);
-      obs$ = this._resource.get(opts);
+      obs$ = this._resource.get(options);
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      obs$ = this._resource.get(Object.assign(opts, { responseType: 'entity' }));
+      obs$ = this._resource.get(
+        Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {}));
     } else if (this._resource instanceof ODataPropertyResource) {
-      obs$ = this._resource.get(Object.assign(opts, { responseType: 'value' }));
+      obs$ = this._resource.get(
+        Object.assign<HttpValueOptions, HttpOptions>(<HttpValueOptions>{responseType: 'value'}, options || {}));
     } else if (this._resource instanceof ODataFunctionResource) {
-      obs$ = this._resource.get(Object.assign(opts, { responseType: 'entity' }));
+      obs$ = this._resource.get(
+        Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {}));
     }
     if (!obs$)
       throw new Error("Not Yet!");
@@ -170,31 +167,19 @@ export class ODataModel<T> {
   }
 
   create(options?: HttpOptions): Observable<this> {
-    let opts = <HttpEntityOptions & HttpValueOptions>{
-      headers: options && options.headers,
-      params: options && options.params,
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }
     if (this._resource instanceof ODataEntityResource) {
-      return this._resource.post(this.toEntity(), opts).pipe(map(([entity, annots]) => this.populate(entity, annots)));
+      return this._resource.post(this.toEntity(), options).pipe(map(([entity, annots]) => this.populate(entity, annots)));
     }
     throw new Error(`Can't create`);
   }
 
   update(options?: HttpOptions): Observable<this> {
-    let opts = <HttpEntityOptions & HttpValueOptions>{
-      headers: options && options.headers,
-      params: options && options.params,
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey())
         throw new Error(`Can't update entity without key`);
       let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
-      return this._resource.put(this.toEntity(), Object.assign(opts, { etag })).pipe(map(([entity, annots]) => this.populate(entity, annots)));
+      return this._resource.put(this.toEntity(), Object.assign({ etag }, options || {})).pipe(map(([entity, annots]) => this.populate(entity, annots)));
     }
     throw new Error(`Can't update`);
   }
@@ -208,98 +193,54 @@ export class ODataModel<T> {
   }
 
   destroy(options?: HttpOptions): Observable<null> {
-    let opts = <HttpEntityOptions & HttpValueOptions>{
-      headers: options && options.headers,
-      params: options && options.params,
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }
     if (this._resource instanceof ODataEntityResource) {
       this._resource.key(this);
       if (!this._resource.hasKey())
         throw new Error(`Can't destroy entity without key`);
       let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
-      return this._resource.delete(Object.assign(opts, { etag }));
+      return this._resource.delete(Object.assign({ etag }, options || {}));
     }
     throw new Error(`Can't destroy`);
   }
 
-  // Callable
-  protected call<R>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'value',
-    options?: HttpOptions
-  ): Observable<R>;
-
-  protected call<R, M extends ODataModel<R>>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'model',
-    options?: HttpOptions
-  ): Observable<M>;
-
-  protected call<R, M extends ODataModel<R>, C extends ODataCollection<R, M>>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'collection',
-    options?: HttpOptions
-  ): Observable<C>;
-
-  protected call<R>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'value' | 'model' | 'collection',
-    options?: HttpOptions
-  ): Observable<any> {
-    let res$ = callable.call(args, 'json', options);
-    switch (responseType) {
-      case 'value':
-        return res$.pipe(map((body: any) => callable.toValue(body)[0]));
-      case 'model':
-        return res$.pipe(map((body: any) => callable.toModel<ODataModel<any>>(body)));
-      case 'collection':
-        return res$.pipe(map((body: any) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(body)));
-    }
+  protected get _segments() {
+    if (!(this._resource && this._resource instanceof ODataEntityResource))
+      throw new Error(`Can't call without EntityResource`);
+    this._resource.key(this);
+    if (!this._resource.hasKey())
+      throw new Error(`Can't use without key`);
+    let resource = this._resource as ODataEntityResource<T>;
+    return {
+      // Function
+      function<R>(name: string, returnType?: string): ODataFunctionResource<R> { return resource.function<R>(name, returnType); },
+      // Action
+      action<R>(name: string, returnType?: string): ODataActionResource<R> { return resource.action<R>(name, returnType); },
+      // Navigation
+      navigationProperty<P>(name: string): ODataNavigationPropertyResource<P> { return resource.navigationProperty<P>(name); }
+    };
   }
 
-  // Functions
-  protected function<R>(name: string, returnType?: string): ODataFunctionResource<R> {
-    if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      if (!this._resource.hasKey())
-        throw new Error(`Can't function without key`);
-      return this._resource.function<R>(name, returnType);
-    }
-    throw new Error(`Can't function without EntityResource`);
-  }
-
-  // Actions
-  protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
-    if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      if (!this._resource.hasKey())
-        throw new Error(`Can't action without key`);
-      return this._resource.action<R>(name, returnType);
-    }
-    throw new Error(`Can't action without EntityResource`);
-  }
-
-  // Navigation Properties === References
-  protected navigationProperty<P>(name: string): ODataNavigationPropertyResource<P> {
-    if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      if (!this._resource.hasKey())
-        throw new Error(`Can't navigation without key`);
-      return this._resource.navigationProperty<P>(name);
-    }
-    throw new Error(`Can't navigation without EntityResource`);
+  get _query() {
+    if (!(this._resource && this._resource instanceof ODataEntityResource))
+      throw new Error("Can't query without EntityResource");
+    this._resource.key(this);
+    if (!this._resource.hasKey())
+      throw new Error(`Can't use without key`);
+    let resource = this._resource as ODataEntityResource<T>;
+    return {
+      // Select
+      select(select?: Select<T>) { return resource.select(select); },
+      // Expand
+      expand(expand?: Expand<T>) { return resource.expand(expand); },
+      // Alias value
+      alias(name: string, value?: any) { return resource.alias(name, value); }
+    };
   }
 
   protected getNavigationProperty<P>(name: string): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     let field = this._resource.meta().fields().find(f => f.name === name);
     if (!(name in this._relationships)) {
-      let nav = this.navigationProperty<P>(field.name);
+      let nav = this._segments.navigationProperty<P>(field.name);
       this._relationships[field.name] = this.related(nav, field);
     }
     return this._relationships[field.name];
@@ -309,7 +250,7 @@ export class ODataModel<T> {
     let field = this._resource.meta().fields().find(f => f.name === name);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
-    let ref = this.navigationProperty<P>(name).reference();
+    let ref = this._segments.navigationProperty<P>(name).reference();
     let etag = (this._annotations as ODataEntityAnnotations).etag;
     // TODO: change the resource of a model 
     delete this._relationships[field.name];
@@ -317,23 +258,5 @@ export class ODataModel<T> {
       return ref.set(model._resource as ODataEntityResource<P>, { etag });
     } else if (model === null)
       return ref.remove({ etag });
-  }
-
-  select(select?: Select<T>) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    return (this._resource as ODataEntityResource<T>).select(select);
-  }
-
-  expand(expand?: Expand<T>) {
-    if (!this._resource)
-      throw new Error("Can't expand");
-    return (this._resource as ODataEntityResource<T>).expand(expand);
-  }
-
-  alias(name: string, value?: any) {
-    if (!this._resource)
-      throw new Error("Can't add alias");
-    return (this._resource as ODataEntityResource<T>).alias(name, value);
   }
 }

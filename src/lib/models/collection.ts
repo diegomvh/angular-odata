@@ -102,12 +102,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Requests
   fetch(options?: HttpOptions): Observable<this> {
-    let opts = <HttpEntitiesOptions>{
-      headers: options && options.headers,
-      params: options && options.params,
-      reportProgress: options && options.reportProgress,
-      withCredentials: options && options.withCredentials
-    }
     let obs$: Observable<any>;
     if (!this._state.page)
       this._state.page = 1;
@@ -116,15 +110,18 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._resource.top(this._state.size);
         this._resource.skip(this._state.size * (this._state.page - 1));
       }
-      obs$ = this._resource.get(Object.assign(opts, { withCount: true }));
+      obs$ = this._resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{withCount: true}, options || {}));
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       if (this._state.size) {
         this._resource.top(this._state.size);
         this._resource.skip(this._state.size * (this._state.page - 1));
       }
-      obs$ = this._resource.get(Object.assign(opts, { withCount: true, responseType: 'entities' }));
+      obs$ = this._resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{withCount: true, responseType: 'entities'}, options || {}));
     } else if (this._resource instanceof ODataFunctionResource) {
-      obs$ = this._resource.get(Object.assign(opts, { responseType: 'entities' }));
+      obs$ = this._resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {}));
     }
     if (!obs$)
       throw new Error("Not Yet!");
@@ -206,99 +203,59 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this._resource as ODataEntitySetResource<any>).count().get();
   }
 
-  // Callable
-  protected call<R>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'value',
-    options?: HttpOptions
-  ): Observable<R>;
-
-  protected call<R, M extends ODataModel<R>>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'model',
-    options?: HttpOptions
-  ): Observable<M>;
-
-  protected call<R, M extends ODataModel<R>, C extends ODataCollection<R, M>>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'collection',
-    options?: HttpOptions
-  ): Observable<C>;
-
-  protected call<R>(
-    callable: ODataCallableResource<R>,
-    args: any | null,
-    responseType: 'value' | 'model' | 'collection',
-    options?: HttpOptions
-  ): Observable<any> {
-    let res$ = callable.call(args, 'json', options);
-    switch (responseType) {
-      case 'value':
-        return res$.pipe(map((body: any) => callable.toValue(body)[0]));
-      case 'model':
-        return res$.pipe(map((body: any) => callable.toModel<ODataModel<any>>(body)));
-      case 'collection':
-        return res$.pipe(map((body: any) => callable.toCollection<ODataCollection<any, ODataModel<any>>>(body)));
-    }
-  }
-
-  // Functions
-  protected function<R>(name: string, returnType?: string): ODataFunctionResource<R> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      return this._resource.function<R>(name, returnType);
-    }
-    throw new Error(`Can't function without EntitySetResource`);
-  }
-
-  // Actions
-  protected action<R>(name: string, returnType?: string): ODataActionResource<R> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      return this._resource.action<R>(name, returnType);
-    }
-    throw new Error(`Can't action without EntitySetResource`);
+  protected get _segments() {
+    if (!(this._resource && this._resource instanceof ODataEntitySetResource))
+      throw new Error(`Can't call without EntitySetResource`);
+    let resource = this._resource as ODataEntitySetResource<T>;
+    return {
+      // Function
+      function<R>(name: string, returnType?: string): ODataFunctionResource<R> { return resource.function<R>(name, returnType); },
+      // Action
+      action<R>(name: string, returnType?: string): ODataActionResource<R> { return resource.action<R>(name, returnType); },
+    };
   }
 
   // Query options
-  select(select?: Select<T>) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    return (this._resource as ODataEntitySetResource<T>).select(select);
+  get _query() {
+    if (!(this._resource && this._resource instanceof ODataEntitySetResource))
+      throw new Error("Can't query without EntitySetResource");
+    let resource = this._resource as ODataEntitySetResource<T>;
+    let col = this;
+    return {
+      // Select
+      select(select?: Select<T>) {
+        return resource.select(select);
+      },
+      // Filter
+      filter(filter?: Filter) {
+        col.resetState();
+        return resource.filter(filter);
+      },
+      // Search
+      search(search?: string) {
+        col.resetState();
+        return resource.search(search);
+      },
+      // OrderBy
+      orderBy(orderBy?: OrderBy<T>) {
+        col.resetState();
+        return resource.orderBy(orderBy);
+      },
+      // Expand
+      expand(expand?: Expand<T>) {
+        return resource.expand(expand);
+      },
+      // GroupBy
+      groupBy(groupBy?: GroupBy<T>) {
+        col.resetState();
+        return resource.groupBy(groupBy);
+      },
+      // Alias value
+      alias(name: string, value?: any) { 
+        col.resetState();
+        return resource.alias(name, value); 
+      }
+    };
   }
-  filter(filter?: Filter) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    this.resetState();
-    return (this._resource as ODataEntitySetResource<T>).filter(filter);
-  }
-  search(search?: string) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    this.resetState();
-    return (this._resource as ODataEntitySetResource<T>).search(search);
-  }
-  orderBy(orderBy?: OrderBy<T>) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    this.resetState();
-    return (this._resource as ODataEntitySetResource<T>).orderBy(orderBy);
-  }
-  expand(expand?: Expand<T>) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    return (this._resource as ODataEntitySetResource<T>).expand(expand);
-  }
-  groupBy(groupBy?: GroupBy<T>) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    this.resetState();
-    return (this._resource as ODataEntitySetResource<T>).groupBy(groupBy);
-  }
-  alias(name: string, value?: any) {
-    if (!this._resource)
-      throw new Error("Can't select");
-    return (this._resource as ODataEntitySetResource<T>).alias(name, value);
-  }
+
 }
