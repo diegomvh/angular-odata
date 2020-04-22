@@ -100,24 +100,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Requests
-  fetch(options?: HttpOptions): Observable<this> {
+  fetch(options?: HttpOptions & {withCount?: boolean}): Observable<this> {
     let obs$: Observable<any>;
-    if (!this._state.page)
-      this._state.page = 1;
     if (this._resource instanceof ODataEntitySetResource) {
-      if (this._state.size) {
-        this._resource.top(this._state.size);
-        this._resource.skip(this._state.size * (this._state.page - 1));
-      }
-      obs$ = this._resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{withCount: true}, options || {}));
+      obs$ = this._resource.get(options);
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      if (this._state.size) {
-        this._resource.top(this._state.size);
-        this._resource.skip(this._state.size * (this._state.page - 1));
-      }
       obs$ = this._resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{withCount: true, responseType: 'entities'}, options || {}));
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {}));
     } else if (this._resource instanceof ODataFunctionResource) {
       obs$ = this._resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {}));
@@ -170,33 +159,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$.pipe(map(() => this));
   }
 
-  // Pagination
-  page(page: number) {
-    this._state.page = page;
-    return this.fetch();
-  }
-
-  size(size: number) {
-    this._state.size = size;
-    return this.page(1);
-  }
-
-  firstPage() {
-    return this.page(1);
-  }
-
-  previousPage() {
-    return (this._state.page) ? this.page(this._state.page - 1) : this.fetch();
-  }
-
-  nextPage() {
-    return (this._state.page) ? this.page(this._state.page + 1) : this.fetch();
-  }
-
-  lastPage() {
-    return (this._state.pages) ? this.page(this._state.pages) : this.fetch();
-  }
-
   // Count
   count() {
     return (this._resource as ODataEntitySetResource<any>).count().get();
@@ -221,6 +183,18 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     let resource = this._resource as ODataEntitySetResource<T>;
     let col = this;
     return {
+      // Top
+      top(top?: number) {
+        return resource.top(top);
+      },
+      // Skip
+      skip(skip?: number) {
+        return resource.skip(skip);
+      },
+      // Skiptoken
+      skiptoken(skiptoken?: string) {
+        return resource.skiptoken(skiptoken);
+      },
       // Select
       select(select?: Select<T>) {
         return resource.select(select);
