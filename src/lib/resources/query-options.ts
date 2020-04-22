@@ -24,6 +24,7 @@ export type ExpandOptions<T> = {
   top?: number;
   expand?: Expand<T>;
 }
+
 export type Transform<T> = {
   aggregate?: Aggregate | Array<Aggregate>;
   filter?: Filter;
@@ -39,7 +40,6 @@ export enum QueryOptionTypes {
   select = 'select',
   filter = 'filter',
   search = 'search',
-  groupBy = 'groupBy',
   transform = 'transform',
   orderBy = 'orderBy',
   top = 'top',
@@ -57,7 +57,6 @@ export type QueryOptions<T> = {
   [QueryOptionTypes.select]?: Select<T>;
   [QueryOptionTypes.filter]?: Filter; 
   [QueryOptionTypes.search]?: string;
-  [QueryOptionTypes.groupBy]?: GroupBy<T>;
   [QueryOptionTypes.transform]?: Transform<T>;
   [QueryOptionTypes.orderBy]?: OrderBy<T>;
   [QueryOptionTypes.top]?: number;
@@ -147,7 +146,6 @@ export class ODataQueryOptions {
       QueryOptionTypes.select,
       QueryOptionTypes.filter,
       QueryOptionTypes.search,
-      QueryOptionTypes.groupBy,
       QueryOptionTypes.transform,
       QueryOptionTypes.orderBy,
       QueryOptionTypes.top,

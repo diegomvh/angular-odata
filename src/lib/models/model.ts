@@ -204,11 +204,13 @@ export class ODataModel<T> {
   }
 
   protected get _segments() {
-    if (!(this._resource && this._resource instanceof ODataEntityResource))
-      throw new Error(`Can't call without EntityResource`);
-    this._resource.key(this);
-    if (!this._resource.hasKey())
-      throw new Error(`Can't use without key`);
+    if (!this._resource)
+      throw new Error(`Can't call without ODataResource`);
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this);
+      if (!this._resource.hasKey())
+        throw new Error(`Can't use without key`);
+    }
     let resource = this._resource as ODataEntityResource<T>;
     return {
       // Function
@@ -221,11 +223,13 @@ export class ODataModel<T> {
   }
 
   get _query() {
-    if (!(this._resource && this._resource instanceof ODataEntityResource))
-      throw new Error("Can't query without EntityResource");
-    this._resource.key(this);
-    if (!this._resource.hasKey())
-      throw new Error(`Can't use without key`);
+    if (!this._resource)
+      throw new Error(`Can't query without ODataResource`);
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.key(this);
+      if (!this._resource.hasKey())
+        throw new Error(`Can't query without key`);
+    }
     let resource = this._resource as ODataEntityResource<T>;
     return {
       // Select

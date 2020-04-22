@@ -125,10 +125,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return this.queryOptions.option(QueryOptionTypes.filter, opts);
   }
 
-  groupBy(opts?: GroupBy<T>) {
-    return this.queryOptions.option(QueryOptionTypes.groupBy, opts);
-  }
-
   orderBy(opts?: OrderBy<T>) {
     return this.queryOptions.option(QueryOptionTypes.orderBy, opts);
   }

@@ -12,9 +12,9 @@ import {
   ODataEntitiesAnnotations,
   Filter,
   Expand,
-  GroupBy,
   Select,
-  OrderBy
+  OrderBy,
+  Transform
 } from '../resources';
 
 import { ODataModel } from './model';
@@ -22,7 +22,6 @@ import {
   HttpOptions,
   HttpEntitiesOptions
 } from '../resources/http-options';
-import { ODataCallableResource } from '../resources/requests/callable';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   private _resource: ODataResource<T>;
@@ -245,10 +244,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       expand(expand?: Expand<T>) {
         return resource.expand(expand);
       },
-      // GroupBy
-      groupBy(groupBy?: GroupBy<T>) {
+      // Transform
+      transform(transform?: Transform<T>) {
         col.resetState();
-        return resource.groupBy(groupBy);
+        return resource.transform(transform);
       },
       // Alias value
       alias(name: string, value?: any) { 

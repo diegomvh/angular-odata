@@ -127,10 +127,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.queryOptions.option<Filter>(QueryOptionTypes.filter, opts);
   }
 
-  groupBy(opts?: GroupBy<T>) {
-    return this.queryOptions.option(QueryOptionTypes.groupBy, opts);
-  }
-
   orderBy(opts?: OrderBy<T>) {
     return this.queryOptions.option<OrderBy<T>>(QueryOptionTypes.orderBy, opts);
   }
