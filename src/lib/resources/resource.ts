@@ -118,6 +118,15 @@ export class ODataResource<Type> {
     return new Collection(entities, {resource: this, annotations: annots}) as C;
   }
 
+  toRelated<R>(value: any, annots: any) {
+    if (Types.isArray(value)) {
+      return this.toCollection(Object.assign(annots, { [VALUE]: value }));
+    } else {
+      return this.toModel(Object.assign(annots, value));
+    }
+  }
+
+
   // Debug
   toString(): string {
     let path = this.path();

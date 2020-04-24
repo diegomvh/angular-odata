@@ -65,20 +65,6 @@ export class ODataModel<T> {
     return this._resource.clone() as ODataResource<T>;
   }
 
-  // TODO: Move this to resource
-  private related<R>(resource: ODataResource<R>, f: ODataField<any>) {
-    let value = this._entity[f.name];
-    if (f.collection) {
-      var annots = this._annotations.property(f.name) || {};
-      // Merge value and annotations {value: []}
-      value = Object.assign(annots, { [VALUE]: value || [] });
-      return resource.toCollection(value);
-    } else {
-      value = value || {};
-      return resource.toModel(value);
-    }
-  }
-
   protected parse(entity: T) {
     let fields = this._resource.meta().fields();
     let entries = Object.entries(entity)
@@ -97,9 +83,13 @@ export class ODataModel<T> {
     Object.assign(attrs, entries
       .filter(([, , f]) => f && !f.navigation && f.parser)
       .reduce((acc, [k, , f]) => {
-        let prop = (this._resource as ODataEntityResource<T>).property(f.name);
-        let complex = this.related(prop, f);
-        return Object.assign(acc, { [k]: complex });
+        let value = this._entity[f.name];
+        if (value) {
+          let prop = (this._resource as ODataEntityResource<T>).property(f.name);
+          var base = f.collection && this._annotations.property(f.name) || {};
+          value = prop.toRelated(value, base);
+        }
+        return Object.assign(acc, { [k]: value });
       }, {}));
     //console.log(attrs);
     return attrs;
@@ -244,8 +234,13 @@ export class ODataModel<T> {
   protected getNavigationProperty<P>(name: string): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     let field = this._resource.meta().fields().find(f => f.name === name);
     if (!(name in this._relationships)) {
-      let nav = this._segments.navigationProperty<P>(field.name);
-      this._relationships[field.name] = this.related(nav, field);
+      let value = this._entity[field.name];
+      if (value) {
+        let nav = this._segments.navigationProperty<P>(field.name);
+        var base = field.collection && this._annotations.property(field.name) || {};
+        value = nav.toRelated(value, base);
+      }
+      this._relationships[field.name] = value; 
     }
     return this._relationships[field.name];
   }
