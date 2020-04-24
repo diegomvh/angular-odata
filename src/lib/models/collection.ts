@@ -34,15 +34,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   private _state: {
     records?: number,
+    skip?: number,
+    top?: number,
+    skiptoken?: string,
     size?: number,
     page?: number,
     pages?: number
   } = {};
   get state() {
     return Object.assign({}, this._state);
-  }
-  private resetState() {
-    this._state = {};
   }
 
   constructor(values?: any[], options: { resource?: ODataResource<T>, annotations?: ODataAnnotations } = {}) {
@@ -68,10 +68,25 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   protected populate(values: any[], annots?: ODataAnnotations): this {
     this._annotations = annots;
+    
+    if (annots instanceof ODataEntitiesAnnotations) {
+      if (annots.top)
+        this._state.top = annots.top;
+      if (annots.skip)
+        this._state.skip = annots.skip;
+      if (annots.skiptoken)
+        this._state.skiptoken = annots.skiptoken;
+      if (annots.count) {
+        this._state.size = this._state.skip;
+        this._state.records = annots.count;
+        this._state.pages = Math.ceil(annots.count / this._state.skip);
+        this._state.page = (this._state.top / this._state.size) + 1;
+      }
+    } else {
+      this._state.records = this._state.size = values.length;
+      this._state.pages = this._state.page = 1;
+    }
 
-    this._state.records = (annots instanceof ODataEntitiesAnnotations && annots.count) ? annots.count : values.length;
-    this._state.size = (annots instanceof ODataEntitiesAnnotations && annots.skip) ? annots.skip : values.length;
-    this._state.pages = (this._state.records && this._state.size) ? Math.ceil(this._state.records / this._state.size) : 1;
     this._models = this._resource ? this.parse(values) : values as M[];
     return this;
   }
@@ -165,8 +180,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   protected get _segments() {
-    if (!(this._resource && this._resource instanceof ODataEntitySetResource))
-      throw new Error(`Can't call without EntitySetResource`);
+    if (!this._resource)
+      throw new Error(`Can't call without ODataResource`);
     let resource = this._resource as ODataEntitySetResource<T>;
     return {
       // Function
@@ -178,57 +193,30 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Query options
   get _query() {
-    if (!(this._resource && this._resource instanceof ODataEntitySetResource))
-      throw new Error("Can't query without EntitySetResource");
+    if (!this._resource)
+      throw new Error(`Can't query without ODataResource`);
     let resource = this._resource as ODataEntitySetResource<T>;
-    let col = this;
     return {
       // Top
-      top(top?: number) {
-        return resource.top(top);
-      },
+      top(top?: number) { return resource.top(top); },
       // Skip
-      skip(skip?: number) {
-        return resource.skip(skip);
-      },
+      skip(skip?: number) { return resource.skip(skip); },
       // Skiptoken
-      skiptoken(skiptoken?: string) {
-        return resource.skiptoken(skiptoken);
-      },
+      skiptoken(skiptoken?: string) { return resource.skiptoken(skiptoken); },
       // Select
-      select(select?: Select<T>) {
-        return resource.select(select);
-      },
+      select(select?: Select<T>) { return resource.select(select); },
       // Filter
-      filter(filter?: Filter) {
-        col.resetState();
-        return resource.filter(filter);
-      },
+      filter(filter?: Filter) { return resource.filter(filter); },
       // Search
-      search(search?: string) {
-        col.resetState();
-        return resource.search(search);
-      },
+      search(search?: string) { return resource.search(search); },
       // OrderBy
-      orderBy(orderBy?: OrderBy<T>) {
-        col.resetState();
-        return resource.orderBy(orderBy);
-      },
+      orderBy(orderBy?: OrderBy<T>) { return resource.orderBy(orderBy); },
       // Expand
-      expand(expand?: Expand<T>) {
-        return resource.expand(expand);
-      },
+      expand(expand?: Expand<T>) { return resource.expand(expand); },
       // Transform
-      transform(transform?: Transform<T>) {
-        col.resetState();
-        return resource.transform(transform);
-      },
+      transform(transform?: Transform<T>) { return resource.transform(transform); },
       // Alias value
-      alias(name: string, value?: any) { 
-        col.resetState();
-        return resource.alias(name, value); 
-      }
+      alias(name: string, value?: any) { return resource.alias(name, value); }
     };
   }
-
 }

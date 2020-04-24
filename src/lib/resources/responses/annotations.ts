@@ -186,10 +186,13 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
       return decodeURIComponent(this.value[ODATA_DELTALINK] as string);
   }
 
+  get top(): number {
+    let match = (this.nextLink || "").match(/\$top=(\d+)/);
+    if (match) return Number(match[1]);
+  }
+
   get skip(): number {
     let match = (this.nextLink || "").match(/\$skip=(\d+)/);
-    if (match) return Number(match[1]);
-    match = (this.nextLink || "").match(/\$skiptoken=(\d+)/);
     if (match) return Number(match[1]);
   }
 
