@@ -146,22 +146,24 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   
   // Custom
-  all(): Observable<T[]> {
+  all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone() as ODataEntitySetResource<T>;
-    let fetch = (options?: { skip?: number, skiptoken?: string, top?: number }) => {
-      if (options) {
-        if (options.skiptoken)
-          res.skiptoken(options.skiptoken);
-        else if (options.skip)
-          res.skip(options.skip);
-        if (options.top)
-          res.top(options.top);
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }) => {
+      if (opts) {
+        if (opts.skiptoken)
+          res.skiptoken(opts.skiptoken);
+        else if (opts.skip)
+          res.skip(opts.skip);
+        if (opts.top)
+          res.top(opts.top);
       }
-      return res.get();
+      return res.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+      );
     }
     return fetch()
       .pipe(
-        expand(([_, odata])  => (odata.skip || odata.skiptoken) ? fetch(odata) : empty()),
+        expand(([_, annots])  => (annots.skip || annots.skiptoken) ? fetch(annots) : empty()),
         concatMap(([entities, _]) => entities),
         toArray());
   }

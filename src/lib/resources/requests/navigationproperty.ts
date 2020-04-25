@@ -150,23 +150,16 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Custom
   single(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this
-      .get({ 
-        headers: options && options.headers,
-        params: options && options.params,
-        responseType: 'entity', 
-        reportProgress: options && options.reportProgress,
-        withCredentials: options && options.withCredentials});
+      .get(
+        Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+      );
   }
 
-  collection(options?: HttpOptions): Observable<[T[], ODataEntitiesAnnotations]> {
+  collection(options?: HttpOptions & {withCount?: boolean}): Observable<[T[], ODataEntitiesAnnotations]> {
     return this
-      .get({ 
-        headers: options && options.headers,
-        params: options && options.params,
-        responseType: 'entities', 
-        reportProgress: options && options.reportProgress,
-        withCredentials: options && options.withCredentials,
-        withCount: true });
+      .get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+      );
   }
 
   all(options?: HttpOptions): Observable<T[]> {
@@ -180,16 +173,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         if (opts.top)
           res.top(opts.top);
       }
-      return res.get({ 
-        headers: options && options.headers,
-        params: options && options.params,
-        reportProgress: options && options.reportProgress,
-        responseType: 'entities', 
-        withCredentials: options && options.withCredentials});
+      return res.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+      );
     }
     return fetch()
       .pipe(
-        expand(([_, odata]) => (odata.skip || odata.skiptoken) ? fetch(odata) : empty()),
+        expand(([_, annots]) => (annots.skip || annots.skiptoken) ? fetch(annots) : empty()),
         concatMap(([entities, _]) => entities),
         toArray());
   }
