@@ -135,8 +135,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   all(): Observable<this> {
     let obs$: Observable<any>;
-    if (!this._state.page)
-      this._state.page = 1;
     if (this._resource instanceof ODataEntitySetResource) {
       obs$ = this._resource.all();
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
