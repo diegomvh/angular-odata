@@ -17,6 +17,21 @@ export const PARSERS: {[name: string]: Parser<any>} = {
     parserFor<E>(name: string) { },
     resolveKey(attrs: any) {}
   },
+  'number': <Parser<number>>{
+    type: 'number',
+    parse(value: any) {
+      return Array.isArray(value) ?
+        value.map(v => Number(v)) :
+        Number(value);
+    },
+    toJSON(value: number) { 
+      return Array.isArray(value) ?
+        value.map(v => Number(v)) :
+        Number(value);
+    },
+    parserFor<E>(name: string) { },
+    resolveKey(attrs: any) {}
+  }
 };
 
 export class ODataField<T> implements Field, Parser<T> {
