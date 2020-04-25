@@ -83,11 +83,6 @@ export class ODataSettings {
       return this.metas[type] as ODataMeta<E>;
   }
 
-  public setForType<T>(type: string): string {
-    let meta = this.metaForType(type) as ODataMeta<T>;
-    return meta && meta.set;
-  }
-
   public parserForType<T>(type: string): Parser<T> {
     if (type in this.parsers)
       return this.parsers[type] as ODataParser<T>;
@@ -96,13 +91,11 @@ export class ODataSettings {
   public modelForType(type: string): typeof ODataModel {
     if (type in this.models)
       return this.models[type] as typeof ODataModel;
-    return ODataModel;
   }
 
   public collectionForType(type: string): typeof ODataCollection {
     if (type in this.collections)
       return this.collections[type] as typeof ODataCollection;
-    return ODataCollection;
   }
 
 }

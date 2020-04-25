@@ -17,7 +17,7 @@ import {
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection } from './models';
+import { ODataModel, ODataCollection, PARSERS } from './models';
 import { ODataMeta } from './models/meta';
 import { Types } from './utils';
 
@@ -38,24 +38,32 @@ export class ODataClient {
     return `${serviceRoot}${resource.path()}`;
   }
 
+  // Resolve Building Blocks
   metaForType<T>(type: string): ODataMeta<T> | null {
     return this.settings.metaForType(type) as ODataMeta<T>;
   }
 
-  setForType(type: string): string | null {
-    return this.settings.setForType(type) as string;
-  }
-
   parserForType<T>(type: string): Parser<T> | null {
-    return this.settings.parserForType(type) as Parser<T>;
+    let parser = this.settings.parserForType(type) as Parser<T>;
+    if (!parser && type in PARSERS) {
+      parser = PARSERS[type];
+    }
+    return parser;
   }
 
   modelForType(type: string): typeof ODataModel {
-    return this.settings.modelForType(type) as typeof ODataModel;
+    let Model = this.settings.modelForType(type) as typeof ODataModel;
+    return Model || ODataModel;
   }
 
   collectionForType(type: string): typeof ODataCollection {
-    return this.settings.collectionForType(type) as typeof ODataCollection;
+    let Collection = this.settings.collectionForType(type) as typeof ODataCollection;
+    return Collection || ODataCollection;
+  }
+
+  setForType<T>(type: string): string | null {
+    let meta = this.metaForType(type) as ODataMeta<T>;
+    return meta && meta.set;
   }
 
   fromJSON<T>(json: {type: string | null, path: any[], query: PlainObject}): ODataResource<T> {
