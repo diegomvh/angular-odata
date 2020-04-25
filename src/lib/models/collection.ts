@@ -73,13 +73,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (annots.top)
         this._state.top = annots.top;
       if (annots.skip)
-        this._state.skip = annots.skip;
+        this._state.size = this._state.skip = annots.skip;
       if (annots.skiptoken)
         this._state.skiptoken = annots.skiptoken;
       if (annots.count) {
-        this._state.size = this._state.skip;
         this._state.records = annots.count;
-        this._state.pages = Math.ceil(annots.count / this._state.skip);
+      if (this._state.records && this._state.size)
+        this._state.pages = Math.ceil(this._state.records / this._state.size);
+      if (this._state.top && this._state.size)
         this._state.page = (this._state.top / this._state.size) + 1;
       }
     } else {
