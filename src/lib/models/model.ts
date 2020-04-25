@@ -87,7 +87,9 @@ export class ODataModel<T> {
         if (value) {
           let prop = (this._resource as ODataEntityResource<T>).property(f.name);
           var base = f.collection && this._annotations.property(f.name) || {};
-          value = prop.toRelated(value, base);
+          value = f.collection ? 
+            prop.toCollection(Object.assign(base, { [VALUE]: value || [] })) : 
+            prop.toModel(Object.assign(base, value || {}));
         }
         return Object.assign(acc, { [k]: value });
       }, {}));
@@ -235,12 +237,11 @@ export class ODataModel<T> {
     let field = this._resource.meta().fields().find(f => f.name === name);
     if (!(name in this._relationships)) {
       let value = this._entity[field.name];
-      if (value) {
-        let nav = this._segments.navigationProperty<P>(field.name);
-        var base = field.collection && this._annotations.property(field.name) || {};
-        value = nav.toRelated(value, base);
-      }
-      this._relationships[field.name] = value; 
+      let nav = this._segments.navigationProperty<P>(field.name);
+      var base = field.collection && this._annotations.property(field.name) || {};
+      this._relationships[field.name] = field.collection ? 
+        nav.toCollection(Object.assign(base, { [VALUE]: value || [] })) : 
+        nav.toModel(Object.assign(base, value || {}));
     }
     return this._relationships[field.name];
   }
