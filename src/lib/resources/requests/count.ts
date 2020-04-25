@@ -24,7 +24,7 @@ export class ODataCountResource extends ODataResource<any> {
   }
 
   get(options?: HttpOptions): Observable<number> {
-    return this.get(
+    return super.get(
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
     );
   }
