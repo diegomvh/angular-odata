@@ -89,24 +89,22 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   action<A>(name: string, type?: string) {
-    let parser = this.client.parserForType<A>(type) as Parser<A>;
     return ODataActionResource.factory<A>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: parser
+      parser: this.client.parserForType<A>(type) as Parser<A>
     });
   }
 
   function<F>(name: string, type?: string) {
-    let parser = this.client.parserForType<F>(type) as Parser<F>;
     return ODataFunctionResource.factory<F>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser
+      parser: this.client.parserForType<F>(type) as Parser<F>
     });
   }
 
