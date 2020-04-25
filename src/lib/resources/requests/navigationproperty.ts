@@ -63,8 +63,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataReferenceResource.factory(
       this.client, {
       segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parser: this.parser
+      options: this.queryOptions.clone()
     });
   }
 
@@ -93,7 +92,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.parser
+      parser: this.client.parserForType<number>('number')
     });
   }
 
