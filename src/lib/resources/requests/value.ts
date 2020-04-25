@@ -24,25 +24,25 @@ export class ODataValueResource<T> extends ODataResource<T> {
   }
 
   arraybuffer(options?: HttpOptions): Observable<ArrayBuffer> {
-    return this.get( 
+    return super.get( 
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'arraybuffer'}, options || {})
     );
   }
 
   blob(options?: HttpOptions): Observable<Blob> {
-    return this.get( 
+    return super.get( 
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'blob'}, options || {})
     );
   }
 
   text(options?: HttpOptions): Observable<string> {
-    return this.get( 
+    return super.get( 
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'text'}, options || {})
     );
   }
 
-  json(options?: HttpOptions): Observable<T> {
-    return this.get( 
+  get(options?: HttpOptions): Observable<T> {
+    return super.get( 
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
     );
   }
