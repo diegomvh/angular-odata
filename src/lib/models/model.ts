@@ -130,9 +130,9 @@ export class ODataModel<T> {
     }
   }
 
-  clone() {
+  clone<Mo extends ODataModel<T>>() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return (new Ctor(this.toEntity(), { resource: this._resource.clone(), annotations: this._annotations })) as ODataModel<T>;
+    return (new Ctor(this.toEntity(), { resource: this._resource.clone(), annotations: this._annotations })) as Mo;
   }
 
   fetch(options?: HttpOptions): Observable<this | null> {
