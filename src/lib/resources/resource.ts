@@ -12,8 +12,7 @@ import {
 import { ODataClient } from '../client';
 import {
   ODataModel,
-  ODataCollection,
-  ODataField
+  ODataCollection
 } from '../models';
 import { Types } from '../utils';
 
@@ -54,8 +53,21 @@ export class ODataResource<Type> {
     return this.parser && this.parser.type;
   }
 
-  meta() {
-    return this.client.metaForType(this.type());
+  // Proxy to client
+  metaForType(type?: string) {
+    return this.client.metaForType(type || this.type());
+  }
+
+  parserForType(type?: string) {
+    return this.client.parserForType(type || this.type());
+  }
+
+  modelForType(type?: string) {
+    return this.client.modelForType(type || this.type());
+  }
+
+  collectionForType(type?: string) {
+    return this.client.collectionForType(type || this.type());
   }
 
   path(): string {
@@ -67,7 +79,7 @@ export class ODataResource<Type> {
   }
 
   protected applyType(type: string) {
-    this.parser = this.client.parserForType(type);
+    this.parser = this.parserForType(type);
   }
 
   protected serialize(obj: Type | Partial<Type>): any {
@@ -108,13 +120,13 @@ export class ODataResource<Type> {
 
   toModel<M extends ODataModel<Type>>(body: any): M {
     let [entity, annots] = this.toEntity(body);
-    let Model = this.client.modelForType(this.type());
+    let Model = this.modelForType();
     return new Model(entity, {resource: this, annotations: annots}) as M;
   }
 
   toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(body: any): C {
     let [entities, annots] = this.toEntities(body);
-    let Collection = this.client.collectionForType(this.type());
+    let Collection = this.collectionForType();
     return new Collection(entities, {resource: this, annotations: annots}) as C;
   }
 

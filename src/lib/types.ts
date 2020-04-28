@@ -93,15 +93,12 @@ export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
 // SETTINGS AND PARSERS
 export type Field = {
   type: string;
-  enum?: { [key: number]: string | number };
   parser?: Parser<any>;
-  enumString?: boolean;
   default?: any;
   maxLength?: number;
   key?: boolean;
   collection?: boolean;
   nullable?: boolean;
-  flags?: boolean;
   navigation?: boolean;
   field?: string;
   ref?: string;
@@ -118,6 +115,14 @@ export interface Parser<T> {
 
 export type Meta<T> = {
   type?: string;
+}
+
+export type MetaEnum<T> = Meta<T> & {
+  flags?: boolean;
+  members: {[name: string]: number} | {[value: number]: string};
+}
+
+export type MetaEntity<T> = Meta<T> & {
   base?: string;
   set?: { 
     name: string;
@@ -126,4 +131,3 @@ export type Meta<T> = {
   annotations: any[];
   fields: { [P in keyof T]?: Field }
 }
-

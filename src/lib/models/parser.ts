@@ -1,5 +1,5 @@
 import { Types, Enums } from '../utils';
-import { Parser, Field, JsonSchemaExpandOptions, Meta, JsonSchemaConfig } from '../types';
+import { Parser, Field, JsonSchemaExpandOptions, Meta, JsonSchemaConfig, MetaEntity, MetaEnum } from '../types';
 
 export const PARSERS: {[name: string]: Parser<any>} = {
   'Date': <Parser<Date>>{
@@ -34,18 +34,72 @@ export const PARSERS: {[name: string]: Parser<any>} = {
   }
 };
 
+export interface ODataParser<Type> extends Parser<Type> { 
+  configure(type: string, parsers: {[type: string]: ODataParser<any> });
+}
+
+export class ODataEnumParser<Type> implements ODataParser<Type> {
+  type: string;
+  flags?: boolean;
+  enumString?: boolean;
+  members: {[name: string]: number} | {[value: number]: string};
+
+  constructor(meta: MetaEnum<Type>, enumString?: boolean) {
+    this.type = meta.type;
+    this.flags = meta.flags;
+    this.members = meta.members;
+    this.enumString = enumString;
+  }
+
+  // Deserialize
+  parse(value: any) {
+    if (value === null) return value;
+    return this.flags ?
+      Enums.toFlags(this.members, value) :
+      Enums.toValue(this.members, value);
+  }
+
+  // Serialize
+  toJSON(value: any) {
+    if (value === null) return value;
+    let enums = this.flags ?
+      Enums.toEnums(this.members, value) :
+      [Enums.toEnum(this.members, value)];
+    if (!this.enumString)
+      enums = enums.map(e => `${this.type}'${e}'`);
+    return enums.join(", ");
+  }
+
+  // Json Schema
+  toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
+    let property = <any>{
+      title: `The ${this.type} field`,
+      type: "string"
+    };
+    property.enum = Enums.keys(this.members);
+    return property;
+  }
+
+  configure(type: string, parsers: { [type: string]: ODataParser<any>; }) {
+  }
+
+  parserFor<E>(name: string): Parser<E> {
+    throw new Error("Method not implemented.");
+  }
+  resolveKey(attrs: any) {
+    throw new Error("Method not implemented.");
+  }
+}
+
 export class ODataField<T> implements Field, Parser<T> {
   name: string;
   type: string;
-  enum?: { [key: number]: string | number };
   parser?: Parser<any>;
-  enumString?: boolean;
   default?: any;
   maxLength?: number;
   key?: boolean;
   collection?: boolean;
   nullable?: boolean;
-  flags?: boolean;
   navigation?: boolean;
   field?: string;
   ref?: string;
@@ -62,12 +116,7 @@ export class ODataField<T> implements Field, Parser<T> {
   // Deserialize
   parse(value: any) {
     if (value === null) return value;
-    if (this.enum) {
-      //TODO: enumString
-      return this.flags ?
-        Enums.toFlags(this.enum, value) :
-        Enums.toValue(this.enum, value);
-    } else if (this.parser) {
+    if (this.parser) {
       return this.parser.parse(value);
     } else if (this.type in PARSERS) {
       return PARSERS[this.type].parse(value);
@@ -78,14 +127,7 @@ export class ODataField<T> implements Field, Parser<T> {
   // Serialize
   toJSON(value: any) {
     if (value === null) return value;
-    if (this.enum) {
-      let enums = this.flags ?
-        Enums.toEnums(this.enum, value) :
-        [Enums.toEnum(this.enum, value)];
-      if (!this.enumString)
-        enums = enums.map(e => `${this.type}'${e}'`);
-      return enums.join(", ");
-    } else if (this.parser) {
+    if (this.parser) {
       return this.parser.toJSON(value);
     } else if (this.type in PARSERS) {
       return PARSERS[this.type].toJSON(value);
@@ -97,12 +139,10 @@ export class ODataField<T> implements Field, Parser<T> {
   toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
     let property = this.parser ? this.parser.toJsonSchema(options) : <any>{
       title: `The ${this.name} field`,
-      type: this.enum ? "string" : this.parser ? "object" : this.type
+      type: this.parser ? "object" : this.type
     };
     if (this.maxLength)
       property.maxLength = this.maxLength;
-    if (this.enum)
-      property.enum = Enums.keys(this.enum);
     if (this.collection)
       property = {
         type: "array", 
@@ -119,37 +159,37 @@ export class ODataField<T> implements Field, Parser<T> {
   resolveKey(attrs: any) {
     return this.parser.resolveKey(attrs);
   }
+
+  isNavigation() {
+    return this.navigation;
+  }
+
+  isComplex() {
+    return this.parser && this.parser instanceof ODataEntityParser && this.parser.isComplex();
+  }
 }
 
-export class ODataParser<Type> implements Parser<Type> {
+export class ODataEntityParser<Type> implements ODataParser<Type> {
   type: string;
   base: string;
-  parent: ODataParser<any>;
+  parent: ODataEntityParser<any>;
   fields: ODataField<any>[];
 
-  constructor(meta: Meta<Type>) {
+  constructor(meta: MetaEntity<Type>) {
     this.type = meta.type;
     this.base = meta.base;
     this.fields = Object.entries(meta.fields)
       .map(([name, f]) => new ODataField(name, f as Field));
   }
 
-  configure(type: string, settings: {
-    stringAsEnum?: boolean,
-    enums?: {[type: string]: {[key: number]: string | number}},
-    parsers?: {[type: string]: ODataParser<any> }
-  }) {
+  configure(type: string, parsers: {[type: string]: ODataEntityParser<any> }) {
     this.type = type;
-    if (settings.parsers && this.base in settings.parsers) {
-      this.parent = settings.parsers[this.base];
+    if (this.base in parsers) {
+      this.parent = parsers[this.base];
     }
     this.fields.forEach(f => {
-      if (settings.enums && f.type in settings.enums) {
-        f.enum = settings.enums[f.type];
-        f.enumString = settings.stringAsEnum;
-      }
-      if (settings.parsers && f.type in settings.parsers) {
-        f.parser = settings.parsers[f.type];
+      if (parsers && f.type in parsers) {
+        f.parser = parsers[f.type];
       }
     });
   }
@@ -217,5 +257,9 @@ export class ODataParser<Type> implements Parser<Type> {
       key = Object.values(key)[0];
     if (!Types.isEmpty(key))
       return key;
+  }
+
+  isComplex() {
+    return this.keys().length === 0;
   }
 }

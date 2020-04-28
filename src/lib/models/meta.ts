@@ -1,18 +1,18 @@
-import { ODataParser, ODataField } from './parser';
-import { Meta } from '../types';
+import { ODataEntityParser, ODataField, ODataParser } from './parser';
+import { MetaEntity } from '../types';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
 
-export class ODataMeta<Type> {
+export class ODataMetaEntity<Type> {
   type: string;
   base: string;
   set: {name: string };
   parser?: ODataParser<Type>;
-  parent?: ODataMeta<any>;
+  parent?: ODataMetaEntity<any>;
   model?: { new(...any): any };
   collection?: { new(...any): any };
 
-  constructor(meta: Meta<Type>) {
+  constructor(meta: MetaEntity<Type>) {
     this.type = meta.type;
     this.base = meta.base;
     this.set = meta.set;
@@ -20,7 +20,7 @@ export class ODataMeta<Type> {
 
   configure(type: string, settings: {
     parsers?: {[type: string]: ODataParser<any> },
-    metas?: {[type: string]: ODataMeta<any> },
+    metas?: {[type: string]: ODataMetaEntity<any> },
     models?: {[type: string]: { new(...any): ODataModel<any>} },
     collections?:{[type: string]: { new(...any): ODataCollection<any, ODataModel<any>> } }
   }) {
@@ -28,7 +28,7 @@ export class ODataMeta<Type> {
       throw new Error(`Can't configure ${this.type} with ${type}`);
     this.type = type;
     if (settings.parsers && this.type in settings.parsers) {
-      this.parser = settings.parsers[this.type] as ODataParser<Type>;
+      this.parser = settings.parsers[this.type] as ODataEntityParser<Type>;
     }
     if (settings.metas && this.base in settings.metas) {
       this.parent = settings.metas[this.base];
@@ -42,7 +42,7 @@ export class ODataMeta<Type> {
   }
 
   fields(include_parents: boolean = true): ODataField<any>[] {
-    let parser = this.parser as ODataParser<any>;
+    let parser = this.parser as ODataEntityParser<any>;
     let fields = [];
     while (parser) {
       fields = [...parser.fields, ...fields];

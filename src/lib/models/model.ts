@@ -21,15 +21,13 @@ import {
   HttpEntityOptions
 } from '../resources/http-options';
 import { VALUE } from '../types';
-import { ODataCallableResource } from '../resources/requests/callable';
-import { ODataField } from './parser';
 import { Types } from '../utils';
 
 export class ODataModel<T> {
-  private _resource: ODataResource<T>;
-  private _entity: T;
-  private _annotations: ODataAnnotations;
-  private _relationships: { [name: string]: ODataModel<any> | ODataCollection<any, ODataModel<any>> }
+  protected _resource: ODataResource<T>;
+  protected _entity: T;
+  protected _annotations: ODataAnnotations;
+  protected _relationships: { [name: string]: ODataModel<any> | ODataCollection<any, ODataModel<any>> }
 
   constructor(entity?: Partial<T>, options: { resource?: ODataResource<T>, annotations?: ODataAnnotations } = {}) {
     if (options.resource instanceof ODataResource)
@@ -43,7 +41,7 @@ export class ODataModel<T> {
     let first = !this._resource;
     this._resource = resource;
     if (first) {
-      this._resource.meta().fields()
+      this._resource.metaForType().fields()
         .filter(field => field.navigation)
         .forEach(field => {
           Object.defineProperty(this, field.name, {
@@ -66,12 +64,12 @@ export class ODataModel<T> {
   }
 
   protected parse(entity: T) {
-    let fields = this._resource.meta().fields();
+    let fields = this._resource.metaForType().fields();
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
     let attrs = Object.assign({}, entries
-      .filter(([, , f]) => f && !f.navigation)
+      .filter(([, , f]) => f && !(f.isNavigation() || f.isComplex()))
       .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {}));
     //console.log(attrs);
     //Others
@@ -81,7 +79,7 @@ export class ODataModel<T> {
     //console.log(attrs);
     //Complexes
     Object.assign(attrs, entries
-      .filter(([, , f]) => f && !f.navigation && f.parser)
+      .filter(([, , f]) => f && f.isComplex())
       .reduce((acc, [k, , f]) => {
         let value = this._entity[f.name];
         if (value) {
@@ -108,9 +106,9 @@ export class ODataModel<T> {
   toEntity(): T {
     if (this._resource) {
       let entity = {} as T;
-      this._resource.meta().fields().forEach(field => {
+      this._resource.metaForType().fields().forEach(field => {
         if (field.parser) {
-          if (field.navigation) {
+          if (field.isNavigation()) {
             if (field.name in this._relationships) {
               let rel = this._relationships[field.name];
               entity[field.name] = (rel instanceof ODataModel) ? rel.toEntity() : rel.toEntities();
@@ -234,7 +232,7 @@ export class ODataModel<T> {
   }
 
   protected getNavigationProperty<P>(name: string): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
-    let field = this._resource.meta().fields().find(f => f.name === name);
+    let field = this._resource.metaForType().fields().find(f => f.name === name);
     if (!(name in this._relationships)) {
       let value = this._entity[field.name];
       let nav = this._segments.navigationProperty<P>(field.name);
@@ -247,7 +245,7 @@ export class ODataModel<T> {
   }
 
   protected setNavigationProperty<P, Pm extends ODataModel<P>>(name: string, model: Pm | null): Observable<this> {
-    let field = this._resource.meta().fields().find(f => f.name === name);
+    let field = this._resource.metaForType().fields().find(f => f.name === name);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
     let ref = this._segments.navigationProperty<P>(name).reference();

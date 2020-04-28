@@ -24,10 +24,10 @@ import {
 } from '../resources/http-options';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
-  private _resource: ODataResource<T>;
-  private _annotations: ODataAnnotations;
+  protected _resource: ODataResource<T>;
+  protected _annotations: ODataAnnotations;
 
-  private _models: M[];
+  protected _models: M[];
   get models() {
     return [...this._models];
   }

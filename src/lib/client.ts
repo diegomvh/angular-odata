@@ -17,8 +17,7 @@ import {
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection, PARSERS } from './models';
-import { ODataMeta } from './models/meta';
+import { ODataModel, ODataCollection, PARSERS, ODataMetaEntity } from './models';
 import { Types } from './utils';
 
 @Injectable()
@@ -39,8 +38,8 @@ export class ODataClient {
   }
 
   // Resolve Building Blocks
-  metaForType<T>(type: string): ODataMeta<T> | null {
-    return this.settings.metaForType(type) as ODataMeta<T>;
+  metaForType<T>(type: string): ODataMetaEntity<T> | null {
+    return this.settings.metaForType(type) as ODataMetaEntity<T>;
   }
 
   parserForType<T>(type: string): Parser<T> | null {

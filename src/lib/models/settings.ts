@@ -3,9 +3,9 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
-import { Meta, Parser } from '../types';
-import { ODataMeta } from './meta';
-import { ODataParser } from './parser';
+import { Meta, Parser, MetaEnum, MetaEntity } from '../types';
+import { ODataMetaEntity } from './meta';
+import { ODataEntityParser, ODataParser, ODataEnumParser } from './parser';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 
@@ -34,7 +34,7 @@ export class ODataSettings {
   stringAsEnum?: boolean;
   enums?: {[type: string]: {[key: number]: string | number}};
   parsers?: {[type: string]: ODataParser<any> };
-  metas?: {[type: string]: ODataMeta<any> };
+  metas?: {[type: string]: ODataMetaEntity<any> };
   models?: {[type: string]: any };
   collections?:{[type: string]: any };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
@@ -54,19 +54,19 @@ export class ODataSettings {
 
     // Build parsers
     this.parsers = Object.entries(config.metas || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataParser(config)}), {});
+      .reduce((acc, [type, meta]) => {
+        let parser = type in config.enums ? new ODataEnumParser(meta as MetaEnum<any>, this.stringAsEnum) : new ODataEntityParser(meta as MetaEntity<any>);
+        return Object.assign(acc, {[type]: parser});
+      }, {});
 
     // Configure Parsers
     Object.entries(this.parsers)
-      .forEach(([type, parser]) => parser.configure(type, { 
-        stringAsEnum: this.stringAsEnum, 
-        enums: this.enums, 
-        parsers: this.parsers 
-      }));
+      .forEach(([type, parser]) => parser.configure(type, this.parsers));
 
     // Build metas
     this.metas = Object.entries(config.metas || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataMeta(config)}), {});
+      .filter(([type, meta]) => !(type in config.enums))
+      .reduce((acc, [type, meta]) => Object.assign(acc, {[type]: new ODataMetaEntity(meta as MetaEntity<any>)}), {});
 
     // Configure Metas
     Object.entries(this.metas)
@@ -78,14 +78,14 @@ export class ODataSettings {
       }));
   }
 
-  public metaForType<E>(type: string): ODataMeta<E> {
+  public metaForType<E>(type: string): ODataMetaEntity<E> {
     if (type in this.metas)
-      return this.metas[type] as ODataMeta<E>;
+      return this.metas[type] as ODataMetaEntity<E>;
   }
 
   public parserForType<T>(type: string): Parser<T> {
     if (type in this.parsers)
-      return this.parsers[type] as ODataParser<T>;
+      return this.parsers[type] as ODataEntityParser<T>;
   }
 
   public modelForType(type: string): typeof ODataModel {
