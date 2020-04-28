@@ -116,10 +116,14 @@ export interface Parser<T> {
   resolveKey(attrs: any);
 }
 
-export type Meta = {
+export type Meta<T> = {
   type?: string;
   base?: string;
-  set?: string;
-  fields: { [name: string]: Field }
+  set?: { 
+    name: string;
+    annotations: any[];
+  };
+  annotations: any[];
+  fields: { [P in keyof T]?: Field }
 }
 

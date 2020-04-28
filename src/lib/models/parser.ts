@@ -127,11 +127,11 @@ export class ODataParser<Type> implements Parser<Type> {
   parent: ODataParser<any>;
   fields: ODataField<any>[];
 
-  constructor(meta: Meta) {
+  constructor(meta: Meta<Type>) {
     this.type = meta.type;
     this.base = meta.base;
     this.fields = Object.entries(meta.fields)
-      .map(([name, f]) => new ODataField(name, f));
+      .map(([name, f]) => new ODataField(name, f as Field));
   }
 
   configure(type: string, settings: {

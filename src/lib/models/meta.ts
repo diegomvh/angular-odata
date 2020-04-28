@@ -6,13 +6,13 @@ import { ODataCollection } from './collection';
 export class ODataMeta<Type> {
   type: string;
   base: string;
-  set: string;
+  set: {name: string };
   parser?: ODataParser<Type>;
   parent?: ODataMeta<any>;
   model?: { new(...any): any };
   collection?: { new(...any): any };
 
-  constructor(meta: Meta) {
+  constructor(meta: Meta<Type>) {
     this.type = meta.type;
     this.base = meta.base;
     this.set = meta.set;

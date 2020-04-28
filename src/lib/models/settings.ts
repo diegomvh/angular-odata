@@ -18,7 +18,7 @@ export type ODataConfig = {
   creation?: Date,
   version?: string,
   enums?: {[type: string]: {[key: number]: string | number}},
-  metas?: {[type: string]: Meta },
+  metas?: {[type: string]: Meta<any> },
   models?: {[type: string]: any };
   collections?:{[type: string]: any };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>

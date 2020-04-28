@@ -61,11 +61,6 @@ export class ODataClient {
     return Collection || ODataCollection;
   }
 
-  setForType<T>(type: string): string | null {
-    let meta = this.metaForType(type) as ODataMeta<T>;
-    return meta && meta.set;
-  }
-
   fromJSON<T>(json: {type: string | null, path: any[], query: PlainObject}): ODataResource<T> {
     let parser = json.type? this.parserForType<T>(json.type) : null;
     let lastSegment = json.path[json.path.length - 1];
