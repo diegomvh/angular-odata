@@ -69,7 +69,7 @@ export class ODataModel<T> {
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
     let attrs = Object.assign({}, entries
-      .filter(([, , f]) => f && !(f.isNavigation() || f.isComplex()))
+      .filter(([, , f]) => f && !(f.isNavigation() || f.isComplexType()))
       .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {}));
     //console.log(attrs);
     //Others
@@ -79,7 +79,7 @@ export class ODataModel<T> {
     //console.log(attrs);
     //Complexes
     Object.assign(attrs, entries
-      .filter(([, , f]) => f && f.isComplex())
+      .filter(([, , f]) => f && f.isComplexType())
       .reduce((acc, [k, , f]) => {
         let value = this._entity[f.name];
         if (value) {
