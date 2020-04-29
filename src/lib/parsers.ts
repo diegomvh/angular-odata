@@ -1,5 +1,5 @@
-import { Types, Enums } from '../utils';
-import { Parser, Field, JsonSchemaExpandOptions, Meta, JsonSchemaConfig, MetaEntity, MetaEnum } from '../types';
+import { Types, Enums } from './utils';
+import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, MetaEntity, MetaEnum } from './types';
 
 export const PARSERS: {[name: string]: Parser<any>} = {
   'Date': <Parser<Date>>{
@@ -13,9 +13,7 @@ export const PARSERS: {[name: string]: Parser<any>} = {
       return Array.isArray(value) ?
         value.map(v => new Date(v)) :
         new Date(value);
-    },
-    parserFor<E>(name: string) { },
-    resolveKey(attrs: any) {}
+    }
   },
   'number': <Parser<number>>{
     type: 'number',
@@ -28,14 +26,13 @@ export const PARSERS: {[name: string]: Parser<any>} = {
       return Array.isArray(value) ?
         value.map(v => Number(v)) :
         Number(value);
-    },
-    parserFor<E>(name: string) { },
-    resolveKey(attrs: any) {}
+    }
   }
 };
 
 export interface ODataParser<Type> extends Parser<Type> { 
   configure(type: string, parsers: {[type: string]: ODataParser<any> });
+  toJsonSchema(options?: JsonSchemaExpandOptions<Type>);
 }
 
 export class ODataEnumParser<Type> implements ODataParser<Type> {
@@ -80,21 +77,13 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
     return property;
   }
 
-  configure(type: string, parsers: { [type: string]: ODataParser<any>; }) {
-  }
-
-  parserFor<E>(name: string): Parser<E> {
-    throw new Error("Method not implemented.");
-  }
-  resolveKey(attrs: any) {
-    throw new Error("Method not implemented.");
-  }
+  configure(type: string, parsers: { [type: string]: ODataParser<any>; }) {}
 }
 
 export class ODataField<T> implements Field, Parser<T> {
   name: string;
   type: string;
-  parser?: Parser<any>;
+  parser?: ODataParser<any>;
   default?: any;
   maxLength?: number;
   key?: boolean;
@@ -150,14 +139,6 @@ export class ODataField<T> implements Field, Parser<T> {
         additionalItems: false
       };
     return property;
-  }
-
-  parserFor<E>(name: string): Parser<E> {
-    return this.parser.parserFor(name);
-  }
-
-  resolveKey(attrs: any) {
-    return this.parser.resolveKey(attrs);
   }
 
   isNavigation() {

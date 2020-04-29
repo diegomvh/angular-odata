@@ -5,7 +5,7 @@ import { ODataModel } from './model';
 import { ODataCollection } from './collection';
 import { Meta, Parser, MetaEnum, MetaEntity } from '../types';
 import { ODataMetaEntity } from './meta';
-import { ODataEntityParser, ODataParser, ODataEnumParser } from './parser';
+import { ODataEntityParser, ODataParser, ODataEnumParser } from '../parsers';
 
 export const ODATA_CONFIG = new InjectionToken<ODataConfig>('odata.config');
 

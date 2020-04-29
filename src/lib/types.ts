@@ -108,9 +108,6 @@ export interface Parser<T> {
   type: string;
   parse(value: any): any;
   toJSON(value: T | Partial<T>): any;
-  toJsonSchema(config: JsonSchemaConfig<T>);
-  parserFor<E>(name: string): Parser<E>;
-  resolveKey(attrs: any);
 }
 
 export type Meta<T> = {

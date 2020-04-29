@@ -1,4 +1,4 @@
-import { ODataEntityParser, ODataField, ODataParser } from './parser';
+import { ODataEntityParser, ODataField, ODataParser } from '../parsers';
 import { MetaEntity } from '../types';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';

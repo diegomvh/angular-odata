@@ -14,6 +14,7 @@ import { ODataFunctionResource } from './function';
 import { map } from 'rxjs/operators';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses';
 import { HttpOptions, HttpEntitiesOptions, HttpValueOptions, HttpEntityOptions } from '../http-options';
+import { ODataEntityParser } from '../../parsers';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -35,22 +36,26 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Segments
   navigationProperty<N>(name: string) {
+    let parser = this.parser instanceof ODataEntityParser ? 
+      this.parser.parserFor<N>(name) : null;
     return ODataNavigationPropertyResource.factory<N>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.parser ? this.parser.parserFor<N>(name) : null
+      parser
     });
   }
 
   property<P>(name: string) {
+    let parser = this.parser instanceof ODataEntityParser ? 
+      this.parser.parserFor<P>(name) : null;
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.parser ? this.parser.parserFor<P>(name) : null
+      parser
     });
   }
 

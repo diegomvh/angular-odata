@@ -205,6 +205,7 @@ export class ODataResource<Type> {
       case 'value':
         return res$.pipe(map((body: any) => this.toValue(body)));
       case 'json':
+      case 'text':
         return res$.pipe(map((body: any) => this.deserialize(body) as Type));
       default:
         return res$;

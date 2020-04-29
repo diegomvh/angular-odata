@@ -6,10 +6,10 @@ import { ODataResource } from '../resource';
 import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataClient } from '../../client';
-import { map } from 'rxjs/operators';
 import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataAnnotations, ODataEntityAnnotations } from '../responses';
-import { $COUNT, Parser } from '../../types';
+import { Parser } from '../../types';
 import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
+import { ODataEntityParser } from '../../parsers';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -39,12 +39,14 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   property<P>(name: string) {
+    let parser = this.parser instanceof ODataEntityParser ? 
+      this.parser.parserFor<P>(name) : null;
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.parser ? this.parser.parserFor<P>(name) : null
+      parser
     });
   }
 

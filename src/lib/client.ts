@@ -17,8 +17,9 @@ import {
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection, PARSERS, ODataMetaEntity } from './models';
+import { ODataModel, ODataCollection, ODataMetaEntity } from './models';
 import { Types } from './utils';
+import { PARSERS } from './parsers';
 
 @Injectable()
 export class ODataClient {

@@ -6,6 +6,7 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { $VALUE, Parser } from '../../types';
 import { HttpOptions } from '../http-options';
+import { ODataEntityParser } from '../../parsers';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   // Factory
@@ -35,15 +36,11 @@ export class ODataValueResource<T> extends ODataResource<T> {
     );
   }
 
-  text(options?: HttpOptions): Observable<string> {
-    return super.get( 
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'text'}, options || {})
-    );
-  }
-
   get(options?: HttpOptions): Observable<T> {
     return super.get( 
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
-    );
+      (this.parser instanceof ODataEntityParser) ?
+        Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {}) :
+        Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'text'}, options || {})
+      );
   }
 }
