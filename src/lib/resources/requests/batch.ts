@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';

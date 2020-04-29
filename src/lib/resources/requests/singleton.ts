@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { PlainObject, $COUNT, Parser } from '../../types';
+import { Parser } from '../../types';
 import { ODataClient } from '../../client';
 import { QueryOptionTypes, Select, Expand } from '../query-options';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
@@ -11,10 +11,9 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { map } from 'rxjs/operators';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses';
-import { HttpOptions, HttpEntitiesOptions, HttpValueOptions, HttpEntityOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityAnnotations } from '../responses';
+import { HttpOptions, HttpEntityOptions } from '../http-options';
+import { ODataEntityParser, ODataFieldParser } from '../../parsers';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -36,7 +35,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Segments
   navigationProperty<N>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser ? 
+    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
       this.parser.parserFor<N>(name) : null;
     return ODataNavigationPropertyResource.factory<N>(
       name,
@@ -48,7 +47,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser ? 
+    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
       this.parser.parserFor<P>(name) : null;
     return ODataPropertyResource.factory<P>(
       name,

@@ -5,8 +5,7 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataCallableResource } from './callable';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
-import { map } from 'rxjs/operators';
-import { $COUNT, Parser } from '../../types';
+import { Parser } from '../../types';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
 
 export class ODataActionResource<T> extends ODataCallableResource<T> {

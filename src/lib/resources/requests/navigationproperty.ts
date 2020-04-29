@@ -1,19 +1,19 @@
 import { ODataResource } from '../resource';
-import { QueryOptionTypes, Select, Expand, Transform, Filter, OrderBy, GroupBy } from '../query-options';
+import { QueryOptionTypes, Select, Expand, Transform, Filter, OrderBy } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
 import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../path-segments';
 import { ODataClient } from '../../client';
 import { Observable, empty } from 'rxjs';
-import { EntityKey, PlainObject, $COUNT, Parser } from '../../types';
+import { EntityKey, Parser } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { Types } from '../../utils/types';
-import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataEntitiesAnnotations, ODataEntityAnnotations, ODataAnnotations } from '../responses';
+import { expand, concatMap, toArray } from 'rxjs/operators';
+import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityParser, ODataFieldParser } from '../../parsers';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
@@ -38,7 +38,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (!Types.isUndefined(key)) {
-      if (this.parser instanceof ODataEntityParser && Types.isObject(key))
+      if ((this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser) && Types.isObject(key))
         key = this.parser.resolveKey(key);
       segment.option(SegmentOptionTypes.key, key);
     }
@@ -69,8 +69,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser ? 
-      this.parser.parserFor<N>(name) : null;
+    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
+      this.parser.parserFor<N>(name) : null; 
     return ODataNavigationPropertyResource.factory<N>(
       name,
       this.client, {
@@ -81,7 +81,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser ? 
+    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
       this.parser.parserFor<P>(name) : null;
     return ODataPropertyResource.factory<P>(
       name,

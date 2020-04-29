@@ -14,7 +14,7 @@ import { Types } from '../../utils/types';
 import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataValueResource } from './value';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityParser, ODataFieldParser } from '../../parsers';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
@@ -38,7 +38,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (!Types.isUndefined(key)) {
-      if (this.parser instanceof ODataEntityParser && Types.isObject(key))
+      if ((this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser) && Types.isObject(key))
         key = this.parser.resolveKey(key);
       segment.option(SegmentOptionTypes.key, key);
     }
@@ -70,7 +70,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser ? 
+    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
       this.parser.parserFor<N>(name) : null;
     return ODataNavigationPropertyResource.factory<N>(
       name,
@@ -82,7 +82,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser ? 
+    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
       this.parser.parserFor<P>(name) : null;
     return ODataPropertyResource.factory<P>(
       name,
