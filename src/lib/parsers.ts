@@ -31,7 +31,7 @@ export const PARSERS: {[name: string]: Parser<any>} = {
 };
 
 export interface ODataParser<Type> extends Parser<Type> { 
-  configure(type: string, parsers: {[type: string]: ODataParser<any> });
+  configure(parsers: {[type: string]: ODataParser<any> });
   toJsonSchema(options?: JsonSchemaExpandOptions<Type>);
 }
 
@@ -77,10 +77,10 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
     return property;
   }
 
-  configure(type: string, parsers: { [type: string]: ODataParser<any>; }) {}
+  configure(parsers: { [type: string]: ODataParser<any>; }) {}
 }
 
-export class ODataField<T> implements Field, Parser<T> {
+export class ODataFieldParser<T> implements ODataParser<T> {
   name: string;
   type: string;
   parser?: ODataParser<any>;
@@ -124,6 +124,12 @@ export class ODataField<T> implements Field, Parser<T> {
     return value;
   }
 
+  configure(parsers: { [type: string]: ODataParser<any>; }) {
+    if (this.type in parsers) {
+      this.parser = parsers[this.type];
+    }
+  }
+
   // Json Schema
   toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
     let property = this.parser ? this.parser.toJsonSchema(options) : <any>{
@@ -145,8 +151,26 @@ export class ODataField<T> implements Field, Parser<T> {
     return this.navigation;
   }
 
-  isComplex() {
-    return this.parser && this.parser instanceof ODataEntityParser && this.parser.isComplex();
+  isEnumType() {
+    return this.parser instanceof ODataEnumParser;
+  }
+
+  isEntityType() {
+    return this.parser instanceof ODataEntityParser;
+  }
+
+  isComplexType() {
+    return this.parser instanceof ODataEntityParser && this.parser.isComplex();
+  }
+
+  parserFor<E>(name: string): Parser<E> {
+    if (this.parser instanceof ODataEntityParser)
+      return this.parser.parserFor(name);
+  }
+
+  resolveKey(attrs: any) {
+    if (this.parser instanceof ODataEntityParser)
+      return this.parser.resolveKey(attrs);
   }
 }
 
@@ -154,25 +178,13 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
   type: string;
   base: string;
   parent: ODataEntityParser<any>;
-  fields: ODataField<any>[];
+  fields: ODataFieldParser<any>[];
 
   constructor(meta: MetaEntity<Type>) {
     this.type = meta.type;
     this.base = meta.base;
     this.fields = Object.entries(meta.fields)
-      .map(([name, f]) => new ODataField(name, f as Field));
-  }
-
-  configure(type: string, parsers: {[type: string]: ODataEntityParser<any> }) {
-    this.type = type;
-    if (this.base in parsers) {
-      this.parent = parsers[this.base];
-    }
-    this.fields.forEach(f => {
-      if (parsers && f.type in parsers) {
-        f.parser = parsers[f.type];
-      }
-    });
+      .map(([name, f]) => new ODataFieldParser(name, f as Field));
   }
 
   // Deserialize
@@ -200,6 +212,13 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
     return Array.isArray(objs) ? 
       objs.map(obj => _toJSON(obj)) :
       _toJSON(objs);
+  }
+
+  configure(parsers: {[type: string]: ODataEntityParser<any> }) {
+    if (this.base in parsers) {
+      this.parent = parsers[this.base];
+    }
+    this.fields.forEach(f => f.configure(parsers));
   }
 
   // Json Schema
