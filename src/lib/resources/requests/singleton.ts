@@ -13,7 +13,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
-import { ODataEntityParser, ODataFieldParser } from '../../parsers';
+import { ODataEntityParser } from '../../parsers';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
@@ -35,7 +35,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Segments
   navigationProperty<N>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
+    let parser = this.parser instanceof ODataEntityParser? 
       this.parser.parserFor<N>(name) : null;
     return ODataNavigationPropertyResource.factory<N>(
       name,
@@ -47,7 +47,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
+    let parser = this.parser instanceof ODataEntityParser? 
       this.parser.parserFor<P>(name) : null;
     return ODataPropertyResource.factory<P>(
       name,

@@ -9,7 +9,7 @@ import { ODataClient } from '../../client';
 import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { Parser } from '../../types';
 import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
-import { ODataEntityParser, ODataFieldParser } from '../../parsers';
+import { ODataEntityParser } from '../../parsers';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
 
@@ -39,7 +39,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser || this.parser instanceof ODataFieldParser ? 
+    let parser = this.parser instanceof ODataEntityParser? 
       this.parser.parserFor<P>(name) : null;
     return ODataPropertyResource.factory<P>(
       name,

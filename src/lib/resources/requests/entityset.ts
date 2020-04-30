@@ -1,6 +1,6 @@
 import { Observable, empty } from 'rxjs';
 
-import { QueryOptionTypes, Expand, Select, Transform, Filter, GroupBy, OrderBy } from '../query-options';
+import { QueryOptionTypes, Expand, Select, Transform, Filter, OrderBy } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 
@@ -9,9 +9,9 @@ import { ODataFunctionResource } from './function';
 import { ODataQueryOptions } from '../query-options';
 import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
-import { EntityKey, $COUNT, Parser } from '../../types';
+import { EntityKey, Parser } from '../../types';
 import { ODataResource } from '../resource';
-import { expand, concatMap, toArray, map } from 'rxjs/operators';
+import { expand, concatMap, toArray } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from '../http-options';
