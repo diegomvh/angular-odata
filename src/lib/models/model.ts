@@ -104,28 +104,20 @@ export class ODataModel<T> {
   }
 
   toEntity(): T {
-    if (this._resource) {
-      let entity = {} as T;
-      this._resource.metaForType().fields().forEach(field => {
-        if (field.parser) {
-          if (field.isNavigation()) {
-            if (field.name in this._relationships) {
-              let rel = this._relationships[field.name];
-              entity[field.name] = (rel instanceof ODataModel) ? rel.toEntity() : rel.toEntities();
-            }
-          } else if (this[field.name] !== undefined) {
-            let complex = this[field.name];
-            entity[field.name] = (complex instanceof ODataModel) ? complex.toEntity() : complex.toEntities();
-          }
-        } else if (this[field.name] !== undefined) {
-          entity[field.name] = this[field.name];
-        }
-      });
-      return entity;
-    } else {
-      let keys = Object.keys(this).filter(k => !(k.startsWith("_") || Types.isFunction(this[k])));
-      return keys.reduce((acc, k) => Object.assign(acc, { [k]: this[k] }), {}) as T;
-    }
+    return Object.entries(
+      Object.assign({}, 
+        this._entity, 
+        Object.entries(this)
+          .filter(([key, ]) => !(key.startsWith("_")))
+          .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {}),
+        this._relationships
+      )
+    ).reduce((acc, [k, value]) => 
+      Object.assign(acc, { [k]: (value instanceof ODataModel) ? 
+        value.toEntity() : 
+        (value instanceof ODataCollection) ?
+        value.toEntities() : value }), 
+      {}) as T;
   }
 
   clone<Mo extends ODataModel<T>>() {
