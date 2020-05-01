@@ -6,8 +6,8 @@ import { ODataCollection } from './collection';
 export class ODataMetaEntity<Type> {
   type: string;
   base: string;
-  set: {name: string };
-  parser?: ODataParser<Type>;
+  set: { name: string };
+  parser?: ODataEntityParser<Type>;
   parent?: ODataMetaEntity<any>;
   model?: { new(...any): any };
   collection?: { new(...any): any };
