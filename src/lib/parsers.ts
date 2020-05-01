@@ -162,18 +162,6 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   isComplexType() {
     return this.parser instanceof ODataEntityParser && this.parser.isComplex();
   }
-
-  _parserFor<E>(name: string): Parser<E> {
-    console.log("Parser from from field");
-    if (this.parser instanceof ODataEntityParser)
-      return this.parser.parserFor(name);
-  }
-
-  _resolveKey(attrs: any) {
-    console.log("Resolve key from field");
-    if (this.parser instanceof ODataEntityParser)
-      return this.parser.resolveKey(attrs);
-  }
 }
 
 export class ODataEntityParser<Type> implements ODataParser<Type> {
