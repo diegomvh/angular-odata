@@ -50,7 +50,8 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
 
   // Deserialize
   parse(value: any) {
-    if (value === null) return value;
+    // String to number
+    if (value === null || typeof(value) === 'number') return value;
     return this.flags ?
       Enums.toFlags(this.members, value) :
       Enums.toValue(this.members, value);
@@ -58,7 +59,8 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
 
   // Serialize
   toJSON(value: any) {
-    if (value === null) return value;
+    // Number to string
+    if (value === null || typeof(value) === 'string') return value;
     let enums = this.flags ?
       Enums.toEnums(this.members, value) :
       [Enums.toEnum(this.members, value)];
