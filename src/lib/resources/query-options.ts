@@ -53,21 +53,6 @@ export enum QueryOptionTypes {
   aliases = 'aliases'
 }
 
-export type QueryOptions<T> = {
-  [QueryOptionTypes.select]?: Select<T>;
-  [QueryOptionTypes.filter]?: Filter; 
-  [QueryOptionTypes.search]?: string;
-  [QueryOptionTypes.transform]?: Transform<T>;
-  [QueryOptionTypes.orderBy]?: OrderBy<T>;
-  [QueryOptionTypes.top]?: number;
-  [QueryOptionTypes.skip]?: number;
-  [QueryOptionTypes.skiptoken]?: string;
-  [QueryOptionTypes.expand]?: Expand<T>;
-  [QueryOptionTypes.format]?: string;
-  [QueryOptionTypes.custom]?: PlainObject;
-  [QueryOptionTypes.aliases]?: PlainObject;
-}
-
 const orderByFieldMapper = (value: any) => 
   (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(' ') : value;
 

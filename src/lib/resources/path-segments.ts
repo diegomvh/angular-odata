@@ -25,7 +25,7 @@ export enum SegmentOptionTypes {
   parameters = 'parameters'
 }
 
-export type ODataSegment = {
+type ODataSegment = {
   type: string;
   name: string;
   options: PlainObject;
@@ -110,7 +110,7 @@ export class ODataPathSegments {
   }
 }
 
-export class SegmentHandler {
+class SegmentHandler {
   options?: PlainObject
   constructor(private segment: ODataSegment) {
     this.options = this.segment.options;
