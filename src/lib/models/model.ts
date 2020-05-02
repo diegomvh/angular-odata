@@ -64,7 +64,7 @@ export class ODataModel<T> {
   }
 
   protected parse(entity: T) {
-    let fields = this._resource.metaForType().fields();
+    let fields = this._resource ? this._resource.metaForType().fields() : [];
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
@@ -99,7 +99,7 @@ export class ODataModel<T> {
     this._entity = entity;
     this._annotations = annots;
     this._relationships = {};
-    Object.assign(this, this._resource ? this.parse(this._entity) : this._entity);
+    Object.assign(this, this.parse(this._entity));
     return this;
   }
 
