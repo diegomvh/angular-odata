@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 
 import {
   ODataResource,
@@ -63,20 +63,21 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   protected parse(values: any[]): M[] {
-    let resource = this._resource.clone();
+    let resource = this._resource ? this._resource.clone() : null;
     if (resource instanceof ODataEntitySetResource)
       resource = resource.entity();
     return (values as T[]).map(value => {
       if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
         resource.key(value);
-      return resource.clone().toModel(value) as M;
+      return (resource ? resource.clone().toModel(value) : value) as M;
     });
   }
 
   protected populate(values: any[], annots?: ODataAnnotations): this {
     this._annotations = annots;
-    
+
     if (annots instanceof ODataEntitiesAnnotations) {
+      this._state = {}; 
       if (annots.top)
         this._state.top = annots.top;
       if (annots.skip)
@@ -91,11 +92,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._state.page = (this._state.top / this._state.size) + 1;
       }
     } else {
-      this._state.records = this._state.size = values.length;
-      this._state.pages = this._state.page = 1;
+      this._state = {
+        records: values.length, size: values.length,
+        page: 1, pages: 1
+      };
     }
 
-    this._models = this._resource ? this.parse(values) : values as M[];
+    this._models = this.parse(values);
     return this;
   }
 
@@ -138,6 +141,18 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       throw new Error("Not Yet!");
     return obs$.pipe(
       map(([entities, annots]) => this.populate(entities, annots)));
+  }
+
+  next(options?: HttpOptions & {withCount?: boolean}) {
+    if (this._state.skip) {
+      this._query.skip(this._state.skip);
+      return this.fetch(options);
+    }
+    else if (this._state.skiptoken) {
+      this._query.skiptoken(this._state.skiptoken);
+      return this.fetch(options);
+    }
+    return EMPTY;
   }
 
   all(): Observable<this> {
