@@ -55,7 +55,7 @@ export class ODataSettings {
     // Build parsers
     this.parsers = Object.entries(config.metas || {})
       .reduce((acc, [type, meta]) => {
-        let parser = type in config.enums ? new ODataEnumParser(meta as MetaEnum<any>, this.stringAsEnum) : new ODataEntityParser(meta as MetaEntity<any>);
+        let parser = type in this.enums ? new ODataEnumParser(meta as MetaEnum<any>, this.stringAsEnum) : new ODataEntityParser(meta as MetaEntity<any>);
         return Object.assign(acc, {[type]: parser});
       }, {});
 
@@ -65,7 +65,7 @@ export class ODataSettings {
 
     // Build metas
     this.metas = Object.entries(config.metas || {})
-      .filter(([type, ]) => !(type in config.enums))
+      .filter(([type, ]) => !(type in this.enums))
       .reduce((acc, [type, meta]) => Object.assign(acc, {[type]: new ODataMetaEntity(meta as MetaEntity<any>)}), {});
 
     // Configure Metas
