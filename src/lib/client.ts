@@ -17,7 +17,7 @@ import {
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection, ODataMetaEntity } from './models';
+import { ODataModel, ODataCollection, ODataEntityConfig } from './models';
 import { Types } from './utils';
 import { PARSERS } from './parsers';
 
@@ -39,8 +39,8 @@ export class ODataClient {
   }
 
   // Resolve Building Blocks
-  metaForType<T>(type: string): ODataMetaEntity<T> | null {
-    return this.settings.metaForType(type) as ODataMetaEntity<T>;
+  entityConfigForType<T>(type: string): ODataEntityConfig<T> | null {
+    return this.settings.entityConfigForType<T>(type);
   }
 
   parserForType<T>(type: string): Parser<T> | null {

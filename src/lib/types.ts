@@ -1,3 +1,7 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { InjectionToken } from '@angular/core';
+
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
@@ -110,21 +114,43 @@ export interface Parser<T> {
   toJSON(value: T | Partial<T>): any;
 }
 
-export type Meta<T> = {
-  type?: string;
+export type Settings = {
+  baseUrl: string,
+  metadataUrl?: string,
+  withCredentials?: boolean,
+  acceptMetadata?: 'minimal' | 'full' | 'none';
+  stringAsEnum?: boolean,
+  creation?: Date,
+  version?: string,
+  apis?: {[type: string]: ApiConfig},
+  enums?: {[type: string]: EnumConfig<any>},
+  entities?: {[type: string]: EntityConfig<any> },
+  services?: {[type: string]: ServiceConfig<any> };
+  errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
-export type MetaEnum<T> = Meta<T> & {
+export const ODATA_CONFIG = new InjectionToken<Settings>('odata.config');
+
+export type ApiConfig = {
+  annotations?: any[];
+}
+
+export type EnumConfig<T> = {
+  type: string;
   flags?: boolean;
   members: {[name: string]: number} | {[value: number]: string};
 }
 
-export type MetaEntity<T> = Meta<T> & {
+export type EntityConfig<T> = {
+  type: string;
   base?: string;
-  set?: { 
-    name: string;
-    annotations: any[];
-  };
-  annotations: any[];
-  fields: { [P in keyof T]?: Field }
+  model?: { new(...any): any };
+  collection?: { new(...any): any };
+  annotations?: any[];
+  fields: { [P in keyof T]?: Field };
+}
+
+export type ServiceConfig<T> = {
+  type: string;
+  annotations?: any[];
 }

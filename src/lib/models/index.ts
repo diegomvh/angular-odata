@@ -1,4 +1,4 @@
 export * from './settings';
-export * from './meta';
+export * from './config';
 export * from './model';
 export * from './collection';

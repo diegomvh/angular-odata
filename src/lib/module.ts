@@ -1,11 +1,12 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { ODataConfig, ODataSettings, ODATA_CONFIG } from './models/settings';
+import { ODataSettings } from './models/settings';
 import { ODataClient } from './client';
 import { ODataServiceFactory } from './services/factory';
+import { Settings, ODATA_CONFIG } from './types';
 
-export function createSettings(config: ODataConfig) {
+export function createSettings(config: Settings) {
   return new ODataSettings(config);
 }
 
@@ -14,7 +15,7 @@ export function createSettings(config: ODataConfig) {
   providers: [ODataClient, ODataServiceFactory]
 })
 export class ODataModule {
-  public static forRoot(config: ODataConfig): ModuleWithProviders {
+  public static forRoot(config: Settings): ModuleWithProviders {
     return {
       ngModule: ODataModule,
       providers: [

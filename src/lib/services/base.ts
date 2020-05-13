@@ -20,8 +20,8 @@ export class ODataBaseService<T> {
   }
 
   // Get base type data
-  public meta() {
+  public config() {
     let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.metaForType<T>(Ctor.type);
+    return this.client.entityConfigForType<T>(Ctor.type);
   }
 }
