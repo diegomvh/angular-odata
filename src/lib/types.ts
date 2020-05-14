@@ -125,7 +125,7 @@ export type Settings = {
   apis?: {[type: string]: ApiConfig},
   enums?: {[type: string]: EnumConfig<any>},
   entities?: {[type: string]: EntityConfig<any> },
-  services?: {[type: string]: ServiceConfig<any> };
+  services?: {[type: string]: ServiceConfig };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -150,7 +150,7 @@ export type EntityConfig<T> = {
   fields: { [P in keyof T]?: Field };
 }
 
-export type ServiceConfig<T> = {
+export type ServiceConfig = {
   type: string;
   annotations?: any[];
 }

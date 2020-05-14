@@ -60,6 +60,12 @@ export class ODataSettings {
       return config as ODataEntityConfig<T>;
   }
 
+  public serviceConfigForType(type: string) {
+    let config = this.configForType(type);
+    if (config instanceof ODataServiceConfig)
+      return config as ODataServiceConfig;
+  }
+
   public modelForType(type: string): typeof ODataModel {
     let config = this.entityConfigForType(type);
     if (!Types.isUndefined(config))

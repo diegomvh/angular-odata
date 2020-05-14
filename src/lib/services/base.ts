@@ -5,13 +5,14 @@ import { EntityKey } from '../types';
 export class ODataBaseService<T> {
   static path: string = "";
   static type: string = "";
+  static entity: string = "";
 
   constructor(protected client: ODataClient) { }
 
   // Build resources
   public entities(): ODataEntitySetResource<T> {
     let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.entitySet<T>(Ctor.path, Ctor.type);
+    return this.client.entitySet<T>(Ctor.path, Ctor.entity);
   }
 
   public entity(key?: EntityKey<T>): ODataEntityResource<T> {
@@ -22,6 +23,6 @@ export class ODataBaseService<T> {
   // Get base type data
   public config() {
     let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.entityConfigForType<T>(Ctor.type);
+    return this.client.serviceConfigForType(Ctor.type);
   }
 }

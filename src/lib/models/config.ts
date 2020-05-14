@@ -57,9 +57,9 @@ export class ODataEntityConfig<Type> implements ODataConfig {
   }
 }
 
-export class ODataServiceConfig<T> implements ODataConfig {
+export class ODataServiceConfig implements ODataConfig {
   type: string;
-  constructor(meta: ServiceConfig<T>) {
+  constructor(meta: ServiceConfig) {
     this.type = meta.type;
   }
 

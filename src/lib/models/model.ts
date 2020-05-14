@@ -41,7 +41,7 @@ export class ODataModel<T> {
     let first = !this._resource;
     this._resource = resource;
     if (first) {
-      this._resource.entityConfigForType().fields()
+      this._resource.config().fields()
         .filter(field => field.navigation)
         .forEach(field => {
           Object.defineProperty(this, field.name, {
@@ -64,7 +64,7 @@ export class ODataModel<T> {
   }
 
   protected parse(entity: T) {
-    let fields = this._resource ? this._resource.entityConfigForType().fields() : [];
+    let fields = this._resource ? this._resource.config().fields() : [];
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
@@ -224,7 +224,7 @@ export class ODataModel<T> {
   }
 
   protected getNavigationProperty<P>(name: string): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
-    let field = this._resource.entityConfigForType().fields().find(f => f.name === name);
+    let field = this._resource.config().fields().find(f => f.name === name);
     if (!(name in this._relationships)) {
       let value = this._entity[field.name];
       let nav = this._segments.navigationProperty<P>(field.name);
@@ -237,7 +237,7 @@ export class ODataModel<T> {
   }
 
   protected setNavigationProperty<P, Pm extends ODataModel<P>>(name: string, model: Pm | null): Observable<this> {
-    let field = this._resource.entityConfigForType().fields().find(f => f.name === name);
+    let field = this._resource.config().fields().find(f => f.name === name);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
     let ref = this._segments.navigationProperty<P>(name).reference();

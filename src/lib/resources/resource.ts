@@ -54,8 +54,8 @@ export class ODataResource<Type> {
   }
 
   // Proxy to client
-  entityConfigForType(type?: string) {
-    return this.client.entityConfigForType<Type>(type || this.type());
+  config() {
+    return this.client.entityConfigForType<Type>(this.type());
   }
 
   parserForType(type?: string) {
