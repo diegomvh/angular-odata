@@ -49,16 +49,21 @@ export class ODataReferenceResource extends ODataResource<any> {
     );
   }
 
-  // Custom
+  // Custom for collections
   add(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     return this.post(target, options);
   }
 
+  remove(target?: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
+    return this.delete(Object.assign({target}, options));
+  }
+
+  // Custom for single
   set(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any>  {
     return this.put(target, options);
   }
 
-  remove(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
+  unset(options?: HttpOptions & { etag?: string }): Observable<any>  {
     return this.delete(options);
   }
 }
