@@ -247,6 +247,6 @@ export class ODataModel<T> {
     if (model instanceof ODataModel) {
       return ref.set(model._resource as ODataEntityResource<P>, { etag });
     } else if (model === null)
-      return ref.remove({ etag });
+      return ref.unset({ etag });
   }
 }

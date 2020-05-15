@@ -188,7 +188,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       obs$ = model.destroy();
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       let ref = this._resource.reference();
-      obs$ = ref.remove({ target: model.target() as ODataEntityResource<T> });
+      obs$ = ref.remove(model.target() as ODataEntityResource<T>);
     }
     if (!obs$)
       throw new Error("Not Yet!");
