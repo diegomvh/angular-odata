@@ -8,7 +8,8 @@ import { ODataParser } from '../parsers';
 import { Types } from '../utils';
 
 export class ODataSettings {
-  baseUrl: string;
+  serviceRootUrl: string;
+  params: { [param: string]: string | string[] };
   metadataUrl?: string;
   withCredentials?: boolean;
   acceptMetadata?: 'minimal' | 'full' | 'none';
@@ -19,8 +20,13 @@ export class ODataSettings {
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: Settings) {
-    this.baseUrl = config.baseUrl;
-    this.metadataUrl = config.metadataUrl || `${config.baseUrl}$metadata`;
+    this.serviceRootUrl = config.serviceRootUrl;
+    if (this.serviceRootUrl.indexOf('?') != -1)
+      throw new Error("The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters");
+    if (!this.serviceRootUrl.endsWith('/'))
+      this.serviceRootUrl += '/';
+    this.params = config.params || {};
+    this.metadataUrl = config.metadataUrl || `${config.serviceRootUrl}$metadata`;
     this.withCredentials = config.withCredentials || false;
     this.acceptMetadata = config.acceptMetadata;
     this.stringAsEnum = config.stringAsEnum || false;

@@ -25,17 +25,8 @@ import { PARSERS } from './parsers';
 export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
-  serviceRoot(): string {
-    let base = this.settings.baseUrl;
-    if (!base.endsWith('/')) {
-      base += '/';
-    }
-    return base;
-  }
-
-  createEndpointUrl(resource: ODataResource<any>) {
-    const serviceRoot = this.serviceRoot();
-    return `${serviceRoot}${resource.path()}`;
+  endpointUrl(resource: ODataResource<any>) {
+    return `${this.settings.serviceRootUrl}${resource.path()}`;
   }
 
   // Resolve Building Blocks
@@ -328,7 +319,7 @@ export class ODataClient {
   } = {}): Observable<any> {
 
     // The Url
-    const url = this.createEndpointUrl(resource);
+    const resourceUrl = this.endpointUrl(resource);
 
     let customHeaders = {};
     if (typeof (options.etag) === 'string')
@@ -341,10 +332,8 @@ export class ODataClient {
       headers = headers.append(ACCEPT, `application/json;odata.metadata=${acceptMetadata}, text/plain, */*`);
 
     // Params
-    let resourceParams = resource.params();
-    let customParams = {};
-
-    let params = this.mergeHttpParams(resourceParams, options.params, customParams);
+    const resourceParams = resource.params();
+    let params = this.mergeHttpParams(this.settings.params, resourceParams, options.params);
 
     // Credentials ?
     let withCredentials = options.withCredentials;
@@ -352,7 +341,7 @@ export class ODataClient {
       withCredentials = this.settings.withCredentials;
 
     // Call http request
-    let res$ = this.http.request(method, url, {
+    let res$ = this.http.request(method, resourceUrl, {
       body: options.body,
       headers: headers,
       observe: options.observe,

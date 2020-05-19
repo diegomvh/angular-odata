@@ -26,14 +26,14 @@ export class ODataReferenceResource extends ODataResource<any> {
 
   // Client Requests
   post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
-    let related = this.client.createEndpointUrl(target);
+    let related = this.client.endpointUrl(target);
     return super.post({[ODATA_ID]: related},
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
     );
   }
 
   put(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any> {
-    let related = this.client.createEndpointUrl(target);
+    let related = this.client.endpointUrl(target);
     return super.put({[ODATA_ID]: related},
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
     );
@@ -41,7 +41,7 @@ export class ODataReferenceResource extends ODataResource<any> {
 
   delete(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
     if (options && options.target) {
-      let related = this.client.createEndpointUrl(options.target);
+      let related = this.client.endpointUrl(options.target);
       this.custom({[$ID]: related});
     }
     return super.delete(

@@ -115,7 +115,8 @@ export interface Parser<T> {
 }
 
 export type Settings = {
-  baseUrl: string,
+  serviceRootUrl: string,
+  params?: { [param: string]: string | string[] };
   metadataUrl?: string,
   withCredentials?: boolean,
   acceptMetadata?: 'minimal' | 'full' | 'none';
