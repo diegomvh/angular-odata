@@ -35,7 +35,7 @@ import { ODataModule } from 'angular-odata';
 @NgModule({
   imports: [
     ...
-    ODataModule.forRoot({baseUrl: "https://services.odata.org/V4/TripPinServiceRW/"})
+    ODataModule.forRoot({serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/' })
     ...
   ]
 })
@@ -50,9 +50,9 @@ import { throwError } from 'rxjs';
 
 import { ODataModule, ODataSettings } from 'angular-odata';
 
-export function oDataSettingsFactory() {
+export function settingsFactory() {
   return new ODataSettings({
-    baseUrl: "https://services.odata.org/V4/TripPinServiceRW/",
+    serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/',
     errorHandler: (error: HttpErrorResponse) => {
       return throwError(error);
     }
@@ -66,7 +66,7 @@ export function oDataSettingsFactory() {
   ]
   providers: [
     ...
-    { provide: ODataSettings, useFactory: oDataSettingsFactory }
+    { provide: ODataSettings, useFactory: settingsFactory }
   ],
 })
 export class AppModule {}
@@ -91,8 +91,8 @@ export class AppComponent {
 
   queries() {
     // Use OData Service Factory
-    let airportsService = this.factory.create<Airport>("Airports");
-    let peopleService = this.factory.create<Person>("People");
+    let airportsService = this.factory.createEntityService<Airport>("Airports");
+    let peopleService = this.factory.createEntityService<Person>("People");
 
     let airports = airportsService.entities();
 
@@ -146,7 +146,7 @@ export class AppComponent {
 
 In this mode, services are created using custom definitions and corresponding settings
 
-1) The entity and metadata
+1) The entity and config
 
 ```typescript
 import { PersonGender } from './persongender.enum';
@@ -167,22 +167,21 @@ export interface Person {
   Photo?: Photo
 }
 
-export const PersonMeta = {
+export const PersonEntityConfig = {
   type: "Microsoft.OData.SampleService.Models.TripPin.Person",
-  set: "People",
   fields: {
-    UserName: {type: 'string', key: true, ref: 'UserName', nullable: false},
+    UserName: {type: 'string', key: true, ref: 'UserName', nullable: false}]},
     FirstName: {type: 'string', nullable: false},
     LastName: {type: 'string', nullable: false},
     Emails: {type: 'string', collection: true},
     AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', collection: true},
-    Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender', flags: false},
+    Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender'},
     Concurrency: {type: 'number', nullable: false},
     Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', collection: true, navigation: true},
     Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', collection: true, navigation: true},
     Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', navigation: true}
   }
-};
+} as EntityConfig<Person>;
 ```
 
 2) The config
@@ -198,16 +197,17 @@ import { PersonMeta } from './Microsoft/OData/SampleService/Models/TripPin/perso
 import { TripMeta } from './Microsoft/OData/SampleService/Models/TripPin/trip.meta';
 
 export const TripPinConfig: ODataConfig = {
-  baseUrl: 'https://services.odata.org/V4/TripPinServiceRW/',
+  serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/',
   enums: {
-    'Microsoft.OData.SampleService.Models.TripPin.PersonGender': PersonGender
+    'Microsoft.OData.SampleService.Models.TripPin.PersonGender': PersonGenderEnumConfig
   },
-  metas: {
+  ...
+  entities: {
     ...
-    'Microsoft.OData.SampleService.Models.TripPin.Location': LocationMeta,
-    'Microsoft.OData.SampleService.Models.TripPin.Photo': PhotoMeta,
-    'Microsoft.OData.SampleService.Models.TripPin.Person': PersonMeta,
-    'Microsoft.OData.SampleService.Models.TripPin.Trip': TripMeta
+    'Microsoft.OData.SampleService.Models.TripPin.Location': LocationEntityConfig,
+    'Microsoft.OData.SampleService.Models.TripPin.Photo': PhotoEntityConfig,
+    'Microsoft.OData.SampleService.Models.TripPin.Person': PersonEntityConfig,
+    'Microsoft.OData.SampleService.Models.TripPin.Trip': TripEntityConfig
   }
 }
 ```
@@ -223,7 +223,8 @@ import { Person } from './person.entity';
 @Injectable()
 export class PeopleService extends ODataEntityService<Person> {
   static path: string = 'People';
-  static type: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
+  static type: string = 'Microsoft.OData.SampleService.Models.TripPin.People';
+  static entity: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
 }
 ```
 
