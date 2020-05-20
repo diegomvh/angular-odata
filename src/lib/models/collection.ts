@@ -178,7 +178,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       obs$ = ref.add(model.target() as ODataEntityResource<T>);
     }
     if (!obs$)
-      throw new Error("Not Yet!");
+      throw new Error(`Can't add`);
     return obs$.pipe(map(() => this));
   }
 
@@ -191,7 +191,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       obs$ = ref.remove(model.target() as ODataEntityResource<T>);
     }
     if (!obs$)
-      throw new Error("Not Yet!");
+      throw new Error(`Can't remove`);
     return obs$.pipe(map(() => this));
   }
 
