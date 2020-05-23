@@ -1,39 +1,8 @@
-import buildQuery from 'odata-query';
+import buildQuery from './builder';
+import { PlainObject } from './builder';
+//import buildQuery from 'odata-query';
 
-import { PlainObject } from '../types';
 import { isoStringToDate, Types, escapeIllegalChars } from '../utils/index';
-
-export type Select<T> = string | keyof T | Array<keyof T>;
-export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | { [P in keyof T]?: OrderBy<T[P]> };
-export type Filter = string | PlainObject | Array<string | PlainObject>;
-export type Expand<T> = string | Array<keyof T> | {[P in keyof T]?: (T[P] extends Array<infer E> ? ExpandOptions<E> : ExpandOptions<T[P]>) };
-export enum StandardAggregateMethods {
-  sum = "sum",
-  min = "min",
-  max = "max",
-  average = "average",
-  countdistinct = "countdistinct",
-}
-export type Aggregate = string | { [propertyName: string]: { with: StandardAggregateMethods, as: string } };
-
-export type OrderByOptions<T> = keyof T | [ keyof T, 'asc' | 'desc' ];
-export type ExpandOptions<T> = {
-  select?: Select<T>;
-  filter?: Filter;
-  orderBy?: OrderBy<T>;
-  top?: number;
-  expand?: Expand<T>;
-}
-
-export type Transform<T> = {
-  aggregate?: Aggregate | Array<Aggregate>;
-  filter?: Filter;
-  groupBy?: GroupBy<T>;
-}
-export type GroupBy<T> = {
-  properties: Array<keyof T>;
-  transform?: Transform<T>;
-}
 
 export enum QueryOptionTypes {
   // System options

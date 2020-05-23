@@ -1,6 +1,7 @@
 import { Observable, empty } from 'rxjs';
 
-import { QueryOptionTypes, Expand, Select, Transform, Filter, OrderBy } from '../query-options';
+import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
+import { QueryOptionTypes } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 

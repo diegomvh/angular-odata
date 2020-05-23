@@ -2,7 +2,8 @@ import { Observable } from 'rxjs';
 
 import { Parser } from '../../types';
 import { ODataClient } from '../../client';
-import { QueryOptionTypes, Select, Expand } from '../query-options';
+import { Expand, Select } from '../builder';
+import { QueryOptionTypes } from '../query-options';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';

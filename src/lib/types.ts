@@ -5,7 +5,6 @@ import { InjectionToken } from '@angular/core';
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
-export type PlainObject = { [property: string]: any };
 
 // ANNOTATIONS
 export const ODATA_ANNOTATION_PREFIX = '@odata';

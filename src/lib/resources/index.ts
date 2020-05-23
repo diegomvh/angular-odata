@@ -1,3 +1,4 @@
+export * from './builder';
 export * from './query-options';
 export * from './path-segments';
 export * from './http-options';

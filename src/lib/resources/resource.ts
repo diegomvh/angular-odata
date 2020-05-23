@@ -2,7 +2,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
-  PlainObject,
   VALUE,
   entityAttributes,
   odataAnnotations,
@@ -16,6 +15,7 @@ import {
 } from '../models';
 import { Types } from '../utils';
 
+import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions,

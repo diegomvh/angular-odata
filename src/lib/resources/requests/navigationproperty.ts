@@ -1,5 +1,6 @@
 import { ODataResource } from '../resource';
-import { QueryOptionTypes, Select, Expand, Transform, Filter, OrderBy } from '../query-options';
+import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
+import { QueryOptionTypes } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
 import { ODataQueryOptions } from '../query-options';

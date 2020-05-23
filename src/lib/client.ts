@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { 
+  PlainObject,
   ODataResource, 
   ODataBatchResource, 
   ODataMetadataResource, 
@@ -16,7 +17,7 @@ import {
   SegmentTypes, 
 } from './resources';
 import { ODataSettings } from './models/settings';
-import { IF_MATCH_HEADER, PlainObject, Parser, ACCEPT } from './types';
+import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
 import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig } from './models';
 import { Types } from './utils';
 import { PARSERS } from './parsers';

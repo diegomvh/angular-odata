@@ -1,7 +1,8 @@
-import buildQuery from 'odata-query';
+import buildQuery from './builder';
+import { PlainObject } from './builder';
+//import buildQuery from 'odata-query';
 
 import { Types, isoStringToDate } from '../utils/index';
-import { PlainObject } from '../types';
 
 import { OptionHandler } from './query-options';
 

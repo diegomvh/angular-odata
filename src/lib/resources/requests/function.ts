@@ -1,12 +1,16 @@
+import { Observable } from 'rxjs';
+
+import { ODataClient } from '../../client';
+import { Parser } from '../../types';
+import { Types } from '../../utils';
+
+import { PlainObject } from '../builder';
 import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../path-segments';
 import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
-import { ODataClient } from '../../client';
-import { PlainObject, Parser } from '../../types';
-import { ODataCallableResource } from './callable';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
-import { Observable } from 'rxjs';
-import { Types } from '../../utils';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
+
+import { ODataCallableResource } from './callable';
 
 export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
