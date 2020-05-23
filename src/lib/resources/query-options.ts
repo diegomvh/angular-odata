@@ -1,4 +1,4 @@
-import buildQuery from './builder';
+import buildQuery, { alias, Alias } from './builder';
 import { PlainObject } from './builder';
 //import buildQuery from 'odata-query';
 
@@ -22,67 +22,6 @@ export enum QueryOptionTypes {
   aliases = 'aliases'
 }
 
-const orderByFieldMapper = (value: any) => 
-  (Types.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(' ') : value;
-
-const orderByOptionsMapper = (value: any, prefix: string = '') => {
-  if (Types.isArray(value)) {
-    return value.map(orderByFieldMapper).map(v => `${prefix}${v}`);
-  } else if (Types.isObject(value)) {
-    return Object.entries(value).map(([k, v]) => orderByOptionsMapper(v, `${k}/`)).map(v => `${prefix}${v}`);
-  }
-  return `${prefix}${value}`;
-}
-
-const expandOptionsMapper = (options: any) => {
-  return [
-    QueryOptionTypes.select,
-    QueryOptionTypes.filter,
-    QueryOptionTypes.orderBy,
-    QueryOptionTypes.top,
-    QueryOptionTypes.expand]
-    .filter(key => !Types.isEmpty(options[key]))
-    .map(key => queryOptionsMapper(key, options[key]))
-    .reduce((acc, query) => Object.assign(acc, query), {});
-}
-
-const queryOptionsMapper = (key: string, value: any): {[key: string] : any} => {
-  switch (key) {
-    case QueryOptionTypes.orderBy:
-      value = orderByOptionsMapper(value)
-      break;
-    case QueryOptionTypes.expand:
-      if (Types.isObject(value) && !Types.isArray(value))
-        value = Object.entries(value).reduce((acc, [k, v]) => Object.assign(acc, {[k]: expandOptionsMapper(v)}), {});
-      break;
-  }
-  return { [key]: value };
-}
-
-const handleAliasValue = (value: any) => {
-  if (typeof value === 'string') {
-    return `'${escapeIllegalChars(value)}'`;
-  } else if (value instanceof Date) {
-    return value.toISOString();
-  } else if (value instanceof Number) {
-    return value;
-  } else if (Array.isArray(value)) {
-    // Double quote strings to keep them after `.join`
-    const arr = value.map(d => (typeof d === 'string' ? `'${d}'` : d));
-    return `[${arr.join(',')}]`;
-  } else {
-    switch (value && value.type) {
-      case 'guid':
-        return value.value;
-      case 'raw':
-        return value.value;
-      case 'binary':
-        return `binary'${value.value}'`;
-    }
-    return value;
-  }
-}
-
 export class ODataQueryOptions {
   // URL QUERY PARTS
   public static readonly PARAM_SEPARATOR = '&';
@@ -96,7 +35,7 @@ export class ODataQueryOptions {
 
   // Params
   params(): PlainObject {
-    let params = [
+    let options = [
       QueryOptionTypes.select,
       QueryOptionTypes.filter,
       QueryOptionTypes.search,
@@ -104,30 +43,26 @@ export class ODataQueryOptions {
       QueryOptionTypes.orderBy,
       QueryOptionTypes.top,
       QueryOptionTypes.skip,
+      QueryOptionTypes.skiptoken,
       QueryOptionTypes.expand,
-      QueryOptionTypes.format]
-      .filter(key => !Types.isEmpty(this.options[key]))
-      .map(key => queryOptionsMapper(key, this.options[key]))
-      .map(query => buildQuery(query))
+      QueryOptionTypes.format,
+      QueryOptionTypes.aliases]
+        .filter(key => !Types.isEmpty(this.options[key]))
+        .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
+
+    let query = buildQuery(options);
+    let params = (query)? query
+      .split(ODataQueryOptions.PARAM_SEPARATOR)
       .reduce((acc, param: string) => {
         let index = param.indexOf(ODataQueryOptions.VALUE_SEPARATOR);
         let name = param.substr(1, index - 1);
         let values = param.substr(index + 1);
         return Object.assign(acc, {[name]: values});
-      }, {});
-
-    // TODO: Add query builder Skiptoken support
-    if (QueryOptionTypes.skiptoken in this.options)
-      params['$skiptoken'] = this.options[QueryOptionTypes.skiptoken];
+      }, {}) : {};
 
     // Custom
     let custom = this.options[QueryOptionTypes.custom] || {};
     Object.assign(params, custom);
-
-    // Aliases
-    let aliases = Object.entries(this.options[QueryOptionTypes.aliases] || {})
-      .reduce((acc, [k, v]) => Object.assign(acc, {[`@${k}`]: handleAliasValue(v)}), {});
-    Object.assign(params, aliases);
 
     return params;
   }
@@ -163,11 +98,18 @@ export class ODataQueryOptions {
   }
 
   // Aliases
-  alias(name: string, value?: any): any {
-    var aliases = this.options[QueryOptionTypes.aliases] || (this.options[QueryOptionTypes.aliases] = {});
-    if (Types.isUndefined(value))
-      return aliases[name];
-    return (aliases[name] = value);
+  alias(name: string, value?: any): Alias {
+    let aliases = (this.options[QueryOptionTypes.aliases] || (this.options[QueryOptionTypes.aliases] = [])) as Alias[];
+    let a = aliases.find(a => a.name === name);
+    if (Types.isUndefined(value)) {
+      return a;
+    } else if (alias === undefined) {
+      a = alias(name, value);
+      aliases.push(a);
+    } else {
+      a.value = value;
+    }
+    return a;
   }
 
   // Clear
@@ -185,13 +127,6 @@ export class OptionHandler<T> {
 
   toJSON() {
     return this.o[this.t];
-  }
-
-  // Add alias
-  alias(name: string) {
-    var aliases = this.o[QueryOptionTypes.aliases] || (this.o[QueryOptionTypes.aliases] = {});
-    aliases[name] = null;
-    return {type: 'raw', value: `@${name}`};
   }
 
   // Primitive value

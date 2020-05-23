@@ -47,15 +47,42 @@ export type GroupBy<T> = {
   transform?: Transform<T>;
 }
 
+export type Value = {
+  type: 'raw' | 'guid' | 'binary' | 'json' | 'alias';
+  value: any;
+}
+
+export type Alias = Value & {
+  name: string;
+  handleName(): string;
+  handleValue(): string;
+}
+
+export const raw = (value: string): Value => ({type: 'raw', value});
+export const guid = (value: string): Value => ({type: 'guid', value});
+export const binary = (value: string): Value => ({type: 'binary', value});
+export const json = (value: PlainObject): Value => ({type: 'json', value});
+export const alias = (name: string, value: PlainObject): Alias => ({
+  type: 'alias', name, value,
+  handleName() {
+    return `@${this.name}`;
+  },
+  handleValue() {
+    return handleValue(this.value);
+  }
+});
+
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
   transform: PlainObject | PlainObject[];
   skip: number;
+  skiptoken: string;
   key: string | number | PlainObject;
   count: boolean | Filter;
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;
+  aliases: Alias[]; 
 }
 
 export default function <T>({
@@ -63,6 +90,7 @@ export default function <T>({
   search: $search,
   top: $top,
   skip: $skip,
+  skiptoken: $skiptoken,
   format: $format,
   filter,
   transform,
@@ -72,6 +100,7 @@ export default function <T>({
   expand,
   action,
   func,
+  aliases
 }: Partial<QueryOptions<T>> = {}) {
   let path = '';
 
@@ -82,14 +111,15 @@ export default function <T>({
     $orderby: orderBy && buildOrderBy(orderBy),
   };
 
-  if (key) {
+  // key is not (null, undefined)
+  if (key != undefined) {
     if (typeof key === 'object') {
       const keys = Object.keys(key)
-        .map(k => `${k}=${key[k]}`)
+        .map(k => `${k}=${handleValue(key[k])}`)
         .join(',');
       path += `(${keys})`;
     } else {
-      path += `(${key})`;
+      path += `(${handleValue(key)})`;
     }
   }
 
@@ -111,30 +141,23 @@ export default function <T>({
     } else if (typeof func === 'object') {
       const [funcName] = Object.keys(func);
       const funcArgs = Object.keys(func[funcName]).reduce(
-        (acc: { params: string[]; aliases: string[] }, item) => {
-          const value = func[funcName][item];
-          if (Array.isArray(value) && typeof value[0] === 'object') {
-            acc.params.push(`${item}=@${item}`);
-            acc.aliases.push(`@${item}=${escape(JSON.stringify(value))}`);
-          } else {
-            acc.params.push(`${item}=${handleValue(value)}`);
-          }
-          return acc;
-        },
-        { params: [], aliases: [] }
+        (acc: string[], item) => [...acc, `${item}=${handleValue(func[funcName][item])}`],
+        []
       );
 
       path += `/${funcName}`;
-      if (funcArgs.params.length) {
-        path += `(${funcArgs.params.join(',')})`;
-      }
-      if (funcArgs.aliases.length) {
-        path += `?${funcArgs.aliases.join(',')}`;
+      if (funcArgs.length) {
+        path += `(${funcArgs.join(',')})`;
       }
     }
   }
 
-  return buildUrl(path, { $select, $search, $top, $skip, $format, ...params });
+  if (aliases) {
+    aliases
+      .reduce((acc, alias) => Object.assign(acc, {[alias.handleName()]: alias.handleValue()}), params);
+  }
+
+  return buildUrl(path, { $select, $search, $top, $skip, $skiptoken, $format, ...params });
 }
 
 function buildFilter(filters: Filter = {}, propPrefix = ''): string {
@@ -323,6 +346,10 @@ function handleValue(value: any) {
         return value.value;
       case 'binary':
         return `binary'${value.value}'`;
+      case 'alias':
+        return (value as Alias).handleName();
+      case 'json':
+        return escape(JSON.stringify(value.value));
     }
     return value;
   }

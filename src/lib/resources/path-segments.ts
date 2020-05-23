@@ -1,4 +1,4 @@
-import buildQuery from './builder';
+import buildQuery, { guid } from './builder';
 import { PlainObject } from './builder';
 //import buildQuery from 'odata-query';
 
@@ -23,7 +23,8 @@ export enum SegmentTypes {
 
 export enum SegmentOptionTypes {
   key = 'key',
-  parameters = 'parameters'
+  parameters = 'parameters',
+  aliases = 'aliases'
 }
 
 type ODataSegment = {
@@ -33,21 +34,20 @@ type ODataSegment = {
 }
 
 const pathSegmentsBuilder = (segment: ODataSegment): string => {
+  let key = segment.options[SegmentOptionTypes.key];
+  let parameters = segment.options[SegmentOptionTypes.parameters];
+  let aliases = segment.options[SegmentOptionTypes.aliases];
   switch (segment.type) {
     case SegmentTypes.functionCall:
-      let parameters = segment.options[SegmentOptionTypes.parameters];
       return (parameters ?
-        buildQuery({ func: { [segment.name]: parameters } }) :
-        buildQuery({ func: segment.name })
+        buildQuery({ func: { [segment.name]: parameters }, aliases}) :
+        buildQuery({ func: segment.name, aliases})
       ).slice(1);
     default:
-      let key = segment.options[SegmentOptionTypes.key];
       if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
-        key = `${key}`;
-      } else if (typeof (key) === 'string' && !(key.charAt(0) === key.charAt(key.length - 1) && ['"', "'"].indexOf(key.charAt(0)) !== -1)) {
-        key = `'${key}'`;
+        key = guid(key);
       }
-      return segment.name + (key ? buildQuery({ key }) : "");
+      return segment.name + (key ? buildQuery({ key, aliases }) : "");
   }
 }
 
