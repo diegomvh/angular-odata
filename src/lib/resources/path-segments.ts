@@ -1,4 +1,4 @@
-import buildQuery, { guid } from './builder';
+import buildQuery, { guid, Alias, alias } from './builder';
 import { PlainObject } from './builder';
 //import buildQuery from 'odata-query';
 
@@ -134,5 +134,20 @@ class SegmentHandler {
     if (!Types.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type as any);
+  }
+
+  // Aliases
+  alias(name: string, value?: any): Alias {
+    let aliases = (this.options[SegmentOptionTypes.aliases] || (this.options[SegmentOptionTypes.aliases] = [])) as Alias[];
+    let a = aliases.find(a => a.name === name);
+    if (Types.isUndefined(value)) {
+      return a;
+    } else if (a === undefined) {
+      a = alias(name, value);
+      aliases.push(a);
+    } else {
+      a.value = value;
+    }
+    return a;
   }
 }

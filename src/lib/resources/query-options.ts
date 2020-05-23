@@ -103,7 +103,7 @@ export class ODataQueryOptions {
     let a = aliases.find(a => a.name === name);
     if (Types.isUndefined(value)) {
       return a;
-    } else if (alias === undefined) {
+    } else if (a === undefined) {
       a = alias(name, value);
       aliases.push(a);
     } else {
