@@ -61,6 +61,17 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return entity;
   }
 
+  cast<C extends T>(type: string) {
+    let entitySet =  new ODataEntitySetResource<C>(
+      this.client, 
+      this.pathSegments.clone(),
+      this.queryOptions.clone(),
+      this.client.parserForType<C>(type) as Parser<C>
+    );
+    entitySet.pathSegments.segment(SegmentTypes.typeName, type);
+    return entitySet;
+  }
+
   action<A>(name: string, type?: string) {
     return ODataActionResource.factory<A>(
       name,
@@ -77,7 +88,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser:this.client.parserForType<F>(type) as Parser<F>
+      parser: this.client.parserForType<F>(type) as Parser<F>
     });
   }
 

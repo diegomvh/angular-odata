@@ -36,7 +36,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   // Key
   key(key?: EntityKey<T>) {
-    let segment = this.pathSegments.last();
+    let segment = this.pathSegments.segment(SegmentTypes.navigationProperty);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (!Types.isUndefined(key)) {

@@ -35,7 +35,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   // Key
   key(key?: EntityKey<T>) {
-    let segment = this.pathSegments.last();
+    let segment = this.pathSegments.segment(SegmentTypes.entitySet);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (!Types.isUndefined(key)) {
@@ -112,6 +112,17 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       options: this.queryOptions.clone(),
       parser: this.client.parserForType<F>(type) as Parser<F>
     });
+  }
+
+  cast<C extends T>(type: string) {
+    let entity =  new ODataEntityResource<C>(
+      this.client, 
+      this.pathSegments.clone(),
+      this.queryOptions.clone(),
+      this.client.parserForType<C>(type) as Parser<C>
+    );
+    entity.pathSegments.segment(SegmentTypes.typeName, type);
+    return entity;
   }
 
   get(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
