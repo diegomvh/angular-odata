@@ -190,13 +190,13 @@ export const PersonEntityConfig = {
 import { ODataConfig } from 'angular-odata';
 
 import ...
-import { PersonGender } from './Microsoft/OData/SampleService/Models/TripPin/persongender.enum';
-import { LocationMeta } from './Microsoft/OData/SampleService/Models/TripPin/location.meta';
-import { PhotoMeta } from './Microsoft/OData/SampleService/Models/TripPin/photo.meta';
-import { PersonMeta } from './Microsoft/OData/SampleService/Models/TripPin/person.meta';
-import { TripMeta } from './Microsoft/OData/SampleService/Models/TripPin/trip.meta';
+import { PersonGenderEnumConfig } from './Microsoft/OData/SampleService/Models/TripPin/persongender.enum.config';
+import { LocationEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/location.entity.config';
+import { PhotoEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/photo.entity.config';
+import { PersonEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/person.entity.config';
+import { TripEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/trip.entity.config';
 
-export const TripPinConfig: ODataConfig = {
+export const TripPinConfig = {
   serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/',
   enums: {
     'Microsoft.OData.SampleService.Models.TripPin.PersonGender': PersonGenderEnumConfig
