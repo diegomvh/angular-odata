@@ -17,9 +17,7 @@ export enum QueryOptionTypes {
   expand = 'expand',
   format = 'format',
   // Custom options
-  custom = 'custom',
-  // Parameter aliases
-  aliases = 'aliases'
+  custom = 'custom'
 }
 
 export class ODataQueryOptions {
@@ -45,8 +43,7 @@ export class ODataQueryOptions {
       QueryOptionTypes.skip,
       QueryOptionTypes.skiptoken,
       QueryOptionTypes.expand,
-      QueryOptionTypes.format,
-      QueryOptionTypes.aliases]
+      QueryOptionTypes.format]
         .filter(key => !Types.isEmpty(this.options[key]))
         .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
 
@@ -98,18 +95,8 @@ export class ODataQueryOptions {
   }
 
   // Aliases
-  alias(name: string, value?: any): Alias {
-    let aliases = (this.options[QueryOptionTypes.aliases] || (this.options[QueryOptionTypes.aliases] = [])) as Alias[];
-    let a = aliases.find(a => a.name === name);
-    if (Types.isUndefined(value)) {
-      return a;
-    } else if (a === undefined) {
-      a = alias(name, value);
-      aliases.push(a);
-    } else {
-      a.value = value;
-    }
-    return a;
+  alias(name: string, value: any): Alias {
+    return alias(name, value);
   }
 
   // Clear

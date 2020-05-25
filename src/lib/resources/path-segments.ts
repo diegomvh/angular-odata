@@ -23,8 +23,7 @@ export enum SegmentTypes {
 
 export enum SegmentOptionTypes {
   key = 'key',
-  parameters = 'parameters',
-  aliases = 'aliases'
+  parameters = 'parameters'
 }
 
 type ODataSegment = {
@@ -34,20 +33,19 @@ type ODataSegment = {
 }
 
 const pathSegmentsBuilder = (segment: ODataSegment): string => {
-  let key = segment.options[SegmentOptionTypes.key];
-  let parameters = segment.options[SegmentOptionTypes.parameters];
-  let aliases = segment.options[SegmentOptionTypes.aliases];
   switch (segment.type) {
     case SegmentTypes.functionCall:
+      let parameters = segment.options[SegmentOptionTypes.parameters];
       return (parameters ?
-        buildQuery({ func: { [segment.name]: parameters }, aliases}) :
-        buildQuery({ func: segment.name, aliases})
+        buildQuery({ func: { [segment.name]: parameters }}) :
+        buildQuery({ func: segment.name})
       ).slice(1);
     default:
+      let key = segment.options[SegmentOptionTypes.key];
       if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
         key = guid(key);
       }
-      return segment.name + (key ? buildQuery({ key, aliases }) : "");
+      return segment.name + (key ? buildQuery({ key }) : "");
   }
 }
 
@@ -139,16 +137,6 @@ class SegmentHandler {
 
   // Aliases
   alias(name: string, value?: any): Alias {
-    let aliases = (this.options[SegmentOptionTypes.aliases] || (this.options[SegmentOptionTypes.aliases] = [])) as Alias[];
-    let a = aliases.find(a => a.name === name);
-    if (Types.isUndefined(value)) {
-      return a;
-    } else if (a === undefined) {
-      a = alias(name, value);
-      aliases.push(a);
-    } else {
-      a.value = value;
-    }
-    return a;
+    return alias(name, value);
   }
 }
