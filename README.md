@@ -9,7 +9,6 @@ Please check also my other related project, [OData Angular Generator](https://gi
 
 ```bash
 npm i uuid
-npm i odata-query
 npm i angular-odata
 ```
 

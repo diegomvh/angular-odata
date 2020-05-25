@@ -4,7 +4,6 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "umdModuleIds": {
-      "odata-query": "buildQuery",
       "uuid": "uuid"
     }
   }
