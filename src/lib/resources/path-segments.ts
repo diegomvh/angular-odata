@@ -82,7 +82,7 @@ export class ODataPathSegments {
 
   find(type: string, name?: string) {
     // Backward search
-    return this.segments.reverse().find(s =>
+    return [...this.segments].reverse().find(s =>
       s.type === type &&
       (Types.isUndefined(name) || s.name === name));
   }
