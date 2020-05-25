@@ -74,12 +74,10 @@ export class ODataModel<T> {
     let attrs = Object.assign({}, entries
       .filter(([, , f]) => f && !(f.isNavigation() || f.isComplexType()))
       .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {}));
-    //console.log(attrs);
     //Others
     Object.assign(attrs, entries
       .filter(([, , f]) => !f)
       .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {}));
-    //console.log(attrs);
     //Complexes
     Object.assign(attrs, entries
       .filter(([, , f]) => f && f.isComplexType())
@@ -94,7 +92,6 @@ export class ODataModel<T> {
         }
         return Object.assign(acc, { [k]: value });
       }, {}));
-    //console.log(attrs);
     return attrs;
   }
 
@@ -154,7 +151,6 @@ export class ODataModel<T> {
   create(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
       let entity = this.toEntity(); 
-      console.log(entity);
       return this._resource.post(entity, options).pipe(map(([entity, annots]) => this.populate(entity, annots)));
     }
     throw new Error(`Can't create`);
