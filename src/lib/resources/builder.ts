@@ -54,23 +54,13 @@ export type Value = {
 
 export type Alias = Value & {
   name: string;
-  handleName(): string;
-  handleValue(): string;
 }
 
 export const raw = (value: string): Value => ({type: 'raw', value});
 export const guid = (value: string): Value => ({type: 'guid', value});
 export const binary = (value: string): Value => ({type: 'binary', value});
 export const json = (value: PlainObject): Value => ({type: 'json', value});
-export const alias = (name: string, value: PlainObject): Alias => ({
-  type: 'alias', name, value,
-  handleName() {
-    return `@${this.name}`;
-  },
-  handleValue() {
-    return handleValue(this.value);
-  }
-});
+export const alias = (name: string, value: PlainObject): Alias => ({ type: 'alias', name, value });
 
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
@@ -154,7 +144,7 @@ export default function <T>({
 
   if (aliases.length > 0) {
     Object.assign(params, aliases.reduce((acc, alias) => 
-      Object.assign(acc, {[alias.handleName()]: alias.handleValue()})
+      Object.assign(acc, {[`@${alias.name}`]: handleValue(alias.value)})
       , {}));
   }
 
@@ -351,7 +341,7 @@ function handleValue(value: any, aliases?: Alias[]) {
         // Collect alias
         if (Array.isArray(aliases))
           aliases.push(value);
-        return (value as Alias).handleName();
+          return `@${value.name}`;
       case 'json':
         return escape(JSON.stringify(value.value));
     }
@@ -518,20 +508,3 @@ function parseNot(builtFilters: string[]): string {
     return filter.charAt(0) === '(' ? `(not ${filter.substr(1)}` : `not ${filter}`;
   }
 }
-
-function flatten(obj: any, name?: string, stem?: string) {
-  var out = {};
-  var newStem = (typeof stem !== 'undefined' && stem !== '') ? stem + '.' + name : name;
-
-  if (typeof obj !== 'object') {
-    out[newStem] = obj;
-    return out;
-  }
-
-  for (var p in obj) {
-    var prop = flatten(obj[p], p, newStem);
-    out = Object.assign(out, prop);
-  }
-
-  return out;
-};

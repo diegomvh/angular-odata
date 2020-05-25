@@ -27,7 +27,8 @@ export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   endpointUrl(resource: ODataResource<any>) {
-    return `${this.settings.serviceRootUrl}${resource.path()}`;
+    const [path, ] = resource.path();
+    return `${this.settings.serviceRootUrl}${path}`;
   }
 
   // Resolve Building Blocks
@@ -320,7 +321,8 @@ export class ODataClient {
   } = {}): Observable<any> {
 
     // The Url
-    const resourceUrl = this.endpointUrl(resource);
+    const [path, pathAliases] = resource.path();
+    const resourceUrl = `${this.settings.serviceRootUrl}${path}`;
 
     let customHeaders = {};
     if (typeof (options.etag) === 'string')
@@ -333,8 +335,8 @@ export class ODataClient {
       headers = headers.append(ACCEPT, `application/json;odata.metadata=${acceptMetadata}, text/plain, */*`);
 
     // Params
-    const resourceParams = resource.params();
-    let params = this.mergeHttpParams(this.settings.params, resourceParams, options.params);
+    const [resourceParams, paramsAliases] = resource.params();
+    let params = this.mergeHttpParams(this.settings.params, resourceParams, paramsAliases, pathAliases, options.params);
 
     // Credentials ?
     let withCredentials = options.withCredentials;

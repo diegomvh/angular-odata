@@ -24,6 +24,8 @@ export class ODataQueryOptions {
   // URL QUERY PARTS
   public static readonly PARAM_SEPARATOR = '&';
   public static readonly VALUE_SEPARATOR = '=';
+  public static readonly ODATA_PARAM_PREFIX = '$';
+  public static readonly ODATA_ALIAS_PREFIX = '@';
 
   options?: PlainObject;
 
@@ -32,7 +34,7 @@ export class ODataQueryOptions {
   }
 
   // Params
-  params(): PlainObject {
+  params(): [PlainObject, PlainObject] {
     let options = [
       QueryOptionTypes.select,
       QueryOptionTypes.filter,
@@ -48,20 +50,24 @@ export class ODataQueryOptions {
         .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
 
     let query = buildQuery(options);
-    let params = (query)? query
+    let odata = (query) ? query.substr(1)
       .split(ODataQueryOptions.PARAM_SEPARATOR)
       .reduce((acc, param: string) => {
         let index = param.indexOf(ODataQueryOptions.VALUE_SEPARATOR);
-        let name = param.substr(1, index - 1);
-        let values = param.substr(index + 1);
-        return Object.assign(acc, {[name]: values});
+        let name = param.substr(0, index);
+        let value = param.substr(index + 1);
+        return Object.assign(acc, {[name]: value});
       }, {}) : {};
+
+    let all = Object.entries(odata);
+    let params = all.filter(([k, ]) => k.startsWith(ODataQueryOptions.ODATA_PARAM_PREFIX)).reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
+    let aliases = all.filter(([k, ]) => k.startsWith(ODataQueryOptions.ODATA_ALIAS_PREFIX)).reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
 
     // Custom
     let custom = this.options[QueryOptionTypes.custom] || {};
     Object.assign(params, custom);
 
-    return params;
+    return [params, aliases];
   }
 
   toJSON() {

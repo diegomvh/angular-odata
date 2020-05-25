@@ -70,11 +70,11 @@ export class ODataResource<Type> {
     return this.client.collectionForType(type || this.type());
   }
 
-  path(): string {
+  path(): [string, PlainObject] {
     return this.pathSegments.path();
   }
 
-  params(): PlainObject {
+  params(): [PlainObject, PlainObject] {
     return this.queryOptions.params();
   }
 
@@ -132,8 +132,9 @@ export class ODataResource<Type> {
 
   // Debug
   toString(): string {
-    let path = this.path();
-    let queryString = Object.entries(this.params())
+    let [path, ] = this.path();
+    let [params, ] = this.params();
+    let queryString = Object.entries(params)
       .map(e => `${e[0]}${ODataQueryOptions.VALUE_SEPARATOR}${e[1]}`)
       .join(ODataQueryOptions.PARAM_SEPARATOR);
     return queryString ? `${path}${ODataResource.QUERY_SEPARATOR}${queryString}` : path

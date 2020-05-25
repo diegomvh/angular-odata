@@ -51,6 +51,7 @@ const pathSegmentsBuilder = (segment: ODataSegment): string => {
 
 export class ODataPathSegments {
   public static readonly PATHSEP = '/';
+  public static readonly ODATA_ALIAS_PREFIX = '@';
 
   protected segments: ODataSegment[];
 
@@ -58,10 +59,10 @@ export class ODataPathSegments {
     this.segments = (segments || []).map(({type, name, options}) => ({type, name, options: options || {}}));
   }
 
-  path(): string {
+  path(): [string, PlainObject] {
     let pathChunks = this.segments
       .map(pathSegmentsBuilder);
-    return pathChunks.join(ODataPathSegments.PATHSEP);
+    return [pathChunks.join(ODataPathSegments.PATHSEP), {}];
   }
 
   toJSON() {
