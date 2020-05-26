@@ -43,7 +43,7 @@ export const ODATA_MEDIA_ETAG = '@odata.mediaEtag';
 export const ODATA_MEDIA_CONTENTTYPE = '@odata.mediaContentType';
 
 export const $ID = '$id';
-  
+
 // SEGMENTS
 export const $METADATA = '$metadata';
 export const $BATCH = '$batch';
@@ -68,8 +68,15 @@ export const MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
 export const CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';
 export const CONTENT_ID = 'Content-ID';
 
-export const NEWLINE = '\r\n';
+// URL PARTS
+export const QUERY_SEPARATOR = '?';
+export const PARAM_SEPARATOR = '&';
+export const VALUE_SEPARATOR = '=';
+export const PATH_SEPARATOR = '/';
+export const ODATA_PARAM_PREFIX = '$';
+export const ODATA_ALIAS_PREFIX = '@';
 
+export const NEWLINE = '\r\n';
 export const VALUE = 'value';
 
 export const odataAnnotations = (value: any) => Object.keys(value)
@@ -79,6 +86,14 @@ export const odataAnnotations = (value: any) => Object.keys(value)
 export const entityAttributes = (value: any) => Object.keys(value)
   .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
+
+export const parseQuery  = (query: string) => query.split(PARAM_SEPARATOR)
+  .reduce((acc, param: string) => {
+    let index = param.indexOf(VALUE_SEPARATOR);
+    if (index !== -1)
+      Object.assign(acc, {[param.substr(0, index)]: param.substr(index + 1)});
+    return acc;
+  }, {});
 
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;

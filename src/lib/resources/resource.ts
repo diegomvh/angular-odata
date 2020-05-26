@@ -6,7 +6,12 @@ import {
   entityAttributes,
   odataAnnotations,
   Parser,
-  $COUNT
+  $COUNT,
+  VALUE_SEPARATOR,
+  PARAM_SEPARATOR,
+  QUERY_SEPARATOR,
+  PATH_SEPARATOR,
+  parseQuery
 } from '../types';
 import { ODataClient } from '../client';
 import {
@@ -29,8 +34,6 @@ import {
 import { HttpOptions } from './http-options';
 
 export class ODataResource<Type> {
-  public static readonly QUERY_SEPARATOR = '?';
-
   // VARIABLES
   protected client: ODataClient;
   protected pathSegments: ODataPathSegments;
@@ -70,12 +73,15 @@ export class ODataResource<Type> {
     return this.client.collectionForType(type || this.type());
   }
 
-  path(): [string, PlainObject] {
-    return this.pathSegments.path();
-  }
-
-  params(): [PlainObject, PlainObject] {
-    return this.queryOptions.params();
+  pathAndParams(): [string, PlainObject] {
+    let path = this.pathSegments.path();
+    let params = this.queryOptions.params();
+    if (path.indexOf(QUERY_SEPARATOR) !== -1) {
+      let parts = path.split(QUERY_SEPARATOR);
+      path = parts[0];
+      Object.assign(params, parseQuery(parts[1]));
+    }
+    return [path, params];
   }
 
   protected applyType(type: string) {
@@ -132,12 +138,11 @@ export class ODataResource<Type> {
 
   // Debug
   toString(): string {
-    let [path, ] = this.path();
-    let [params, ] = this.params();
+    let [path, params] = this.pathAndParams();
     let queryString = Object.entries(params)
-      .map(e => `${e[0]}${ODataQueryOptions.VALUE_SEPARATOR}${e[1]}`)
-      .join(ODataQueryOptions.PARAM_SEPARATOR);
-    return queryString ? `${path}${ODataResource.QUERY_SEPARATOR}${queryString}` : path
+      .map(e => `${e[0]}${VALUE_SEPARATOR}${e[1]}`)
+      .join(PARAM_SEPARATOR);
+    return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path
   }
 
   clone(): ODataResource<Type> {

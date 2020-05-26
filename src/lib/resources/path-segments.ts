@@ -5,6 +5,7 @@ import { PlainObject } from './builder';
 import { Types, isoStringToDate } from '../utils/index';
 
 import { OptionHandler } from './query-options';
+import { PATH_SEPARATOR } from '../types';
 
 export enum SegmentTypes {
   batch = 'batch',
@@ -50,19 +51,16 @@ const pathSegmentsBuilder = (segment: ODataSegment): string => {
 }
 
 export class ODataPathSegments {
-  public static readonly PATHSEP = '/';
-  public static readonly ODATA_ALIAS_PREFIX = '@';
-
   protected segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
     this.segments = (segments || []).map(({type, name, options}) => ({type, name, options: options || {}}));
   }
 
-  path(): [string, PlainObject] {
-    let pathChunks = this.segments
+  path(): string {
+    let chunks = this.segments
       .map(pathSegmentsBuilder);
-    return [pathChunks.join(ODataPathSegments.PATHSEP), {}];
+    return chunks.join(PATH_SEPARATOR);
   }
 
   toJSON() {

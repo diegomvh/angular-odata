@@ -3,6 +3,7 @@ import { PlainObject } from './builder';
 //import buildQuery from 'odata-query';
 
 import { isoStringToDate, Types, escapeIllegalChars } from '../utils/index';
+import { PARAM_SEPARATOR, VALUE_SEPARATOR, ODATA_PARAM_PREFIX, ODATA_ALIAS_PREFIX, parseQuery } from '../types';
 
 export enum QueryOptionTypes {
   // System options
@@ -21,12 +22,6 @@ export enum QueryOptionTypes {
 }
 
 export class ODataQueryOptions {
-  // URL QUERY PARTS
-  public static readonly PARAM_SEPARATOR = '&';
-  public static readonly VALUE_SEPARATOR = '=';
-  public static readonly ODATA_PARAM_PREFIX = '$';
-  public static readonly ODATA_ALIAS_PREFIX = '@';
-
   options?: PlainObject;
 
   constructor(options?: PlainObject) {
@@ -34,7 +29,7 @@ export class ODataQueryOptions {
   }
 
   // Params
-  params(): [PlainObject, PlainObject] {
+  params(): PlainObject {
     let options = [
       QueryOptionTypes.select,
       QueryOptionTypes.filter,
@@ -50,24 +45,13 @@ export class ODataQueryOptions {
         .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
 
     let query = buildQuery(options);
-    let odata = (query) ? query.substr(1)
-      .split(ODataQueryOptions.PARAM_SEPARATOR)
-      .reduce((acc, param: string) => {
-        let index = param.indexOf(ODataQueryOptions.VALUE_SEPARATOR);
-        let name = param.substr(0, index);
-        let value = param.substr(index + 1);
-        return Object.assign(acc, {[name]: value});
-      }, {}) : {};
-
-    let all = Object.entries(odata);
-    let params = all.filter(([k, ]) => k.startsWith(ODataQueryOptions.ODATA_PARAM_PREFIX)).reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
-    let aliases = all.filter(([k, ]) => k.startsWith(ODataQueryOptions.ODATA_ALIAS_PREFIX)).reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
+    let params = (query) ? parseQuery(query.substr(1)) : {};
 
     // Custom
     let custom = this.options[QueryOptionTypes.custom] || {};
     Object.assign(params, custom);
 
-    return [params, aliases];
+    return params;
   }
 
   toJSON() {
