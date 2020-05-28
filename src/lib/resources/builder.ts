@@ -47,19 +47,17 @@ export type GroupBy<T> = {
   transform?: Transform<T>;
 }
 
-export type Value = {
-  type: 'raw' | 'guid' | 'binary' | 'json' | 'alias';
-  value: any;
-}
+export type Raw = { type: 'raw'; value: any; }
+export type Guid = { type: 'guid'; value: any; }
+export type Binary = { type: 'binary'; value: any; }
+export type Json = { type: 'json'; value: any; }
+export type Alias = { type: 'alias'; name: string; value: any; }
+export type Value = string | Date | number | boolean | Raw | Guid | Binary | Json | Alias; 
 
-export type Alias = Value & {
-  name: string;
-}
-
-export const raw = (value: string): Value => ({type: 'raw', value});
-export const guid = (value: string): Value => ({type: 'guid', value});
-export const binary = (value: string): Value => ({type: 'binary', value});
-export const json = (value: PlainObject): Value => ({type: 'json', value});
+export const raw = (value: string): Raw => ({type: 'raw', value});
+export const guid = (value: string): Guid => ({type: 'guid', value});
+export const binary = (value: string): Binary => ({type: 'binary', value});
+export const json = (value: PlainObject): Json => ({type: 'json', value});
 export const alias = (name: string, value: PlainObject): Alias => ({ type: 'alias', name, value });
 
 export type QueryOptions<T> = ExpandOptions<T> & {
@@ -95,7 +93,7 @@ export default function <T>({
   let aliases: Alias[] = [];
 
   const params: any = {
-    $filter: (filter || count instanceof Object) && buildFilter(count instanceof Object ? count : filter, aliases),
+    $filter: (filter || typeof count === 'object') && buildFilter(typeof count === 'object' ? count : filter, aliases),
     $apply: transform && buildTransforms(transform),
     $expand: expand && buildExpand(expand),
     $orderby: orderBy && buildOrderBy(orderBy),
@@ -103,14 +101,7 @@ export default function <T>({
 
   // key is not (null, undefined)
   if (key != undefined) {
-    if (typeof key === 'object') {
-      const keys = Object.keys(key)
-        .map(k => `${k}=${handleValue(key[k], aliases)}`)
-        .join(',');
-      path += `(${keys})`;
-    } else {
-      path += `(${handleValue(key, aliases)})`;
-    }
+    path += `(${handleValue(key as Value, aliases)})`;
   }
 
   if (count) {
@@ -223,7 +214,7 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
                 result.push(`${builtFilters.join(` ${op} `)}`);
               }
             }
-          } else if (value instanceof Object) {
+          } else if (typeof value === 'object') {
             if ('type' in value) {
               result.push(`${propName} eq ${handleValue(value, aliases)}`);
             } else {
@@ -317,36 +308,35 @@ function escapeIllegalChars(string: string) {
   return string;
 }
 
-function handleValue(value: any, aliases?: Alias[]) {
+function handleValue(value: Value, aliases?: Alias[]): any {
   if (typeof value === 'string') {
     return `'${escapeIllegalChars(value)}'`;
   } else if (value instanceof Date) {
     return value.toISOString();
-  } else if (value instanceof Number) {
+  } else if (typeof value === 'number') {
     return value;
   } else if (Array.isArray(value)) {
-    // Double quote strings to keep them after `.join`
-    const arr = value.map(d => (typeof d === 'string' ? `'${d}'` : d));
-    return `[${arr.join(',')}]`;
-  } else {
-    // TODO: Figure out how best to specify types.  See: https://github.com/devnixs/ODataAngularResources/blob/master/src/odatavalue.js
-    switch (value && value.type) {
-      case 'guid':
-        return value.value;
-      case 'raw':
-        return value.value;
-      case 'binary':
-        return `binary'${value.value}'`;
-      case 'alias':
-        // Collect alias
-        if (Array.isArray(aliases))
-          aliases.push(value);
-          return `@${value.name}`;
-      case 'json':
-        return escape(JSON.stringify(value.value));
-    }
+    return `[${value.map(d => handleValue(d)).join(',')}]`;
+  } else if (value === null) {
     return value;
+  } else if (typeof value === 'object' && !('type' in value)) {
+    return Object.keys(value)
+      .map(k => `${k}=${handleValue(value[k], aliases)}`).join(',');
+  } else if (typeof value === 'object' && value.type === 'raw') {
+    return value.value;
+  } else if (typeof value === 'object' && value.type === 'guid') {
+    return value.value;
+  } else if (typeof value === 'object' && value.type === 'binary') {
+    return `binary'${value.value}'`;
+  } else if (typeof value === 'object' && value.type === 'alias') {
+    // Store
+    if (Array.isArray(aliases))
+      aliases.push(value as Alias);
+    return `@${(value as Alias).name}`;
+  } else if (typeof value === 'object' && value.type === 'json') {
+    return escape(JSON.stringify(value.value));
   }
+  return value;
 }
 
 function buildExpand<T>(expands: Expand<T>): string {
