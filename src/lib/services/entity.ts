@@ -60,17 +60,17 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
       .get();
   }
 
-  public create(entity: T): Observable<[T, ODataEntityAnnotations]> {
+  public create(entity: Partial<T>): Observable<[T, ODataEntityAnnotations]> {
     return this.entities()
       .post(entity);
   }
 
-  public update(entity: T, etag?: string): Observable<[T, ODataEntityAnnotations]> {
+  public update(entity: Partial<T>, etag?: string): Observable<[T, ODataEntityAnnotations]> {
     return this.entity(entity)
       .put(entity, {etag});
   }
 
-  public assign(entity: Partial<T>, etag?: string) {
+  public assign(entity: Partial<T>, etag?: string): Observable<[T, ODataEntityAnnotations]> {
     return this.entity(entity as EntityKey<T>)
       .patch(entity, {etag});
   }
@@ -91,7 +91,7 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
       }));
   }
 
-  public save(entity: T) {
+  public save(entity: Partial<T>) {
     return this.entity(entity).hasKey() ? this.update(entity) : this.create(entity);
   }
 }
