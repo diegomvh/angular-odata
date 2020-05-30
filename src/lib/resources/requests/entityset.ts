@@ -102,7 +102,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   // Client requests
-  post(entity: T, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+  post(entity: Partial<T>, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return super.post(this.serialize(entity),
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
