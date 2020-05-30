@@ -128,36 +128,42 @@ export interface Parser<T> {
   toJSON(value: T | Partial<T>): any;
 }
 
-export type Settings = {
+export type Config = {
   serviceRootUrl: string,
   params?: { [param: string]: string | string[] };
-  metadataUrl?: string,
   withCredentials?: boolean,
   acceptMetadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean,
   creation?: Date,
   version?: string,
-  apis?: {[type: string]: ApiConfig},
-  enums?: {[type: string]: EnumConfig<any>},
-  entities?: {[type: string]: EntityConfig<any> },
-  services?: {[type: string]: ServiceConfig };
+  schemas?: {[type: string]: Schema},
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
-export const ODATA_CONFIG = new InjectionToken<Settings>('odata.config');
+export const ODATA_CONFIG = new InjectionToken<Config>('odata.config');
 
-export type ApiConfig = {
+export type Schema = {
+  namespace: string;
   annotations?: any[];
+  enums?: {[type: string]: EnumConfig<any>},
+  entities?: {[type: string]: EntityConfig<any> },
+  containers?: {[type: string]: Container },
+}
+
+export type Container = {
+  name: string;
+  annotations?: any[];
+  services?: {[type: string]: ServiceConfig };
 }
 
 export type EnumConfig<T> = {
-  type: string;
+  name: string;
   flags?: boolean;
   members: {[name: string]: number} | {[value: number]: string};
 }
 
 export type EntityConfig<T> = {
-  type: string;
+  name: string;
   base?: string;
   model?: { new(...any): any };
   collection?: { new(...any): any };
@@ -166,6 +172,6 @@ export type EntityConfig<T> = {
 }
 
 export type ServiceConfig = {
-  type: string;
+  name: string;
   annotations?: any[];
 }

@@ -2,8 +2,8 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
-import { Settings } from '../types';
-import { ODataEntityConfig, ODataEnumConfig, ODataApiConfig, ODataServiceConfig, ODataConfig } from './config';
+import { Config } from '../types';
+import { ODataEntityConfig, ODataEnumConfig, ODataSchema, ODataServiceConfig } from './config';
 import { ODataParser } from '../parsers';
 import { Types } from '../utils';
 
@@ -16,42 +16,38 @@ export class ODataSettings {
   creation?: Date;
   version?: string;
   stringAsEnum?: boolean;
-  configs?: {[type: string]: ODataConfig };
+  schemas?: {[type: string]: ODataSchema };
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
-  constructor(config: Settings) {
+  constructor(config: Config) {
     this.serviceRootUrl = config.serviceRootUrl;
     if (this.serviceRootUrl.indexOf('?') != -1)
       throw new Error("The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters");
     if (!this.serviceRootUrl.endsWith('/'))
       this.serviceRootUrl += '/';
     this.params = config.params || {};
-    this.metadataUrl = config.metadataUrl || `${config.serviceRootUrl}$metadata`;
+    this.metadataUrl = `${config.serviceRootUrl}$metadata`;
     this.withCredentials = config.withCredentials || false;
     this.acceptMetadata = config.acceptMetadata;
     this.stringAsEnum = config.stringAsEnum || false;
     this.creation = config.creation || new Date();
     this.errorHandler = config.errorHandler || null;
 
-    this.configs = Object.entries(config.apis || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataApiConfig(config)}), {});
+    this.schemas = Object.entries(config.schemas || {})
+      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataSchema(config)}), {});
 
-    Object.entries(config.enums || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataEnumConfig(config, this.stringAsEnum)}), this.configs);
-
-    Object.entries(config.entities || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataEntityConfig(config)}), this.configs);
-
-    Object.entries(config.services || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataServiceConfig(config)}), this.configs);
-
-    Object.entries(this.configs)
-      .forEach(([, config]) => config.configure(this));
+    console.log(this.parserForType);
+    Object.entries(this.schemas)
+      .forEach(([, schema]) => schema.configure({
+        stringAsEnum: this.stringAsEnum, 
+        parserForType: (type: string) => this.parserForType(type)
+      }));
   }
 
   public configForType(type: string) {
-    if (type in this.configs)
-      return this.configs[type];
+    let schema = Object.values(this.schemas).find(s => type.startsWith(s.namespace));
+    if (schema)
+      return schema.configFor(type.substring(schema.namespace.length + 1));
   }
 
   public enumConfigForType<T>(type: string) {

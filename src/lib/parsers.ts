@@ -31,21 +31,21 @@ export const PARSERS: {[name: string]: Parser<any>} = {
 };
 
 export interface ODataParser<Type> extends Parser<Type> { 
-  configure(settings: {parserForType: (type: string) => ODataParser<any>});
+  configure(settings: {namespace: string, stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>});
   toJsonSchema(options?: JsonSchemaExpandOptions<Type>);
 }
 
 export class ODataEnumParser<Type> implements ODataParser<Type> {
+  name: string;
   type: string;
   flags?: boolean;
-  enumString?: boolean;
+  stringAsEnum?: boolean;
   members: {[name: string]: number} | {[value: number]: string};
 
-  constructor(meta: EnumConfig<Type>, enumString?: boolean) {
-    this.type = meta.type;
+  constructor(meta: EnumConfig<Type>) {
+    this.name = meta.name;
     this.flags = meta.flags;
     this.members = meta.members;
-    this.enumString = enumString;
   }
 
   // Deserialize
@@ -64,7 +64,7 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
     let enums = this.flags ?
       Enums.toEnums(this.members, value) :
       [Enums.toEnum(this.members, value)];
-    if (!this.enumString)
+    if (!this.stringAsEnum)
       enums = enums.map(e => `${this.type}'${e}'`);
     return enums.join(", ");
   }
@@ -72,14 +72,17 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
   // Json Schema
   toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
     let property = <any>{
-      title: `The ${this.type} field`,
+      title: `The ${this.name} field`,
       type: "string"
     };
     property.enum = Enums.keys(this.members);
     return property;
   }
 
-  configure(settings: {parserForType: (type: string) => ODataParser<any>}) {}
+  configure(settings: {namespace: string, stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+    this.type = `${settings.namespace}.${this.name}`;
+    this.stringAsEnum = settings.stringAsEnum;
+  }
 }
 
 export class ODataFieldParser<T> implements ODataParser<T> {
@@ -126,7 +129,7 @@ export class ODataFieldParser<T> implements ODataParser<T> {
     return value;
   }
 
-  configure(settings: {parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {namespace: string, stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
     this.parser = settings.parserForType(this.type);
   }
 
@@ -165,13 +168,14 @@ export class ODataFieldParser<T> implements ODataParser<T> {
 }
 
 export class ODataEntityParser<Type> implements ODataParser<Type> {
+  name: string;
   type: string;
   base: string;
   parent: ODataEntityParser<any>;
   fields: ODataFieldParser<any>[];
 
   constructor(meta: EntityConfig<Type>) {
-    this.type = meta.type;
+    this.name = meta.name;
     this.base = meta.base;
     this.fields = Object.entries(meta.fields)
       .map(([name, f]) => new ODataFieldParser(name, f as Field));
@@ -204,7 +208,8 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
       _toJSON(objs);
   }
 
-  configure(settings: {parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {namespace: string, stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+    this.type = `${settings.namespace}.${this.name}`;
     if (this.base)
       this.parent = settings.parserForType(this.base) as ODataEntityParser<any>;
     this.fields.forEach(f => f.configure(settings));
@@ -217,9 +222,9 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
       .map(f => ({[f.name]: f.toJsonSchema(config[f.name])}))
       .reduce((acc, v) => Object.assign(acc, v), {});
     return {
-      title: `The ${this.type} schema`,
+      title: `The ${this.name} schema`,
       type: "object",
-      description: `The ${this.type} configuration`,
+      description: `The ${this.name} configuration`,
       properties: properties,
       required: this.fields.filter(f => !f.nullable).map(f => f.name)
     };
