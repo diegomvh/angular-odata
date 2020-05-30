@@ -136,7 +136,7 @@ export type Config = {
   stringAsEnum?: boolean,
   creation?: Date,
   version?: string,
-  schemas?: {[type: string]: Schema},
+  schemas?: Array<Schema>,
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
@@ -144,16 +144,16 @@ export const ODATA_CONFIG = new InjectionToken<Config>('odata.config');
 
 export type Schema = {
   namespace: string;
-  annotations?: any[];
-  enums?: {[type: string]: EnumConfig<any>},
-  entities?: {[type: string]: EntityConfig<any> },
-  containers?: {[type: string]: Container },
+  annotations?: Array<any>;
+  enums?: Array<EnumConfig<any>>;
+  entities?: Array<EntityConfig<any>>;
+  containers?: Array<Container>
 }
 
 export type Container = {
   name: string;
-  annotations?: any[];
-  services?: {[type: string]: ServiceConfig };
+  annotations?: Array<any>;
+  services?: Array<ServiceConfig>;
 }
 
 export type EnumConfig<T> = {

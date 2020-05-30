@@ -3,39 +3,27 @@ import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser } fr
 
 export class ODataSchema {
   namespace: string;
-  enums?: {[type: string]: ODataEnumConfig<any> };
-  entities?: {[type: string]: ODataEntityConfig<any> };
-  containers?: {[type: string]: ODataContainer };
+  enums?: Array<ODataEnumConfig<any>>;
+  entities?: Array<ODataEntityConfig<any>>;
+  containers?: Array<ODataContainer>;
   constructor(config: Schema) {
     this.namespace = config.namespace;
-    this.enums = Object.entries(config.enums || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataEnumConfig(config)}), {});
-
-    this.entities = Object.entries(config.entities || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataEntityConfig(config)}), {});
-
-    this.containers = Object.entries(config.containers || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataContainer(config)}), {});
+    this.enums = (config.enums || []).map(config => new ODataEnumConfig(config));
+    this.entities = (config.entities || []).map(config => new ODataEntityConfig(config));
+    this.containers = (config.containers || []).map(container => new ODataContainer(container));
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
-    Object.entries(this.enums)
-      .forEach(([, config]) => config.configure(Object.assign({namespace: this.namespace}, settings)));
-    Object.entries(this.entities)
-      .forEach(([, config]) => config.configure(Object.assign({namespace: this.namespace}, settings)));
-  }
-
-  public configFor(name: string) {
-    if (name in this.enums)
-      return this.enums[name];
-    else if (name in this.entities)
-      return this.entities[name];
-    //TODO: Buscar en los contenedores
+    this.enums
+      .forEach(config => config.configure(Object.assign({namespace: this.namespace}, settings)));
+    this.entities
+      .forEach(config => config.configure(Object.assign({namespace: this.namespace}, settings)));
   }
 }
 
 export class ODataEnumConfig<Type> {
   name: string;
+  type: string;
   parser?: ODataEnumParser<Type>;
   members: {[name: string]: number} | {[value: number]: string};
   constructor(config: EnumConfig<Type>) {
@@ -45,12 +33,14 @@ export class ODataEnumConfig<Type> {
   }
 
   configure(settings: {namespace: string, stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+    this.type = `${settings.namespace}.${this.name}`;
     this.parser.configure(settings);
   }
 }
 
 export class ODataEntityConfig<Type> {
   name: string;
+  type: string;
   parser?: ODataEntityParser<Type>;
   model?: { new(...any): any };
   collection?: { new(...any): any };
@@ -61,6 +51,7 @@ export class ODataEntityConfig<Type> {
   }
 
   configure(settings: {namespace: string, stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+    this.type = `${settings.namespace}.${this.name}`;
     this.parser.configure(settings);
   }
 
@@ -78,9 +69,10 @@ export class ODataEntityConfig<Type> {
 }
 
 export class ODataContainer {
-  type: string;
+  name: string;
   services?: {[type: string]: ODataServiceConfig };
   constructor(config: Container) {
+    this.name = config.name;
     this.services = Object.entries(config.services || {})
       .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataServiceConfig(config)}), {});
   }

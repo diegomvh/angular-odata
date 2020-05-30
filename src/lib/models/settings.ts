@@ -16,7 +16,7 @@ export class ODataSettings {
   creation?: Date;
   version?: string;
   stringAsEnum?: boolean;
-  schemas?: {[type: string]: ODataSchema };
+  schemas?: Array<ODataSchema>;
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: Config) {
@@ -33,39 +33,39 @@ export class ODataSettings {
     this.creation = config.creation || new Date();
     this.errorHandler = config.errorHandler || null;
 
-    this.schemas = Object.entries(config.schemas || {})
-      .reduce((acc, [type, config]) => Object.assign(acc, {[type]: new ODataSchema(config)}), {});
+    this.schemas = config.schemas.map(schema => new ODataSchema(schema));
 
-    console.log(this.parserForType);
-    Object.entries(this.schemas)
-      .forEach(([, schema]) => schema.configure({
-        stringAsEnum: this.stringAsEnum, 
-        parserForType: (type: string) => this.parserForType(type)
-      }));
+    this.schemas.forEach(schema => schema.configure({
+      stringAsEnum: this.stringAsEnum, 
+      parserForType: (type: string) => this.parserForType(type)
+    }));
   }
 
-  public configForType(type: string) {
-    let schema = Object.values(this.schemas).find(s => type.startsWith(s.namespace));
+  public schemaForType(type: string) {
+    let schema = this.schemas.find(s => type.startsWith(s.namespace));
     if (schema)
-      return schema.configFor(type.substring(schema.namespace.length + 1));
+      return schema;
   }
 
   public enumConfigForType<T>(type: string) {
-    let config = this.configForType(type);
-    if (config instanceof ODataEnumConfig)
-      return config as ODataEnumConfig<T>;
+    let schema = this.schemaForType(type);
+    if (schema)
+      return schema.enums.find(e => e.type === type) as ODataEnumConfig<T>;
   }
 
   public entityConfigForType<T>(type: string) {
-    let config = this.configForType(type);
-    if (config instanceof ODataEntityConfig)
-      return config as ODataEntityConfig<T>;
+    let schema = this.schemaForType(type);
+    if (schema)
+      return schema.entities.find(e => e.type === type) as ODataEntityConfig<T>;
   }
 
   public serviceConfigForType(type: string) {
-    let config = this.configForType(type);
-    if (config instanceof ODataServiceConfig)
-      return config as ODataServiceConfig;
+    /*
+    let schema = this.schemaForType(type);
+    if (schema)
+      return schema.containers.find(e => e.type === type) as ODataServiceConfig;
+      */
+    return null;
   }
 
   public modelForType(type: string): typeof ODataModel {
@@ -85,5 +85,4 @@ export class ODataSettings {
     if (!Types.isUndefined(config))
       return config.parser as ODataParser<T>;
   }
-
 }
