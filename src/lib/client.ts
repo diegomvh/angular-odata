@@ -27,7 +27,8 @@ export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   endpointUrl(resource: ODataResource<any>) {
-    return `${this.settings.serviceRootUrl}${resource}`;
+    let config = this.settings.configForType(resource.type());
+    return `${config.serviceRootUrl}${resource}`;
   }
 
   // Resolve Building Blocks
@@ -319,9 +320,11 @@ export class ODataClient {
     withCredentials?: boolean
   } = {}): Observable<any> {
 
+    let config = this.settings.configForType(resource.type());
+
     // The Url
     const [resourcePath, resourceParams] = resource.pathAndParams();
-    const resourceUrl = `${this.settings.serviceRootUrl}${resourcePath}`;
+    const resourceUrl = `${config.serviceRootUrl}${resourcePath}`;
 
     let customHeaders = {};
     if (typeof (options.etag) === 'string')
@@ -329,17 +332,17 @@ export class ODataClient {
     let headers = this.mergeHttpHeaders(options.headers, customHeaders);
 
     // Metadata ?
-    let acceptMetadata = this.settings.acceptMetadata;
+    let acceptMetadata = config.acceptMetadata;
     if (!Types.isUndefined(acceptMetadata) && options.responseType === 'json' && options.observe === 'body')
       headers = headers.append(ACCEPT, `application/json;odata.metadata=${acceptMetadata}, text/plain, */*`);
 
     // Params
-    let params = this.mergeHttpParams(this.settings.params, resourceParams, options.params);
+    let params = this.mergeHttpParams(config.params, resourceParams, options.params);
 
     // Credentials ?
     let withCredentials = options.withCredentials;
     if (Types.isUndefined(withCredentials))
-      withCredentials = this.settings.withCredentials;
+      withCredentials = config.withCredentials;
 
     // Call http request
     let res$ = this.http.request(method, resourceUrl, {
@@ -353,9 +356,9 @@ export class ODataClient {
     });
 
     // Context Error Handler
-    if (this.settings.errorHandler) {
+    if (config.errorHandler) {
       res$ = res$.pipe(
-        catchError(this.settings.errorHandler)
+        catchError(config.errorHandler)
       );
     }
     return res$;

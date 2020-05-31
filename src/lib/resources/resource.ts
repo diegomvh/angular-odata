@@ -53,7 +53,7 @@ export class ODataResource<Type> {
   }
 
   type(): string {
-    return this.parser && this.parser.type;
+    return this.parser && this.parser.type || '';
   }
 
   // Proxy to client

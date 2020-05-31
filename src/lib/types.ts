@@ -128,7 +128,7 @@ export interface Parser<T> {
   toJSON(value: T | Partial<T>): any;
 }
 
-export type Config = {
+export type Configuration = {
   serviceRootUrl: string,
   params?: { [param: string]: string | string[] };
   withCredentials?: boolean,
@@ -140,7 +140,7 @@ export type Config = {
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
-export const ODATA_CONFIG = new InjectionToken<Config>('odata.config');
+export const ODATA_CONFIGURATIONS = new InjectionToken<Configuration>('odata.configuraions');
 
 export type Schema = {
   namespace: string;
