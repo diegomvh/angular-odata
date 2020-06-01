@@ -9,12 +9,12 @@ import { ODataCollection } from './collection';
 export class ODataConfig {
   serviceRootUrl: string;
   params: { [param: string]: string | string[] };
+  headers: { [param: string]: string | string[] };
   metadataUrl?: string;
   withCredentials?: boolean;
   acceptMetadata?: 'minimal' | 'full' | 'none';
-  creation?: Date;
-  version?: string;
   stringAsEnum?: boolean;
+  creation?: Date;
   schemas?: Array<ODataSchema>;
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
@@ -25,6 +25,7 @@ export class ODataConfig {
     if (!this.serviceRootUrl.endsWith('/'))
       this.serviceRootUrl += '/';
     this.params = config.params || {};
+    this.headers = config.headers || {};
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;
     this.withCredentials = config.withCredentials || false;
     this.acceptMetadata = config.acceptMetadata;

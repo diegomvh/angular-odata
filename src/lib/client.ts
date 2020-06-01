@@ -114,7 +114,7 @@ export class ODataClient {
       if (header instanceof HttpHeaders) {
         const httpHeader = header as HttpHeaders;
         attrs = httpHeader.keys().reduce((acc, key) => Object.assign(acc, { [key]: httpHeader.getAll(key) }), attrs);
-      } else if (typeof (header) === 'object')
+      } else if (typeof header === 'object')
         attrs = Object.assign(attrs, header);
     });
     return new HttpHeaders(attrs);
@@ -127,7 +127,7 @@ export class ODataClient {
       if (param instanceof HttpParams) {
         const httpParam = param as HttpParams;
         attrs = httpParam.keys().reduce((acc, key) => Object.assign(acc, { [key]: httpParam.getAll(key) }), attrs);
-      } else if (typeof (param) === 'object')
+      } else if (typeof param === 'object')
         attrs = Object.assign(attrs, param);
     });
     return new HttpParams({ fromObject: attrs });
@@ -326,15 +326,14 @@ export class ODataClient {
     const [resourcePath, resourceParams] = resource.pathAndParams();
     const resourceUrl = `${config.serviceRootUrl}${resourcePath}`;
 
+    // Headers
     let customHeaders = {};
-    if (typeof (options.etag) === 'string')
+    if (typeof options.etag === 'string')
       customHeaders[IF_MATCH_HEADER] = options.etag;
-    let headers = this.mergeHttpHeaders(options.headers, customHeaders);
-
     // Metadata ?
-    let acceptMetadata = config.acceptMetadata;
-    if (!Types.isUndefined(acceptMetadata) && options.responseType === 'json' && options.observe === 'body')
-      headers = headers.append(ACCEPT, `application/json;odata.metadata=${acceptMetadata}, text/plain, */*`);
+    if (!Types.isUndefined(config.acceptMetadata) && options.responseType === 'json' && options.observe === 'body')
+      customHeaders[ACCEPT] = `application/json;odata.metadata=${config.acceptMetadata}, text/plain, */*`;
+    let headers = this.mergeHttpHeaders(config.headers, customHeaders, options.headers);
 
     // Params
     let params = this.mergeHttpParams(config.params, resourceParams, options.params);

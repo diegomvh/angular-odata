@@ -131,11 +131,11 @@ export interface Parser<T> {
 export type Configuration = {
   serviceRootUrl: string,
   params?: { [param: string]: string | string[] };
+  headers?: { [param: string]: string | string[] };
   withCredentials?: boolean,
   acceptMetadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean,
   creation?: Date,
-  version?: string,
   schemas?: Array<Schema>,
   errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }

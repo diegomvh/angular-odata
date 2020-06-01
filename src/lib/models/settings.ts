@@ -17,7 +17,7 @@ export class ODataSettings {
     let config = this.configs.find(c => c.schemas.some(s => type.startsWith(s.namespace)));
     if (config)
       return config;
-    throw new Error(`The type: ${type} does not belong to any known configuration`);
+    throw new Error(`The type: '${type}' does not belong to any known configuration`);
   }
 
   //#region Find Config
