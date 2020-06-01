@@ -27,21 +27,24 @@ export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   endpointUrl(resource: ODataResource<any>) {
-    let config = this.settings.configForType(resource.type());
+    let config = this.settings.configForNamespace(resource.type());
     return `${config.serviceRootUrl}${resource}`;
   }
 
   // Resolve Building Blocks
   entityConfigForType<T>(type: string): ODataEntityConfig<T> | null {
-    return this.settings.entityConfigForType<T>(type);
+    let config = this.settings.configForNamespace(type);
+    return config.entityConfigForType<T>(type);
   }
 
   serviceConfigForType(type: string): ODataServiceConfig | null {
-    return this.settings.serviceConfigForType(type);
+    let config = this.settings.configForNamespace(type);
+    return config.serviceConfigForType(type);
   }
 
   parserForType<T>(type: string): Parser<T> | null {
-    let parser = this.settings.parserForType(type) as Parser<T>;
+    let config = this.settings.configForNamespace(type);
+    let parser = config.parserForType(type) as Parser<T>;
     if (!parser && type in PARSERS) {
       parser = PARSERS[type];
     }
@@ -49,12 +52,14 @@ export class ODataClient {
   }
 
   modelForType(type: string): typeof ODataModel {
-    let Model = this.settings.modelForType(type) as typeof ODataModel;
+    let config = this.settings.configForNamespace(type);
+    let Model = config.modelForType(type) as typeof ODataModel;
     return Model || ODataModel;
   }
 
   collectionForType(type: string): typeof ODataCollection {
-    let Collection = this.settings.collectionForType(type) as typeof ODataCollection;
+    let config = this.settings.configForNamespace(type);
+    let Collection = config.collectionForType(type) as typeof ODataCollection;
     return Collection || ODataCollection;
   }
 
@@ -320,7 +325,7 @@ export class ODataClient {
     withCredentials?: boolean
   } = {}): Observable<any> {
 
-    let config = this.settings.configForType(resource.type());
+    let config = this.settings.configForNamespace(resource.type());
 
     // The Url
     const [resourcePath, resourceParams] = resource.pathAndParams();
