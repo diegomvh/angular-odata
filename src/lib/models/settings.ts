@@ -8,6 +8,7 @@ export class ODataSettings {
 
   constructor(configs: Configuration[]) {
     this.configs = configs.map(config => new ODataConfig(config));
+    if (this.configs.length > 1 && this.configs.some(c => Types.isUndefined(c.name)))
 
     this.configs.forEach(config => config.configure({
       parserForType: (type: string) => this.parserForType(type)

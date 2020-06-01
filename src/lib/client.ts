@@ -317,6 +317,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any | null,
     etag?: string,
+    //config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -324,6 +325,12 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean
   } = {}): Observable<any> {
+
+    /*
+    let config = options.config ? 
+      this.settings.config(options.config) : 
+      this.settings.configForNamespace(resource.type());
+    */
 
     let config = this.settings.configForNamespace(resource.type());
 

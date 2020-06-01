@@ -20,12 +20,12 @@ export class ODataConfig {
   errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: Configuration) {
-    this.name = config.name;
     this.serviceRootUrl = config.serviceRootUrl;
     if (this.serviceRootUrl.indexOf('?') != -1)
       throw new Error("The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters");
     if (!this.serviceRootUrl.endsWith('/'))
       this.serviceRootUrl += '/';
+    this.name = config.name;
     this.params = config.params || {};
     this.headers = config.headers || {};
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;

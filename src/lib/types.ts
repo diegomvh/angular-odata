@@ -129,8 +129,8 @@ export interface Parser<T> {
 }
 
 export type Configuration = {
-  name: string,
   serviceRootUrl: string,
+  name?: string,
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean,
