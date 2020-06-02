@@ -378,12 +378,6 @@ export class ODataClient {
       withCredentials: withCredentials
     });
 
-    // Context Error Handler
-    if (config.errorHandler) {
-      res$ = res$.pipe(
-        catchError(config.errorHandler)
-      );
-    }
     return res$;
   }
 

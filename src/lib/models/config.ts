@@ -17,7 +17,6 @@ export class ODataConfig {
   stringAsEnum?: boolean;
   creation?: Date;
   schemas?: Array<ODataSchema>;
-  errorHandler?: (error: HttpErrorResponse) => Observable<never>;
 
   constructor(config: Configuration) {
     this.serviceRootUrl = config.serviceRootUrl;
@@ -33,7 +32,6 @@ export class ODataConfig {
     this.acceptMetadata = config.acceptMetadata;
     this.stringAsEnum = config.stringAsEnum || false;
     this.creation = config.creation || new Date();
-    this.errorHandler = config.errorHandler || null;
 
     this.schemas = config.schemas.map(schema => new ODataSchema(schema));
   }
