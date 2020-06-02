@@ -142,6 +142,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -153,6 +154,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -164,6 +166,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -175,6 +178,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe: 'events', 
@@ -186,6 +190,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -197,6 +202,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -208,6 +214,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -219,6 +226,7 @@ export class ODataClient {
   request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -230,6 +238,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -241,6 +250,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -252,6 +262,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -262,6 +273,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -273,6 +285,7 @@ export class ODataClient {
   request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -284,6 +297,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -295,6 +309,7 @@ export class ODataClient {
   request<R>(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -306,6 +321,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     etag?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
@@ -317,7 +333,7 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any | null,
     etag?: string,
-    //config?: string,
+    config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -326,13 +342,9 @@ export class ODataClient {
     withCredentials?: boolean
   } = {}): Observable<any> {
 
-    /*
     let config = options.config ? 
       this.settings.config(options.config) : 
-      this.settings.configForNamespace(resource.type());
-    */
-
-    let config = this.settings.configForNamespace(resource.type());
+      this.settings.configForNamespace(resource.namespace());
 
     // The Url
     const [resourcePath, resourceParams] = resource.pathAndParams();

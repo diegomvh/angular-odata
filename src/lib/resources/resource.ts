@@ -10,7 +10,6 @@ import {
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
   QUERY_SEPARATOR,
-  PATH_SEPARATOR,
   parseQuery
 } from '../types';
 import { ODataClient } from '../client';
@@ -53,7 +52,13 @@ export class ODataResource<Type> {
   }
 
   type(): string {
-    return this.parser && this.parser.type || '';
+    if (this.parser)
+      return this.parser.type;
+  }
+
+  namespace(): string {
+    if (this.parser)
+      return this.parser.namespace;
   }
 
   // Proxy to client
@@ -196,6 +201,7 @@ export class ODataResource<Type> {
     let res$ = this.client.request(method, this, {
       body: options.body,
       etag: options.etag,
+      config: options.config,
       headers: options.headers,
       observe: 'body',
       params: params,

@@ -38,9 +38,13 @@ export class ODataConfig {
     this.schemas = config.schemas.map(schema => new ODataSchema(schema));
   }
   
-  configure(settings: {parserForType: (type: string) => ODataParser<any>}) {
+  configure() {
     this.schemas
-      .forEach(schmea => schmea.configure(Object.assign({stringAsEnum: this.stringAsEnum}, settings)));
+      .forEach(schmea => schmea.configure({
+        stringAsEnum: this.stringAsEnum,
+        parserForType: (type: string) => this.parserForType(type)
+      })
+    );
   }
 
   //#region Find Config for Type
@@ -149,16 +153,14 @@ export class ODataSchema {
 
 export class ODataEnumConfig<Type> {
   name: string;
-  namespace: string;
   type: string;
   parser?: ODataEnumParser<Type>;
   members: {[name: string]: number} | {[value: number]: string};
   constructor(config: EnumConfig<Type>, namespace: string) {
     this.name = config.name;
     this.members = config.members;
-    this.namespace = namespace;
-    this.type = `${this.namespace}.${this.name}`;
-    this.parser = new ODataEnumParser(config as EnumConfig<any>, this.namespace);
+    this.type = `${namespace}.${this.name}`;
+    this.parser = new ODataEnumParser(config as EnumConfig<any>, namespace);
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
@@ -168,7 +170,6 @@ export class ODataEnumConfig<Type> {
 
 export class ODataEntityConfig<Type> {
   name: string;
-  namespace: string;
   type: string;
   parser?: ODataEntityParser<Type>;
   model?: { new(...any): any };
@@ -176,9 +177,8 @@ export class ODataEntityConfig<Type> {
 
   constructor(config: EntityConfig<Type>, namespace: string) {
     this.name = config.name;
-    this.namespace = namespace;
-    this.type = `${this.namespace}.${this.name}`;
-    this.parser = new ODataEntityParser(config, this.namespace);
+    this.type = `${namespace}.${this.name}`;
+    this.parser = new ODataEntityParser(config, namespace);
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
@@ -200,14 +200,12 @@ export class ODataEntityConfig<Type> {
 
 export class ODataContainer {
   name: string;
-  namespace: string;
   type: string;
-  services?: Array<ODataServiceConfig>
+  services?: Array<ODataServiceConfig>;
   constructor(config: Container, namespace: string) {
     this.name = config.name;
-    this.namespace = namespace;
-    this.type = `${this.namespace}.${this.name}`;
-    this.services = (config.services || []).map(config => new ODataServiceConfig(config, this.namespace));
+    this.type = `${namespace}.${this.name}`;
+    this.services = (config.services || []).map(config => new ODataServiceConfig(config, namespace));
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
@@ -218,12 +216,10 @@ export class ODataContainer {
 
 export class ODataServiceConfig {
   name: string;
-  namespace: string;
   type: string;
   constructor(config: ServiceConfig, namespace: string) {
     this.name = config.name;
-    this.namespace = namespace;
-    this.type = `${this.namespace}.${this.name}`;
+    this.type = `${namespace}.${this.name}`;
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {}

@@ -90,7 +90,8 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
 export class ODataFieldParser<T> implements ODataParser<T> {
   name: string;
   type: string;
-  parser?: ODataParser<any>;
+  entity: ODataEntityParser<any>;
+  parser?: Parser<any>;
   default?: any;
   maxLength?: number;
   key?: boolean;
@@ -100,9 +101,14 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   field?: string;
   ref?: string;
 
-  constructor(name: string, field: Field) {
+  constructor(name: string, field: Field, entity: ODataEntityParser<any>) {
     this.name = name;
+    this.entity = entity;
     Object.assign(this, field);
+  }
+
+  get namespace() {
+    return this.entity.namespace;
   }
 
   resolve(value: any) {
@@ -112,32 +118,24 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   // Deserialize
   parse(value: any) {
     if (value === null) return value;
-    if (this.parser) {
-      return this.parser.parse(value);
-    } else if (this.type in PARSERS) {
-      return PARSERS[this.type].parse(value);
-    }
-    return value;
+    return this.parser ? this.parser.parse(value) : value;
   }
 
   // Serialize
   toJSON(value: any) {
     if (value === null) return value;
-    if (this.parser) {
-      return this.parser.toJSON(value);
-    } else if (this.type in PARSERS) {
-      return PARSERS[this.type].toJSON(value);
-    }
-    return value;
+    return this.parser ? this.parser.toJSON(value) : value;
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
-    this.parser = settings.parserForType(this.type);
+    this.parser = (this.type in PARSERS) ? 
+      PARSERS[this.type] : 
+      settings.parserForType(this.type);
   }
 
   // Json Schema
   toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
-    let property = this.parser ? this.parser.toJsonSchema(options) : <any>{
+    let property = this.parser ? (this.parser as ODataParser<any>).toJsonSchema(options) : <any>{
       title: `The ${this.name} field`,
       type: this.parser ? "object" : this.type
     };
@@ -177,13 +175,13 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
   parent: ODataEntityParser<any>;
   fields: ODataFieldParser<any>[];
 
-  constructor(meta: EntityConfig<Type>, namespace: string) {
-    this.name = meta.name;
-    this.base = meta.base;
+  constructor(config: EntityConfig<Type>, namespace: string) {
+    this.name = config.name;
+    this.base = config.base;
     this.namespace = namespace;
     this.type = `${this.namespace}.${this.name}`;
-    this.fields = Object.entries(meta.fields)
-      .map(([name, f]) => new ODataFieldParser(name, f as Field));
+    this.fields = Object.entries(config.fields)
+      .map(([name, f]) => new ODataFieldParser(name, f as Field, this));
   }
 
   // Deserialize

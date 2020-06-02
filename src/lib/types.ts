@@ -124,6 +124,7 @@ export type Field = {
 
 export interface Parser<T> {
   type: string;
+  namespace: string;
   parse(value: any): any;
   toJSON(value: T | Partial<T>): any;
 }
