@@ -34,7 +34,9 @@ import { ODataModule } from 'angular-odata';
 @NgModule({
   imports: [
     ...
-    ODataModule.forRoot({serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/' })
+    ODataModule.forRoot({
+      serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/'
+    })
     ...
   ]
 })
@@ -45,16 +47,12 @@ or build settings through a factory function.
 
 ```typescript
 import { NgModule } from '@angular/core';
-import { throwError } from 'rxjs';
 
 import { ODataModule, ODataSettings } from 'angular-odata';
 
 export function settingsFactory() {
   return new ODataSettings({
-    serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/',
-    errorHandler: (error: HttpErrorResponse) => {
-      return throwError(error);
-    }
+    serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/'
   });
 }
 
@@ -143,9 +141,9 @@ export class AppComponent {
 
 ### Advanced usage: Create Custom Services
 
-In this mode, services are created using custom definitions and corresponding settings
+In this mode, services are created using custom definitions and corresponding configuration
 
-1) The entity and config
+1) The entity with configuration
 
 ```typescript
 import { PersonGender } from './persongender.enum';
@@ -166,8 +164,8 @@ export interface Person {
   Photo?: Photo
 }
 
-export const PersonEntityConfig = {
-  type: "Microsoft.OData.SampleService.Models.TripPin.Person",
+export const PersonConfig = {
+  name: "Person",
   fields: {
     UserName: {type: 'string', key: true, ref: 'UserName', nullable: false}]},
     FirstName: {type: 'string', nullable: false},
@@ -183,31 +181,33 @@ export const PersonEntityConfig = {
 } as EntityConfig<Person>;
 ```
 
-2) The config
+2) The api configuration 
 
 ```typescript
-import { ODataConfig } from 'angular-odata';
-
 import ...
-import { PersonGenderEnumConfig } from './Microsoft/OData/SampleService/Models/TripPin/persongender.enum.config';
-import { LocationEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/location.entity.config';
-import { PhotoEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/photo.entity.config';
-import { PersonEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/person.entity.config';
-import { TripEntityConfig } from './Microsoft/OData/SampleService/Models/TripPin/trip.entity.config';
+import { PersonGenderConfig } from './Microsoft/OData/SampleService/Models/TripPin/persongender.enum.config';
+import { LocationConfig } from './Microsoft/OData/SampleService/Models/TripPin/location.entity.config';
+import { PhotoConfig } from './Microsoft/OData/SampleService/Models/TripPin/photo.entity.config';
+import { PersonConfig } from './Microsoft/OData/SampleService/Models/TripPin/person.entity.config';
+import { TripConfig } from './Microsoft/OData/SampleService/Models/TripPin/trip.entity.config';
 
 export const TripPinConfig = {
   serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/',
-  enums: {
-    'Microsoft.OData.SampleService.Models.TripPin.PersonGender': PersonGenderEnumConfig
-  },
-  ...
-  entities: {
-    ...
-    'Microsoft.OData.SampleService.Models.TripPin.Location': LocationEntityConfig,
-    'Microsoft.OData.SampleService.Models.TripPin.Photo': PhotoEntityConfig,
-    'Microsoft.OData.SampleService.Models.TripPin.Person': PersonEntityConfig,
-    'Microsoft.OData.SampleService.Models.TripPin.Trip': TripEntityConfig
-  }
+  schemas: [ // Schemas
+    {
+      namespace: "Microsoft.OData.SampleService.Models.TripPin",
+      enums: [
+        PersonGenderConfig
+      ],
+      entities: [
+        ...
+        LocationConfig,
+        PhotoConfig,
+        PersonConfig,
+        TripConfig
+      ]
+    }
+  ]
 }
 ```
 
@@ -302,7 +302,7 @@ import { TripPinConfig, TripPinModule } from './trippin';
 @NgModule({
   imports: [
     ...
-    ODataModule.forRoot(Object.assign(TripPinConfig, {baseUrl: 'https://services.odata.org/V4/TripPinServiceRW/' })),
+    ODataModule.forRoot(TripPinConfig),
     TripPinModule
   ]
   ...
