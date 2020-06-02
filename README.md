@@ -16,8 +16,8 @@ npm i angular-odata
 
 Full examples of the library:
 
- - [TripPinEntity](https://github.com/diegomvh/TripPinEntity)
- - [TripPinModel](https://github.com/diegomvh/TripPinModel)
+ - [AngularODataEntity](https://github.com/diegomvh/AngularODataEntity)
+ - [AngularODataModel](https://github.com/diegomvh/AngularODataModel)
 
 ## Usage:
 
@@ -260,7 +260,7 @@ import { PeopleService } from './trippin';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'TripPinEntity';
+  title = 'AngularODataEntity';
   constructor(private people: PeopleService) {
     this.show('scottketchum');
   }
