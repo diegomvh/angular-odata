@@ -7,7 +7,7 @@ import { ODataServiceFactory } from './services/factory';
 import { Configuration, ODATA_CONFIGURATIONS } from './types';
 
 export function createSettings(configs: Configuration[]) {
-  return new ODataSettings(configs);
+  return new ODataSettings(...configs);
 }
 
 @NgModule({

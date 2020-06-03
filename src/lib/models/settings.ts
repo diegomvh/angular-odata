@@ -5,7 +5,7 @@ import { Types } from '../utils';
 export class ODataSettings {
   configs?: Array<ODataConfig>;
 
-  constructor(configs: Configuration[]) {
+  constructor(...configs: Configuration[]) {
     this.configs = configs.map(config => new ODataConfig(config));
     if (this.configs.length > 1 && this.configs.some(c => Types.isUndefined(c.name)))
       throw new Error("Multiple APIs mode needs configuration names");
