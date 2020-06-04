@@ -9,7 +9,8 @@ import {
   ODataActionResource, 
   ODataFunctionResource, 
   ODataEntitiesAnnotations, 
-  ODataEntityAnnotations 
+  ODataEntityAnnotations, 
+  HttpOptions
 } from '../resources';
 import { EntityKey } from '../types';
 import { ODataClient } from '../client';
@@ -45,53 +46,53 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
   }
 
   // Entity Actions
-  public fetchCollection(): Observable<[T[], ODataEntitiesAnnotations]> {
+  public fetchCollection(options?: HttpOptions): Observable<[T[], ODataEntitiesAnnotations]> {
     return this.entities()
-      .get();
+      .get(options);
   }
 
-  public fetchAll(): Observable<T[]> {
+  public fetchAll(options?: HttpOptions): Observable<T[]> {
     return this.entities()
-      .all();
+      .all(options);
   }
 
-  public fetchOne(key: EntityKey<T>): Observable<[T, ODataEntityAnnotations]> {
+  public fetchOne(key: EntityKey<T>, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this.entity(key)
-      .get();
+      .get(options);
   }
 
-  public create(entity: Partial<T>): Observable<[T, ODataEntityAnnotations]> {
+  public create(entity: Partial<T>, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return this.entities()
-      .post(entity);
+      .post(entity, options);
   }
 
-  public update(entity: Partial<T>, etag?: string): Observable<[T, ODataEntityAnnotations]> {
+  public update(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<[T, ODataEntityAnnotations]> {
     return this.entity(entity)
-      .put(entity, {etag});
+      .put(entity, options);
   }
 
-  public assign(entity: Partial<T>, etag?: string): Observable<[T, ODataEntityAnnotations]> {
+  public assign(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<[T, ODataEntityAnnotations]> {
     return this.entity(entity as EntityKey<T>)
-      .patch(entity, {etag});
+      .patch(entity, options);
   }
 
-  public destroy(entity: T, etag?: string) {
+  public destroy(entity: T, options?: HttpOptions & { etag?: string }) {
     return this.entity(entity)
-      .delete({etag});
+      .delete(options);
   }
 
   // Shortcuts
-  public fetchOrCreate(entity: Partial<T>): Observable<[T, ODataEntityAnnotations]> {
-    return this.fetchOne(entity as EntityKey<T>)
+  public fetchOrCreate(entity: Partial<T>, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+    return this.fetchOne(entity as EntityKey<T>, options)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)
-          return this.create(entity as T);
+          return this.create(entity as T, options);
         else
           return throwError(error);
       }));
   }
 
-  public save(entity: Partial<T>) {
-    return this.entity(entity).hasKey() ? this.update(entity) : this.create(entity);
+  public save(entity: Partial<T>, options?: HttpOptions & {etag?: string}) {
+    return this.entity(entity).hasKey() ? this.update(entity, options) : this.create(entity, options);
   }
 }
