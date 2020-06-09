@@ -41,11 +41,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   entity(key?: EntityKey<T>) {
-    let entity = ODataEntityResource.factory<T>(
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone()
-    });
+    let entity = ODataEntityResource.factory<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
     if (!Types.isEmpty(key)) {
       entity.key(key);
     }

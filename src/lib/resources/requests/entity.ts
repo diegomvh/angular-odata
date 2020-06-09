@@ -19,13 +19,7 @@ import { ODataEntityParser } from '../../parsers';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
-  static factory<E>(client: ODataClient, opts?: {
-    segments?: ODataPathSegments,
-    options?: ODataQueryOptions}
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
+  static factory<E>(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
     options.keep(QueryOptionNames.expand, QueryOptionNames.select, QueryOptionNames.format);
     return new ODataEntityResource<E>(client, segments, options);
   }
