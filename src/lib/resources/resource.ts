@@ -23,7 +23,7 @@ import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions,
-  QueryOptionTypes
+  QueryOptionNames
 } from './query-options';
 import {
   ODataValueAnnotations,
@@ -175,7 +175,7 @@ export class ODataResource<Type> {
 
   // Query
   custom(opts?: PlainObject) {
-    return this.queryOptions.option<PlainObject>(QueryOptionTypes.custom, opts);
+    return this.queryOptions.option<PlainObject>(QueryOptionNames.custom, opts);
   }
 
   alias(name: string, value?: any) {
