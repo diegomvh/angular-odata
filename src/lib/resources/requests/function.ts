@@ -1,12 +1,11 @@
 import { Observable } from 'rxjs';
 
 import { ODataClient } from '../../client';
-import { Parser } from '../../types';
 import { Types } from '../../utils';
 
 import { PlainObject } from '../builder';
-import { ODataPathSegments, SegmentTypes, SegmentOptionTypes } from '../path-segments';
-import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
+import { ODataPathSegments, SegmentNames, SegmentOptionNames } from '../path-segments';
+import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
 
@@ -15,17 +14,10 @@ import { ODataCallableResource } from './callable';
 export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
   // Factory
-  static factory<R>(name: string, service: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parse?: string} 
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
-    segments.segment(SegmentTypes.functionCall, name).setParse(opts.parse);
-    options.keep(QueryOptionTypes.format);
-    return new ODataFunctionResource<R>(service, segments, options);
+  static factory<R>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(SegmentNames.function, name).setType(type);
+    options.keep(QueryOptionNames.format);
+    return new ODataFunctionResource<R>(client, segments, options);
   }
 
   // Parameters
@@ -34,9 +26,9 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
     if (!segment)
       throw new Error(`FunctionResourse dosn't have segment`);
     if (Types.isUndefined(params))
-      return segment.option(SegmentOptionTypes.parameters);
+      return segment.option(SegmentOptionNames.parameters);
     
-    return segment.option(SegmentOptionTypes.parameters, params);
+    return segment.option(SegmentOptionNames.parameters, params);
   }
 
   //GET

@@ -1,24 +1,18 @@
 import { Observable } from 'rxjs';
 
-import { ODataPathSegments, SegmentTypes } from '../path-segments';
-import { ODataQueryOptions, QueryOptionTypes } from '../query-options';
+import { ODataPathSegments, SegmentNames } from '../path-segments';
+import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataResource } from '../resource';
 import { ODataClient } from '../../client';
-import { $COUNT, Parser } from '../../types';
+import { $COUNT } from '../../types';
 import { HttpOptions } from '../http-options';
 
 export class ODataCountResource extends ODataResource<any> {
   // Factory
-  static factory(service: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions} 
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
-    segments.segment(SegmentTypes.count, $COUNT).setParse('number');
-    options.keep(QueryOptionTypes.filter, QueryOptionTypes.search);
-    return new ODataCountResource(service, segments, options);
+  static factory(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(SegmentNames.count, $COUNT).setType('number');
+    options.keep(QueryOptionNames.filter, QueryOptionNames.search);
+    return new ODataCountResource(client, segments, options);
   }
 
   get(options?: HttpOptions): Observable<number> {

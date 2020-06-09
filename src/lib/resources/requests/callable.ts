@@ -2,7 +2,7 @@ import { ODataResource } from '../resource';
 import { ODataEntitiesAnnotations, ODataAnnotations, ODataEntityAnnotations, ODataValueAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';
 import { Observable } from 'rxjs';
-import { SegmentTypes } from '../path-segments';
+import { SegmentNames } from '../path-segments';
 import { Types } from '../../utils';
 import { ODataModel } from '../../models/model';
 import { ODATA_CONTEXT } from '../../types';
@@ -18,7 +18,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
 
   // EntitySet
   entitySet(name?: string) {
-    let segment = this.pathSegments.segment(SegmentTypes.entitySet);
+    let segment = this.pathSegments.segment(SegmentNames.entitySet);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))

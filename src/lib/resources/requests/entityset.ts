@@ -1,16 +1,16 @@
 import { Observable, empty } from 'rxjs';
 
 import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
-import { QueryOptionTypes } from '../query-options';
+import { QueryOptionNames } from '../query-options';
 import { ODataClient } from '../../client';
-import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataPathSegments, SegmentNames } from '../path-segments';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataQueryOptions } from '../query-options';
 import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
-import { EntityKey, Parser } from '../../types';
+import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
 import { expand, concatMap, toArray } from 'rxjs/operators';
 import { Types } from '../../utils';
@@ -20,16 +20,9 @@ import { ODataModel } from '../../models';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
-  static factory<E>(name: string, client: ODataClient, opts?: {
-    segments?: ODataPathSegments, 
-    options?: ODataQueryOptions,
-    parse?: string 
-  }) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
-    segments.segment(SegmentTypes.entitySet, name).setParse(opts.parse);
-    options.keep(QueryOptionTypes.filter, QueryOptionTypes.orderBy, QueryOptionTypes.skip, QueryOptionTypes.transform, QueryOptionTypes.top, QueryOptionTypes.search, QueryOptionTypes.format);
+  static factory<E>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(SegmentNames.entitySet, name).setType(type);
+    options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
     return new ODataEntitySetResource<E>(client, segments, options);
   }
 
@@ -39,7 +32,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   // EntitySet
   entitySet(name?: string) {
-    let segment = this.pathSegments.segment(SegmentTypes.entitySet);
+    let segment = this.pathSegments.segment(SegmentNames.entitySet);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))
@@ -65,36 +58,20 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.pathSegments.clone(),
       this.queryOptions.clone()
     );
-    entitySet.pathSegments.segment(SegmentTypes.type, type).setParse(type);
+    entitySet.pathSegments.segment(SegmentNames.type, type).setType(type);
     return entitySet;
   }
 
   action<A>(name: string, type?: string) {
-    return ODataActionResource.factory<A>(
-      name,
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parse: type 
-    });
+    return ODataActionResource.factory<A>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<F>(name: string, type?: string) {
-    return ODataFunctionResource.factory<F>(
-      name,
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parse: type 
-    });
+    return ODataFunctionResource.factory<F>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {
-    return ODataCountResource.factory(
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone()
-    });
+    return ODataCountResource.factory(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   // Client requests
@@ -112,43 +89,43 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   // Query
   select(opts?: Select<T>) {
-    return this.queryOptions.option<Select<T>>(QueryOptionTypes.select, opts);
+    return this.queryOptions.option<Select<T>>(QueryOptionNames.select, opts);
   }
 
   expand(opts?: Expand<T>) {
-    return this.queryOptions.option<Expand<T>>(QueryOptionTypes.expand, opts);
+    return this.queryOptions.option<Expand<T>>(QueryOptionNames.expand, opts);
   }
 
   transform(opts?: Transform<T>) {
-    return this.queryOptions.option<Transform<T>>(QueryOptionTypes.transform, opts);
+    return this.queryOptions.option<Transform<T>>(QueryOptionNames.transform, opts);
   }
 
   search(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionTypes.search, opts);
+    return this.queryOptions.option<string>(QueryOptionNames.search, opts);
   }
 
   filter(opts?: Filter) {
-    return this.queryOptions.option(QueryOptionTypes.filter, opts);
+    return this.queryOptions.option(QueryOptionNames.filter, opts);
   }
 
   orderBy(opts?: OrderBy<T>) {
-    return this.queryOptions.option(QueryOptionTypes.orderBy, opts);
+    return this.queryOptions.option(QueryOptionNames.orderBy, opts);
   }
 
   format(opts?: string) {
-    return this.queryOptions.option(QueryOptionTypes.format, opts);
+    return this.queryOptions.option(QueryOptionNames.format, opts);
   }
 
   top(opts?: number) {
-    return this.queryOptions.option(QueryOptionTypes.top, opts);
+    return this.queryOptions.option(QueryOptionNames.top, opts);
   }
 
   skip(opts?: number) {
-    return this.queryOptions.option(QueryOptionTypes.skip, opts);
+    return this.queryOptions.option(QueryOptionNames.skip, opts);
   }
 
   skiptoken(opts?: string) {
-    return this.queryOptions.option(QueryOptionTypes.skiptoken, opts);
+    return this.queryOptions.option(QueryOptionNames.skiptoken, opts);
   }
   
   // Custom

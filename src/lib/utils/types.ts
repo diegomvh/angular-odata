@@ -11,10 +11,6 @@ export const Types = {
     return Types.isNull(value) || Types.isUndefined(value);
   },
 
-  isNotNullNorUndefined(value: any): boolean {
-    return !Types.isNull(value) && !Types.isUndefined(value);
-  },
-
   isObject(value: any): boolean {
     return typeof value === 'object' && !Types.isNull(value);
   },

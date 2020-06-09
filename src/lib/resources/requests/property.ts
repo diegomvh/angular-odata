@@ -4,47 +4,29 @@ import { ODataValueResource } from './value';
 
 import { ODataResource } from '../resource';
 import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataPathSegments, SegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
-
   // Factory
-  static factory<P>(name: string, client: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parse?: string} 
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
-    segments.segment(SegmentTypes.property, name).setParse(opts.parse)
+  static factory<P>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(SegmentNames.property, name).setType(type)
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options);
   }
 
   // Segments
   value() {
-    return ODataValueResource.factory<T>(
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone()
-    });
+    return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
-    let parse = this.parser instanceof ODataEntityParser? 
+    let type = this.parser instanceof ODataEntityParser? 
       this.parser.typeFor(name) : null;
-    return ODataPropertyResource.factory<P>(
-      name,
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parse
-    });
+    return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;

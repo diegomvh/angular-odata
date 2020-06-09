@@ -7,7 +7,7 @@ import { Types, isoStringToDate } from '../utils/index';
 import { OptionHandler } from './query-options';
 import { PATH_SEPARATOR } from '../types';
 
-export enum SegmentTypes {
+export enum SegmentNames {
   batch = 'batch',
   metadata = 'metadata',
   entitySet = 'entitySet',
@@ -15,35 +15,35 @@ export enum SegmentTypes {
   type = 'type',
   property = 'property',
   navigationProperty = 'navigationProperty',
-  ref = 'ref',
+  reference = 'reference',
   value = 'value',
   count = 'count',
-  functionCall = 'functionCall',
-  actionCall = 'actionCall'
+  function = 'function',
+  action = 'action'
 }
 
-export enum SegmentOptionTypes {
+export enum SegmentOptionNames {
   key = 'key',
   parameters = 'parameters'
 }
 
-type ODataSegment = {
-  type: string;
+export type ODataSegment = {
+  name: string;
   path: string;
-  parse: string;
+  type: string;
   options: PlainObject;
 }
 
 const pathSegmentsBuilder = (segment: ODataSegment): string => {
-  switch (segment.type) {
-    case SegmentTypes.functionCall:
-      let parameters = segment.options[SegmentOptionTypes.parameters];
+  switch (segment.name) {
+    case SegmentNames.function:
+      let parameters = segment.options[SegmentOptionNames.parameters];
       return (parameters ?
         buildQuery({ func: { [segment.path]: parameters }}) :
         buildQuery({ func: segment.path})
       ).slice(1);
     default:
-      let key = segment.options[SegmentOptionTypes.key];
+      let key = segment.options[SegmentOptionNames.key];
       if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
         key = guid(key);
       }
@@ -55,7 +55,7 @@ export class ODataPathSegments {
   protected segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments = (segments || []).map(({type, path, parse, options}) => ({type, path, parse, options: options || {}}));
+    this.segments = (segments || []).map(({name, path, type, options}) => ({name, path, type, options: options || {}}));
   }
 
   path(): string {
@@ -64,9 +64,13 @@ export class ODataPathSegments {
     return chunks.join(PATH_SEPARATOR);
   }
 
+  types(): string[] {
+    return this.segments.map(s => s.type).filter(t => !Types.isNullOrUndefined(t));
+  }
+
   toJSON() {
     return this.segments.map(segment => { 
-      let json = <any>{ type: segment.type, path: segment.path, parse: segment.parse };
+      let json = <any>{ name: segment.name, path: segment.path, type: segment.type };
       let options = isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
       if (!Types.isEmpty(options))
         json.options = options;
@@ -78,16 +82,11 @@ export class ODataPathSegments {
     return new ODataPathSegments(this.toJSON());
   }
 
-  find(type: string, path?: string) {
+  find(name: string, path?: string) {
     // Backward search
     return [...this.segments].reverse().find(s =>
-      s.type === type &&
+      s.name === name &&
       (Types.isUndefined(path) || s.path === path));
-  }
-
-  first(): SegmentHandler {
-    if (this.segments.length > 0)
-      return new SegmentHandler(this.segments[0]);
   }
 
   last(): SegmentHandler {
@@ -95,22 +94,22 @@ export class ODataPathSegments {
       return new SegmentHandler(this.segments[this.segments.length - 1]);
   }
 
-  segment(type: string, path?: string): SegmentHandler {
-    let segment = this.find(type, path);
+  segment(name: string, path?: string): SegmentHandler {
+    let segment = this.find(name, path);
     if (!segment && !Types.isUndefined(path)) {
-      segment = { type, path: path, options: {} } as ODataSegment;
+      segment = { name, path, options: {} } as ODataSegment;
       this.segments.push(segment);
     }
     if (segment)
       return new SegmentHandler(segment);
   }
 
-  has(type: string, path?: string) {
-    return !!this.find(type, path);
+  has(name: string, path?: string) {
+    return !!this.find(name, path);
   }
 
-  remove(type: string, path?: string) {
-    let segment = this.find(type, path);
+  remove(name: string, path?: string) {
+    let segment = this.find(name, path);
     this.segments = this.segments.filter(s => s !== segment);
   }
 }
@@ -121,16 +120,16 @@ class SegmentHandler {
     this.options = this.segment.options;
   }
 
+  get name() {
+    return this.segment.name;
+  }
+
   get type() {
     return this.segment.type;
   }
 
-  get parse() {
-    return this.segment.parse;
-  }
-
-  setParse(value: string) {
-    this.segment.parse = value;
+  setType(value: string) {
+    this.segment.type = value;
   }
 
   get path() {
@@ -142,7 +141,7 @@ class SegmentHandler {
   }
 
   // Option Handler
-  option<T>(type: SegmentOptionTypes, opts?: T) {
+  option<T>(type: SegmentOptionNames, opts?: T) {
     if (!Types.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type as any);

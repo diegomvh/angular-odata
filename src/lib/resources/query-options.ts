@@ -2,10 +2,10 @@ import buildQuery, { alias, Alias } from './builder';
 import { PlainObject } from './builder';
 //import buildQuery from 'odata-query';
 
-import { isoStringToDate, Types, escapeIllegalChars } from '../utils/index';
-import { PARAM_SEPARATOR, VALUE_SEPARATOR, ODATA_PARAM_PREFIX, ODATA_ALIAS_PREFIX, parseQuery } from '../types';
+import { isoStringToDate, Types } from '../utils/index';
+import { parseQuery } from '../types';
 
-export enum QueryOptionTypes {
+export enum QueryOptionNames {
   // System options
   select = 'select',
   filter = 'filter',
@@ -31,16 +31,16 @@ export class ODataQueryOptions {
   // Params
   params(): PlainObject {
     let options = [
-      QueryOptionTypes.select,
-      QueryOptionTypes.filter,
-      QueryOptionTypes.search,
-      QueryOptionTypes.transform,
-      QueryOptionTypes.orderBy,
-      QueryOptionTypes.top,
-      QueryOptionTypes.skip,
-      QueryOptionTypes.skiptoken,
-      QueryOptionTypes.expand,
-      QueryOptionTypes.format]
+      QueryOptionNames.select,
+      QueryOptionNames.filter,
+      QueryOptionNames.search,
+      QueryOptionNames.transform,
+      QueryOptionNames.orderBy,
+      QueryOptionNames.top,
+      QueryOptionNames.skip,
+      QueryOptionNames.skiptoken,
+      QueryOptionNames.expand,
+      QueryOptionNames.format]
         .filter(key => !Types.isEmpty(this.options[key]))
         .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
 
@@ -48,7 +48,7 @@ export class ODataQueryOptions {
     let params = (query) ? parseQuery(query.substr(1)) : {};
 
     // Custom
-    let custom = this.options[QueryOptionTypes.custom] || {};
+    let custom = this.options[QueryOptionNames.custom] || {};
     Object.assign(params, custom);
 
     return params;
@@ -63,24 +63,24 @@ export class ODataQueryOptions {
   }
 
   // Option Handler
-  option<T>(type: QueryOptionTypes, opts?: T) {
+  option<T>(type: QueryOptionNames, opts?: T) {
     if (!Types.isUndefined(opts))
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type);
   }
 
   // Query Options tools
-  has(type: QueryOptionTypes) {
+  has(type: QueryOptionNames) {
     return !Types.isUndefined(this.options[type]);
   }
 
-  remove(...types: QueryOptionTypes[]) {
+  remove(...types: QueryOptionNames[]) {
     types.forEach(type => this.option(type).clear());
   }
 
-  keep(...types: QueryOptionTypes[]) {
+  keep(...types: QueryOptionNames[]) {
     this.options = Object.keys(this.options)
-      .filter((k: QueryOptionTypes) => types.indexOf(k) !== -1)
+      .filter((k: QueryOptionNames) => types.indexOf(k) !== -1)
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
@@ -96,7 +96,7 @@ export class ODataQueryOptions {
 }
 
 export class OptionHandler<T> {
-  constructor(private o: PlainObject, private t: QueryOptionTypes) { }
+  constructor(private o: PlainObject, private t: QueryOptionNames) { }
 
   get name() {
     return this.t;

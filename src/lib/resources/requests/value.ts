@@ -1,25 +1,19 @@
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataPathSegments, SegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
-import { $VALUE, Parser } from '../../types';
+import { $VALUE } from '../../types';
 import { HttpOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   // Factory
-  static factory<V>(service: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions}
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
-    segments.segment(SegmentTypes.value, $VALUE);
+  static factory<V>(client: ODataClient, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(SegmentNames.value, $VALUE).setType(type);
     options.clear();
-    return new ODataValueResource<V>(service, segments, options);
+    return new ODataValueResource<V>(client, segments, options);
   }
 
   arraybuffer(options?: HttpOptions): Observable<ArrayBuffer> {

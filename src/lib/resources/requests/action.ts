@@ -1,24 +1,16 @@
 import { Observable } from 'rxjs';
 
-import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataPathSegments, SegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataCallableResource } from './callable';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
-import { Parser } from '../../types';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
 
 export class ODataActionResource<T> extends ODataCallableResource<T> {
   // Factory
-  static factory<R>(name: string, client: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parse?: string}
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
-    segments.segment(SegmentTypes.actionCall, name).setParse(opts.parse);
+  static factory<R>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(SegmentNames.action, name).setType(type);
     options.clear();
     return new ODataActionResource<R>(client, segments, options);
   }

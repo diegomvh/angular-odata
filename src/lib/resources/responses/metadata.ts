@@ -378,14 +378,14 @@ export class ODataMetadata {
         let element: Element;
         for (let index = 0; index < children.length; index++) {
             if (children.item(index).nodeName === tag) {
-                if (Types.isNotNullNorUndefined(element)) {
+                if (!Types.isNullOrUndefined(element)) {
                     throw new Error('Expected one ' + tag);
                 }
                 element = children.item(index);
             }
         }
 
-        if (Types.isNotNullNorUndefined(element)) {
+        if (!Types.isNullOrUndefined(element)) {
             const attributes: NamedNodeMap = element.attributes;
             const fieldValues: any[] = this.getFieldValues(fieldNames, attributes, element);
             switch (tag) {
@@ -689,17 +689,17 @@ export class ODataMetadata {
 
     protected getAttributeValue(attributes: NamedNodeMap, attributeName: string): string {
         const attribute: Attr = attributes.getNamedItem(attributeName);
-        if (Types.isNotNullNorUndefined(attribute)) {
+        if (!Types.isNullOrUndefined(attribute)) {
             return attribute.nodeValue;
         }
         return undefined;
     }
 
     protected propertyValueToNumber(attributeValue: string): number {
-        return Types.isNotNullNorUndefined(attributeValue) ? Number(attributeValue) : undefined;
+        return !Types.isNullOrUndefined(attributeValue) ? Number(attributeValue) : undefined;
     }
 
     protected propertyValueToBoolean(attributeValue: string): boolean {
-        return Types.isNotNullNorUndefined(attributeValue) ? attributeValue === 'true' : undefined;
+        return !Types.isNullOrUndefined(attributeValue) ? attributeValue === 'true' : undefined;
     }
 }

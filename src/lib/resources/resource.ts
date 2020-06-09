@@ -37,28 +37,31 @@ export class ODataResource<Type> {
   protected client: ODataClient;
   protected pathSegments: ODataPathSegments;
   protected queryOptions: ODataQueryOptions;
-  protected parser: Parser<Type> | null;
 
   constructor(
     client: ODataClient,
     segments?: ODataPathSegments,
-    options?: ODataQueryOptions,
-    parser?: Parser<Type>
+    options?: ODataQueryOptions
   ) {
     this.client = client;
     this.pathSegments = segments || new ODataPathSegments();
     this.queryOptions = options || new ODataQueryOptions();
-    this.parser = parser;
+  }
+
+  get parser(): Parser<Type> | null {
+    let segment = this.pathSegments.last();
+    if (segment && segment.type)
+      return this.client.parserForType(segment.type);
   }
 
   type(): string {
-    if (this.parser)
-      return this.parser.type;
+    let segment = this.pathSegments.last();
+    if (segment)
+      return segment.type;
   }
 
-  namespace(): string {
-    if (this.parser)
-      return this.parser.namespace;
+  types(): string[] {
+    return this.pathSegments.types();
   }
 
   // Proxy to client
@@ -90,7 +93,7 @@ export class ODataResource<Type> {
   }
 
   protected applyType(type: string) {
-    this.parser = this.parserForType(type);
+    this.pathSegments.last().setType(type);
   }
 
   protected serialize(obj: Type | Partial<Type>): any {

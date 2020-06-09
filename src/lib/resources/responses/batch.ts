@@ -53,7 +53,7 @@ export class ODataBatch {
                     batchPartStartIndex = undefined;
                 }
                 continue;
-            } else if (Types.isNotNullNorUndefined(odataResponseCS) && batchBodyLine.startsWith(ODataBatch.CONTENT_ID)) {
+            } else if (!Types.isNullOrUndefined(odataResponseCS) && batchBodyLine.startsWith(ODataBatch.CONTENT_ID)) {
                 contentId = Number(this.getHeaderValue(batchBodyLine));
             } else if (batchBodyLine.startsWith(ODataBatch.HTTP11)) {
                 batchPartStartIndex = index;
@@ -64,7 +64,7 @@ export class ODataBatch {
                 }
 
                 const odataResponse: HttpResponse<any> = this.createODataResponse(batchBodyLines, batchPartStartIndex, index - 1);
-                if (Types.isNotNullNorUndefined(odataResponseCS)) {
+                if (!Types.isNullOrUndefined(odataResponseCS)) {
                     odataResponseCS[contentId] = odataResponse;
                 } else {
                     this.odataResponses.push(odataResponse);
@@ -73,9 +73,9 @@ export class ODataBatch {
                 if (batchBodyLine === boundaryDelimiterBatch || batchBodyLine === boundaryDelimiterCS) {
                     batchPartStartIndex = index + 1;
                 } else if (batchBodyLine === boundaryEndBatch || batchBodyLine === boundaryEndCS) {
-                    if (Types.isNotNullNorUndefined(odataResponseCS)) {
+                    if (!Types.isNullOrUndefined(odataResponseCS)) {
                         for (const response of odataResponseCS) {
-                            if (Types.isNotNullNorUndefined(response)) {
+                            if (!Types.isNullOrUndefined(response)) {
                                 this.odataResponses.push(response);
                             }
                         }

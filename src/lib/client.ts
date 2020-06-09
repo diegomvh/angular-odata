@@ -13,8 +13,11 @@ import {
   ODataFunctionResource, 
   ODataActionResource, 
   ODataEntityResource,
-  SegmentOptionTypes, 
-  SegmentTypes, 
+  SegmentOptionNames, 
+  SegmentNames,
+  ODataPathSegments,
+  ODataSegment,
+  ODataQueryOptions, 
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
@@ -27,7 +30,7 @@ export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   endpointUrl(resource: ODataResource<any>) {
-    let config = this.settings.configForType(resource.type());
+    let config = this.settings.findConfigForTypes(resource.types());
     return `${config.serviceRootUrl}${resource}`;
   }
 
@@ -65,19 +68,18 @@ export class ODataClient {
     return Collection || ODataCollection;
   }
 
-  fromJSON<T>(json: {type: string | null, path: any[], query: PlainObject}): ODataResource<T> {
-    let parser = json.type? this.parserForType<T>(json.type) : null;
-    let lastSegment = json.path[json.path.length - 1];
-    let Ctor = (lastSegment.type === SegmentTypes.entitySet && lastSegment.options && SegmentOptionTypes.key in lastSegment.options) ? ODataEntityResource :
+  fromJSON<T extends ODataResource<any>>(json: {segments: ODataSegment[], options: PlainObject}): T {
+    let lastSegment = json.segments[json.segments.length - 1];
+    let Ctor = (lastSegment.name === SegmentNames.entitySet && lastSegment.options && SegmentOptionNames.key in lastSegment.options) ? ODataEntityResource :
       {
-        [SegmentTypes.metadata]: ODataMetadataResource,
-        [SegmentTypes.batch]: ODataBatchResource,
-        [SegmentTypes.singleton]: ODataSingletonResource,
-        [SegmentTypes.entitySet]: ODataEntitySetResource,
-        [SegmentTypes.actionCall]: ODataActionResource,
-        [SegmentTypes.functionCall]: ODataFunctionResource
-      }[lastSegment.type];
-    return new Ctor(this, json.path, json.query, parser) as ODataResource<T>;
+        [SegmentNames.metadata]: ODataMetadataResource,
+        [SegmentNames.batch]: ODataBatchResource,
+        [SegmentNames.singleton]: ODataSingletonResource,
+        [SegmentNames.entitySet]: ODataEntitySetResource,
+        [SegmentNames.action]: ODataActionResource,
+        [SegmentNames.function]: ODataFunctionResource
+      }[lastSegment.name];
+    return new Ctor(this, new ODataPathSegments(json.segments), new ODataQueryOptions(json.options)) as T;
   }
 
   // Requests
@@ -90,21 +92,21 @@ export class ODataClient {
   }
 
   singleton<T>(name: string, type?: string) {
-    return ODataSingletonResource.factory<T>(name, this, {parse: type});
+    return ODataSingletonResource.factory<T>(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    return ODataEntitySetResource.factory<T>(name, this, {parse: type});
+    return ODataEntitySetResource.factory<T>(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   // Unbound Action
   action<T>(name: string, returnType?: string): ODataActionResource<T> {
-    return ODataActionResource.factory(name, this, {parse: returnType});
+    return ODataActionResource.factory(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   // Unbound Function
   function<T>(name: string, params: any | null, returnType?: string): ODataFunctionResource<T> {
-    let func = ODataFunctionResource.factory<T>(name, this, {parse: returnType});
+    let func = ODataFunctionResource.factory<T>(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
     if (params)
       func.parameters(params);
     return func;
@@ -342,8 +344,8 @@ export class ODataClient {
 
     let config = options.config ? 
       this.settings.config(options.config) : 
-      this.settings.configForType(resource.namespace());
-    if (!config) throw new Error(`The namespace: '${resource.namespace()}' does not belong to any known configuration`);
+      this.settings.findConfigForTypes(resource.types());
+    if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
     // The Url
     const [resourcePath, resourceParams] = resource.pathAndParams();

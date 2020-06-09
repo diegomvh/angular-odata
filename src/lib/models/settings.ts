@@ -19,10 +19,14 @@ export class ODataSettings {
       return config;
   }
 
-  public configForType(namespace: string) {
+  public findConfigForTypes(types: string[]) {
     if (this.configs.length === 1) return this.configs[0];
-    let config = this.configs.find(c => c.schemas.some(s => !Types.isNullOrUndefined(namespace) && namespace.startsWith(s.namespace)));
+    let config = this.configs.find(c => c.schemas.some(s => types.some(type => type.startsWith(s.namespace))));
     if (config)
       return config;
+  }
+
+  public configForType(type: string) {
+    return this.findConfigForTypes([type]);
   }
 }

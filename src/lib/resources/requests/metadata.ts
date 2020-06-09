@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { ODataPathSegments, SegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
@@ -18,7 +18,7 @@ export class ODataMetadataResource extends ODataResource<any> {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
 
-    segments.segment(SegmentTypes.metadata, $METADATA);
+    segments.segment(SegmentNames.metadata, $METADATA);
     options.clear();
     return new ODataMetadataResource(service, segments, options);
   }

@@ -1,10 +1,9 @@
 import { Observable } from 'rxjs';
 
-import { Parser } from '../../types';
 import { ODataClient } from '../../client';
 import { Expand, Select } from '../builder';
-import { QueryOptionTypes } from '../query-options';
-import { ODataPathSegments, SegmentTypes } from '../path-segments';
+import { QueryOptionNames } from '../query-options';
+import { ODataPathSegments, SegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
 
@@ -19,63 +18,31 @@ import { ODataEntityParser } from '../../parsers';
 export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Factory
-  static factory<R>(name: string, client: ODataClient, opts?: {
-    segments?: ODataPathSegments,
-    options?: ODataQueryOptions,
-    parse?: string
-  }
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
-    segments.segment(SegmentTypes.singleton, name).setParse(opts.parse);
-    options.keep(QueryOptionTypes.format);
+  static factory<R>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(SegmentNames.singleton, name).setType(type);
+    options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(client, segments, options);
   }
 
   // Segments
   navigationProperty<N>(name: string) {
-    let parse = this.parser instanceof ODataEntityParser? 
+    let type = this.parser instanceof ODataEntityParser? 
       this.parser.typeFor(name) : null;
-    return ODataNavigationPropertyResource.factory<N>(
-      name,
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parse
-    });
+    return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
-    let parse = this.parser instanceof ODataEntityParser? 
+    let type = this.parser instanceof ODataEntityParser? 
       this.parser.typeFor(name) : null;
-    return ODataPropertyResource.factory<P>(
-      name,
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parse
-    });
+    return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   action<A>(name: string, type?: string) {
-    return ODataActionResource.factory<A>(
-      name,
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parse: type
-    });
+    return ODataActionResource.factory<A>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<F>(name: string, type?: string) {
-    return ODataFunctionResource.factory<F>(
-      name,
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parse: type
-    });
+    return ODataFunctionResource.factory<F>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   // Client Requests
@@ -111,14 +78,14 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Query
   select(opts?: Select<T>) {
-    return this.queryOptions.option<Select<T>>(QueryOptionTypes.select, opts);
+    return this.queryOptions.option<Select<T>>(QueryOptionNames.select, opts);
   }
 
   expand(opts?: Expand<T>) {
-    return this.queryOptions.option<Expand<T>>(QueryOptionTypes.expand, opts);
+    return this.queryOptions.option<Expand<T>>(QueryOptionNames.expand, opts);
   }
 
   format(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionTypes.format, opts);
+    return this.queryOptions.option<string>(QueryOptionNames.format, opts);
   }
 }
