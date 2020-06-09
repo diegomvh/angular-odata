@@ -27,38 +27,40 @@ export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   endpointUrl(resource: ODataResource<any>) {
-    let config = this.settings.configForNamespace(resource.type());
+    let config = this.settings.configForType(resource.type());
     return `${config.serviceRootUrl}${resource}`;
   }
 
   // Resolve Building Blocks
   entityConfigForType<T>(type: string): ODataEntityConfig<T> | null {
-    let config = this.settings.configForNamespace(type);
+    let config = this.settings.configForType(type);
     return config.entityConfigForType<T>(type);
   }
 
   serviceConfigForType(type: string): ODataServiceConfig | null {
-    let config = this.settings.configForNamespace(type);
+    let config = this.settings.configForType(type);
     return config.serviceConfigForType(type);
   }
 
   parserForType<T>(type: string): Parser<T> | null {
-    let config = this.settings.configForNamespace(type);
-    let parser = config.parserForType(type) as Parser<T>;
+    let parser: Parser<T>;
+    let config = this.settings.configForType(type);
+    if (config)
+      parser = config.parserForType(type) as Parser<T>;
     if (!parser && type in PARSERS) {
-      parser = PARSERS[type];
+      parser = PARSERS[type] as Parser<T>;
     }
     return parser;
   }
 
   modelForType(type: string): typeof ODataModel {
-    let config = this.settings.configForNamespace(type);
+    let config = this.settings.configForType(type);
     let Model = config.modelForType(type) as typeof ODataModel;
     return Model || ODataModel;
   }
 
   collectionForType(type: string): typeof ODataCollection {
-    let config = this.settings.configForNamespace(type);
+    let config = this.settings.configForType(type);
     let Collection = config.collectionForType(type) as typeof ODataCollection;
     return Collection || ODataCollection;
   }
@@ -88,28 +90,24 @@ export class ODataClient {
   }
 
   singleton<T>(name: string, type?: string) {
-    let parser = type? this.parserForType<T>(type) : null;
-    return ODataSingletonResource.factory<T>(name, this, {parser});
+    return ODataSingletonResource.factory<T>(name, this, {parse: type});
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    let parser = type? this.parserForType<T>(type) : null;
-    return ODataEntitySetResource.factory<T>(name, this, {parser});
+    return ODataEntitySetResource.factory<T>(name, this, {parse: type});
   }
 
   // Unbound Action
   action<T>(name: string, returnType?: string): ODataActionResource<T> {
-    let parser = returnType? this.parserForType<T>(returnType) : null;
-    return ODataActionResource.factory(name, this, {parser});
+    return ODataActionResource.factory(name, this, {parse: returnType});
   }
 
   // Unbound Function
   function<T>(name: string, params: any | null, returnType?: string): ODataFunctionResource<T> {
-    let parser = returnType? this.parserForType<T>(returnType) : null;
-    let query = ODataFunctionResource.factory(name, this, {parser});
+    let func = ODataFunctionResource.factory<T>(name, this, {parse: returnType});
     if (params)
-      query.parameters(params);
-    return query;
+      func.parameters(params);
+    return func;
   }
 
   //Merge Headers
@@ -344,7 +342,8 @@ export class ODataClient {
 
     let config = options.config ? 
       this.settings.config(options.config) : 
-      this.settings.configForNamespace(resource.namespace());
+      this.settings.configForType(resource.namespace());
+    if (!config) throw new Error(`The namespace: '${resource.namespace()}' does not belong to any known configuration`);
 
     // The Url
     const [resourcePath, resourceParams] = resource.pathAndParams();

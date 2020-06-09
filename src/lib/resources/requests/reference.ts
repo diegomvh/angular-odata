@@ -12,16 +12,14 @@ export class ODataReferenceResource extends ODataResource<any> {
   // Factory
   static factory(service: ODataClient, opts?: {
       segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parser?: Parser<any>}
+      options?: ODataQueryOptions}
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
     segments.segment(SegmentTypes.ref, $REFERENCE);
     options.clear();
-    return new ODataReferenceResource(service, segments, options, parser);
+    return new ODataReferenceResource(service, segments, options);
   }
 
   // Client Requests

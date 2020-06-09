@@ -150,10 +150,10 @@ export class ODataResource<Type> {
     return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path
   }
 
-  clone<Re extends ODataResource<Type>>(): Re {
+  clone(): ODataResource<Type> {
     let Ctor = <typeof ODataResource>this.constructor;
-    return (new Ctor(this.client, this.pathSegments.clone(), this.queryOptions.clone(), this.parser)) as Re;
-  }
+    return (new Ctor(this.client, this.pathSegments.clone(), this.queryOptions.clone())) as ODataResource<Type>;
+  };
 
   toJSON() {
     let json = <any>{ path: this.pathSegments.toJSON() };

@@ -12,14 +12,14 @@ export class ODataServiceFactory {
   createEntityService<T>(path: string, type?: string): ODataEntityService<T> {
     return new class extends ODataEntityService<T> {
       static path = path;
-      static entity = type || "";
+      static entity = type;
     }(this.client);
   }
 
   createModelService<T, M extends ODataModel<T>, C extends ODataCollection<T, M>>(path: string, type?: string): ODataModelService<T, M, C> {
     return new class extends ODataModelService<T, M, C> {
       static path = path;
-      static entity = type || "";
+      static entity = type;
     }(this.client);
   }
 }

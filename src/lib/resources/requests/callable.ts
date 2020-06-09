@@ -22,8 +22,8 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))
-      segment.name = name;
-    return segment.name;
+      segment.setPath(name);
+    return segment.path;
   }
 
   abstract call(

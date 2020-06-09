@@ -18,15 +18,14 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   static factory<R>(name: string, service: ODataClient, opts?: {
       segments?: ODataPathSegments, 
       options?: ODataQueryOptions,
-      parser?: Parser<R>}
+      parse?: string} 
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
-    segments.segment(SegmentTypes.functionCall, name);
+    segments.segment(SegmentTypes.functionCall, name).setParse(opts.parse);
     options.keep(QueryOptionTypes.format);
-    return new ODataFunctionResource<R>(service, segments, options, parser);
+    return new ODataFunctionResource<R>(service, segments, options);
   }
 
   // Parameters

@@ -11,16 +11,14 @@ export class ODataCountResource extends ODataResource<any> {
   // Factory
   static factory(service: ODataClient, opts?: {
       segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parser?: Parser<any>}
+      options?: ODataQueryOptions} 
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
-    segments.segment(SegmentTypes.count, $COUNT);
+    segments.segment(SegmentTypes.count, $COUNT).setParse('number');
     options.keep(QueryOptionTypes.filter, QueryOptionTypes.search);
-    return new ODataCountResource(service, segments, options, parser);
+    return new ODataCountResource(service, segments, options);
   }
 
   get(options?: HttpOptions): Observable<number> {

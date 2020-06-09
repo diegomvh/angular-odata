@@ -37,7 +37,6 @@ export interface ODataParser<Type> extends Parser<Type> {
 
 export class ODataEnumParser<Type> implements ODataParser<Type> {
   name: string;
-  namespace: string;
   type: string;
   flags?: boolean;
   stringAsEnum?: boolean;
@@ -45,8 +44,7 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
 
   constructor(meta: EnumConfig<Type>, namespace: string) {
     this.name = meta.name;
-    this.namespace = namespace;
-    this.type = `${this.namespace}.${this.name}`;
+    this.type = `${namespace}.${this.name}`;
     this.flags = meta.flags;
     this.members = meta.members;
   }
@@ -107,10 +105,6 @@ export class ODataFieldParser<T> implements ODataParser<T> {
     Object.assign(this, field);
   }
 
-  get namespace() {
-    return this.entity.namespace;
-  }
-
   resolve(value: any) {
     return this.ref.split('/').reduce((acc, name) => acc[name], value);
   }
@@ -169,7 +163,6 @@ export class ODataFieldParser<T> implements ODataParser<T> {
 
 export class ODataEntityParser<Type> implements ODataParser<Type> {
   name: string;
-  namespace: string;
   type: string;
   base: string;
   parent: ODataEntityParser<any>;
@@ -178,8 +171,7 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
   constructor(config: EntityConfig<Type>, namespace: string) {
     this.name = config.name;
     this.base = config.base;
-    this.namespace = namespace;
-    this.type = `${this.namespace}.${this.name}`;
+    this.type = `${namespace}.${this.name}`;
     this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataFieldParser(name, f as Field, this));
   }
@@ -233,12 +225,12 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
     };
   }
 
-  parserFor<E>(name: string): Parser<E> {
+  typeFor(name: string): string {
     let field = this.fields.find(f => f.name === name);
     if (field)
-      return field.parser || field;
+      return field.type;
     else if (this.parent) 
-      return this.parent.parserFor(name);
+      return this.parent.typeFor(name);
   }
 
   keys() { 

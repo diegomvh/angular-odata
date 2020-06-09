@@ -23,15 +23,14 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   static factory<E>(name: string, client: ODataClient, opts?: {
     segments?: ODataPathSegments, 
     options?: ODataQueryOptions,
-    parser?: Parser<E> 
+    parse?: string 
   }) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
-    segments.segment(SegmentTypes.entitySet, name);
+    segments.segment(SegmentTypes.entitySet, name).setParse(opts.parse);
     options.keep(QueryOptionTypes.filter, QueryOptionTypes.orderBy, QueryOptionTypes.skip, QueryOptionTypes.transform, QueryOptionTypes.top, QueryOptionTypes.search, QueryOptionTypes.format);
-    return new ODataEntitySetResource<E>(client, segments, options, parser);
+    return new ODataEntitySetResource<E>(client, segments, options);
   }
 
   toModel<M extends ODataModel<T>>(body: any): M {
@@ -44,16 +43,15 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))
-      segment.name = name;
-    return segment.name;
+      segment.setPath(name);
+    return segment.path;
   }
 
   entity(key?: EntityKey<T>) {
     let entity = ODataEntityResource.factory<T>(
       this.client, {
       segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parser: this.parser
+      options: this.queryOptions.clone()
     });
     if (!Types.isEmpty(key)) {
       entity.key(key);
@@ -65,10 +63,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     let entitySet =  new ODataEntitySetResource<C>(
       this.client, 
       this.pathSegments.clone(),
-      this.queryOptions.clone(),
-      this.client.parserForType<C>(type) as Parser<C>
+      this.queryOptions.clone()
     );
-    entitySet.pathSegments.segment(SegmentTypes.typeName, type);
+    entitySet.pathSegments.segment(SegmentTypes.type, type).setParse(type);
     return entitySet;
   }
 
@@ -78,7 +75,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.client.parserForType<A>(type) as Parser<A>
+      parse: type 
     });
   }
 
@@ -88,7 +85,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.client.parserForType<F>(type) as Parser<F>
+      parse: type 
     });
   }
 
@@ -96,8 +93,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return ODataCountResource.factory(
       this.client, {
       segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parser: this.client.parserForType<number>('number')
+      options: this.queryOptions.clone()
     });
   }
 

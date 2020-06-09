@@ -12,7 +12,7 @@ export enum SegmentTypes {
   metadata = 'metadata',
   entitySet = 'entitySet',
   singleton = 'singleton',
-  typeName = 'typeName',
+  type = 'type',
   property = 'property',
   navigationProperty = 'navigationProperty',
   ref = 'ref',
@@ -29,7 +29,8 @@ export enum SegmentOptionTypes {
 
 type ODataSegment = {
   type: string;
-  name: string;
+  path: string;
+  parse: string;
   options: PlainObject;
 }
 
@@ -38,15 +39,15 @@ const pathSegmentsBuilder = (segment: ODataSegment): string => {
     case SegmentTypes.functionCall:
       let parameters = segment.options[SegmentOptionTypes.parameters];
       return (parameters ?
-        buildQuery({ func: { [segment.name]: parameters }}) :
-        buildQuery({ func: segment.name})
+        buildQuery({ func: { [segment.path]: parameters }}) :
+        buildQuery({ func: segment.path})
       ).slice(1);
     default:
       let key = segment.options[SegmentOptionTypes.key];
       if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
         key = guid(key);
       }
-      return segment.name + (key ? buildQuery({ key }) : "");
+      return segment.path + (key ? buildQuery({ key }) : "");
   }
 }
 
@@ -54,7 +55,7 @@ export class ODataPathSegments {
   protected segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments = (segments || []).map(({type, name, options}) => ({type, name, options: options || {}}));
+    this.segments = (segments || []).map(({type, path, parse, options}) => ({type, path, parse, options: options || {}}));
   }
 
   path(): string {
@@ -65,7 +66,7 @@ export class ODataPathSegments {
 
   toJSON() {
     return this.segments.map(segment => { 
-      let json = <any>{ type: segment.type, name: segment.name };
+      let json = <any>{ type: segment.type, path: segment.path, parse: segment.parse };
       let options = isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
       if (!Types.isEmpty(options))
         json.options = options;
@@ -77,11 +78,16 @@ export class ODataPathSegments {
     return new ODataPathSegments(this.toJSON());
   }
 
-  find(type: string, name?: string) {
+  find(type: string, path?: string) {
     // Backward search
     return [...this.segments].reverse().find(s =>
       s.type === type &&
-      (Types.isUndefined(name) || s.name === name));
+      (Types.isUndefined(path) || s.path === path));
+  }
+
+  first(): SegmentHandler {
+    if (this.segments.length > 0)
+      return new SegmentHandler(this.segments[0]);
   }
 
   last(): SegmentHandler {
@@ -89,22 +95,22 @@ export class ODataPathSegments {
       return new SegmentHandler(this.segments[this.segments.length - 1]);
   }
 
-  segment(type: string, name?: string): SegmentHandler {
-    let segment = this.find(type, name);
-    if (!segment && !Types.isUndefined(name)) {
-      segment = { type, name, options: {} } as ODataSegment;
+  segment(type: string, path?: string): SegmentHandler {
+    let segment = this.find(type, path);
+    if (!segment && !Types.isUndefined(path)) {
+      segment = { type, path: path, options: {} } as ODataSegment;
       this.segments.push(segment);
     }
     if (segment)
       return new SegmentHandler(segment);
   }
 
-  has(type: string, name?: string) {
-    return !!this.find(type, name);
+  has(type: string, path?: string) {
+    return !!this.find(type, path);
   }
 
-  remove(type: string, name?: string) {
-    let segment = this.find(type, name);
+  remove(type: string, path?: string) {
+    let segment = this.find(type, path);
     this.segments = this.segments.filter(s => s !== segment);
   }
 }
@@ -119,12 +125,20 @@ class SegmentHandler {
     return this.segment.type;
   }
 
-  get name() {
-    return this.segment.name;
+  get parse() {
+    return this.segment.parse;
   }
 
-  set name(value: string) {
-    this.segment.name = value;
+  setParse(value: string) {
+    this.segment.parse = value;
+  }
+
+  get path() {
+    return this.segment.path;
+  }
+
+  setPath(value: string) {
+    this.segment.path = value;
   }
 
   // Option Handler

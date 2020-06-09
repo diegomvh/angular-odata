@@ -7,7 +7,6 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, SegmentTypes } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
-import { Parser } from '../../types';
 import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers';
 
@@ -17,15 +16,14 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   static factory<P>(name: string, client: ODataClient, opts?: {
       segments?: ODataPathSegments, 
       options?: ODataQueryOptions,
-      parser?: Parser<P>}
+      parse?: string} 
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
-    segments.segment(SegmentTypes.property, name);
+    segments.segment(SegmentTypes.property, name).setParse(opts.parse)
     options.clear();
-    return new ODataPropertyResource<P>(client, segments, options, parser);
+    return new ODataPropertyResource<P>(client, segments, options);
   }
 
   // Segments
@@ -33,20 +31,19 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return ODataValueResource.factory<T>(
       this.client, {
       segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parser: this.parser
+      options: this.queryOptions.clone()
     });
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser? 
-      this.parser.parserFor<P>(name) : null;
+    let parse = this.parser instanceof ODataEntityParser? 
+      this.parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser
+      parse
     });
   }
 

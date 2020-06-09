@@ -22,62 +22,59 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   static factory<R>(name: string, client: ODataClient, opts?: {
     segments?: ODataPathSegments,
     options?: ODataQueryOptions,
-    parser?: Parser<R>
+    parse?: string
   }
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
-    segments.segment(SegmentTypes.singleton, name);
+    segments.segment(SegmentTypes.singleton, name).setParse(opts.parse);
     options.keep(QueryOptionTypes.format);
-    return new ODataSingletonResource<R>(client, segments, options, parser);
+    return new ODataSingletonResource<R>(client, segments, options);
   }
 
   // Segments
   navigationProperty<N>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser? 
-      this.parser.parserFor<N>(name) : null;
+    let parse = this.parser instanceof ODataEntityParser? 
+      this.parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser
+      parse
     });
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser? 
-      this.parser.parserFor<P>(name) : null;
+    let parse = this.parser instanceof ODataEntityParser? 
+      this.parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser
+      parse
     });
   }
 
   action<A>(name: string, type?: string) {
-    let parser = this.client.parserForType<A>(type) as Parser<A>;
     return ODataActionResource.factory<A>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: parser
+      parse: type
     });
   }
 
   function<F>(name: string, type?: string) {
-    let parser = this.client.parserForType<F>(type) as Parser<F>;
     return ODataFunctionResource.factory<F>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser
+      parse: type
     });
   }
 

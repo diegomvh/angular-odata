@@ -12,16 +12,14 @@ export class ODataValueResource<T> extends ODataResource<T> {
   // Factory
   static factory<V>(service: ODataClient, opts?: {
       segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parser?: Parser<V>}
+      options?: ODataQueryOptions}
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
     segments.segment(SegmentTypes.value, $VALUE);
     options.clear();
-    return new ODataValueResource<V>(service, segments, options, parser);
+    return new ODataValueResource<V>(service, segments, options);
   }
 
   arraybuffer(options?: HttpOptions): Observable<ArrayBuffer> {

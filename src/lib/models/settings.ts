@@ -9,7 +9,6 @@ export class ODataSettings {
     this.configs = configs.map(config => new ODataConfig(config));
     if (this.configs.length > 1 && this.configs.some(c => Types.isUndefined(c.name)))
       throw new Error("Multiple APIs mode needs configuration names");
-
     this.configs.forEach(config => config.configure());
   }
 
@@ -18,14 +17,12 @@ export class ODataSettings {
     let config = this.configs.find(c => !Types.isUndefined(name) && c.name === name);
     if (config)
       return config;
-    throw new Error(`The configuration with name '${name}' does not exists`);
   }
 
-  public configForNamespace(namespace: string) {
+  public configForType(namespace: string) {
     if (this.configs.length === 1) return this.configs[0];
     let config = this.configs.find(c => c.schemas.some(s => !Types.isNullOrUndefined(namespace) && namespace.startsWith(s.namespace)));
     if (config)
       return config;
-    throw new Error(`The namespace: '${namespace}' does not belong to any known configuration`);
   }
 }

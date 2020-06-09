@@ -13,16 +13,14 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   static factory(service: ODataClient, opts?: {
       segments?: ODataPathSegments, 
-      options?: ODataQueryOptions,
-      parser?: Parser<any>}
+      options?: ODataQueryOptions}
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
     segments.segment(SegmentTypes.metadata, $METADATA);
     options.clear();
-    return new ODataMetadataResource(service, segments, options, parser);
+    return new ODataMetadataResource(service, segments, options);
   }
 
   get(options?: HttpOptions): Observable<ODataMetadata> {

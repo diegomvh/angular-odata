@@ -21,16 +21,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(client: ODataClient, opts?: {
     segments?: ODataPathSegments,
-    options?: ODataQueryOptions,
-    parser?: Parser<E>
-  }
+    options?: ODataQueryOptions}
   ) {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
-    let parser = opts && opts.parser || null;
 
     options.keep(QueryOptionTypes.expand, QueryOptionTypes.select, QueryOptionTypes.format);
-    return new ODataEntityResource<E>(client, segments, options, parser);
+    return new ODataEntityResource<E>(client, segments, options);
   }
 
   // Key
@@ -56,8 +53,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))
-      segment.name = name;
-    return segment.name;
+      segment.setPath(name);
+    return segment.path;
   }
 
   // Segments
@@ -65,32 +62,31 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataValueResource.factory<T>(
       this.client, {
       segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone(),
-      parser: this.parser
+      options: this.queryOptions.clone()
     });
   }
 
   navigationProperty<N>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser? 
-      this.parser.parserFor<N>(name) : null;
+    let parse = this.parser instanceof ODataEntityParser? 
+      this.parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser
+      parse
     });
   }
 
   property<P>(name: string) {
-    let parser = this.parser instanceof ODataEntityParser? 
-      this.parser.parserFor<P>(name) : null;
+    let parse = this.parser instanceof ODataEntityParser? 
+      this.parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(
       name,
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser
+      parse
     });
   }
 
@@ -100,7 +96,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.client.parserForType<A>(type) as Parser<A>
+      parse: type
     });
   }
 
@@ -110,7 +106,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.client, {
       segments: this.pathSegments.clone(),
       options: this.queryOptions.clone(),
-      parser: this.client.parserForType<F>(type) as Parser<F>
+      parse: type
     });
   }
 
@@ -118,10 +114,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     let entity =  new ODataEntityResource<C>(
       this.client, 
       this.pathSegments.clone(),
-      this.queryOptions.clone(),
-      this.client.parserForType<C>(type) as Parser<C>
+      this.queryOptions.clone()
     );
-    entity.pathSegments.segment(SegmentTypes.typeName, type);
+    entity.pathSegments.segment(SegmentTypes.type, type).setParse(type);
     return entity;
   }
 
