@@ -63,24 +63,24 @@ export class ODataQueryOptions {
   }
 
   // Option Handler
-  option<T>(type: QueryOptionNames, opts?: T) {
+  option<T>(name: QueryOptionNames, opts?: T) {
     if (!Types.isUndefined(opts))
-      this.options[type] = opts;
-    return new OptionHandler<T>(this.options, type);
+      this.options[name] = opts;
+    return new OptionHandler<T>(this.options, name);
   }
 
   // Query Options tools
-  has(type: QueryOptionNames) {
-    return !Types.isUndefined(this.options[type]);
+  has(name: QueryOptionNames) {
+    return !Types.isUndefined(this.options[name]);
   }
 
-  remove(...types: QueryOptionNames[]) {
-    types.forEach(type => this.option(type).clear());
+  remove(...names: QueryOptionNames[]) {
+    names.forEach(name => this.option(name).clear());
   }
 
-  keep(...types: QueryOptionNames[]) {
+  keep(...names: QueryOptionNames[]) {
     this.options = Object.keys(this.options)
-      .filter((k: QueryOptionNames) => types.indexOf(k) !== -1)
+      .filter((k: QueryOptionNames) => names.indexOf(k) !== -1)
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
@@ -96,26 +96,26 @@ export class ODataQueryOptions {
 }
 
 export class OptionHandler<T> {
-  constructor(private o: PlainObject, private t: QueryOptionNames) { }
+  constructor(private o: PlainObject, private n: QueryOptionNames) { }
 
   get name() {
-    return this.t;
+    return this.n;
   }
 
   toJSON() {
-    return this.o[this.t];
+    return this.o[this.n];
   }
 
   // Primitive value
   value() {
-    return this.o[this.t];
+    return this.o[this.n];
   }
 
   // Array
   private assertArray(): Array<any> {
-    if (!Types.isArray(this.o[this.t]))
-      this.o[this.t] = !Types.isUndefined(this.o[this.t]) ? [this.o[this.t]] : [];
-    return this.o[this.t];
+    if (!Types.isArray(this.o[this.n]))
+      this.o[this.n] = !Types.isUndefined(this.o[this.n]) ? [this.o[this.n]] : [];
+    return this.o[this.n];
   }
 
   push(value: T) {
@@ -123,10 +123,10 @@ export class OptionHandler<T> {
   }
 
   remove(value: T) {
-    this.o[this.t] = this.assertArray().filter(v => v !== value);
+    this.o[this.n] = this.assertArray().filter(v => v !== value);
     // If only one... down to value
-    if (this.o[this.t].length === 1)
-      this.o[this.t] = this.o[this.t][0];
+    if (this.o[this.n].length === 1)
+      this.o[this.n] = this.o[this.n][0];
   }
 
   at(index: number) {
@@ -135,8 +135,8 @@ export class OptionHandler<T> {
 
   // Hash map
   private assertObject(): PlainObject {
-    if (!Types.isArray(this.o[this.t]) && Types.isObject(this.o[this.t])) {
-      return this.o[this.t];
+    if (!Types.isArray(this.o[this.n]) && Types.isObject(this.o[this.n])) {
+      return this.o[this.n];
     }
     let arr = this.assertArray();
     let obj = arr.find(v => Types.isObject(v));
@@ -152,17 +152,17 @@ export class OptionHandler<T> {
   }
 
   get(name: string): T {
-    if (!Types.isArray(this.o[this.t])) {
-      return this.o[this.t][name];
+    if (!Types.isArray(this.o[this.n])) {
+      return this.o[this.n][name];
     }
   }
 
   unset(name: string) {
     delete this.assertObject()[name];
-    if (Types.isArray(this.o[this.t])) {
-      this.o[this.t] = this.o[this.t].filter(v => !Types.isEmpty(v));
-      if (this.o[this.t].length === 1)
-        this.o[this.t] = this.o[this.t][0];
+    if (Types.isArray(this.o[this.n])) {
+      this.o[this.n] = this.o[this.n].filter(v => !Types.isEmpty(v));
+      if (this.o[this.n].length === 1)
+        this.o[this.n] = this.o[this.n][0];
     }
   }
 
@@ -175,6 +175,6 @@ export class OptionHandler<T> {
   }
 
   clear() {
-    delete this.o[this.t];
+    delete this.o[this.n];
   }
 }

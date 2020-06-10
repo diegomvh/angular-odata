@@ -159,14 +159,10 @@ export class ODataResource<Type> {
   };
 
   toJSON() {
-    let json = <any>{ path: this.pathSegments.toJSON() };
-    let type = this.type();
-    if (!Types.isNullOrUndefined(type))
-      json.type = type;
-    let options = this.queryOptions.toJSON();
-    if (!Types.isEmpty(options))
-      json.query = options;
-    return json;
+    return { 
+      segments: this.pathSegments.toJSON(),
+      options: this.queryOptions.toJSON()  
+    };
   }
 
   is(type: string) {
