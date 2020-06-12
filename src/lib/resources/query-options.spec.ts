@@ -110,9 +110,6 @@ describe('ODataQueryOptions', () => {
     //
     queryOptions.option(QueryOptionNames.skip, 0);
     expect(queryOptions.toString()).toEqual('');
-    //
-    //queryOptions.option(QueryOptionNames.skip, -1);
-    //expect(() => queryOptions.skip(-1)).toThrowError('skip cannot be negative');
   });
 
   it('test top', () => {
@@ -125,23 +122,6 @@ describe('ODataQueryOptions', () => {
     //
     queryOptions.option(QueryOptionNames.top, 0);
     expect(queryOptions.toString()).toEqual('$top=0');
-    //
-    //expect(() => queryOptions.top(-1)).toThrowError('top cannot be negative');
-  });
-
-  it('test count', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
-    //queryOptions.option(QueryOptionNames.count, undefined);
-    //expect(queryOptions.toString()).toEqual('');
-    //
-    //queryOptions.count(null);
-    //expect(queryOptions.toString()).toEqual('');
-    //
-    //queryOptions.count(true);
-    //expect(queryOptions.toString()).toEqual('$count=true');
-    //
-    //queryOptions.count(false);
-    //expect(queryOptions.toString()).toEqual('$count=false');
   });
 
   it('test format', () => {
@@ -189,17 +169,7 @@ describe('ODataQueryOptions', () => {
     queryOptions.option(QueryOptionNames.search, 'value');
     queryOptions.option(QueryOptionNames.skip, 10);
     queryOptions.option(QueryOptionNames.top, 20);
-    //queryOptions.option(QueryOptionNames.count(true);
-    expect(queryOptions.toString()).toEqual('$select=value&$filter=' + encodeURIComponent('property eq value') + '&$expand=entitySet&$orderby=property&$search=' + encodeURIComponent('value') + '&$skip=10&$top=20&$count=true');
-    //
-    queryOptions.option(QueryOptionNames.select, ['value']);
-    queryOptions.option(QueryOptionNames.filter, 'property eq value');
-    queryOptions.option(QueryOptionNames.expand, 'entitySet');
-    queryOptions.option(QueryOptionNames.orderBy, 'property');
-    queryOptions.option(QueryOptionNames.search, 'value');
-    queryOptions.option(QueryOptionNames.skip, 10);
-    queryOptions.option(QueryOptionNames.top, 20);
-    expect(queryOptions.toString()).toEqual('$select=value;$filter=' + encodeURIComponent('property eq value') + ';$expand=entitySet;$orderby=property;$search=' + encodeURIComponent('value') + ';$skip=10;$top=20;$count=true');
+    expect(queryOptions.params()).toEqual({$select: 'value', $filter: 'property eq value', $expand: 'entitySet', $orderby: 'property', $search: 'value', $skip: '10', $top: '20'});
   });
 
   it('test isEmpty', () => {

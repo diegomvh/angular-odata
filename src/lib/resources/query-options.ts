@@ -17,7 +17,6 @@ export enum QueryOptionNames {
   skiptoken = 'skiptoken',
   expand = 'expand',
   format = 'format',
-  count = 'count',
   // Custom options
   custom = 'custom'
 }
@@ -41,8 +40,7 @@ export class ODataQueryOptions {
       QueryOptionNames.skip,
       QueryOptionNames.skiptoken,
       QueryOptionNames.expand,
-      QueryOptionNames.format,
-      QueryOptionNames.count]
+      QueryOptionNames.format]
         .filter(key => !Types.isEmpty(this.options[key]))
         .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
 
