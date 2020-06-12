@@ -76,10 +76,10 @@ export type QueryOptions<T> = ExpandOptions<T> & {
 export default function <T>({
   select: $select,
   search: $search,
-  top: $top,
-  skip: $skip,
   skiptoken: $skiptoken,
   format: $format,
+  top,
+  skip,
   filter,
   transform,
   orderBy,
@@ -92,17 +92,24 @@ export default function <T>({
   let path: string = '';
   let aliases: Alias[] = [];
 
-  const params: any = {
-    $filter: (filter || typeof count === 'object') && buildFilter(typeof count === 'object' ? count : filter, aliases),
-    $apply: transform && buildTransforms(transform),
-    $expand: expand && buildExpand(expand),
-    $orderby: orderBy && buildOrderBy(orderBy),
-  };
+  const params: any = {};
 
   // key is not (null, undefined)
   if (key != undefined) {
     path += `(${handleValue(key as Value, aliases)})`;
   }
+
+  if (filter || typeof count === 'object')
+    params.$filter = buildFilter(typeof count === 'object' ? count : filter, aliases);
+
+  if (transform)
+    params.$apply = buildTransforms(transform);
+  
+  if (expand)
+    params.$expand = buildExpand(expand);
+  
+  if (orderBy)
+    params.$orderby = buildOrderBy(orderBy);
 
   if (count) {
     if (typeof count === 'boolean') {
@@ -110,6 +117,14 @@ export default function <T>({
     } else {
       path += '/$count';
     }
+  }
+
+  if (typeof top === 'number') {
+    params.$top = top;
+  }
+
+  if (skip) {
+    params.$skip = skip;
   }
 
   if (action) {
@@ -139,7 +154,7 @@ export default function <T>({
       , {}));
   }
 
-  return buildUrl(path, { $select, $search, $top, $skip, $skiptoken, $format, ...params });
+  return buildUrl(path, { $select, $search, $skiptoken, $format, ...params });
 }
 
 function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: string = ''): string {
@@ -319,22 +334,24 @@ function handleValue(value: Value, aliases?: Alias[]): any {
     return `[${value.map(d => handleValue(d)).join(',')}]`;
   } else if (value === null) {
     return value;
-  } else if (typeof value === 'object' && !('type' in value)) {
-    return Object.keys(value)
-      .map(k => `${k}=${handleValue(value[k], aliases)}`).join(',');
-  } else if (typeof value === 'object' && value.type === 'raw') {
-    return value.value;
-  } else if (typeof value === 'object' && value.type === 'guid') {
-    return value.value;
-  } else if (typeof value === 'object' && value.type === 'binary') {
-    return `binary'${value.value}'`;
-  } else if (typeof value === 'object' && value.type === 'alias') {
-    // Store
-    if (Array.isArray(aliases))
-      aliases.push(value as Alias);
-    return `@${(value as Alias).name}`;
-  } else if (typeof value === 'object' && value.type === 'json') {
-    return escape(JSON.stringify(value.value));
+  } else if (typeof value === 'object') {
+    if (value.type === 'raw') {
+      return value.value;
+    } else if (value.type === 'guid') {
+      return value.value;
+    } else if (value.type === 'binary') {
+      return `binary'${value.value}'`;
+    } else if (value.type === 'alias') {
+      // Store
+      if (Array.isArray(aliases))
+        aliases.push(value as Alias);
+      return `@${(value as Alias).name}`;
+    } else if (value.type === 'json') {
+      return escape(JSON.stringify(value.value));
+    } else {
+      return Object.keys(value)
+        .map(k => `${k}=${handleValue(value[k], aliases)}`).join(',');
+    }
   }
   return value;
 }
@@ -481,12 +498,9 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
 
 function buildUrl(path: string, params: PlainObject): string {
   // This can be refactored using URL API. But IE does not support it.
-  const queries: string[] = [];
-  for (const key of Object.getOwnPropertyNames(params)) {
-    if (params[key]) {
-      queries.push(`${key}=${params[key]}`);
-    }
-  }
+  const queries: string[] = Object.getOwnPropertyNames(params)
+    .filter(key => params[key] !== undefined && params[key] !== '')
+    .map(key => `${key}=${params[key]}`);
   return queries.length ? `${path}?${queries.join('&')}` : path;
 }
 
