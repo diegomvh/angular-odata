@@ -144,13 +144,13 @@ export class ODataResource<Type> {
     return new Collection(entities, {resource: this, annotations: annots}) as C;
   }
 
-  // Debug
+  // Testing
   toString(): string {
     let [path, params] = this.pathAndParams();
     let queryString = Object.entries(params)
       .map(e => `${e[0]}${VALUE_SEPARATOR}${e[1]}`)
       .join(PARAM_SEPARATOR);
-    return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path
+    return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
   }
 
   clone<Re extends ODataResource<Type>>(): Re {
