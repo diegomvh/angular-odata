@@ -88,7 +88,6 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
 export class ODataFieldParser<T> implements ODataParser<T> {
   name: string;
   type: string;
-  entity: ODataEntityParser<any>;
   parser?: Parser<any>;
   default?: any;
   maxLength?: number;
@@ -99,9 +98,8 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   field?: string;
   ref?: string;
 
-  constructor(name: string, field: Field, entity: ODataEntityParser<any>) {
+  constructor(name: string, field: Field) {
     this.name = name;
-    this.entity = entity;
     Object.assign(this, field);
   }
 
@@ -173,7 +171,7 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
     this.base = config.base;
     this.type = `${namespace}.${this.name}`;
     this.fields = Object.entries(config.fields)
-      .map(([name, f]) => new ODataFieldParser(name, f as Field, this));
+      .map(([name, f]) => new ODataFieldParser(name, f as Field));
   }
 
   // Deserialize

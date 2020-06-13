@@ -1,5 +1,5 @@
 import { ODataEntityParser, ODataFieldParser, ODataParser, ODataEnumParser } from '../parsers';
-import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration } from '../types';
+import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, Field } from '../types';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Types } from '../utils';
@@ -169,13 +169,17 @@ export class ODataEnumConfig<Type> {
 export class ODataEntityConfig<Type> {
   name: string;
   type: string;
-  parser?: ODataEntityParser<Type>;
+  annotations: any[];
   model?: { new(...any): any };
   collection?: { new(...any): any };
+  parser?: ODataEntityParser<Type>;
 
   constructor(config: EntityConfig<Type>, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${this.name}`;
+    this.model = config.model;
+    this.collection = config.collection;
+    this.annotations = config.annotations;
     this.parser = new ODataEntityParser(config, namespace);
   }
 
@@ -183,12 +187,18 @@ export class ODataEntityConfig<Type> {
     this.parser.configure(settings);
   }
 
-  fields(include_parents: boolean = true): ODataFieldParser<any>[] {
+  fields(opts: {
+    include_parents?: boolean,
+    include_navigation?: boolean
+  } = {include_navigation: true, include_parents: true}): ODataFieldParser<any>[] {
     let parser = this.parser as ODataEntityParser<any>;
-    let fields = [];
+    let fields = <ODataFieldParser<any>[]>[];
     while (parser) {
-      fields = [...parser.fields, ...fields];
-      if (!include_parents)
+      fields = [
+        ...parser.fields.filter(field => opts.include_navigation || !field.navigation),
+        ...fields
+      ];
+      if (!opts.include_parents)
         break;
       parser = parser.parent;
     }
