@@ -177,9 +177,9 @@ export class ODataEntityConfig<Type> {
   constructor(config: EntityConfig<Type>, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${this.name}`;
+    this.annotations = config.annotations;
     this.model = config.model;
     this.collection = config.collection;
-    this.annotations = config.annotations;
     this.parser = new ODataEntityParser(config, namespace);
   }
 
@@ -209,10 +209,12 @@ export class ODataEntityConfig<Type> {
 export class ODataContainer {
   name: string;
   type: string;
+  annotations: any[];
   services?: Array<ODataServiceConfig>;
   constructor(config: Container, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${this.name}`;
+    this.annotations = config.annotations;
     this.services = (config.services || []).map(config => new ODataServiceConfig(config, namespace));
   }
 
@@ -225,9 +227,11 @@ export class ODataContainer {
 export class ODataServiceConfig {
   name: string;
   type: string;
+  annotations: any[];
   constructor(config: ServiceConfig, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${this.name}`;
+    this.annotations = config.annotations;
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {}
