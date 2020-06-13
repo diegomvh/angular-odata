@@ -33,7 +33,7 @@ export class ODataConfig {
     this.stringAsEnum = config.stringAsEnum || false;
     this.creation = config.creation || new Date();
 
-    this.schemas = config.schemas.map(schema => new ODataSchema(schema));
+    this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema));
   }
   
   configure() {
