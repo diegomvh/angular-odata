@@ -1,44 +1,56 @@
-import { TestBed } from '@angular/core/testing';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import { ODataClient } from '../client';
-import { ODataModule } from '../module';
 import { ODataResource } from './resource';
-import { ODataMetadataResource, ODataEntitySetResource } from './requests';
+import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataBatchResource } from './requests';
+import { ODataPathSegments } from './path-segments';
+import { ODataQueryOptions } from './query-options';
 
-const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';
 interface Person {}
 
 describe('ODataResource', () => {
-  let client: ODataClient;
-  
+  let segments: ODataPathSegments;
+  let options: ODataQueryOptions;
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ODataModule.forRoot({serviceRootUrl: SERVICE_ROOT}), HttpClientTestingModule]
-    });
-
-    client = TestBed.inject<ODataClient>(ODataClient);
+    segments = new ODataPathSegments(); 
+    options = new ODataQueryOptions(); 
   });
 
-  it('should be created', () => {
-    const resource: ODataResource<Person> = new ODataResource<Person>(client);
+  it('should create resource', () => {
+    const resource: ODataResource<Person> = new ODataResource<Person>(null);
     expect(resource).toBeTruthy();
-    expect(client.endpointUrl(resource)).toEqual(SERVICE_ROOT);
+    expect(resource.toString()).toEqual('');
   });
 
-   it('should create metadata resource', () => {
-    const metadata: ODataMetadataResource = client.metadata();
-    expect(client.endpointUrl(metadata)).toEqual(SERVICE_ROOT + '$metadata');
+  it('should create batch resource', () => {
+    const metadata: ODataBatchResource = ODataBatchResource.factory(null);
+    expect(metadata.toString()).toEqual('$batch');
+  });
+
+  it('should create metadata resource', () => {
+    const metadata: ODataMetadataResource = ODataMetadataResource.factory(null);
+    expect(metadata.toString()).toEqual('$metadata');
   });
 
   it('should create entitySet resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET);
-    expect(client.endpointUrl(set)).toEqual(SERVICE_ROOT + 'People');
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options); 
+    expect(set.toString()).toEqual('People');
   });
 
   it('should create entity resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
     const entity = set.entity('russellwhyte');
-    expect(client.endpointUrl(entity)).toEqual(SERVICE_ROOT + 'People(\'russellwhyte\')');
+    expect(entity.toString()).toEqual('People(\'russellwhyte\')');
+  });
+
+  it('should create collection function', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
+    const fun: ODataFunctionResource<any> = set.function<any>("NS.MyFunction");
+    expect(fun.toString()).toEqual('People/NS.MyFunction');
+  });
+
+  it('should create entity function', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
+    const entity = set.entity('russellwhyte');
+    const fun: ODataFunctionResource<any> = entity.function<any>("NS.MyFunction");
+    expect(fun.toString()).toEqual('People(\'russellwhyte\')/NS.MyFunction');
   });
 });

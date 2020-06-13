@@ -105,11 +105,8 @@ export class ODataClient {
   }
 
   // Unbound Function
-  function<T>(name: string, params: any | null, returnType?: string): ODataFunctionResource<T> {
-    let func = ODataFunctionResource.factory<T>(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
-    if (params)
-      func.parameters(params);
-    return func;
+  function<T>(name: string, returnType?: string): ODataFunctionResource<T> {
+    return ODataFunctionResource.factory<T>(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   //Merge Headers

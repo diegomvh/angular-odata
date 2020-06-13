@@ -68,13 +68,10 @@ export class ODataBatchResource extends ODataResource<any> {
     this.changesetID = 1;
   }
 
-  static factory(service: ODataClient, segments?: ODataPathSegments, options?: ODataQueryOptions) {
-    segments = segments || new ODataPathSegments();
-    options = options || new ODataQueryOptions();
-
+  static factory(service: ODataClient) {
+    let segments = new ODataPathSegments();
     segments.segment(SegmentNames.batch, $BATCH);
-    options.clear();
-    return new ODataBatchResource(service, segments, options);
+    return new ODataBatchResource(service, segments);
   }
 
   add(method: RequestMethod, query: ODataResource<any>, options?: HttpOptions & { body?: any }): ODataBatchResource {

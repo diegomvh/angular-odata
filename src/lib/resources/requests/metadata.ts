@@ -2,25 +2,18 @@ import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
 import { ODataPathSegments, SegmentNames } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
-import { $METADATA, Parser } from '../../types';
 import { ODataMetadata } from '../responses';
+import { $METADATA } from '../../types';
 import { HttpOptions } from '../http-options';
 
 export class ODataMetadataResource extends ODataResource<any> {
 
-  static factory(service: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions}
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
+  static factory(client: ODataClient) {
+    let segments = new ODataPathSegments();
     segments.segment(SegmentNames.metadata, $METADATA);
-    options.clear();
-    return new ODataMetadataResource(service, segments, options);
+    return new ODataMetadataResource(client, segments);
   }
 
   get(options?: HttpOptions): Observable<ODataMetadata> {
