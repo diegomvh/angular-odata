@@ -8,7 +8,7 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { Expand, Select } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { ODataPathSegments, SegmentOptionNames, SegmentNames } from '../path-segments';
+import { ODataPathSegments, SegmentOptionNames, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
@@ -26,7 +26,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   // Key
   key(key?: EntityKey<T>) {
-    let segment = this.pathSegments.segment(SegmentNames.entitySet);
+    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (!Types.isUndefined(key)) {
@@ -43,7 +43,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   // EntitySet
   entitySet(name?: string) {
-    let segment = this.pathSegments.segment(SegmentNames.entitySet);
+    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))
@@ -82,7 +82,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.pathSegments.clone(),
       this.queryOptions.clone()
     );
-    entity.pathSegments.segment(SegmentNames.type, type).setType(type);
+    entity.pathSegments.segment(PathSegmentNames.type, type).setType(type);
     return entity;
   }
 

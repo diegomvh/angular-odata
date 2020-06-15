@@ -7,7 +7,7 @@ import { Types, isoStringToDate } from '../utils/index';
 import { OptionHandler } from './query-options';
 import { PATH_SEPARATOR } from '../types';
 
-export enum SegmentNames {
+export enum PathSegmentNames {
   batch = 'batch',
   metadata = 'metadata',
   entitySet = 'entitySet',
@@ -36,7 +36,7 @@ export type ODataSegment = {
 
 const pathSegmentsBuilder = (segment: ODataSegment): string => {
   switch (segment.name) {
-    case SegmentNames.function:
+    case PathSegmentNames.function:
       let parameters = segment.options[SegmentOptionNames.parameters];
       return (parameters ?
         buildQuery({ func: { [segment.path]: parameters }}) :
@@ -66,6 +66,10 @@ export class ODataPathSegments {
 
   types(): string[] {
     return this.segments.map(s => s.type).filter(t => !Types.isNullOrUndefined(t));
+  }
+
+  toString(): string {
+    return this.path();
   }
 
   toJSON() {

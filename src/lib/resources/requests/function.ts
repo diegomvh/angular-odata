@@ -4,7 +4,7 @@ import { ODataClient } from '../../client';
 import { Types } from '../../utils';
 
 import { PlainObject } from '../builder';
-import { ODataPathSegments, SegmentNames, SegmentOptionNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
@@ -15,7 +15,7 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
 
   // Factory
   static factory<R>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(SegmentNames.function, name).setType(type);
+    segments.segment(PathSegmentNames.function, name).setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataFunctionResource<R>(client, segments, options);
   }

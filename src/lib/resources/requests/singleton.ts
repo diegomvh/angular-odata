@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ODataClient } from '../../client';
 import { Expand, Select } from '../builder';
 import { QueryOptionNames } from '../query-options';
-import { ODataPathSegments, SegmentNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
 
@@ -19,7 +19,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Factory
   static factory<R>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(SegmentNames.singleton, name).setType(type);
+    segments.segment(PathSegmentNames.singleton, name).setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(client, segments, options);
   }

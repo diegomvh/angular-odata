@@ -4,7 +4,7 @@ import { QueryOptionNames } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
 import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments, SegmentNames, SegmentOptionNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { Observable, empty } from 'rxjs';
 import { EntityKey } from '../../types';
@@ -19,14 +19,14 @@ import { ODataEntityParser } from '../../parsers';
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(SegmentNames.navigationProperty, name).setType(type);
+    segments.segment(PathSegmentNames.navigationProperty, name).setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataNavigationPropertyResource<E>(client, segments, options);
   }
 
   // Key
   key(key?: EntityKey<T>) {
-    let segment = this.pathSegments.segment(SegmentNames.navigationProperty);
+    let segment = this.pathSegments.segment(PathSegmentNames.navigationProperty);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (!Types.isUndefined(key)) {
@@ -43,7 +43,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   // EntitySet
   entitySet(name?: string) {
-    let segment = this.pathSegments.segment(SegmentNames.entitySet);
+    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))

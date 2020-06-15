@@ -1,5 +1,5 @@
 import { ODataResource } from './resource';
-import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataBatchResource } from './requests';
+import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataBatchResource, ODataActionResource, ODataCountResource, ODataNavigationPropertyResource } from './requests';
 import { ODataPathSegments } from './path-segments';
 import { ODataQueryOptions } from './query-options';
 
@@ -38,7 +38,7 @@ describe('ODataResource', () => {
   it('should create entity resource', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
     const entity = set.entity('russellwhyte');
-    expect(entity.toString()).toEqual('People(\'russellwhyte\')');
+    expect(entity.toString()).toEqual("People('russellwhyte')");
   });
 
   it('should create collection function', () => {
@@ -51,6 +51,41 @@ describe('ODataResource', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any> = entity.function<any>("NS.MyFunction");
-    expect(fun.toString()).toEqual('People(\'russellwhyte\')/NS.MyFunction');
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
   });
+
+  it('should create collection action', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
+    const act: ODataActionResource<any> = set.action<any>("NS.MyAction");
+    expect(act.toString()).toEqual('People/NS.MyAction');
+  });
+
+  it('should create entity function', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
+    const entity = set.entity('russellwhyte');
+    const act: ODataActionResource<any> = entity.action<any>("NS.MyAction");
+    expect(act.toString()).toEqual("People('russellwhyte')/NS.MyAction");
+  });
+
+  it('should create collection count', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
+    const count: ODataCountResource = set.count();
+    expect(count.toString()).toEqual("People/$count");
+  });
+
+  it('should create entity navigation', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
+    const entity = set.entity('russellwhyte');
+    const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
+    expect(friends.toString()).toEqual("People('russellwhyte')/Friends");
+  });
+
+  it('should create entity single navigation', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(null, 'People', '', segments, options);
+    const entity = set.entity('russellwhyte');
+    const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
+    friends.key('mirsking');
+    expect(friends.toString()).toEqual("People('russellwhyte')/Friends('mirsking')");
+  });
+
 });

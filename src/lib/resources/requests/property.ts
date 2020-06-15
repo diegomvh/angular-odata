@@ -4,7 +4,7 @@ import { ODataValueResource } from './value';
 
 import { ODataResource } from '../resource';
 import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments, SegmentNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
@@ -13,7 +13,7 @@ import { ODataEntityParser } from '../../parsers';
 export class ODataPropertyResource<T> extends ODataResource<T> {
   // Factory
   static factory<P>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(SegmentNames.property, name).setType(type)
+    segments.segment(PathSegmentNames.property, name).setType(type)
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options);
   }

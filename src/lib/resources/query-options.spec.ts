@@ -143,9 +143,6 @@ describe('ODataQueryOptions', () => {
     const queryOptions: ODataQueryOptions = new ODataQueryOptions();
     queryOptions.option(QueryOptionNames.custom, undefined);
     expect(queryOptions.toString()).toEqual('');
-    //expect(() => queryOptions.customOption(undefined, undefined)).toThrowError('key cannot be undefined');
-    //
-    //expect(() => queryOptions.customOption(null, null)).toThrowError('key cannot be null');
     //
     queryOptions.option(QueryOptionNames.custom, {key: undefined});
     expect(queryOptions.toString()).toEqual('');

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { ODataMetadata } from '../responses';
@@ -12,7 +12,7 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   static factory(client: ODataClient) {
     let segments = new ODataPathSegments();
-    segments.segment(SegmentNames.metadata, $METADATA);
+    segments.segment(PathSegmentNames.metadata, $METADATA);
     return new ODataMetadataResource(client, segments);
   }
 

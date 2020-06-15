@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
-import { ODataPathSegments, SegmentNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { map } from 'rxjs/operators';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID } from '../../types';
@@ -70,7 +70,7 @@ export class ODataBatchResource extends ODataResource<any> {
 
   static factory(service: ODataClient) {
     let segments = new ODataPathSegments();
-    segments.segment(SegmentNames.batch, $BATCH);
+    segments.segment(PathSegmentNames.batch, $BATCH);
     return new ODataBatchResource(service, segments);
   }
 

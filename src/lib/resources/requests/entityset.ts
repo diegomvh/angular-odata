@@ -3,7 +3,7 @@ import { Observable, empty } from 'rxjs';
 import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
 import { QueryOptionNames } from '../query-options';
 import { ODataClient } from '../../client';
-import { ODataPathSegments, SegmentNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
@@ -21,7 +21,7 @@ import { ODataModel } from '../../models';
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   // Factory
   static factory<E>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(SegmentNames.entitySet, name).setType(type);
+    segments.segment(PathSegmentNames.entitySet, name).setType(type);
     options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
     return new ODataEntitySetResource<E>(client, segments, options);
   }
@@ -32,7 +32,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   // EntitySet
   entitySet(name?: string) {
-    let segment = this.pathSegments.segment(SegmentNames.entitySet);
+    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for entitySet`);
     if (!Types.isUndefined(name))
@@ -54,7 +54,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.pathSegments.clone(),
       this.queryOptions.clone()
     );
-    entitySet.pathSegments.segment(SegmentNames.type, type).setType(type);
+    entitySet.pathSegments.segment(PathSegmentNames.type, type).setType(type);
     return entitySet;
   }
 

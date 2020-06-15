@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
-import { ODataPathSegments, SegmentNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
@@ -17,7 +17,7 @@ export class ODataReferenceResource extends ODataResource<any> {
     let segments = opts && opts.segments || new ODataPathSegments();
     let options = opts && opts.options || new ODataQueryOptions();
 
-    segments.segment(SegmentNames.reference, $REFERENCE);
+    segments.segment(PathSegmentNames.reference, $REFERENCE);
     options.clear();
     return new ODataReferenceResource(service, segments, options);
   }

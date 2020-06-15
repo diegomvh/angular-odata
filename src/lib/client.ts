@@ -14,7 +14,7 @@ import {
   ODataActionResource, 
   ODataEntityResource,
   SegmentOptionNames, 
-  SegmentNames,
+  PathSegmentNames,
   ODataPathSegments,
   ODataSegment,
   ODataQueryOptions, 
@@ -70,14 +70,14 @@ export class ODataClient {
 
   fromJSON<T extends ODataResource<any>>(json: {segments: ODataSegment[], options: PlainObject}): T {
     let lastSegment = json.segments[json.segments.length - 1];
-    let Ctor = (lastSegment.name === SegmentNames.entitySet && lastSegment.options && SegmentOptionNames.key in lastSegment.options) ? ODataEntityResource :
+    let Ctor = (lastSegment.name === PathSegmentNames.entitySet && lastSegment.options && SegmentOptionNames.key in lastSegment.options) ? ODataEntityResource :
       {
-        [SegmentNames.metadata]: ODataMetadataResource,
-        [SegmentNames.batch]: ODataBatchResource,
-        [SegmentNames.singleton]: ODataSingletonResource,
-        [SegmentNames.entitySet]: ODataEntitySetResource,
-        [SegmentNames.action]: ODataActionResource,
-        [SegmentNames.function]: ODataFunctionResource
+        [PathSegmentNames.metadata]: ODataMetadataResource,
+        [PathSegmentNames.batch]: ODataBatchResource,
+        [PathSegmentNames.singleton]: ODataSingletonResource,
+        [PathSegmentNames.entitySet]: ODataEntitySetResource,
+        [PathSegmentNames.action]: ODataActionResource,
+        [PathSegmentNames.function]: ODataFunctionResource
       }[lastSegment.name];
     return new Ctor(this, new ODataPathSegments(json.segments), new ODataQueryOptions(json.options)) as T;
   }
