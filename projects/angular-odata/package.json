@@ -1,0 +1,33 @@
+{
+  "name": "angular-odata",
+  "version": "0.13.0",
+  "license": "MIT",
+  "description": "Client side OData V4 typescript library for Angular",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegomvh/angular-odata.git"
+  },
+  "keywords": [
+    "client",
+    "odata",
+    "odata v4",
+    "typescript",
+    "api",
+    "@angular",
+    "angular"
+  ],
+  "author": "Diego van Haaster",
+  "bugs": {
+    "url": "https://github.com/diegomvh/angular-odata/issues"
+  },
+  "homepage": "https://github.com/diegomvh/angular-odata",
+  "private": false,
+  "peerDependencies": {
+    "@angular/common": "^9.1.9",
+    "@angular/core": "^9.1.9",
+    "uuid": "^3.3.3"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0"
+  }
+}
