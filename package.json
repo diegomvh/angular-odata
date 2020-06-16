@@ -29,7 +29,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:doc": "compodoc -p projects/angular-odata/tsconfig.lib.json -d docs"
+    "build:doc": "compodoc -p projects/angular-odata/tsconfig.lib.json -d docs --disableGraph --disableCoverage"
   },
   "dependencies": {
     "@angular/animations": "~9.1.9",

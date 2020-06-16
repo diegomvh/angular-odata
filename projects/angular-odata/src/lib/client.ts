@@ -99,12 +99,22 @@ export class ODataClient {
     return ODataEntitySetResource.factory<T>(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  // Unbound Action
+  /**
+   * Unbound Action
+   * @param  {string} name
+   * @param  {string} returnType?
+   * @returns ODataActionResource
+   */
   action<T>(name: string, returnType?: string): ODataActionResource<T> {
     return ODataActionResource.factory(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  // Unbound Function
+  /**
+   * Unbound Function
+   * @param  {string} name
+   * @param  {string} returnType?
+   * @returns ODataFunctionResource
+   */
   function<T>(name: string, returnType?: string): ODataFunctionResource<T> {
     return ODataFunctionResource.factory<T>(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
   }

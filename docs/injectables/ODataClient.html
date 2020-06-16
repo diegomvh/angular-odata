@@ -619,8 +619,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="103"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:103</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:108</a></div>
                 </td>
             </tr>
 
@@ -635,6 +635,8 @@
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Unbound Action</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -644,6 +646,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -658,6 +661,8 @@
                                     </td>
 
 
+                                    <td>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>returnType</td>
@@ -670,6 +675,10 @@
                                     </td>
 
 
+                                    <td>
+                                        <p>?</p>
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -681,7 +690,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>ODataActionResource</p>
+
                     </div>
                 </td>
             </tr>
@@ -811,88 +821,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="382"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:382</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="delete"></a>
-                    <span class="name">
-                        <b>
-                            delete
-                        </b>
-                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>delete(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options?: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="392"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:392</a></div>
                 </td>
@@ -943,7 +871,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1025,7 +953,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1107,7 +1035,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1189,7 +1117,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1271,7 +1199,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1353,6 +1281,88 @@
                     <div>
                     </div>
                     <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="delete"></a>
+                    <span class="name">
+                        <b>
+                            delete
+                        </b>
+                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>delete(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options?: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="452"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:452</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Object&gt;&gt;</code>
 
                     </div>
@@ -1385,8 +1395,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="453"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:453</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="463"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:463</a></div>
                 </td>
             </tr>
 
@@ -1475,88 +1485,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="464"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:464</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="delete"></a>
-                    <span class="name">
-                        <b>
-                            delete
-                        </b>
-                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>delete(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options?: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="474"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:474</a></div>
                 </td>
@@ -1607,7 +1535,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1689,7 +1617,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -1771,6 +1699,88 @@
                     <div>
                     </div>
                     <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="delete"></a>
+                    <span class="name">
+                        <b>
+                            delete
+                        </b>
+                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>delete(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options?: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="504"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:504</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Object&gt;&gt;</code>
 
                     </div>
@@ -1803,8 +1813,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="505"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:505</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="515"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:515</a></div>
                 </td>
             </tr>
 
@@ -1893,8 +1903,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="516"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:516</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="526"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:526</a></div>
                 </td>
             </tr>
 
@@ -1975,8 +1985,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="527"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:527</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="537"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:537</a></div>
                 </td>
             </tr>
 
@@ -2065,8 +2075,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="538"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:538</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="548"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:548</a></div>
                 </td>
             </tr>
 
@@ -2469,8 +2479,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="108"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:108</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:118</a></div>
                 </td>
             </tr>
 
@@ -2485,6 +2495,8 @@
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Unbound Function</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -2494,6 +2506,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2508,6 +2521,8 @@
                                     </td>
 
 
+                                    <td>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>returnType</td>
@@ -2520,6 +2535,10 @@
                                     </td>
 
 
+                                    <td>
+                                        <p>?</p>
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2531,89 +2550,8 @@
 
                     </div>
                     <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="get"></a>
-                    <span class="name">
-                        <b>
-                            get
-                        </b>
-                        <a href="#get"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>get(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
-                </td>
-            </tr>
+                        <p>ODataFunctionResource</p>
 
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="551"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:551</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
                     </div>
                 </td>
             </tr>
@@ -2691,7 +2629,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -2773,7 +2711,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -2855,7 +2793,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -2937,7 +2875,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -3019,6 +2957,88 @@
                     <div>
                     </div>
                     <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="get"></a>
+                    <span class="name">
+                        <b>
+                            get
+                        </b>
+                        <a href="#get"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>get(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="611"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:611</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
 
                     </div>
@@ -3051,8 +3071,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="610"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:610</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="620"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:620</a></div>
                 </td>
             </tr>
 
@@ -3133,8 +3153,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="620"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:620</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="630"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:630</a></div>
                 </td>
             </tr>
 
@@ -3223,8 +3243,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="630"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:630</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="640"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:640</a></div>
                 </td>
             </tr>
 
@@ -3305,8 +3325,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="639"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:639</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="649"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:649</a></div>
                 </td>
             </tr>
 
@@ -3387,8 +3407,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="648"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:648</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="658"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:658</a></div>
                 </td>
             </tr>
 
@@ -3469,8 +3489,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="657"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:657</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="667"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:667</a></div>
                 </td>
             </tr>
 
@@ -3551,8 +3571,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="667"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:667</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="677"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:677</a></div>
                 </td>
             </tr>
 
@@ -3641,8 +3661,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="677"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:677</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="687"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:687</a></div>
                 </td>
             </tr>
 
@@ -3723,8 +3743,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="687"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:687</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="697"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:697</a></div>
                 </td>
             </tr>
 
@@ -3813,8 +3833,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="697"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:697</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="707"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:707</a></div>
                 </td>
             </tr>
 
@@ -3870,88 +3890,6 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="head"></a>
-                    <span class="name">
-                        <b>
-                            head
-                        </b>
-                        <a href="#head"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>head(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="709"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:709</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4033,7 +3971,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4115,7 +4053,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4197,7 +4135,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4279,7 +4217,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4361,7 +4299,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4443,7 +4381,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Object&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4477,6 +4415,88 @@
                 <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="779"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:779</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Object&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="head"></a>
+                    <span class="name">
+                        <b>
+                            head
+                        </b>
+                        <a href="#head"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>head(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="789"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:789</a></div>
                 </td>
             </tr>
 
@@ -4565,88 +4585,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="789"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:789</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="head"></a>
-                    <span class="name">
-                        <b>
-                            head
-                        </b>
-                        <a href="#head"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>head(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="799"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:799</a></div>
                 </td>
@@ -4697,7 +4635,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4779,7 +4717,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4861,7 +4799,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Object&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -4895,6 +4833,88 @@
                 <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="829"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:829</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Object&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="head"></a>
+                    <span class="name">
+                        <b>
+                            head
+                        </b>
+                        <a href="#head"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>head(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="839"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:839</a></div>
                 </td>
             </tr>
 
@@ -4983,8 +5003,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="839"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:839</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="849"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:849</a></div>
                 </td>
             </tr>
 
@@ -5065,8 +5085,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="849"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:849</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="859"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:859</a></div>
                 </td>
             </tr>
 
@@ -5155,8 +5175,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="859"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:859</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="869"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:869</a></div>
                 </td>
             </tr>
 
@@ -5243,8 +5263,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="871"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:871</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="881"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:881</a></div>
                 </td>
             </tr>
 
@@ -5325,8 +5345,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="873"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:873</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="883"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:883</a></div>
                 </td>
             </tr>
 
@@ -5415,8 +5435,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="875"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:875</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="885"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:885</a></div>
                 </td>
             </tr>
 
@@ -5505,8 +5525,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="113"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:113</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="123"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:123</a></div>
                 </td>
             </tr>
 
@@ -5575,8 +5595,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="126"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:126</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="136"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:136</a></div>
                 </td>
             </tr>
 
@@ -5747,88 +5767,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="883"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:883</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="options"></a>
-                    <span class="name">
-                        <b>
-                            options
-                        </b>
-                        <a href="#options"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>options(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="893"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:893</a></div>
                 </td>
@@ -5879,7 +5817,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -5961,7 +5899,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -6043,7 +5981,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -6125,7 +6063,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -6207,7 +6145,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -6289,7 +6227,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Object&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -6408,6 +6346,88 @@
                 </td>
             </tr>
 
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Object&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="options"></a>
+                    <span class="name">
+                        <b>
+                            options
+                        </b>
+                        <a href="#options"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>options(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, options: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="973"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:973</a></div>
+                </td>
+            </tr>
+
             <tr>
                 <td class="col-md-4">
                     <b>Type parameters :</b>
@@ -6493,8 +6513,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="973"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:973</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="983"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:983</a></div>
                 </td>
             </tr>
 
@@ -6575,8 +6595,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="982"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:982</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="992"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:992</a></div>
                 </td>
             </tr>
 
@@ -6657,8 +6677,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="991"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:991</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1001"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1001</a></div>
                 </td>
             </tr>
 
@@ -6739,8 +6759,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1000"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1000</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1010"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1010</a></div>
                 </td>
             </tr>
 
@@ -6821,8 +6841,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1010"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1010</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1020"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1020</a></div>
                 </td>
             </tr>
 
@@ -6911,8 +6931,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1020"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1020</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1030"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1030</a></div>
                 </td>
             </tr>
 
@@ -6993,8 +7013,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1030"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1030</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1040"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1040</a></div>
                 </td>
             </tr>
 
@@ -7083,8 +7103,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1040"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1040</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1050"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1050</a></div>
                 </td>
             </tr>
 
@@ -7249,8 +7269,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1052"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1052</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1062"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1062</a></div>
                 </td>
             </tr>
 
@@ -7343,8 +7363,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1063"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1063</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1073"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1073</a></div>
                 </td>
             </tr>
 
@@ -7437,8 +7457,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1074"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1074</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1084"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1084</a></div>
                 </td>
             </tr>
 
@@ -7531,8 +7551,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1085"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1085</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1095"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1095</a></div>
                 </td>
             </tr>
 
@@ -7625,8 +7645,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1096"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1096</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1106"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1106</a></div>
                 </td>
             </tr>
 
@@ -7719,8 +7739,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1107"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1117"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1117</a></div>
                 </td>
             </tr>
 
@@ -7813,8 +7833,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1118"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1118</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1128"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1128</a></div>
                 </td>
             </tr>
 
@@ -7907,8 +7927,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1129"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1129</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1139"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1139</a></div>
                 </td>
             </tr>
 
@@ -8009,100 +8029,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1140"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1140</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>body</td>
-                                    <td>
-                                            <code>any | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="patch"></a>
-                    <span class="name">
-                        <b>
-                            patch
-                        </b>
-                        <a href="#patch"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>patch(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options?: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="1150"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:1150</a></div>
                 </td>
@@ -8165,7 +8091,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -8259,7 +8185,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -8353,6 +8279,100 @@
                     <div>
                     </div>
                     <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="patch"></a>
+                    <span class="name">
+                        <b>
+                            patch
+                        </b>
+                        <a href="#patch"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>patch(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options?: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1180"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1180</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                            <code>any | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Object&gt;&gt;</code>
 
                     </div>
@@ -8385,8 +8405,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1181"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1181</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1191"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1191</a></div>
                 </td>
             </tr>
 
@@ -8487,8 +8507,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1192"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1192</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1202"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1202</a></div>
                 </td>
             </tr>
 
@@ -8581,8 +8601,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1203"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1203</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1213"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1213</a></div>
                 </td>
             </tr>
 
@@ -8683,8 +8703,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1214"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1214</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1224"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1224</a></div>
                 </td>
             </tr>
 
@@ -8785,100 +8805,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1227"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1227</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>body</td>
-                                    <td>
-                                            <code>any | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="post"></a>
-                    <span class="name">
-                        <b>
-                            post
-                        </b>
-                        <a href="#post"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>post(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="1237"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:1237</a></div>
                 </td>
@@ -8941,7 +8867,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9035,7 +8961,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9129,7 +9055,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;string&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9223,7 +9149,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9317,7 +9243,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9411,7 +9337,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Object&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;string&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9445,6 +9371,100 @@
                 <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="1297"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:1297</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                            <code>any | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpEvent&lt;Object&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="post"></a>
+                    <span class="name">
+                        <b>
+                            post
+                        </b>
+                        <a href="#post"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>post(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1307"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1307</a></div>
                 </td>
             </tr>
 
@@ -9545,100 +9565,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1307"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1307</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>body</td>
-                                    <td>
-                                            <code>any | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="post"></a>
-                    <span class="name">
-                        <b>
-                            post
-                        </b>
-                        <a href="#post"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>post(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="1317"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:1317</a></div>
                 </td>
@@ -9701,7 +9627,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9795,7 +9721,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9889,7 +9815,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Object&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -9923,6 +9849,100 @@
                 <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="1347"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:1347</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                            <code>any | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Object&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="post"></a>
+                    <span class="name">
+                        <b>
+                            post
+                        </b>
+                        <a href="#post"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>post(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1357"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1357</a></div>
                 </td>
             </tr>
 
@@ -10023,8 +10043,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1357"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1357</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1367"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1367</a></div>
                 </td>
             </tr>
 
@@ -10117,8 +10137,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1367"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1367</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1377"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1377</a></div>
                 </td>
             </tr>
 
@@ -10219,8 +10239,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1377"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1377</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1387"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1387</a></div>
                 </td>
             </tr>
 
@@ -10321,8 +10341,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1389"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1389</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1399"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1399</a></div>
                 </td>
             </tr>
 
@@ -10415,8 +10435,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1400"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1400</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1410"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1410</a></div>
                 </td>
             </tr>
 
@@ -10509,8 +10529,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1411"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1411</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1421"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1421</a></div>
                 </td>
             </tr>
 
@@ -10603,8 +10623,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1422"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1422</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1432"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1432</a></div>
                 </td>
             </tr>
 
@@ -10697,8 +10717,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1433"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1433</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1443"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1443</a></div>
                 </td>
             </tr>
 
@@ -10791,8 +10811,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1444"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1444</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1454"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1454</a></div>
                 </td>
             </tr>
 
@@ -10885,8 +10905,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1455"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1455</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1465"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1465</a></div>
                 </td>
             </tr>
 
@@ -10979,8 +10999,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1466"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1466</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1476"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1476</a></div>
                 </td>
             </tr>
 
@@ -11081,100 +11101,6 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1477"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1477</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>body</td>
-                                    <td>
-                                            <code>any | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                            <code>literal type</code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="put"></a>
-                    <span class="name">
-                        <b>
-                            put
-                        </b>
-                        <a href="#put"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>put(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options?: literal type)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="1487"
                             class="link-to-prism">projects/angular-odata/src/lib/client.ts:1487</a></div>
                 </td>
@@ -11237,7 +11163,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;ArrayBuffer&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -11331,7 +11257,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Blob&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -11425,6 +11351,100 @@
                     <div>
                     </div>
                     <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;string&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="put"></a>
+                    <span class="name">
+                        <b>
+                            put
+                        </b>
+                        <a href="#put"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>put(resource: <a href="../classes/ODataResource.html">ODataResource<any></a>, body: any | null, options?: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="1517"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1517</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                            <code>any | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;HttpResponse&lt;Object&gt;&gt;</code>
 
                     </div>
@@ -11457,8 +11477,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1518"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1518</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1528"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1528</a></div>
                 </td>
             </tr>
 
@@ -11559,8 +11579,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1529"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1529</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1539"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1539</a></div>
                 </td>
             </tr>
 
@@ -11653,8 +11673,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1540"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1540</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1550"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1550</a></div>
                 </td>
             </tr>
 
@@ -11755,8 +11775,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="1551"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1551</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="1561"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:1561</a></div>
                 </td>
             </tr>
 
@@ -11857,8 +11877,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="139"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:139</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="149"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:149</a></div>
                 </td>
             </tr>
 
@@ -11951,8 +11971,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="151"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:151</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="161"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:161</a></div>
                 </td>
             </tr>
 
@@ -12045,8 +12065,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="163"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:163</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="173"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:173</a></div>
                 </td>
             </tr>
 
@@ -12139,8 +12159,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="175"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:175</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:185</a></div>
                 </td>
             </tr>
 
@@ -12233,8 +12253,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="187"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:187</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="197"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:197</a></div>
                 </td>
             </tr>
 
@@ -12327,8 +12347,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="199"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:199</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="209"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:209</a></div>
                 </td>
             </tr>
 
@@ -12421,8 +12441,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="211"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:211</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="221"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:221</a></div>
                 </td>
             </tr>
 
@@ -12515,8 +12535,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="223"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:223</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="233"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:233</a></div>
                 </td>
             </tr>
 
@@ -12617,8 +12637,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="235"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:235</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="245"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:245</a></div>
                 </td>
             </tr>
 
@@ -12711,8 +12731,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="247"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:247</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="257"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:257</a></div>
                 </td>
             </tr>
 
@@ -12805,8 +12825,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="259"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:259</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="269"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:269</a></div>
                 </td>
             </tr>
 
@@ -12899,8 +12919,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="270"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:270</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="280"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:280</a></div>
                 </td>
             </tr>
 
@@ -12993,8 +13013,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="282"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:282</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="292"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:292</a></div>
                 </td>
             </tr>
 
@@ -13095,8 +13115,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="294"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:294</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="304"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:304</a></div>
                 </td>
             </tr>
 
@@ -13189,8 +13209,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="306"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:306</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="316"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:316</a></div>
                 </td>
             </tr>
 
@@ -13291,8 +13311,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="318"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:318</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="328"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:328</a></div>
                 </td>
             </tr>
 
@@ -13385,8 +13405,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="330"
-                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:330</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="340"
+                            class="link-to-prism">projects/angular-odata/src/lib/client.ts:340</a></div>
                 </td>
             </tr>
 
@@ -13732,12 +13752,22 @@ export class ODataClient {
     return ODataEntitySetResource.factory&lt;T&gt;(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  // Unbound Action
+  /**
+   * Unbound Action
+   * @param  {string} name
+   * @param  {string} returnType?
+   * @returns ODataActionResource
+   */
   action&lt;T&gt;(name: string, returnType?: string): ODataActionResource&lt;T&gt; {
     return ODataActionResource.factory(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  // Unbound Function
+  /**
+   * Unbound Function
+   * @param  {string} name
+   * @param  {string} returnType?
+   * @returns ODataFunctionResource
+   */
   function&lt;T&gt;(name: string, returnType?: string): ODataFunctionResource&lt;T&gt; {
     return ODataFunctionResource.factory&lt;T&gt;(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
   }
