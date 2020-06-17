@@ -4,14 +4,10 @@ import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig,
 export const DATE_PARSER: {[type: string]: Parser<any>} = {
   'Date': <Parser<Date>>{
     deserialize(value: any) {
-      return Array.isArray(value) ?
-        value.map(v => new Date(v)) :
-        new Date(value);
+      return new Date(value);
     },
     serialize(value: Date) { 
-      return Array.isArray(value) ?
-        value.map(v => new Date(v)) :
-        new Date(value);
+      return value.toISOString();
     }
   }
 };
@@ -96,13 +92,17 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   // Deserialize
   deserialize(value: any) {
     if (value === null) return value;
-    return this.parser ? this.parser.deserialize(value) : value;
+    if (this.parser)
+      return Array.isArray(this.parser)? value.map(v => this.parser.deserialize(v)) : this.parser.deserialize(value);
+    return value;
   }
 
   // Serialize
   serialize(value: any) {
     if (value === null) return value;
-    return this.parser ? this.parser.serialize(value) : value;
+    if (this.parser)
+      return Array.isArray(this.parser)? value.map(v => this.parser.serialize(v)) : this.parser.serialize(value);
+    return value;
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
