@@ -85,14 +85,14 @@ export class ODataResource<Type> {
     this.pathSegments.last().setType(type);
   }
 
-  protected serialize(obj: Type | Partial<Type>): any {
-    let parser = this.client.parserFor(this);
-    return parser ? parser.toJSON(obj) : obj;
-  }
-
   protected deserialize<T>(value: any): T {
     let parser = this.client.parserFor(this);
-    return parser ? parser.parse(value) : value;
+    return parser ? parser.deserialize(value) : value;
+  }
+
+  protected serialize(obj: Type | Partial<Type>): any {
+    let parser = this.client.parserFor(this);
+    return parser ? parser.serialize(obj) : obj;
   }
 
   // to<Thing>

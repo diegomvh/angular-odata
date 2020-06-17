@@ -123,9 +123,8 @@ export type Field = {
 }
 
 export interface Parser<T> {
-  type: string;
-  parse(value: any): any;
-  toJSON(value: T | Partial<T>): any;
+  deserialize(value: any): any;
+  serialize(value: T | Partial<T>): any;
 }
 
 export type Configuration = {

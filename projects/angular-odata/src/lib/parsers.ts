@@ -1,28 +1,26 @@
 import { Types, Enums } from './utils';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, EnumConfig } from './types';
 
-export const PARSERS: {[name: string]: Parser<any>} = {
+export const PARSERS: {[type: string]: Parser<any>} = {
   'Date': <Parser<Date>>{
-    type: 'Date',
-    parse(value: any) {
+    deserialize(value: any) {
       return Array.isArray(value) ?
         value.map(v => new Date(v)) :
         new Date(value);
     },
-    toJSON(value: Date) { 
+    serialize(value: Date) { 
       return Array.isArray(value) ?
         value.map(v => new Date(v)) :
         new Date(value);
     }
   },
   'number': <Parser<number>>{
-    type: 'number',
-    parse(value: any) {
+    deserialize(value: any) {
       return Array.isArray(value) ?
         value.map(v => Number(v)) :
         Number(value);
     },
-    toJSON(value: number) { 
+    serialize(value: number) { 
       return Array.isArray(value) ?
         value.map(v => Number(v)) :
         Number(value);
@@ -50,7 +48,7 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
   }
 
   // Deserialize
-  parse(value: any) {
+  deserialize(value: any) {
     // String to number
     if (value === null || typeof(value) === 'number') return value;
     return this.flags ?
@@ -59,7 +57,7 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
   }
 
   // Serialize
-  toJSON(value: any) {
+  serialize(value: any) {
     // Number to string
     if (value === null || typeof(value) === 'string') return value;
     let enums = this.flags ?
@@ -108,15 +106,15 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   }
 
   // Deserialize
-  parse(value: any) {
+  deserialize(value: any) {
     if (value === null) return value;
-    return this.parser ? this.parser.parse(value) : value;
+    return this.parser ? this.parser.deserialize(value) : value;
   }
 
   // Serialize
-  toJSON(value: any) {
+  serialize(value: any) {
     if (value === null) return value;
-    return this.parser ? this.parser.toJSON(value) : value;
+    return this.parser ? this.parser.serialize(value) : value;
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
@@ -175,13 +173,13 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
   }
 
   // Deserialize
-  parse(objs: any): Type | Type[] {
+  deserialize(objs: any): Type | Type[] {
     if (this.parent)
-      objs = this.parent.parse(objs);
+      objs = this.parent.deserialize(objs);
     let _parse = (obj) =>
       Object.assign(obj, this.fields
         .filter(f => f.name in obj)
-        .reduce((acc, f) => Object.assign(acc, { [f.name]: f.parse(obj[f.name]) }), {})
+        .reduce((acc, f) => Object.assign(acc, { [f.name]: f.deserialize(obj[f.name]) }), {})
       );
     return Array.isArray(objs) ?
       objs.map(obj => _parse(obj)) :
@@ -189,12 +187,12 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
   }
 
   // Serialize
-  toJSON(objs: any): any {
+  serialize(objs: any): any {
     if (this.parent)
-      objs = this.parent.toJSON(objs);
+      objs = this.parent.serialize(objs);
     let _toJSON = (obj) => Object.assign(obj, this.fields
       .filter(f => f.name in obj)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.toJSON(obj[f.name]) }), {})
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize(obj[f.name]) }), {})
     );
     return Array.isArray(objs) ? 
       objs.map(obj => _toJSON(obj)) :
