@@ -1,7 +1,5 @@
-import { ODataEntityParser, ODataFieldParser, ODataParser, ODataEnumParser, PARSERS } from '../parsers';
+import { ODataEntityParser, ODataFieldParser, ODataEnumParser, DATE_PARSER } from '../parsers';
 import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, Field } from '../types';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Types } from '../utils';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
@@ -16,6 +14,7 @@ export class ODataConfig {
   acceptMetadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean;
   creation?: Date;
+  parsers?: {[type: string]: Parser<any>};
   schemas?: Array<ODataSchema>;
 
   constructor(config: Configuration) {
@@ -32,6 +31,7 @@ export class ODataConfig {
     this.acceptMetadata = config.acceptMetadata;
     this.stringAsEnum = config.stringAsEnum || false;
     this.creation = config.creation || new Date();
+    this.parsers = config.parsers || {...DATE_PARSER};
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema));
   }
@@ -118,8 +118,8 @@ export class ODataConfig {
   //#endregion
 
   public parserForType<T>(type: string): Parser<T> {
-    if (type in PARSERS) {
-      return PARSERS[type] as Parser<T>;
+    if (type in this.parsers) {
+      return this.parsers[type] as Parser<T>;
     }
     let config = this.enumConfigForType(type) || this.entityConfigForType(type);
     if (!Types.isUndefined(config))

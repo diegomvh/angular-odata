@@ -136,8 +136,8 @@ export type Configuration = {
   acceptMetadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean,
   creation?: Date,
+  parsers?: {[type: string]: Parser<any>};
   schemas?: Array<Schema>,
-  errorHandler?: (error: HttpErrorResponse) => Observable<never>
 }
 
 export const ODATA_CONFIGURATIONS = new InjectionToken<Configuration>('odata.configuraions');

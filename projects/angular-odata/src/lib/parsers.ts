@@ -1,7 +1,7 @@
 import { Types, Enums } from './utils';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, EnumConfig } from './types';
 
-export const PARSERS: {[type: string]: Parser<any>} = {
+export const DATE_PARSER: {[type: string]: Parser<any>} = {
   'Date': <Parser<Date>>{
     deserialize(value: any) {
       return Array.isArray(value) ?
@@ -12,18 +12,6 @@ export const PARSERS: {[type: string]: Parser<any>} = {
       return Array.isArray(value) ?
         value.map(v => new Date(v)) :
         new Date(value);
-    }
-  },
-  'number': <Parser<number>>{
-    deserialize(value: any) {
-      return Array.isArray(value) ?
-        value.map(v => Number(v)) :
-        Number(value);
-    },
-    serialize(value: number) { 
-      return Array.isArray(value) ?
-        value.map(v => Number(v)) :
-        Number(value);
     }
   }
 };
@@ -118,9 +106,7 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   }
 
   configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
-    this.parser = (this.type in PARSERS) ? 
-      PARSERS[this.type] : 
-      settings.parserForType(this.type);
+    this.parser = settings.parserForType(this.type);
   }
 
   // Json Schema
