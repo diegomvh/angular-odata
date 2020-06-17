@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 import { 
   PlainObject,
@@ -23,7 +22,6 @@ import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
 import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig } from './models';
 import { Types } from './utils';
-import { PARSERS } from './parsers';
 
 @Injectable()
 export class ODataClient {
@@ -36,24 +34,15 @@ export class ODataClient {
 
   // Resolve Building Blocks
   entityConfigForType<T>(type: string): ODataEntityConfig<T> | null {
-    let config = this.settings.configForType(type);
-    return config.entityConfigForType<T>(type);
+    return this.settings.entityConfigForType<T>(type);
   }
 
   serviceConfigForType(type: string): ODataServiceConfig | null {
-    let config = this.settings.configForType(type);
-    return config.serviceConfigForType(type);
+    return this.settings.serviceConfigForType(type);
   }
 
   parserForType<T>(type: string): Parser<T> | null {
-    let parser: Parser<T>;
-    let config = this.settings.configForType(type);
-    if (config)
-      parser = config.parserForType(type) as Parser<T>;
-    if (!parser && type in PARSERS) {
-      parser = PARSERS[type] as Parser<T>;
-    }
-    return parser;
+    return this.settings.parserForType(type);
   }
 
   modelForType(type: string): typeof ODataModel {
@@ -1231,7 +1220,7 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PATCH', resource, Object.assign(options, {body}));
+    return this.request<any>('PATCH', resource, Object.assign(options, {body}) as any);
   }
 
   post(resource: ODataResource<any>, body: any | null, options: {
@@ -1393,7 +1382,7 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('POST', resource, Object.assign(options, {body}));
+    return this.request<any>('POST', resource, Object.assign(options, {body}) as any);
   }
 
   put(resource: ODataResource<any>, body: any | null, options?: {
@@ -1568,6 +1557,6 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PUT', resource, Object.assign(options, {body}));
+    return this.request<any>('PUT', resource, Object.assign(options, {body}) as any);
   }
 }

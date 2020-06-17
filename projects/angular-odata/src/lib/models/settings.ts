@@ -1,8 +1,9 @@
-import { Configuration } from '../types';
+import { Configuration, Parser } from '../types';
 import { ODataConfig } from './config';
 import { Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
+import { PARSERS } from '../parsers';
 
 export class ODataSettings {
   configs?: Array<ODataConfig>;
@@ -32,7 +33,42 @@ export class ODataSettings {
     return this.findConfigForTypes([type]);
   }
 
-  // Configs shortcuts
+  //#region Configs shortcuts
+  public enumConfigForType<T>(type: string) {
+    let values = this.configs.map(config => config.enumConfigForType<T>(type)).filter(e => e);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0];
+  }
+
+  public entityConfigForType<T>(type: string) {
+    let values = this.configs.map(config => config.entityConfigForType<T>(type)).filter(e => e);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0];
+  }
+
+  public serviceConfigForType(type: string) {
+    let values = this.configs.map(config => config.serviceConfigForType(type)).filter(e => e);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0];
+  }
+
+  public modelForType(type: string): typeof ODataModel {
+    let values = this.configs.map(config => config.modelForType(type)).filter(e => e);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0];
+  }
+
+  public collectionForType(type: string): typeof ODataCollection {
+    let values = this.configs.map(config => config.collectionForType(type)).filter(e => e);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0];
+  }
+
   public enumConfigForName<T>(name: string) {
     let values = this.configs.map(config => config.enumConfigForName<T>(name)).filter(e => e);
     if (values.length > 1)
@@ -66,5 +102,17 @@ export class ODataSettings {
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
+  }
+  //#endregion
+
+  parserForType<T>(type: string): Parser<T> | null {
+    let parser: Parser<T>;
+    let config = this.configForType(type);
+    if (config)
+      parser = config.parserForType(type) as Parser<T>;
+    if (!parser && type in PARSERS) {
+      parser = PARSERS[type] as Parser<T>;
+    }
+    return parser;
   }
 }
