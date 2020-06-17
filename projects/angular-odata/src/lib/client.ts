@@ -32,29 +32,26 @@ export class ODataClient {
     return `${config.serviceRootUrl}${resource}`;
   }
 
+  parserFor<T>(resource: ODataResource<any>): Parser<T> {
+    let config = this.settings.findConfigForTypes(resource.types());
+    return config.parserForType(resource.type());
+  }
+
   // Resolve Building Blocks
-  entityConfigForType<T>(type: string): ODataEntityConfig<T> | null {
+  entityConfigForType<T>(type: string): ODataEntityConfig<T> {
     return this.settings.entityConfigForType<T>(type);
   }
 
-  serviceConfigForType(type: string): ODataServiceConfig | null {
+  serviceConfigForType(type: string): ODataServiceConfig {
     return this.settings.serviceConfigForType(type);
   }
 
-  parserForType<T>(type: string): Parser<T> | null {
-    return this.settings.parserForType(type);
-  }
-
   modelForType(type: string): typeof ODataModel {
-    let config = this.settings.configForType(type);
-    let Model = config.modelForType(type) as typeof ODataModel;
-    return Model || ODataModel;
+    return this.settings.modelForType(type) || ODataModel;
   }
 
   collectionForType(type: string): typeof ODataCollection {
-    let config = this.settings.configForType(type);
-    let Collection = config.collectionForType(type) as typeof ODataCollection;
-    return Collection || ODataCollection;
+    return this.settings.collectionForType(type) || ODataCollection;
   }
 
   fromJSON<T extends ODataResource<any>>(json: {segments: ODataSegment[], options: PlainObject}): T {

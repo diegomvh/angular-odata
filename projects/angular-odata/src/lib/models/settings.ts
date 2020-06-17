@@ -3,7 +3,6 @@ import { ODataConfig } from './config';
 import { Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
-import { PARSERS } from '../parsers';
 
 export class ODataSettings {
   configs?: Array<ODataConfig>;
@@ -104,15 +103,4 @@ export class ODataSettings {
     return values[0];
   }
   //#endregion
-
-  parserForType<T>(type: string): Parser<T> | null {
-    let parser: Parser<T>;
-    let config = this.configForType(type);
-    if (config)
-      parser = config.parserForType(type) as Parser<T>;
-    if (!parser && type in PARSERS) {
-      parser = PARSERS[type] as Parser<T>;
-    }
-    return parser;
-  }
 }

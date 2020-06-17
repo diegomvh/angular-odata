@@ -31,7 +31,7 @@ export const PARSERS: {[name: string]: Parser<any>} = {
 };
 
 export interface ODataParser<Type> extends Parser<Type> { 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>});
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>});
   toJsonSchema(options?: JsonSchemaExpandOptions<Type>);
 }
 
@@ -80,7 +80,7 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
     return property;
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
     this.stringAsEnum = settings.stringAsEnum;
   }
 }
@@ -119,7 +119,7 @@ export class ODataFieldParser<T> implements ODataParser<T> {
     return this.parser ? this.parser.toJSON(value) : value;
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
     this.parser = (this.type in PARSERS) ? 
       PARSERS[this.type] : 
       settings.parserForType(this.type);
@@ -201,7 +201,7 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
       _toJSON(objs);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
     if (this.base) {
       this.parent = settings.parserForType(this.base) as ODataEntityParser<any>;
     }

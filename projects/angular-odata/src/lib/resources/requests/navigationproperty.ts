@@ -30,8 +30,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     if (!segment)
       throw new Error(`EntityResourse dosn't have segment for key`);
     if (!Types.isUndefined(key)) {
-      if (this.parser instanceof ODataEntityParser && Types.isObject(key))
-        key = this.parser.resolveKey(key);
+      let parser = this.client.parserFor(this);
+      if (parser instanceof ODataEntityParser && Types.isObject(key))
+        key = parser.resolveKey(key);
       segment.option(SegmentOptionNames.key, key);
     }
     return segment.option(SegmentOptionNames.key).value();
@@ -61,14 +62,16 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(name: string) {
-    let type = this.parser instanceof ODataEntityParser? 
-      this.parser.typeFor(name) : null; 
+    let parser = this.client.parserFor(this);
+    let type = parser instanceof ODataEntityParser? 
+      parser.typeFor(name) : null; 
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
-    let type = this.parser instanceof ODataEntityParser? 
-      this.parser.typeFor(name) : null;
+    let parser = this.client.parserFor(this);
+    let type = parser instanceof ODataEntityParser? 
+      parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 

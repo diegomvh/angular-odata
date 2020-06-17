@@ -26,14 +26,16 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   // Segments
   navigationProperty<N>(name: string) {
-    let type = this.parser instanceof ODataEntityParser? 
-      this.parser.typeFor(name) : null;
+    let parser = this.client.parserFor(this);
+    let type = parser instanceof ODataEntityParser? 
+      parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
-    let type = this.parser instanceof ODataEntityParser? 
-      this.parser.typeFor(name) : null;
+    let parser = this.client.parserFor(this);
+    let type = parser instanceof ODataEntityParser? 
+      parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 

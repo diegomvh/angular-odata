@@ -1,4 +1,4 @@
-import { ODataEntityParser, ODataFieldParser, ODataParser, ODataEnumParser } from '../parsers';
+import { ODataEntityParser, ODataFieldParser, ODataParser, ODataEnumParser, PARSERS } from '../parsers';
 import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, Field } from '../types';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -117,10 +117,13 @@ export class ODataConfig {
   //#endregion
   //#endregion
 
-  public parserForType<T>(type: string): ODataParser<T> {
+  public parserForType<T>(type: string): Parser<T> {
+    if (type in PARSERS) {
+      return PARSERS[type] as Parser<T>;
+    }
     let config = this.enumConfigForType(type) || this.entityConfigForType(type);
     if (!Types.isUndefined(config))
-      return config.parser as ODataParser<T>;
+      return config.parser as Parser<T>;
   }
 }
 
@@ -141,7 +144,7 @@ export class ODataSchema {
     return this.containers.reduce((acc, container) => [...acc, ...container.services], <ODataServiceConfig[]>[]);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
     this.enums
       .forEach(config => config.configure(settings));
     this.entities
@@ -161,7 +164,7 @@ export class ODataEnumConfig<Type> {
     this.parser = new ODataEnumParser(config as EnumConfig<any>, namespace);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
     this.parser.configure(settings);
   }
 }
@@ -183,7 +186,7 @@ export class ODataEntityConfig<Type> {
     this.parser = new ODataEntityParser(config, namespace);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
     this.parser.configure(settings);
   }
 
@@ -218,7 +221,7 @@ export class ODataContainer {
     this.services = (config.services || []).map(config => new ODataServiceConfig(config, namespace));
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
     this.services
       .forEach(config => config.configure(settings));
   }
@@ -234,5 +237,5 @@ export class ODataServiceConfig {
     this.annotations = config.annotations;
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => ODataParser<any>}) {}
+  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {}
 }

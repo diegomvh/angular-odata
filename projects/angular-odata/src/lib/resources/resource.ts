@@ -5,7 +5,6 @@ import {
   VALUE,
   entityAttributes,
   odataAnnotations,
-  Parser,
   $COUNT,
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
@@ -48,12 +47,6 @@ export class ODataResource<Type> {
     this.queryOptions = options || new ODataQueryOptions();
   }
 
-  get parser(): Parser<Type> | null {
-    let segment = this.pathSegments.last();
-    if (segment && segment.type)
-      return this.client.parserForType(segment.type);
-  }
-
   type(): string {
     let segment = this.pathSegments.last();
     if (segment)
@@ -67,10 +60,6 @@ export class ODataResource<Type> {
   // Proxy to client
   config() {
     return this.client.entityConfigForType<Type>(this.type());
-  }
-
-  parserForType(type?: string) {
-    return this.client.parserForType(type || this.type());
   }
 
   modelForType(type?: string) {
@@ -97,11 +86,13 @@ export class ODataResource<Type> {
   }
 
   protected serialize(obj: Type | Partial<Type>): any {
-    return this.parser ? this.parser.toJSON(obj) : obj;
+    let parser = this.client.parserFor(this);
+    return parser ? parser.toJSON(obj) : obj;
   }
 
   protected deserialize<T>(value: any): T {
-    return this.parser ? this.parser.parse(value) : value;
+    let parser = this.client.parserFor(this);
+    return parser ? parser.parse(value) : value;
   }
 
   // to<Thing>
