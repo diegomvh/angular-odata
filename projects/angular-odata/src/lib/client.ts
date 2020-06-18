@@ -34,7 +34,7 @@ export class ODataClient {
 
   parserFor<T>(resource: ODataResource<any>): Parser<T> {
     let config = this.settings.findConfigForTypes(resource.types());
-    return config.parserForType(resource.type());
+    return config.parserForType<T>(resource.type());
   }
 
   // Resolve Building Blocks
@@ -106,27 +106,39 @@ export class ODataClient {
   }
 
   //Merge Headers
-  mergeHttpHeaders(...headers: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
+  mergeHttpHeaders(...values: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
     let attrs = {};
-    headers.forEach(header => {
-      if (header instanceof HttpHeaders) {
-        const httpHeader = header as HttpHeaders;
-        attrs = httpHeader.keys().reduce((acc, key) => Object.assign(acc, { [key]: httpHeader.getAll(key) }), attrs);
-      } else if (typeof header === 'object')
-        attrs = Object.assign(attrs, header);
+    values.forEach(value => {
+      if (value instanceof HttpHeaders) {
+        const httpHeader = value as HttpHeaders;
+        attrs = httpHeader.keys().reduce((acc, key) => {
+          acc[key] = [...(acc[key] || []), ...httpHeader.getAll(key)];
+          return acc;
+        }, attrs);
+      } else if (typeof value === 'object')
+        attrs = Object.entries(value).reduce((acc, [key, value]) => {
+          acc[key] = [...(acc[key] || []), value];
+          return acc;
+        }, attrs);
     });
     return new HttpHeaders(attrs);
   }
 
-  //Merge Params
-  mergeHttpParams(...params: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
+  // Merge Params
+  mergeHttpParams(...values: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
     let attrs = {};
-    params.forEach(param => {
-      if (param instanceof HttpParams) {
-        const httpParam = param as HttpParams;
-        attrs = httpParam.keys().reduce((acc, key) => Object.assign(acc, { [key]: httpParam.getAll(key) }), attrs);
-      } else if (typeof param === 'object')
-        attrs = Object.assign(attrs, param);
+    values.forEach(value => {
+      if (value instanceof HttpParams) {
+        const httpParam = value as HttpParams;
+        attrs = httpParam.keys().reduce((acc, key) => {
+          acc[key] = [...(acc[key] || []), ...httpParam.getAll(key)];
+          return acc;
+        }, attrs);
+      } else if (typeof value === 'object')
+        attrs = Object.entries(value).reduce((acc, [key, value]) => {
+          acc[key] = [...(acc[key] || []), value];
+          return acc;
+        }, attrs);
     });
     return new HttpParams({ fromObject: attrs });
   }
