@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ODataClient } from './client';
 import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataBatchResource } from './resources';
 import { ODataModule } from './module';
@@ -7,34 +7,96 @@ import { ODataEntityParser } from './parsers';
 import { EntityConfig } from './types';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
-const ENTITY_SET = 'People';
 const SINGLETON = 'Me';
+const NAMESPACE = 'Tests';
+
+//#region Schema
+interface PlanItem {
+  PlanItemId: number;
+  ConfirmationCode?: string;
+  StartsAt?: Date;
+  EndsAt?: Date;
+  Duration?: string;
+}
+const PlanItemConfig = {
+  name: "PlanItem",
+  fields: {
+    PlanItemId: { type: 'Number', key: true, ref: 'PlanItemId', nullable: false },
+    ConfirmationCode: { type: 'String' },
+    StartsAt: { type: 'Date' },
+    EndsAt: { type: 'Date' },
+    Duration: { type: 'String' }
+  }
+} as EntityConfig<PlanItem>;
+
+interface Trip {
+  TripId: number;
+  ShareId?: string;
+  Description?: string;
+  Name: string;
+  Budget: number;
+  StartsAt: Date;
+  EndsAt: Date;
+  Tags: string[];
+  PlanItems?: PlanItem[];
+}
+
+export const TripConfig = {
+  name: "Trip",
+  fields: {
+    TripId: { type: 'Number', key: true, ref: 'TripId', nullable: false },
+    ShareId: { type: 'String' },
+    Description: { type: 'String' },
+    Name: { type: 'String', nullable: false },
+    Budget: { type: 'Number', nullable: false },
+    StartsAt: { type: 'Date', nullable: false },
+    EndsAt: { type: 'Date', nullable: false },
+    Tags: { type: 'String', nullable: false, collection: true },
+    PlanItems: { type: `${NAMESPACE}.PlanItem`, collection: true, navigation: true }
+  }
+} as EntityConfig<Trip>;
+
+const ENTITY_SET = 'People';
 interface Person {
+  UserName: string;
   FirstName: string;
   LastName: string;
+  Emails?: string[];
+  Friends?: Person[];
+  Trips?: Trip[];
 }
-const NAMESPACE = 'Tests';
 const NAME = 'Person';
 const PersonConfig = {
   name: NAME,
   fields: {
-    FirstName: {type: "String", nullable: false},
-    LastName: {type: "String", nullable: false}
+    UserName: { type: 'String', key: true, ref: 'UserName', nullable: false },
+    FirstName: { type: 'String', nullable: false },
+    LastName: { type: 'String', nullable: false },
+    Emails: { type: 'String', collection: true },
+    Friends: { type: `${NAMESPACE}.Person`, collection: true, navigation: true },
+    Trips: { type: `${NAMESPACE}.Trip`, collection: true, navigation: true }
   }
 } as EntityConfig<Person>;
+//#endregion
 
 describe('ODataClient', () => {
   let client: ODataClient;
-  
+  let httpMock: HttpTestingController;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ODataModule.forRoot({
         serviceRootUrl: SERVICE_ROOT,
-        schemas: [{namespace: NAMESPACE, entities: [PersonConfig]}]
+        schemas: [{ namespace: NAMESPACE, entities: [PlanItemConfig, TripConfig, PersonConfig] }]
       }), HttpClientTestingModule]
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('should create metadata resource', () => {
@@ -76,7 +138,7 @@ describe('ODataClient', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
     const parser = client.parserFor<Person>(set) as ODataEntityParser<Person>;
     expect(parser).toBeInstanceOf(ODataEntityParser);
-    expect(parser.fields.length).toEqual(2);
+    expect(parser.fields.length).toEqual(6);
   });
 
   it('should convert resource to json', () => {
@@ -105,5 +167,42 @@ describe('ODataClient', () => {
       param3: 'value3'
     });
     expect(params.toString()).toEqual('param1=value1&param2=value2&params=value1&params=value2&param3=value3');
+  });
+
+  it('should fetch people', () => {
+    const dummyPeople = {
+      "@odata.context": "http://services.odata.org/V4/TripPinServiceRW/$metadata#People",
+      "value": [
+        {
+          "@odata.id": "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+          "@odata.etag": "W/\"08D814450D6BDB6F\"",
+          "UserName": "russellwhyte", "FirstName": "Russell", "LastName": "Whyte",
+          "Emails": [
+            "Russell@example.com",
+            "Russell@contoso.com"
+          ]
+        },
+        {
+          "@odata.id": "http://services.odata.org/V4/TripPinServiceRW/People('scottketchum')",
+          "@odata.etag": "W/\"08D814450D6BDB6F\"",
+          "UserName": "scottketchum", "FirstName": "Scott", "LastName": "Ketchum",
+          "Emails": [
+            "Scott@example.com"
+          ]
+        }
+      ]
+    };
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
+    set.top(2);
+
+    set.get().subscribe(([people, annotations]) => {
+      expect(people.length).toBe(2);
+      expect(annotations.context.set).toEqual("People");
+      expect(people).toEqual(dummyPeople.value);
+    });
+
+    const req = httpMock.expectOne(`${SERVICE_ROOT}${ENTITY_SET}?$top=2`);
+    expect(req.request.method).toBe("GET");
+    req.flush(dummyPeople);
   });
 });
