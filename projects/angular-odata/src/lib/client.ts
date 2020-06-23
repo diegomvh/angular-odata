@@ -48,6 +48,10 @@ export class ODataClient {
     return this.settings.serviceConfigForType(type);
   }
 
+  parserForType<T>(type: string): Parser<T> {
+    return this.settings.parserForType<T>(type);
+  }
+
   modelForType(type: string): typeof ODataModel {
     return this.settings.modelForType(type) || ODataModel;
   }

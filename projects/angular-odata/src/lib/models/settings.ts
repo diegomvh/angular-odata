@@ -54,6 +54,13 @@ export class ODataSettings {
     return values[0];
   }
 
+  public parserForType<T>(type: string): Parser<T> {
+    let values = this.configs.map(config => config.parserForType<T>(type)).filter(e => e);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0] as Parser<T>;
+  }
+
   public modelForType(type: string): typeof ODataModel {
     let values = this.configs.map(config => config.modelForType(type)).filter(e => e);
     if (values.length > 1)
