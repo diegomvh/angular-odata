@@ -29,12 +29,14 @@ export class ODataClient {
 
   endpointUrl(resource: ODataResource<any>) {
     let config = this.settings.findConfigForTypes(resource.types());
-    return `${config.serviceRootUrl}${resource}`;
+    if (config)
+      return `${config.serviceRootUrl}${resource}`;
   }
 
   parserFor<T>(resource: ODataResource<any>): Parser<T> {
     let config = this.settings.findConfigForTypes(resource.types());
-    return config.parserForType<T>(resource.type());
+    if (config)
+      return config.parserForType<T>(resource.type());
   }
 
   // Resolve Building Blocks
