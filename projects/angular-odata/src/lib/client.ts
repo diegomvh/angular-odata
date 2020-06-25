@@ -28,14 +28,14 @@ export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   endpointUrl(resource: ODataResource<any>) {
-    let config = this.settings.findConfigForTypes(resource.types());
+    const config = this.settings.findConfigForTypes(resource.types());
     if (config)
       return `${config.serviceRootUrl}${resource}`;
   }
 
   parserFor<T>(resource: ODataResource<any>): Parser<T> {
-    let config = this.settings.findConfigForTypes(resource.types());
-    if (config)
+    const config = this.settings.findConfigForTypes(resource.types());
+    if (config && resource.type())
       return config.parserForType<T>(resource.type());
   }
 

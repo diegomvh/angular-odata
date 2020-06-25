@@ -46,13 +46,17 @@ export class ODataResource<Type> {
     this.pathSegments = segments || new ODataPathSegments();
     this.queryOptions = options || new ODataQueryOptions();
   }
-
+  /**
+   * @returns string The type of the resource
+   */
   type(): string {
     let segment = this.pathSegments.last();
     if (segment)
       return segment.type;
   }
-
+  /**
+   * @returns string All covered types of the resource
+   */
   types(): string[] {
     return this.pathSegments.types();
   }

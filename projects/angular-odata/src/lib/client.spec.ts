@@ -5,6 +5,7 @@ import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, O
 import { ODataModule } from './module';
 import { ODataEntityParser } from './parsers';
 import { EntityConfig } from './types';
+import { ODataEntityConfig } from './models';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const SINGLETON = 'Me';
@@ -97,6 +98,38 @@ describe('ODataClient', () => {
 
   afterEach(() => {
     httpMock.verify();
+  });
+
+  it('should return undefined parser for resource', () => {
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET);
+    const parser = client.parserFor<Person>(set);
+    expect(parser).toBeUndefined();
+  });
+
+  it('should return person parser for resource', () => {
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
+    const parser = client.parserFor<Person>(set);
+    expect(parser).toBeInstanceOf(ODataEntityParser);
+  });
+
+  it('should return undefined parser for type', () => {
+    const parser = client.parserForType<Person>(`${NAMESPACE}.Foo`);
+    expect(parser).toBeUndefined();
+  });
+
+  it('should return person parser for type', () => {
+    const parser = client.parserForType<Person>(`${NAMESPACE}.${NAME}`);
+    expect(parser).toBeInstanceOf(ODataEntityParser);
+  });
+
+  it('should return undefined entity config', () => {
+    const config = client.entityConfigForType<Person>(`${NAMESPACE}.Foo`);
+    expect(config).toBeUndefined();
+  });
+
+  it('should return person entity config', () => {
+    const config = client.entityConfigForType<Person>(`${NAMESPACE}.${NAME}`);
+    expect(config).toBeInstanceOf(ODataEntityConfig);
   });
 
   it('should create metadata resource', () => {
