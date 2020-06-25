@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ODataClient } from './client';
-import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataBatchResource } from './resources';
+import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataBatchResource, ODataEntityResource } from './resources';
 import { ODataModule } from './module';
 import { ODataEntityParser } from './parsers';
 import { EntityConfig } from './types';
@@ -203,9 +203,7 @@ describe('ODataClient', () => {
   });
 
   it('should fetch people', () => {
-    const dummyPeople = {
-      "@odata.context": "http://services.odata.org/V4/TripPinServiceRW/$metadata#People",
-      "value": [
+    const dummyPeople = [
         {
           "@odata.id": "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
           "@odata.etag": "W/\"08D814450D6BDB6F\"",
@@ -223,7 +221,10 @@ describe('ODataClient', () => {
             "Scott@example.com"
           ]
         }
-      ]
+      ];
+    const data = {
+      "@odata.context": "http://services.odata.org/V4/TripPinServiceRW/$metadata#People",
+      "value": dummyPeople
     };
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
     set.top(2);
@@ -231,11 +232,37 @@ describe('ODataClient', () => {
     set.get().subscribe(([people, annotations]) => {
       expect(people.length).toBe(2);
       expect(annotations.context.set).toEqual("People");
-      expect(people).toEqual(dummyPeople.value);
+      expect(people).toEqual(dummyPeople);
     });
 
     const req = httpMock.expectOne(`${SERVICE_ROOT}${ENTITY_SET}?$top=2`);
     expect(req.request.method).toBe("GET");
-    req.flush(dummyPeople);
+    req.flush(data);
+  });
+
+  it('should fetch person', () => {
+    const dummyPerson = {
+      "UserName": "russellwhyte", "FirstName": "Russell", "LastName": "Whyte",
+      "Emails": [
+        "Russell@example.com",
+        "Russell@contoso.com"
+      ]
+    };
+    const data = Object.assign({}, dummyPerson, {
+      "@odata.context":"http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity",
+      "@odata.id": "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+      "@odata.etag": "W/\"08D814450D6BDB6F\"",
+    });
+    const entity: ODataEntityResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`).entity('russellwhyte');
+
+    entity.get().subscribe(([person, annotations]) => {
+      expect(annotations.context.set).toEqual("People");
+      expect(annotations.etag).toEqual('W/"08D814450D6BDB6F"');
+      expect(person).toEqual(person);
+    });
+
+    const req = httpMock.expectOne(`${SERVICE_ROOT}${ENTITY_SET}('russellwhyte')`);
+    expect(req.request.method).toBe("GET");
+    req.flush(data);
   });
 });
