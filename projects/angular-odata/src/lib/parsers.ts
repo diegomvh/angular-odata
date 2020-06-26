@@ -78,6 +78,8 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   nullable?: boolean;
   navigation?: boolean;
   field?: string;
+  precision?: number;
+  scale?: number;
   ref?: string;
 
   constructor(name: string, field: Field) {
@@ -92,8 +94,10 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   // Deserialize
   deserialize(value: any) {
     if (value === null) return value;
-    if (this.parser)
-      return Array.isArray(this.parser)? value.map(v => this.parser.deserialize(v)) : this.parser.deserialize(value);
+    if (this.parser) 
+      return Array.isArray(this.parser) ? 
+        value.map(v => this.parser.deserialize.apply(this, v)) : 
+        this.parser.deserialize.apply(this, value);
     return value;
   }
 
@@ -101,7 +105,9 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   serialize(value: any) {
     if (value === null) return value;
     if (this.parser)
-      return Array.isArray(this.parser)? value.map(v => this.parser.serialize(v)) : this.parser.serialize(value);
+      return Array.isArray(this.parser) ? 
+        value.map(v => this.parser.serialize.apply(this, v)) : 
+        this.parser.serialize.apply(this, value);
     return value;
   }
 
