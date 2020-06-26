@@ -1,5 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { InjectionToken } from '@angular/core';
 
 export type EntityKey<T> = {
@@ -135,6 +133,7 @@ export type Configuration = {
   withCredentials?: boolean,
   acceptMetadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean,
+  ieee754Compatible?: boolean,
   creation?: Date,
   parsers?: {[type: string]: Parser<any>};
   schemas?: Array<Schema>,

@@ -3,17 +3,34 @@ import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig,
 
 export const DATE_PARSER: {[type: string]: Parser<any>} = {
   'Date': <Parser<Date>>{
-    deserialize(value: any) {
+    deserialize(value: any): Date {
       return new Date(value);
     },
-    serialize(value: Date) { 
+    serialize(value: Date): any { 
       return value.toISOString();
     }
   }
 };
 
+export const DECIMAL_PARSER: {[type: string]: Parser<any>} = {
+  'Decimal': <Parser<number>>{
+    deserialize(value: any): number {
+      if (this.ieee754Compatible) {
+        return Number(value);
+      }
+      return value;
+    },
+    serialize(value: number): any { 
+      if (this.ieee754Compatible) {
+        return parseFloat(value.toPrecision(this.precision)).toFixed(this.scale);
+      }
+      return value;
+    }
+  }
+};
+
 export interface ODataParser<Type> extends Parser<Type> { 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>});
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>});
   toJsonSchema(options?: JsonSchemaExpandOptions<Type>);
 }
 
@@ -62,7 +79,7 @@ export class ODataEnumParser<Type> implements ODataParser<Type> {
     return property;
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {
     this.stringAsEnum = settings.stringAsEnum;
   }
 }
@@ -81,6 +98,7 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   precision?: number;
   scale?: number;
   ref?: string;
+  ieee754Compatible?: boolean;
 
   constructor(name: string, field: Field) {
     this.name = name;
@@ -95,9 +113,9 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   deserialize(value: any) {
     if (value === null) return value;
     if (this.parser) 
-      return Array.isArray(this.parser) ? 
-        value.map(v => this.parser.deserialize.apply(this, v)) : 
-        this.parser.deserialize.apply(this, value);
+      return Array.isArray(value) ? 
+        value.map(v => this.parser.deserialize(v)) : 
+        this.parser.deserialize(value);
     return value;
   }
 
@@ -105,14 +123,28 @@ export class ODataFieldParser<T> implements ODataParser<T> {
   serialize(value: any) {
     if (value === null) return value;
     if (this.parser)
-      return Array.isArray(this.parser) ? 
-        value.map(v => this.parser.serialize.apply(this, v)) : 
-        this.parser.serialize.apply(this, value);
+      return Array.isArray(value) ? 
+        value.map(v => this.parser.serialize(v)) : 
+        this.parser.serialize(value);
     return value;
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
-    this.parser = settings.parserForType(this.type);
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {
+    this.ieee754Compatible = settings.ieee754Compatible;
+    const parser = settings.parserForType(this.type);
+    if (parser) {
+      if (parser instanceof ODataEntityParser || parser instanceof ODataEnumParser)
+        this.parser = parser;
+      else {
+        // Change deserialize/serialize
+        this.deserialize = (value: any) => Array.isArray(value) ? 
+          value.map(v => parser.deserialize.call(this, v)) : 
+          parser.deserialize.call(this, value);
+        this.serialize = (value: any) => Array.isArray(value) ? 
+          value.map(v => parser.serialize.call(this, v)) : 
+          parser.serialize.call(this, value);
+      }
+    }
   }
 
   // Json Schema
@@ -191,7 +223,7 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
       _toJSON(objs);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {
     if (this.base) {
       this.parent = settings.parserForType(this.base) as ODataEntityParser<any>;
     }

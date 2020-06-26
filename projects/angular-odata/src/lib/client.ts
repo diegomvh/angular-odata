@@ -366,9 +366,17 @@ export class ODataClient {
     let customHeaders = {};
     if (typeof options.etag === 'string')
       customHeaders[IF_MATCH_HEADER] = options.etag;
-    // Metadata ?
-    if (!Types.isUndefined(config.acceptMetadata) && options.responseType === 'json' && options.observe === 'body')
-      customHeaders[ACCEPT] = `application/json;odata.metadata=${config.acceptMetadata}, text/plain, */*`;
+    if (options.responseType === 'json' && options.observe === 'body') {
+      let accept = [];
+      // Metadata ?
+      if (!Types.isUndefined(config.acceptMetadata))
+        accept.push(`odata.metadata=${config.acceptMetadata}`);
+      // IEEE754
+      if (!Types.isUndefined(config.ieee754Compatible))
+        accept.push("IEEE754Compatible=true");
+      if (accept.length > 0)
+        customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;
+    }
     let headers = this.mergeHttpHeaders(config.headers, customHeaders, options.headers);
 
     // Params

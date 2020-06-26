@@ -1,4 +1,4 @@
-import { ODataEntityParser, ODataFieldParser, ODataEnumParser, DATE_PARSER } from '../parsers';
+import { ODataEntityParser, ODataFieldParser, ODataEnumParser, DATE_PARSER, DECIMAL_PARSER } from '../parsers';
 import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, Field } from '../types';
 import { Types } from '../utils';
 import { ODataModel } from './model';
@@ -13,6 +13,7 @@ export class ODataConfig {
   withCredentials?: boolean;
   acceptMetadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean;
+  ieee754Compatible?: boolean;
   creation?: Date;
   parsers?: {[type: string]: Parser<any>};
   schemas?: Array<ODataSchema>;
@@ -30,8 +31,9 @@ export class ODataConfig {
     this.withCredentials = config.withCredentials || false;
     this.acceptMetadata = config.acceptMetadata;
     this.stringAsEnum = config.stringAsEnum || false;
+    this.ieee754Compatible = config.ieee754Compatible || false;
     this.creation = config.creation || new Date();
-    this.parsers = config.parsers || {...DATE_PARSER};
+    this.parsers = config.parsers || {...DATE_PARSER, ...DECIMAL_PARSER};
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema));
   }
@@ -40,6 +42,7 @@ export class ODataConfig {
     this.schemas
       .forEach(schmea => schmea.configure({
         stringAsEnum: this.stringAsEnum,
+        ieee754Compatible: this.ieee754Compatible,
         parserForType: (type: string) => this.parserForType(type)
       })
     );
@@ -144,7 +147,7 @@ export class ODataSchema {
     return this.containers.reduce((acc, container) => [...acc, ...container.services], <ODataServiceConfig[]>[]);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {
     this.enums
       .forEach(config => config.configure(settings));
     this.entities
@@ -164,7 +167,7 @@ export class ODataEnumConfig<Type> {
     this.parser = new ODataEnumParser(config as EnumConfig<any>, namespace);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {
     this.parser.configure(settings);
   }
 }
@@ -186,7 +189,7 @@ export class ODataEntityConfig<Type> {
     this.parser = new ODataEntityParser(config, namespace);
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {
     this.parser.configure(settings);
   }
 
@@ -221,7 +224,7 @@ export class ODataContainer {
     this.services = (config.services || []).map(config => new ODataServiceConfig(config, namespace));
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {
     this.services
       .forEach(config => config.configure(settings));
   }
@@ -237,5 +240,5 @@ export class ODataServiceConfig {
     this.annotations = config.annotations;
   }
 
-  configure(settings: {stringAsEnum: boolean, parserForType: (type: string) => Parser<any>}) {}
+  configure(settings: {stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any>}) {}
 }
