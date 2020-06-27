@@ -88,6 +88,7 @@ export class ODataBatchResource extends ODataResource<any> {
     });
 
     return this.client.post(this, this.body(), {
+      config: options.config,
       headers: headers,
       observe: 'response',
       params: options.params,
