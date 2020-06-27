@@ -10,7 +10,7 @@ import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT,
 import { ODataResource } from '../resource';
 import { ODataBatch } from '../responses';
 import { HttpOptions } from '../http-options';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 export enum RequestMethod {
   Get,
@@ -60,18 +60,18 @@ export class ODataBatchResource extends ODataResource<any> {
   private changesetBoundary: string;
   private changesetID: number;
 
-  constructor(service: ODataClient, segments?: ODataPathSegments, options?: ODataQueryOptions) {
-    super(service, segments, options);
+  constructor(service: ODataClient, segments?: ODataPathSegments) {
+    super(service, segments);
     this.requests = [];
     this.batchBoundary = BatchRequest.BATCH_PREFIX + uuidv4();
     this.changesetBoundary = null;
     this.changesetID = 1;
   }
 
-  static factory(service: ODataClient) {
+  static factory(client: ODataClient) {
     let segments = new ODataPathSegments();
     segments.segment(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(service, segments);
+    return new ODataBatchResource(client, segments);
   }
 
   add(method: RequestMethod, query: ODataResource<any>, options?: HttpOptions & { body?: any }): ODataBatchResource {
@@ -87,7 +87,7 @@ export class ODataBatchResource extends ODataResource<any> {
       [ACCEPT]: MULTIPART_MIXED
     });
 
-    return this.client.post(this, this.getBody(), {
+    return this.client.post(this, this.body(), {
       headers: headers,
       observe: 'response',
       params: options.params,
@@ -97,7 +97,7 @@ export class ODataBatchResource extends ODataResource<any> {
     }).pipe(map(resp => new ODataBatch(resp)));
   }
 
-  getBody(): string {
+  body(): string {
     let res = '';
 
     for (const request of this.requests) {
@@ -155,13 +155,5 @@ export class ODataBatchResource extends ODataResource<any> {
     }
 
     return res;
-  }
-
-  getRequests(): BatchRequest[] {
-    return this.requests;
-  }
-
-  setBatchBoundary(batchBoundary: string): void {
-    this.batchBoundary = batchBoundary;
   }
 }
