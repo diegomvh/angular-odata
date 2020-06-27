@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
 import { map } from 'rxjs/operators';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID } from '../../types';
 import { ODataResource } from '../resource';
@@ -12,30 +11,20 @@ import { ODataBatch } from '../responses';
 import { HttpOptions } from '../http-options';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
-export enum RequestMethod {
-  Get,
-  Post,
-  Put,
-  Delete,
-  Options,
-  Head,
-  Patch
-}
-
-class BatchRequest {
+export class ODataBatchRequest {
   public static readonly BOUNDARY_PREFIX_SUFFIX = '--';
   public static readonly BATCH_PREFIX = 'batch_';
   public static readonly CHANGESET_PREFIX = 'changeset_';
 
   constructor(
-    public method: RequestMethod,
+    public method: string,
     public odataQuery: ODataResource<any>,
     public options?: HttpOptions & { body?: any }) { }
 
-  getHeaders(method: RequestMethod): string {
+  getHeaders(method: string): string {
     let res = '';
 
-    if (method === RequestMethod.Post || method === RequestMethod.Patch || method === RequestMethod.Put) {
+    if (method === 'POST' || method === 'PATCH' || method === 'PUT') {
       res += CONTENT_TYPE + ': ' + APPLICATION_JSON + NEWLINE;
     }
 
@@ -55,7 +44,7 @@ export class ODataBatchResource extends ODataResource<any> {
   private static readonly BINARY = 'binary';
 
   // VARIABLES
-  private requests: BatchRequest[];
+  private requests: ODataBatchRequest[];
   private batchBoundary: string;
   private changesetBoundary: string;
   private changesetID: number;
@@ -63,7 +52,7 @@ export class ODataBatchResource extends ODataResource<any> {
   constructor(service: ODataClient, segments?: ODataPathSegments) {
     super(service, segments);
     this.requests = [];
-    this.batchBoundary = BatchRequest.BATCH_PREFIX + uuidv4();
+    this.batchBoundary = ODataBatchRequest.BATCH_PREFIX + uuidv4();
     this.changesetBoundary = null;
     this.changesetID = 1;
   }
@@ -74,9 +63,9 @@ export class ODataBatchResource extends ODataResource<any> {
     return new ODataBatchResource(client, segments);
   }
 
-  add(method: RequestMethod, query: ODataResource<any>, options?: HttpOptions & { body?: any }): ODataBatchResource {
-    this.requests.push(new BatchRequest(method, query, options));
-    return this;
+  add(method: string, query: ODataResource<any>, options?: HttpOptions & { body?: any }): ODataBatchRequest {
+    this.requests.push(new ODataBatchRequest(method, query, options));
+    return this.request[this.requests.length - 1];
   }
 
   execute(options: HttpOptions = {}): Observable<ODataBatch> {
@@ -102,45 +91,45 @@ export class ODataBatchResource extends ODataResource<any> {
     let res = '';
 
     for (const request of this.requests) {
-      const method: RequestMethod = request.method;
+      const method: string = request.method;
       const odataQuery: ODataResource<any> = request.odataQuery;
       const body: any = request.options.body;
 
       // if method is GET and there is a changeset boundary open then close it
-      if (method === RequestMethod.Get && !Types.isNullOrUndefined(this.changesetBoundary)) {
-        res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + BatchRequest.BOUNDARY_PREFIX_SUFFIX + NEWLINE;
+      if (method === 'GET' && !Types.isNullOrUndefined(this.changesetBoundary)) {
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + NEWLINE;
         this.changesetBoundary = null;
       }
 
       // if there is no changeset boundary open then open a batch boundary
       if (Types.isNullOrUndefined(this.changesetBoundary)) {
-        res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + NEWLINE;
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + NEWLINE;
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
-      if (method !== RequestMethod.Get) {
+      if (method !== 'GET') {
         if (Types.isNullOrUndefined(this.changesetBoundary)) {
-          this.changesetBoundary = BatchRequest.CHANGESET_PREFIX + uuidv4();
+          this.changesetBoundary = ODataBatchRequest.CHANGESET_PREFIX + uuidv4();
           res += CONTENT_TYPE + ': ' + MULTIPART_MIXED_BOUNDARY + this.changesetBoundary + NEWLINE;
           res += NEWLINE;
         }
-        res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + NEWLINE;
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + NEWLINE;
       }
 
       res += CONTENT_TYPE + ': ' + APPLICATION_HTTP + NEWLINE;
       res += CONTENT_TRANSFER_ENCODING + ': ' + ODataBatchResource.BINARY + NEWLINE;
 
-      if (method !== RequestMethod.Get) {
+      if (method !== 'GET') {
         res += CONTENT_ID + ': ' + this.changesetID++ + NEWLINE;
       }
 
       res += NEWLINE;
-      res += RequestMethod[method] + ' ' + odataQuery + ' ' + HTTP11 + NEWLINE;
+      res += method + ' ' + odataQuery + ' ' + HTTP11 + NEWLINE;
 
       res += request.getHeaders(method);
 
       res += NEWLINE;
-      if (method === RequestMethod.Get || method === RequestMethod.Delete) {
+      if (method === 'GET' || method === 'DELETE') {
         res += NEWLINE;
       } else {
         res += JSON.stringify(body) + NEWLINE;
@@ -149,10 +138,10 @@ export class ODataBatchResource extends ODataResource<any> {
 
     if (res.length) {
       if (!Types.isNullOrUndefined(this.changesetBoundary)) {
-        res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + BatchRequest.BOUNDARY_PREFIX_SUFFIX + NEWLINE;
+        res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + NEWLINE;
         this.changesetBoundary = null;
       }
-      res += BatchRequest.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + BatchRequest.BOUNDARY_PREFIX_SUFFIX;
+      res += ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + ODataBatchRequest.BOUNDARY_PREFIX_SUFFIX;
     }
 
     return res;

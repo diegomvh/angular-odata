@@ -200,21 +200,26 @@ export class ODataResource<Type> {
       observe: 'body',
       params: params,
       responseType: responseType,
+      batch: options.batch,
       reportProgress: options.reportProgress,
       withCredentials: options.withCredentials
     });
-    switch (options.responseType) {
-      case 'entity':
-        return res$.pipe(map((body: any) => this.toEntity(body)));
-      case 'entities':
-        return res$.pipe(map((body: any) => this.toEntities(body)));
-      case 'value':
-        return res$.pipe(map((body: any) => this.toValue(body)));
-      case 'json':
-      case 'text':
-        return res$.pipe(map((body: any) => this.deserialize(body) as Type));
-      default:
-        return res$;
+    if (options.batch) {
+      console.log("batch");
+    } else {
+      switch (options.responseType) {
+        case 'entity':
+          return res$.pipe(map((body: any) => this.toEntity(body)));
+        case 'entities':
+          return res$.pipe(map((body: any) => this.toEntities(body)));
+        case 'value':
+          return res$.pipe(map((body: any) => this.toValue(body)));
+        case 'json':
+        case 'text':
+          return res$.pipe(map((body: any) => this.deserialize(body) as Type));
+        default:
+          return res$;
+      }
     }
   }
 
