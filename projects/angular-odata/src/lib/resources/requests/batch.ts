@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Observable } from 'rxjs';
 
 import { ODataClient } from '../../client';
@@ -11,6 +10,15 @@ import { ODataBatch } from '../responses';
 import { HttpOptions } from '../http-options';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
+// From https://github.com/adamhalasz/uniqid
+let last: number; 
+const now = () => {
+    var time = Date.now();
+    var last = last || time;
+    return last = time > last ? time : last + 1;
+}
+const uniqid = (prefix?: string, suffix?: string): string => (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : '');
+
 export class ODataBatchRequest {
   public static readonly BOUNDARY_PREFIX_SUFFIX = '--';
   public static readonly BATCH_PREFIX = 'batch_';
@@ -18,7 +26,7 @@ export class ODataBatchRequest {
 
   constructor(
     public method: string,
-    public odataQuery: ODataResource<any>,
+    public resource: ODataResource<any>,
     public options?: HttpOptions & { body?: any }) { }
 
   getHeaders(method: string): string {
@@ -52,7 +60,7 @@ export class ODataBatchResource extends ODataResource<any> {
   constructor(service: ODataClient, segments?: ODataPathSegments) {
     super(service, segments);
     this.requests = [];
-    this.batchBoundary = ODataBatchRequest.BATCH_PREFIX + uuidv4();
+    this.batchBoundary = uniqid(ODataBatchRequest.BATCH_PREFIX);
     this.changesetBoundary = null;
     this.changesetID = 1;
   }
@@ -92,7 +100,7 @@ export class ODataBatchResource extends ODataResource<any> {
 
     for (const request of this.requests) {
       const method: string = request.method;
-      const odataQuery: ODataResource<any> = request.odataQuery;
+      const resource: ODataResource<any> = request.resource;
       const body: any = request.options.body;
 
       // if method is GET and there is a changeset boundary open then close it
@@ -109,7 +117,7 @@ export class ODataBatchResource extends ODataResource<any> {
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (method !== 'GET') {
         if (Types.isNullOrUndefined(this.changesetBoundary)) {
-          this.changesetBoundary = ODataBatchRequest.CHANGESET_PREFIX + uuidv4();
+          this.changesetBoundary = uniqid(ODataBatchRequest.CHANGESET_PREFIX);
           res += CONTENT_TYPE + ': ' + MULTIPART_MIXED_BOUNDARY + this.changesetBoundary + NEWLINE;
           res += NEWLINE;
         }
@@ -124,7 +132,7 @@ export class ODataBatchResource extends ODataResource<any> {
       }
 
       res += NEWLINE;
-      res += method + ' ' + odataQuery + ' ' + HTTP11 + NEWLINE;
+      res += method + ' ' + this.client.endpointUrl(resource) + ' ' + HTTP11 + NEWLINE;
 
       res += request.getHeaders(method);
 

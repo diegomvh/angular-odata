@@ -8,7 +8,6 @@ Please check also my other related project, [OData Angular Generator](https://gi
 ## Install:
 
 ```bash
-npm i uuid
 npm i angular-odata
 ```
 
@@ -315,4 +314,3 @@ For a deep query customizations the library use `odata-query` as a builder.
 ## Credits
 Angular OData is built using the following open source projects:
 - [OData v4 query builder](https://github.com/techniq/odata-query)
-- [Generate RFC-compliant UUIDs in JavaScript](https://github.com/uuidjs/uuid)
