@@ -29,7 +29,7 @@ export class ODataBatchRequest {
     public resource: ODataResource<any>,
     public options?: HttpOptions & { body?: any }) { }
 
-  getHeaders(method: string): string {
+  headers(method: string): string {
     let res = '';
 
     if (method === 'POST' || method === 'PATCH' || method === 'PUT') {
@@ -45,6 +45,10 @@ export class ODataBatchRequest {
     }
 
     return res;
+  }
+
+  map(func: (body: any) => void): any {
+
   }
 }
 
@@ -134,7 +138,7 @@ export class ODataBatchResource extends ODataResource<any> {
       res += NEWLINE;
       res += method + ' ' + this.client.endpointUrl(resource) + ' ' + HTTP11 + NEWLINE;
 
-      res += request.getHeaders(method);
+      res += request.headers(method);
 
       res += NEWLINE;
       if (method === 'GET' || method === 'DELETE') {
