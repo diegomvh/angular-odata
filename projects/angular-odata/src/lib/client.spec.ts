@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ODataClient } from './client';
-import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataBatchResource, ODataEntityResource } from './resources';
+import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from './resources';
 import { ODataModule } from './module';
 import { ODataEntityParser } from './parsers';
 import { EntityConfig } from './types';
 import { ODataEntityConfig } from './models';
+import { HttpResponseBase, HttpHandler, HttpHeaders } from '@angular/common/http';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const SINGLETON = 'Me';
@@ -264,5 +265,62 @@ describe('ODataClient', () => {
     const req = httpMock.expectOne(`${SERVICE_ROOT}${ENTITY_SET}('russellwhyte')`);
     expect(req.request.method).toBe("GET");
     req.flush(data);
+  });
+
+  it('should execute batch', () => {
+    const entity: ODataEntityResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`).entity('russellwhyte');
+    const batch = client.batch((batch) => {
+      entity.get({batch}).subscribe(([person, annotations]) => {
+        expect(annotations.context.set).toEqual("People");
+        expect(annotations.etag).toEqual('W/"08D814450D6BDB6F"');
+        expect(person).toEqual(person);
+      });
+    }).post().subscribe();
+
+    const headers = new HttpHeaders({
+      'Content-Length': 'response_total_content_length',
+      'Content-Type': 'multipart/mixed; boundary=batch_foobarbaz'
+    });
+    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    expect(req.request.method).toBe("POST");
+    req.flush(`--batch_foobarbaz
+Content-Type: application/http
+Content-ID: <response-item1:12930812@classroom.example.com>
+
+HTTP/1.1 200 OK
+Content-Type application/json
+Content-Length: response_part_1_content_length
+
+{
+  "id": "134529639",
+  "name": "Course 1",
+  "section": "Section 1",
+  "ownerId": "116269102540619633451",
+  "creationTime": "2015-06-25T14:23:56.535Z",
+  "updateTime": "2015-06-25T14:33:06.583Z",
+  "enrollmentCode": "6paeflo",
+  "courseState": "PROVISIONED",
+  "alternateLink": "http://classroom.google.com/c/MTM0NTI5NjM5"
+}
+--batch_foobarbaz
+Content-Type: application/http
+Content-ID: <response-item2:12930812@classroom.example.com>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: response_part_2_content_length
+
+{
+  "id": "134529901",
+  "name": "Course 1",
+  "section": "Section 2",
+  "ownerId": "116269102540619633451",
+  "creationTime": "2015-06-25T14:23:08.761Z",
+  "updateTime": "2015-06-25T14:33:06.490Z",
+  "enrollmentCode": "so75ha5",
+  "courseState": "PROVISIONED",
+  "alternateLink": "http://classroom.google.com/c/MTM0NTI5OTAx"
+}
+--batch_foobarbaz--`, {headers});
   });
 });

@@ -7,6 +7,7 @@ import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT,
 import { ODataResource } from '../resource';
 import { HttpOptions } from '../http-options';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 // From https://github.com/adamhalasz/uniqid
 var glast: number; 
@@ -20,6 +21,7 @@ const uniqid = (prefix?: string, suffix?: string): string => (prefix ? prefix : 
 const getHeaderValue = (header: string): string => {
   let res: string = header.split(';')[0].trim();
   res = res.split(':')[1].trim();
+  console.log(res);
   return res;
 }
 
@@ -129,7 +131,7 @@ export class ODataBatchResource extends ODataResource<any> {
     return request; 
   }
 
-  execute(options: HttpOptions = {}) {
+  post(options: HttpOptions = {}) {
     let headers = this.client.mergeHttpHeaders(options.headers, {
       [ODATA_VERSION]: VERSION_4_0,
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
@@ -144,12 +146,12 @@ export class ODataBatchResource extends ODataResource<any> {
       reportProgress: options.reportProgress,
       responseType: 'text',
       withCredentials: options.withCredentials
-    }).subscribe(resp => {
+    }).pipe(map(resp => {
       let responses = this.parseResponses(resp);
-      this.requests.forEach((req, index) => {
-        req.next(responses[index].body);
-      });
-    });
+      responses.map((resp, index) => this.requests[index].next(resp));
+      return responses;
+    }
+    ));
   }
 
   buildBody(): string {
@@ -208,7 +210,6 @@ export class ODataBatchResource extends ODataResource<any> {
       }
       res += BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + BOUNDARY_PREFIX_SUFFIX;
     }
-
     return res;
   }
 

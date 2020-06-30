@@ -16,8 +16,7 @@ import {
   PathSegmentNames,
   ODataPathSegments,
   ODataSegment,
-  ODataQueryOptions,
-  ODataBatch, 
+  ODataQueryOptions
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
@@ -79,10 +78,11 @@ export class ODataClient {
     return ODataMetadataResource.factory(this);
   }
 
-  batch(transaction: (batch: ODataBatchResource) => Observable<ODataBatch> | void): Observable<ODataBatch> {
+  batch(transaction?: (batch: ODataBatchResource) => void) {
     let batch = ODataBatchResource.factory(this);
-    let ret = transaction(batch);
-    return ret instanceof Observable ? ret : batch.execute();
+    if (transaction)
+      transaction(batch);
+    return batch;
   }
 
   singleton<T>(name: string, type?: string) {
