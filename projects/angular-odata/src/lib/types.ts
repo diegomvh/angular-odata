@@ -66,6 +66,11 @@ export const MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
 export const CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';
 export const CONTENT_ID = 'Content-ID';
 
+export const BINARY = 'binary';
+export const BOUNDARY_PREFIX_SUFFIX = '--';
+export const BATCH_PREFIX = 'batch_';
+export const CHANGESET_PREFIX = 'changeset_';
+
 // URL PARTS
 export const QUERY_SEPARATOR = '?';
 export const PARAM_SEPARATOR = '&';

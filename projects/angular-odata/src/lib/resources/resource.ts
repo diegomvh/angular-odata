@@ -192,21 +192,9 @@ export class ODataResource<Type> {
         'json' : 
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
-    if (options.batch) {
-      let request = options.batch.add(method, this, options);
-      switch (options.responseType) {
-        case 'entity':
-          request.map((body: any) => this.toEntity(body));
-        case 'entities':
-          request.map((body: any) => this.toEntities(body));
-        case 'value':
-          request.map((body: any) => this.toValue(body));
-        case 'json':
-        case 'text':
-          request.map((body: any) => this.deserialize(body) as Type);
-      }
-    } else {
-      let res$ = this.client.request(method, this, {
+    let res$ = (options.batch) ? 
+      options.batch.add(method, this, options) :
+      this.client.request(method, this, {
         body: options.body,
         etag: options.etag,
         config: options.config,
@@ -217,19 +205,18 @@ export class ODataResource<Type> {
         reportProgress: options.reportProgress,
         withCredentials: options.withCredentials
       });
-      switch (options.responseType) {
-        case 'entity':
-          return res$.pipe(map((body: any) => this.toEntity(body)));
-        case 'entities':
-          return res$.pipe(map((body: any) => this.toEntities(body)));
-        case 'value':
-          return res$.pipe(map((body: any) => this.toValue(body)));
-        case 'json':
-        case 'text':
-          return res$.pipe(map((body: any) => this.deserialize(body) as Type));
-        default:
-          return res$;
-      }
+    switch (options.responseType) {
+      case 'entity':
+        return res$.pipe(map((body: any) => this.toEntity(body)));
+      case 'entities':
+        return res$.pipe(map((body: any) => this.toEntities(body)));
+      case 'value':
+        return res$.pipe(map((body: any) => this.toValue(body)));
+      case 'json':
+      case 'text':
+        return res$.pipe(map((body: any) => this.deserialize(body) as Type));
+      default:
+        return res$;
     }
   }
 
