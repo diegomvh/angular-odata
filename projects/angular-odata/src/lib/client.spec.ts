@@ -195,12 +195,15 @@ describe('ODataClient', () => {
     const params = client.mergeHttpParams({
       param1: 'value1',
       param2: 'value2',
-      params: 'value1'
+      params: ['value1']
     }, {
-      params: 'value2',
-      param3: 'value3'
+      param3: 'value3',
+      params: ['value2', 'value3', 'value4'],
+    }, {
+      params: ['value5', 'value6'],
+      param4: 'value4'
     });
-    expect(params.toString()).toEqual('param1=value1&param2=value2&params=value1&params=value2&param3=value3');
+    expect(params.toString()).toEqual('param1=value1&param2=value2&params=value1&params=value2&params=value3&params=value4&params=value5&params=value6&param3=value3&param4=value4');
   });
 
   it('should fetch people', () => {

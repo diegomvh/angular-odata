@@ -115,40 +115,36 @@ export class ODataClient {
 
   //Merge Headers
   mergeHttpHeaders(...values: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
-    let attrs = {};
+    let headers = new HttpHeaders();
     values.forEach(value => {
       if (value instanceof HttpHeaders) {
-        const httpHeader = value as HttpHeaders;
-        attrs = httpHeader.keys().reduce((acc, key) => {
-          acc[key] = [...(acc[key] || []), ...httpHeader.getAll(key)];
-          return acc;
-        }, attrs);
-      } else if (typeof value === 'object')
-        attrs = Object.entries(value).reduce((acc, [key, value]) => {
-          acc[key] = [...(acc[key] || []), value];
-          return acc;
-        }, attrs);
+        value.keys().forEach(key => {
+          headers = value.getAll(key).reduce((acc, v) => acc.append(key, v), headers);
+        });
+      } else if (typeof value === 'object') {
+        Object.entries(value).forEach(([key, value]) => {
+          headers = (Array.isArray(value) ? value : [value]).reduce((acc, v) => acc.append(key, v), headers);
+        });
+      }
     });
-    return new HttpHeaders(attrs);
+    return headers; 
   }
 
   // Merge Params
   mergeHttpParams(...values: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
-    let attrs = {};
+    let params = new HttpParams();
     values.forEach(value => {
       if (value instanceof HttpParams) {
-        const httpParam = value as HttpParams;
-        attrs = httpParam.keys().reduce((acc, key) => {
-          acc[key] = [...(acc[key] || []), ...httpParam.getAll(key)];
-          return acc;
-        }, attrs);
-      } else if (typeof value === 'object')
-        attrs = Object.entries(value).reduce((acc, [key, value]) => {
-          acc[key] = [...(acc[key] || []), value];
-          return acc;
-        }, attrs);
+        value.keys().forEach(key => {
+          params = value.getAll(key).reduce((acc, v) => acc.append(key, v), params);
+        });
+      } else if (typeof value === 'object') {
+        Object.entries(value).forEach(([key, value]) => {
+          params = (Array.isArray(value) ? value : [value]).reduce((acc, v) => acc.append(key, v), params);
+        });
+      }
     });
-    return new HttpParams({ fromObject: attrs });
+    return params; 
   }
 
   // Request headers, get, post, put, patch... etc
@@ -377,9 +373,8 @@ export class ODataClient {
       this.settings.findConfigForTypes(resource.types());
     if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
-    // The Url
+    // The Path and Params from resource
     const [resourcePath, resourceParams] = resource.pathAndParams();
-    const resourceUrl = `${config.serviceRootUrl}${resourcePath}`;
 
     // Headers
     let customHeaders = {};
@@ -411,7 +406,7 @@ export class ODataClient {
       // Add request to batch
       //TODO: Assert observe
       let observe: 'body' | 'response' = options.observe as 'body' | 'response';
-      return options.batch.addRequest(method, resourceUrl, {
+      return options.batch.addRequest(method, resourcePath, {
         body: options.body,
         config: options.config,
         headers: headers,
@@ -421,7 +416,7 @@ export class ODataClient {
       });
     } else {
       // Call http request
-      return this.http.request(method, resourceUrl, {
+      return this.http.request(method, `${config.serviceRootUrl}${resourcePath}`, {
         body: options.body,
         headers: headers,
         observe: options.observe,
