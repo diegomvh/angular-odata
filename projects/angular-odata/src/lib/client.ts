@@ -156,6 +156,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -168,6 +169,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -180,6 +182,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -192,6 +195,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe: 'events', 
@@ -204,6 +208,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -216,6 +221,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -228,6 +234,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -240,6 +247,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -252,6 +260,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -264,6 +273,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -276,6 +286,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -287,6 +298,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -299,6 +311,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -311,6 +324,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -323,6 +337,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -335,6 +350,7 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
@@ -347,6 +363,7 @@ export class ODataClient {
     body?: any | null,
     etag?: string,
     config?: string,
+    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -389,16 +406,31 @@ export class ODataClient {
     if (Types.isUndefined(withCredentials))
       withCredentials = config.withCredentials;
 
-    // Call http request
-    return this.http.request(method, resourceUrl, {
-      body: options.body,
-      headers: headers,
-      observe: options.observe,
-      params: params,
-      reportProgress: options.reportProgress,
-      responseType: options.responseType,
-      withCredentials: withCredentials
-    });
+    let request = (options.batch) ? options.batch.addRequest : this.http.request;
+    if (options.batch instanceof ODataBatchResource) {
+      // Add request to batch
+      //TODO: Assert observe
+      let observe: 'body' | 'response' = options.observe as 'body' | 'response';
+      return options.batch.addRequest(method, resourceUrl, {
+        body: options.body,
+        config: options.config,
+        headers: headers,
+        params: params,
+        observe: observe,
+        responseType: options.responseType
+      });
+    } else {
+      // Call http request
+      return this.http.request(method, resourceUrl, {
+        body: options.body,
+        headers: headers,
+        observe: options.observe,
+        params: params,
+        reportProgress: options.reportProgress,
+        responseType: options.responseType,
+        withCredentials: withCredentials
+      });
+    }
   }
 
   delete(resource: ODataResource<any>, options?: {

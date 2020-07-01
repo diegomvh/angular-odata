@@ -6,7 +6,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID, BATCH_PREFIX, BOUNDARY_PREFIX_SUFFIX, CHANGESET_PREFIX, BINARY } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions } from '../http-options';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 // From https://github.com/adamhalasz/uniqid
@@ -21,7 +21,6 @@ const uniqid = (prefix?: string, suffix?: string): string => (prefix ? prefix : 
 const getHeaderValue = (header: string): string => {
   let res: string = header.split(';')[0].trim();
   res = res.split(':')[1].trim();
-  console.log(res);
   return res;
 }
 
@@ -80,27 +79,33 @@ const createODataResponse = (batchBodyLines: string[], batchPartStartIndex: numb
 export class ODataBatchRequest<T> extends Subject<T> {
   constructor(
     public method: string,
-    public resource: ODataResource<any>,
-    public options?: HttpOptions & { body?: any }) {
+    public path: string,
+    public options?: { 
+      body?: any | null,
+      config?: string,
+      headers?: HttpHeaders | { [header: string]: string | string[] },
+      observe?: 'body' | 'response',
+      params?: HttpParams | { [param: string]: string | string[] },
+      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'}
+    ) {
       super();
     }
 
-  headers(method: string): string {
-    let res = '';
-
-    if (method === 'POST' || method === 'PATCH' || method === 'PUT') {
-      res += CONTENT_TYPE + ': ' + APPLICATION_JSON + NEWLINE;
+  toString() {
+    let res = [`${this.method} ${this.path} ${HTTP11}`];
+    if (this.method === 'POST' || this.method === 'PATCH' || this.method === 'PUT') {
+      res.push(`${CONTENT_TYPE}: ${APPLICATION_JSON}`);
     }
 
-    if (Types.isNullOrUndefined(this.options) || Types.isNullOrUndefined(this.options.headers)) {
-      return res;
+    if (this.options && this.options.headers instanceof HttpHeaders) {
+      let headers = this.options.headers;
+      res = [
+        ...res, 
+        ...headers.keys().map(key => `${key}: ${headers.getAll(key).join(',')}`)
+      ];
     }
 
-    for (const key of (this.options.headers as HttpHeaders).keys()) {
-      res += key + ': ' + (this.options.headers as HttpHeaders).getAll(key) + NEWLINE;
-    }
-
-    return res;
+    return res.join(NEWLINE);
   }
 }
 
@@ -125,8 +130,16 @@ export class ODataBatchResource extends ODataResource<any> {
     return new ODataBatchResource(client, segments);
   }
 
-  add<T>(method: string, query: ODataResource<any>, options?: HttpOptions & { body?: any }): ODataBatchRequest<T> {
-    let request = new ODataBatchRequest<T>(method, query, options);
+  addRequest(method: string, path: string, options?: {
+      body?: any | null,
+      config?: string,
+      headers?: HttpHeaders | { [header: string]: string | string[] },
+      observe?: 'body' | 'response',
+      params?: HttpParams | { [param: string]: string | string[] },
+      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' }
+  ): ODataBatchRequest<any> {
+    //TODO: Allow only with same config name
+    let request = new ODataBatchRequest<any>(method, path, options);
     this.requests.push(request);
     return request; 
   }
@@ -155,66 +168,59 @@ export class ODataBatchResource extends ODataResource<any> {
   }
 
   buildBody(): string {
-    let res = '';
+    let res = [];
 
     for (const request of this.requests) {
-      const method: string = request.method;
-      const resource: ODataResource<any> = request.resource;
-      const body: any = request.options.body;
-
       // if method is GET and there is a changeset boundary open then close it
-      if (method === 'GET' && !Types.isNullOrUndefined(this.changesetBoundary)) {
-        res += BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + BOUNDARY_PREFIX_SUFFIX + NEWLINE;
+      if (request.method === 'GET' && !Types.isNullOrUndefined(this.changesetBoundary)) {
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         this.changesetBoundary = null;
       }
 
       // if there is no changeset boundary open then open a batch boundary
       if (Types.isNullOrUndefined(this.changesetBoundary)) {
-        res += BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + NEWLINE;
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}`);
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
-      if (method !== 'GET') {
+      if (request.method !== 'GET') {
         if (Types.isNullOrUndefined(this.changesetBoundary)) {
           this.changesetBoundary = uniqid(CHANGESET_PREFIX);
-          res += CONTENT_TYPE + ': ' + MULTIPART_MIXED_BOUNDARY + this.changesetBoundary + NEWLINE;
-          res += NEWLINE;
+          res.push(`${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${this.changesetBoundary}`);
+          res.push(NEWLINE);
         }
-        res += BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + NEWLINE;
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.changesetBoundary}`);
       }
 
-      res += CONTENT_TYPE + ': ' + APPLICATION_HTTP + NEWLINE;
-      res += CONTENT_TRANSFER_ENCODING + ': ' + BINARY + NEWLINE;
+      res.push(`${CONTENT_TYPE}: ${APPLICATION_HTTP}`);
+      res.push(`${CONTENT_TRANSFER_ENCODING}: ${BINARY}`);
 
-      if (method !== 'GET') {
-        res += CONTENT_ID + ': ' + this.changesetID++ + NEWLINE;
+      if (request.method !== 'GET') {
+        res.push(`${CONTENT_ID}: ${this.changesetID++}`);
       }
 
-      res += NEWLINE;
-      res += method + ' ' + this.client.endpointUrl(resource) + ' ' + HTTP11 + NEWLINE;
+      res.push(NEWLINE);
+      res.push(`${request}`);
 
-      res += request.headers(method);
-
-      res += NEWLINE;
-      if (method === 'GET' || method === 'DELETE') {
-        res += NEWLINE;
+      if (request.method === 'GET' || request.method === 'DELETE') {
+        res.push(NEWLINE);
       } else {
-        res += JSON.stringify(body) + NEWLINE;
+        res.push(JSON.stringify(request.options.body));
       }
     }
 
     if (res.length) {
       if (!Types.isNullOrUndefined(this.changesetBoundary)) {
-        res += BOUNDARY_PREFIX_SUFFIX + this.changesetBoundary + BOUNDARY_PREFIX_SUFFIX + NEWLINE;
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         this.changesetBoundary = null;
       }
-      res += BOUNDARY_PREFIX_SUFFIX + this.batchBoundary + BOUNDARY_PREFIX_SUFFIX;
+      res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
     }
-    return res;
+    return res.join(NEWLINE);
   }
 
-  parseResponses(response: HttpResponse<string>): HttpResponse<string>[] {
-    let responses: HttpResponse<string>[] = [];
+  parseResponses(response: HttpResponse<any>): HttpResponse<any>[] {
+    let responses: HttpResponse<any>[] = [];
     const contentType: string = response.headers.get(CONTENT_TYPE);
     const boundaryDelimiterBatch: string = getBoundaryDelimiter(contentType);
     const boundaryEndBatch: string = getBoundaryEnd(boundaryDelimiterBatch);

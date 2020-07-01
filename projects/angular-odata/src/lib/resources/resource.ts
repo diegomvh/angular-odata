@@ -192,19 +192,18 @@ export class ODataResource<Type> {
         'json' : 
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
-    let res$ = (options.batch) ? 
-      options.batch.add(method, this, options) :
-      this.client.request(method, this, {
-        body: options.body,
-        etag: options.etag,
-        config: options.config,
-        headers: options.headers,
-        observe: 'body',
-        params: params,
-        responseType: responseType,
-        reportProgress: options.reportProgress,
-        withCredentials: options.withCredentials
-      });
+    let res$ = this.client.request(method, this, {
+      body: options.body,
+      etag: options.etag,
+      config: options.config,
+      batch: options.batch,
+      headers: options.headers,
+      observe: 'body',
+      params: params,
+      responseType: responseType,
+      reportProgress: options.reportProgress,
+      withCredentials: options.withCredentials
+    });
     switch (options.responseType) {
       case 'entity':
         return res$.pipe(map((body: any) => this.toEntity(body)));
