@@ -139,8 +139,9 @@ describe('ODataClient', () => {
   });
 
   it('should create batch resource', () => {
-    const batch: ODataBatchResource = client.batch();
-    expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
+    client.batch((batch) => {
+      expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
+    });
   });
 
   it('should create singleton resource', () => {
@@ -280,7 +281,7 @@ describe('ODataClient', () => {
         expect(annotations.etag).toEqual('W/"08D814450D6BDB6F"');
         expect(person).toEqual(person);
       });
-    }).post().subscribe();
+    }).subscribe();
 
     const headers = new HttpHeaders({
       'Content-Length': 'response_total_content_length',

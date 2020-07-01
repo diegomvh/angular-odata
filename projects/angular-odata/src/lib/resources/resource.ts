@@ -196,7 +196,6 @@ export class ODataResource<Type> {
       body: options.body,
       etag: options.etag,
       config: options.config,
-      batch: options.batch,
       headers: options.headers,
       observe: 'body',
       params: params,

@@ -5,7 +5,6 @@ export type HttpOptions = {
   config?: string,
   headers?: HttpHeaders | {[header: string]: string | string[]},
   params?: HttpParams | {[param: string]: string | string[]},
-  batch?: ODataBatchResource,
   reportProgress?: boolean,
   withCredentials?: boolean
 }

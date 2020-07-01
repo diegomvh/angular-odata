@@ -25,6 +25,7 @@ import { Types } from './utils';
 
 @Injectable()
 export class ODataClient {
+  private _batch: ODataBatchResource;
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   endpointUrl(resource: ODataResource<any>) {
@@ -78,11 +79,12 @@ export class ODataClient {
     return ODataMetadataResource.factory(this);
   }
 
-  batch(transaction?: (batch: ODataBatchResource) => void) {
-    let batch = ODataBatchResource.factory(this);
-    if (transaction)
-      transaction(batch);
-    return batch;
+  batch(transaction: (batch: ODataBatchResource) => void): Observable<HttpResponse<any>[]> {
+    this._batch = ODataBatchResource.factory(this);
+    transaction(this._batch);
+    let resp$ = this._batch.exec();
+    this._batch = null;
+    return resp$;
   }
 
   singleton<T>(name: string, type?: string) {
@@ -152,7 +154,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -165,7 +166,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -178,7 +178,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -191,7 +190,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe: 'events', 
@@ -204,7 +202,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -217,7 +214,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -230,7 +226,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -243,7 +238,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -256,7 +250,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -269,7 +262,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -282,7 +274,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -294,7 +285,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -307,7 +297,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -320,7 +309,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -333,7 +321,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -346,7 +333,6 @@ export class ODataClient {
     body?: any,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
@@ -359,7 +345,6 @@ export class ODataClient {
     body?: any | null,
     etag?: string,
     config?: string,
-    batch?: ODataBatchResource,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -401,12 +386,11 @@ export class ODataClient {
     if (Types.isUndefined(withCredentials))
       withCredentials = config.withCredentials;
 
-    let request = (options.batch) ? options.batch.addRequest : this.http.request;
-    if (options.batch instanceof ODataBatchResource) {
+    if (this._batch instanceof ODataBatchResource) {
       // Add request to batch
       //TODO: Assert observe
       let observe: 'body' | 'response' = options.observe as 'body' | 'response';
-      return options.batch.addRequest(method, resourcePath, {
+      return this._batch.add(method, resourcePath, {
         body: options.body,
         config: options.config,
         headers: headers,

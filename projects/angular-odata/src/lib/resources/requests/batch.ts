@@ -76,7 +76,7 @@ const createODataResponse = (batchBodyLines: string[], batchPartStartIndex: numb
   });
 }
 
-export class ODataBatchRequest<T> extends Subject<T> {
+export class ODataBatchRequest extends Subject<any> {
   constructor(
     public method: string,
     public path: string,
@@ -117,17 +117,11 @@ export class ODataBatchRequest<T> extends Subject<T> {
 
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
-  private requests: ODataBatchRequest<any>[];
-  private batchBoundary: string;
-  private changesetBoundary: string;
-  private changesetID: number;
+  private requests: ODataBatchRequest[];
 
   constructor(service: ODataClient, segments?: ODataPathSegments) {
     super(service, segments);
     this.requests = [];
-    this.batchBoundary = uniqid(BATCH_PREFIX);
-    this.changesetBoundary = null;
-    this.changesetID = 1;
   }
 
   static factory(client: ODataClient) {
@@ -136,28 +130,29 @@ export class ODataBatchResource extends ODataResource<any> {
     return new ODataBatchResource(client, segments);
   }
 
-  addRequest(method: string, path: string, options?: {
+  add(method: string, path: string, options?: {
       body?: any | null,
       config?: string,
       headers?: HttpHeaders,
       observe?: 'body' | 'response',
       params?: HttpParams,
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' }
-  ): ODataBatchRequest<any> {
+  ): ODataBatchRequest {
     //TODO: Allow only with same config name
-    let request = new ODataBatchRequest<any>(method, path, options);
+    let request = new ODataBatchRequest(method, path, options);
     this.requests.push(request);
     return request; 
   }
 
-  post(options: HttpOptions = {}) {
+  exec(options: HttpOptions = {}) {
+    const batchBoundary = uniqid(BATCH_PREFIX);
     let headers = this.client.mergeHttpHeaders(options.headers, {
       [ODATA_VERSION]: VERSION_4_0,
-      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
+      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + batchBoundary,
       [ACCEPT]: MULTIPART_MIXED
     });
 
-    return this.client.post(this, this.buildBody(), {
+    return this.client.post(this, this.body(batchBoundary), {
       config: options.config,
       headers: headers,
       observe: 'response',
@@ -165,44 +160,48 @@ export class ODataBatchResource extends ODataResource<any> {
       reportProgress: options.reportProgress,
       responseType: 'text',
       withCredentials: options.withCredentials
-    }).subscribe(resp => {
-      this.parseResponses(resp).forEach((res, index) => {
-        let req = this.requests[index];
-        req.next((req.options.observe === 'response') ? res : res.body);
-      });
-    });
+    }).pipe(
+      map(resp => 
+        this.parse(resp).map((res, index) => {
+          let req = this.requests[index];
+          req.next((req.options.observe === 'body') ? res.body : res);
+          return res; 
+        })
+      ));
   }
 
-  buildBody(): string {
+  body(batchBoundary: string): string {
     let res = [];
+    let changesetBoundary = null;
+    let changesetID = 1;
 
     for (const request of this.requests) {
       // if method is GET and there is a changeset boundary open then close it
-      if (request.method === 'GET' && !Types.isNullOrUndefined(this.changesetBoundary)) {
-        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
-        this.changesetBoundary = null;
+      if (request.method === 'GET' && !Types.isNullOrUndefined(changesetBoundary)) {
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
+        changesetBoundary = null;
       }
 
       // if there is no changeset boundary open then open a batch boundary
-      if (Types.isNullOrUndefined(this.changesetBoundary)) {
-        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}`);
+      if (Types.isNullOrUndefined(changesetBoundary)) {
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}`);
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (request.method !== 'GET') {
-        if (Types.isNullOrUndefined(this.changesetBoundary)) {
-          this.changesetBoundary = uniqid(CHANGESET_PREFIX);
-          res.push(`${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${this.changesetBoundary}`);
+        if (Types.isNullOrUndefined(changesetBoundary)) {
+          changesetBoundary = uniqid(CHANGESET_PREFIX);
+          res.push(`${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}`);
           res.push(NEWLINE);
         }
-        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.changesetBoundary}`);
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}`);
       }
 
       res.push(`${CONTENT_TYPE}: ${APPLICATION_HTTP}`);
       res.push(`${CONTENT_TRANSFER_ENCODING}: ${BINARY}`);
 
       if (request.method !== 'GET') {
-        res.push(`${CONTENT_ID}: ${this.changesetID++}`);
+        res.push(`${CONTENT_ID}: ${changesetID++}`);
       }
 
       res.push(NEWLINE);
@@ -216,16 +215,16 @@ export class ODataBatchResource extends ODataResource<any> {
     }
 
     if (res.length) {
-      if (!Types.isNullOrUndefined(this.changesetBoundary)) {
-        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
-        this.changesetBoundary = null;
+      if (!Types.isNullOrUndefined(changesetBoundary)) {
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
+        changesetBoundary = null;
       }
-      res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
+      res.push(`${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
     }
     return res.join(NEWLINE);
   }
 
-  parseResponses(response: HttpResponse<any>): HttpResponse<any>[] {
+  parse(response: HttpResponse<any>): HttpResponse<any>[] {
     let responses: HttpResponse<any>[] = [];
     const contentType: string = response.headers.get(CONTENT_TYPE);
     const boundaryDelimiterBatch: string = getBoundaryDelimiter(contentType);
