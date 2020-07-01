@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID, BATCH_PREFIX, BOUNDARY_PREFIX_SUFFIX, CHANGESET_PREFIX, BINARY } from '../../types';
+import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID, BATCH_PREFIX, BOUNDARY_PREFIX_SUFFIX, CHANGESET_PREFIX, BINARY, PARAM_SEPARATOR } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions } from '../http-options';
 import { HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
@@ -80,24 +80,30 @@ export class ODataBatchRequest<T> extends Subject<T> {
   constructor(
     public method: string,
     public path: string,
-    public options?: { 
+    public options: { 
       body?: any | null,
       config?: string,
-      headers?: HttpHeaders | { [header: string]: string | string[] },
+      headers?: HttpHeaders,
       observe?: 'body' | 'response',
-      params?: HttpParams | { [param: string]: string | string[] },
-      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'}
+      params?: HttpParams,
+      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'} = {}
     ) {
       super();
     }
 
   toString() {
-    let res = [`${this.method} ${this.path} ${HTTP11}`];
+    // Url
+    let url = `/${this.path}`;
+    if (this.options.params instanceof HttpParams && this.options.params.keys().length > 0) {
+      url = `${url}?${this.options.params}`;
+    }
+
+    let res = [`${this.method} ${url} ${HTTP11}`];
     if (this.method === 'POST' || this.method === 'PATCH' || this.method === 'PUT') {
       res.push(`${CONTENT_TYPE}: ${APPLICATION_JSON}`);
     }
 
-    if (this.options && this.options.headers instanceof HttpHeaders) {
+    if (this.options.headers instanceof HttpHeaders) {
       let headers = this.options.headers;
       res = [
         ...res, 
@@ -133,9 +139,9 @@ export class ODataBatchResource extends ODataResource<any> {
   addRequest(method: string, path: string, options?: {
       body?: any | null,
       config?: string,
-      headers?: HttpHeaders | { [header: string]: string | string[] },
+      headers?: HttpHeaders,
       observe?: 'body' | 'response',
-      params?: HttpParams | { [param: string]: string | string[] },
+      params?: HttpParams,
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' }
   ): ODataBatchRequest<any> {
     //TODO: Allow only with same config name
@@ -159,12 +165,12 @@ export class ODataBatchResource extends ODataResource<any> {
       reportProgress: options.reportProgress,
       responseType: 'text',
       withCredentials: options.withCredentials
-    }).pipe(map(resp => {
-      let responses = this.parseResponses(resp);
-      responses.map((resp, index) => this.requests[index].next(resp));
-      return responses;
-    }
-    ));
+    }).subscribe(resp => {
+      this.parseResponses(resp).forEach((res, index) => {
+        let req = this.requests[index];
+        req.next((req.options.observe === 'response') ? res : res.body);
+      });
+    });
   }
 
   buildBody(): string {
