@@ -186,9 +186,11 @@ describe('ODataClient', () => {
     const headers = client.mergeHttpHeaders({
       'Content-Type': 'application/json'
     }, {
-      Authorization: 'Bearer token'
+      Authorization: 'Bearer token',
+      'Content-Type': '*/*'
     });
     expect(headers.get('Authorization')).toEqual("Bearer token");
+    expect(headers.getAll('Content-Type')).toEqual(['application/json', '*/*']);
   });
 
   it('should merge params', () => {
