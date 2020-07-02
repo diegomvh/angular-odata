@@ -79,12 +79,8 @@ export class ODataClient {
     return ODataMetadataResource.factory(this);
   }
 
-  batch(transaction: (batch: ODataBatchResource) => void): Observable<HttpResponse<any>[]> {
-    this._batch = ODataBatchResource.factory(this);
-    transaction(this._batch);
-    let resp$ = this._batch.exec();
-    this._batch = null;
-    return resp$;
+  batch(): ODataBatchResource {
+    return ODataBatchResource.factory(this);
   }
 
   singleton<T>(name: string, type?: string) {
@@ -147,6 +143,15 @@ export class ODataClient {
       }
     });
     return params; 
+  }
+
+  using(batch: ODataBatchResource, func: (batch?: ODataBatchResource) => void) {
+    this._batch = batch;
+    try {
+      func(batch);
+    } finally {
+      this._batch = null;
+    }
   }
 
   // Request headers, get, post, put, patch... etc

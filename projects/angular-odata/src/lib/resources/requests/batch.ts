@@ -118,9 +118,11 @@ export class ODataBatchRequest extends Subject<any> {
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
   private requests: ODataBatchRequest[];
+  public batchId: string;
 
   constructor(service: ODataClient, segments?: ODataPathSegments) {
     super(service, segments);
+    this.batchId = uniqid(BATCH_PREFIX);
     this.requests = [];
   }
 
@@ -144,36 +146,29 @@ export class ODataBatchResource extends ODataResource<any> {
     return request; 
   }
 
-  exec(options: HttpOptions = {}) {
-    const batchBoundary = uniqid(BATCH_PREFIX);
-    let headers = this.client.mergeHttpHeaders(options.headers, {
+  post(func: (batch?: ODataBatchResource) => void, options?: HttpOptions) {
+    this.client.using(this, func);
+    let opts = Object.assign<any, HttpOptions>({ observe: 'response', responseType: 'text' }, options || {});
+    opts.headers = this.client.mergeHttpHeaders(opts.headers, {
       [ODATA_VERSION]: VERSION_4_0,
-      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + batchBoundary,
+      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchId,
       [ACCEPT]: MULTIPART_MIXED
     });
-
-    return this.client.post(this, this.body(batchBoundary), {
-      config: options.config,
-      headers: headers,
-      observe: 'response',
-      params: options.params,
-      reportProgress: options.reportProgress,
-      responseType: 'text',
-      withCredentials: options.withCredentials
-    }).pipe(
-      map(resp => 
+    return this.client.post(this, this.body(), opts).pipe(
+      map((resp: any) => 
         this.parse(resp).map((res, index) => {
           let req = this.requests[index];
           req.next((req.options.observe === 'body') ? res.body : res);
           return res; 
         })
-      ));
+      )
+    );
   }
 
-  body(batchBoundary: string): string {
+  body(): string {
     let res = [];
     let changesetBoundary = null;
-    let changesetID = 1;
+    let changesetId = 1;
 
     for (const request of this.requests) {
       // if method is GET and there is a changeset boundary open then close it
@@ -184,7 +179,7 @@ export class ODataBatchResource extends ODataResource<any> {
 
       // if there is no changeset boundary open then open a batch boundary
       if (Types.isNullOrUndefined(changesetBoundary)) {
-        res.push(`${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}`);
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchId}`);
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
@@ -201,7 +196,7 @@ export class ODataBatchResource extends ODataResource<any> {
       res.push(`${CONTENT_TRANSFER_ENCODING}: ${BINARY}`);
 
       if (request.method !== 'GET') {
-        res.push(`${CONTENT_ID}: ${changesetID++}`);
+        res.push(`${CONTENT_ID}: ${changesetId++}`);
       }
 
       res.push(NEWLINE);
@@ -219,7 +214,7 @@ export class ODataBatchResource extends ODataResource<any> {
         res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         changesetBoundary = null;
       }
-      res.push(`${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
+      res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchId}${BOUNDARY_PREFIX_SUFFIX}`);
     }
     return res.join(NEWLINE);
   }

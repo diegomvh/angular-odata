@@ -44,9 +44,9 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
     responseType: 'json' | 'value' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any> {
-    let ops = Object.assign<any, HttpOptions>({ responseType }, options || {});
+    let opts = Object.assign<any, HttpOptions>({ responseType }, options || {});
     if (args)
       this.parameters(args);
-    return this.get(ops) as Observable<any>;
+    return this.get(opts) as Observable<any>;
   }
 }

@@ -139,9 +139,8 @@ describe('ODataClient', () => {
   });
 
   it('should create batch resource', () => {
-    client.batch((batch) => {
-      expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
-    });
+    const batch: ODataBatchResource = client.batch();
+    expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
   });
 
   it('should create singleton resource', () => {
@@ -275,8 +274,9 @@ describe('ODataClient', () => {
 
   it('should execute batch', () => {
     const entity: ODataEntityResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`).entity('russellwhyte');
-    const batch = client.batch((batch) => {
-      entity.get({batch}).subscribe(([person, annotations]) => {
+    const batch = client.batch();
+    batch.post(batch => {
+      entity.get().subscribe(([person, annotations]) => {
         expect(annotations.context.set).toEqual("People");
         expect(annotations.etag).toEqual('W/"08D814450D6BDB6F"');
         expect(person).toEqual(person);

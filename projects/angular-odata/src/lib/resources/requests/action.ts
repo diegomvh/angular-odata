@@ -28,7 +28,7 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
     responseType: 'json' | 'value' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any> {
-    let ops = Object.assign<any, HttpOptions>({ responseType }, options || {});
-    return this.post(args, ops) as Observable<any>;
+    let opts = Object.assign<any, HttpOptions>({ responseType }, options || {});
+    return this.post(args, opts) as Observable<any>;
   }
 }
