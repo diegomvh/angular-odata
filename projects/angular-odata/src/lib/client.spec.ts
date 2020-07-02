@@ -273,9 +273,29 @@ describe('ODataClient', () => {
   });
 
   it('should execute batch', () => {
+    const payload = {
+      "@odata.context":"http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity",
+      "@odata.id": "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+      "@odata.etag": "W/\"08D814450D6BDB6F\"",
+      "UserName": "russellwhyte", "FirstName": "Russell", "LastName": "Whyte",
+      "Emails": [
+        "Russell@example.com",
+        "Russell@contoso.com"
+      ]
+    };
+    const data = `--batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+Content-Type: application/json; odata.metadata=minimal
+OData-Version: 4.0
+
+${JSON.stringify(payload)}
+--batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b--`.split("\n").join("\r\n");
     const entity: ODataEntityResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`).entity('russellwhyte');
-    const batch = client.batch();
-    batch.post(batch => {
+    client.batch().post((batch) => {
+      expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
       entity.get().subscribe(([person, annotations]) => {
         expect(annotations.context.set).toEqual("People");
         expect(annotations.etag).toEqual('W/"08D814450D6BDB6F"');
@@ -284,49 +304,11 @@ describe('ODataClient', () => {
     }).subscribe();
 
     const headers = new HttpHeaders({
-      'Content-Length': 'response_total_content_length',
-      'Content-Type': 'multipart/mixed; boundary=batch_foobarbaz'
+      'Content-Length': data.length.toString(),
+      'Content-Type': 'multipart/mixed; boundary=batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b'
     });
     const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe("POST");
-    req.flush(`--batch_foobarbaz
-Content-Type: application/http
-Content-ID: <response-item1:12930812@classroom.example.com>
-
-HTTP/1.1 200 OK
-Content-Type application/json
-Content-Length: response_part_1_content_length
-
-{
-  "id": "134529639",
-  "name": "Course 1",
-  "section": "Section 1",
-  "ownerId": "116269102540619633451",
-  "creationTime": "2015-06-25T14:23:56.535Z",
-  "updateTime": "2015-06-25T14:33:06.583Z",
-  "enrollmentCode": "6paeflo",
-  "courseState": "PROVISIONED",
-  "alternateLink": "http://classroom.google.com/c/MTM0NTI5NjM5"
-}
---batch_foobarbaz
-Content-Type: application/http
-Content-ID: <response-item2:12930812@classroom.example.com>
-
-HTTP/1.1 200 OK
-Content-Type: application/json
-Content-Length: response_part_2_content_length
-
-{
-  "id": "134529901",
-  "name": "Course 1",
-  "section": "Section 2",
-  "ownerId": "116269102540619633451",
-  "creationTime": "2015-06-25T14:23:08.761Z",
-  "updateTime": "2015-06-25T14:33:06.490Z",
-  "enrollmentCode": "so75ha5",
-  "courseState": "PROVISIONED",
-  "alternateLink": "http://classroom.google.com/c/MTM0NTI5OTAx"
-}
---batch_foobarbaz--`, {headers});
+    req.flush(data, {headers});
   });
 });

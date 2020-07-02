@@ -6,15 +6,17 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID, BATCH_PREFIX, BOUNDARY_PREFIX_SUFFIX, CHANGESET_PREFIX, BINARY, PARAM_SEPARATOR } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions } from '../http-options';
-import { HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
+const XSSI_PREFIX = /^\)\]\}',?\n/;
+
 // From https://github.com/adamhalasz/uniqid
-var glast: number; 
+var glast: number;
 const now = () => {
-    let time = Date.now();
-    let last = glast || time;
-    return glast = time > last ? time : last + 1;
+  let time = Date.now();
+  let last = glast || time;
+  return glast = time > last ? time : last + 1;
 }
 const uniqid = (prefix?: string, suffix?: string): string => (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : '');
 
@@ -43,86 +45,137 @@ const getBoundaryEnd = (boundaryDelimiter: string): string => {
   return boundaryEnd;
 }
 
-const createODataResponse = (batchBodyLines: string[], batchPartStartIndex: number, batchPartEndIndex: number): HttpResponse<any> => {
-  let index: number = batchPartStartIndex;
-  const statusLine: string = batchBodyLines[index];
-  const statusLineParts: string[] = batchBodyLines[index].split(' ');
-  const status: string = statusLineParts[1];
-  const statusTextIndex = statusLine.indexOf(status) + status.length + 1;
-  const statusText: string = statusLine.substring(statusTextIndex);
-
-  let httpHeaders: HttpHeaders = new HttpHeaders();
-  for (++index; index <= batchPartEndIndex; index++) {
-    const batchBodyLine: string = batchBodyLines[index];
-
-    if (batchBodyLine === '') {
-      break;
-    }
-
-    const batchBodyLineParts: string[] = batchBodyLine.split(': ');
-    httpHeaders = httpHeaders.append(batchBodyLineParts[0].trim(), batchBodyLineParts[1].trim());
-  }
-
-  let body = '';
-  for (; index <= batchPartEndIndex; index++) {
-    body += batchBodyLines[index];
-  }
-
-  return new HttpResponse({
-    body,
-    headers: httpHeaders,
-    status: Number(status),
-    statusText
-  });
-}
-
 export class ODataBatchRequest extends Subject<any> {
+  body?: any;
+  config?: string;
+  observe: 'body' | 'response';
+  headers?: HttpHeaders;
+  params?: HttpParams;
+  responseType: 'arraybuffer' | 'blob' | 'json' | 'text';
+
   constructor(
     public method: string,
     public path: string,
-    public options: { 
+    options?: {
       body?: any | null,
       config?: string,
       headers?: HttpHeaders,
       observe?: 'body' | 'response',
       params?: HttpParams,
-      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'} = {}
-    ) {
-      super();
+      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
     }
+  ) {
+    super();
+    Object.assign(this, { responseType: 'json', observe: 'body' }, options || {});
+  }
 
-  toString() {
+  url() {
     // Url
     let url = `/${this.path}`;
-    if (this.options.params instanceof HttpParams && this.options.params.keys().length > 0) {
-      url = `${url}?${this.options.params}`;
+    if (this.params instanceof HttpParams && this.params.keys().length > 0) {
+      url = `${url}?${this.params}`;
     }
+    return url;
+  }
 
-    let res = [`${this.method} ${url} ${HTTP11}`];
+  toString() {
+    let res = [`${this.method} ${this.url()} ${HTTP11}`];
     if (this.method === 'POST' || this.method === 'PATCH' || this.method === 'PUT') {
       res.push(`${CONTENT_TYPE}: ${APPLICATION_JSON}`);
     }
 
-    if (this.options.headers instanceof HttpHeaders) {
-      let headers = this.options.headers;
+    if (this.headers instanceof HttpHeaders) {
+      let headers = this.headers;
       res = [
-        ...res, 
+        ...res,
         ...headers.keys().map(key => `${key}: ${headers.getAll(key).join(',')}`)
       ];
     }
 
     return res.join(NEWLINE);
   }
+
+  onLoad(content: string[], status: { code: number, text: string }) {
+    let headers: HttpHeaders = new HttpHeaders();
+    var index = 1;
+    for (; index < content.length; index++) {
+      const batchBodyLine: string = content[index];
+
+      if (batchBodyLine === '') {
+        break;
+      }
+
+      const batchBodyLineParts: string[] = batchBodyLine.split(': ');
+      headers = headers.append(batchBodyLineParts[0].trim(), batchBodyLineParts[1].trim());
+    }
+
+    let body: string | { error: any, text: string } = '';
+    for (; index < content.length; index++) {
+      body += content[index];
+    }
+
+    if (status.code === 0) {
+      status.code = !!body ? 200 : 0;
+    }
+
+    let ok = status.code >= 200 && status.code < 300;
+    if (this.responseType === 'json' && typeof body === 'string') {
+      const originalBody = body;
+      body = body.replace(XSSI_PREFIX, '');
+      try {
+        body = body !== '' ? JSON.parse(body) : null;
+      } catch (error) {
+        body = originalBody;
+
+        if (ok) {
+          ok = false;
+          body = { error, text: body };
+        }
+      }
+    }
+
+    if (ok) {
+      let resp = new HttpResponse({
+        body,
+        headers,
+        status: status.code,
+        statusText: status.text,
+        url: this.url()
+      });
+      this.next(this.observe === 'body' ? resp.body : resp);
+      this.complete();
+    } else {
+      // An unsuccessful request is delivered on the error channel.
+      this.error(new HttpErrorResponse({
+        // The error in this case is the response body (error from the server).
+        error: body,
+        headers,
+        status: status.code,
+        statusText: status.text,
+        url: this.url()
+      }));
+    }
+  }
+
+  onError(content: string[], status: { code: number, text: string }) {
+    const res = new HttpErrorResponse({
+      error: content.join(NEWLINE),
+      status: status.code || 0,
+      statusText: status.text || 'Unknown Error',
+      url: this.url() || undefined,
+    });
+    this.error(res);
+  }
 }
 
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
   private requests: ODataBatchRequest[];
-  public batchId: string;
+  public batchBoundary: string;
 
   constructor(service: ODataClient, segments?: ODataPathSegments) {
     super(service, segments);
-    this.batchId = uniqid(BATCH_PREFIX);
+    this.batchBoundary = uniqid(BATCH_PREFIX);
     this.requests = [];
   }
 
@@ -133,17 +186,18 @@ export class ODataBatchResource extends ODataResource<any> {
   }
 
   add(method: string, path: string, options?: {
-      body?: any | null,
-      config?: string,
-      headers?: HttpHeaders,
-      observe?: 'body' | 'response',
-      params?: HttpParams,
-      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' }
+    body?: any | null,
+    config?: string,
+    headers?: HttpHeaders,
+    observe?: 'body' | 'response',
+    params?: HttpParams,
+    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
+  }
   ): ODataBatchRequest {
     //TODO: Allow only with same config name
     let request = new ODataBatchRequest(method, path, options);
     this.requests.push(request);
-    return request; 
+    return request;
   }
 
   post(func: (batch?: ODataBatchResource) => void, options?: HttpOptions) {
@@ -151,17 +205,14 @@ export class ODataBatchResource extends ODataResource<any> {
     let opts = Object.assign<any, HttpOptions>({ observe: 'response', responseType: 'text' }, options || {});
     opts.headers = this.client.mergeHttpHeaders(opts.headers, {
       [ODATA_VERSION]: VERSION_4_0,
-      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchId,
+      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
       [ACCEPT]: MULTIPART_MIXED
     });
     return this.client.post(this, this.body(), opts).pipe(
-      map((resp: any) => 
-        this.parse(resp).map((res, index) => {
-          let req = this.requests[index];
-          req.next((req.options.observe === 'body') ? res.body : res);
-          return res; 
-        })
-      )
+      map((resp: any) => {
+        this.handleResponse(resp);
+        return resp;
+      })
     );
   }
 
@@ -179,7 +230,7 @@ export class ODataBatchResource extends ODataResource<any> {
 
       // if there is no changeset boundary open then open a batch boundary
       if (Types.isNullOrUndefined(changesetBoundary)) {
-        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchId}`);
+        res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}`);
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
@@ -205,7 +256,7 @@ export class ODataBatchResource extends ODataResource<any> {
       if (request.method === 'GET' || request.method === 'DELETE') {
         res.push(NEWLINE);
       } else {
-        res.push(JSON.stringify(request.options.body));
+        res.push(JSON.stringify(request.body));
       }
     }
 
@@ -214,72 +265,77 @@ export class ODataBatchResource extends ODataResource<any> {
         res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         changesetBoundary = null;
       }
-      res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchId}${BOUNDARY_PREFIX_SUFFIX}`);
+      res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
     }
     return res.join(NEWLINE);
   }
 
-  parse(response: HttpResponse<any>): HttpResponse<any>[] {
-    let responses: HttpResponse<any>[] = [];
+  handleResponse(response: HttpResponse<any>) {
+    let chunks: string[][] = [];
     const contentType: string = response.headers.get(CONTENT_TYPE);
-    const boundaryDelimiterBatch: string = getBoundaryDelimiter(contentType);
-    const boundaryEndBatch: string = getBoundaryEnd(boundaryDelimiterBatch);
+    const batchBoundary: string = getBoundaryDelimiter(contentType);
+    const endLine: string = getBoundaryEnd(batchBoundary);
 
-    const batchBody: string = response.body;
-    const batchBodyLines: string[] = batchBody.split(NEWLINE);
+    const lines: string[] = response.body.split(NEWLINE);
 
-    let odataResponseCS: HttpResponse<any>[];
+    let changesetResponses: string[][];
     let contentId: number;
-    let boundaryDelimiterCS;
-    let boundaryEndCS;
-    let batchPartStartIndex;
-    for (let index = 0; index < batchBodyLines.length; index++) {
-      const batchBodyLine: string = batchBodyLines[index];
+    let changesetBoundary;
+    let changesetEndLine;
+    let startIndex;
+    for (let index = 0; index < lines.length; index++) {
+      const line = lines[index];
 
-      if (batchBodyLine.startsWith(CONTENT_TYPE)) {
-        const contentTypeValue: string = getHeaderValue(batchBodyLine);
+      if (line.startsWith(CONTENT_TYPE)) {
+        const contentTypeValue: string = getHeaderValue(line);
         if (contentTypeValue === MULTIPART_MIXED) {
-          odataResponseCS = [];
+          changesetResponses = [];
           contentId = undefined;
-          boundaryDelimiterCS = getBoundaryDelimiter(batchBodyLine);
-          boundaryEndCS = getBoundaryEnd(boundaryDelimiterCS);
-          batchPartStartIndex = undefined;
+          changesetBoundary = getBoundaryDelimiter(line);
+          changesetEndLine = getBoundaryEnd(changesetBoundary);
+          startIndex = undefined;
         }
         continue;
-      } else if (!Types.isNullOrUndefined(odataResponseCS) && batchBodyLine.startsWith(CONTENT_ID)) {
-        contentId = Number(getHeaderValue(batchBodyLine));
-      } else if (batchBodyLine.startsWith(HTTP11)) {
-        batchPartStartIndex = index;
-      } else if (batchBodyLine === boundaryDelimiterBatch || batchBodyLine === boundaryDelimiterCS
-        || batchBodyLine === boundaryEndBatch || batchBodyLine === boundaryEndCS) {
-        if (!batchPartStartIndex) {
+      } else if (!Types.isNullOrUndefined(changesetResponses) && line.startsWith(CONTENT_ID)) {
+        contentId = Number(getHeaderValue(line));
+      } else if (line.startsWith(HTTP11)) {
+        startIndex = index;
+      } else if (line === batchBoundary || line === changesetBoundary
+        || line === endLine || line === changesetEndLine) {
+        if (!startIndex) {
           continue;
         }
-
-        const odataResponse: HttpResponse<any> = createODataResponse(batchBodyLines, batchPartStartIndex, index - 1);
-        if (!Types.isNullOrUndefined(odataResponseCS)) {
-          odataResponseCS[contentId] = odataResponse;
+        const chunk = lines.slice(startIndex, index);
+        if (!Types.isNullOrUndefined(changesetResponses)) {
+          changesetResponses[contentId] = chunk;
         } else {
-          responses.push(odataResponse);
+          chunks.push(chunk);
         }
 
-        if (batchBodyLine === boundaryDelimiterBatch || batchBodyLine === boundaryDelimiterCS) {
-          batchPartStartIndex = index + 1;
-        } else if (batchBodyLine === boundaryEndBatch || batchBodyLine === boundaryEndCS) {
-          if (!Types.isNullOrUndefined(odataResponseCS)) {
-            for (const response of odataResponseCS) {
+        if (line === batchBoundary || line === changesetBoundary) {
+          startIndex = index + 1;
+        } else if (line === endLine || line === changesetEndLine) {
+          if (!Types.isNullOrUndefined(changesetResponses)) {
+            for (const response of changesetResponses) {
               if (!Types.isNullOrUndefined(response)) {
-                responses.push(response);
+                chunks.push(response);
               }
             }
           }
-          odataResponseCS = undefined;
-          boundaryDelimiterCS = undefined;
-          boundaryEndCS = undefined;
-          batchPartStartIndex = undefined;
+          changesetResponses = undefined;
+          changesetBoundary = undefined;
+          changesetEndLine = undefined;
+          startIndex = undefined;
         }
       }
     }
-    return responses;
+    chunks.forEach((chunk, index) => {
+      const req = this.requests[index];
+      const statusParts = chunk[0].split(' ');
+      req.onLoad(chunk.slice(1), {
+        code: Number(statusParts[1]),
+        text: statusParts[2]
+      });
+    });
   }
 }
