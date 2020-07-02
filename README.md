@@ -134,6 +134,14 @@ export class AppComponent {
 
     // Remove Expand
     people.expand().clear();
+
+    // Batch
+    let batch = odata.batch();
+    batch.post(() => {
+      airports.get().subscribe(console.log);
+      airport.get().subscribe(console.log);
+      people.get({withCount: true}).subscribe(console.log);
+    }).subscribe();
   }
 }
 ```
