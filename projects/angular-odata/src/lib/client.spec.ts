@@ -4,82 +4,9 @@ import { ODataClient } from './client';
 import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from './resources';
 import { ODataModule } from './module';
 import { ODataEntityParser } from './parsers';
-import { EntityConfig } from './types';
 import { ODataEntityConfig } from './models';
-import { HttpResponseBase, HttpHandler, HttpHeaders } from '@angular/common/http';
-
-const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
-const SINGLETON = 'Me';
-const NAMESPACE = 'Tests';
-
-//#region Schema
-interface PlanItem {
-  PlanItemId: number;
-  ConfirmationCode?: string;
-  StartsAt?: Date;
-  EndsAt?: Date;
-  Duration?: string;
-}
-const PlanItemConfig = {
-  name: "PlanItem",
-  fields: {
-    PlanItemId: { type: 'Number', key: true, ref: 'PlanItemId', nullable: false },
-    ConfirmationCode: { type: 'String' },
-    StartsAt: { type: 'Date' },
-    EndsAt: { type: 'Date' },
-    Duration: { type: 'String' }
-  }
-} as EntityConfig<PlanItem>;
-
-interface Trip {
-  TripId: number;
-  ShareId?: string;
-  Description?: string;
-  Name: string;
-  Budget: number;
-  StartsAt: Date;
-  EndsAt: Date;
-  Tags: string[];
-  PlanItems?: PlanItem[];
-}
-
-export const TripConfig = {
-  name: "Trip",
-  fields: {
-    TripId: { type: 'Number', key: true, ref: 'TripId', nullable: false },
-    ShareId: { type: 'String' },
-    Description: { type: 'String' },
-    Name: { type: 'String', nullable: false },
-    Budget: { type: 'Number', nullable: false },
-    StartsAt: { type: 'Date', nullable: false },
-    EndsAt: { type: 'Date', nullable: false },
-    Tags: { type: 'String', nullable: false, collection: true },
-    PlanItems: { type: `${NAMESPACE}.PlanItem`, collection: true, navigation: true }
-  }
-} as EntityConfig<Trip>;
-
-const ENTITY_SET = 'People';
-interface Person {
-  UserName: string;
-  FirstName: string;
-  LastName: string;
-  Emails?: string[];
-  Friends?: Person[];
-  Trips?: Trip[];
-}
-const NAME = 'Person';
-const PersonConfig = {
-  name: NAME,
-  fields: {
-    UserName: { type: 'String', key: true, ref: 'UserName', nullable: false },
-    FirstName: { type: 'String', nullable: false },
-    LastName: { type: 'String', nullable: false },
-    Emails: { type: 'String', collection: true },
-    Friends: { type: `${NAMESPACE}.Person`, collection: true, navigation: true },
-    Trips: { type: `${NAMESPACE}.Trip`, collection: true, navigation: true }
-  }
-} as EntityConfig<Person>;
-//#endregion
+import { HttpHeaders } from '@angular/common/http';
+import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -87,10 +14,7 @@ describe('ODataClient', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ODataModule.forRoot({
-        serviceRootUrl: SERVICE_ROOT,
-        schemas: [{ namespace: NAMESPACE, entities: [PlanItemConfig, TripConfig, PersonConfig] }]
-      }), HttpClientTestingModule]
+      imports: [ODataModule.forRoot(TripPinConfig), HttpClientTestingModule]
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
@@ -102,15 +26,15 @@ describe('ODataClient', () => {
   });
 
   it('should return undefined parser for resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET);
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People');
     const parser = client.parserFor<Person>(set);
     expect(parser).toBeUndefined();
   });
 
   it('should return person parser for resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const parser = client.parserFor<Person>(set);
-    expect(parser).toBeInstanceOf(ODataEntityParser);
+    expect(parser instanceof ODataEntityParser).toBeTruthy();
   });
 
   it('should return undefined parser for type', () => {
@@ -119,8 +43,8 @@ describe('ODataClient', () => {
   });
 
   it('should return person parser for type', () => {
-    const parser = client.parserForType<Person>(`${NAMESPACE}.${NAME}`);
-    expect(parser).toBeInstanceOf(ODataEntityParser);
+    const parser = client.parserForType<Person>(`${NAMESPACE}.Person`);
+    expect(parser instanceof ODataEntityParser).toBeTruthy();
   });
 
   it('should return undefined entity config', () => {
@@ -129,8 +53,8 @@ describe('ODataClient', () => {
   });
 
   it('should return person entity config', () => {
-    const config = client.entityConfigForType<Person>(`${NAMESPACE}.${NAME}`);
-    expect(config).toBeInstanceOf(ODataEntityConfig);
+    const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
+    expect(config instanceof ODataEntityConfig).toBeTruthy();
   });
 
   it('should create metadata resource', () => {
@@ -144,12 +68,12 @@ describe('ODataClient', () => {
   });
 
   it('should create singleton resource', () => {
-    const singleton: ODataSingletonResource<Person> = client.singleton<Person>(SINGLETON);
+    const singleton: ODataSingletonResource<Person> = client.singleton<Person>('Me');
     expect(client.endpointUrl(singleton)).toEqual(SERVICE_ROOT + 'Me');
   });
 
   it('should create entitySet resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET);
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People');
     expect(client.endpointUrl(set)).toEqual(SERVICE_ROOT + 'People');
   });
 
@@ -169,14 +93,14 @@ describe('ODataClient', () => {
   });
 
   it('should return parser for resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const parser = client.parserFor<Person>(set) as ODataEntityParser<Person>;
-    expect(parser).toBeInstanceOf(ODataEntityParser);
-    expect(parser.fields.length).toEqual(6);
+    expect(parser instanceof ODataEntityParser).toBeTruthy();
+    expect(parser.fields.length).toEqual(10);
   });
 
   it('should convert resource to json', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const func = set.function("NS.MyFunction");
     const json = func.toJSON();
     expect(client.fromJSON(json)).toEqual(func);
@@ -232,7 +156,7 @@ describe('ODataClient', () => {
       "@odata.context": "http://services.odata.org/V4/TripPinServiceRW/$metadata#People",
       "value": dummyPeople
     };
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`);
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     set.top(2);
 
     set.get().subscribe(([people, annotations]) => {
@@ -241,7 +165,7 @@ describe('ODataClient', () => {
       expect(people).toEqual(dummyPeople);
     });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}${ENTITY_SET}?$top=2`);
+    const req = httpMock.expectOne(`${SERVICE_ROOT}People?$top=2`);
     expect(req.request.method).toBe("GET");
     req.flush(data);
   });
@@ -259,7 +183,7 @@ describe('ODataClient', () => {
       "@odata.id": "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
       "@odata.etag": "W/\"08D814450D6BDB6F\"",
     });
-    const entity: ODataEntityResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`).entity('russellwhyte');
+    const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
 
     entity.get().subscribe(([person, annotations]) => {
       expect(annotations.context.set).toEqual("People");
@@ -267,7 +191,7 @@ describe('ODataClient', () => {
       expect(person).toEqual(person);
     });
 
-    const req = httpMock.expectOne(`${SERVICE_ROOT}${ENTITY_SET}('russellwhyte')`);
+    const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);
     expect(req.request.method).toBe("GET");
     req.flush(data);
   });
@@ -293,7 +217,7 @@ OData-Version: 4.0
 
 ${JSON.stringify(payload)}
 --batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b--`.split("\n").join("\r\n");
-    const entity: ODataEntityResource<Person> = client.entitySet<Person>(ENTITY_SET, `${NAMESPACE}.${NAME}`).entity('russellwhyte');
+    const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
     client.batch().post((batch) => {
       expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
       entity.get().subscribe(([person, annotations]) => {

@@ -15,7 +15,7 @@ export function createSettings(configs: Configuration[]) {
   providers: [ODataClient, ODataServiceFactory]
 })
 export class ODataModule {
-  public static forRoot(...configs: Configuration[]): ModuleWithProviders {
+  public static forRoot(...configs: Configuration[]): ModuleWithProviders<ODataModule> {
     return {
       ngModule: ODataModule,
       providers: [
