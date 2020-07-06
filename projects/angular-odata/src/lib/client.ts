@@ -376,7 +376,7 @@ export class ODataClient {
       if (!Types.isUndefined(config.acceptMetadata))
         accept.push(`odata.metadata=${config.acceptMetadata}`);
       // IEEE754
-      if (!Types.isUndefined(config.ieee754Compatible))
+      if (config.ieee754Compatible)
         accept.push("IEEE754Compatible=true");
       if (accept.length > 0)
         customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;
