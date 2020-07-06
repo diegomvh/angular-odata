@@ -1,5 +1,5 @@
-import { ODataEntityParser, ODataFieldParser, ODataEnumParser, DATE_PARSER, DECIMAL_PARSER } from '../parsers';
-import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, Field } from '../types';
+import { ODataEntityParser, ODataFieldParser, ODataEnumParser, EDM_PARSERS } from '../parsers/index';
+import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration } from '../types';
 import { Types } from '../utils';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
@@ -33,7 +33,7 @@ export class ODataConfig {
     this.stringAsEnum = config.stringAsEnum || false;
     this.ieee754Compatible = config.ieee754Compatible || false;
     this.creation = config.creation || new Date();
-    this.parsers = config.parsers || {...DATE_PARSER, ...DECIMAL_PARSER};
+    this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema));
   }

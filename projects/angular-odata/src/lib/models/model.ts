@@ -21,7 +21,7 @@ import {
   HttpEntityOptions
 } from '../resources/http-options';
 import { VALUE } from '../types';
-import { ODataFieldParser } from '../parsers';
+import { ODataFieldParser } from '../parsers/index';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;

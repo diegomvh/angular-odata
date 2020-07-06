@@ -6,7 +6,7 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { $VALUE } from '../../types';
 import { HttpOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   // Factory

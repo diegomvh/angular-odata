@@ -8,7 +8,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   // Factory

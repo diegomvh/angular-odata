@@ -1,10 +1,12 @@
 export * from './types';
-export * from './parsers';
 export * from './client';
 export * from './module';
 
 // Utils
 export * from './utils/index';
+
+// Parsers
+export * from './parsers/index';
 
 // Models
 export * from './models/index';

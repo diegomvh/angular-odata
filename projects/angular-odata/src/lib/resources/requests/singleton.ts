@@ -13,7 +13,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
 

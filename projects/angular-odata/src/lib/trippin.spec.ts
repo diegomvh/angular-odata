@@ -1,6 +1,6 @@
 
 import { Configuration, EnumConfig, EntityConfig, ServiceConfig } from './types';
-import { DATE_PARSER, DECIMAL_PARSER } from './parsers';
+import { EDM_PARSERS } from './parsers/index';
 import { ODataEntityService } from './services';
 import { Injectable } from '@angular/core';
 
@@ -137,8 +137,5 @@ export const TripPinConfig = {
       services: [ PeopleServiceConfig ]
     }]
   }],
-  parsers: {
-    ...DATE_PARSER,
-    ...DECIMAL_PARSER
-  }
+  parsers: EDM_PARSERS
 } as Configuration;

@@ -14,7 +14,7 @@ import { Types } from '../../utils/types';
 import { expand, concatMap, toArray } from 'rxjs/operators';
 import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   // Factory

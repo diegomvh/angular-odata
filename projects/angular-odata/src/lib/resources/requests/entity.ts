@@ -15,7 +15,7 @@ import { Types } from '../../utils/types';
 import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataValueResource } from './value';
-import { ODataEntityParser } from '../../parsers';
+import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   // Factory
