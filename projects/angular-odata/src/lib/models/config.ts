@@ -28,11 +28,11 @@ export class ODataConfig {
     this.params = config.params || {};
     this.headers = config.headers || {};
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;
-    this.withCredentials = config.withCredentials || false;
-    this.acceptMetadata = config.acceptMetadata;
-    this.stringAsEnum = config.stringAsEnum || false;
-    this.ieee754Compatible = config.ieee754Compatible || false;
     this.creation = config.creation || new Date();
+    this.withCredentials = config.withCredentials;
+    this.acceptMetadata = config.acceptMetadata;
+    this.ieee754Compatible = config.ieee754Compatible;
+    this.stringAsEnum = config.stringAsEnum;
     this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema));
