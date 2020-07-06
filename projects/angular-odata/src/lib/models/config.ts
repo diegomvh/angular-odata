@@ -197,18 +197,22 @@ export class ODataEntityConfig<Type> {
     include_parents?: boolean,
     include_navigation?: boolean
   } = {include_navigation: true, include_parents: true}): ODataFieldParser<any>[] {
-    let parser = this.parser as ODataEntityParser<any>;
+    let parent = this.parser as ODataEntityParser<any>;
     let fields = <ODataFieldParser<any>[]>[];
-    while (parser) {
+    while (parent) {
       fields = [
-        ...parser.fields.filter(field => opts.include_navigation || !field.navigation),
+        ...parent.fields.filter(field => opts.include_navigation || !field.navigation),
         ...fields
       ];
       if (!opts.include_parents)
         break;
-      parser = parser.parent;
+      parent = parent.parent;
     }
     return fields;
+  }
+
+  field(name: string) {
+    return this.fields().find(f => f.name === name);
   }
 }
 

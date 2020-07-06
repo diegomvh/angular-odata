@@ -30,6 +30,8 @@ import {
   ODataEntitiesAnnotations
 } from './responses';
 import { HttpOptions } from './http-options';
+import { inspect } from 'util';
+import { ODataParser } from '../parsers/base';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -89,14 +91,18 @@ export class ODataResource<Type> {
     this.pathSegments.last().setType(type);
   }
 
-  protected deserialize<T>(value: any): T {
-    let parser = this.client.parserFor(this);
-    return parser ? parser.deserialize(value) : value;
+  protected deserialize(value: any): Type | Type[] {
+    let parser = this.client.parserFor<Type>(this);
+    if (parser instanceof ODataParser)
+      return Array.isArray(value) ? value.map(v => parser.deserialize(v)) : parser.deserialize(value);
+    return value;
   }
 
-  protected serialize(obj: Type | Partial<Type>): any {
-    let parser = this.client.parserFor(this);
-    return parser ? parser.serialize(obj) : obj;
+  protected serialize(entity: Partial<Type> | Array<Partial<Type>>): any {
+    let parser = this.client.parserFor<Type>(this);
+    if (parser instanceof ODataParser)
+      return Array.isArray(entity) ? entity.map(e => parser.serialize(e)) : parser.serialize(entity);
+    return entity;
   }
 
   // to<Thing>
@@ -107,7 +113,7 @@ export class ODataResource<Type> {
     if (!Types.isNullOrUndefined(type) && type !== this.type())
       this.applyType(type);
     let attrs = entityAttributes(body);
-    return [this.deserialize<Type>(attrs), annots];
+    return [this.deserialize(attrs) as Type, annots];
   }
 
   toEntities(body: any): [Type[] | null, ODataEntitiesAnnotations | null] {
@@ -117,14 +123,14 @@ export class ODataResource<Type> {
     if (!Types.isNullOrUndefined(type) && type !== this.type())
       this.applyType(type);
     let value = body[VALUE];
-    return [this.deserialize<Type[]>(value), annots];
+    return [this.deserialize(value) as Type[], annots];
   }
 
   toValue(body: any): [Type | null, ODataValueAnnotations | null] {
     if (!body) return [null, null];
     let annots = ODataValueAnnotations.factory(odataAnnotations(body));
     let value = body[VALUE];
-    return [this.deserialize<Type>(value), annots];
+    return [this.deserialize(value) as Type, annots];
   }
 
   toModel<M extends ODataModel<Type>>(body: any): M {

@@ -250,6 +250,8 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
                 } else if (COLLECTION_OPERATORS.indexOf(op) !== -1) {
                   const collectionClause = buildCollectionClause(filterKey.toLowerCase(), value[op], op, propName);
                   if (collectionClause) { result.push(collectionClause); }
+                } else if (op === 'has') {
+                  result.push(`${propName} ${op} ${handleValue(value[op], aliases)}`);
                 } else if (op === 'in') {
                   const resultingValues = Array.isArray(value[op])
                     ? // Convert `{ Prop: { in: [1,2,3] } }` to `(Prop eq 1 or Prop eq 2 or Prop eq 3)`
