@@ -2,15 +2,18 @@ import { Parser } from '../types';
 
 // InMemory Filter!
 // https://github.com/jaystack/odata-v4-inmemory/
-export const DATE_PARSER: { [type: string]: Parser<any> } = {
-  'Edm.Date': <Parser<Date>>{
-    deserialize(value: any): Date {
-      return new Date(value);
-    },
-    serialize(value: Date): any {
-      return value.toISOString();
-    }
+const DATE = <Parser<Date>>{
+  deserialize(value: any): Date {
+    return new Date(value);
+  },
+  serialize(value: Date): any {
+    return value.toISOString();
   }
+};
+
+export const DATE_PARSER: { [type: string]: Parser<any> } = {
+  'Edm.Date': DATE,
+  'Edm.DateTimeOffset': DATE
 };
 
 export const DECIMAL_PARSER: { [type: string]: Parser<any> } = {
@@ -78,9 +81,9 @@ export const DURATION_PARSER: { [type: string]: Parser<any> } = {
   }
 };
 
-export const EDM_PARSERS = Object.assign({}, 
-  DATE_PARSER, 
-  DECIMAL_PARSER, 
+export const EDM_PARSERS = Object.assign({},
+  DATE_PARSER,
+  DECIMAL_PARSER,
   DOUBLE_PARSER,
   TIME_PARSER,
   DURATION_PARSER);
