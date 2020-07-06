@@ -172,8 +172,8 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
       objs = this.parent.deserialize(objs);
     let _parse = (obj) =>
       Object.assign(obj, this.fields
-        .filter(f => f.name in obj)
-        .reduce((acc, f) => Object.assign(acc, { [f.name]: obj[f.name] && f.deserialize(obj[f.name]) }), {})
+        .filter(f => f.name in obj && !Types.isNullOrUndefined(obj[f.name]))
+        .reduce((acc, f) => Object.assign(acc, { [f.name]: f.deserialize(obj[f.name]) }), {})
       );
     return Array.isArray(objs) ?
       objs.map(obj => _parse(obj)) :
@@ -185,8 +185,8 @@ export class ODataEntityParser<Type> implements ODataParser<Type> {
     if (this.parent)
       objs = this.parent.serialize(objs);
     let _toJSON = (obj) => Object.assign(obj, this.fields
-      .filter(f => f.name in obj)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: obj[f.name] && f.serialize(obj[f.name]) }), {})
+      .filter(f => f.name in obj && !Types.isNullOrUndefined(obj[f.name]))
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize(obj[f.name]) }), {})
     );
     return Array.isArray(objs) ?
       objs.map(obj => _toJSON(obj)) :
