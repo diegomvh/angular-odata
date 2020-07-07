@@ -5,7 +5,7 @@ import { ODataParser } from './base';
 import { ODataEnumParser } from './enum';
 
 export class ODataFieldParser<Type> extends ODataParser<Type> {
-  parser?: ODataEntityParser<Type> | ODataEnumParser<Type>;
+  private parser?: ODataEntityParser<Type> | ODataEnumParser<Type>;
   default?: any;
   maxLength?: number;
   key?: boolean;

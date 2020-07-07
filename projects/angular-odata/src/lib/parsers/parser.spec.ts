@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from '../resources';
-import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT, PersonGender } from '../trippin.spec';
+import { TripPinConfig, Person, NAMESPACE, PersonGender } from '../trippin.spec';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataParser } from './base';
@@ -31,33 +30,36 @@ describe('ODataClient', () => {
   it('should serialize enum', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
     const field = config.field('Gender');
-    expect(field.parser.serialize(PersonGender.Female)).toEqual('Female');
+    expect(field.serialize(PersonGender.Female)).toEqual('Female');
   });
 
   it('should deserialize enum', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
     const field = config.field('Gender');
-    expect(field.parser.deserialize('Female')).toEqual(PersonGender.Female);
+    expect(field.deserialize('Female')).toEqual(PersonGender.Female);
   });
 
   it('should serialize flags', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
+    const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
+    parser.flags = true;
     const field = config.field('Gender');
-    (field.parser as ODataEnumParser<PersonGender>).flags = true;
     expect(field.serialize(3)).toEqual('Male, Female, Unknown');
   });
 
   it('should deserialize flags', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
+    const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
+    parser.flags = true;
     const field = config.field('Gender');
-    (field.parser as ODataEnumParser<PersonGender>).flags = true;
     expect(field.deserialize('Male, Female, Unknown')).toEqual(3);
   });
 
   it('should serialize entity', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
-    const field = config.field('Gender');
-    field.parser.stringAsEnum = false;
+    const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
+    parser.flags = true;
+    parser.stringAsEnum = false;
     expect(config.parser.serialize({
       FirstName: 'Name',
       Emails: [], 

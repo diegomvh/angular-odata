@@ -14,16 +14,16 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any): any {
+  deserialize(value: any): Partial<Type> {
     // String to number
-    if (typeof (value) === 'number') return value;
+    if (typeof (value) === 'number') return <any>value as Type;
     return this.flags ?
       <any>Enums.toFlags(this.members, value):
       <any>Enums.toValue(this.members, value);
   }
 
   // Serialize
-  serialize(value: any): any {
+  serialize(value: Partial<Type>): any {
     // Number to string
     if (typeof (value) === 'string') return value;
     let enums = this.flags ?
