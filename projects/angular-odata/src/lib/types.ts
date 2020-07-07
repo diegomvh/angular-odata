@@ -126,8 +126,8 @@ export type Field = {
 }
 
 export interface Parser<T> {
-  deserialize(value: any): T | T[];
-  serialize(value: Partial<T> | Array<Partial<T>>): any;
+  deserialize(value: any): Partial<T> | Partial<T>[];
+  serialize(value: Partial<T> | Partial<T>[]): any;
 }
 
 export type Configuration = {

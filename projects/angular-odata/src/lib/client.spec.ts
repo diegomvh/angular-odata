@@ -96,7 +96,7 @@ describe('ODataClient', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const parser = client.parserFor<Person>(set) as ODataEntityParser<Person>;
     expect(parser instanceof ODataEntityParser).toBeTruthy();
-    expect(parser.fields.length).toEqual(10);
+    expect(parser.fields.length).toEqual(9);
   });
 
   it('should convert resource to json', () => {

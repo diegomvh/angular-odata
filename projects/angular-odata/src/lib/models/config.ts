@@ -211,7 +211,7 @@ export class ODataEntityConfig<Type> {
     return fields;
   }
 
-  field(name: string) {
+  field<P extends keyof Type>(name: P): ODataFieldParser<Type[P]> {
     return this.fields().find(f => f.name === name);
   }
 }

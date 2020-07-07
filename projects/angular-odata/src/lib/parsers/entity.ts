@@ -2,9 +2,10 @@ import { Types, Enums } from '../utils';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig } from '../types';
 
 import { ODataParser } from './base';
+import { ODataEnumParser } from './enum';
 
-export class ODataFieldParser<T> extends ODataParser<T> {
-  parser?: ODataParser<T>;
+export class ODataFieldParser<Type> extends ODataParser<Type> {
+  parser?: ODataEntityParser<Type> | ODataEnumParser<Type>;
   default?: any;
   maxLength?: number;
   key?: boolean;
@@ -26,16 +27,20 @@ export class ODataFieldParser<T> extends ODataParser<T> {
   }
 
   // Deserialize
-  deserialize(value: any): T | T[] {
+  deserialize(value: any): Partial<Type>;
+  deserialize(value: any[]): Partial<Type>[];
+  deserialize(value: any | any[]): Partial<Type> | Partial<Type>[] {
     if (this.parser)
       return Array.isArray(value) ?
-        (value.map(v => this.parser.deserialize(v)) as T[]) :
-        (this.parser.deserialize(value) as T);
+        (value.map(v => this.parser.deserialize(v)) as Partial<Type>[]):
+        (this.parser.deserialize(value) as Partial<Type>);
     return super.deserialize(value);
   }
 
   // Serialize
-  serialize(value: Partial<T> | Array<Partial<T>>): any {
+  serialize(value: Partial<Type>): any;
+  serialize(value: Partial<Type>[]): any[];
+  serialize(value: Partial<Type> | Partial<Type>[]): any | any[] {
     if (this.parser)
       return Array.isArray(value) ?
         value.map(v => this.parser.serialize(v)) :
@@ -47,7 +52,7 @@ export class ODataFieldParser<T> extends ODataParser<T> {
     super.configure(settings);
     const parser = settings.parserForType(this.type);
     if (parser) {
-      if (parser instanceof ODataParser)
+      if (parser instanceof ODataEntityParser || parser instanceof ODataEnumParser)
         this.parser = parser;
       else {
         // Change deserialize/serialize
@@ -62,7 +67,7 @@ export class ODataFieldParser<T> extends ODataParser<T> {
   }
 
   // Json Schema
-  toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
+  toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
     let property = this.parser ? this.parser.toJsonSchema(options) : <any>{
       title: `The ${this.name} field`,
       type: this.parser ? "object" : this.type
@@ -96,7 +101,7 @@ export class ODataEntityParser<Type> extends ODataParser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any): Type {
+  deserialize(value: any): Partial<Type> {
     if (this.parent)
       value = this.parent.deserialize(value);
     return Object.assign(value, this.fields

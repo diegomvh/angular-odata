@@ -91,14 +91,14 @@ export class ODataResource<Type> {
     this.pathSegments.last().setType(type);
   }
 
-  protected deserialize(value: any): Type | Type[] {
+  protected deserialize(value: any): Partial<Type> | Partial<Type>[] {
     let parser = this.client.parserFor<Type>(this);
     if (parser instanceof ODataParser)
       return Array.isArray(value) ? value.map(v => parser.deserialize(v)) : parser.deserialize(value);
     return value;
   }
 
-  protected serialize(entity: Partial<Type> | Array<Partial<Type>>): any {
+  protected serialize(entity: Partial<Type> | Partial<Type>[]): any {
     let parser = this.client.parserFor<Type>(this);
     if (parser instanceof ODataParser)
       return Array.isArray(entity) ? entity.map(e => parser.serialize(e)) : parser.serialize(entity);

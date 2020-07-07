@@ -86,7 +86,6 @@ export interface Person {
   FirstName: string;
   LastName: string;
   Emails?: string[];
-  AddressInfo?: Location[];
   Gender?: PersonGender;
   Friends?: Person[];
   Trips?: Trip[];
@@ -100,7 +99,6 @@ export const PersonConfig = {
     FirstName: {type: 'String', nullable: false},
     LastName: {type: 'String', nullable: false},
     Emails: {type: 'String', collection: true},
-    AddressInfo: {type: '${NAMESPACE}.Location', collection: true},
     Gender: {type: `${NAMESPACE}.PersonGender`},
     Concurrency: {type: 'Number', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Computed","bool":true}]},
     Friends: {type: `${NAMESPACE}.Person`, collection: true, navigation: true},
@@ -124,6 +122,7 @@ export const PeopleServiceConfig = {
 
 export const TripPinConfig = {
   serviceRootUrl: SERVICE_ROOT,
+  stringAsEnum: true,
   schemas: [{
     namespace: `${NAMESPACE}`,
     enums: [ PersonGenderConfig ],
