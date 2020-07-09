@@ -14,24 +14,26 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any): Partial<Type> {
-    // String to number
-    if (typeof (value) === 'number') return <any>value as Type;
-    return this.flags ?
-      <any>Enums.toFlags(this.members, value):
-      <any>Enums.toValue(this.members, value);
+  deserialize(value: any): Partial<Type> | Partial<Type>[] {
+    // string | string[] -> number | number[]
+    // TODO: stringAsEnum
+    if (this.flags) {
+      return Enums.toValues(this.members, value) as any;
+    } else {
+      return Enums.toValue(this.members, value) as any;
+    }
   }
 
   // Serialize
-  serialize(value: Partial<Type>): any {
-    // Number to string
-    if (typeof (value) === 'string') return value;
-    let enums = this.flags ?
-      Enums.toEnums(this.members, value) :
-      [Enums.toEnum(this.members, value)];
-    if (!this.stringAsEnum)
-      enums = enums.map(e => `${this.type}'${e}'`);
-    return enums.join(", ");
+  serialize(value: Partial<Type> | Partial<Type>[]): any {
+    // number | number[] -> string | string[]
+    if (this.flags) {
+      const names = Enums.toNames(this.members, value);
+      return this.stringAsEnum ? names : names.map(name => `${this.type}'${name}'`);
+    } else {
+      const name = Enums.toName(this.members, value);
+      return this.stringAsEnum ? name : `${this.type}'${name}'`;
+    }
   }
 
   // Json Schema
@@ -40,7 +42,7 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
       title: `The ${this.name} field`,
       type: "string"
     };
-    property.enum = Enums.keys(this.members);
+    property.enum = Enums.names(this.members);
     return property;
   }
 }

@@ -27,24 +27,26 @@ export class ODataFieldParser<Type> extends ODataParser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any): Partial<Type>;
-  deserialize(value: any[]): Partial<Type>[];
-  deserialize(value: any | any[]): Partial<Type> | Partial<Type>[] {
-    if (this.parser)
+  deserialize(value: any): Partial<Type> | Partial<Type>[] {
+    if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
         (value.map(v => this.parser.deserialize(v)) as Partial<Type>[]):
         (this.parser.deserialize(value) as Partial<Type>);
+    } else if (this.parser instanceof ODataEnumParser) {
+      return this.parser.deserialize(value);
+    }
     return super.deserialize(value);
   }
 
   // Serialize
-  serialize(value: Partial<Type>): any;
-  serialize(value: Partial<Type>[]): any[];
-  serialize(value: Partial<Type> | Partial<Type>[]): any | any[] {
-    if (this.parser)
+  serialize(value: Partial<Type> | Partial<Type>[]): any {
+    if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
         value.map(v => this.parser.serialize(v)) :
         this.parser.serialize(value);
+    } else if (this.parser instanceof ODataEnumParser) {
+      return this.parser.serialize(value);
+    }
     return super.serialize(value);
   }
 

@@ -1,42 +1,37 @@
 export const Enums = {
-  keys<E>(Enum: E) {
+  names<E>(Enum: E): string[] {
     return Object.keys(Enum).filter(k => typeof Enum[k] === 'number');
   },
   
-  values<E>(Enum: E) {
-    return Object.keys(Enum).filter(k => typeof Enum[k] === 'string');
+  values<E>(Enum: E): number[] {
+    return Object.values(Enum).filter(v => typeof v === 'number');
   },
 
-  toValue<E>(Enum: E, value: any): number[] {
+  toValue<E>(Enum: E, value: any): number {
     return Enum[value];
   },
 
   toValues<E>(Enum: E, value: any): number[] {
-    if (typeof value === 'string'){
-      return value.split(", ").map(opcion => Enum[opcion]);
+    if (typeof value === 'string') {
+      return value.split(',').map(opcion => this.toValue(Enum, opcion.trim()));
+    } else if (Array.isArray(value) && value.every(v => typeof v === 'string')) {
+      return value.map(opcion => this.toValue(Enum, opcion.trim()));
     } else if (typeof value === 'number') {
-      return Object.values(Enum).filter(v => typeof v === "number" && (value & v) === v);
+      return this.values(Enum).filter(v => (value & v) === v);
     }
-    return [value];
   },
 
-  toEnum<E>(Enum: E, value: any): string {
+  toName<E>(Enum: E, value: any): string {
     return Enum[value];
   },
   
-  toEnums<E>(Enum: E, value: any): string[] {
+  toNames<E>(Enum: E, value: any): string[] {
     if (typeof value === 'number') {
-      return Object.values(Enum)
-        .filter(e => typeof e === "string" && (Enum[e] & value) === Enum[e]);
-    }
-    return [value.toString()];
-  },
-
-  toFlags<E>(Enum: E, value: any): number {
-    if (typeof value === "string") {
-      return this.toValues(Enum, value).reduce((flags, v) => flags | v, 0);
-    }
-    return Number(value);
+      return this.names(Enum)
+        .filter(k => (value & Enum[k]) === Enum[k]);
+    } else if (Array.isArray(value) && value.every(v => typeof v === 'number')) {
+      return value.map(v => this.toName(Enum, v));
+    } 
   },
 
   toString<E>(Enum: E, value: any): string {

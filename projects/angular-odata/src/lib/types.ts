@@ -169,6 +169,7 @@ export type EnumConfig<T> = {
 export type EntityConfig<T> = {
   name: string;
   base?: string;
+  open?: boolean;
   model?: { new(...any): any };
   collection?: { new(...any): any };
   annotations?: any[];
