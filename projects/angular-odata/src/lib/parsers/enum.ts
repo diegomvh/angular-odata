@@ -16,7 +16,6 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
   // Deserialize
   deserialize(value: any): Partial<Type> | Partial<Type>[] {
     // string | string[] -> number | number[]
-    // TODO: stringAsEnum
     if (this.flags) {
       return Enums.toValues(this.members, value) as any;
     } else {
