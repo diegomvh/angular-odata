@@ -8,7 +8,6 @@ Please check also my other related project, [OData Angular Generator](https://gi
 ## Install:
 
 ```bash
-npm i uuid
 npm i angular-odata
 ```
 
@@ -135,6 +134,14 @@ export class AppComponent {
 
     // Remove Expand
     people.expand().clear();
+
+    // Batch
+    let batch = odata.batch();
+    batch.post(() => {
+      airports.get().subscribe(console.log);
+      airport.get().subscribe(console.log);
+      people.get({withCount: true}).subscribe(console.log);
+    }).subscribe();
   }
 }
 ```
@@ -167,13 +174,13 @@ export interface Person {
 export const PersonConfig = {
   name: "Person",
   fields: {
-    UserName: {type: 'String', key: true, ref: 'UserName', nullable: false}]},
-    FirstName: {type: 'String', nullable: false},
-    LastName: {type: 'String', nullable: false},
-    Emails: {type: 'String', collection: true},
+    UserName: {type: 'Edm.String', key: true, ref: 'UserName', nullable: false}]},
+    FirstName: {type: 'Edm.String', nullable: false},
+    LastName: {type: 'Edm.String', nullable: false},
+    Emails: {type: 'Edm.String', collection: true},
     AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', collection: true},
     Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender'},
-    Concurrency: {type: 'Number', nullable: false},
+    Concurrency: {type: 'Edm.Number', nullable: false},
     Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', collection: true, navigation: true},
     Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', collection: true, navigation: true},
     Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', navigation: true}
@@ -315,4 +322,3 @@ For a deep query customizations the library use `odata-query` as a builder.
 ## Credits
 Angular OData is built using the following open source projects:
 - [OData v4 query builder](https://github.com/techniq/odata-query)
-- [Generate RFC-compliant UUIDs in JavaScript](https://github.com/uuidjs/uuid)
