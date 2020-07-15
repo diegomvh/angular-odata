@@ -32,9 +32,5 @@ export const Enums = {
     } else if (Array.isArray(value) && value.every(v => typeof v === 'number')) {
       return value.map(v => this.toName(Enum, v));
     } 
-  },
-
-  toString<E>(Enum: E, value: any): string {
-    return this.toEnums(Enum, value).join(", ");
   }
 }

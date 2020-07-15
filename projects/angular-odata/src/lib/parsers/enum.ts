@@ -15,9 +15,9 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
 
   // Deserialize
   deserialize(value: any): Partial<Type> | Partial<Type>[] {
-    // string | string[] -> number | number[]
+    // string | string[] -> number 
     if (this.flags) {
-      return Enums.toValues(this.members, value) as any;
+      return Enums.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
     } else {
       return Enums.toValue(this.members, value) as any;
     }
@@ -25,13 +25,17 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
 
   // Serialize
   serialize(value: Partial<Type> | Partial<Type>[]): any {
-    // number | number[] -> string | string[]
+    // number | number[] -> string 
     if (this.flags) {
-      const names = Enums.toNames(this.members, value);
-      return this.stringAsEnum ? names : names.map(name => `${this.type}'${name}'`);
+      let names = Enums.toNames(this.members, value);
+      if (!this.stringAsEnum)
+        names = names.map(name => `${this.type}'${name}'`)
+      return names.join(", ");
     } else {
-      const name = Enums.toName(this.members, value);
-      return this.stringAsEnum ? name : `${this.type}'${name}'`;
+      let name = Enums.toName(this.members, value);
+      if (!this.stringAsEnum)
+        name = `${this.type}'${name}'`;
+      return name;
     }
   }
 
