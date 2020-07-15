@@ -180,7 +180,7 @@ export const PersonConfig = {
     Emails: {type: 'Edm.String', collection: true},
     AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', collection: true},
     Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender'},
-    Concurrency: {type: 'Edm.Number', nullable: false},
+    Concurrency: {type: 'Edm.Int64', nullable: false},
     Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', collection: true, navigation: true},
     Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', collection: true, navigation: true},
     Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', navigation: true}
