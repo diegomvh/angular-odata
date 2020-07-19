@@ -72,6 +72,7 @@ describe('ODataClient', () => {
     enum Color { Red = 1, Yellow, Orange, Green, Black};
     const config = new ODataConfig({
       serviceRootUrl: "http://foo",
+      stringAsEnum: true,
       schemas: [{
         namespace: "Primitive", 
         enums: [{name: "Color", members: Color}],
@@ -108,8 +109,7 @@ describe('ODataClient', () => {
       }] 
     });
     config.configure();
-    const parser = config.parserForType('Primitive.Entity');
-    let result = parser.deserialize({
+    const primitives = {
       "null": null,
       "true": true, 
       "false": false,
@@ -122,7 +122,7 @@ describe('ODataClient', () => {
       "double": 3.1415926535897931,
       "decimal": 34.95,
       "string": "Say \"Hello\",\nthen go",
-      "binary": "T0RhdGE",
+      "binary": "T0RhdGE=",
       "date": "2012-12-03",
       "timeOfDay": "07:59:59.999",
       "dateTimeOffset": "2012-12-03T07:16:23Z",
@@ -130,8 +130,9 @@ describe('ODataClient', () => {
       "guid": "01234567-89ab-cdef-0123-456789abcdef",
       "enumeration": "Yellow",
       "point": {"type": "point","coordinates":[142.1,64.1]}
-    });
-    result = parser.serialize(result);
-    console.log(result);
+    };
+    const parser = config.parserForType('Primitive.Entity');
+    let result = parser.deserialize(primitives);
+    expect(parser.serialize(result)).toEqual(primitives);
   });
 });
