@@ -3,7 +3,8 @@ import { TripPinConfig, Person, NAMESPACE, PersonGender } from '../trippin.spec'
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataParser } from './base';
-import { ODataEnumParser } from 'angular-odata';
+import { ODataEnumParser } from './enum';
+import { ODataConfig } from '../models';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -65,5 +66,72 @@ describe('ODataClient', () => {
       Emails: [], 
       Gender: PersonGender.Male
     })).toEqual({FirstName: 'Name', Emails: [], Gender: `${NAMESPACE}.PersonGender'Male'`}); 
+  });
+
+  it('should deserialize primitive values', () => {
+    enum Color { Red = 1, Yellow, Orange, Green, Black};
+    const config = new ODataConfig({
+      serviceRootUrl: "http://foo",
+      schemas: [{
+        namespace: "Primitive", 
+        enums: [{name: "Color", members: Color}],
+        entities: [
+          {
+            name: "Entity", 
+            fields: { 
+              // Null values are represented as the JSON literal null.
+              'null': {type: 'Edm.String', nullable: true},
+              // Values of type Edm.Boolean are represented as the JSON literals true and false
+              'true': {type: 'Edm.Boolean'}, //The binary-valued logic
+              'false': {type: 'Edm.Boolean'},
+              // Values of types Edm.Byte, Edm.SByte, Edm.Int16, Edm.Int32, Edm.Int64, Edm.Single, Edm.Double, and Edm.Decimal are represented as JSON numbers, except for NaN, INF, and –INF which are represented as strings.
+              'byte': {type: 'Edm.Byte'}, //The unsigned 8-bit integer
+              'sbyte': {type: 'Edm.SByte'}, //The signed 8-bit integer
+              'int16': {type: 'Edm.Int16'},
+              'int32': {type: 'Edm.Int32'},
+              'int64': {type: 'Edm.Int64'},
+              'single': {type: 'Edm.Single'},
+              'double': {type: 'Edm.Double'}, //The IEEE 754 binary64 floating-point number with 15 - 17 decimal digits
+              'decimal': {type: 'Edm.Decimal'}, //The numeric values with fixed precision and scale
+              // Values of type Edm.String are represented as JSON strings, using the JSON string escaping rules.
+              'string': {type: 'Edm.String'},
+              // Values of type Edm.Binary, Edm.Date, Edm.DateTimeOffset, Edm.Duration,  Edm.Guid, and Edm.TimeOfDay as well as enumeration values are represented as JSON strings whose content satisfies the rules binaryValue, dateValue, dateTimeOffsetValue, durationValue, guidValue, timeOfDayValue, and enumValue
+              'binary': {type: 'Edm.Binary'},
+              'date': {type: 'Edm.Date'}, //The date without a time-zone offset
+              'dateTimeOffset': {type: 'Edm.DateTimeOffset'},
+              'duration': {type: 'Edm.Duration'},
+              'timeOfDay': {type: 'Edm.TimeOfDay'}, //The clock time 00:00 - 23:59:59.999999999999
+              'guid': {type: 'Edm.Guid'},
+              'enumeration': {type: 'Primitive.Color'},
+            }
+          }]
+      }] 
+    });
+    config.configure();
+    const parser = config.parserForType('Primitive.Entity');
+    let result = parser.deserialize({
+      "null": null,
+      "true": true, 
+      "false": false,
+      "byte": -128,
+      "sbyte": -128,
+      "int16": -128,
+      "int32": -128,
+      "int64": -128,
+      "single": "INF",
+      "double": 3.1415926535897931,
+      "decimal": 34.95,
+      "string": "Say \"Hello\",\nthen go",
+      "binary": "T0RhdGE",
+      "date": "2012-12-03",
+      "timeOfDay": "07:59:59.999",
+      "dateTimeOffset": "2012-12-03T07:16:23Z",
+      "duration": "P12DT23H59M59.999999999999S",
+      "guid": "01234567-89ab-cdef-0123-456789abcdef",
+      "enumeration": "Yellow",
+      "point": {"type": "point","coordinates":[142.1,64.1]}
+    });
+    result = parser.serialize(result);
+    console.log(result);
   });
 });
