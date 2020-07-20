@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
@@ -44,7 +44,6 @@ const getBoundaryEnd = (boundaryDelimiter: string): string => {
   const boundaryEnd: string = boundaryDelimiter + BOUNDARY_PREFIX_SUFFIX;
   return boundaryEnd;
 }
-
 export class ODataBatchRequest extends Subject<any> {
   body?: any;
   config?: string;
