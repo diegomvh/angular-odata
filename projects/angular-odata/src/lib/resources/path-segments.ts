@@ -2,7 +2,7 @@ import buildQuery, { guid, Alias, alias } from './builder';
 import { PlainObject } from './builder';
 //import buildQuery from 'odata-query';
 
-import { Types, isoStringToDate } from '../utils/index';
+import { Types, Dates } from '../utils/index';
 
 import { OptionHandler } from './query-options';
 import { PATH_SEPARATOR } from '../types';
@@ -75,7 +75,7 @@ export class ODataPathSegments {
   toJSON() {
     return this.segments.map(segment => { 
       let json = <any>{ name: segment.name, path: segment.path, type: segment.type };
-      let options = isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
+      let options = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
       if (!Types.isEmpty(options))
         json.options = options;
       return json; 

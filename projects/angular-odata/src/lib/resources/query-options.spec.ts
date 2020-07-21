@@ -173,4 +173,52 @@ describe('ODataQueryOptions', () => {
     const queryOptions: ODataQueryOptions = new ODataQueryOptions();
     expect(queryOptions.toString()).toEqual('');
   });
+
+  it('test value top', () => {
+    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const handler = queryOptions.option(QueryOptionNames.top, 1);
+    expect(queryOptions.toString()).toEqual('$top=1');
+    expect(handler.value()).toEqual(1);
+    handler.value(4);
+    expect(queryOptions.toString()).toEqual('$top=4');
+  });
+
+  it('test clear by handler', () => {
+    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const handler = queryOptions.option(QueryOptionNames.top, 1);
+    handler.clear();
+    expect(queryOptions.toString()).toEqual('');
+  });
+
+  it('test array like filter', () => {
+    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const handler = queryOptions.option(QueryOptionNames.filter, "foo eq 1");
+    expect(queryOptions.toString()).toEqual('$filter=foo eq 1');
+    handler.push("bar ne 2");
+    expect(queryOptions.toString()).toEqual('$filter=foo eq 1 and bar ne 2');
+    handler.remove("foo eq 1");
+    expect(queryOptions.toString()).toEqual('$filter=bar ne 2');
+    expect(handler.at(0)).toEqual('bar ne 2');
+  });
+
+  it('test hashmap like filter', () => {
+    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const handler = queryOptions.option(QueryOptionNames.filter, {foo: 1});
+    expect(queryOptions.toString()).toEqual('$filter=foo eq 1');
+    handler.set("bar", {ne: 2});
+    expect(queryOptions.toString()).toEqual('$filter=foo eq 1 and bar ne 2');
+    handler.unset("foo");
+    expect(queryOptions.toString()).toEqual('$filter=bar ne 2');
+    expect(handler.get('bar')).toEqual({ne: 2});
+    expect(handler.has('foo')).toEqual(false);
+    handler.set("bar.ne", 4);
+    expect(queryOptions.toString()).toEqual('$filter=bar ne 4');
+    handler.unset("bar.ne");
+    handler.set("bar.gt", 4);
+    expect(queryOptions.toString()).toEqual('$filter=bar gt 4');
+    handler.unset("bar.gt");
+    expect(queryOptions.toString()).toEqual('');
+    handler.assign({foo: 1, bar: 2, fooBar: { lt: 4 }});
+    expect(queryOptions.toString()).toEqual('$filter=bar eq 2 and foo eq 1 and fooBar lt 4');
+  });
 });

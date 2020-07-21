@@ -1,8 +1,7 @@
 import buildQuery, { alias, Alias } from './builder';
 import { PlainObject } from './builder';
-//import buildQuery from 'odata-query';
 
-import { isoStringToDate, Types } from '../utils/index';
+import { Dates, Types } from '../utils/index';
 import { parseQuery } from '../types';
 
 export enum QueryOptionNames {
@@ -62,7 +61,7 @@ export class ODataQueryOptions {
   }
 
   toJSON() {
-    return isoStringToDate(JSON.parse(JSON.stringify(this.options)));
+    return Dates.isoStringToDate(JSON.parse(JSON.stringify(this.options)));
   }
 
   clone() {
@@ -113,12 +112,13 @@ export class OptionHandler<T> {
     return this.o[this.n];
   }
 
-  // Primitive value
-  value() {
-    return this.o[this.n];
+  //#region Primitive Value
+  value(v?: any) {
+    return !Types.isUndefined(v) && (this.o[this.n] = v) || this.o[this.n];
   }
+  //#endregion
 
-  // Array
+  //#region Array Value
   private assertArray(): Array<any> {
     if (!Types.isArray(this.o[this.n]))
       this.o[this.n] = !Types.isUndefined(this.o[this.n]) ? [this.o[this.n]] : [];
@@ -139,33 +139,52 @@ export class OptionHandler<T> {
   at(index: number) {
     return this.assertArray()[index];
   }
+  //#endregion
 
-  // Hash map
-  private assertObject(): PlainObject {
+  //#region HashMap Value
+  private assertObject(create: boolean): PlainObject {
     if (!Types.isArray(this.o[this.n]) && Types.isObject(this.o[this.n])) {
       return this.o[this.n];
     }
     let arr = this.assertArray();
     let obj = arr.find(v => Types.isObject(v));
-    if (!obj) {
+    if (!obj && create) {
       obj = {};
       arr.push(obj);
-    }
-    return obj;
-  }
-
-  set(name: string, value: T) {
-    this.assertObject()[name] = value;
-  }
-
-  get(name: string): T {
-    if (!Types.isArray(this.o[this.n])) {
-      return this.o[this.n][name];
+      return obj;
     }
   }
 
-  unset(name: string) {
-    delete this.assertObject()[name];
+  set(path: string, value: any, customizer?: any) {
+    let obj = this.assertObject(true);
+    // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+
+    pathArray.reduce((acc, key, i) => {
+      if (acc[key] === undefined) acc[key] = {};
+      if (i === pathArray.length - 1) acc[key] = value;
+      return acc[key];
+    }, obj);
+  }
+
+  get(path: string, def?: any): any {
+    let obj = this.assertObject(false) || {};
+    // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    // Find value if exist return otherwise return undefined value;
+    return (pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj) || def);
+  }
+
+  unset(path: string) {
+    let obj = this.assertObject(true);
+    // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+
+    pathArray.reduce((acc, key, i) => {
+      if (i === pathArray.length - 1) delete acc[key];
+      return acc[key];
+    }, obj);
+
     if (Types.isArray(this.o[this.n])) {
       this.o[this.n] = this.o[this.n].filter(v => !Types.isEmpty(v));
       if (this.o[this.n].length === 1)
@@ -173,13 +192,19 @@ export class OptionHandler<T> {
     }
   }
 
-  has(name: string) {
-    return !!this.get(name);
+  has(path: string) {
+    let obj = this.assertObject(false) || {};
+    // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
+    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+
+    return !!pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj);
   }
 
   assign(values: PlainObject) {
-    Object.assign(this.assertObject(), values);
+    let obj = this.assertObject(true);
+    Object.assign(obj, values);
   }
+  //#endregion
 
   clear() {
     delete this.o[this.n];
