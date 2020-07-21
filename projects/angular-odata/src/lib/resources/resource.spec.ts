@@ -96,7 +96,7 @@ describe('ODataResource', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', '', segments, options);
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
-    friends.key('mirsking');
+    friends.segment.key('mirsking');
     expect(friends.toString()).toEqual("People('russellwhyte')/Friends('mirsking')");
   });
 

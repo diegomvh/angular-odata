@@ -23,43 +23,15 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     options.keep(QueryOptionNames.format);
     return new ODataNavigationPropertyResource<E>(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataNavigationPropertyResource<T>>();
+  }
   //#endregion
-
-  // Key
-  key(key?: EntityKey<T>) {
-    let segment = this.pathSegments.segment(PathSegmentNames.navigationProperty);
-    if (!segment)
-      throw new Error(`EntityResourse dosn't have segment for key`);
-    if (!Types.isUndefined(key)) {
-      let parser = this.client.parserFor(this);
-      if (parser instanceof ODataEntityParser && Types.isObject(key))
-        key = parser.resolveKey(key);
-      segment.option(SegmentOptionNames.key, key);
-    }
-    return segment.option(SegmentOptionNames.key).value();
-  }
-
-  hasKey() {
-    return this.key() !== undefined;
-  }
-
-  // EntitySet
-  entitySet(name?: string) {
-    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
-    if (!segment)
-      throw new Error(`EntityResourse dosn't have segment for entitySet`);
-    if (!Types.isUndefined(name))
-      segment.setPath(name);
-    return segment.path;
-  }
 
   //#region Inmutable Resource
   reference() {
-    return ODataReferenceResource.factory(
-      this.client, {
-      segments: this.pathSegments.clone(),
-      options: this.queryOptions.clone()
-    });
+    return ODataReferenceResource.factory(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   navigationProperty<N>(name: string) {
@@ -142,6 +114,33 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
+  get segment() {
+    const client = this.client;
+    const segments = this.pathSegments;
+    return {
+      entitySet(name?: string) {
+        let segment = segments.segment(PathSegmentNames.entitySet);
+        if (!segment)
+          throw new Error(`NavigationPropertyResource dosn't have segment for entitySet`);
+        if (!Types.isUndefined(name))
+          segment.setPath(name);
+        return segment.path;
+      },
+      key(key?: EntityKey<T>) {
+        let segment = segments.segment(PathSegmentNames.navigationProperty);
+        if (!segment)
+          throw new Error(`NavigationPropertyResourse dosn't have segment for key`);
+        if (!Types.isUndefined(key)) {
+          let parser = client.parserForType(segments.last().type);
+          if (parser instanceof ODataEntityParser && Types.isObject(key))
+            key = parser.resolveKey(key);
+          segment.option(SegmentOptionNames.key, key);
+        }
+        return segment.option(SegmentOptionNames.key).value();
+      }
+    }
+  }
+
   get query() {
     const options = this.queryOptions;
     return {

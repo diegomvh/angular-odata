@@ -14,6 +14,10 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
     options.clear();
     return new ODataActionResource<R>(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataActionResource<T>>();
+  }
   //#endregion
 
   //#region Requests

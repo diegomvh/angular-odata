@@ -65,10 +65,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   protected parse(values: any[]): M[] {
     let resource = this._resource ? this._resource.clone() : null;
     if (resource instanceof ODataEntitySetResource)
-      resource = resource.entity();
+      resource = resource.entity(null);
     return (values as T[]).map(value => {
       if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
-        resource.key(value);
+        resource.segment.key(value);
       return (resource ? resource.clone().toModel(value) : value) as M;
     });
   }

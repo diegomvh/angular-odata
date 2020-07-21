@@ -15,6 +15,10 @@ export class ODataValueResource<T> extends ODataResource<T> {
     options.clear();
     return new ODataValueResource<V>(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataValueResource<T>>();
+  }
   //#endregion
 
   //#region Requests

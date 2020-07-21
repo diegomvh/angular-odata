@@ -14,6 +14,10 @@ export class ODataCountResource extends ODataResource<any> {
     options.keep(QueryOptionNames.filter, QueryOptionNames.search);
     return new ODataCountResource(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataCountResource>();
+  }
   //#endregion
 
   //#region Requests

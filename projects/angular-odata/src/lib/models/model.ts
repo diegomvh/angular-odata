@@ -22,6 +22,7 @@ import {
 } from '../resources/http-options';
 import { VALUE } from '../types';
 import { ODataFieldParser } from '../parsers/index';
+import { Types } from '../utils';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;
@@ -128,8 +129,8 @@ export class ODataModel<T> {
   fetch(options?: HttpOptions): Observable<this | null> {
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      if (!this._resource.hasKey())
+      this._resource.segment.key(this);
+      if (Types.isUndefined(this._resource.segment.key()))
         throw new Error(`Can't fetch entity without key`);
       obs$ = this._resource.get(options);
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
@@ -158,8 +159,8 @@ export class ODataModel<T> {
 
   update(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      if (!this._resource.hasKey())
+      this._resource.segment.key(this);
+      if (Types.isUndefined(this._resource.segment.key()))
         throw new Error(`Can't update entity without key`);
       let resource = this._resource;
       let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
@@ -182,8 +183,8 @@ export class ODataModel<T> {
 
   save(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      return this._resource.hasKey() ? this.update(options) : this.create(options);
+      this._resource.segment.key(this);
+      return Types.isUndefined(this._resource.segment.key()) ? this.create(options) : this.update(options);
     }
     throw new Error(`Can't save`);
   }
@@ -191,8 +192,8 @@ export class ODataModel<T> {
   destroy(options?: HttpOptions): Observable<null> {
     if (this._resource instanceof ODataEntityResource) {
       let etag = (this._annotations && this._annotations instanceof ODataEntityAnnotations) ? this._annotations.etag : undefined;
-      this._resource.key(this);
-      if (!this._resource.hasKey())
+      this._resource.segment.key(this);
+      if (Types.isUndefined(this._resource.segment.key()))
         throw new Error(`Can't destroy entity without key`);
       return this._resource.delete(Object.assign({ etag }, options || {}));
     }
@@ -203,8 +204,8 @@ export class ODataModel<T> {
     if (!this._resource)
       throw new Error(`Can't call without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      if (!this._resource.hasKey())
+      this._resource.segment.key(this);
+      if (Types.isUndefined(this._resource.segment.key()))
         throw new Error(`Can't use without key`);
     }
     let resource = this._resource as ODataEntityResource<T>;
@@ -222,8 +223,8 @@ export class ODataModel<T> {
     if (!this._resource)
       throw new Error(`Can't query without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {
-      this._resource.key(this);
-      if (!this._resource.hasKey())
+      this._resource.segment.key(this);
+      if (Types.isUndefined(this._resource.segment.key()))
         throw new Error(`Can't query without key`);
     }
     let resource = this._resource as ODataEntityResource<T>;

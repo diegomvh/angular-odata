@@ -25,39 +25,27 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
     return new ODataEntitySetResource<E>(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataEntitySetResource<T>>();
+  }
   //#endregion
 
   toModel<M extends ODataModel<T>>(body: any): M {
     return this.entity(body).toModel(body);
   }
 
-  // EntitySet
-  entitySet(name?: string) {
-    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
-    if (!segment)
-      throw new Error(`EntityResourse dosn't have segment for entitySet`);
-    if (!Types.isUndefined(name))
-      segment.setPath(name);
-    return segment.path;
-  }
-
   //#region Inmutable Resource
-  entity(key?: EntityKey<T>) {
-    let entity = ODataEntityResource.factory<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
-    if (!Types.isEmpty(key)) {
-      entity.key(key);
-    }
+  entity(key: EntityKey<T>) {
+    const entity = ODataEntityResource.factory<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    entity.segment.key(key);
     return entity;
   }
 
   cast<C extends T>(type: string) {
-    let entitySet = new ODataEntitySetResource<C>(
-      this.client, 
-      this.pathSegments.clone(),
-      this.queryOptions.clone()
-    );
-    entitySet.pathSegments.segment(PathSegmentNames.type, type).setType(type);
-    return entitySet;
+    let segments = this.pathSegments.clone();
+    segments.segment(PathSegmentNames.type, type).setType(type);
+    return new ODataEntitySetResource<C>(this.client, segments, this.queryOptions.clone());
   }
 
   action<A>(name: string, type?: string) {
@@ -134,6 +122,20 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
+  get segment() {
+    const segments = this.pathSegments;
+    return {
+      entitySet(name?: string) {
+        let segment = segments.segment(PathSegmentNames.entitySet);
+        if (!segment)
+          throw new Error(`EntityResourse dosn't have segment for entitySet`);
+        if (!Types.isUndefined(name))
+          segment.setPath(name);
+        return segment.path;
+      }
+    }
+  }
+
   get query() {
     const options = this.queryOptions;
     return {

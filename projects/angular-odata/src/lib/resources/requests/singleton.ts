@@ -22,6 +22,10 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataSingletonResource<T>>();
+  }
   //#endregion
 
   //#region Inmutable Resource

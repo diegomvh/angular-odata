@@ -23,35 +23,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     options.keep(QueryOptionNames.expand, QueryOptionNames.select, QueryOptionNames.format);
     return new ODataEntityResource<E>(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataEntityResource<T>>();
+  }
   //#endregion
-
-  // Key
-  key(key?: EntityKey<T>) {
-    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
-    if (!segment)
-      throw new Error(`EntityResourse dosn't have segment for key`);
-    if (!Types.isUndefined(key)) {
-      let parser = this.client.parserFor(this);
-      if (parser instanceof ODataEntityParser && Types.isObject(key))
-        key = parser.resolveKey(key);
-      segment.option(SegmentOptionNames.key, key);
-    }
-    return segment.option(SegmentOptionNames.key).value();
-  }
-
-  hasKey() {
-    return this.key() !== undefined;
-  }
-
-  // EntitySet
-  entitySet(name?: string) {
-    let segment = this.pathSegments.segment(PathSegmentNames.entitySet);
-    if (!segment)
-      throw new Error(`EntityResourse dosn't have segment for entitySet`);
-    if (!Types.isUndefined(name))
-      segment.setPath(name);
-    return segment.path;
-  }
 
   //#region Inmutable Resource
   value() {
@@ -81,13 +57,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   cast<C extends T>(type: string) {
-    let entity =  new ODataEntityResource<C>(
-      this.client, 
-      this.pathSegments.clone(),
-      this.queryOptions.clone()
-    );
-    entity.pathSegments.segment(PathSegmentNames.type, type).setType(type);
-    return entity;
+    let segments = this.pathSegments.clone();
+    segments.segment(PathSegmentNames.type, type).setType(type);
+    return new ODataEntityResource<C>(this.client, segments, this.queryOptions.clone());
   }
 
   select(opts: Select<T>) {
@@ -110,6 +82,33 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
+  get segment() {
+    const client = this.client;
+    const segments = this.pathSegments;
+    return {
+      entitySet(name?: string) {
+        let segment = segments.segment(PathSegmentNames.entitySet);
+        if (!segment)
+          throw new Error(`EntityResourse dosn't have segment for entitySet`);
+        if (!Types.isUndefined(name))
+          segment.setPath(name);
+        return segment.path;
+      },
+      key(key?: EntityKey<T>) {
+        let segment = segments.segment(PathSegmentNames.entitySet);
+        if (!segment)
+          throw new Error(`EntityResourse dosn't have segment for key`);
+        if (!Types.isUndefined(key)) {
+          let parser = client.parserForType(segments.last().type);
+          if (parser instanceof ODataEntityParser && Types.isObject(key))
+            key = parser.resolveKey(key);
+          segment.option(SegmentOptionNames.key, key);
+        }
+        return segment.option(SegmentOptionNames.key).value();
+      }
+    }
+  }
+
   get query() {
     const options = this.queryOptions;
     return {

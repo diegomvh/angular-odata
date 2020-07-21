@@ -17,6 +17,10 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options);
   }
+
+  clone() {
+    return super.clone<ODataPropertyResource<T>>();
+  }
   //#endregion
 
   //#region Inmutable Resource

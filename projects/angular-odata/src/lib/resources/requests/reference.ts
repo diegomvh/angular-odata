@@ -10,16 +10,14 @@ import { HttpOptions } from '../http-options';
 
 export class ODataReferenceResource extends ODataResource<any> {
   //#region Factory
-  static factory(service: ODataClient, opts?: {
-      segments?: ODataPathSegments, 
-      options?: ODataQueryOptions}
-  ) {
-    let segments = opts && opts.segments || new ODataPathSegments();
-    let options = opts && opts.options || new ODataQueryOptions();
-
+  static factory<P>(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
     segments.segment(PathSegmentNames.reference, $REFERENCE);
     options.clear();
-    return new ODataReferenceResource(service, segments, options);
+    return new ODataReferenceResource(client, segments, options);
+  }
+
+  clone() {
+    return super.clone<ODataReferenceResource>();
   }
   //#endregion
 

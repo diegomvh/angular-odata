@@ -1,9 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { ODataClient } from '../../client';
-import { Types } from '../../utils';
 
-import { PlainObject } from '../builder';
 import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
@@ -18,18 +16,11 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
     options.keep(QueryOptionNames.format);
     return new ODataFunctionResource<R>(client, segments, options);
   }
-  //#endregion
 
-  // Parameters
-  parameters(params?: PlainObject) {
-    let segment = this.pathSegments.last();
-    if (!segment)
-      throw new Error(`FunctionResourse dosn't have segment`);
-    if (Types.isUndefined(params))
-      return segment.option(SegmentOptionNames.parameters);
-    
-    return segment.option(SegmentOptionNames.parameters, params);
+  clone() {
+    return super.clone<ODataFunctionResource<T>>();
   }
+  //#endregion
 
   //#region Requests
   get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
@@ -47,8 +38,10 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
     options?: HttpOptions
   ): Observable<any> {
     let opts = Object.assign<any, HttpOptions>({ responseType }, options || {});
-    if (args)
-      this.parameters(args);
+    let segment = this.pathSegments.last();
+    if (!segment)
+      throw new Error(`FunctionResourse dosn't have segment`);
+    segment.option(SegmentOptionNames.parameters, args);
     return this.get(opts) as Observable<any>;
   }
   //#endregion

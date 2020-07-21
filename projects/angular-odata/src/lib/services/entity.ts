@@ -16,6 +16,7 @@ import { EntityKey } from '../types';
 import { ODataClient } from '../client';
 
 import { ODataBaseService } from './base';
+import { Types } from '../utils';
 
 @Injectable()
 export class ODataEntityService<T> extends ODataBaseService<T> {
@@ -93,6 +94,6 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
   }
 
   public save(entity: Partial<T>, options?: HttpOptions & {etag?: string}) {
-    return this.entity(entity).hasKey() ? this.update(entity, options) : this.create(entity, options);
+    return Types.isUndefined(this.entity(entity).segment.key()) ? this.create(entity, options) : this.update(entity, options);
   }
 }
