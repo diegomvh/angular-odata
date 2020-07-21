@@ -9,7 +9,7 @@ import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
 import { HttpOptions } from '../http-options';
 
 export class ODataReferenceResource extends ODataResource<any> {
-  // Factory
+  //#region Factory
   static factory(service: ODataClient, opts?: {
       segments?: ODataPathSegments, 
       options?: ODataQueryOptions}
@@ -21,8 +21,9 @@ export class ODataReferenceResource extends ODataResource<any> {
     options.clear();
     return new ODataReferenceResource(service, segments, options);
   }
+  //#endregion
 
-  // Client Requests
+  //#region Requests
   post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     let related = this.client.endpointUrl(target);
     return super.post({[ODATA_ID]: related},
@@ -46,8 +47,9 @@ export class ODataReferenceResource extends ODataResource<any> {
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
     );
   }
+  //#endregion
 
-  // Custom for collections
+  //#region Custom for collections
   add(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     return this.post(target, options);
   }
@@ -55,8 +57,9 @@ export class ODataReferenceResource extends ODataResource<any> {
   remove(target?: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     return this.delete(Object.assign({target}, options));
   }
+  //#region 
 
-  // Custom for single
+  //#region Custom for single
   set(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any>  {
     return this.put(target, options);
   }
@@ -64,4 +67,5 @@ export class ODataReferenceResource extends ODataResource<any> {
   unset(options?: HttpOptions & { etag?: string }): Observable<any>  {
     return this.delete(options);
   }
+  //#region 
 }

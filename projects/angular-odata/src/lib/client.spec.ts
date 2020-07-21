@@ -156,10 +156,9 @@ describe('ODataClient', () => {
       "@odata.context": "http://services.odata.org/V4/TripPinServiceRW/$metadata#People",
       "value": dummyPeople
     };
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
-    set.top(2);
-
-    set.get().subscribe(([people, annotations]) => {
+    client.entitySet<Person>('People', `${NAMESPACE}.Person`)
+    .top(2)
+    .get().subscribe(([people, annotations]) => {
       expect(people.length).toBe(2);
       expect(annotations.context.set).toEqual("People");
       expect(people).toEqual(dummyPeople);

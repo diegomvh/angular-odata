@@ -30,7 +30,6 @@ import {
   ODataEntitiesAnnotations
 } from './responses';
 import { HttpOptions } from './http-options';
-import { inspect } from 'util';
 import { ODataParser } from '../parsers/base';
 
 export class ODataResource<Type> {

@@ -11,14 +11,15 @@ import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../htt
 import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
-  // Factory
+  //#region Factory
   static factory<P>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
     segments.segment(PathSegmentNames.property, name).setType(type)
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options);
   }
+  //#endregion
 
-  // Segments
+  //#region Inmutable Resource
   value() {
     return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -29,11 +30,14 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
+  //#endregion
 
+  //#region Requests
   get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
   get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
   get(options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
   get(options: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
     return super.get(options);
   }
+  //#endregion
 }

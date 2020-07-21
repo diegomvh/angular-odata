@@ -17,12 +17,13 @@ import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-opt
 import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
-  // Factory
+  //#region Factory
   static factory<E>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
     segments.segment(PathSegmentNames.navigationProperty, name).setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataNavigationPropertyResource<E>(client, segments, options);
   }
+  //#endregion
 
   // Key
   key(key?: EntityKey<T>) {
@@ -52,7 +53,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return segment.path;
   }
 
-  // Segments
+  //#region Inmutable Resource
   reference() {
     return ODataReferenceResource.factory(
       this.client, {
@@ -79,64 +80,114 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataCountResource.factory(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  // Client requests
+  select(opts: Select<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Select<T>>(QueryOptionNames.select, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  expand(opts: Expand<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Expand<T>>(QueryOptionNames.expand, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  transform(opts: Transform<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Transform<T>>(QueryOptionNames.transform, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  search(opts: string) {
+    let options = this.queryOptions.clone();
+    options.option<string>(QueryOptionNames.search, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  filter(opts: Filter) {
+    let options = this.queryOptions.clone();
+    options.option<Filter>(QueryOptionNames.filter, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  orderBy(opts: OrderBy<T>) {
+    let options = this.queryOptions.clone();
+    options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  format(opts: string) {
+    let options = this.queryOptions.clone();
+    options.option<string>(QueryOptionNames.format, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  top(opts: number) {
+    let options = this.queryOptions.clone();
+    options.option<number>(QueryOptionNames.top, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  skip(opts: number) {
+    let options = this.queryOptions.clone();
+    options.option<number>(QueryOptionNames.skip, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  skiptoken(opts: string) {
+    let options = this.queryOptions.clone();
+    options.option<string>(QueryOptionNames.skiptoken, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+  //#endregion
+
+  //#region Mutable Resource
+  get query() {
+    const options = this.queryOptions;
+    return {
+      select(opts?: Select<T>) {
+        return options.option<Select<T>>(QueryOptionNames.select, opts);
+      },
+      expand(opts?: Expand<T>) {
+        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
+      },
+      transform(opts?: Transform<T>) {
+        return options.option<Transform<T>>(QueryOptionNames.transform, opts);
+      },
+      search(opts?: string) {
+        return options.option<string>(QueryOptionNames.search, opts);
+      },
+      filter(opts?: Filter) {
+        return options.option<Filter>(QueryOptionNames.filter, opts);
+      },
+      orderBy(opts?: OrderBy<T>) {
+        return options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
+      },
+      format(opts?: string) {
+        return options.option<string>(QueryOptionNames.format, opts);
+      },
+      top(opts?: number) {
+        return options.option<number>(QueryOptionNames.top, opts);
+      },
+      skip(opts?: number) {
+        return options.option<number>(QueryOptionNames.skip, opts);
+      },
+      skiptoken(opts?: string) {
+        return options.option<string>(QueryOptionNames.skiptoken, opts);
+      }
+    }
+  }
+  //#endregion
+
+  //#region Requests
   get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
-
   get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-
   get(options: HttpEntityOptions & HttpEntitiesOptions): Observable<any> {
     return super.get(options);
   }
+  //#endregion
 
-  // Options
-  select(opts?: Select<T>) {
-    return this.queryOptions.option<Select<T>>(QueryOptionNames.select, opts);
-  }
-
-  expand(opts?: Expand<T>) {
-    return this.queryOptions.option<Expand<T>>(QueryOptionNames.expand, opts);
-  }
-
-  transform(opts?: Transform<T>) {
-    return this.queryOptions.option<Transform<T>>(QueryOptionNames.transform, opts);
-  }
-
-  search(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionNames.search, opts);
-  }
-
-  filter(opts?: Filter) {
-    return this.queryOptions.option<Filter>(QueryOptionNames.filter, opts);
-  }
-
-  orderBy(opts?: OrderBy<T>) {
-    return this.queryOptions.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-  }
-
-  format(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionNames.format, opts);
-  }
-
-  top(opts?: number) {
-    return this.queryOptions.option<number>(QueryOptionNames.top, opts);
-  }
-
-  skip(opts?: number) {
-    return this.queryOptions.option<number>(QueryOptionNames.skip, opts);
-  }
-
-  skiptoken(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionNames.skiptoken, opts);
-  }
-
-  // Custom
-  single(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
-    return this
-      .get(
-        Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
-      );
-  }
-
+  //#region Custom for collections
   collection(options?: HttpOptions & {withCount?: boolean}): Observable<[T[], ODataEntitiesAnnotations]> {
     return this
       .get(
@@ -165,4 +216,14 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         concatMap(([entities, _]) => entities),
         toArray());
   }
+  //#endregion
+
+  //#region Custom for single
+  single(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+    return this
+      .get(
+        Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+      );
+  }
+  //#endregion
 }

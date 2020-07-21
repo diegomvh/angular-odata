@@ -6,7 +6,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID, BATCH_PREFIX, BOUNDARY_PREFIX_SUFFIX, CHANGESET_PREFIX, BINARY, PARAM_SEPARATOR } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions } from '../http-options';
-import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse, HttpRequest } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;
@@ -44,8 +44,9 @@ const getBoundaryEnd = (boundaryDelimiter: string): string => {
   const boundaryEnd: string = boundaryDelimiter + BOUNDARY_PREFIX_SUFFIX;
   return boundaryEnd;
 }
+
 export class ODataBatchRequest extends Subject<any> {
-  body?: any;
+  body?: any | null;
   config?: string;
   observe: 'body' | 'response';
   headers?: HttpHeaders;
@@ -59,8 +60,8 @@ export class ODataBatchRequest extends Subject<any> {
       body?: any | null,
       config?: string,
       headers?: HttpHeaders,
-      observe?: 'body' | 'response',
       params?: HttpParams,
+      observe?: 'body' | 'response',
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
     }
   ) {
@@ -178,18 +179,20 @@ export class ODataBatchResource extends ODataResource<any> {
     this.requests = [];
   }
 
+  //#region Factory
   static factory(client: ODataClient) {
     let segments = new ODataPathSegments();
     segments.segment(PathSegmentNames.batch, $BATCH);
     return new ODataBatchResource(client, segments);
   }
+  //#endregion
 
   add(method: string, path: string, options?: {
-    body?: any | null,
+    body: any | null, 
     config?: string,
     headers?: HttpHeaders,
-    observe?: 'body' | 'response',
     params?: HttpParams,
+    observe?: 'body' | 'response',
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
   }
   ): ODataBatchRequest {

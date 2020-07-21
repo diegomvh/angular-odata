@@ -18,11 +18,12 @@ import { ODataValueResource } from './value';
 import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
-  // Factory
+  //#region Factory
   static factory<E>(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
     options.keep(QueryOptionNames.expand, QueryOptionNames.select, QueryOptionNames.format);
     return new ODataEntityResource<E>(client, segments, options);
   }
+  //#endregion
 
   // Key
   key(key?: EntityKey<T>) {
@@ -52,7 +53,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return segment.path;
   }
 
-  // Segments
+  //#region Inmutable Resource
   value() {
     return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -89,6 +90,43 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return entity;
   }
 
+  select(opts: Select<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Select<T>>(QueryOptionNames.select, opts);
+    return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  expand(opts: Expand<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Expand<T>>(QueryOptionNames.expand, opts);
+    return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+
+  format(opts: string) {
+    let options = this.queryOptions.clone();
+    options.option<string>(QueryOptionNames.format, opts);
+    return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), options);
+  }
+  //#endregion
+
+  //#region Mutable Resource
+  get query() {
+    const options = this.queryOptions;
+    return {
+      select(opts?: Select<T>) {
+        return options.option<Select<T>>(QueryOptionNames.select, opts);
+      },
+      expand(opts?: Expand<T>) {
+        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
+      },
+      format(opts?: string) {
+        return options.option<string>(QueryOptionNames.format, opts);
+      }
+    }
+  }
+  //#endregion
+
+  //#region Requests
   get(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
     return super.get(
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
@@ -118,17 +156,5 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
-
-  // Query
-  select(opts?: Select<T>) {
-    return this.queryOptions.option<Select<T>>(QueryOptionNames.select, opts);
-  }
-
-  expand(opts?: Expand<T>) {
-    return this.queryOptions.option<Expand<T>>(QueryOptionNames.expand, opts);
-  }
-
-  format(opts?: string) {
-    return this.queryOptions.option<string>(QueryOptionNames.format, opts);
-  }
+  //#endregion
 }

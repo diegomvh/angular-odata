@@ -26,6 +26,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
     return segment.path;
   }
 
+  //#region Custom abstract calls
   abstract call(
     args: any | null, 
     responseType: 'value', 
@@ -49,4 +50,5 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
     responseType: 'json' | 'value' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any>;
+  //#endregion
 }
