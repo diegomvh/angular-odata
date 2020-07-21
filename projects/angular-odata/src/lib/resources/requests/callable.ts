@@ -7,7 +7,7 @@ import { Types } from '../../utils';
 import { ODataModel } from '../../models/model';
 import { ODATA_CONTEXT, EntityKey } from '../../types';
 import { ODataEntityParser } from '../../parsers';
-import { Select, OrderBy, Transform, Expand, Filter } from '../builder';
+import { Select, OrderBy, Transform, Expand, Filter, PlainObject } from '../builder';
 import { QueryOptionNames } from '../query-options';
 
 export abstract class ODataCallableResource<T> extends ODataResource<T> {
@@ -79,6 +79,9 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
       },
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
+      },
+      custom(opts?: PlainObject) {
+        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
     }
   }

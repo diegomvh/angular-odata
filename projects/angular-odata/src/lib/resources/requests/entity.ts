@@ -6,7 +6,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
-import { Expand, Select } from '../builder';
+import { Expand, Select, PlainObject } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, SegmentOptionNames, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
@@ -79,6 +79,12 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     options.option<string>(QueryOptionNames.format, opts);
     return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), options);
   }
+
+  custom(opts: PlainObject) {
+    let options = this.queryOptions.clone();
+    options.option<PlainObject>(QueryOptionNames.custom, opts);
+    return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), options);
+  }
   //#endregion
 
   //#region Mutable Resource
@@ -120,6 +126,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       },
       format(opts?: string) {
         return options.option<string>(QueryOptionNames.format, opts);
+      },
+      custom(opts?: PlainObject) {
+        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
     }
   }

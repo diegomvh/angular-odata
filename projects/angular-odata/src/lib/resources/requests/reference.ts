@@ -2,11 +2,12 @@ import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
 import { HttpOptions } from '../http-options';
+import { PlainObject } from '../builder';
 
 export class ODataReferenceResource extends ODataResource<any> {
   //#region Factory
@@ -18,6 +19,25 @@ export class ODataReferenceResource extends ODataResource<any> {
 
   clone() {
     return super.clone<ODataReferenceResource>();
+  }
+  //#endregion
+
+  //#region Inmutable Resource
+  custom(opts: PlainObject) {
+    let options = this.queryOptions.clone();
+    options.option<PlainObject>(QueryOptionNames.custom, opts);
+    return new ODataReferenceResource(this.client, this.pathSegments.clone(), options);
+  }
+  //#endregion
+
+  //#region Mutable Resource
+  get query() {
+    const options = this.queryOptions;
+    return {
+      custom(opts?: PlainObject) {
+        return options.option<PlainObject>(QueryOptionNames.custom, opts);
+      }
+    }
   }
   //#endregion
 
@@ -39,7 +59,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   delete(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
     if (options && options.target) {
       let related = this.client.endpointUrl(options.target);
-      this.custom({[$ID]: related});
+      this.query.custom({[$ID]: related});
     }
     return super.delete(
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})

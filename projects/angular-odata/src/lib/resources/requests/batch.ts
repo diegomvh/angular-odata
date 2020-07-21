@@ -6,7 +6,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { $BATCH, CONTENT_TYPE, APPLICATION_JSON, NEWLINE, ODATA_VERSION, ACCEPT, HTTP11, MULTIPART_MIXED, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, APPLICATION_HTTP, CONTENT_TRANSFER_ENCODING, CONTENT_ID, BATCH_PREFIX, BOUNDARY_PREFIX_SUFFIX, CHANGESET_PREFIX, BINARY, PARAM_SEPARATOR } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions } from '../http-options';
-import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse, HttpRequest } from '@angular/common/http';
+import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;

@@ -1,5 +1,5 @@
 import { ODataResource } from '../resource';
-import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
+import { Expand, Select, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { QueryOptionNames } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
@@ -111,6 +111,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     options.option<string>(QueryOptionNames.skiptoken, opts);
     return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
   }
+
+  custom(opts: PlainObject) {
+    let options = this.queryOptions.clone();
+    options.option<PlainObject>(QueryOptionNames.custom, opts);
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+  }
   //#endregion
 
   //#region Mutable Resource
@@ -173,6 +179,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       },
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
+      },
+      custom(opts?: PlainObject) {
+        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
     }
   }
@@ -195,15 +204,15 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   all(options?: HttpOptions): Observable<T[]> {
-    let res = this.clone() as ODataNavigationPropertyResource<T>;
+    let res = this.clone();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataEntitiesAnnotations]> => {
       if (opts) {
         if (opts.skiptoken)
-          res.skiptoken(opts.skiptoken);
+          res.query.skiptoken(opts.skiptoken);
         else if (opts.skip)
-          res.skip(opts.skip);
+          res.query.skip(opts.skip);
         if (opts.top)
-          res.top(opts.top);
+          res.query.top(opts.top);
       }
       return res.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})

@@ -156,22 +156,13 @@ export class ODataResource<Type> {
   clone<Re extends ODataResource<Type>>(): Re {
     let Ctor = <typeof ODataResource>this.constructor;
     return (new Ctor(this.client, this.pathSegments.clone(), this.queryOptions.clone())) as Re;
-  };
+  }
 
   toJSON() {
     return { 
       segments: this.pathSegments.toJSON(),
       options: this.queryOptions.toJSON()  
     };
-  }
-
-  is(type: string) {
-    return this.pathSegments.last().type === type;
-  }
-
-  // Query
-  custom(opts?: PlainObject) {
-    return this.queryOptions.option<PlainObject>(QueryOptionNames.custom, opts);
   }
 
   alias(name: string, value?: any) {

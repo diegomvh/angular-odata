@@ -168,7 +168,7 @@ export class ODataModel<T> {
       let rels = Object.values(this._relations)
             .filter((value) => value.field.navigation && !value.field.collection)
             .map((value) => {
-              let ref = this._segments.navigationProperty<any>(value.field.name).reference();
+              let ref = (this._resource as ODataEntityResource<T>).navigationProperty<any>(value.field.name).reference();
               delete entity[value.field.name];
               return value.rel != null ? 
                 ref.set(value.rel.target() as ODataEntityResource<any>, {etag}) : 
@@ -200,7 +200,7 @@ export class ODataModel<T> {
     throw new Error(`Can't destroy`);
   }
 
-  protected get _segments() {
+  get _segment() {
     if (!this._resource)
       throw new Error(`Can't call without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {
@@ -208,7 +208,8 @@ export class ODataModel<T> {
       if (Types.isUndefined(this._resource.segment.key()))
         throw new Error(`Can't use without key`);
     }
-    let resource = this._resource as ODataEntityResource<T>;
+    return (this._resource as ODataEntityResource<T>).segment;
+    /*
     return {
       // Function
       function<R>(name: string, returnType?: string): ODataFunctionResource<R> { return resource.function<R>(name, returnType); },
@@ -217,6 +218,7 @@ export class ODataModel<T> {
       // Navigation
       navigationProperty<P>(name: string): ODataNavigationPropertyResource<P> { return resource.navigationProperty<P>(name); }
     };
+    */
   }
 
   get _query() {
@@ -227,21 +229,13 @@ export class ODataModel<T> {
       if (Types.isUndefined(this._resource.segment.key()))
         throw new Error(`Can't query without key`);
     }
-    let resource = this._resource as ODataEntityResource<T>;
-    return {
-      // Select
-      select(select?: Select<T>) { return resource.select(select); },
-      // Expand
-      expand(expand?: Expand<T>) { return resource.expand(expand); },
-      // Alias value
-      alias(name: string, value?: any) { return resource.alias(name, value); }
-    };
+    return (this._resource as ODataEntityResource<T>).query;
   }
 
   protected getNavigationProperty<P>(field: ODataFieldParser<any>): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     if (!(field.name in this._relations)) {
       let value = this._entity[field.name];
-      let nav = this._segments.navigationProperty<P>(field.name);
+      let nav = (this._resource as ODataEntityResource<T>).navigationProperty<P>(field.name);
       let base = field.collection && this._annotations.property(field.name) || {};
       let rel = field.collection ? 
         nav.toCollection(Object.assign(base, { [VALUE]: value || [] })) : 
