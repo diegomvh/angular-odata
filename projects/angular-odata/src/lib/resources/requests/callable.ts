@@ -21,6 +21,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
 
   //#region Mutable Resource
   get segment() {
+    const res = this;
     const client = this.client;
     const segments = this.pathSegments;
     return {
@@ -37,7 +38,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
         if (!segment)
           throw new Error(`CallableResource dosn't have segment for key`);
         if (!Types.isUndefined(key)) {
-          let parser = client.parserForType(segments.last().type);
+          let parser = client.parserFor<T>(res);
           if (parser instanceof ODataEntityParser && Types.isObject(key))
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
