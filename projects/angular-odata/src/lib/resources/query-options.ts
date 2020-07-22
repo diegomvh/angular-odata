@@ -151,8 +151,8 @@ export class OptionHandler<T> {
     if (!obj && create) {
       obj = {};
       arr.push(obj);
-      return obj;
     }
+    return obj;
   }
 
   set(path: string, value: any, customizer?: any) {
