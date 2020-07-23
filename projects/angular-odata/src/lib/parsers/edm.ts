@@ -33,8 +33,7 @@ export const DATE_PARSERS: { [type: string]: Parser<any> } = {
         throw new TypeError(`duration invalid: "${value}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`)
       }
       let duration: Duration = {};
-      if (matches[1] === '-')
-        duration.sign = matches[1];
+      duration.sign = (matches[1] === '-') ? -1 : 1;
       return ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].reduce((acc, name, index) => {
         const v = parseFloat(matches[index + 3]);
         if (!Number.isNaN(v))
@@ -44,13 +43,13 @@ export const DATE_PARSERS: { [type: string]: Parser<any> } = {
     },
     serialize(d: Duration): any {
       return [
-        (d.sign === '-') ? d.sign : '',
+        (d.sign === -1) ? '-' : '',
         'P',
         d.years ? d.years + 'Y' : '',
         d.months ? d.months + 'M' : '',
         d.days ? d.days + 'D' : '',
         'T',
-        d.hours ? d.hours + 'D' : '',
+        d.hours ? d.hours + 'H' : '',
         d.minutes ? d.minutes + 'M' : '',
         d.seconds ? d.seconds + 'S' : '',
       ].join("");

@@ -1,7 +1,7 @@
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
 
 export type Duration = {
-  sign?: string;
+  sign?: 1 | -1;
   years?: number;
   months?: number;
   days?: number;
