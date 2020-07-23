@@ -21,8 +21,7 @@ import { Types } from '../utils';
 import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
 import {
-  ODataQueryOptions,
-  QueryOptionNames
+  ODataQueryOptions
 } from './query-options';
 import {
   ODataValueAnnotations,

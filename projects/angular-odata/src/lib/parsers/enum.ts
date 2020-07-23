@@ -1,5 +1,5 @@
 import { Enums } from '../utils';
-import { Parser, JsonSchemaExpandOptions, EnumConfig } from '../types';
+import { JsonSchemaExpandOptions, EnumConfig } from '../types';
 
 import { ODataParser } from './base';
 

@@ -40,7 +40,7 @@ export class ODataConfig {
   
   configure() {
     this.schemas
-      .forEach(schmea => schmea.configure({
+      .forEach(schema => schema.configure({
         stringAsEnum: this.stringAsEnum,
         ieee754Compatible: this.ieee754Compatible,
         parserForType: (type: string) => this.parserForType(type)

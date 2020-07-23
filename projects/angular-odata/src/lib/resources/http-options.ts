@@ -1,5 +1,4 @@
 import { HttpHeaders, HttpParams } from "@angular/common/http";
-import { ODataBatchResource } from './requests';
 
 export type HttpOptions = {
   config?: string,
