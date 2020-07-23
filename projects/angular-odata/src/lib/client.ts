@@ -20,7 +20,7 @@ import {
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig } from './models';
+import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig, ODataConfig } from './models';
 import { Types } from './utils';
 
 @Injectable()
@@ -28,14 +28,18 @@ export class ODataClient {
   private _batch: ODataBatchResource;
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
+  configFor(resource: ODataResource<any>): ODataConfig {
+    return this.settings.findConfigForTypes(resource.types());
+  }
+
   endpointUrl(resource: ODataResource<any>) {
-    const config = this.settings.findConfigForTypes(resource.types());
+    const config = this.configFor(resource);
     if (config)
       return `${config.serviceRootUrl}${resource}`;
   }
 
   parserFor<T>(resource: ODataResource<any>): Parser<T> {
-    const config = this.settings.findConfigForTypes(resource.types());
+    const config = this.configFor(resource);
     if (config && resource.type())
       return config.parserForType<T>(resource.type());
   }

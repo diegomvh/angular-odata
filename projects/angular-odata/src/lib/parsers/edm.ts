@@ -1,33 +1,42 @@
-import { Parser } from '../types';
+import { Parser, DeserializeOptions, SerializeOptions } from '../types';
 import { Duration } from './types';
 
-export const DATE_PARSERS: { [type: string]: Parser<any> } = {
+//https://github.com/niklasvh/base64-arraybuffer
+const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+// Use a lookup table to find the index.
+const lookup = new Uint8Array(256);
+for (var i = 0; i < chars.length; i++) {
+  lookup[chars.charCodeAt(i)] = i;
+}
+
+export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   'Edm.Date': <Parser<Date>>{
-    deserialize(value: any): Date {
+    deserialize(value: any, options: DeserializeOptions): Date {
       return new Date(`${value}T00:00:00.000Z`);
     },
-    serialize(value: Date): any {
+    serialize(value: Date, options: SerializeOptions): any {
       return value.toISOString().substring(0, 10);
     }
   },
   'Edm.TimeOfDay': <Parser<Date>>{
-    deserialize(value: any): Date {
+    deserialize(value: any, options: DeserializeOptions): Date {
       return new Date(`1970-01-01T${value}Z`);
     },
-    serialize(value: Date): any {
+    serialize(value: Date, options: SerializeOptions): any {
       return value.toISOString().substring(11, 23);
     }
   },
   'Edm.DateTimeOffset': <Parser<Date>>{
-    deserialize(value: any): Date {
+    deserialize(value: any, options: DeserializeOptions): Date {
       return new Date(value);
     },
-    serialize(value: Date): any {
+    serialize(value: Date, options: SerializeOptions): any {
       return value.toISOString();
     }
   },
   'Edm.Duration': <Parser<Duration>>{
-    deserialize(value: any): Duration {
+    deserialize(value: any, options: DeserializeOptions): Duration {
       const matches = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(value);
       if (!matches || value.length < 3) {
         throw new TypeError(`duration invalid: "${value}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`)
@@ -41,7 +50,7 @@ export const DATE_PARSERS: { [type: string]: Parser<any> } = {
         return acc;
       }, duration) as Duration;
     },
-    serialize(d: Duration): any {
+    serialize(d: Duration, options: SerializeOptions): any {
       return [
         (d.sign === -1) ? '-' : '',
         'P',
@@ -54,18 +63,15 @@ export const DATE_PARSERS: { [type: string]: Parser<any> } = {
         d.seconds ? d.seconds + 'S' : '',
       ].join("");
     }
-  }
-};
-
-export const NUMBER_PARSERS: { [type: string]: Parser<any> } = {
+  },
   'Edm.Decimal': <Parser<number>>{
-    deserialize(value: any): number {
+    deserialize(value: any, options: DeserializeOptions): number {
       if (this.ieee754Compatible) {
         return parseFloat(value);
       }
       return value;
     },
-    serialize(value: number): any {
+    serialize(value: number, options: SerializeOptions): any {
       if (this.ieee754Compatible) {
         return parseFloat(value.toPrecision(this.precision)).toFixed(this.scale);
       }
@@ -73,39 +79,27 @@ export const NUMBER_PARSERS: { [type: string]: Parser<any> } = {
     }
   },
   'Edm.Double': <Parser<number>>{
-    deserialize(value: any): number {
+    deserialize(value: any, options: DeserializeOptions): number {
       if (value === 'INF') return Infinity;
       return value;
     },
-    serialize(value: number): any {
+    serialize(value: number, options: SerializeOptions): any {
       if (value === Infinity) return 'INF';
       return value;
     }
   },
   'Edm.Single': <Parser<number>>{
-    deserialize(value: any): number {
+    deserialize(value: any, options: DeserializeOptions): number {
       if (value === 'INF') return Infinity;
       return value;
     },
-    serialize(value: number): any {
+    serialize(value: number, options: SerializeOptions): any {
       if (value === Infinity) return 'INF';
       return value;
     }
-  }
-};
-
-//https://github.com/niklasvh/base64-arraybuffer
-const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-// Use a lookup table to find the index.
-const lookup = new Uint8Array(256);
-for (var i = 0; i < chars.length; i++) {
-  lookup[chars.charCodeAt(i)] = i;
-}
-
-export const BINARY_PARSERS: { [type: string]: Parser<any> } = {
+  },
   'Edm.Binary': <Parser<ArrayBuffer>>{
-    deserialize(base64: any): ArrayBuffer {
+    deserialize(base64: any, options: DeserializeOptions): ArrayBuffer {
       var bufferLength = base64.length * 0.75,
         len = base64.length, i, p = 0,
         encoded1, encoded2, encoded3, encoded4;
@@ -133,7 +127,7 @@ export const BINARY_PARSERS: { [type: string]: Parser<any> } = {
 
       return arraybuffer;
     },
-    serialize(arrayBuffer: ArrayBuffer): any {
+    serialize(arrayBuffer: ArrayBuffer, options: SerializeOptions): any {
       var bytes = new Uint8Array(arrayBuffer),
         i, len = bytes.length, base64 = "";
 
@@ -154,5 +148,3 @@ export const BINARY_PARSERS: { [type: string]: Parser<any> } = {
     }
   }
 }
-
-export const EDM_PARSERS = Object.assign({}, DATE_PARSERS, NUMBER_PARSERS, BINARY_PARSERS);

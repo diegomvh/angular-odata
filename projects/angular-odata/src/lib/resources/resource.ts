@@ -90,16 +90,16 @@ export class ODataResource<Type> {
   }
 
   protected deserialize(value: any): Partial<Type> | Partial<Type>[] {
-    let parser = this.client.parserFor<Type>(this);
-    if (parser instanceof ODataParser)
-      return Array.isArray(value) ? value.map(v => parser.deserialize(v)) : parser.deserialize(value);
+    let config = this.client.configFor(this);
+    if (!Types.isNullOrUndefined(config)) 
+      return config.deserialize(this.type(), value);
     return value;
   }
 
   protected serialize(entity: Partial<Type> | Partial<Type>[]): any {
-    let parser = this.client.parserFor<Type>(this);
-    if (parser instanceof ODataParser)
-      return Array.isArray(entity) ? entity.map(e => parser.serialize(e)) : parser.serialize(entity);
+    let config = this.client.configFor(this);
+    if (!Types.isNullOrUndefined(config))
+      return config.serialize(this.type(), entity);
     return entity;
   }
 

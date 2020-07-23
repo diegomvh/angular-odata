@@ -1,11 +1,11 @@
-import { Types, Enums } from '../utils';
-import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig } from '../types';
+import { Types } from '../utils';
+import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, DeserializeOptions, SerializeOptions } from '../types';
 
-import { ODataParser } from './base';
+import { ODataParser, NONE_PARSER } from './base';
 import { ODataEnumParser } from './enum';
 
 export class ODataFieldParser<Type> extends ODataParser<Type> {
-  private parser?: ODataEntityParser<Type> | ODataEnumParser<Type>;
+  private parser?: Parser<Type>;
   default?: any;
   maxLength?: number;
   key?: boolean;
@@ -27,50 +27,36 @@ export class ODataFieldParser<Type> extends ODataParser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any): Partial<Type> | Partial<Type>[] {
+  deserialize(value: any, options: DeserializeOptions): Partial<Type> | Partial<Type>[] {
     if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
-        (value.map(v => this.parser.deserialize(v)) as Partial<Type>[]):
-        (this.parser.deserialize(value) as Partial<Type>);
+        (value.map(v => this.parser.deserialize(v, options)) as Partial<Type>[]):
+        (this.parser.deserialize(value, options) as Partial<Type>);
     } else if (this.parser instanceof ODataEnumParser) {
-      return this.parser.deserialize(value);
+      return this.parser.deserialize(value, options);
     }
-    return super.deserialize(value);
+    return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(value: Partial<Type> | Partial<Type>[]): any {
+  serialize(value: Partial<Type> | Partial<Type>[], options: SerializeOptions): any {
     if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
-        value.map(v => this.parser.serialize(v)) :
-        this.parser.serialize(value);
+        value.map(v => this.parser.serialize(v, options)) :
+        this.parser.serialize(value, options);
     } else if (this.parser instanceof ODataEnumParser) {
-      return this.parser.serialize(value);
+      return this.parser.serialize(value, options);
     }
-    return super.serialize(value);
+    return this.parser.serialize(value, options);
   }
 
-  configure(settings: { stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any> }) {
-    super.configure(settings);
-    const parser = settings.parserForType(this.type);
-    if (parser) {
-      if (parser instanceof ODataEntityParser || parser instanceof ODataEnumParser)
-        this.parser = parser;
-      else {
-        // Change deserialize/serialize
-        this.deserialize = (value: any) => Array.isArray(value) ?
-          value.map(v => parser.deserialize.call(this, v)) :
-          parser.deserialize.call(this, value);
-        this.serialize = (value: any) => Array.isArray(value) ?
-          value.map(v => parser.serialize.call(this, v)) :
-          parser.serialize.call(this, value);
-      }
-    }
+  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+    this.parser = settings.parserForType(this.type) || NONE_PARSER;
   }
 
   // Json Schema
   toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
-    let property = this.parser ? this.parser.toJsonSchema(options) : <any>{
+    let property = this.parser instanceof ODataParser ? this.parser.toJsonSchema(options) : <any>{
       title: `The ${this.name} field`,
       type: this.parser ? "object" : this.type
     };
@@ -103,27 +89,26 @@ export class ODataEntityParser<Type> extends ODataParser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any): Partial<Type> {
+  deserialize(value: any, options: DeserializeOptions): Partial<Type> {
     if (this.parent)
-      value = this.parent.deserialize(value);
+      value = this.parent.deserialize(value, options);
     return Object.assign(value, this.fields
       .filter(f => f.name in value && !Types.isNullOrUndefined(value[f.name]))
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.deserialize(value[f.name]) }), {})
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.deserialize(value[f.name], options) }), {})
     );
   }
 
   // Serialize
-  serialize(entity: Partial<Type>): any {
+  serialize(entity: Partial<Type>, options: SerializeOptions): any {
     if (this.parent)
-      entity = this.parent.serialize(entity);
+      entity = this.parent.serialize(entity, options);
     return Object.assign(entity, this.fields
       .filter(f => f.name in entity && !Types.isNullOrUndefined(entity[f.name]))
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize(entity[f.name]) }), {})
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize(entity[f.name], options) }), {})
     );
   }
 
-  configure(settings: { stringAsEnum: boolean, ieee754Compatible: boolean, parserForType: (type: string) => Parser<any> }) {
-    super.configure(settings);
+  configure(settings: { parserForType: (type: string) => Parser<any> }) {
     if (this.base) {
       this.parent = settings.parserForType(this.base) as ODataEntityParser<any>;
     }

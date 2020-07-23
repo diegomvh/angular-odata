@@ -1,5 +1,5 @@
 import { Enums } from '../utils';
-import { JsonSchemaExpandOptions, EnumConfig } from '../types';
+import { JsonSchemaExpandOptions, EnumConfig, DeserializeOptions, SerializeOptions } from '../types';
 
 import { ODataParser } from './base';
 
@@ -14,7 +14,7 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any): Partial<Type> | Partial<Type>[] {
+  deserialize(value: any, options: DeserializeOptions): Partial<Type> | Partial<Type>[] {
     // string | string[] -> number | number[]
     if (this.flags) {
       return Enums.toValues(this.members, value) as any;
@@ -24,14 +24,14 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
   }
 
   // Serialize
-  serialize(value: Partial<Type> | Partial<Type>[]): any {
+  serialize(value: Partial<Type> | Partial<Type>[], options: SerializeOptions): any {
     // number | number[] -> string | string[]
     if (this.flags) {
       const names = Enums.toNames(this.members, value);
-      return this.stringAsEnum ? names : names.map(name => `${this.type}'${name}'`);
+      return options.stringAsEnum ? names : names.map(name => `${this.type}'${name}'`);
     } else {
       const name = Enums.toName(this.members, value);
-      return this.stringAsEnum ? name : `${this.type}'${name}'`;
+      return options.stringAsEnum ? name : `${this.type}'${name}'`;
     }
   }
 
