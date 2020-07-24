@@ -1,4 +1,4 @@
-import { Parser, DeserializeOptions, SerializeOptions } from '../types';
+import { Parser, ParseOptions } from '../types';
 import { Duration } from './types';
 
 //https://github.com/niklasvh/base64-arraybuffer
@@ -12,31 +12,31 @@ for (var i = 0; i < chars.length; i++) {
 
 export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   'Edm.Date': <Parser<Date>>{
-    deserialize(value: any, options: DeserializeOptions): Date {
+    deserialize(value: any, options: ParseOptions): Date {
       return new Date(`${value}T00:00:00.000Z`);
     },
-    serialize(value: Date, options: SerializeOptions): any {
+    serialize(value: Date, options: ParseOptions): any {
       return value.toISOString().substring(0, 10);
     }
   },
   'Edm.TimeOfDay': <Parser<Date>>{
-    deserialize(value: any, options: DeserializeOptions): Date {
+    deserialize(value: any, options: ParseOptions): Date {
       return new Date(`1970-01-01T${value}Z`);
     },
-    serialize(value: Date, options: SerializeOptions): any {
+    serialize(value: Date, options: ParseOptions): any {
       return value.toISOString().substring(11, 23);
     }
   },
   'Edm.DateTimeOffset': <Parser<Date>>{
-    deserialize(value: any, options: DeserializeOptions): Date {
+    deserialize(value: any, options: ParseOptions): Date {
       return new Date(value);
     },
-    serialize(value: Date, options: SerializeOptions): any {
+    serialize(value: Date, options: ParseOptions): any {
       return value.toISOString();
     }
   },
   'Edm.Duration': <Parser<Duration>>{
-    deserialize(value: any, options: DeserializeOptions): Duration {
+    deserialize(value: any, options: ParseOptions): Duration {
       const matches = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(value);
       if (!matches || value.length < 3) {
         throw new TypeError(`duration invalid: "${value}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`)
@@ -50,7 +50,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         return acc;
       }, duration) as Duration;
     },
-    serialize(d: Duration, options: SerializeOptions): any {
+    serialize(d: Duration, options: ParseOptions): any {
       return [
         (d.sign === -1) ? '-' : '',
         'P',
@@ -65,13 +65,13 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     }
   },
   'Edm.Decimal': <Parser<number>>{
-    deserialize(value: any, options: DeserializeOptions): number {
+    deserialize(value: any, options: ParseOptions): number {
       if (this.ieee754Compatible) {
         return parseFloat(value);
       }
       return value;
     },
-    serialize(value: number, options: SerializeOptions): any {
+    serialize(value: number, options: ParseOptions): any {
       if (this.ieee754Compatible) {
         return parseFloat(value.toPrecision(this.precision)).toFixed(this.scale);
       }
@@ -79,27 +79,27 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     }
   },
   'Edm.Double': <Parser<number>>{
-    deserialize(value: any, options: DeserializeOptions): number {
+    deserialize(value: any, options: ParseOptions): number {
       if (value === 'INF') return Infinity;
       return value;
     },
-    serialize(value: number, options: SerializeOptions): any {
+    serialize(value: number, options: ParseOptions): any {
       if (value === Infinity) return 'INF';
       return value;
     }
   },
   'Edm.Single': <Parser<number>>{
-    deserialize(value: any, options: DeserializeOptions): number {
+    deserialize(value: any, options: ParseOptions): number {
       if (value === 'INF') return Infinity;
       return value;
     },
-    serialize(value: number, options: SerializeOptions): any {
+    serialize(value: number, options: ParseOptions): any {
       if (value === Infinity) return 'INF';
       return value;
     }
   },
   'Edm.Binary': <Parser<ArrayBuffer>>{
-    deserialize(base64: any, options: DeserializeOptions): ArrayBuffer {
+    deserialize(base64: any, options: ParseOptions): ArrayBuffer {
       var bufferLength = base64.length * 0.75,
         len = base64.length, i, p = 0,
         encoded1, encoded2, encoded3, encoded4;
@@ -127,7 +127,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
 
       return arraybuffer;
     },
-    serialize(arrayBuffer: ArrayBuffer, options: SerializeOptions): any {
+    serialize(arrayBuffer: ArrayBuffer, options: ParseOptions): any {
       var bytes = new Uint8Array(arrayBuffer),
         i, len = bytes.length, base64 = "";
 

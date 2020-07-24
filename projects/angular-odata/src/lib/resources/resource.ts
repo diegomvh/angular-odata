@@ -29,7 +29,6 @@ import {
   ODataEntitiesAnnotations
 } from './responses';
 import { HttpOptions } from './http-options';
-import { ODataParser } from '../parsers/base';
 
 export class ODataResource<Type> {
   // VARIABLES

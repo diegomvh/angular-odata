@@ -22,6 +22,12 @@ export class ODataBaseService<T> {
   }
 
   // Service Config 
+  public config() {
+    let Ctor = <typeof ODataBaseService>this.constructor;
+    return this.client.configForType(Ctor.type);
+  }
+
+  // Service Config 
   public serviceConfig() {
     let Ctor = <typeof ODataBaseService>this.constructor;
     return this.client.serviceConfigForType(Ctor.type);

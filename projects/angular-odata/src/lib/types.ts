@@ -125,19 +125,14 @@ export type Field = {
   ref?: string;
 }
 
-export type DeserializeOptions = {
-  stringAsEnum?: boolean;
-  ieee754Compatible?: boolean;
-}
-
-export type SerializeOptions = { 
+export type ParseOptions = {
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
 }
 
 export interface Parser<T> {
-  deserialize(value: any, options: DeserializeOptions): Partial<T> | Partial<T>[];
-  serialize(value: Partial<T> | Partial<T>[], options: SerializeOptions): any;
+  deserialize(value: any, options: ParseOptions): Partial<T> | Partial<T>[];
+  serialize(value: Partial<T> | Partial<T>[], options: ParseOptions): any;
 }
 
 export type Configuration = {

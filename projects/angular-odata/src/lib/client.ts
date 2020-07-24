@@ -29,7 +29,7 @@ export class ODataClient {
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
   configFor(resource: ODataResource<any>): ODataConfig {
-    return this.settings.findConfigForTypes(resource.types());
+    return this.settings.configForTypes(resource.types());
   }
 
   endpointUrl(resource: ODataResource<any>) {
@@ -45,6 +45,10 @@ export class ODataClient {
   }
 
   // Resolve Building Blocks
+  configForType(type: string): ODataConfig {
+    return this.settings.configForType(type);
+  }
+
   entityConfigForType<T>(type: string): ODataEntityConfig<T> {
     return this.settings.entityConfigForType<T>(type);
   }
@@ -364,7 +368,7 @@ export class ODataClient {
 
     let config = options.config ? 
       this.settings.config(options.config) : 
-      this.settings.findConfigForTypes(resource.types());
+      this.settings.configForTypes(resource.types());
     if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
     // The Path and Params from resource

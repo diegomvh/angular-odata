@@ -1,4 +1,4 @@
-import { ODataParser, ODataEntityParser, ODataFieldParser, ODataEnumParser, EDM_PARSERS } from '../parsers/index';
+import { ODataEntityParser, ODataFieldParser, ODataEnumParser, EDM_PARSERS } from '../parsers/index';
 import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration } from '../types';
 import { Types } from '../utils';
 import { ODataModel } from './model';
@@ -46,16 +46,16 @@ export class ODataConfig {
 
   deserialize<T>(type: string, value: any): Partial<T> | Partial<T>[] {
     let parser = this.parserForType<T>(type);
-    if (parser instanceof ODataParser)
+    if (!Types.isUndefined(parser) && 'deserialize' in parser)
       return Array.isArray(value) ? 
-        value.map(v => parser.deserialize(v, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible})) : 
-        parser.deserialize(value, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible});
+        value.map(v => parser.deserialize(v, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible})) as Partial<T>[]: 
+        parser.deserialize(value, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible}) as Partial<T>;
     return value;
   }
 
   serialize<T>(type: string, entity: Partial<T> | Partial<T>[]): any {
     let parser = this.parserForType<T>(type);
-    if (parser instanceof ODataParser)
+    if (!Types.isUndefined(parser) && 'serialize' in parser)
       return Array.isArray(entity) ? 
         entity.map(e => parser.serialize(e, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible})) : 
         parser.serialize(entity, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible});

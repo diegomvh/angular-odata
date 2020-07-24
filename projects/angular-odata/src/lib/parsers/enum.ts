@@ -1,20 +1,21 @@
 import { Enums } from '../utils';
-import { JsonSchemaExpandOptions, EnumConfig, DeserializeOptions, SerializeOptions } from '../types';
+import { JsonSchemaExpandOptions, EnumConfig, ParseOptions, Parser } from '../types';
 
-import { ODataParser } from './base';
-
-export class ODataEnumParser<Type> extends ODataParser<Type> {
+export class ODataEnumParser<Type> implements Parser<Type> {
+  name: string;
+  type: string;
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
 
   constructor(meta: EnumConfig<Type>, namespace: string) {
-    super(meta.name, `${namespace}.${meta.name}`);
+    this.name = meta.name;
+    this.type = `${namespace}.${meta.name}`;
     this.flags = meta.flags;
     this.members = meta.members;
   }
 
   // Deserialize
-  deserialize(value: any, options: DeserializeOptions): Partial<Type> | Partial<Type>[] {
+  deserialize(value: any, options: ParseOptions): Partial<Type> | Partial<Type>[] {
     // string | string[] -> number | number[]
     if (this.flags) {
       return Enums.toValues(this.members, value) as any;
@@ -24,7 +25,7 @@ export class ODataEnumParser<Type> extends ODataParser<Type> {
   }
 
   // Serialize
-  serialize(value: Partial<Type> | Partial<Type>[], options: SerializeOptions): any {
+  serialize(value: Partial<Type> | Partial<Type>[], options: ParseOptions): any {
     // number | number[] -> string | string[]
     if (this.flags) {
       const names = Enums.toNames(this.members, value);

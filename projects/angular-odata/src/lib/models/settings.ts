@@ -21,7 +21,7 @@ export class ODataSettings {
       return config;
   }
 
-  public findConfigForTypes(types: string[]) {
+  public configForTypes(types: string[]) {
     if (this.configs.length === 1) return this.configs[0];
     let config = this.configs.find(c => c.schemas.some(s => types.some(type => type.startsWith(s.namespace))));
     if (config)
@@ -29,7 +29,7 @@ export class ODataSettings {
   }
 
   public configForType(type: string) {
-    return this.findConfigForTypes([type]);
+    return this.configForTypes([type]);
   }
 
   //#region Configs shortcuts
