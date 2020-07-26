@@ -35,7 +35,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
   }
 
   get(options?: HttpOptions): Observable<T> {
-    let parser = this.client.parserFor(this);
+    let parser = this.client.parserFor<T>(this);
     return super.get(
       (parser instanceof ODataEntityParser) ?
         Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType: 'json' }, options || {}) :

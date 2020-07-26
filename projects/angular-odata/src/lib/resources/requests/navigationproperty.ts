@@ -35,14 +35,14 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(name: string) {
-    let parser = this.client.parserFor(this);
+    let parser = this.client.parserFor<N>(this);
     let type = parser instanceof ODataEntityParser? 
       parser.typeFor(name) : null; 
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
-    let parser = this.client.parserFor(this);
+    let parser = this.client.parserFor<P>(this);
     let type = parser instanceof ODataEntityParser? 
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());

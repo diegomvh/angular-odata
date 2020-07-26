@@ -1,5 +1,5 @@
-import { ODataEntityParser, ODataFieldParser, ODataEnumParser, EDM_PARSERS } from '../parsers/index';
-import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration } from '../types';
+import { ODataEntityParser, ODataFieldParser, ODataEnumParser, EDM_PARSERS, ODataCallableParser } from '../parsers/index';
+import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, FunctionConfig, ActionConfig } from '../types';
 import { Types } from '../utils';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
@@ -148,12 +148,16 @@ export class ODataSchema {
   namespace: string;
   enums?: Array<ODataEnumConfig<any>>;
   entities?: Array<ODataEntityConfig<any>>;
+  functions?: Array<ODataFunctionConfig>;
+  actions?: Array<ODataActionConfig>;
   containers?: Array<ODataContainer>;
 
   constructor(config: Schema) {
     this.namespace = config.namespace;
     this.enums = (config.enums || []).map(config => new ODataEnumConfig(config, this.namespace));
     this.entities = (config.entities || []).map(config => new ODataEntityConfig(config, this.namespace));
+    this.functions = (config.functions || []).map(config => new ODataFunctionConfig(config, this.namespace));
+    this.actions = (config.actions || []).map(config => new ODataActionConfig(config, this.namespace));
     this.containers = (config.containers || []).map(container => new ODataContainer(container, this.namespace));
   }
 
@@ -221,6 +225,28 @@ export class ODataEntityConfig<Type> {
 
   field<P extends keyof Type>(name: P): ODataFieldParser<Type[P]> {
     return this.fields().find(f => f.name === name);
+  }
+}
+
+export class ODataFunctionConfig {
+  name: string;
+  type: string;
+  parser?: ODataCallableParser;
+  constructor(config: FunctionConfig, namespace: string) {
+    this.name = config.name;
+    this.type = `${namespace}.${this.name}`;
+    this.parser = new ODataCallableParser(config, namespace);
+  }
+}
+
+export class ODataActionConfig {
+  name: string;
+  type: string;
+  parser?: ODataCallableParser;
+  constructor(config: ActionConfig, namespace: string) {
+    this.name = config.name;
+    this.type = `${namespace}.${this.name}`;
+    this.parser = new ODataCallableParser(config, namespace);
   }
 }
 

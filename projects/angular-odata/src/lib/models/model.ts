@@ -6,11 +6,8 @@ import {
   ODataEntityResource,
   ODataPropertyResource,
   ODataFunctionResource,
-  ODataActionResource,
   ODataAnnotations,
-  ODataEntityAnnotations,
-  Expand,
-  Select
+  ODataEntityAnnotations
 } from '../resources';
 
 import { ODataCollection } from './collection';
@@ -20,7 +17,6 @@ import {
   HttpPropertyOptions,
   HttpEntityOptions
 } from '../resources/http-options';
-import { VALUE } from '../types';
 import { ODataFieldParser } from '../parsers/index';
 import { Types } from '../utils';
 

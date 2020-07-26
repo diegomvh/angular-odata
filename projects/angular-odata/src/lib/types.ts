@@ -182,19 +182,25 @@ export type EntityConfig<T> = {
   fields: { [P in keyof T]?: Field };
 }
 
-export type FunctionConfig = {
+export type Parameter = {
+  type: string;
+  nullable?: boolean;
+  collection?: boolean;
+}
+
+export type CallableConfig = {
   name: string;
+  parameters: { [name: string]: Parameter };
+}
+
+export type FunctionConfig = CallableConfig & {
   bound?: boolean;
   path?: string;
   composable?: boolean;
-  parameters: { [name: string]: {type: string, nullable?: boolean, collection?: boolean} };
   return: {type: string, nullable?: boolean, collection?: boolean };
 }
 
-export type ActionConfig = {
-  name: string;
-  parameters: { [name: string]: {type: string, nullable?: boolean, collection?: boolean} };
-}
+export type ActionConfig = CallableConfig & {}
 
 export type ServiceConfig = {
   name: string;

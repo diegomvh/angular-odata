@@ -29,7 +29,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   property<P>(name: string) {
-    let parser = this.client.parserFor(this);
+    let parser = this.client.parserFor<P>(this);
     let type = parser instanceof ODataEntityParser? 
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
