@@ -48,7 +48,7 @@ const getBoundaryEnd = (boundaryDelimiter: string): string => {
 export class ODataBatchRequest extends Subject<any> {
   body?: any | null;
   config?: string;
-  observe: 'body' | 'response';
+  observe?: 'body' | 'events' | 'response';
   headers?: HttpHeaders;
   params?: HttpParams;
   responseType: 'arraybuffer' | 'blob' | 'json' | 'text';
@@ -61,7 +61,7 @@ export class ODataBatchRequest extends Subject<any> {
       config?: string,
       headers?: HttpHeaders,
       params?: HttpParams,
-      observe?: 'body' | 'response',
+      observe?: 'body' | 'events' | 'response',
       responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
     }
   ) {
@@ -192,7 +192,7 @@ export class ODataBatchResource extends ODataResource<any> {
     config?: string,
     headers?: HttpHeaders,
     params?: HttpParams,
-    observe?: 'body' | 'response',
+    observe?: 'body' | 'events' | 'response',
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
   }
   ): ODataBatchRequest {

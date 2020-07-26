@@ -8,6 +8,6 @@ export type HttpOptions = {
   withCredentials?: boolean
 }
 
-export type HttpValueOptions = HttpOptions & { responseType?: 'value' };
+export type HttpPropertyOptions = HttpOptions & { responseType?: 'property' };
 export type HttpEntityOptions = HttpOptions & { responseType?: 'entity' }
 export type HttpEntitiesOptions = HttpOptions & { responseType?: 'entities', withCount?: boolean };

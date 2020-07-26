@@ -2,9 +2,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
-  VALUE,
-  entityAttributes,
-  odataAnnotations,
   $COUNT,
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
@@ -23,12 +20,9 @@ import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions
 } from './query-options';
-import {
-  ODataValueAnnotations,
-  ODataEntityAnnotations,
-  ODataEntitiesAnnotations
-} from './responses';
 import { HttpOptions } from './http-options';
+import { ODataResponse } from './responses/response';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations } from './responses';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -65,14 +59,6 @@ export class ODataResource<Type> {
     return this.client.entityConfigForType<Type>(this.type());
   }
 
-  modelForType(type?: string) {
-    return this.client.modelForType(type || this.type());
-  }
-
-  collectionForType(type?: string) {
-    return this.client.collectionForType(type || this.type());
-  }
-
   pathAndParams(): [string, PlainObject] {
     let path = this.pathSegments.path();
     let params = this.queryOptions.params();
@@ -84,61 +70,20 @@ export class ODataResource<Type> {
     return [path, params];
   }
 
-  protected applyType(type: string) {
-    this.pathSegments.last().setType(type);
-  }
-
-  protected deserialize(value: any): Partial<Type> | Partial<Type>[] {
-    let config = this.client.configFor(this);
-    if (!Types.isNullOrUndefined(config)) 
-      return config.deserialize(this.type(), value);
-    return value;
-  }
-
-  protected serialize(entity: Partial<Type> | Partial<Type>[]): any {
+  private serialize(entity: Partial<Type> | Partial<Type>[]): any {
     let config = this.client.configFor(this);
     if (!Types.isNullOrUndefined(config))
       return config.serialize(this.type(), entity);
     return entity;
   }
 
-  // to<Thing>
-  toEntity(body: any): [Type | null, ODataEntityAnnotations | null] {
-    if (!body) return [null, null];
-    let annots = ODataEntityAnnotations.factory(odataAnnotations(body));
-    let type = (annots.context && annots.context.type) ? annots.context.type : annots.type;
-    if (!Types.isNullOrUndefined(type) && type !== this.type())
-      this.applyType(type);
-    let attrs = entityAttributes(body);
-    return [this.deserialize(attrs) as Type, annots];
-  }
-
-  toEntities(body: any): [Type[] | null, ODataEntitiesAnnotations | null] {
-    if (!body) return [null, null];
-    let annots = ODataEntitiesAnnotations.factory(odataAnnotations(body));
-    let type = annots.context && annots.context.type || null;
-    if (!Types.isNullOrUndefined(type) && type !== this.type())
-      this.applyType(type);
-    let value = body[VALUE];
-    return [this.deserialize(value) as Type[], annots];
-  }
-
-  toValue(body: any): [Type | null, ODataValueAnnotations | null] {
-    if (!body) return [null, null];
-    let annots = ODataValueAnnotations.factory(odataAnnotations(body));
-    let value = body[VALUE];
-    return [this.deserialize(value) as Type, annots];
-  }
-
-  toModel<M extends ODataModel<Type>>(body: any): M {
-    let [entity, annots] = this.toEntity(body);
-    let Model = this.modelForType();
+  toModel<M extends ODataModel<Type>>(entity: Partial<Type>, annots?: ODataEntityAnnotations): M {
+    let Model = this.client.modelForType(this.type());
     return new Model(entity, {resource: this, annotations: annots}) as M;
   }
 
-  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(body: any): C {
-    let [entities, annots] = this.toEntities(body);
-    let Collection = this.collectionForType();
+  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], annots?: ODataEntitiesAnnotations): C {
+    let Collection = this.client.collectionForType(this.type());
     return new Collection(entities, {resource: this, annotations: annots}) as C;
   }
 
@@ -171,9 +116,9 @@ export class ODataResource<Type> {
   protected request(
     method: string,
     options: HttpOptions & {
-      body?: any | null,
+      entity?: Partial<Type> | null,
       etag?: string,
-      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities',
+      responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
       withCount?: boolean
     }): Observable<any> {
 
@@ -182,69 +127,71 @@ export class ODataResource<Type> {
       params = this.client.mergeHttpParams(params, { [$COUNT]: 'true' })
 
     let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 
-      (options.responseType && ['value', 'entity', 'entities'].indexOf(options.responseType) !== -1) ? 
+      (options.responseType && ['property', 'entity', 'entities'].indexOf(options.responseType) !== -1) ? 
         'json' : 
+      (options.responseType === 'value') ? 
+        'text' :
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
-
-    let res$ = this.client.request(method, this, {
-      body: options.body,
+    
+    const body = !Types.isNullOrUndefined(options.entity) ? this.serialize(options.entity) : null;
+    const res$ = this.client.request(method, this, {
+      body,
       etag: options.etag,
       config: options.config,
       headers: options.headers,
-      observe: 'body',
+      observe: 'response',
       params: params,
       responseType: responseType,
       reportProgress: options.reportProgress,
       withCredentials: options.withCredentials
     });
     switch (options.responseType) {
-      case 'entity':
-        return res$.pipe(map((body: any) => this.toEntity(body)));
       case 'entities':
-        return res$.pipe(map((body: any) => this.toEntities(body)));
+        return res$.pipe(map((res: ODataResponse<Type>) => res.entities()));
+      case 'entity':
+        return res$.pipe(map((res: ODataResponse<Type>) => res.entity()));
+      case 'property':
+        return res$.pipe(map((res: ODataResponse<Type>) => res.property()));
       case 'value':
-        return res$.pipe(map((body: any) => this.toValue(body)));
-      case 'json':
-      case 'text':
-        return res$.pipe(map((body: any) => this.deserialize(body) as Type));
+        return res$.pipe(map((res: ODataResponse<Type>) => res.value() as Type));
       default:
         return res$;
     }
   }
 
   protected get(options: HttpOptions & { 
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
     return this.request('GET', options);
   }
 
-  protected post(body: any | null, options: HttpOptions & { 
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
+  protected post(entity: Partial<Type>, options: HttpOptions & { 
+    responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
-    return this.request('POST', Object.assign(options, { body }));
+    return this.request('POST', Object.assign(options, { entity }));
   }
 
-  protected put(body: any | null, options: HttpOptions & {
+  protected put(entity: Partial<Type>, options: HttpOptions & {
     etag?: string, 
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean 
   }): Observable<any> {
-    return this.request('PUT', Object.assign(options, { body }));
+    return this.request('PUT', Object.assign(options, { entity }));
   }
 
-  protected patch(body: any | null, options: HttpOptions & {
+  protected patch(entity: Partial<Type>, options: HttpOptions & {
     etag?: string, 
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
-    return this.request('PATCH', Object.assign(options, { body }));
+    return this.request('PATCH', Object.assign(options, { entity }));
   }
 
   protected delete(options: HttpOptions & {
     etag?: string, 
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'entity' | 'entities', 
+    responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
     return this.request('DELETE', options);

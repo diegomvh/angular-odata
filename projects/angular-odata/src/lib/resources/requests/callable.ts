@@ -91,7 +91,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
   //#region Custom abstract calls
   abstract call(
     args: any | null, 
-    responseType: 'value', 
+    responseType: 'property', 
     options?: HttpOptions
   ): Observable<[T, ODataValueAnnotations]>;
 
@@ -109,7 +109,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
 
   abstract call(
     args: any | null, 
-    responseType: 'json' | 'value' | 'entity' | 'entities', 
+    responseType: 'value' | 'property' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any>;
   //#endregion

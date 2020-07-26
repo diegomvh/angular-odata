@@ -7,7 +7,7 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataValueAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
-import { HttpValueOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
+import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -39,8 +39,8 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Requests
   get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
   get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-  get(options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
-  get(options: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
+  get(options: HttpPropertyOptions): Observable<[T, ODataValueAnnotations]>;
+  get(options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
     return super.get(options);
   }
   //#endregion

@@ -17,7 +17,7 @@ import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 import {
   HttpOptions,
-  HttpValueOptions,
+  HttpPropertyOptions,
   HttpEntityOptions
 } from '../resources/http-options';
 import { VALUE } from '../types';
@@ -85,11 +85,10 @@ export class ODataModel<T> {
       .reduce((acc, [k, , f]) => {
         let value = this._entity[f.name];
         if (value) {
-          let prop = (this._resource as ODataEntityResource<T>).property(f.name);
-          var base = f.collection && this._annotations.property(f.name) || {};
+          let prop = (this._resource as ODataEntityResource<T>).property<any>(f.name);
           value = f.collection ? 
-            prop.toCollection(Object.assign(base, { [VALUE]: value || [] })) : 
-            prop.toModel(Object.assign(base, value || {}));
+            prop.toCollection(value) : 
+            prop.toModel(value, new ODataEntityAnnotations(this._annotations.property(f.name)));
         }
         return Object.assign(acc, { [k]: value });
       }, {}));
@@ -138,7 +137,7 @@ export class ODataModel<T> {
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {}));
     } else if (this._resource instanceof ODataPropertyResource) {
       obs$ = this._resource.get(
-        Object.assign<HttpValueOptions, HttpOptions>(<HttpValueOptions>{responseType: 'value'}, options || {}));
+        Object.assign<HttpPropertyOptions, HttpOptions>(<HttpPropertyOptions>{responseType: 'property'}, options || {}));
     } else if (this._resource instanceof ODataFunctionResource) {
       obs$ = this._resource.get(
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {}));
@@ -236,10 +235,9 @@ export class ODataModel<T> {
     if (!(field.name in this._relations)) {
       let value = this._entity[field.name];
       let nav = (this._resource as ODataEntityResource<T>).navigationProperty<P>(field.name);
-      let base = field.collection && this._annotations.property(field.name) || {};
       let rel = field.collection ? 
-        nav.toCollection(Object.assign(base, { [VALUE]: value || [] })) : 
-        nav.toModel(Object.assign(base, value || {}));
+        nav.toCollection(value) : 
+        nav.toModel(value, new ODataEntityAnnotations(this._annotations.property(field.name)));
       this._relations[field.name] = {field, rel};
     }
     return this._relations[field.name].rel;

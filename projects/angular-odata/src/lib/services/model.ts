@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ODataClient } from "../client";
-import { VALUE } from '../types';
 import { ODataModel, ODataCollection } from '../models';
 
 import { ODataBaseService } from './base';
@@ -16,8 +15,8 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
     return this.entity(entity).toModel<M>(entity);
   }
 
-  public collection(models?: Partial<T>[]): C {
-    return this.entities().toCollection<C>({[VALUE]: models || []});
+  public collection(entities?: Partial<T>[]): C {
+    return this.entities().toCollection<C>(entities);
   }
 
   public attach(value: M): M;

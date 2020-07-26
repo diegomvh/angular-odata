@@ -22,6 +22,8 @@ import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
 import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig, ODataConfig } from './models';
 import { Types } from './utils';
+import { ODataResponse } from './resources/responses/response';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ODataClient {
@@ -291,8 +293,9 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+    responseType: 'text', 
+    withCredentials?: boolean,
+  }): Observable<ODataResponse<string>>;
 
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
@@ -304,7 +307,7 @@ export class ODataClient {
     params?: HttpParams | { [param: string]: string | string[] },
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
@@ -316,7 +319,7 @@ export class ODataClient {
     params?: HttpParams | { [param: string]: string | string[] },
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<R>>;
+  }): Observable<ODataResponse<R>>;
 
   request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
@@ -355,7 +358,7 @@ export class ODataClient {
   }): Observable<any>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any | null,
+    body?: any,
     etag?: string,
     config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -399,21 +402,18 @@ export class ODataClient {
     if (Types.isUndefined(withCredentials))
       withCredentials = config.withCredentials;
 
-    if (this._batch instanceof ODataBatchResource) {
+    const res$ = (this._batch instanceof ODataBatchResource)?
       // Add request to batch
-      //TODO: Assert observe
-      let observe: 'body' | 'response' = options.observe as 'body' | 'response';
-      return this._batch.add(method, resourcePath, {
+      this._batch.add(method, resourcePath, {
         body: options.body,
         config: options.config,
         headers: headers,
         params: params,
-        observe: observe,
+        observe: options.observe,
         responseType: options.responseType
-      });
-    } else {
+      }) :
       // Call http request
-      return this.http.request(method, `${config.serviceRootUrl}${resourcePath}`, {
+      this.http.request(method, `${config.serviceRootUrl}${resourcePath}`, {
         body: options.body,
         headers: headers,
         observe: options.observe,
@@ -422,7 +422,17 @@ export class ODataClient {
         responseType: options.responseType,
         withCredentials: withCredentials
       });
+    if (options.observe === 'response' && (options.responseType === 'json' || options.responseType === 'text')) {
+      return res$.pipe(map((res: HttpResponse<any>) => new ODataResponse({
+        body: res.body,
+        config: config,
+        headers: res.headers,
+        status: res.status,
+        statusText: res.statusText,
+        resource: resource
+      })));
     }
+    return res$;
   }
 
   delete(resource: ODataResource<any>, options?: {
@@ -535,7 +545,7 @@ export class ODataClient {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'text', withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+  }): Observable<ODataResponse<string>>;
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
@@ -546,7 +556,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
@@ -557,7 +567,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<T>>;
+  }): Observable<ODataResponse<T>>;
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
@@ -698,7 +708,7 @@ export class ODataClient {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'text', withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+  }): Observable<ODataResponse<string>>;
 
   get(resource: ODataResource<any>, options: {
     config?: string,
@@ -708,7 +718,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   get<T>(resource: ODataResource<any>, options: {
     config?: string,
@@ -718,7 +728,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<T>>;
+  }): Observable<ODataResponse<T>>;
 
   get(resource: ODataResource<any>, options?: {
     config?: string,
@@ -860,7 +870,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType: 'text', 
     withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+  }): Observable<ODataResponse<string>>;
 
   head(resource: ODataResource<any>, options: {
     config?: string,
@@ -870,7 +880,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   head<T>(resource: ODataResource<any>, options: {
     config?: string,
@@ -880,7 +890,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<T>>;
+  }): Observable<ODataResponse<T>>;
 
   head(resource: ODataResource<any>, options?: {
     config?: string,
@@ -1022,7 +1032,8 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', withCredentials?: boolean,
+    responseType: 'arraybuffer', 
+    withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
   options(resource: ODataResource<any>, options: {
@@ -1040,8 +1051,9 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+    responseType: 'text', 
+    withCredentials?: boolean,
+  }): Observable<ODataResponse<string>>;
 
   options(resource: ODataResource<any>, options: {
     config?: string,
@@ -1051,7 +1063,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   options<T>(resource: ODataResource<any>, options: {
     config?: string,
@@ -1061,7 +1073,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<T>>;
+  }): Observable<ODataResponse<T>>;
 
   options(resource: ODataResource<any>, options?: {
     config?: string,
@@ -1211,7 +1223,7 @@ export class ODataClient {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'text', withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+  }): Observable<ODataResponse<string>>;
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
@@ -1222,7 +1234,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
@@ -1233,7 +1245,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<T>>;
+  }): Observable<ODataResponse<T>>;
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
@@ -1378,7 +1390,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType: 'text', 
     withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+  }): Observable<ODataResponse<string>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
     config?: string,
@@ -1388,7 +1400,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   post<T>(resource: ODataResource<any>, body: any | null, options: {
     config?: string,
@@ -1398,7 +1410,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<T>>;
+  }): Observable<ODataResponse<T>>;
 
   post(resource: ODataResource<any>, body: any | null, options?: {
     config?: string,
@@ -1548,7 +1560,7 @@ export class ODataClient {
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
     responseType: 'text', withCredentials?: boolean,
-  }): Observable<HttpResponse<string>>;
+  }): Observable<ODataResponse<string>>;
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
@@ -1559,7 +1571,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<Object>>;
+  }): Observable<ODataResponse<Object>>;
 
   put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
@@ -1570,7 +1582,7 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'json',
     withCredentials?: boolean,
-  }): Observable<HttpResponse<T>>;
+  }): Observable<ODataResponse<T>>;
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,

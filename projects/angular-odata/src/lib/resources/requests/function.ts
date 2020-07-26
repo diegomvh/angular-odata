@@ -5,7 +5,7 @@ import { ODataClient } from '../../client';
 import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpValueOptions, HttpOptions } from '../http-options';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
 
 import { ODataCallableResource } from './callable';
 
@@ -25,8 +25,8 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   //#region Requests
   get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
   get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-  get(options: HttpValueOptions): Observable<[T, ODataValueAnnotations]>;
-  get(options: HttpEntityOptions & HttpEntitiesOptions & HttpValueOptions): Observable<any> {
+  get(options: HttpPropertyOptions): Observable<[T, ODataValueAnnotations]>;
+  get(options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
     return super.get(options);
   }
   //#endregion
@@ -34,7 +34,7 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   //#region Custom call 
   call(
     args: any | null, 
-    responseType: 'json' | 'value' | 'entity' | 'entities', 
+    responseType: 'value' | 'property' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any> {
     let opts = Object.assign<any, HttpOptions>({ responseType }, options || {});

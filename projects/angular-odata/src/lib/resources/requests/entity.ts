@@ -143,19 +143,19 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   post(entity: Partial<T>, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
-    return super.post(this.serialize(entity),
+    return super.post(entity,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
   put(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<[T, ODataEntityAnnotations]> {
-    return super.put(this.serialize(entity),
+    return super.put(entity,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
   patch(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<[T, ODataEntityAnnotations]> {
-    return super.patch(this.serialize(entity),
+    return super.patch(entity,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }

@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { TripPinConfig, Person, NAMESPACE, PersonGender } from '../trippin.spec';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
-import { ODataParser } from './base';
 import { ODataEnumParser } from './enum';
 import { ODataConfig } from '../models';
+import { ODataEntityParser } from './entity';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -19,13 +19,13 @@ describe('ODataClient', () => {
 
   it('should return parser for type', () => {
     const parser = client.parserForType(`${NAMESPACE}.Person`);
-    expect(parser instanceof ODataParser).toBeTruthy();
+    expect(parser instanceof ODataEntityParser).toBeTruthy();
   });
 
   it('should return parser from config', () => {
     const config = client.entityConfigForType(`${NAMESPACE}.Person`);
     const parser = config.parser; 
-    expect(parser instanceof ODataParser).toBeTruthy();
+    expect(parser instanceof ODataEntityParser).toBeTruthy();
   });
 
   it('should serialize enum', () => {
