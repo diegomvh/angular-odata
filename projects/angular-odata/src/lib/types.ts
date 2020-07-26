@@ -114,7 +114,6 @@ export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
 // SETTINGS AND PARSERS
 export type Field = {
   type: string;
-  parser?: Parser<any>;
   default?: any;
   maxLength?: number;
   key?: boolean;
@@ -156,6 +155,8 @@ export type Schema = {
   annotations?: Array<any>;
   enums?: Array<EnumConfig<any>>;
   entities?: Array<EntityConfig<any>>;
+  functions?: Array<FunctionConfig>;
+  actions?: Array<ActionConfig>;
   containers?: Array<Container>
 }
 
@@ -179,6 +180,20 @@ export type EntityConfig<T> = {
   collection?: { new(...any): any };
   annotations?: any[];
   fields: { [P in keyof T]?: Field };
+}
+
+export type FunctionConfig = {
+  name: string;
+  bound?: boolean;
+  path?: string;
+  composable?: boolean;
+  parameters: { [name: string]: {type: string, nullable?: boolean, collection?: boolean} };
+  return: {type: string, nullable?: boolean, collection?: boolean };
+}
+
+export type ActionConfig = {
+  name: string;
+  parameters: { [name: string]: {type: string, nullable?: boolean, collection?: boolean} };
 }
 
 export type ServiceConfig = {
