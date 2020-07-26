@@ -114,6 +114,16 @@ export class ODataConfig {
       .find(e => e.name === name) as ODataEntityConfig<T>;
   }
 
+  public functionConfigForName<T>(name: string) {
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.functions], <ODataFunctionConfig[]>[])
+      .find(e => e.name === name) as ODataFunctionConfig;
+  }
+
+  public actionConfigForName<T>(name: string) {
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.actions], <ODataActionConfig[]>[])
+      .find(e => e.name === name) as ODataActionConfig;
+  }
+
   public serviceConfigForName(name: string) {
     return this.schemas.reduce((acc, schema) => [...acc, ...schema.services], <ODataServiceConfig[]>[])
       .find(e => e.name === name) as ODataServiceConfig;
