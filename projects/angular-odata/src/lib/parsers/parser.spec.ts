@@ -129,7 +129,8 @@ describe('ODataClient', () => {
       "enumeration": "Yellow",
       "point": {"type": "point","coordinates":[142.1,64.1]}
     };
-    const result = config.deserialize('Primitive.Entity', primitives);
-    expect(config.serialize('Primitive.Entity', result)).toEqual(primitives);
+    const parser = config.parserForType('Primitive.Entity');
+    const result = parser.deserialize(primitives, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible});
+    expect(parser.serialize(result, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible})).toEqual(primitives);
   });
 });
