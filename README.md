@@ -87,53 +87,47 @@ export class AppComponent {
 
   queries() {
     // Use OData Service Factory
-    let airportsService = this.factory.createEntityService<Airport>("Airports");
-    let peopleService = this.factory.createEntityService<Person>("People");
+    let airportsService = this.factory.createEntityService<Airport>("Airports", 'Microsoft.OData.SampleService.Models.TripPin.Airport');
+    let peopleService = this.factory.createEntityService<Person>("People", 'Microsoft.OData.SampleService.Models.TripPin.Person');
 
     let airports = airportsService.entities();
 
-    // Fetch set
+    // Fetch all airports
     airports.all()
-      .subscribe(aports => console.log("All: ", aports));
+    .subscribe(aports => console.log("All: ", aports));
 
-    // Fetch with count
+    // Fetch airports with count
     airports.get({withCount: true})
-      .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
+    .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
 
-    // Fetch by key
-    let airport = airports.entity("CYYZ");
-    airport.get()
-      .subscribe(([aport, annots]) => console.log("Airport: ", aport, "Annotations: ", annots));
+    // Fetch airport with key
+    airports.entity("CYYZ").get()
+    .subscribe(([aport, annots]) => console.log("Airport: ", aport, "Annotations: ", annots));
 
-    // Filter
-    airports.filter({Location: {City: {CountryRegion: "United States"}}});
+    // Filter airports (inmutable resource)
+    airports.filter({Location: {City: {CountryRegion: "United States"}}}).get()
+    .subscribe(([aports, annots]) => console.log("Airports of United States: ", aports, "Annotations: ", annots));
+
+    // Add filter (mutable resource)
+    airports.query.filter().push({Location: {City: {Region: "California"}}});
     airports.get()
-      .subscribe(([aports, annots]) => console.log("Airports of United States: ", aports, "Annotations: ", annots));
+    .subscribe(([aports, annots]) => console.log("Airports in California: ", aports, "Annotations: ", annots));
 
-    // Add filter
-    airports.filter().push({Location: {City: {Region: "California"}}});
+    // Remove filter (mutable resource)
+    airports.query.filter().clear();
     airports.get()
-      .subscribe(([aports, annots]) => console.log("Airports in California: ", aports, "Annotations: ", annots));
-
-    // Remove filter
-    airports.filter().clear();
-    airports.get()
-      .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
+    .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
 
     let people = peopleService.entities();
 
-    // Expand
+    // Expand (inmutable resource)
     people.expand({
       Friends: { 
         expand: { Friends: { select: ['AddressInfo']}} 
       }, 
       Trips: { select: ['Name', 'Tags'] },
-    });
-    people.get({withCount: true})
-      .subscribe(([peop, annots]) => console.log("People with Friends and Trips: ", peop, "Annotations: ", annots));
-
-    // Remove Expand
-    people.expand().clear();
+    }).get({withCount: true})
+    .subscribe(([peop, annots]) => console.log("People with Friends and Trips: ", peop, "Annotations: ", annots));
 
     // Batch
     let batch = odata.batch();
