@@ -4,10 +4,6 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { 
-  ODataNavigationPropertyResource, 
-  ODataPropertyResource, 
-  ODataActionResource, 
-  ODataFunctionResource, 
   ODataEntitiesAnnotations, 
   ODataEntityAnnotations, 
   HttpOptions
@@ -21,30 +17,6 @@ import { Types } from '../utils';
 @Injectable()
 export class ODataEntityService<T> extends ODataBaseService<T> {
   constructor(protected client: ODataClient) { super(client); }
-
-  public navigationProperty<P>(key: EntityKey<T>, name: string): ODataNavigationPropertyResource<P> {
-    return this.entity(key).navigationProperty<P>(name);
-  }
-
-  public property<P>(key: EntityKey<T>, name: string): ODataPropertyResource<P> {
-    return this.entity(key).property<P>(name);
-  }
-
-  public action<R>(key: EntityKey<T>, type: string): ODataActionResource<R> {
-    return this.entity(key).action<R>(type);
-  }
-
-  public collectionAction<R>(type: string): ODataActionResource<R> {
-    return this.entities().action<R>(type);
-  }
-
-  public function<R>(key: EntityKey<T>, type: string): ODataFunctionResource<R> {
-    return this.entity(key).function<R>(type);
-  }
-
-  public collectionFunction<R>(type: string): ODataFunctionResource<R> {
-    return this.entities().function<R>(type);
-  }
 
   // Entity Actions
   public fetchCollection(options?: HttpOptions): Observable<[T[], ODataEntitiesAnnotations]> {
