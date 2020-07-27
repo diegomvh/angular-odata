@@ -20,7 +20,7 @@ import {
 } from './resources';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig, ODataConfig } from './models';
+import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig, ODataConfig, ODataCallableConfig } from './models';
 import { Types } from './utils';
 import { ODataResponse } from './resources/responses/response';
 import { map } from 'rxjs/operators';
@@ -53,6 +53,10 @@ export class ODataClient {
 
   entityConfigForType<T>(type: string): ODataEntityConfig<T> {
     return this.settings.entityConfigForType<T>(type);
+  }
+
+  callableConfigForType<T>(type: string): ODataCallableConfig {
+    return this.settings.callableConfigForType(type);
   }
 
   serviceConfigForType(type: string): ODataServiceConfig {
@@ -103,22 +107,20 @@ export class ODataClient {
 
   /**
    * Unbound Action
-   * @param  {string} name
-   * @param  {string} returnType?
+   * @param  {string} type?
    * @returns ODataActionResource
    */
-  action<T>(name: string, returnType?: string): ODataActionResource<T> {
-    return ODataActionResource.factory(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
+  action<T>(type: string): ODataActionResource<T> {
+    return ODataActionResource.factory(this, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
    * Unbound Function
-   * @param  {string} name
-   * @param  {string} returnType?
+   * @param  {string} type?
    * @returns ODataFunctionResource
    */
-  function<T>(name: string, returnType?: string): ODataFunctionResource<T> {
-    return ODataFunctionResource.factory<T>(this, name, returnType, new ODataPathSegments(), new ODataQueryOptions());
+  function<T>(type: string): ODataFunctionResource<T> {
+    return ODataFunctionResource.factory<T>(this, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   //Merge Headers

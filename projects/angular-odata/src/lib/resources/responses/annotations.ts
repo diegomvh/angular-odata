@@ -84,13 +84,13 @@ export class ODataAnnotations {
 
 }
 
-export class ODataValueAnnotations extends ODataAnnotations {
-  clone(): ODataValueAnnotations {
-    return new ODataValueAnnotations(this.value);
+export class ODataPropertyAnnotations extends ODataAnnotations {
+  clone(): ODataPropertyAnnotations {
+    return new ODataPropertyAnnotations(this.value);
   };
 
   static factory(data: any) {
-    return new ODataValueAnnotations(odataAnnotations(data));
+    return new ODataPropertyAnnotations(odataAnnotations(data));
   }
 
   get type(): string {

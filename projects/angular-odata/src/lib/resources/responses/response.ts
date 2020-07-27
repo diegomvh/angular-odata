@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from './annotations';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from './annotations';
 import { odataAnnotations, entityAttributes, VALUE, Parser } from '../../types';
 import { Types } from '../../utils';
 import { ODataModel, ODataCollection, ODataConfig } from '../../models';
@@ -29,38 +29,43 @@ export class ODataResponse<T> {
       this.resource = init.resource;
     }
 
+  private deserialize<T>(value: any): Partial<T> | Partial<T>[] {
+    //TODO
+    //const type = annots.context && annots.context.type || null; 
+    let parser = this.config.parserForType<T>(this.resource.type());
+    if (!Types.isUndefined(parser) && 'deserialize' in parser)
+      return Array.isArray(value) ? 
+        value.map(v => parser.deserialize(v, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible})) as Partial<T>[]: 
+        parser.deserialize(value, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible}) as Partial<T>;
+    return value;
+  }
+
   entity(): [T | null, ODataEntityAnnotations | null] {
     if (!this.body) return [null, null];
     const annots = ODataEntityAnnotations.factory(odataAnnotations(this.body));
-    const type = annots.context && annots.context.type || null; 
     
-    //TODO: ieee754 from header
-    const entity = this.config.deserialize<T>(type || this.resource.type(), entityAttributes(this.body)) as T;
+    const entity = this.deserialize<T>(entityAttributes(this.body)) as T;
     return [entity, annots];
   }
 
   entities(): [T[] | null, ODataEntitiesAnnotations | null] {
     if (!this.body) return [null, null];
     const annots = ODataEntitiesAnnotations.factory(odataAnnotations(this.body));
-    const type = annots.context && annots.context.type || null;
 
-    //TODO: ieee754 from header
-    const entities = this.config.deserialize<T>(type || this.resource.type(), this.body[VALUE]) as T[];
+    const entities = this.deserialize<T>(this.body[VALUE]) as T[];
     return [entities, annots];
   }
 
-  property(): [T | null, ODataValueAnnotations | null] {
+  property(): [T | null, ODataPropertyAnnotations | null] {
     if (!this.body) return [null, null];
-    const annots = ODataValueAnnotations.factory(odataAnnotations(this.body));
-    const type = annots.context && annots.context.type || null;
+    const annots = ODataPropertyAnnotations.factory(odataAnnotations(this.body));
 
-    //TODO: ieee754 from header
-    const property = this.config.deserialize<T>(type || this.resource.type(), this.body[VALUE]) as T;
+    const property = this.deserialize<T>(this.body[VALUE]) as T;
     return [property, annots];
   }
 
   value(): T {
     if (!this.body) return null;
-    return this.config.deserialize<T>(this.resource.type(), this.body) as T;
+    return this.deserialize<T>(this.body) as T;
   }
 }

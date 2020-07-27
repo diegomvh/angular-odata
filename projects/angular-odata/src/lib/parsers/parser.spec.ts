@@ -45,8 +45,8 @@ describe('ODataClient', () => {
     const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
     parser.flags = true;
     const field = config.field('Gender');
-    expect(field.serialize(3, {stringAsEnum: true})).toEqual(['Male', 'Female', 'Unknown']);
-    expect(field.serialize([0, 1, 2], {stringAsEnum: true})).toEqual(['Male', 'Female', 'Unknown']);
+    expect(field.serialize(3, {stringAsEnum: true})).toEqual('Male, Female, Unknown');
+    expect(field.serialize([0, 1, 2], {stringAsEnum: true})).toEqual('Male, Female, Unknown');
   });
 
   it('should deserialize flags', () => {
@@ -54,12 +54,11 @@ describe('ODataClient', () => {
     const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
     parser.flags = true;
     const field = config.field('Gender');
-    expect(field.deserialize('Male, Female, Unknown', {stringAsEnum: true})).toEqual([0, 1, 2]);
+    expect(field.deserialize('Male, Female, Unknown', {stringAsEnum: true})).toEqual(3);
   });
 
   it('should serialize entity', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
-    const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
     expect(config.parser.serialize({
       FirstName: 'Name',
       Emails: [], 

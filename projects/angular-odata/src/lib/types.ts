@@ -155,8 +155,7 @@ export type Schema = {
   annotations?: Array<any>;
   enums?: Array<EnumConfig<any>>;
   entities?: Array<EntityConfig<any>>;
-  functions?: Array<FunctionConfig>;
-  actions?: Array<ActionConfig>;
+  callables?: Array<CallableConfig>;
   containers?: Array<Container>
 }
 
@@ -190,17 +189,12 @@ export type Parameter = {
 
 export type CallableConfig = {
   name: string;
-  parameters: { [name: string]: Parameter };
-}
-
-export type FunctionConfig = CallableConfig & {
-  bound?: boolean;
   path?: string;
+  bound?: boolean;
   composable?: boolean;
-  return: {type: string, nullable?: boolean, collection?: boolean };
+  parameters?: { [name: string]: Parameter };
+  return?: string;
 }
-
-export type ActionConfig = CallableConfig & {}
 
 export type ServiceConfig = {
   name: string;

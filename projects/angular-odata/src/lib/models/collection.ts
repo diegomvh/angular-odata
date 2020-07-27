@@ -206,9 +206,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     let resource = this._resource as ODataEntitySetResource<T>;
     return {
       // Function
-      function<R>(name: string, returnType?: string): ODataFunctionResource<R> { return resource.function<R>(name, returnType); },
+      function<R>(type: string): ODataFunctionResource<R> { return resource.function<R>(type); },
       // Action
-      action<R>(name: string, returnType?: string): ODataActionResource<R> { return resource.action<R>(name, returnType); },
+      action<R>(type: string): ODataActionResource<R> { return resource.action<R>(type); },
     };
   }
 

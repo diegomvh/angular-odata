@@ -70,10 +70,13 @@ export class ODataResource<Type> {
     return [path, params];
   }
 
-  private serialize(entity: Partial<Type> | Partial<Type>[]): any {
+  protected serialize(entity: Partial<Type> | Partial<Type>[]): any {
     let config = this.client.configFor(this);
-    if (!Types.isNullOrUndefined(config))
-      return config.serialize(this.type(), entity);
+    let parser = config.parserForType<Type>(this.type());
+    if (!Types.isUndefined(parser) && 'serialize' in parser)
+      return Array.isArray(entity) ? 
+        entity.map(e => parser.serialize(e, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible})) : 
+        parser.serialize(entity, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible});
     return entity;
   }
 

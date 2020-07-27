@@ -30,20 +30,20 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
     return this.entity(key).property<P>(name);
   }
 
-  public action<R>(key: EntityKey<T>, name: string, returnType?: string): ODataActionResource<R> {
-    return this.entity(key).action<R>(name, returnType);
+  public action<R>(key: EntityKey<T>, type: string): ODataActionResource<R> {
+    return this.entity(key).action<R>(type);
   }
 
-  public collectionAction<R>(name: string, returnType?: string): ODataActionResource<R> {
-    return this.entities().action<R>(name, returnType);
+  public collectionAction<R>(type: string): ODataActionResource<R> {
+    return this.entities().action<R>(type);
   }
 
-  public function<R>(key: EntityKey<T>, name: string, returnType?: string): ODataFunctionResource<R> {
-    return this.entity(key).function<R>(name, returnType);
+  public function<R>(key: EntityKey<T>, type: string): ODataFunctionResource<R> {
+    return this.entity(key).function<R>(type);
   }
 
-  public collectionFunction<R>(name: string, returnType?: string): ODataFunctionResource<R> {
-    return this.entities().function<R>(name, returnType);
+  public collectionFunction<R>(type: string): ODataFunctionResource<R> {
+    return this.entities().function<R>(type);
   }
 
   // Entity Actions

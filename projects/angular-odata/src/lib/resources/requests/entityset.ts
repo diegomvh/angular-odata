@@ -48,12 +48,12 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return new ODataEntitySetResource<C>(this.client, segments, this.queryOptions.clone());
   }
 
-  action<A>(name: string, type?: string) {
-    return ODataActionResource.factory<A>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  action<A>(type: string) {
+    return ODataActionResource.factory<A>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  function<F>(name: string, type?: string) {
-    return ODataFunctionResource.factory<F>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  function<F>(type: string) {
+    return ODataFunctionResource.factory<F>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {

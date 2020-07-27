@@ -4,13 +4,13 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataCallableResource } from './callable';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataValueAnnotations } from '../responses/annotations';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../responses/annotations';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
 
 export class ODataActionResource<T> extends ODataCallableResource<T> {
   //#region Factory
-  static factory<R>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.action, name).setType(type);
+  static factory<R>(client: ODataClient, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(PathSegmentNames.action, type).setType(type);
     options.clear();
     return new ODataActionResource<R>(client, segments, options);
   }
@@ -23,7 +23,7 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
   //#region Requests
   post(body: any | null, options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
   post(body: any | null, options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-  post(body: any | null, options: HttpPropertyOptions): Observable<[T, ODataValueAnnotations]>;
+  post(body: any | null, options: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
   post(body: any | null, options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
     return super.post(body, options);
   }
@@ -32,7 +32,7 @@ export class ODataActionResource<T> extends ODataCallableResource<T> {
   //#region Custom call 
   call(
     args: any | null, 
-    responseType: 'value' | 'property' | 'entity' | 'entities', 
+    responseType: 'property' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any> {
     let opts = Object.assign<any, HttpOptions>({ responseType }, options || {});

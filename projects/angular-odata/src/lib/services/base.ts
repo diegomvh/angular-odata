@@ -6,14 +6,14 @@ import { ODataEntityConfig } from '../models';
 export class ODataBaseService<T> {
   static path: string = "";
   static type: string = "";
-  static entity: string = "";
+  static entityType: string = "";
 
   constructor(protected client: ODataClient) { }
 
   // Build resources
   public entities(): ODataEntitySetResource<T> {
     let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.entitySet<T>(Ctor.path, Ctor.entity);
+    return this.client.entitySet<T>(Ctor.path, Ctor.entityType);
   }
 
   public entity(key?: EntityKey<T>): ODataEntityResource<T> {
@@ -36,6 +36,6 @@ export class ODataBaseService<T> {
   // Entity Config 
   public entityConfig() {
     let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.entityConfigForType(Ctor.entity) as ODataEntityConfig<T>;
+    return this.client.entityConfigForType(Ctor.entityType) as ODataEntityConfig<T>;
   }
 }

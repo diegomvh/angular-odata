@@ -1,5 +1,5 @@
 import { ODataEntityParser, ODataFieldParser, ODataEnumParser, EDM_PARSERS, ODataCallableParser } from '../parsers/index';
-import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, FunctionConfig, ActionConfig } from '../types';
+import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, CallableConfig } from '../types';
 import { Types } from '../utils';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
@@ -44,24 +44,6 @@ export class ODataConfig {
     });
   }
 
-  deserialize<T>(type: string, value: any): Partial<T> | Partial<T>[] {
-    let parser = this.parserForType<T>(type);
-    if (!Types.isUndefined(parser) && 'deserialize' in parser)
-      return Array.isArray(value) ? 
-        value.map(v => parser.deserialize(v, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible})) as Partial<T>[]: 
-        parser.deserialize(value, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible}) as Partial<T>;
-    return value;
-  }
-
-  serialize<T>(type: string, entity: Partial<T> | Partial<T>[]): any {
-    let parser = this.parserForType<T>(type);
-    if (!Types.isUndefined(parser) && 'serialize' in parser)
-      return Array.isArray(entity) ? 
-        entity.map(e => parser.serialize(e, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible})) : 
-        parser.serialize(entity, {stringAsEnum: this.stringAsEnum, ieee754Compatible: this.ieee754Compatible});
-    return entity;
-  }
-
   //#region Find Config for Type
   private schemaForType(type: string) {
     let schema = this.schemas.find(s => type.startsWith(s.namespace));
@@ -79,6 +61,12 @@ export class ODataConfig {
     let schema = this.schemaForType(type);
     if (schema)
       return schema.entities.find(e => e.type === type) as ODataEntityConfig<T>;
+  }
+
+  public callableConfigForType<T>(type: string) {
+    let schema = this.schemaForType(type);
+    if (schema)
+      return schema.callables.find(e => e.type === type) as ODataCallableConfig;
   }
 
   public serviceConfigForType(type: string) {
@@ -114,14 +102,9 @@ export class ODataConfig {
       .find(e => e.name === name) as ODataEntityConfig<T>;
   }
 
-  public functionConfigForName<T>(name: string) {
-    return this.schemas.reduce((acc, schema) => [...acc, ...schema.functions], <ODataFunctionConfig[]>[])
-      .find(e => e.name === name) as ODataFunctionConfig;
-  }
-
-  public actionConfigForName<T>(name: string) {
-    return this.schemas.reduce((acc, schema) => [...acc, ...schema.actions], <ODataActionConfig[]>[])
-      .find(e => e.name === name) as ODataActionConfig;
+  public callableConfigForName<T>(name: string) {
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.callables], <ODataCallableConfig[]>[])
+      .find(e => e.name === name) as ODataCallableConfig;
   }
 
   public serviceConfigForName(name: string) {
@@ -148,7 +131,7 @@ export class ODataConfig {
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
     }
-    let config = this.enumConfigForType(type) || this.entityConfigForType(type);
+    let config = this.enumConfigForType(type) || this.entityConfigForType(type) || this.callableConfigForType(type);
     if (!Types.isUndefined(config))
       return config.parser as Parser<T>;
   }
@@ -158,16 +141,14 @@ export class ODataSchema {
   namespace: string;
   enums?: Array<ODataEnumConfig<any>>;
   entities?: Array<ODataEntityConfig<any>>;
-  functions?: Array<ODataFunctionConfig>;
-  actions?: Array<ODataActionConfig>;
+  callables?: Array<ODataCallableConfig>;
   containers?: Array<ODataContainer>;
 
   constructor(config: Schema) {
     this.namespace = config.namespace;
     this.enums = (config.enums || []).map(config => new ODataEnumConfig(config, this.namespace));
     this.entities = (config.entities || []).map(config => new ODataEntityConfig(config, this.namespace));
-    this.functions = (config.functions || []).map(config => new ODataFunctionConfig(config, this.namespace));
-    this.actions = (config.actions || []).map(config => new ODataActionConfig(config, this.namespace));
+    this.callables = (config.callables || []).map(config => new ODataCallableConfig(config, this.namespace));
     this.containers = (config.containers || []).map(container => new ODataContainer(container, this.namespace));
   }
 
@@ -178,6 +159,8 @@ export class ODataSchema {
   configure(settings: {parserForType: (type: string) => Parser<any>}) {
     this.entities
       .forEach(config => config.configure(settings));
+    this.callables
+      .forEach(callable => callable.configure(settings));
   }
 }
 
@@ -238,25 +221,19 @@ export class ODataEntityConfig<Type> {
   }
 }
 
-export class ODataFunctionConfig {
+export class ODataCallableConfig {
   name: string;
   type: string;
   parser?: ODataCallableParser;
-  constructor(config: FunctionConfig, namespace: string) {
+
+  constructor(config: CallableConfig, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${this.name}`;
     this.parser = new ODataCallableParser(config, namespace);
   }
-}
 
-export class ODataActionConfig {
-  name: string;
-  type: string;
-  parser?: ODataCallableParser;
-  constructor(config: ActionConfig, namespace: string) {
-    this.name = config.name;
-    this.type = `${namespace}.${this.name}`;
-    this.parser = new ODataCallableParser(config, namespace);
+  configure(settings: {parserForType: (type: string) => Parser<any>}) {
+    this.parser.configure(settings);
   }
 }
 

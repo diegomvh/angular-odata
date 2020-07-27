@@ -1,5 +1,5 @@
 import { ODataResource } from '../resource';
-import { ODataEntitiesAnnotations, ODataAnnotations, ODataEntityAnnotations, ODataValueAnnotations } from '../responses';
+import { ODataEntitiesAnnotations, ODataAnnotations, ODataEntityAnnotations, ODataPropertyAnnotations } from '../responses';
 import { HttpOptions } from '../http-options';
 import { Observable } from 'rxjs';
 import { PathSegmentNames, SegmentOptionNames } from '../path-segments';
@@ -93,7 +93,7 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
     args: any | null, 
     responseType: 'property', 
     options?: HttpOptions
-  ): Observable<[T, ODataValueAnnotations]>;
+  ): Observable<[T, ODataPropertyAnnotations]>;
 
   abstract call(
     args: any | null, 

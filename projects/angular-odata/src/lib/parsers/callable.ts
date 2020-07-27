@@ -54,20 +54,21 @@ export class ODataParameterParser<Type> implements Parser<Type> {
 export class ODataCallableParser implements Parser<any> {
   name: string;
   type: string;
+  return?: string;
+  parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
 
   constructor(config: CallableConfig, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${config.name}`;
-    this.parameters = Object.entries(config.parameters)
+    this.return = config.return;
+    this.parameters = Object.entries(config.parameters || [])
       .map(([name, p]) => new ODataParameterParser(name, p as Parameter));
   }
 
+  // Deserialize
   deserialize(value: any, options: ParseOptions): Partial<any> | Partial<any>[] {
-    return Object.assign(value, this.parameters
-      .filter(p => p.name in value && !Types.isNullOrUndefined(value[p.name]))
-      .reduce((acc, p) => Object.assign(acc, { [p.name]: p.deserialize(value[p.name], options) }), {})
-    );
+    return this.parser.deserialize(value, options);
   }
 
   // Serialize
@@ -79,6 +80,8 @@ export class ODataCallableParser implements Parser<any> {
   }
 
   configure(settings: { parserForType: (type: string) => Parser<any> }) {
-    this.parameters.forEach(f => f.configure(settings));
+    if (this.return)
+      this.parser = settings.parserForType(this.return) || NONE_PARSER;
+    this.parameters.forEach(p => p.configure(settings));
   }
 }
