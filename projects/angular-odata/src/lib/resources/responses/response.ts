@@ -32,11 +32,14 @@ export class ODataResponse<T> {
   private deserialize<T>(value: any): Partial<T> | Partial<T>[] {
     //TODO
     //const type = annots.context && annots.context.type || null; 
-    let parser = this.config.parserForType<T>(this.resource.type());
-    if (!Types.isUndefined(parser) && 'deserialize' in parser)
-      return Array.isArray(value) ? 
-        value.map(v => parser.deserialize(v, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible})) as Partial<T>[]: 
-        parser.deserialize(value, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible}) as Partial<T>;
+    let type = this.resource.type(); 
+    if (type) {
+      let parser = this.config.parserForType<T>(type);
+      if (!Types.isUndefined(parser) && 'deserialize' in parser)
+        return Array.isArray(value) ? 
+          value.map(v => parser.deserialize(v, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible})) as Partial<T>[]: 
+          parser.deserialize(value, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible}) as Partial<T>;
+    }
     return value;
   }
 
