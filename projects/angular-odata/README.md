@@ -224,7 +224,7 @@ import { Person } from './person.entity';
 export class PeopleService extends ODataEntityService<Person> {
   static path: string = 'People';
   static type: string = 'Microsoft.OData.SampleService.Models.TripPin.People';
-  static entity: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
+  static entityType: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
 }
 ```
 
@@ -267,25 +267,19 @@ export class AppComponent {
   }
 
   show(name: string) {
-    let person = this.people.entity({UserName: name});
-    person.expand({
+    this.people.entity({UserName: name})
+    .expand({
       Friends: {}, 
-      Trips: {
-        expand: {
-          Photos: {}, 
-          PlanItems: {}
-        }
-      }, 
+      Trips: { expand: { Photos: {}, PlanItems: {} } }, 
       Photo: {}
+    }).get()
+    .subscribe(([person, ]) => {
+      this.person = person;
+      if (person.Photo) {
+        let media = this.photos.entity(person.Photo).media();
+        media.blob().subscribe(console.log);
+      }
     });
-    person.get()
-      .subscribe(([person, ]) => {
-        this.person = person;
-        if (person.Photo) {
-          let media = this.photos.entity(person.Photo).media();
-          media.blob().subscribe(console.log);
-        }
-      });
   }
 }
 ```
