@@ -73,7 +73,7 @@ export class ODataCallableParser implements Parser<any> {
 
   // Serialize
   serialize(entity: Partial<any>, options: ParseOptions): any {
-    return Object.assign(entity, this.parameters
+    return Object.assign({}, this.parameters
       .filter(p => p.name in entity && !Types.isNullOrUndefined(entity[p.name]))
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(entity[p.name], options) }), {})
     );
