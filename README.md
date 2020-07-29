@@ -168,13 +168,13 @@ export interface Person {
 export const PersonConfig = {
   name: "Person",
   fields: {
-    UserName: {type: 'Edm.String', key: true, ref: 'UserName', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    UserName: {type: 'Edm.String', key: true, ref: 'UserName', nullable: false}]},
     FirstName: {type: 'Edm.String', nullable: false},
     LastName: {type: 'Edm.String', nullable: false},
     Emails: {type: 'Edm.String', collection: true},
     AddressInfo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Location', collection: true},
     Gender: {type: 'Microsoft.OData.SampleService.Models.TripPin.PersonGender'},
-    Concurrency: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Computed","bool":true}]},
+    Concurrency: {type: 'Edm.Int64', nullable: false},
     Friends: {type: 'Microsoft.OData.SampleService.Models.TripPin.Person', collection: true, navigation: true},
     Trips: {type: 'Microsoft.OData.SampleService.Models.TripPin.Trip', collection: true, navigation: true},
     Photo: {type: 'Microsoft.OData.SampleService.Models.TripPin.Photo', navigation: true}
@@ -224,7 +224,7 @@ import { Person } from './person.entity';
 export class PeopleService extends ODataEntityService<Person> {
   static path: string = 'People';
   static type: string = 'Microsoft.OData.SampleService.Models.TripPin.People';
-  static entity: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
+  static entityType: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
 }
 ```
 
@@ -267,25 +267,19 @@ export class AppComponent {
   }
 
   show(name: string) {
-    let person = this.people.entity({UserName: name});
-    person.expand({
+    this.people.entity({UserName: name})
+    .expand({
       Friends: {}, 
-      Trips: {
-        expand: {
-          Photos: {}, 
-          PlanItems: {}
-        }
-      }, 
+      Trips: { expand: { Photos: {}, PlanItems: {} } }, 
       Photo: {}
+    }).get()
+    .subscribe(([person, ]) => {
+      this.person = person;
+      if (person.Photo) {
+        let media = this.photos.entity(person.Photo).media();
+        media.blob().subscribe(console.log);
+      }
     });
-    person.get()
-      .subscribe(([person, ]) => {
-        this.person = person;
-        if (person.Photo) {
-          let media = this.photos.entity(person.Photo).media();
-          media.blob().subscribe(console.log);
-        }
-      });
   }
 }
 ```
