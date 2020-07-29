@@ -148,7 +148,19 @@ export class ODataSchema {
     this.namespace = config.namespace;
     this.enums = (config.enums || []).map(config => new ODataEnumConfig(config, this.namespace));
     this.entities = (config.entities || []).map(config => new ODataEntityConfig(config, this.namespace));
-    this.callables = (config.callables || []).map(config => new ODataCallableConfig(config, this.namespace));
+    // Merge callables
+    let configs = (config.callables || []);
+    configs = configs.reduce((acc, config) => {
+      if (acc.every(c => c.name !== config.name)) {
+        config = configs.filter(c => c.name === config.name).reduce((acc, c) => { 
+          acc.parameters = Object.assign(acc.parameters || {}, c.parameters || {});
+          return acc;
+        }, config);
+        return [...acc, config];
+      }
+      return acc;
+    }, []);
+    this.callables = configs.map(config => new ODataCallableConfig(config, this.namespace));
     this.containers = (config.containers || []).map(container => new ODataContainer(container, this.namespace));
   }
 
@@ -157,8 +169,10 @@ export class ODataSchema {
   }
 
   configure(settings: {parserForType: (type: string) => Parser<any>}) {
+    // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));
+    // Configure callables
     this.callables
       .forEach(callable => callable.configure(settings));
   }
@@ -224,11 +238,17 @@ export class ODataEntityConfig<Type> {
 export class ODataCallableConfig {
   name: string;
   type: string;
+  path?: string;
+  bound?: boolean;
+  composable?: boolean;
   parser?: ODataCallableParser;
 
   constructor(config: CallableConfig, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${this.name}`;
+    this.path = config.path;
+    this.bound = config.bound;
+    this.composable = config.composable;
     this.parser = new ODataCallableParser(config, namespace);
   }
 
