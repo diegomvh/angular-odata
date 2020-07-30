@@ -66,7 +66,7 @@ export class ODataConfig {
   public callableConfigForType<T>(type: string) {
     let schema = this.schemaForType(type);
     if (schema)
-      return schema.callables.find(e => e.type === type) as ODataCallableConfig;
+      return schema.callables.find(e => e.type === type) as ODataCallableConfig<T>;
   }
 
   public serviceConfigForType(type: string) {
@@ -103,8 +103,8 @@ export class ODataConfig {
   }
 
   public callableConfigForName<T>(name: string) {
-    return this.schemas.reduce((acc, schema) => [...acc, ...schema.callables], <ODataCallableConfig[]>[])
-      .find(e => e.name === name) as ODataCallableConfig;
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.callables], <ODataCallableConfig<any>[]>[])
+      .find(e => e.name === name) as ODataCallableConfig<T>;
   }
 
   public serviceConfigForName(name: string) {
@@ -141,7 +141,7 @@ export class ODataSchema {
   namespace: string;
   enums?: Array<ODataEnumConfig<any>>;
   entities?: Array<ODataEntityConfig<any>>;
-  callables?: Array<ODataCallableConfig>;
+  callables?: Array<ODataCallableConfig<any>>;
   containers?: Array<ODataContainer>;
 
   constructor(config: Schema) {
@@ -235,13 +235,13 @@ export class ODataEntityConfig<Type> {
   }
 }
 
-export class ODataCallableConfig {
+export class ODataCallableConfig<R> {
   name: string;
   type: string;
   path?: string;
   bound?: boolean;
   composable?: boolean;
-  parser?: ODataCallableParser;
+  parser?: ODataCallableParser<R>;
 
   constructor(config: CallableConfig, namespace: string) {
     this.name = config.name;

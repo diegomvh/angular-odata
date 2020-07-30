@@ -47,8 +47,8 @@ export class ODataSettings {
     return values[0];
   }
 
-  public callableConfigForType(type: string) {
-    let values = this.configs.map(config => config.callableConfigForType(type)).filter(e => e);
+  public callableConfigForType<T>(type: string) {
+    let values = this.configs.map(config => config.callableConfigForType<T>(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];

@@ -55,8 +55,8 @@ export class ODataClient {
     return this.settings.entityConfigForType<T>(type);
   }
 
-  callableConfigForType<T>(type: string): ODataCallableConfig {
-    return this.settings.callableConfigForType(type);
+  callableConfigForType<T>(type: string): ODataCallableConfig<T> {
+    return this.settings.callableConfigForType<T>(type);
   }
 
   serviceConfigForType(type: string): ODataServiceConfig {

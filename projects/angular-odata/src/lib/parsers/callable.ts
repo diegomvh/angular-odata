@@ -23,7 +23,9 @@ export class ODataParameterParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): Partial<Type> | Partial<Type>[] {
+  deserialize(value: any, options: ParseOptions): Type {
+    return this.parser.deserialize(value, options);
+    /*
     if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
         (value.map(v => this.parser.deserialize(v, options)) as Partial<Type>[]):
@@ -31,11 +33,13 @@ export class ODataParameterParser<Type> implements Parser<Type> {
     } else if (this.parser instanceof ODataEnumParser) {
       return this.parser.deserialize(value, options);
     }
-    return this.parser.deserialize(value, options);
+    */
   }
 
   // Serialize
-  serialize(value: Partial<Type> | Partial<Type>[], options: ParseOptions): any {
+  serialize(value: Type, options: ParseOptions): any {
+    return this.parser.serialize(value, options);
+    /*
     if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
         value.map(v => this.parser.serialize(v, options)) :
@@ -43,7 +47,7 @@ export class ODataParameterParser<Type> implements Parser<Type> {
     } else if (this.parser instanceof ODataEnumParser) {
       return this.parser.serialize(value, options);
     }
-    return this.parser.serialize(value, options);
+    */
   }
 
   configure(settings: { parserForType: (type: string) => Parser<any> }) {
@@ -51,7 +55,7 @@ export class ODataParameterParser<Type> implements Parser<Type> {
   }
 }
 
-export class ODataCallableParser implements Parser<any> {
+export class ODataCallableParser<R> implements Parser<R> {
   name: string;
   type: string;
   return?: string;
@@ -67,15 +71,15 @@ export class ODataCallableParser implements Parser<any> {
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): Partial<any> | Partial<any>[] {
+  deserialize(value: any, options: ParseOptions): R {
     return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(entity: Partial<any>, options: ParseOptions): any {
+  serialize(params: any, options: ParseOptions): any {
     return Object.assign({}, this.parameters
-      .filter(p => p.name in entity && !Types.isNullOrUndefined(entity[p.name]))
-      .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(entity[p.name], options) }), {})
+      .filter(p => p.name in params && !Types.isNullOrUndefined(params[p.name]))
+      .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
     );
   }
 

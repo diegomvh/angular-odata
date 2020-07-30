@@ -1,8 +1,6 @@
 import { Types } from '../utils';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, ParseOptions } from '../types';
 
-import { ODataEnumParser } from './enum';
-
 const NONE_PARSER = {
   deserialize: (value: any, options: ParseOptions) => value,
   serialize: (value: any, options: ParseOptions) => value
@@ -34,7 +32,9 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): Partial<Type> | Partial<Type>[] {
+  deserialize(value: any, options: ParseOptions): Type {
+    return this.parser.deserialize(value, options);
+    /*
     if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
         (value.map(v => this.parser.deserialize(v, options)) as Partial<Type>[]):
@@ -42,11 +42,13 @@ export class ODataFieldParser<Type> implements Parser<Type> {
     } else if (this.parser instanceof ODataEnumParser) {
       return this.parser.deserialize(value, options);
     }
-    return this.parser.deserialize(value, options);
+    */
   }
 
   // Serialize
-  serialize(value: Partial<Type> | Partial<Type>[], options: ParseOptions): any {
+  serialize(value: Type, options: ParseOptions): any {
+    return this.parser.serialize(value, options);
+    /*
     if (this.parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
         value.map(v => this.parser.serialize(v, options)) :
@@ -54,7 +56,7 @@ export class ODataFieldParser<Type> implements Parser<Type> {
     } else if (this.parser instanceof ODataEnumParser) {
       return this.parser.serialize(value, options);
     }
-    return this.parser.serialize(value, options);
+    */
   }
 
   configure(settings: { parserForType: (type: string) => Parser<any> }) {
@@ -88,18 +90,20 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   type: string;
   base: string;
   parent: ODataEntityParser<any>;
+  children: ODataEntityParser<any>[];
   fields: ODataFieldParser<any>[];
 
   constructor(config: EntityConfig<Type>, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${config.name}`;
     this.base = config.base;
+    this.children = [];
     this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataFieldParser(name, f as Field));
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): Partial<Type> {
+  deserialize(value: any, options: ParseOptions): Type {
     if (this.parent)
       value = this.parent.deserialize(value, options);
     return Object.assign(value, this.fields
@@ -109,7 +113,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(entity: Partial<Type>, options: ParseOptions): any {
+  serialize(entity: Type, options: ParseOptions): any {
     if (this.parent)
       entity = this.parent.serialize(entity, options);
     return Object.assign(entity, this.fields
@@ -120,7 +124,9 @@ export class ODataEntityParser<Type> implements Parser<Type> {
 
   configure(settings: { parserForType: (type: string) => Parser<any> }) {
     if (this.base) {
-      this.parent = settings.parserForType(this.base) as ODataEntityParser<any>;
+      const parent = settings.parserForType(this.base) as ODataEntityParser<any>;
+      parent.children.push(this);
+      this.parent = parent;
     }
     this.fields.forEach(f => f.configure(settings));
   }

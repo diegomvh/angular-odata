@@ -15,8 +15,8 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): Partial<Type> | Partial<Type>[] {
-    // string | string[] -> number 
+  deserialize(value: string, options: ParseOptions): Type {
+    // string -> Type 
     if (this.flags) {
       return Enums.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
     } else {
@@ -25,8 +25,8 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(value: Partial<Type> | Partial<Type>[], options: ParseOptions): any {
-    // number | number[] -> string 
+  serialize(value: Type, options: ParseOptions): string {
+    // Type -> string 
     if (this.flags) {
       let names = Enums.toNames(this.members, value);
       if (!options.stringAsEnum)

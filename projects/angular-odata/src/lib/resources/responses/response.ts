@@ -2,7 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from './annotations';
 import { odataAnnotations, entityAttributes, VALUE, Parser } from '../../types';
 import { Types } from '../../utils';
-import { ODataModel, ODataCollection, ODataConfig } from '../../models';
+import { ODataConfig } from '../../models';
 import { ODataResource } from '../resource';
 
 export class ODataResponse<T> {
@@ -29,46 +29,65 @@ export class ODataResponse<T> {
       this.resource = init.resource;
     }
 
-  private deserialize<T>(value: any): Partial<T> | Partial<T>[] {
-    //TODO
-    //const type = annots.context && annots.context.type || null; 
-    let type = this.resource.type(); 
-    if (type) {
-      let parser = this.config.parserForType<T>(type);
-      if (!Types.isUndefined(parser) && 'deserialize' in parser)
-        return Array.isArray(value) ? 
-          value.map(v => parser.deserialize(v, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible})) as Partial<T>[]: 
-          parser.deserialize(value, {stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible}) as Partial<T>;
+  entity(): {entity: T, annotations: ODataEntityAnnotations} {
+    if (this.body) {
+      const annotations = ODataEntityAnnotations.factory(odataAnnotations(this.body))
+      const type = annotations.type || this.resource.type();
+      let entity = this.body;
+      if (type) {
+        const parser = this.config.parserForType<T>(type);
+        if (!Types.isUndefined(parser) && 'deserialize' in parser)
+          entity = parser.deserialize(entity, {
+            stringAsEnum: this.config.stringAsEnum, 
+            ieee754Compatible: this.config.ieee754Compatible}) as T;
+      }
+      return { entity, annotations };
     }
-    return value;
   }
 
-  entity(): [T | null, ODataEntityAnnotations | null] {
-    if (!this.body) return [null, null];
-    const annots = ODataEntityAnnotations.factory(odataAnnotations(this.body));
-    
-    const entity = this.deserialize<T>(entityAttributes(this.body)) as T;
-    return [entity, annots];
+  entities(): {entities: T[], annotations: ODataEntitiesAnnotations} {
+    if (this.body) {
+      const annotations = ODataEntitiesAnnotations.factory(odataAnnotations(this.body))
+      const type = this.resource.type();
+      let entities = this.body[VALUE];
+      if (type) {
+        const parser = this.config.parserForType<T>(type);
+        if (!Types.isUndefined(parser) && 'deserialize' in parser)
+          entities = entities.map(entity => parser.deserialize(entity, {
+            stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible})) as T[];
+      }
+      return { entities, annotations };
+    }
   }
 
-  entities(): [T[] | null, ODataEntitiesAnnotations | null] {
-    if (!this.body) return [null, null];
-    const annots = ODataEntitiesAnnotations.factory(odataAnnotations(this.body));
-
-    const entities = this.deserialize<T>(this.body[VALUE]) as T[];
-    return [entities, annots];
-  }
-
-  property(): [T | null, ODataPropertyAnnotations | null] {
-    if (!this.body) return [null, null];
-    const annots = ODataPropertyAnnotations.factory(odataAnnotations(this.body));
-
-    const property = this.deserialize<T>(this.body[VALUE]) as T;
-    return [property, annots];
+  property(): {property: T, annotations: ODataPropertyAnnotations} {
+    if (this.body) {
+      const annotations = ODataPropertyAnnotations.factory(odataAnnotations(this.body))
+      const type = annotations.type || this.resource.type();
+      let property = this.body[VALUE];
+      if (type) {
+        const parser = this.config.parserForType<T>(type);
+        if (!Types.isUndefined(parser) && 'deserialize' in parser)
+          property = parser.deserialize(property, {
+            stringAsEnum: this.config.stringAsEnum, 
+            ieee754Compatible: this.config.ieee754Compatible}) as T;
+      }
+      return { property, annotations };
+    } 
   }
 
   value(): T {
-    if (!this.body) return null;
-    return this.deserialize<T>(this.body) as T;
+    if (this.body) {
+      const type = this.resource.type();
+      let value = this.body;
+      if (type) {
+        const parser = this.config.parserForType<T>(type);
+        if (!Types.isUndefined(parser) && 'deserialize' in parser)
+          value = parser.deserialize(value, {
+            stringAsEnum: this.config.stringAsEnum, 
+            ieee754Compatible: this.config.ieee754Compatible}) as T;
+      }
+      return value; 
+    } 
   }
 }

@@ -129,9 +129,9 @@ export type ParseOptions = {
   ieee754Compatible?: boolean;
 }
 
-export interface Parser<T> {
-  deserialize(value: any, options: ParseOptions): Partial<T> | Partial<T>[];
-  serialize(value: Partial<T> | Partial<T>[], options: ParseOptions): any;
+export type Parser<T> = {
+  deserialize(value: any, options: ParseOptions): T;
+  serialize(value: T, options: ParseOptions): any;
 }
 
 export type Configuration = {

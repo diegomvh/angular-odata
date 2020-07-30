@@ -70,7 +70,7 @@ export class ODataResource<Type> {
     return [path, params];
   }
 
-  protected serialize(entity: Partial<Type> | Partial<Type>[]): any {
+  protected serialize(entity: Type): any {
     let config = this.client.configFor(this);
     let parser = config.parserForType<Type>(this.type());
     if (!Types.isUndefined(parser) && 'serialize' in parser)
@@ -119,7 +119,7 @@ export class ODataResource<Type> {
   protected request(
     method: string,
     options: HttpOptions & {
-      entity?: Partial<Type> | null,
+      entity?: any,
       etag?: string,
       responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
       withCount?: boolean
