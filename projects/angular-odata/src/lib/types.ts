@@ -81,11 +81,24 @@ export const ODATA_ALIAS_PREFIX = '@';
 
 export const NEWLINE = '\r\n';
 export const VALUE = 'value';
+export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
+//#region Extract odata annotations
 export const odataAnnotations = (value: any) => Object.keys(value)
   .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
+export const odataType = (value: any) => {
+  if (ODATA_TYPE in this.value) {
+    const value = this.value[ODATA_TYPE].substr(1) as string;
+    const matches = COLLECTION.exec(value);
+    if (matches)
+      return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1]; 
+    return value;
+  }
+}
+
+//#endregion
 export const entityAttributes = (value: any) => Object.keys(value)
   .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});

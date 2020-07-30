@@ -15,10 +15,9 @@ import {
   ODATA_EDITLINK, 
   ODATA_FUNCTION_PREFIX, 
   ODATA_ANNOTATION_PREFIX,
-  odataAnnotations
+  odataAnnotations,
+  odataType
 } from '../../types';
-
-const COLLECTION = /Collection\(([\w\.]+)\)/;
 
 export class ODataAnnotations {
   constructor(protected value: { [name: string]: any }) { }
@@ -81,13 +80,7 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 
   get type(): string {
-    if (ODATA_TYPE in this.value) {
-      const value = this.value[ODATA_TYPE].substr(1) as string;
-      const matches = COLLECTION.exec(value);
-      if (matches)
-        return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1]; 
-      return value;
-    }
+    return odataType(this.value);
   }
 
   get collection(): boolean {
@@ -101,9 +94,7 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   };
 
   get type(): string {
-    if (ODATA_TYPE in this.value) {
-      return this.value[ODATA_TYPE].substr(1);
-    }
+    return odataType(this.value);
   }
 
   get id() {

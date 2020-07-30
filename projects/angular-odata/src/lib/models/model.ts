@@ -29,7 +29,7 @@ export class ODataModel<T> {
     field: ODataFieldParser<any>
   }}
 
-  constructor(entity?: Partial<T>, options: { resource?: ODataResource<T>, annotations?: ODataAnnotations } = {}) {
+  constructor(entity?: T, options: { resource?: ODataResource<T>, annotations?: ODataAnnotations } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((entity || {}) as T, options.annotations);

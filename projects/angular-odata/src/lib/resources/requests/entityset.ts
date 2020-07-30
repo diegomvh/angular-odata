@@ -31,10 +31,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  toModel<M extends ODataModel<T>>(body: any): M {
-    return this.entity(body).toModel(body);
-  }
-
   //#region Inmutable Resource
   entity(key: EntityKey<T>) {
     const entity = ODataEntityResource.factory<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
@@ -48,12 +44,12 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return new ODataEntitySetResource<C>(this.client, segments, this.queryOptions.clone());
   }
 
-  action<A>(type: string) {
-    return ODataActionResource.factory<A>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+  action<P, R>(type: string) {
+    return ODataActionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  function<F>(type: string) {
-    return ODataFunctionResource.factory<F>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+  function<P, R>(type: string) {
+    return ODataFunctionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {

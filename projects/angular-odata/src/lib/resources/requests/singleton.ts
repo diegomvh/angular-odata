@@ -44,12 +44,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  action<A>(type: string) {
-    return ODataActionResource.factory<A>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+  action<P, R>(type: string) {
+    return ODataActionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  function<F>(type: string) {
-    return ODataFunctionResource.factory<F>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+  function<P, R>(type: string) {
+    return ODataFunctionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   select(opts: Select<T>) {

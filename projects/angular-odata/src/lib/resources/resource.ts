@@ -21,8 +21,7 @@ import {
   ODataQueryOptions
 } from './query-options';
 import { HttpOptions } from './http-options';
-import { ODataResponse } from './responses/response';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations } from './responses';
+import { ODataResponse, ODataEntityAnnotations, ODataEntitiesAnnotations } from './responses/index';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -70,22 +69,22 @@ export class ODataResource<Type> {
     return [path, params];
   }
 
-  protected serialize(entity: Type): any {
+  protected serialize(value: any): any {
     let config = this.client.configFor(this);
     let parser = config.parserForType<Type>(this.type());
     if (!Types.isUndefined(parser) && 'serialize' in parser)
-      return Array.isArray(entity) ? 
-        entity.map(e => parser.serialize(e, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible})) : 
-        parser.serialize(entity, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible});
-    return entity;
+      return Array.isArray(value) ? 
+        value.map(e => parser.serialize(e, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible})) : 
+        parser.serialize(value, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible});
+    return value;
   }
 
-  toModel<M extends ODataModel<Type>>(entity: Partial<Type>, annots?: ODataEntityAnnotations): M {
+  toModel<M extends ODataModel<Type>>(entity: Type, annots?: ODataEntityAnnotations): M {
     let Model = this.client.modelForType(this.type());
     return new Model(entity, {resource: this, annotations: annots}) as M;
   }
 
-  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], annots?: ODataEntitiesAnnotations): C {
+  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Type[], annots?: ODataEntitiesAnnotations): C {
     let Collection = this.client.collectionForType(this.type());
     return new Collection(entities, {resource: this, annotations: annots}) as C;
   }

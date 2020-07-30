@@ -110,8 +110,8 @@ export class ODataClient {
    * @param  {string} type?
    * @returns ODataActionResource
    */
-  action<T>(type: string): ODataActionResource<T> {
-    return ODataActionResource.factory(this, type, new ODataPathSegments(), new ODataQueryOptions());
+  action<P, R>(type: string): ODataActionResource<P, R> {
+    return ODataActionResource.factory<P, R>(this, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
@@ -119,8 +119,8 @@ export class ODataClient {
    * @param  {string} type?
    * @returns ODataFunctionResource
    */
-  function<T>(type: string): ODataFunctionResource<T> {
-    return ODataFunctionResource.factory<T>(this, type, new ODataPathSegments(), new ODataQueryOptions());
+  function<P, R>(type: string): ODataFunctionResource<P, R> {
+    return ODataFunctionResource.factory<P, R>(this, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   //Merge Headers

@@ -197,14 +197,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom for collections
-  collection(options?: HttpOptions & {withCount?: boolean}): Observable<ODataEntities<T>> {
-    return this
-      .get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
-      );
-  }
-
+  //#region Custom 
   all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
@@ -225,15 +218,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         expand(({annotations}) => (annotations.skip || annotations.skiptoken) ? fetch(annotations) : empty()),
         concatMap(({entities}) => entities),
         toArray());
-  }
-  //#endregion
-
-  //#region Custom for single
-  single(options?: HttpOptions): Observable<ODataEntity<T>> {
-    return this
-      .get(
-        Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
-      );
   }
   //#endregion
 }

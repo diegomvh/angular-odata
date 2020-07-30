@@ -16,6 +16,7 @@ import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataValueResource } from './value';
 import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntity } from '../responses/response';
+import { map } from 'rxjs/operators';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
@@ -48,12 +49,12 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  action<A>(type: string) {
-    return ODataActionResource.factory<A>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+  action<P, R>(type: string) {
+    return ODataActionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  function<F>(type: string) {
-    return ODataFunctionResource.factory<F>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+  function<P, R>(type: string) {
+    return ODataFunctionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   cast<C extends T>(type: string) {
@@ -164,6 +165,12 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return super.delete(
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
+  }
+  //#endregion
+
+  //#region Custom for entity
+  fetch(options?: HttpOptions): Observable<T> {
+    return this.get(options).pipe(map(({entity}) => entity));
   }
   //#endregion
 }
