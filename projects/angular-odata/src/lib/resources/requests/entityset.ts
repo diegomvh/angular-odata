@@ -14,9 +14,9 @@ import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
 import { expand, concatMap, toArray } from 'rxjs/operators';
 import { Types } from '../../utils';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from '../http-options';
 import { ODataModel } from '../../models';
+import { ODataEntity, ODataEntities } from '../responses/response';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -183,13 +183,13 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  post(entity: Partial<T>, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+  post(entity: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
     return super.post(entity,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
-  get(options?: HttpOptions & { withCount?: boolean }): Observable<[T[], ODataEntitiesAnnotations]> {
+  get(options?: HttpOptions & { withCount?: boolean }): Observable<ODataEntities<T>> {
     return super.get(
       Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
     );
@@ -199,7 +199,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Custom for collections
   all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
-    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }) => {
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
       if (opts) {
         if (opts.skiptoken)
           res.query.skiptoken(opts.skiptoken);
@@ -214,8 +214,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand(([_, annots])  => (annots.skip || annots.skiptoken) ? fetch(annots) : empty()),
-        concatMap(([entities, _]) => entities),
+        expand(({annotations})  => (annotations.skip || annotations.skiptoken) ? fetch(annotations) : empty()),
+        concatMap(({entities}) => entities),
         toArray());
   }
   //#endregion

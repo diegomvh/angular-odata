@@ -8,6 +8,7 @@ import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotati
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
 
 import { ODataCallableResource } from './callable';
+import { ODataProperty, ODataEntities, ODataEntity } from '../responses/response';
 
 export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   //#region Factory
@@ -23,9 +24,9 @@ export class ODataFunctionResource<T> extends ODataCallableResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
-  get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-  get(options: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
+  get(options: HttpEntityOptions): Observable<ODataEntity<T>>;
+  get(options: HttpEntitiesOptions): Observable<ODataEntities<T>>;
+  get(options: HttpPropertyOptions): Observable<ODataProperty<T>>;
   get(options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
     return super.get(options);
   }

@@ -18,6 +18,8 @@ import {
   odataAnnotations
 } from '../../types';
 
+const COLLECTION = /Collection\(([\w\.]+)\)/;
+
 export class ODataAnnotations {
   constructor(protected value: { [name: string]: any }) { }
 
@@ -42,16 +44,6 @@ export class ODataAnnotations {
     return this._context;
   }
 
-  private _functions: any;
-  get functions() {
-    if (!this._functions) {
-      this._functions = Object.keys(this.value)
-        .filter(k => k.startsWith(ODATA_FUNCTION_PREFIX))
-        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: this.value[key] }), {});
-    }
-    return this._functions;
-  }
-
   private _properties: any;
   get properties() {
     if (!this._properties) {
@@ -69,19 +61,14 @@ export class ODataAnnotations {
     return this._properties;
   }
 
+  property(name: string) {
+    return ODataPropertyAnnotations.factory(this.properties[name]);
+  }
+
   // Method
   clone(): ODataAnnotations {
     return new ODataAnnotations(this.value);
   };
-
-  property(name: string) {
-    return this.properties[name];
-  }
-
-  function(name: string) {
-    return this.functions[name];
-  }
-
 }
 
 export class ODataPropertyAnnotations extends ODataAnnotations {
@@ -95,8 +82,16 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
 
   get type(): string {
     if (ODATA_TYPE in this.value) {
-      return this.value[ODATA_TYPE].substr(1);
+      const value = this.value[ODATA_TYPE].substr(1) as string;
+      const matches = COLLECTION.exec(value);
+      if (matches)
+        return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1]; 
+      return value;
     }
+  }
+
+  get collection(): boolean {
+    return (ODATA_TYPE in this.value && this.value[ODATA_TYPE].substr(1).startsWith(`Collection`));
   }
 }
 
@@ -159,6 +154,20 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   static factory(data: any) {
     return new ODataEntityAnnotations(odataAnnotations(data));
   }
+
+  private _functions: any;
+  get functions() {
+    if (!this._functions) {
+      this._functions = Object.keys(this.value)
+        .filter(k => k.startsWith(ODATA_FUNCTION_PREFIX))
+        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: this.value[key] }), {});
+    }
+    return this._functions;
+  }
+
+  function(name: string) {
+    return this.functions[name];
+  }
 }
 
 export class ODataEntitiesAnnotations extends ODataAnnotations {
@@ -203,5 +212,19 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
 
   static factory(data: any) {
     return new ODataEntitiesAnnotations(odataAnnotations(data));
+  }
+
+  private _functions: any;
+  get functions() {
+    if (!this._functions) {
+      this._functions = Object.keys(this.value)
+        .filter(k => k.startsWith(ODATA_FUNCTION_PREFIX))
+        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: this.value[key] }), {});
+    }
+    return this._functions;
+  }
+
+  function(name: string) {
+    return this.functions[name];
   }
 }

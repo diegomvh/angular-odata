@@ -9,6 +9,7 @@ import { ODATA_CONTEXT, EntityKey } from '../../types';
 import { ODataEntityParser } from '../../parsers';
 import { Select, OrderBy, Transform, Expand, Filter, PlainObject } from '../builder';
 import { QueryOptionNames } from '../query-options';
+import { ODataProperty, ODataEntity, ODataEntities } from '../responses/response';
 
 export abstract class ODataCallableResource<T> extends ODataResource<T> {
   toModel<M extends ODataModel<T>>(body: any): M {
@@ -93,19 +94,19 @@ export abstract class ODataCallableResource<T> extends ODataResource<T> {
     args: any | null, 
     responseType: 'property', 
     options?: HttpOptions
-  ): Observable<[T, ODataPropertyAnnotations]>;
+  ): Observable<ODataProperty<T>>;
 
   abstract call(
     args: any | null, 
     responseType: 'entity', 
     options?: HttpOptions
-  ): Observable<[T, ODataEntityAnnotations]>;
+  ): Observable<ODataEntity<T>>;
 
   abstract call(
     args: any | null, 
     responseType: 'entities', 
     options?: HttpOptions
-  ): Observable<[T[], ODataEntitiesAnnotations]>;
+  ): Observable<ODataEntities<T>>;
 
   abstract call(
     args: any | null, 

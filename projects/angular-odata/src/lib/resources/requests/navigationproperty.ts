@@ -15,6 +15,7 @@ import { expand, concatMap, toArray } from 'rxjs/operators';
 import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
+import { ODataEntities, ODataEntity } from '../responses/response';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -189,15 +190,15 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
-  get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
+  get(options: HttpEntityOptions): Observable<ODataEntity<T>>;
+  get(options: HttpEntitiesOptions): Observable<ODataEntities<T>>;
   get(options: HttpEntityOptions & HttpEntitiesOptions): Observable<any> {
     return super.get(options);
   }
   //#endregion
 
   //#region Custom for collections
-  collection(options?: HttpOptions & {withCount?: boolean}): Observable<[T[], ODataEntitiesAnnotations]> {
+  collection(options?: HttpOptions & {withCount?: boolean}): Observable<ODataEntities<T>> {
     return this
       .get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
@@ -206,7 +207,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
-    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<[T[], ODataEntitiesAnnotations]> => {
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
       if (opts) {
         if (opts.skiptoken)
           res.query.skiptoken(opts.skiptoken);
@@ -221,14 +222,14 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand(([_, annots]) => (annots.skip || annots.skiptoken) ? fetch(annots) : empty()),
-        concatMap(([entities, _]) => entities),
+        expand(({annotations}) => (annotations.skip || annotations.skiptoken) ? fetch(annotations) : empty()),
+        concatMap(({entities}) => entities),
         toArray());
   }
   //#endregion
 
   //#region Custom for single
-  single(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+  single(options?: HttpOptions): Observable<ODataEntity<T>> {
     return this
       .get(
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})

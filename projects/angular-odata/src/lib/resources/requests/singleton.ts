@@ -14,6 +14,7 @@ import { ODataFunctionResource } from './function';
 import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
+import { ODataEntity } from '../responses/response';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
@@ -97,19 +98,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+  get(options?: HttpOptions): Observable<ODataEntity<T>> {
     return super.get(
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
       );
   }
 
-  post(entity: Partial<T>, options?: HttpOptions): Observable<[T, ODataEntityAnnotations]> {
+  post(entity: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
     return super.post(entity,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
-  put(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<[T, ODataEntityAnnotations]> {
+  put(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
     return super.put(entity,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
@@ -121,7 +122,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     );
   }
 
-  delete(options?: HttpOptions & { etag?: string }): Observable<T> {
+  delete(options?: HttpOptions & { etag?: string }): Observable<any> {
     return super.delete(
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );

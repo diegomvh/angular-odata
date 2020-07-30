@@ -1,9 +1,13 @@
 import { HttpHeaders } from '@angular/common/http';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from './annotations';
-import { odataAnnotations, entityAttributes, VALUE, Parser } from '../../types';
+import { odataAnnotations, VALUE } from '../../types';
 import { Types } from '../../utils';
 import { ODataConfig } from '../../models';
 import { ODataResource } from '../resource';
+
+export type ODataEntity<T> = {entity: T, annotations: ODataEntityAnnotations};
+export type ODataEntities<T> = {entities: T[], annotations: ODataEntitiesAnnotations};
+export type ODataProperty<T> = {property: T, annotations: ODataPropertyAnnotations};
 
 export class ODataResponse<T> {
   readonly body: any|null;
@@ -29,7 +33,7 @@ export class ODataResponse<T> {
       this.resource = init.resource;
     }
 
-  entity(): {entity: T, annotations: ODataEntityAnnotations} {
+  entity(): ODataEntity<T> {
     if (this.body) {
       const annotations = ODataEntityAnnotations.factory(odataAnnotations(this.body))
       const type = annotations.type || this.resource.type();
@@ -45,7 +49,7 @@ export class ODataResponse<T> {
     }
   }
 
-  entities(): {entities: T[], annotations: ODataEntitiesAnnotations} {
+  entities(): ODataEntities<T> { 
     if (this.body) {
       const annotations = ODataEntitiesAnnotations.factory(odataAnnotations(this.body))
       const type = this.resource.type();
@@ -54,13 +58,14 @@ export class ODataResponse<T> {
         const parser = this.config.parserForType<T>(type);
         if (!Types.isUndefined(parser) && 'deserialize' in parser)
           entities = entities.map(entity => parser.deserialize(entity, {
-            stringAsEnum: this.config.stringAsEnum, ieee754Compatible: this.config.ieee754Compatible})) as T[];
+            stringAsEnum: this.config.stringAsEnum, 
+            ieee754Compatible: this.config.ieee754Compatible})) as T[];
       }
       return { entities, annotations };
     }
   }
 
-  property(): {property: T, annotations: ODataPropertyAnnotations} {
+  property(): ODataProperty<T> {
     if (this.body) {
       const annotations = ODataPropertyAnnotations.factory(odataAnnotations(this.body))
       const type = annotations.type || this.resource.type();
@@ -68,9 +73,13 @@ export class ODataResponse<T> {
       if (type) {
         const parser = this.config.parserForType<T>(type);
         if (!Types.isUndefined(parser) && 'deserialize' in parser)
-          property = parser.deserialize(property, {
-            stringAsEnum: this.config.stringAsEnum, 
-            ieee754Compatible: this.config.ieee754Compatible}) as T;
+          property = Array.isArray(property) ? 
+            property.map(p => parser.deserialize(p, {
+              stringAsEnum: this.config.stringAsEnum, 
+              ieee754Compatible: this.config.ieee754Compatible})) : 
+            parser.deserialize(property, {
+              stringAsEnum: this.config.stringAsEnum, 
+              ieee754Compatible: this.config.ieee754Compatible});
       }
       return { property, annotations };
     } 
@@ -83,9 +92,13 @@ export class ODataResponse<T> {
       if (type) {
         const parser = this.config.parserForType<T>(type);
         if (!Types.isUndefined(parser) && 'deserialize' in parser)
-          value = parser.deserialize(value, {
-            stringAsEnum: this.config.stringAsEnum, 
-            ieee754Compatible: this.config.ieee754Compatible}) as T;
+          value = Array.isArray(value) ? 
+            value.map(v => parser.deserialize(v, {
+              stringAsEnum: this.config.stringAsEnum, 
+              ieee754Compatible: this.config.ieee754Compatible})) : 
+            parser.deserialize(value, {
+              stringAsEnum: this.config.stringAsEnum, 
+              ieee754Compatible: this.config.ieee754Compatible});
       }
       return value; 
     } 

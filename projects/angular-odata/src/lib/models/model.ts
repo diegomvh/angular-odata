@@ -147,7 +147,7 @@ export class ODataModel<T> {
   create(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
       let entity = this.toEntity(); 
-      return this._resource.post(entity, options).pipe(map(([entity, annots]) => this.populate(entity, annots)));
+      return this._resource.post(entity, options).pipe(map(({entity, annotations}) => this.populate(entity, annotations)));
     }
     throw new Error(`Can't create`);
   }
@@ -171,7 +171,7 @@ export class ODataModel<T> {
             });
       return forkJoin(rels).pipe(
         switchMap(() => resource.put(entity, Object.assign({ etag }, options || {}))),
-        map(([entity, annots]) => this.populate(entity, annots)));
+        map(({entity, annotations}) => this.populate(entity, annotations)));
     }
     throw new Error(`Can't update`);
   }

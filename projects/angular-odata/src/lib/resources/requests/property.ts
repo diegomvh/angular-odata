@@ -9,6 +9,7 @@ import { ODataClient } from '../../client';
 import { ODataPropertyAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
+import { ODataProperty, ODataEntities, ODataEntity } from '../responses/response';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -37,9 +38,9 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpEntityOptions): Observable<[T, ODataEntityAnnotations]>;
-  get(options: HttpEntitiesOptions): Observable<[T[], ODataEntitiesAnnotations]>;
-  get(options: HttpPropertyOptions): Observable<[T, ODataPropertyAnnotations]>;
+  get(options: HttpEntityOptions): Observable<ODataEntity<T>>;
+  get(options: HttpEntitiesOptions): Observable<ODataEntities<T>>;
+  get(options: HttpPropertyOptions): Observable<ODataProperty<T>>;
   get(options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
     return super.get(options);
   }
