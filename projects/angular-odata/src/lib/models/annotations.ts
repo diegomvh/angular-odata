@@ -205,17 +205,17 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
   }
 
   get top(): number {
-    let match = (this.nextLink || "").match(/\$top=(\d+)/);
+    let match = (this.nextLink || "").match(/[&?]{1}\$top=(\d+)/);
     if (match) return Number(match[1]);
   }
 
   get skip(): number {
-    let match = (this.nextLink || "").match(/\$skip=(\d+)/);
+    let match = (this.nextLink || "").match(/[&?]{1}\$skip=(\d+)/);
     if (match) return Number(match[1]);
   }
 
   get skiptoken(): string {
-    let match = (this.nextLink || "").match(/\$skiptoken=([\d\w\s]+)/);
+    let match = (this.nextLink || "").match(/[&?]{1}\$skiptoken=([\d\w\s]+)/);
     if (match) return match[1];
   }
 
