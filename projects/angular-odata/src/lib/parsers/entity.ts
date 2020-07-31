@@ -35,6 +35,7 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   private parse(parser: ODataEntityParser<Type>, value: any, options: ParseOptions): any {
     const type = Types.isObject(value) ? odataType(value) : undefined;
     if (!Types.isUndefined(type) && parser.type !== type) {
+      //TODO: full search
       parser = parser.children.find(c => c.type === type);
     }
     return parser.deserialize(value, options);

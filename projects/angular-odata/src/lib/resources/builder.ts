@@ -7,7 +7,7 @@ const SUPPORTED_EXPAND_PROPERTIES = [
   'select',
   'top',
   'count',
-  'orderBy',
+  'orderby',
   'filter',
 ];
 
@@ -382,7 +382,7 @@ function buildExpand<T>(expands: Expand<T>): string {
 
     if (
       expandKeys.some(
-        key => SUPPORTED_EXPAND_PROPERTIES.indexOf(key) !== -1
+        key => SUPPORTED_EXPAND_PROPERTIES.indexOf(key.toLowerCase()) !== -1
       )
     ) {
       return expandKeys
@@ -402,7 +402,7 @@ function buildExpand<T>(expands: Expand<T>): string {
             default: 
               value = buildExpand((expands as NestedExpandOptions<any>)[key] as Expand<T>);
           }
-          return `$${key}=${value}`;
+          return `$${key.toLowerCase()}=${value}`;
         })
         .join(';');
     } else {
