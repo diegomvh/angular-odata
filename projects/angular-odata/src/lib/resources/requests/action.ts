@@ -14,8 +14,10 @@ import { map } from 'rxjs/operators';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.action, type).setType(type);
+  static factory<P, R>(client: ODataClient, typeOrPath: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const config = client.callableConfigForType<R>(typeOrPath);
+    const path = config ? config.path : typeOrPath;
+    segments.segment(PathSegmentNames.action, path).setType(typeOrPath);
     options.clear();
     return new ODataActionResource<P, R>(client, segments, options);
   }
@@ -104,12 +106,12 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Custom 
-  call(params: P | null, responseType: 'entity', options?: HttpOptions): Observable<R>;
-  call(params: P | null, responseType: 'entities', options?: HttpOptions): Observable<R[]>;
-  call(params: P | null, responseType: 'property', options?: HttpOptions): Observable<R>;
+  call(params: P | null, responseType?: 'entity', options?: HttpOptions): Observable<R>;
+  call(params: P | null, responseType?: 'entities', options?: HttpOptions): Observable<R[]>;
+  call(params: P | null, responseType?: 'property', options?: HttpOptions): Observable<R>;
   call(
     params: P | null, 
-    responseType: 'property' | 'entity' | 'entities', 
+    responseType?: 'property' | 'entity' | 'entities', 
     options?: HttpOptions
   ): Observable<any> {
     const res = this.clone();
@@ -123,6 +125,8 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
         return res$.pipe(map((res: ODataEntity<R>) => res.entity));
       case 'property':
         return res$.pipe(map((res: ODataProperty<R>) => res.property));
+      default:
+        return res$;
     }
   }
   //#endregion

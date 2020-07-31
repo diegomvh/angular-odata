@@ -18,8 +18,8 @@ import { ODataEntity } from '../responses/response';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<R>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.singleton, name).setType(type);
+  static factory<R>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(PathSegmentNames.singleton, path).setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(client, segments, options);
   }
@@ -104,20 +104,20 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       );
   }
 
-  post(entity: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
-    return super.post(entity,
+  post(attrs: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
+    return super.post(attrs,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
-  put(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
-    return super.put(entity,
+  put(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
+    return super.put(attrs,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
-  patch(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
-    return super.patch(entity,
+  patch(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
+    return super.patch(attrs,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }

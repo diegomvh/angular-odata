@@ -1,9 +1,6 @@
 import { Types } from '../utils';
 import { Parser, ParseOptions, Parameter, CallableConfig } from '../types';
 
-import { ODataEnumParser } from './enum';
-import { ODataEntityParser } from './entity';
-
 const NONE_PARSER = {
   deserialize: (value: any, options: ParseOptions) => value,
   serialize: (value: any, options: ParseOptions) => value

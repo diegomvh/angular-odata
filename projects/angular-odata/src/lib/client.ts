@@ -97,12 +97,12 @@ export class ODataClient {
     return ODataBatchResource.factory(this);
   }
 
-  singleton<T>(name: string, type?: string) {
-    return ODataSingletonResource.factory<T>(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
+  singleton<T>(path: string, type?: string) {
+    return ODataSingletonResource.factory<T>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    return ODataEntitySetResource.factory<T>(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
+  entitySet<T>(path: string, type?: string): ODataEntitySetResource<T> {
+    return ODataEntitySetResource.factory<T>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**

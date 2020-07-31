@@ -10,7 +10,7 @@ import { HttpOptions } from '../http-options';
 export class ODataCountResource extends ODataResource<any> {
   //#region Factory
   static factory(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.count, $COUNT).setType('number');
+    segments.segment(PathSegmentNames.count, $COUNT).setType('Edm.Int32');
     options.keep(QueryOptionNames.filter, QueryOptionNames.search);
     return new ODataCountResource(client, segments, options);
   }

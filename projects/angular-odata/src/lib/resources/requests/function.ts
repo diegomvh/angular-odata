@@ -16,8 +16,10 @@ import { map } from 'rxjs/operators';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.function, type).setType(type);
+  static factory<P, R>(client: ODataClient, typeOrPath: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const config = client.callableConfigForType<R>(typeOrPath);
+    const path = config ? config.path : typeOrPath;
+    segments.segment(PathSegmentNames.function, path).setType(typeOrPath);
     options.clear();
     return new ODataFunctionResource<P, R>(client, segments, options);
   }
@@ -114,7 +116,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  //#region Custom call 
+  //#region Custom 
   call(params: P | null, responseType: 'entity', options?: HttpOptions): Observable<R>;
   call(params: P | null, responseType: 'entities', options?: HttpOptions): Observable<R[]>;
   call(params: P | null, responseType: 'property', options?: HttpOptions): Observable<R>;
@@ -124,7 +126,8 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     options?: HttpOptions
   ): Observable<any> {
     const res = this.clone();
-    res.segment.parameters(params);
+    if (params)
+      res.segment.parameters(params);
     const res$ = res.get(
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType }, options || {})
     );
@@ -135,6 +138,8 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
         return res$.pipe(map((res: ODataEntity<R>) => res.entity));
       case 'property':
         return res$.pipe(map((res: ODataProperty<R>) => res.property));
+      default:
+        return res$;
     }
   }
   //#endregion

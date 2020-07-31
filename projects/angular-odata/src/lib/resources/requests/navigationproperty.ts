@@ -11,16 +11,17 @@ import { EntityKey } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { Types } from '../../utils/types';
-import { expand, concatMap, toArray } from 'rxjs/operators';
+import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntities, ODataEntity } from '../responses/response';
+import { ODataValueResource } from './value';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.navigationProperty, name).setType(type);
+  static factory<E>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(PathSegmentNames.navigationProperty, path).setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataNavigationPropertyResource<E>(client, segments, options);
   }
@@ -31,6 +32,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Inmutable Resource
+  value() {
+    return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
+  }
+
   reference() {
     return ODataReferenceResource.factory(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -218,6 +223,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         expand(({annotations}) => (annotations.skip || annotations.skiptoken) ? fetch(annotations) : empty()),
         concatMap(({entities}) => entities),
         toArray());
+  }
+
+  fetch(options?: HttpOptions): Observable<T> {
+    return this.get(
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+    ).pipe(map(({entity}) => entity));
   }
   //#endregion
 }

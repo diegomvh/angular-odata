@@ -15,13 +15,12 @@ import { ODataResource } from '../resource';
 import { expand, concatMap, toArray } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from '../http-options';
-import { ODataModel } from '../../models';
 import { ODataEntity, ODataEntities } from '../responses/response';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.entitySet, name).setType(type);
+  static factory<E>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(PathSegmentNames.entitySet, path).setType(type);
     options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
     return new ODataEntitySetResource<E>(client, segments, options);
   }
@@ -179,8 +178,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  post(entity: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
-    return super.post(entity,
+  post(attrs: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
+    return super.post(attrs,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }

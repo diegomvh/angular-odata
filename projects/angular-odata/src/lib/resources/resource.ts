@@ -118,7 +118,7 @@ export class ODataResource<Type> {
   protected request(
     method: string,
     options: HttpOptions & {
-      entity?: any,
+      attrs?: any,
       etag?: string,
       responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
       withCount?: boolean
@@ -135,7 +135,7 @@ export class ODataResource<Type> {
         'text' :
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
     
-    const body = !Types.isNullOrUndefined(options.entity) ? this.serialize(options.entity) : null;
+    const body = !Types.isNullOrUndefined(options.attrs) ? this.serialize(options.attrs) : null;
     const res$ = this.client.request(method, this, {
       body,
       etag: options.etag,
@@ -157,7 +157,7 @@ export class ODataResource<Type> {
       case 'value':
         return res$.pipe(map((res: ODataResponse<Type>) => res.value() as Type));
       default:
-        return res$;
+        return res$.pipe(map((res: ODataResponse<Type>) => res.body));
     }
   }
 
@@ -168,27 +168,27 @@ export class ODataResource<Type> {
     return this.request('GET', options);
   }
 
-  protected post(entity: Partial<Type>, options: HttpOptions & { 
+  protected post(attrs: Partial<Type>, options: HttpOptions & { 
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
-    return this.request('POST', Object.assign(options, { entity }));
+    return this.request('POST', Object.assign(options, { attrs }));
   }
 
-  protected put(entity: Partial<Type>, options: HttpOptions & {
+  protected put(attrs: Partial<Type>, options: HttpOptions & {
     etag?: string, 
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean 
   }): Observable<any> {
-    return this.request('PUT', Object.assign(options, { entity }));
+    return this.request('PUT', Object.assign(options, { attrs }));
   }
 
-  protected patch(entity: Partial<Type>, options: HttpOptions & {
+  protected patch(attrs: Partial<Type>, options: HttpOptions & {
     etag?: string, 
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
-    return this.request('PATCH', Object.assign(options, { entity }));
+    return this.request('PATCH', Object.assign(options, { attrs }));
   }
 
   protected delete(options: HttpOptions & {

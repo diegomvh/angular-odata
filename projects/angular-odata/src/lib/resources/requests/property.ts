@@ -7,14 +7,15 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { ODataPropertyAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
-import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions } from '../http-options';
+import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
 import { ODataProperty, ODataEntities, ODataEntity } from '../responses/response';
+import { map } from 'rxjs/operators';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<P>(client: ODataClient, name: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.property, name).setType(type)
+  static factory<P>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(PathSegmentNames.property, path).setType(type)
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options);
   }
@@ -45,4 +46,10 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return super.get(options);
   }
   //#endregion
+
+  fetch(options?: HttpOptions): Observable<T> {
+    return this.get(
+      Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options || {})
+    ).pipe(map(({property}) => property));
+  }
 }

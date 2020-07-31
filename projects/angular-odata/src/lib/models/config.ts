@@ -245,8 +245,8 @@ export class ODataCallableConfig<R> {
 
   constructor(config: CallableConfig, namespace: string) {
     this.name = config.name;
-    this.type = `${namespace}.${this.name}`;
-    this.path = config.path;
+    this.type = `${namespace}.${config.name}`;
+    this.path = config.path || (config.bound ? `${namespace}.${config.name}` : config.name);
     this.bound = config.bound;
     this.composable = config.composable;
     this.parser = new ODataCallableParser(config, namespace);

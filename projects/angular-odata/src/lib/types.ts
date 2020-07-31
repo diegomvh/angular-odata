@@ -89,12 +89,12 @@ export const odataAnnotations = (value: any) => Object.keys(value)
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
 export const odataType = (value: any) => {
-  if (ODATA_TYPE in this.value) {
-    const value = this.value[ODATA_TYPE].substr(1) as string;
-    const matches = COLLECTION.exec(value);
+  if (ODATA_TYPE in value) {
+    const type = value[ODATA_TYPE].substr(1) as string;
+    const matches = COLLECTION.exec(type);
     if (matches)
       return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1]; 
-    return value;
+    return type;
   }
 }
 

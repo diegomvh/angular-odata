@@ -143,20 +143,20 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       );
   }
 
-  post(entity: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
-    return super.post(entity,
+  post(attrs: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
+    return super.post(attrs,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
-  put(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
-    return super.put(entity,
+  put(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
+    return super.put(attrs,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
 
-  patch(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
-    return super.patch(entity,
+  patch(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
+    return super.patch(attrs,
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
     );
   }
@@ -168,7 +168,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom for entity
+  //#region Custom
   fetch(options?: HttpOptions): Observable<T> {
     return this.get(options).pipe(map(({entity}) => entity));
   }
