@@ -1,6 +1,5 @@
 import { Types } from '../utils';
-import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, ParseOptions } from '../types';
-import { odataType } from '../models';
+import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, ParseOptions, odataType } from '../types';
 
 const NONE_PARSER = {
   deserialize: (value: any, options: ParseOptions) => value,
@@ -34,7 +33,7 @@ export class ODataFieldParser<Type> implements Parser<Type> {
 
   // Deserialize
   private parse(parser: ODataEntityParser<Type>, value: any, options: ParseOptions): any {
-    const type = odataType(value);
+    const type = Types.isObject(value) ? odataType(value) : undefined;
     if (!Types.isUndefined(type) && parser.type !== type) {
       parser = parser.children.find(c => c.type === type);
     }
@@ -53,7 +52,7 @@ export class ODataFieldParser<Type> implements Parser<Type> {
 
   // Serialize
   private toJson(parser: ODataEntityParser<Type>, value: any, options: ParseOptions): any {
-    const type = odataType(value);
+    const type = Types.isObject(value) ? odataType(value) : undefined;
     if (!Types.isUndefined(type) && parser.type !== type) {
       parser = parser.children.find(c => c.type === type);
     }

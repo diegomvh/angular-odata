@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations, odataType } from '../models/annotations';
-import { VALUE, Parser } from '../types';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../models/annotations';
+import { VALUE, Parser, odataType } from '../types';
 import { Types } from '../utils';
 import { ODataConfig } from '../models';
 import { ODataResource } from './resource';
@@ -35,7 +35,7 @@ export class ODataResponse<T> {
     }
 
   private parse(parser: Parser<T>, value: any): any {
-    const type = odataType(value);
+    const type = Types.isObject(value) ? odataType(value) : undefined;
     if (!Types.isUndefined(type) && parser instanceof ODataEntityParser && parser.type !== type) {
       parser = parser.children.find(c => c.type === type);
     }

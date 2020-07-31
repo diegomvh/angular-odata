@@ -81,12 +81,48 @@ export const ODATA_ALIAS_PREFIX = '@';
 
 export const NEWLINE = '\r\n';
 export const VALUE = 'value';
+export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
-//#endregion
-export const entityAttributes = (value: any) => Object.keys(value)
-  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(ODATA_FUNCTION_PREFIX))
+//#region Extract odata annotations
+export const odataAnnotations = (value: Object) => Object.keys(value)
+  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
+export const odataType = (value: Object) => {
+  if (ODATA_TYPE in value) {
+    const type = value[ODATA_TYPE].substr(1) as string;
+    const matches = COLLECTION.exec(type);
+    if (matches)
+      return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1]; 
+    return type;
+  }
+}
+
+export type ODataContext = {
+  metadata?: string;
+  singleton?: string;
+  entitySet?: string;
+  property?: string;
+  entity?: string;
+}
+
+export const odataContext = (value: Object) => {
+  if (ODATA_CONTEXT in value) {
+    let ctx: ODataContext = {};
+    const str = value[ODATA_CONTEXT] as string;
+    const index = str.lastIndexOf("#");
+    ctx.metadata = str.substr(0, index);
+    const parts = str.substr(index + 1).split("/");
+    ctx.entitySet = parts[0];
+    if (parts[parts.length - 1] === '$entity') {
+      ctx.entity = parts[1];
+    } else if (parts.length > 1) {
+      ctx.property = parts[1];
+    }
+    return ctx;
+  }
+}
+//#endregion
 export const parseQuery  = (query: string) => query.split(PARAM_SEPARATOR)
   .reduce((acc, param: string) => {
     let index = param.indexOf(VALUE_SEPARATOR);

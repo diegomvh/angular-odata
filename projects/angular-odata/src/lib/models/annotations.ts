@@ -9,54 +9,16 @@ import {
   ODATA_MEDIA_ETAG, 
   ODATA_MEDIA_READLINK, 
   ODATA_MEDIA_CONTENTTYPE, 
-  ODATA_CONTEXT, 
   ODATA_ID, 
   ODATA_READLINK, 
   ODATA_EDITLINK, 
   ODATA_FUNCTION_PREFIX, 
-  ODATA_ANNOTATION_PREFIX
+  ODATA_ANNOTATION_PREFIX,
+  odataAnnotations,
+  odataContext,
+  ODataContext,
+  odataType
 } from '../types';
-
-export const COLLECTION = /Collection\(([\w\.]+)\)/;
-
-//#region Extract odata annotations
-export const odataAnnotations = (value: any) => Object.keys(value)
-  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(ODATA_FUNCTION_PREFIX))
-  .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
-
-export const odataType = (value: any) => {
-  if (ODATA_TYPE in value) {
-    const type = value[ODATA_TYPE].substr(1) as string;
-    const matches = COLLECTION.exec(type);
-    if (matches)
-      return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1]; 
-    return type;
-  }
-}
-
-export type ODataContext = {
-  metadata?: string;
-  singleton?: string;
-  entitySet?: string;
-  property?: string;
-  entity?: string;
-}
-export const odataContext = (value: any) => {
-  if (ODATA_CONTEXT in value) {
-    let ctx: ODataContext = {};
-    const str = value[ODATA_CONTEXT] as string;
-    const index = str.lastIndexOf("#");
-    ctx.metadata = str.substr(0, index);
-    const parts = str.substr(index + 1).split("/");
-    ctx.entitySet = parts[0];
-    if (parts[parts.length - 1] === '$entity') {
-      ctx.entity = parts[1];
-    } else if (parts.length > 1) {
-      ctx.property = parts[1];
-    }
-    return ctx;
-  }
-}
 
 export class ODataAnnotations {
   value: {[name: string]: any}

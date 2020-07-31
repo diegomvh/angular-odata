@@ -16,10 +16,6 @@ export const Types = {
     return !Types.isNull(value) && (type === 'object' || type === 'function');
   },
 
-  isObjectLike(value: any): boolean {
-    return value != null && typeof value == 'object';
-  },
-
   isFunction(value: any): boolean {
     return typeof value === "function";
   },
