@@ -72,8 +72,9 @@ export class ODataResponse<T> {
   property(): ODataProperty<T> {
     if (this.body) {
       const annotations = new ODataPropertyAnnotations(this.body)
-      const type = annotations.type || this.resource.type();
-      const property = this.deserialize(type, this.body[VALUE]) as T;
+      const property = this.deserialize(
+        this.resource.type(), 
+        VALUE in this.body? this.body[VALUE] : this.body) as T;
       return { property, annotations };
     } 
   }
