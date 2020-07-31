@@ -53,7 +53,7 @@ export class ODataAnnotations {
   }
 
   property(name: string) {
-    return new ODataPropertyAnnotations(this.properties[name]);
+    return this.properties[name];
   }
 
   // Method

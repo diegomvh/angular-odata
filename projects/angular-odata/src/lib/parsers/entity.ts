@@ -93,6 +93,10 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   isNavigation() {
     return this.navigation;
   }
+
+  isComplexType() {
+    return this.parser instanceof ODataEntityParser && this.parser.isComplexType();
+  }
 }
 
 export class ODataEntityParser<Type> implements Parser<Type> {
@@ -178,7 +182,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
       return key;
   }
 
-  isComplex() {
+  isComplexType() {
     return this.keys().length === 0;
   }
 }

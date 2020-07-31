@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, throwError, empty } from 'rxjs';
 
 import { EntityKey } from '../../types';
 
@@ -16,7 +16,8 @@ import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataValueResource } from './value';
 import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntity } from '../response';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
@@ -31,6 +32,12 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Inmutable Resource
+  key(key: EntityKey<T>) {
+    const entity = this.clone(); 
+    entity.segment.key(key);
+    return entity;
+  }
+
   value() {
     return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -173,8 +180,22 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
+  save(attrs: Partial<T>, options?: HttpOptions & {etag?: string}) {
+    return Types.isUndefined(this.segment.key()) ? this.post(attrs, options) : this.put(attrs, options);
+  }
+
   fetch(options?: HttpOptions): Observable<T> {
-    return this.get(options).pipe(map(({entity}) => entity));
+    return Types.isUndefined(this.segment.key()) ? this.get(options).pipe(map(({entity}) => entity)) : empty();
+  }
+
+  fetchOrCreate(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
+    return this.fetch(options)
+      .pipe(catchError((error: HttpErrorResponse) => {
+        if (error.status === 404)
+          return this.post(attrs, options).pipe(map(({entity}) => entity));
+        else
+          return throwError(error);
+      }));
   }
   //#endregion
 }

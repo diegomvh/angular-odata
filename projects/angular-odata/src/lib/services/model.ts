@@ -10,14 +10,6 @@ export class ODataModelService<T, M extends ODataModel<T>, C extends ODataCollec
   constructor(protected client: ODataClient) { super(client); }
 
   // Models
-  public model(entity?: T): M {
-    return this.entity(entity).toModel<M>(entity);
-  }
-
-  public collection(entities?: T[]): C {
-    return this.entities().toCollection<C>(entities);
-  }
-
   public attach(value: M): M;
   public attach(value: C): C;
   public attach(value: any): any {

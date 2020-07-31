@@ -38,16 +38,19 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options?: HttpOptions): Observable<ODataProperty<T>> {
-    return super.get(
-      Object.assign<HttpPropertyOptions, HttpOptions>(<HttpPropertyOptions>{responseType: 'property'}, options || {})
-      );
+  get(options: HttpEntityOptions): Observable<ODataEntity<T>>;
+  get(options: HttpEntitiesOptions): Observable<ODataEntities<T>>;
+  get(options: HttpPropertyOptions): Observable<ODataProperty<T>>;
+  get(options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
+    return super.get(options);
   }
   //#endregion
 
-  //#region Custom
+  //#region Custom 
   fetch(options?: HttpOptions): Observable<T> {
-    return this.get(options).pipe(map(({property}) => property));
+    return this.get(
+      Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options || {})
+    ).pipe(map(({property}) => property));
   }
   //#endregion
 }

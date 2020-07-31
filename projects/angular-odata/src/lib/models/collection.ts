@@ -20,7 +20,8 @@ import {
   HttpOptions,
   HttpEntitiesOptions
 } from '../resources/http-options';
-import { ODataAnnotations, ODataEntitiesAnnotations } from './annotations';
+import { ODataAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from './annotations';
+import { entityAttributes } from '../types';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   protected _resource: ODataResource<T>;
@@ -47,7 +48,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   constructor(values?: any[], options: { resource?: ODataResource<T>, annotations?: ODataAnnotations } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
-    this.populate((values || []) as M[], options.annotations || null);
+    this.populate((values || []), options.annotations);
   }
 
   attach(resource: ODataResource<T>) {
@@ -126,20 +127,19 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Requests
   fetch(options?: HttpOptions & {withCount?: boolean}): Observable<this> {
-    let obs$: Observable<any>;
     if (this._resource instanceof ODataEntitySetResource) {
-      obs$ = this._resource.get(options);
+      return this._resource.get(options).pipe(
+      map(({entities, annotations}) => this.populate(entities, annotations)));
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      obs$ = this._resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {}));
+      return this._resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
+      map(({entities, annotations}) => this.populate(entities, annotations)));
     } else if (this._resource instanceof ODataFunctionResource) {
-      obs$ = this._resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {}));
+      return this._resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
+      map(({entities, annotations}) => this.populate(entities, annotations)));
     }
-    if (!obs$)
-      throw new Error("Not Yet!");
-    return obs$.pipe(
-      map(([entities, annots]) => this.populate(entities, annots)));
+    throw new Error("Not Yet!");
   }
 
   next(options?: HttpOptions & {withCount?: boolean}) {
