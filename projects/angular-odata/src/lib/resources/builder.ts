@@ -382,7 +382,7 @@ function buildExpand<T>(expands: Expand<T>): string {
 
     if (
       expandKeys.some(
-        key => SUPPORTED_EXPAND_PROPERTIES.indexOf(key.toLowerCase()) !== -1
+        key => SUPPORTED_EXPAND_PROPERTIES.indexOf(key) !== -1
       )
     ) {
       return expandKeys
