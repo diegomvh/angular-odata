@@ -38,6 +38,7 @@ export type ODataContext = {
   metadata?: string;
   singleton?: string;
   entitySet?: string;
+  property?: string;
   entity?: string;
 }
 export const odataContext = (value: any) => {
@@ -48,8 +49,11 @@ export const odataContext = (value: any) => {
     ctx.metadata = str.substr(0, index);
     const parts = str.substr(index + 1).split("/");
     ctx.entitySet = parts[0];
-    if (parts[parts.length - 1] === '$entity')
+    if (parts[parts.length - 1] === '$entity') {
       ctx.entity = parts[1];
+    } else if (parts.length > 1) {
+      ctx.property = parts[1];
+    }
     return ctx;
   }
 }
