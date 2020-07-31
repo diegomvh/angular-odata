@@ -4,7 +4,7 @@ import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataClient } from '../../client';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
-import { ODataProperty, ODataEntities, ODataEntity } from '../responses/index';
+import { ODataProperty, ODataEntities, ODataEntity } from '../response';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
@@ -14,10 +14,8 @@ import { map } from 'rxjs/operators';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, typeOrPath: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const config = client.callableConfigForType<R>(typeOrPath);
-    const path = config ? config.path : typeOrPath;
-    segments.segment(PathSegmentNames.action, path).setType(typeOrPath);
+  static factory<P, R>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(PathSegmentNames.action, path).setType(type);
     options.clear();
     return new ODataActionResource<P, R>(client, segments, options);
   }

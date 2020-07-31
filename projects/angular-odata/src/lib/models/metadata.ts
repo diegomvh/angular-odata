@@ -1,6 +1,6 @@
 import { CsdlTypeDefinition } from './csdl/csdl-type-definition';
 import { CsdlSchema } from './csdl/csdl-schema';
-import { Types } from '../../utils/types';
+import { Types } from '../utils/types';
 import { CsdlEnumType, CsdlEnumMember } from './csdl/csdl-enum-type';
 import { CsdlEntityType, CsdlPropertyRef, CsdlKey, CsdlComplexType } from './csdl/csdl-structured-type';
 import { CsdlFunction, CsdlParameter, CsdlFunctionImport, CsdlActionImport, CsdlReturnType, CsdlAction } from './csdl/csdl-function-action';

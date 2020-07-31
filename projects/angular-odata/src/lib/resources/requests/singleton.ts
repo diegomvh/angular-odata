@@ -11,10 +11,9 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { ODataEntityAnnotations } from '../responses';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
-import { ODataEntity } from '../responses/response';
+import { ODataEntity } from '../response';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
@@ -45,11 +44,15 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(type: string) {
-    return ODataActionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+    const config = this.client.callableConfigForType<R>(type);
+    const path = config ? config.path : type;
+    return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(type: string) {
-    return ODataFunctionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+    const config = this.client.callableConfigForType<R>(type);
+    const path = config ? config.path : type;
+    return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   select(opts: Select<T>) {

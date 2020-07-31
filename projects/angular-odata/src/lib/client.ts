@@ -17,12 +17,12 @@ import {
   ODataPathSegments,
   ODataSegment,
   ODataQueryOptions
-} from './resources';
+} from './resources/index';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig, ODataConfig, ODataCallableConfig } from './models';
-import { Types } from './utils';
-import { ODataResponse } from './resources/responses/response';
+import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig, ODataConfig, ODataCallableConfig } from './models/index';
+import { Types } from './utils/index';
+import { ODataResponse } from './resources/response';
 import { map } from 'rxjs/operators';
 
 @Injectable()
@@ -111,7 +111,9 @@ export class ODataClient {
    * @returns ODataActionResource
    */
   action<P, R>(type: string): ODataActionResource<P, R> {
-    return ODataActionResource.factory<P, R>(this, type, new ODataPathSegments(), new ODataQueryOptions());
+    const config = this.callableConfigForType<R>(type);
+    const path = config ? config.path : type;
+    return ODataActionResource.factory<P, R>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
@@ -120,7 +122,9 @@ export class ODataClient {
    * @returns ODataFunctionResource
    */
   function<P, R>(type: string): ODataFunctionResource<P, R> {
-    return ODataFunctionResource.factory<P, R>(this, type, new ODataPathSegments(), new ODataQueryOptions());
+    const config = this.callableConfigForType<R>(type);
+    const path = config ? config.path : type;
+    return ODataFunctionResource.factory<P, R>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   //Merge Headers

@@ -11,9 +11,11 @@ import {
 import { ODataClient } from '../client';
 import {
   ODataModel,
-  ODataCollection
-} from '../models';
-import { Types } from '../utils';
+  ODataCollection,
+  ODataEntityAnnotations,
+  ODataEntitiesAnnotations
+} from '../models/index';
+import { Types } from '../utils/index';
 
 import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
@@ -21,7 +23,7 @@ import {
   ODataQueryOptions
 } from './query-options';
 import { HttpOptions } from './http-options';
-import { ODataResponse, ODataEntityAnnotations, ODataEntitiesAnnotations } from './responses/index';
+import { ODataResponse } from './response';
 
 export class ODataResource<Type> {
   // VARIABLES

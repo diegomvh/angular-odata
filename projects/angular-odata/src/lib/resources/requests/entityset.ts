@@ -15,7 +15,7 @@ import { ODataResource } from '../resource';
 import { expand, concatMap, toArray } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from '../http-options';
-import { ODataEntity, ODataEntities } from '../responses/response';
+import { ODataEntity, ODataEntities } from '../response';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -44,11 +44,15 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(type: string) {
-    return ODataActionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+    const config = this.client.callableConfigForType<R>(type);
+    const path = config ? config.path : type;
+    return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(type: string) {
-    return ODataFunctionResource.factory<P, R>(this.client, type, this.pathSegments.clone(), this.queryOptions.clone());
+    const config = this.client.callableConfigForType<R>(type);
+    const path = config ? config.path : type;
+    return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {

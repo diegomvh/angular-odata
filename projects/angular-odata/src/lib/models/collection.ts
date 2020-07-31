@@ -8,8 +8,6 @@ import {
   ODataNavigationPropertyResource,
   ODataFunctionResource,
   ODataActionResource,
-  ODataAnnotations,
-  ODataEntitiesAnnotations,
   Filter,
   Expand,
   Select,
@@ -22,6 +20,7 @@ import {
   HttpOptions,
   HttpEntitiesOptions
 } from '../resources/http-options';
+import { ODataAnnotations, ODataEntitiesAnnotations } from './annotations';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   protected _resource: ODataResource<T>;

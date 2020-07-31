@@ -6,8 +6,6 @@ import {
   ODataEntityResource,
   ODataPropertyResource,
   ODataFunctionResource,
-  ODataAnnotations,
-  ODataEntityAnnotations
 } from '../resources';
 
 import { ODataCollection } from './collection';
@@ -19,6 +17,7 @@ import {
 } from '../resources/http-options';
 import { ODataFieldParser } from '../parsers/index';
 import { Types } from '../utils';
+import { ODataAnnotations, ODataEntityAnnotations } from './annotations';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;

@@ -6,20 +6,18 @@ import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
 
-import { ODataProperty, ODataEntities, ODataEntity } from '../responses/index';
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataEntityParser } from '../../parsers';
 import { ODataResource } from '../resource';
 import { map } from 'rxjs/operators';
+import { ODataEntity, ODataEntities, ODataProperty } from '../response';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, typeOrPath: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const config = client.callableConfigForType<R>(typeOrPath);
-    const path = config ? config.path : typeOrPath;
-    segments.segment(PathSegmentNames.function, path).setType(typeOrPath);
+  static factory<P, R>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.segment(PathSegmentNames.function, path).setType(type);
     options.clear();
     return new ODataFunctionResource<P, R>(client, segments, options);
   }

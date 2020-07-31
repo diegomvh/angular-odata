@@ -1,5 +1,6 @@
 import { Types } from '../utils';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, ParseOptions } from '../types';
+import { odataType } from '../models';
 
 const NONE_PARSER = {
   deserialize: (value: any, options: ParseOptions) => value,
@@ -32,31 +33,41 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): Type {
-    return this.parser.deserialize(value, options);
-    /*
-    if (this.parser instanceof ODataEntityParser) {
-      return Array.isArray(value) ?
-        (value.map(v => this.parser.deserialize(v, options)) as Partial<Type>[]):
-        (this.parser.deserialize(value, options) as Partial<Type>);
-    } else if (this.parser instanceof ODataEnumParser) {
-      return this.parser.deserialize(value, options);
+  private parse(parser: ODataEntityParser<Type>, value: any, options: ParseOptions): any {
+    const type = odataType(value);
+    if (!Types.isUndefined(type) && parser.type !== type) {
+      parser = parser.children.find(c => c.type === type);
     }
-    */
+    return parser.deserialize(value, options);
+  }
+
+  deserialize(value: any, options: ParseOptions): Type {
+    const parser = this.parser;
+    if (parser instanceof ODataEntityParser) {
+      return Array.isArray(value) ? 
+        value.map(v => this.parse(parser, v, options)) : 
+        this.parse(parser, value, options);
+    }
+    return parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(value: Type, options: ParseOptions): any {
-    return this.parser.serialize(value, options);
-    /*
-    if (this.parser instanceof ODataEntityParser) {
-      return Array.isArray(value) ?
-        value.map(v => this.parser.serialize(v, options)) :
-        this.parser.serialize(value, options);
-    } else if (this.parser instanceof ODataEnumParser) {
-      return this.parser.serialize(value, options);
+  private toJson(parser: ODataEntityParser<Type>, value: any, options: ParseOptions): any {
+    const type = odataType(value);
+    if (!Types.isUndefined(type) && parser.type !== type) {
+      parser = parser.children.find(c => c.type === type);
     }
-    */
+    return parser.serialize(value, options);
+  }
+
+  serialize(value: Type, options: ParseOptions): any {
+    const parser = this.parser;
+    if (parser instanceof ODataEntityParser) {
+      return Array.isArray(value) ?
+        value.map(v => this.toJson(parser, v, options)) :
+        this.toJson(parser, value, options);
+    }
+    return parser.serialize(value, options);
   }
 
   configure(settings: { parserForType: (type: string) => Parser<any> }) {

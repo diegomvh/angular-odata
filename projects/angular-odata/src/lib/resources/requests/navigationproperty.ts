@@ -12,10 +12,9 @@ import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { ODataEntitiesAnnotations, ODataEntityAnnotations } from '../responses';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
-import { ODataEntities, ODataEntity } from '../responses/response';
+import { ODataEntities, ODataEntity } from '../response';
 import { ODataValueResource } from './value';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {

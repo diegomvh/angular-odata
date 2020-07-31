@@ -14,31 +14,57 @@ import {
   ODATA_READLINK, 
   ODATA_EDITLINK, 
   ODATA_FUNCTION_PREFIX, 
-  ODATA_ANNOTATION_PREFIX,
-  odataAnnotations,
-  odataType
-} from '../../types';
+  ODATA_ANNOTATION_PREFIX
+} from '../types';
+
+export const COLLECTION = /Collection\(([\w\.]+)\)/;
+
+//#region Extract odata annotations
+export const odataAnnotations = (value: any) => Object.keys(value)
+  .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(ODATA_FUNCTION_PREFIX))
+  .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
+
+export const odataType = (value: any) => {
+  if (ODATA_TYPE in value) {
+    const type = value[ODATA_TYPE].substr(1) as string;
+    const matches = COLLECTION.exec(type);
+    if (matches)
+      return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1]; 
+    return type;
+  }
+}
+
+export type ODataContext = {
+  metadata?: string;
+  singleton?: string;
+  entitySet?: string;
+  entity?: string;
+}
+export const odataContext = (value: any) => {
+  if (ODATA_CONTEXT in value) {
+    let ctx: ODataContext = {};
+    const str = value[ODATA_CONTEXT] as string;
+    const index = str.lastIndexOf("#");
+    ctx.metadata = str.substr(0, index);
+    const parts = str.substr(index + 1).split("/");
+    ctx.entitySet = parts[0];
+    if (parts[parts.length - 1] === '$entity')
+      ctx.entity = parts[1];
+    return ctx;
+  }
+}
 
 export class ODataAnnotations {
-  constructor(protected value: { [name: string]: any }) { }
-
-  static factory(data: any) {
-    return new ODataAnnotations(odataAnnotations(data));
+  value: {[name: string]: any}
+  constructor(data: { [name: string]: any }) {
+    this.value = odataAnnotations(data);
   }
 
   // Context
   private _context: any;
-  get context(): { set: string, type: string | null } {
+  get context(): ODataContext {
     if (!this._context) {
-      this._context = {};
-      if (ODATA_CONTEXT in this.value) {
-        let value = this.value[ODATA_CONTEXT];
-        let index = value.lastIndexOf("#");
-        let parts = value.substr(index + 1).split("/");
-        let set = parts[0];
-        let type = parts.length > 3 ? parts[1] : null;
-        this._context = { set, type };
-      }
+      this._context = odataContext(this.value) || {};
     }
     return this._context;
   }
@@ -61,7 +87,7 @@ export class ODataAnnotations {
   }
 
   property(name: string) {
-    return ODataPropertyAnnotations.factory(this.properties[name]);
+    return new ODataPropertyAnnotations(this.properties[name]);
   }
 
   // Method
@@ -74,10 +100,6 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   clone(): ODataPropertyAnnotations {
     return new ODataPropertyAnnotations(this.value);
   };
-
-  static factory(data: any) {
-    return new ODataPropertyAnnotations(odataAnnotations(data));
-  }
 
   get type(): string {
     return odataType(this.value);
@@ -142,10 +164,6 @@ export class ODataEntityAnnotations extends ODataAnnotations {
       return this.value[ODATA_MEDIA_CONTENTTYPE] as string;
   }
 
-  static factory(data: any) {
-    return new ODataEntityAnnotations(odataAnnotations(data));
-  }
-
   private _functions: any;
   get functions() {
     if (!this._functions) {
@@ -199,10 +217,6 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
   get skiptoken(): string {
     let match = (this.nextLink || "").match(/\$skiptoken=([\d\w\s]+)/);
     if (match) return match[1];
-  }
-
-  static factory(data: any) {
-    return new ODataEntitiesAnnotations(odataAnnotations(data));
   }
 
   private _functions: any;
