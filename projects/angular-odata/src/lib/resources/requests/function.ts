@@ -13,6 +13,7 @@ import { ODataEntityParser } from '../../parsers';
 import { ODataResource } from '../resource';
 import { map } from 'rxjs/operators';
 import { ODataEntity, ODataEntities, ODataProperty } from '../response';
+import { ODataCallableConfig } from '../../models';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -26,6 +27,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return super.clone<ODataFunctionResource<P, R>>();
   }
   //#endregion
+
+  config() {
+    return super.config() as ODataCallableConfig<R>;
+  }
 
   //#region Mutable Resource
   get segment() {

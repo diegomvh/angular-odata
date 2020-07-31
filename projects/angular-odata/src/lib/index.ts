@@ -1,6 +1,7 @@
 export * from './types';
 export * from './client';
 export * from './module';
+export * from './service';
 
 // Utils
 export * from './utils/index';
@@ -14,5 +15,3 @@ export * from './models/index';
 // Resources
 export * from './resources/index';
 
-// Services
-export * from './services/index';

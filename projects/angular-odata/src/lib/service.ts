@@ -1,17 +1,14 @@
-import { ODataEntitySetResource, ODataEntityResource } from '../resources';
-import { ODataClient } from "../client";
-import { EntityKey } from '../types';
-import { ODataEntityConfig, ODataModel, ODataCollection } from '../models';
+import { ODataEntitySetResource, ODataEntityResource } from './resources';
+import { ODataClient } from "./client";
+import { EntityKey } from './types';
+import { ODataEntityConfig, ODataModel, ODataCollection } from './models';
+import { Injectable } from '@angular/core';
 
-export class ODataBaseService<T> {
-  static path: string = "";
-  static type: string = "";
-  static entityType: string = "";
+export class ODataService<T> {
+  constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
 
-  constructor(protected client: ODataClient) { }
   public entities(): ODataEntitySetResource<T> {
-    let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.entitySet<T>(Ctor.path, Ctor.entityType);
+    return this.client.entitySet<T>(this.name, this.entityType);
   }
 
   public entity(key?: EntityKey<T>): ODataEntityResource<T> {
@@ -40,19 +37,26 @@ export class ODataBaseService<T> {
 
   // Service Config 
   public config() {
-    let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.configForType(Ctor.type);
+    return this.client.configForType(this.entityType);
   }
 
   // Service Config 
   public serviceConfig() {
-    let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.serviceConfigForType(Ctor.type);
+    return this.config().serviceConfigForName(this.name);
   }
 
   // Entity Config 
   public entityConfig() {
-    let Ctor = <typeof ODataBaseService>this.constructor;
-    return this.client.entityConfigForType(Ctor.entityType) as ODataEntityConfig<T>;
+    return this.config().entityConfigForType(this.entityType) as ODataEntityConfig<T>;
+  }
+}
+
+@Injectable()
+export class ODataServiceFactory {
+  constructor(protected client: ODataClient) { }
+
+  create<T>(name: string, entityType?: string): ODataService<T> {
+    return new class extends ODataService<T> {
+    }(this.client, name, entityType);
   }
 }

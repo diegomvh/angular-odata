@@ -16,6 +16,7 @@ import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-opt
 import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntities, ODataEntity } from '../response';
 import { ODataValueResource } from './value';
+import { ODataEntityConfig } from '../../models';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -29,6 +30,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return super.clone<ODataNavigationPropertyResource<T>>();
   }
   //#endregion
+  
+  config() {
+    return super.config() as ODataEntityConfig<T>;
+  }
 
   //#region Inmutable Resource
   value() {

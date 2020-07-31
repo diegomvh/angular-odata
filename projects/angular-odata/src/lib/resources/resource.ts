@@ -57,7 +57,8 @@ export class ODataResource<Type> {
 
   // Proxy to client
   config() {
-    return this.client.entityConfigForType<Type>(this.type());
+    let config = this.client.configFor(this);
+    return config.enumConfigForType<Type>(this.type()) || config.entityConfigForType<Type>(this.type()) || config.callableConfigForType<Type>(this.type());
   }
 
   pathAndParams(): [string, PlainObject] {

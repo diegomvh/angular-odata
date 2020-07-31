@@ -14,6 +14,7 @@ import { ODataFunctionResource } from './function';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntity } from '../response';
+import { ODataEntityConfig } from '../../models';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
@@ -27,6 +28,10 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return super.clone<ODataSingletonResource<T>>();
   }
   //#endregion
+
+  config() {
+    return super.config() as ODataEntityConfig<T>;
+  }
 
   //#region Inmutable Resource
   navigationProperty<N>(name: string) {

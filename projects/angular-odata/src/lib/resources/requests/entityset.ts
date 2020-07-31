@@ -16,6 +16,7 @@ import { expand, concatMap, toArray } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from '../http-options';
 import { ODataEntity, ODataEntities } from '../response';
+import { ODataEntityConfig } from '../../models';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -29,6 +30,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return super.clone<ODataEntitySetResource<T>>();
   }
   //#endregion
+
+  config() {
+    return super.config() as ODataEntityConfig<T>;
+  }
 
   //#region Inmutable Resource
   entity(key: EntityKey<T>) {

@@ -131,7 +131,7 @@ export class ODataConfig {
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
     }
-    let config = this.enumConfigForType(type) || this.entityConfigForType(type) || this.callableConfigForType(type);
+    let config = this.enumConfigForType<T>(type) || this.entityConfigForType<T>(type) || this.callableConfigForType<T>(type);
     if (!Types.isUndefined(config))
       return config.parser as Parser<T>;
   }

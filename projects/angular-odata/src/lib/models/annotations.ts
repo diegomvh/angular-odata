@@ -157,7 +157,7 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
 
   get count(): number {
     if (ODATA_COUNT in this.value)
-      return this.value[ODATA_COUNT] as number;
+      return Number(this.value[ODATA_COUNT]);
   }
 
   get nextLink(): string {

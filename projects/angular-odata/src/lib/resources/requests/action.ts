@@ -11,6 +11,7 @@ import { EntityKey } from '../../types';
 import { ODataEntityParser } from '../../parsers';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { map } from 'rxjs/operators';
+import { ODataCallableConfig } from '../../models';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -24,6 +25,10 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return super.clone<ODataActionResource<P, R>>();
   }
   //#endregion
+
+  config() {
+    return super.config() as ODataCallableConfig<R>;
+  }
 
   //#region Mutable Resource
   get segment() {

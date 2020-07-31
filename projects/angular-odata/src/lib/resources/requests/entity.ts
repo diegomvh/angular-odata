@@ -18,6 +18,7 @@ import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntity } from '../response';
 import { map, catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ODataEntityConfig } from '../../models';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
@@ -30,6 +31,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return super.clone<ODataEntityResource<T>>();
   }
   //#endregion
+
+  config() {
+    return super.config() as ODataEntityConfig<T>;
+  }
 
   //#region Inmutable Resource
   key(key: EntityKey<T>) {

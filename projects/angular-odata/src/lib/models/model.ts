@@ -20,6 +20,7 @@ import { ODataFieldParser } from '../parsers/index';
 import { Types } from '../utils';
 import { ODataAnnotations, ODataEntityAnnotations, ODataEntitiesAnnotations } from './annotations';
 import { entityAttributes } from '../types';
+import { ODataEntityConfig } from './config';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;
@@ -42,7 +43,7 @@ export class ODataModel<T> {
     let first = !this._resource;
     this._resource = resource;
     if (first) {
-      this._resource.config().fields()
+      (this._resource.config() as ODataEntityConfig<T>).fields()
         .filter(field => field.navigation)
         .forEach(field => {
           Object.defineProperty(this, field.name, {
@@ -65,7 +66,7 @@ export class ODataModel<T> {
   }
 
   protected parse(entity: T) {
-    let fields = this._resource ? this._resource.config().fields() : [];
+    let fields = this._resource ? (this._resource.config() as ODataEntityConfig<T>).fields() : [];
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes

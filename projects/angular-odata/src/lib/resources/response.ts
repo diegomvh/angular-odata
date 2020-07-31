@@ -45,7 +45,7 @@ export class ODataResponse<T> {
   }
   
   private deserialize(type: string, value: any): any {
-    const parser = this.config.parserForType<T>(type);
+    const parser = !Types.isNullOrUndefined(type) ? this.config.parserForType<T>(type) : undefined;
     if (!Types.isUndefined(parser) && 'deserialize' in parser)
       return Array.isArray(value) ? 
         value.map(v => this.parse(parser, v)) : 
