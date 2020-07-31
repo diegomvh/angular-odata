@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { 
-  HttpOptions
+  HttpOptions, ODataEntity
 } from '../resources';
 import { EntityKey } from '../types';
 import { ODataClient } from '../client';
@@ -17,32 +17,19 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
   constructor(protected client: ODataClient) { super(client); }
 
   // Entity Actions
-  public all(options?: HttpOptions): Observable<T[]> {
+  public create(entity: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
     return this.entities()
-      .all(options);
+      .post(entity, options);
   }
 
-  public fetch(key: EntityKey<T>, options?: HttpOptions): Observable<T> {
-    return this.entity(key)
-      .fetch(options);
-  }
-
-  public create(entity: Partial<T>, options?: HttpOptions): Observable<T> {
-    return this.entities()
-      .post(entity, options)
-      .pipe(map(({entity}) => entity));
-  }
-
-  public update(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
+  public update(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
     return this.entity(entity)
-      .put(entity, options)
-      .pipe(map(({entity}) => entity));
+      .put(entity, options);
   }
 
-  public assign(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
+  public assign(entity: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
     return this.entity(entity as EntityKey<T>)
-      .patch(entity, options)
-      .pipe(map(({entity}) => entity));
+      .patch(entity, options);
   }
 
   public destroy(entity: T, options?: HttpOptions & { etag?: string }) {
@@ -51,8 +38,8 @@ export class ODataEntityService<T> extends ODataBaseService<T> {
   }
 
   // Shortcuts
-  public fetchOrCreate(entity: Partial<T>, options?: HttpOptions): Observable<T> {
-    return this.fetch(entity as EntityKey<T>, options)
+  public getOrCreate(entity: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
+    return this.entity(entity as EntityKey<T>).get(options)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)
           return this.create(entity as T, options);
