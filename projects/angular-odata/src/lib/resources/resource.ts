@@ -136,8 +136,15 @@ export class ODataResource<Type> {
         'text' :
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
     
-    const body = !Types.isNullOrUndefined(options.attrs) ? this.serialize(options.attrs) : null;
-    const etag = options.etag || !Types.isNullOrUndefined(options.attrs)? odataEtag(options.attrs) : undefined;
+    let body = null;
+    if (!Types.isNullOrUndefined(options.attrs)) {
+      body = this.serialize(options.attrs);
+    }
+    let etag = options.etag;
+    if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
+      etag = odataEtag(options.attrs);
+    }
+    console.log(etag);
     const res$ = this.client.request(method, this, {
       body,
       etag,
