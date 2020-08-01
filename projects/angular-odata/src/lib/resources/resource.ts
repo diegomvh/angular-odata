@@ -144,7 +144,6 @@ export class ODataResource<Type> {
     if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
       etag = odataEtag(options.attrs);
     }
-    console.log(etag);
     const res$ = this.client.request(method, this, {
       body,
       etag,
