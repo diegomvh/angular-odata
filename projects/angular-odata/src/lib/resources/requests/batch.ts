@@ -13,20 +13,20 @@ const XSSI_PREFIX = /^\)\]\}',?\n/;
 
 // From https://github.com/adamhalasz/uniqid
 var glast: number;
-const now = () => {
+function now() {
   let time = Date.now();
   let last = glast || time;
   return glast = time > last ? time : last + 1;
 }
-const uniqid = (prefix?: string, suffix?: string): string => (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : '');
+function uniqid(prefix?: string, suffix?: string): string { return (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : ''); }
 
-const getHeaderValue = (header: string): string => {
+function getHeaderValue(header: string): string {
   let res: string = header.split(';')[0].trim();
   res = res.split(':')[1].trim();
   return res;
 }
 
-const getBoundaryDelimiter = (contentType: string): string => {
+function getBoundaryDelimiter(contentType: string): string {
   const contentTypeParts: string[] = contentType.split(';');
   if (contentTypeParts.length === 2) {
     const boundary: string = contentType.split(';')[1].trim();
@@ -37,7 +37,7 @@ const getBoundaryDelimiter = (contentType: string): string => {
   }
 }
 
-const getBoundaryEnd = (boundaryDelimiter: string): string => {
+function getBoundaryEnd(boundaryDelimiter: string): string {
   if (!boundaryDelimiter.length) {
     return '';
   }

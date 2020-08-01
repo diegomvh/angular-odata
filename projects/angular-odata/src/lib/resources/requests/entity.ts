@@ -185,22 +185,39 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  save(attrs: Partial<T>, options?: HttpOptions & {etag?: string}) {
-    return Types.isUndefined(this.segment.key()) ? this.post(attrs, options) : this.put(attrs, options);
-  }
-
   fetch(options?: HttpOptions): Observable<T> {
     return Types.isUndefined(this.segment.key()) ? this.get(options).pipe(map(({entity}) => entity)) : empty();
+  }
+
+  create(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
+    return this.post(attrs, options)
+      .pipe(map(({entity}) => entity))
+  }
+
+  update(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
+    return Types.isUndefined(this.segment.key()) ? this.put(attrs, options).pipe(map(({entity}) => entity)) : empty();
+  }
+
+  assign(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
+    return Types.isUndefined(this.segment.key()) ? this.patch(attrs, options).pipe(map(({entity}) => entity)) : empty();
+  }
+
+  destroy(options?: HttpOptions & { etag?: string }) {
+    return Types.isUndefined(this.segment.key()) ? this.delete(options).pipe(map(({entity}) => entity)) : empty();
   }
 
   fetchOrCreate(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
     return this.fetch(options)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)
-          return this.post(attrs, options).pipe(map(({entity}) => entity));
+          return this.create(attrs, options);
         else
           return throwError(error);
       }));
+  }
+
+  save(attrs: Partial<T>, options?: HttpOptions & {etag?: string}) {
+    return Types.isUndefined(this.segment.key()) ? this.post(attrs, options) : this.put(attrs, options);
   }
   //#endregion
 }

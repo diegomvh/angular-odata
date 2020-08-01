@@ -6,7 +6,8 @@ import {
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
   QUERY_SEPARATOR,
-  parseQuery
+  parseQuery,
+  odataEtag
 } from '../types';
 import { ODataClient } from '../client';
 import { Types } from '../utils/index';
@@ -136,9 +137,10 @@ export class ODataResource<Type> {
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
     
     const body = !Types.isNullOrUndefined(options.attrs) ? this.serialize(options.attrs) : null;
+    const etag = options.etag || !Types.isNullOrUndefined(options.attrs)? odataEtag(options.attrs) : undefined;
     const res$ = this.client.request(method, this, {
       body,
-      etag: options.etag,
+      etag,
       config: options.config,
       headers: options.headers,
       observe: 'response',

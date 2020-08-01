@@ -12,7 +12,7 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
-import { expand, concatMap, toArray } from 'rxjs/operators';
+import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from '../http-options';
 import { ODataEntity, ODataEntities } from '../response';
@@ -221,6 +221,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
         expand(({annotations})  => (annotations.skip || annotations.skiptoken) ? fetch(annotations) : empty()),
         concatMap(({entities}) => entities),
         toArray());
+  }
+
+  add(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
+    return this.post(attrs, options)
+      .pipe(map(({entity}) => entity))
   }
   //#endregion
 }
