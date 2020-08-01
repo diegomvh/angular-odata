@@ -12,9 +12,9 @@ import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntity } from '../response';
-import { ODataEntityConfig } from '../../models';
+import { ODataEntityConfig } from '../../models/config';
+import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory

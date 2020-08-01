@@ -35,8 +35,7 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   private parse(parser: ODataEntityParser<Type>, value: any, options: ParseOptions): any {
     const type = Types.isObject(value) ? odataType(value) : undefined;
     if (!Types.isUndefined(type) && parser.type !== type) {
-      //TODO: full search
-      parser = parser.children.find(c => c.type === type);
+      return parser.findParser(c => c.type === type).deserialize(value, options);
     }
     return parser.deserialize(value, options);
   }
@@ -55,7 +54,7 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   private toJson(parser: ODataEntityParser<Type>, value: any, options: ParseOptions): any {
     const type = Types.isObject(value) ? odataType(value) : undefined;
     if (!Types.isUndefined(type) && parser.type !== type) {
-      parser = parser.children.find(c => c.type === type);
+      return parser.findParser(c => c.type === type).serialize(value, options);
     }
     return parser.serialize(value, options);
   }
@@ -185,5 +184,15 @@ export class ODataEntityParser<Type> implements Parser<Type> {
 
   isComplexType() {
     return this.keys().length === 0;
+  }
+  
+  find(predicate: (p: ODataEntityParser<any>) => boolean): ODataEntityParser<any> {
+    if (predicate(this))
+      return this;
+    return this.children.find(c => c.find(predicate));
+  }
+
+  findParser(predicate: (p: ODataEntityParser<any>) => boolean): Parser<any> {
+    return this.find(predicate) || NONE_PARSER;
   }
 }

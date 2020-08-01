@@ -9,12 +9,6 @@ import {
   parseQuery
 } from '../types';
 import { ODataClient } from '../client';
-import {
-  ODataModel,
-  ODataCollection,
-  ODataEntityAnnotations,
-  ODataEntitiesAnnotations
-} from '../models/index';
 import { Types } from '../utils/index';
 
 import { PlainObject } from './builder';
@@ -24,6 +18,9 @@ import {
 } from './query-options';
 import { HttpOptions } from './http-options';
 import { ODataResponse } from './response';
+import { ODataCollection } from '../models/collection';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../models/annotations';
+import { ODataModel } from '../models/model';
 
 export class ODataResource<Type> {
   // VARIABLES

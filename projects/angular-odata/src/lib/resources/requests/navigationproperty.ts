@@ -13,10 +13,10 @@ import { ODataPropertyResource } from './property';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntities, ODataEntity } from '../response';
 import { ODataValueResource } from './value';
-import { ODataEntityConfig } from '../../models';
+import { ODataEntityConfig } from '../../models/config';
+import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory

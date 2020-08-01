@@ -7,9 +7,9 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from '../http-options';
-import { ODataEntityParser } from '../../parsers/index';
 import { ODataProperty, ODataEntities, ODataEntity } from '../response';
 import { map } from 'rxjs/operators';
+import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory

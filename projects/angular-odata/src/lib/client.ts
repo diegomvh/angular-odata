@@ -20,10 +20,12 @@ import {
 } from './resources/index';
 import { ODataSettings } from './models/settings';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
-import { ODataModel, ODataCollection, ODataEntityConfig, ODataServiceConfig, ODataConfig, ODataCallableConfig } from './models/index';
 import { Types } from './utils/index';
 import { ODataResponse } from './resources/response';
 import { map } from 'rxjs/operators';
+import { ODataConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './models/config';
+import { ODataModel } from './models/model';
+import { ODataCollection } from './models/collection';
 
 @Injectable()
 export class ODataClient {

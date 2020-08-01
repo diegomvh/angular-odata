@@ -17,7 +17,8 @@ import {
   odataAnnotations,
   odataContext,
   ODataContext,
-  odataType
+  odataType,
+  odataEtag
 } from '../types';
 
 export class ODataAnnotations {
@@ -91,8 +92,7 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   }
 
   get etag() {
-    if (ODATA_ETAG in this.value)
-      return this.value[ODATA_ETAG] as string;
+    return odataEtag(this.value)
   }
 
   get mediaEtag(): string {

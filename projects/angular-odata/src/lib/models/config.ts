@@ -1,8 +1,11 @@
-import { ODataEntityParser, ODataFieldParser, ODataEnumParser, EDM_PARSERS, ODataCallableParser } from '../parsers/index';
 import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, CallableConfig } from '../types';
 import { Types } from '../utils';
 import { ODataModel } from './model';
 import { ODataCollection } from './collection';
+import { ODataEnumParser } from '../parsers/enum';
+import { ODataEntityParser, ODataFieldParser } from '../parsers/entity';
+import { ODataCallableParser } from '../parsers/callable';
+import { EDM_PARSERS } from '../parsers/edm';
 
 export class ODataConfig {
   name: string;

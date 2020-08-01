@@ -14,11 +14,11 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { HttpOptions, HttpEntityOptions } from '../http-options';
 import { ODataValueResource } from './value';
-import { ODataEntityParser } from '../../parsers/index';
 import { ODataEntity } from '../response';
 import { map, catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ODataEntityConfig } from '../../models';
+import { ODataEntityConfig } from '../../models/config';
+import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory

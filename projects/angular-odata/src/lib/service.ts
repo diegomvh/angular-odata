@@ -1,8 +1,10 @@
 import { ODataEntitySetResource, ODataEntityResource } from './resources';
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
-import { ODataEntityConfig, ODataModel, ODataCollection } from './models';
 import { Injectable } from '@angular/core';
+import { ODataCollection } from './models/collection';
+import { ODataModel } from './models/model';
+import { ODataEntityConfig } from './models/config';
 
 export class ODataService<T> {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }

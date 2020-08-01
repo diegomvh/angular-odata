@@ -92,6 +92,12 @@ export const entityAttributes = (value: Object) => Object.keys(value)
   .filter(key => key.indexOf(ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(ODATA_FUNCTION_PREFIX))
   .reduce((acc, key) => Object.assign(acc, {[key]: value[key]}), {});
 
+export const odataEtag = (value: Object) => {
+  if (ODATA_ETAG in value) {
+    return value[ODATA_ETAG] as string;
+  }
+}
+
 export const odataType = (value: Object) => {
   if (ODATA_TYPE in value) {
     const type = value[ODATA_TYPE].substr(1) as string;

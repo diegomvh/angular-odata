@@ -8,10 +8,10 @@ import { ODataProperty, ODataEntities, ODataEntity } from '../response';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
-import { ODataEntityParser } from '../../parsers';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { map } from 'rxjs/operators';
-import { ODataCallableConfig } from '../../models';
+import { ODataCallableConfig } from '../../models/config';
+import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory

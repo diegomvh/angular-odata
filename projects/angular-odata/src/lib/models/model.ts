@@ -13,14 +13,13 @@ import { ODataCollection } from './collection';
 import { ODataNavigationPropertyResource } from '../resources/requests/navigationproperty';
 import {
   HttpOptions,
-  HttpPropertyOptions,
   HttpEntityOptions
 } from '../resources/http-options';
-import { ODataFieldParser } from '../parsers/index';
 import { Types } from '../utils';
 import { ODataAnnotations, ODataEntityAnnotations, ODataEntitiesAnnotations } from './annotations';
 import { entityAttributes } from '../types';
 import { ODataEntityConfig } from './config';
+import { ODataFieldParser } from '../parsers/entity';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;

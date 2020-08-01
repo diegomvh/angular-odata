@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../types';
 import { HttpOptions } from '../http-options';
-import { ODataMetadata } from '../../models/index';
+import { ODataMetadata } from '../../models/metadata';
 
 export class ODataMetadataResource extends ODataResource<any> {
   //#region Factory

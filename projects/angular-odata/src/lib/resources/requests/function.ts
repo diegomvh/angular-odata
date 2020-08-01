@@ -9,11 +9,11 @@ import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOption
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
-import { ODataEntityParser } from '../../parsers';
 import { ODataResource } from '../resource';
 import { map } from 'rxjs/operators';
 import { ODataEntity, ODataEntities, ODataProperty } from '../response';
-import { ODataCallableConfig } from '../../models';
+import { ODataCallableConfig } from '../../models/config';
+import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory

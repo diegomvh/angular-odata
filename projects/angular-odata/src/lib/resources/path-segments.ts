@@ -34,7 +34,7 @@ export type ODataSegment = {
   options: PlainObject;
 }
 
-const pathSegmentsBuilder = (segment: ODataSegment): string => {
+function pathSegmentsBuilder(segment: ODataSegment): string {
   switch (segment.name) {
     case PathSegmentNames.function:
       let parameters = segment.options[SegmentOptionNames.parameters];

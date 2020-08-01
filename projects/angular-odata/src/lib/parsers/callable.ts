@@ -2,8 +2,8 @@ import { Types } from '../utils';
 import { Parser, ParseOptions, Parameter, CallableConfig } from '../types';
 
 const NONE_PARSER = {
-  deserialize: (value: any, options: ParseOptions) => value,
-  serialize: (value: any, options: ParseOptions) => value
+  deserialize(value: any, options: ParseOptions) {return value},
+  serialize(value: any, options: ParseOptions) {return value} 
 } as Parser<any>;
 
 export class ODataParameterParser<Type> implements Parser<Type> {

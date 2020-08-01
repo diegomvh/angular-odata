@@ -1,10 +1,10 @@
 import { HttpHeaders } from '@angular/common/http';
 import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../models/annotations';
 import { VALUE, Parser, odataType } from '../types';
-import { Types } from '../utils';
-import { ODataConfig } from '../models';
+import { Types } from '../utils/types';
+import { ODataConfig } from '../models/config';
 import { ODataResource } from './resource';
-import { ODataEntityParser } from '../parsers';
+import { ODataEntityParser } from '../parsers/entity';
 
 export type ODataEntity<T> = {entity: T, annotations: ODataEntityAnnotations};
 export type ODataEntities<T> = {entities: T[], annotations: ODataEntitiesAnnotations};
@@ -37,8 +37,7 @@ export class ODataResponse<T> {
   private parse(parser: Parser<T>, value: any): any {
     const type = Types.isObject(value) ? odataType(value) : undefined;
     if (!Types.isUndefined(type) && parser instanceof ODataEntityParser && parser.type !== type) {
-      //TODO: full search
-      parser = parser.children.find(c => c.type === type);
+      parser = parser.findParser(c => c.type === type);
     }
     return parser.deserialize(value, {
       stringAsEnum: this.config.stringAsEnum, 
