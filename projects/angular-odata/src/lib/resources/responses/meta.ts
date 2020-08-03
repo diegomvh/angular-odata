@@ -1,4 +1,3 @@
-import { HttpHeaders } from '@angular/common/http';
 import { 
   ODATA_COUNT, 
   ODATA_NEXTLINK, 
@@ -18,28 +17,22 @@ import {
   odataContext,
   ODataContext,
   odataType,
-  odataEtag,
-  ParseOptions
+  odataEtag
 } from '../../types';
+import { ResponseOptions } from './types';
 
 export class ODataMeta {
   annotations: {[name: string]: any};
-  headers: HttpHeaders;
-  constructor(data: { [name: string]: any }, headers?: HttpHeaders) {
-    this.annotations = odataAnnotations(data);
-    this.headers = headers;
-    console.log(this.headers.keys());
-    console.log(this.headers.get('OData-Version'));
-    console.log(this.headers.get('ETag'));
-    console.log(this.headers.get('Content-Type'));
-  }
-
-  options(): ParseOptions {
-    //TODO: From Headers
-    return {
-      //version: this.version,
-      //metadata: this.metadata,
-      //ieee754Compatible: this.ieee754Compatible
+  options: ResponseOptions;
+  constructor(data: { [name: string]: any }, options?: ResponseOptions) {
+    this.options = options || {} as ResponseOptions;
+    switch(this.options.version) {
+      case "2.0":
+      case "3.0":
+        this.annotations = data;
+        break;
+      default:
+        this.annotations = odataAnnotations(data);
     }
   }
 
@@ -177,7 +170,11 @@ export class ODataEntitiesMeta extends ODataMeta {
   }
 
   get nextLink(): string {
-    if (ODATA_NEXTLINK in this.annotations)
+    if (this.options.version === "2.0" && '__next' in this.annotations)
+      return decodeURIComponent(this.annotations['__next'] as string);
+    else if (this.options.version === "3.0" && 'odata.nextLink' in this.annotations)
+      return decodeURIComponent(this.annotations['odata.nextLink'] as string);
+    else if (ODATA_NEXTLINK in this.annotations)
       return decodeURIComponent(this.annotations[ODATA_NEXTLINK] as string);
   }
 
@@ -197,7 +194,7 @@ export class ODataEntitiesMeta extends ODataMeta {
   }
 
   get skiptoken(): string {
-    let match = (this.nextLink || "").match(/[&?]{1}\$skiptoken=([\d\w\s]+)/);
+    let match = (this.nextLink || "").match(/[&?]{1}\$skiptoken=([\d\w\s']+)/);
     if (match) return match[1];
   }
 
