@@ -1,15 +1,16 @@
-import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, CallableConfig } from '../types';
-import { Types } from '../utils';
-import { ODataModel } from './model';
-import { ODataCollection } from './collection';
-import { ODataEnumParser } from '../parsers/enum';
-import { ODataEntityParser, ODataFieldParser } from '../parsers/entity';
-import { ODataCallableParser } from '../parsers/callable';
-import { EDM_PARSERS } from '../parsers/edm';
+import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, CallableConfig, ParseOptions } from './types';
+import { Types } from './utils';
+import { ODataModel } from './models/model';
+import { ODataCollection } from './models/collection';
+import { ODataEnumParser } from './parsers/enum';
+import { ODataEntityParser, ODataFieldParser } from './parsers/entity';
+import { ODataCallableParser } from './parsers/callable';
+import { EDM_PARSERS } from './parsers/edm';
 
 export class ODataConfig {
   name: string;
   serviceRootUrl: string;
+  version: string;
   params: { [param: string]: string | string[] };
   headers: { [param: string]: string | string[] };
   metadataUrl?: string;
@@ -28,6 +29,7 @@ export class ODataConfig {
     if (!this.serviceRootUrl.endsWith('/'))
       this.serviceRootUrl += '/';
     this.name = config.name;
+    this.version = config.version;
     this.params = config.params || {};
     this.headers = config.headers || {};
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;
@@ -45,6 +47,14 @@ export class ODataConfig {
     this.schemas.forEach(schema => {
       schema.configure({ parserForType: (type: string) => this.parserForType(type) });
     });
+  }
+
+  options(): ParseOptions {
+    return {
+      version: this.version,
+      stringAsEnum: this.stringAsEnum,
+      ieee754Compatible: this.ieee754Compatible
+    }
   }
 
   //#region Find Config for Type

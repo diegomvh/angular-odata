@@ -168,6 +168,7 @@ export type Field = {
 }
 
 export type ParseOptions = {
+  version?: string;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
 }
@@ -180,6 +181,7 @@ export type Parser<T> = {
 export type Configuration = {
   serviceRootUrl: string,
   name?: string,
+  version?: string,
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean,

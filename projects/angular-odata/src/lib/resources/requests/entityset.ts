@@ -16,7 +16,7 @@ import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
 import { ODataEntity, ODataEntities } from '../responses/index';
-import { ODataEntityConfig } from '../../models/config';
+import { ODataEntityConfig } from '../../config';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory

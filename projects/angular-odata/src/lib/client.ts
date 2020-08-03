@@ -6,11 +6,6 @@ import { map } from 'rxjs/operators';
 import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
 import { Types } from './utils/index';
 import { 
-  ODataSettings,
-  ODataConfig,
-  ODataEntityConfig,
-  ODataCallableConfig,
-  ODataServiceConfig,
   ODataModel,
   ODataCollection
 } from './models/index';
@@ -31,6 +26,8 @@ import {
   ODataQueryOptions,
   ODataResponse
 } from './resources/index';
+import { ODataConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './config';
+import { ODataSettings } from './settings';
 
 @Injectable()
 export class ODataClient {

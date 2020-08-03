@@ -12,7 +12,7 @@ import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { HttpOptions, HttpEntityOptions } from './options';
-import { ODataEntityConfig } from '../../models/config';
+import { ODataEntityConfig } from '../../config';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntity } from '../responses/index';
 

@@ -4,7 +4,7 @@ import { EntityKey } from './types';
 import { Injectable } from '@angular/core';
 import { ODataCollection } from './models/collection';
 import { ODataModel } from './models/model';
-import { ODataEntityConfig } from './models/config';
+import { ODataEntityConfig } from './config';
 
 export class ODataService<T> {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }

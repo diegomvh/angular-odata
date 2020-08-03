@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 
-import { ODataSettings } from './models/settings';
+import { ODataSettings } from './settings';
 import { ODataClient } from './client';
 import { Configuration, ODATA_CONFIGURATIONS } from './types';
 import { ODataServiceFactory } from './service';

@@ -20,11 +20,9 @@ import {
 import { HttpOptions } from './requests/index';
 import { 
   ODataModel,
-  ODataCollection,
-  ODataEntityAnnotations, 
-  ODataEntitiesAnnotations
+  ODataCollection
 } from '../models/index';
-import { ODataResponse } from './responses';
+import { ODataResponse, ODataEntityOptions, ODataEntitiesOptions } from './responses';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -78,17 +76,17 @@ export class ODataResource<Type> {
     let parser = config.parserForType<Type>(this.type());
     if (!Types.isUndefined(parser) && 'serialize' in parser)
       return Array.isArray(value) ? 
-        value.map(e => parser.serialize(e, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible})) : 
-        parser.serialize(value, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible});
+        value.map(e => parser.serialize(e, config.options())) : 
+        parser.serialize(value, config.options());
     return value;
   }
 
-  model<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityAnnotations): M {
+  model<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityOptions): M {
     let Model = this.client.modelForType(this.type());
     return new Model(entity, {resource: this, meta}) as M;
   }
 
-  collection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesAnnotations): C {
+  collection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesOptions): C {
     let Collection = this.client.collectionForType(this.type());
     return new Collection(entities, {resource: this, meta}) as C;
   }

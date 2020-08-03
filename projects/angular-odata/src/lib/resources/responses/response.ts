@@ -1,8 +1,8 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../../models/annotations';
+import { ODataEntityOptions, ODataEntitiesOptions, ODataPropertyOptions } from './options';
 import { VALUE, Parser, odataType } from '../../types';
 import { Types } from '../../utils/types';
-import { ODataConfig } from '../../models/config';
+import { ODataConfig } from '../../config';
 import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
@@ -36,9 +36,7 @@ export class ODataResponse<T> {
     if (!Types.isUndefined(type) && parser instanceof ODataEntityParser && parser.type !== type) {
       parser = parser.findParser(c => c.type === type);
     }
-    return parser.deserialize(value, {
-      stringAsEnum: this.config.stringAsEnum, 
-      ieee754Compatible: this.config.ieee754Compatible});
+    return parser.deserialize(value, this.config.options());
   }
   
   private deserialize(type: string, value: any): any {
@@ -52,7 +50,7 @@ export class ODataResponse<T> {
 
   entity(): ODataEntity<T> {
     if (this.body) {
-      const annotations = new ODataEntityAnnotations(this.body)
+      const annotations = new ODataEntityOptions(this.body)
       const entity = this.deserialize(this.resource.type(), this.body) as T;
       return { entity, meta: annotations };
     }
@@ -60,7 +58,7 @@ export class ODataResponse<T> {
 
   entities(): ODataEntities<T> { 
     if (this.body) {
-      const annotations = new ODataEntitiesAnnotations(this.body)
+      const annotations = new ODataEntitiesOptions(this.body)
       const entities = this.deserialize(this.resource.type(), this.body[VALUE]) as T[];
       return { entities, meta: annotations };
     }
@@ -68,7 +66,7 @@ export class ODataResponse<T> {
 
   property(): ODataProperty<T> {
     if (this.body) {
-      const annotations = new ODataPropertyAnnotations(this.body)
+      const annotations = new ODataPropertyOptions(this.body)
       const property = this.deserialize(
         this.resource.type(), 
         VALUE in this.body? this.body[VALUE] : this.body) as T;

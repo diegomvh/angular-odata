@@ -1,8 +1,8 @@
-import { Configuration, Parser } from '../types';
+import { Configuration, Parser } from './types';
 import { ODataConfig } from './config';
-import { Types } from '../utils';
-import { ODataCollection } from './collection';
-import { ODataModel } from './model';
+import { Types } from './utils';
+import { ODataCollection } from './models/collection';
+import { ODataModel } from './models/model';
 
 export class ODataSettings {
   configs?: Array<ODataConfig>;

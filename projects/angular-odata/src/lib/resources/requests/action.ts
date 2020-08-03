@@ -10,7 +10,7 @@ import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { map } from 'rxjs/operators';
-import { ODataCallableConfig } from '../../models/config';
+import { ODataCallableConfig } from '../../config';
 import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {

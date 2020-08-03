@@ -12,7 +12,7 @@ import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../buil
 import { ODataResource } from '../resource';
 import { map } from 'rxjs/operators';
 import { ODataEntity, ODataEntities, ODataProperty } from '../responses/index';
-import { ODataCallableConfig } from '../../models/config';
+import { ODataCallableConfig } from '../../config';
 import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
