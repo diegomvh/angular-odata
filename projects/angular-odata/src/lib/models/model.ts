@@ -16,7 +16,7 @@ import {
   HttpEntityOptions
 } from '../resources/requests/options';
 import { Types } from '../utils';
-import { ODataOptions, ODataEntityOptions, ODataEntitiesOptions } from '../resources/responses/options';
+import { ODataMeta, ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
 import { entityAttributes } from '../types';
 import { ODataEntityConfig } from '../config';
 import { ODataFieldParser } from '../parsers/entity';
@@ -24,13 +24,13 @@ import { ODataFieldParser } from '../parsers/entity';
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;
   protected _entity: T;
-  protected _meta: ODataOptions;
+  protected _meta: ODataMeta;
   protected _relations: { [name: string]: { 
     rel: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
     field: ODataFieldParser<any>
   }}
 
-  constructor(entity?: any, options: { resource?: ODataResource<T>, meta?: ODataOptions } = {}) {
+  constructor(entity?: any, options: { resource?: ODataResource<T>, meta?: ODataMeta } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((entity || {}), options.meta);
@@ -84,17 +84,17 @@ export class ODataModel<T> {
         if (value) {
           let prop = (this._resource as ODataEntityResource<T>).property<any>(f.name);
           value = f.collection ? 
-            prop.collection(value, new ODataEntitiesOptions(this._meta.property(f.name))) : 
-            prop.model(value, new ODataEntityOptions(value));
+            prop.collection(value, new ODataEntitiesMeta(this._meta.property(f.name))) : 
+            prop.model(value, new ODataEntityMeta(value));
         }
         return Object.assign(acc, { [k]: value });
       }, {}));
     return attrs;
   }
 
-  protected populate(entity: any, meta?: ODataOptions) {
+  protected populate(entity: any, meta?: ODataMeta) {
     this._entity = entityAttributes(entity) as T;
-    this._meta = meta || new ODataEntityOptions(entity);
+    this._meta = meta || new ODataEntityMeta(entity);
     this._relations = {};
     Object.assign(this, this.parse(this._entity));
     return this;
@@ -125,7 +125,7 @@ export class ODataModel<T> {
   fetch(options?: HttpOptions): Observable<this | null> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.segment.key(this);
-      if (Types.isUndefined(this._resource.segment.key()))
+      if (this._resource.segment.key().empty())
         throw new Error(`Can't fetch entity without key`);
       return this._resource.get(options).pipe(
         map(({entity, meta}) => entity ? this.populate(entity, meta) : null));
@@ -156,10 +156,10 @@ export class ODataModel<T> {
   update(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.segment.key(this);
-      if (Types.isUndefined(this._resource.segment.key()))
+      if (this._resource.segment.key().empty())
         throw new Error(`Can't update entity without key`);
       let resource = this._resource;
-      let etag = (this._meta && this._meta instanceof ODataEntityOptions) ? this._meta.etag : undefined;
+      let etag = (this._meta && this._meta instanceof ODataEntityMeta) ? this._meta.etag : undefined;
       let entity = this.toEntity(); 
       let rels = Object.values(this._relations)
             .filter((value) => value.field.navigation && !value.field.collection)
@@ -180,16 +180,16 @@ export class ODataModel<T> {
   save(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.segment.key(this);
-      return Types.isUndefined(this._resource.segment.key()) ? this.create(options) : this.update(options);
+      return this._resource.segment.key().empty() ? this.create(options) : this.update(options);
     }
     throw new Error(`Can't save`);
   }
 
   destroy(options?: HttpOptions): Observable<null> {
     if (this._resource instanceof ODataEntityResource) {
-      let etag = (this._meta && this._meta instanceof ODataEntityOptions) ? this._meta.etag : undefined;
+      let etag = (this._meta && this._meta instanceof ODataEntityMeta) ? this._meta.etag : undefined;
       this._resource.segment.key(this);
-      if (Types.isUndefined(this._resource.segment.key()))
+      if (this._resource.segment.key().empty())
         throw new Error(`Can't destroy entity without key`);
       return this._resource.delete(Object.assign({ etag }, options || {}));
     }
@@ -201,7 +201,7 @@ export class ODataModel<T> {
       throw new Error(`Can't call without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {
       this._resource.segment.key(this);
-      if (Types.isUndefined(this._resource.segment.key()))
+      if (this._resource.segment.key().empty())
         throw new Error(`Can't use without key`);
     }
     return (this._resource as ODataEntityResource<T>).segment;
@@ -222,7 +222,7 @@ export class ODataModel<T> {
       throw new Error(`Can't query without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {
       this._resource.segment.key(this);
-      if (Types.isUndefined(this._resource.segment.key()))
+      if (this._resource.segment.key().empty())
         throw new Error(`Can't query without key`);
     }
     return (this._resource as ODataEntityResource<T>).query;
@@ -233,8 +233,8 @@ export class ODataModel<T> {
       let value = this._entity[field.name];
       let nav = (this._resource as ODataEntityResource<T>).navigationProperty<P>(field.name);
       let rel = field.collection ? 
-        nav.collection(value, new ODataEntitiesOptions(this._meta.property(field.name))) : 
-        nav.model(value, new ODataEntityOptions(value));
+        nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name))) : 
+        nav.model(value, new ODataEntityMeta(value));
       this._relations[field.name] = {field, rel};
     }
     return this._relations[field.name].rel;

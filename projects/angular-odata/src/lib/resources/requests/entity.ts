@@ -116,7 +116,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
           throw new Error(`EntityResourse dosn't have segment for entitySet`);
         if (!Types.isUndefined(name))
           segment.setPath(name);
-        return segment.path;
+        return segment;
       },
       key(key?: EntityKey<T>) {
         let segment = segments.segment(PathSegmentNames.entitySet);
@@ -128,7 +128,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
         }
-        return segment.option(SegmentOptionNames.key).value();
+        return segment.option<EntityKey<T>>(SegmentOptionNames.key);
       }
     }
   }
@@ -178,57 +178,57 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   delete(options?: HttpOptions & { etag?: string }): Observable<any> {
-    return super.delete(
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
-    );
+    return super.delete(options);
   }
   //#endregion
 
   //#region Custom
   fetch(options?: HttpOptions): Observable<T> {
-    if (Types.isUndefined(this.segment.key()))
+    if (this.segment.key().empty())
       return throwError("Resource without key");
     return this.get(options).pipe(map(({entity}) => entity));
   }
 
   create(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
-    if (!Types.isUndefined(this.segment.key()))
+    if (!this.segment.key().empty())
       return throwError("Resource with key");
     return this.post(attrs, options).pipe(map(({entity}) => entity));
   }
 
   update(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
-    if (Types.isUndefined(this.segment.key()))
+    if (this.segment.key().empty())
       return throwError("Resource without key");
     return this.put(attrs, options).pipe(map(({entity}) => entity));
   }
 
   assign(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
     //TODO Patch return
-    if (Types.isUndefined(this.segment.key()))
+    if (this.segment.key().empty())
       return throwError("Resource without key");
     return this.patch(attrs, options).pipe(map(({entity}) => entity));
   }
 
   destroy(options?: HttpOptions & { etag?: string }): Observable<any> {
     //TODO Patch return
-    if (Types.isUndefined(this.segment.key()))
+    if (this.segment.key().empty())
       return throwError("Resource without key");
-    return this.delete(options).pipe(map(({entity}) => entity));
+    return this.delete(options);
   }
 
   fetchOrCreate(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
     return this.fetch(options)
       .pipe(catchError((error: HttpErrorResponse) => {
-        if (error.status === 404)
+        if (error.status === 404) {
+          this.segment.key().clear();
           return this.create(attrs, options);
-        else
+        } else {
           return throwError(error);
+        }
       }));
   }
 
   save(attrs: Partial<T>, options?: HttpOptions & {etag?: string}): Observable<T> {
-    if (Types.isUndefined(this.segment.key())) 
+    if (this.segment.key().empty()) 
       return this.create(attrs, options);
     return this.update(attrs, options);
   }

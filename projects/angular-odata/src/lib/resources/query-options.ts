@@ -112,6 +112,10 @@ export class OptionHandler<T> {
     return this.o[this.n];
   }
 
+  empty() {
+    return Types.isEmpty(this.o[this.n]);
+  }
+
   //#region Primitive Value
   value(v?: any) {
     return !Types.isUndefined(v) && (this.o[this.n] = v) || this.o[this.n];

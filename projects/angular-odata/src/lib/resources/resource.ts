@@ -22,7 +22,7 @@ import {
   ODataModel,
   ODataCollection
 } from '../models/index';
-import { ODataResponse, ODataEntityOptions, ODataEntitiesOptions } from './responses';
+import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -81,12 +81,12 @@ export class ODataResource<Type> {
     return value;
   }
 
-  model<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityOptions): M {
+  model<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityMeta): M {
     let Model = this.client.modelForType(this.type());
     return new Model(entity, {resource: this, meta}) as M;
   }
 
-  collection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesOptions): C {
+  collection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesMeta): C {
     let Collection = this.client.collectionForType(this.type());
     return new Collection(entities, {resource: this, meta}) as C;
   }

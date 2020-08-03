@@ -169,6 +169,7 @@ export type Field = {
 
 export type ParseOptions = {
   version?: string;
+  metadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
 }
@@ -185,7 +186,7 @@ export type Configuration = {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean,
-  acceptMetadata?: 'minimal' | 'full' | 'none';
+  metadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean,
   ieee754Compatible?: boolean,
   creation?: Date,

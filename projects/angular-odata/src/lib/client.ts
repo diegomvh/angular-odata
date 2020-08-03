@@ -394,8 +394,8 @@ export class ODataClient {
 
     let accept = [];
     // Metadata ?
-    if (!Types.isUndefined(config.acceptMetadata))
-      accept.push(`odata.metadata=${config.acceptMetadata}`);
+    if (!Types.isUndefined(config.metadata))
+      accept.push(`odata.metadata=${config.metadata}`);
     // IEEE754
     if (!Types.isUndefined(config.ieee754Compatible))
       accept.push(`IEEE754Compatible=${config.ieee754Compatible}`);

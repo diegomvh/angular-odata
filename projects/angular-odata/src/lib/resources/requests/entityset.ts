@@ -141,7 +141,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
           throw new Error(`EntityResourse dosn't have segment for entitySet`);
         if (!Types.isUndefined(name))
           segment.setPath(name);
-        return segment.path;
+        return segment;
       }
     }
   }

@@ -141,7 +141,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
           throw new Error(`NavigationPropertyResource dosn't have segment for entitySet`);
         if (!Types.isUndefined(name))
           segment.setPath(name);
-        return segment.path;
+        return segment;
       },
       key(key?: EntityKey<T>) {
         let segment = segments.segment(PathSegmentNames.navigationProperty);
@@ -153,7 +153,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
         }
-        return segment.option(SegmentOptionNames.key).value();
+        return segment.option(SegmentOptionNames.key);
       }
     }
   }

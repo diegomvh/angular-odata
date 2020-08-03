@@ -1,4 +1,4 @@
 export * from './types';
 export * from './response';
-export * from './options';
+export * from './meta';
 export * from './metadata';

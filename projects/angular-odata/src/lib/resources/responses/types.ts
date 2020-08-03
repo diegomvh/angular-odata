@@ -1,5 +1,5 @@
-import { ODataEntityOptions, ODataEntitiesOptions, ODataPropertyOptions } from './options';
+import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 
-export type ODataEntity<T> = {entity: T, meta: ODataEntityOptions};
-export type ODataEntities<T> = {entities: T[], meta: ODataEntitiesOptions};
-export type ODataProperty<T> = {property: T, meta: ODataPropertyOptions};
+export type ODataEntity<T> = {entity: T, meta: ODataEntityMeta};
+export type ODataEntities<T> = {entities: T[], meta: ODataEntitiesMeta};
+export type ODataProperty<T> = {property: T, meta: ODataPropertyMeta};

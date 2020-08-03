@@ -44,7 +44,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
           throw new Error(`CallableResource dosn't have segment for entitySet`);
         if (!Types.isUndefined(name))
           segment.setPath(name);
-        return segment.path;
+        return segment;
       },
       key<E>(key?: EntityKey<E>) {
         let segment = segments.segment(PathSegmentNames.entitySet);
@@ -56,7 +56,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
         }
-        return segment.option(SegmentOptionNames.key).value();
+        return segment.option(SegmentOptionNames.key);
       },
       parameters(params?: P) {
         let segment = segments.segment(PathSegmentNames.function);
@@ -65,7 +65,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
         if (!Types.isUndefined(params)) {
           segment.option(SegmentOptionNames.parameters, res.serialize(params));
         }
-        return segment.option(SegmentOptionNames.parameters).value();
+        return segment.option(SegmentOptionNames.parameters);
       }
     }
   }

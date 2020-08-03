@@ -15,7 +15,7 @@ export class ODataConfig {
   headers: { [param: string]: string | string[] };
   metadataUrl?: string;
   withCredentials?: boolean;
-  acceptMetadata?: 'minimal' | 'full' | 'none';
+  metadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
   creation?: Date;
@@ -35,7 +35,7 @@ export class ODataConfig {
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;
     this.creation = config.creation || new Date();
     this.withCredentials = config.withCredentials;
-    this.acceptMetadata = config.acceptMetadata;
+    this.metadata = config.metadata || 'minimal';
     this.ieee754Compatible = config.ieee754Compatible;
     this.stringAsEnum = config.stringAsEnum;
     this.parsers = config.parsers || EDM_PARSERS;
@@ -52,6 +52,7 @@ export class ODataConfig {
   options(): ParseOptions {
     return {
       version: this.version,
+      metadata: this.metadata,
       stringAsEnum: this.stringAsEnum,
       ieee754Compatible: this.ieee754Compatible
     }

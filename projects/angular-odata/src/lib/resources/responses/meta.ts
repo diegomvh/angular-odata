@@ -18,18 +18,29 @@ import {
   odataContext,
   ODataContext,
   odataType,
-  odataEtag
+  odataEtag,
+  ParseOptions
 } from '../../types';
 
-export class ODataOptions {
+export class ODataMeta {
   annotations: {[name: string]: any};
   headers: HttpHeaders;
   constructor(data: { [name: string]: any }, headers?: HttpHeaders) {
     this.annotations = odataAnnotations(data);
     this.headers = headers;
-    console.log(this.headers.getAll('OData-Version'));
-    console.log(this.headers.getAll('ETag'));
-    console.log(this.headers.getAll('Content-Type'));
+    console.log(this.headers.keys());
+    console.log(this.headers.get('OData-Version'));
+    console.log(this.headers.get('ETag'));
+    console.log(this.headers.get('Content-Type'));
+  }
+
+  options(): ParseOptions {
+    //TODO: From Headers
+    return {
+      //version: this.version,
+      //metadata: this.metadata,
+      //ieee754Compatible: this.ieee754Compatible
+    }
   }
 
   // Context
@@ -63,14 +74,14 @@ export class ODataOptions {
   }
 
   // Method
-  clone(): ODataOptions {
-    return new ODataOptions(this.annotations);
+  clone(): ODataMeta {
+    return new ODataMeta(this.annotations);
   };
 }
 
-export class ODataPropertyOptions extends ODataOptions {
-  clone(): ODataPropertyOptions {
-    return new ODataPropertyOptions(this.annotations);
+export class ODataPropertyMeta extends ODataMeta {
+  clone(): ODataPropertyMeta {
+    return new ODataPropertyMeta(this.annotations);
   };
 
   get type(): string {
@@ -82,9 +93,9 @@ export class ODataPropertyOptions extends ODataOptions {
   }
 }
 
-export class ODataEntityOptions extends ODataOptions {
-  clone(): ODataEntityOptions {
-    return new ODataEntityOptions(this.annotations);
+export class ODataEntityMeta extends ODataMeta {
+  clone(): ODataEntityMeta {
+    return new ODataEntityMeta(this.annotations);
   };
 
   get type(): string {
@@ -150,9 +161,9 @@ export class ODataEntityOptions extends ODataOptions {
   }
 }
 
-export class ODataEntitiesOptions extends ODataOptions {
-  clone(): ODataEntitiesOptions {
-    return new ODataEntitiesOptions(this.annotations);
+export class ODataEntitiesMeta extends ODataMeta {
+  clone(): ODataEntitiesMeta {
+    return new ODataEntitiesMeta(this.annotations);
   };
 
   get readLink(): string {

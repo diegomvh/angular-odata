@@ -118,7 +118,7 @@ export class ODataPathSegments {
   }
 }
 
-class SegmentHandler {
+export class SegmentHandler {
   options?: PlainObject
   constructor(private segment: ODataSegment) {
     this.options = this.segment.options;

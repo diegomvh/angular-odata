@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ODataEntityOptions, ODataEntitiesOptions, ODataPropertyOptions } from './options';
+import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 import { VALUE, Parser, odataType } from '../../types';
 import { Types } from '../../utils/types';
 import { ODataConfig } from '../../config';
@@ -50,7 +50,7 @@ export class ODataResponse<T> {
 
   entity(): ODataEntity<T> {
     if (this.body) {
-      const annotations = new ODataEntityOptions(this.body, this.headers)
+      const annotations = new ODataEntityMeta(this.body, this.headers)
       const entity = this.deserialize(this.resource.type(), this.body) as T;
       return { entity, meta: annotations };
     }
@@ -58,7 +58,7 @@ export class ODataResponse<T> {
 
   entities(): ODataEntities<T> { 
     if (this.body) {
-      const annotations = new ODataEntitiesOptions(this.body, this.headers)
+      const annotations = new ODataEntitiesMeta(this.body, this.headers)
       const entities = this.deserialize(this.resource.type(), this.body[VALUE]) as T[];
       return { entities, meta: annotations };
     }
@@ -66,7 +66,7 @@ export class ODataResponse<T> {
 
   property(): ODataProperty<T> {
     if (this.body) {
-      const annotations = new ODataPropertyOptions(this.body, this.headers)
+      const annotations = new ODataPropertyMeta(this.body, this.headers)
       const property = this.deserialize(
         this.resource.type(), 
         VALUE in this.body? this.body[VALUE] : this.body) as T;

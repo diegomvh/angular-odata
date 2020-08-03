@@ -20,11 +20,11 @@ import {
   HttpOptions,
   HttpEntitiesOptions
 } from '../resources/requests/options';
-import { ODataOptions, ODataEntitiesOptions } from '../resources/responses/options';
+import { ODataMeta, ODataEntitiesMeta } from '../resources/responses/meta';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   protected _resource: ODataResource<T>;
-  protected _meta: ODataOptions;
+  protected _meta: ODataMeta;
 
   protected _models: M[];
   get models() {
@@ -44,7 +44,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return Object.assign({}, this._state);
   }
 
-  constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataOptions } = {}) {
+  constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataMeta } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((values || []), options.meta);
@@ -72,10 +72,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     });
   }
 
-  protected populate(values: any[], annots?: ODataOptions): this {
+  protected populate(values: any[], annots?: ODataMeta): this {
     this._meta = annots;
 
-    if (annots instanceof ODataEntitiesOptions) {
+    if (annots instanceof ODataEntitiesMeta) {
       this._state = {}; 
       if (annots.top)
         this._state.top = annots.top;
