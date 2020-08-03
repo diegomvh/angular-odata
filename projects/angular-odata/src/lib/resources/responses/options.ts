@@ -27,7 +27,9 @@ export class ODataOptions {
   constructor(data: { [name: string]: any }, headers?: HttpHeaders) {
     this.annotations = odataAnnotations(data);
     this.headers = headers;
-    console.log(this.headers.toString());
+    console.log(this.headers.getAll('OData-Version'));
+    console.log(this.headers.getAll('ETag'));
+    console.log(this.headers.getAll('Content-Type'));
   }
 
   // Context
