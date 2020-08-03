@@ -2,14 +2,14 @@ import { HttpHeaders } from '@angular/common/http';
 import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 import { VALUE, Parser, odataType } from '../../types';
 import { Types } from '../../utils/types';
-import { ODataConfig } from '../../config';
+import { ODataApiConfig } from '../../config';
 import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
 
 export class ODataResponse<T> {
   readonly body: any|null;
-  readonly config: ODataConfig;
+  readonly config: ODataApiConfig;
   readonly headers: HttpHeaders;
   readonly status: number;
   readonly statusText: string;
@@ -17,7 +17,7 @@ export class ODataResponse<T> {
 
   constructor(init: { 
     body?: any | null;
-    config?: ODataConfig;
+    config?: ODataApiConfig;
     headers?: HttpHeaders;
     status?: number;
     statusText?: string;

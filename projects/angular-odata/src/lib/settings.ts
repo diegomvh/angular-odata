@@ -1,14 +1,14 @@
 import { Configuration, Parser } from './types';
-import { ODataConfig } from './config';
+import { ODataApiConfig } from './config';
 import { Types } from './utils';
 import { ODataCollection } from './models/collection';
 import { ODataModel } from './models/model';
 
 export class ODataSettings {
-  configs?: Array<ODataConfig>;
+  configs?: Array<ODataApiConfig>;
 
   constructor(...configs: Configuration[]) {
-    this.configs = configs.map(config => new ODataConfig(config));
+    this.configs = configs.map(config => new ODataApiConfig(config));
     if (this.configs.length > 1 && this.configs.some(c => Types.isUndefined(c.name)))
       throw new Error("Multiple APIs: Needs configuration names");
     this.configs.forEach(config => config.configure());

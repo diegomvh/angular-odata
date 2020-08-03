@@ -200,7 +200,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom for collections
+  //#region Custom
   all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {

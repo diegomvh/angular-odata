@@ -26,7 +26,7 @@ import {
   ODataQueryOptions,
   ODataResponse
 } from './resources/index';
-import { ODataConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './config';
+import { ODataApiConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './config';
 import { ODataSettings } from './settings';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class ODataClient {
   private _batch: ODataBatchResource;
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
-  configFor(resource: ODataResource<any>): ODataConfig {
+  configFor(resource: ODataResource<any>): ODataApiConfig {
     return this.settings.configForTypes(resource.types());
   }
 
@@ -51,7 +51,7 @@ export class ODataClient {
   }
 
   // Resolve Building Blocks
-  configForType(type: string): ODataConfig {
+  configForType(type: string): ODataApiConfig {
     return this.settings.configForType(type);
   }
 

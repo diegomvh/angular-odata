@@ -7,7 +7,7 @@ import { ODataEntityParser, ODataFieldParser } from './parsers/entity';
 import { ODataCallableParser } from './parsers/callable';
 import { EDM_PARSERS } from './parsers/edm';
 
-export class ODataConfig {
+export class ODataApiConfig {
   name: string;
   serviceRootUrl: string;
   version: string;
@@ -20,7 +20,7 @@ export class ODataConfig {
   ieee754Compatible?: boolean;
   creation?: Date;
   parsers?: {[type: string]: Parser<any>};
-  schemas?: Array<ODataSchema>;
+  schemas?: Array<ODataSchemaConfig>;
 
   constructor(config: Configuration) {
     this.serviceRootUrl = config.serviceRootUrl;
@@ -40,7 +40,7 @@ export class ODataConfig {
     this.stringAsEnum = config.stringAsEnum;
     this.parsers = config.parsers || EDM_PARSERS;
 
-    this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema));
+    this.schemas = (config.schemas || []).map(schema => new ODataSchemaConfig(schema, this));
   }
   
   configure() {
@@ -151,19 +151,21 @@ export class ODataConfig {
   }
 }
 
-export class ODataSchema {
+export class ODataSchemaConfig {
+  api: ODataApiConfig;
   namespace: string;
   enums?: Array<ODataEnumConfig<any>>;
   entities?: Array<ODataEntityConfig<any>>;
   callables?: Array<ODataCallableConfig<any>>;
   containers?: Array<ODataContainer>;
 
-  constructor(config: Schema) {
-    this.namespace = config.namespace;
-    this.enums = (config.enums || []).map(config => new ODataEnumConfig(config, this.namespace));
-    this.entities = (config.entities || []).map(config => new ODataEntityConfig(config, this.namespace));
+  constructor(schema: Schema, api: ODataApiConfig) {
+    this.api = api;
+    this.namespace = schema.namespace;
+    this.enums = (schema.enums || []).map(config => new ODataEnumConfig(config, this));
+    this.entities = (schema.entities || []).map(config => new ODataEntityConfig(config, this));
     // Merge callables
-    let configs = (config.callables || []);
+    let configs = (schema.callables || []);
     configs = configs.reduce((acc, config) => {
       if (acc.every(c => c.name !== config.name)) {
         config = configs.filter(c => c.name === config.name).reduce((acc, c) => { 
@@ -174,8 +176,12 @@ export class ODataSchema {
       }
       return acc;
     }, []);
-    this.callables = configs.map(config => new ODataCallableConfig(config, this.namespace));
-    this.containers = (config.containers || []).map(container => new ODataContainer(container, this.namespace));
+    this.callables = configs.map(config => new ODataCallableConfig(config, this));
+    this.containers = (schema.containers || []).map(container => new ODataContainer(container, this));
+  }
+
+  options() {
+    return this.api.options();
   }
 
   get services(): Array<ODataServiceConfig> {
@@ -193,19 +199,26 @@ export class ODataSchema {
 }
 
 export class ODataEnumConfig<Type> {
+  schema: ODataSchemaConfig;
   name: string;
   type: string;
   parser?: ODataEnumParser<Type>;
   members: {[name: string]: number} | {[value: number]: string};
-  constructor(config: EnumConfig<Type>, namespace: string) {
-    this.name = config.name;
-    this.members = config.members;
-    this.type = `${namespace}.${this.name}`;
-    this.parser = new ODataEnumParser(config as EnumConfig<any>, namespace);
+  constructor(enu: EnumConfig<Type>, schema: ODataSchemaConfig) {
+    this.schema = schema;
+    this.name = enu.name;
+    this.members = enu.members;
+    this.type = `${schema.namespace}.${this.name}`;
+    this.parser = new ODataEnumParser(enu as EnumConfig<any>, schema.namespace);
+  }
+
+  options() {
+    return this.schema.options();
   }
 }
 
 export class ODataEntityConfig<Type> {
+  schema: ODataSchemaConfig;
   name: string;
   type: string;
   annotations: any[];
@@ -213,13 +226,18 @@ export class ODataEntityConfig<Type> {
   collection?: { new(...any): any };
   parser?: ODataEntityParser<Type>;
 
-  constructor(config: EntityConfig<Type>, namespace: string) {
+  constructor(config: EntityConfig<Type>, schema: ODataSchemaConfig) {
+    this.schema = schema;
     this.name = config.name;
-    this.type = `${namespace}.${this.name}`;
+    this.type = `${schema.namespace}.${this.name}`;
     this.annotations = config.annotations;
     this.model = config.model;
     this.collection = config.collection;
-    this.parser = new ODataEntityParser(config, namespace);
+    this.parser = new ODataEntityParser(config, schema.namespace);
+  }
+
+  options() {
+    return this.schema.options();
   }
 
   configure(settings: {parserForType: (type: string) => Parser<any>}) {
@@ -250,6 +268,7 @@ export class ODataEntityConfig<Type> {
 }
 
 export class ODataCallableConfig<R> {
+  schema: ODataSchemaConfig;
   name: string;
   type: string;
   path?: string;
@@ -257,13 +276,18 @@ export class ODataCallableConfig<R> {
   composable?: boolean;
   parser?: ODataCallableParser<R>;
 
-  constructor(config: CallableConfig, namespace: string) {
+  constructor(config: CallableConfig, schema: ODataSchemaConfig) {
+    this.schema = schema;
     this.name = config.name;
-    this.type = `${namespace}.${config.name}`;
-    this.path = config.path || (config.bound ? `${namespace}.${config.name}` : config.name);
+    this.type = `${schema.namespace}.${config.name}`;
+    this.path = config.path || (config.bound ? `${schema.namespace}.${config.name}` : config.name);
     this.bound = config.bound;
     this.composable = config.composable;
-    this.parser = new ODataCallableParser(config, namespace);
+    this.parser = new ODataCallableParser(config, schema.namespace);
+  }
+
+  options() {
+    return this.schema.options();
   }
 
   configure(settings: {parserForType: (type: string) => Parser<any>}) {
@@ -272,25 +296,37 @@ export class ODataCallableConfig<R> {
 }
 
 export class ODataContainer {
+  schema: ODataSchemaConfig;
   name: string;
   type: string;
   annotations: any[];
   services?: Array<ODataServiceConfig>;
-  constructor(config: Container, namespace: string) {
+  constructor(config: Container, schema: ODataSchemaConfig) {
+    this.schema = schema;
     this.name = config.name;
-    this.type = `${namespace}.${this.name}`;
+    this.type = `${schema.namespace}.${this.name}`;
     this.annotations = config.annotations;
-    this.services = (config.services || []).map(config => new ODataServiceConfig(config, namespace));
+    this.services = (config.services || []).map(config => new ODataServiceConfig(config, schema));
+  }
+
+  options() {
+    return this.schema.options();
   }
 }
 
 export class ODataServiceConfig {
+  schema: ODataSchemaConfig
   name: string;
   type: string;
   annotations: any[];
-  constructor(config: ServiceConfig, namespace: string) {
+  constructor(config: ServiceConfig, schema: ODataSchemaConfig) {
+    this.schema = schema;
     this.name = config.name;
-    this.type = `${namespace}.${this.name}`;
+    this.type = `${schema.namespace}.${this.name}`;
     this.annotations = config.annotations;
+  }
+
+  options() {
+    return this.schema.options();
   }
 }
