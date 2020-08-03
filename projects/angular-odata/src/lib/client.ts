@@ -1,7 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
+import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
+import { Types } from './utils/index';
+import { 
+  ODataSettings,
+  ODataConfig,
+  ODataEntityConfig,
+  ODataCallableConfig,
+  ODataServiceConfig,
+  ODataModel,
+  ODataCollection
+} from './models/index';
 import { 
   PlainObject,
   ODataResource, 
@@ -16,16 +28,9 @@ import {
   PathSegmentNames,
   ODataPathSegments,
   ODataSegment,
-  ODataQueryOptions
+  ODataQueryOptions,
+  ODataResponse
 } from './resources/index';
-import { ODataSettings } from './models/settings';
-import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
-import { Types } from './utils/index';
-import { ODataResponse } from './resources/response';
-import { map } from 'rxjs/operators';
-import { ODataConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './models/config';
-import { ODataModel } from './models/model';
-import { ODataCollection } from './models/collection';
 
 @Injectable()
 export class ODataClient {

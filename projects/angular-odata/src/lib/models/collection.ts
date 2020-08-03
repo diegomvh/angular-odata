@@ -19,13 +19,12 @@ import { ODataModel } from './model';
 import {
   HttpOptions,
   HttpEntitiesOptions
-} from '../resources/http-options';
+} from '../resources/requests/options';
 import { ODataAnnotations, ODataEntitiesAnnotations, ODataEntityAnnotations } from './annotations';
-import { entityAttributes } from '../types';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   protected _resource: ODataResource<T>;
-  protected _annotations: ODataAnnotations;
+  protected _meta: ODataAnnotations;
 
   protected _models: M[];
   get models() {
@@ -45,10 +44,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return Object.assign({}, this._state);
   }
 
-  constructor(values?: any[], options: { resource?: ODataResource<T>, annotations?: ODataAnnotations } = {}) {
+  constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataAnnotations } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
-    this.populate((values || []), options.annotations);
+    this.populate((values || []), options.meta);
   }
 
   attach(resource: ODataResource<T>) {
@@ -69,12 +68,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (values as T[]).map(value => {
       if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
         resource.segment.key(value);
-      return (resource ? resource.clone().toModel(value) : value) as M;
+      return (resource ? resource.clone().model(value) : value) as M;
     });
   }
 
   protected populate(values: any[], annots?: ODataAnnotations): this {
-    this._annotations = annots;
+    this._meta = annots;
 
     if (annots instanceof ODataEntitiesAnnotations) {
       this._state = {}; 
@@ -108,7 +107,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   clone() {
     let Ctor = <typeof ODataCollection>this.constructor;
-    return (new Ctor(this.models, { resource: this._resource.clone(), annotations: this._annotations })) as ODataCollection<T, ODataModel<T>>;
+    return (new Ctor(this.models, { resource: this._resource.clone(), meta: this._meta })) as ODataCollection<T, ODataModel<T>>;
   }
 
   // Iterable
@@ -129,15 +128,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   fetch(options?: HttpOptions & {withCount?: boolean}): Observable<this> {
     if (this._resource instanceof ODataEntitySetResource) {
       return this._resource.get(options).pipe(
-      map(({entities, annotations}) => this.populate(entities, annotations)));
+      map(({entities, meta}) => this.populate(entities, meta)));
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       return this._resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
-      map(({entities, annotations}) => this.populate(entities, annotations)));
+      map(({entities, meta}) => this.populate(entities, meta)));
     } else if (this._resource instanceof ODataFunctionResource) {
       return this._resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
-      map(({entities, annotations}) => this.populate(entities, annotations)));
+      map(({entities, meta}) => this.populate(entities, meta)));
     }
     throw new Error("Not Yet!");
   }

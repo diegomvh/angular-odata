@@ -1,3 +1,4 @@
+export * from './options';
 export * from './action';
 export * from './batch';
 export * from './count';

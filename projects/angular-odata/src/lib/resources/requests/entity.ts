@@ -12,9 +12,9 @@ import { ODataPathSegments, SegmentOptionNames, PathSegmentNames } from '../path
 import { ODataClient } from '../../client';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
-import { HttpOptions, HttpEntityOptions } from '../http-options';
+import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataValueResource } from './value';
-import { ODataEntity } from '../response';
+import { ODataEntity } from '../responses/index';
 import { map, catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ODataEntityConfig } from '../../models/config';

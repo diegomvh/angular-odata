@@ -6,7 +6,7 @@ import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
-import { HttpOptions } from '../http-options';
+import { HttpOptions } from './options';
 import { PlainObject } from '../builder';
 
 export class ODataReferenceResource extends ODataResource<any> {

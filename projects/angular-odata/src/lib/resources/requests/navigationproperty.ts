@@ -12,8 +12,8 @@ import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from '../http-options';
-import { ODataEntities, ODataEntity } from '../response';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
+import { ODataEntities, ODataEntity } from '../responses/index';
 import { ODataValueResource } from './value';
 import { ODataEntityConfig } from '../../models/config';
 import { ODataEntityParser } from '../../parsers/entity';
@@ -224,7 +224,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand(({annotations}) => (annotations.skip || annotations.skiptoken) ? fetch(annotations) : empty()),
+        expand(({meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : empty()),
         concatMap(({entities}) => entities),
         toArray());
   }

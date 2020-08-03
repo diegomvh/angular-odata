@@ -6,8 +6,8 @@ import { ODataResource } from '../resource';
 import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataClient } from '../../client';
-import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from '../http-options';
-import { ODataProperty, ODataEntities, ODataEntity } from '../response';
+import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
+import { ODataProperty, ODataEntities, ODataEntity } from '../responses/index';
 import { map } from 'rxjs/operators';
 import { ODataEntityParser } from '../../parsers/entity';
 

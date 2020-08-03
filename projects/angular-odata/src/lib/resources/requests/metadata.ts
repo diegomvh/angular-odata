@@ -5,8 +5,8 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { $METADATA } from '../../types';
-import { HttpOptions } from '../http-options';
-import { ODataMetadata } from '../../models/metadata';
+import { HttpOptions } from './options';
+import { ODataMetadata } from '../responses/index';
 
 export class ODataMetadataResource extends ODataResource<any> {
   //#region Factory

@@ -1,14 +1,11 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../models/annotations';
-import { VALUE, Parser, odataType } from '../types';
-import { Types } from '../utils/types';
-import { ODataConfig } from '../models/config';
-import { ODataResource } from './resource';
-import { ODataEntityParser } from '../parsers/entity';
-
-export type ODataEntity<T> = {entity: T, annotations: ODataEntityAnnotations};
-export type ODataEntities<T> = {entities: T[], annotations: ODataEntitiesAnnotations};
-export type ODataProperty<T> = {property: T, annotations: ODataPropertyAnnotations};
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from '../../models/annotations';
+import { VALUE, Parser, odataType } from '../../types';
+import { Types } from '../../utils/types';
+import { ODataConfig } from '../../models/config';
+import { ODataResource } from '../resource';
+import { ODataEntityParser } from '../../parsers/entity';
+import { ODataEntities, ODataEntity, ODataProperty } from './types';
 
 export class ODataResponse<T> {
   readonly body: any|null;
@@ -57,7 +54,7 @@ export class ODataResponse<T> {
     if (this.body) {
       const annotations = new ODataEntityAnnotations(this.body)
       const entity = this.deserialize(this.resource.type(), this.body) as T;
-      return { entity, annotations };
+      return { entity, meta: annotations };
     }
   }
 
@@ -65,7 +62,7 @@ export class ODataResponse<T> {
     if (this.body) {
       const annotations = new ODataEntitiesAnnotations(this.body)
       const entities = this.deserialize(this.resource.type(), this.body[VALUE]) as T[];
-      return { entities, annotations };
+      return { entities, meta: annotations };
     }
   }
 
@@ -75,7 +72,7 @@ export class ODataResponse<T> {
       const property = this.deserialize(
         this.resource.type(), 
         VALUE in this.body? this.body[VALUE] : this.body) as T;
-      return { property, annotations };
+      return { property, meta: annotations };
     } 
   }
 

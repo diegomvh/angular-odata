@@ -4,14 +4,14 @@ import { ODataClient } from '../../client';
 
 import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from '../http-options';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataResource } from '../resource';
 import { map } from 'rxjs/operators';
-import { ODataEntity, ODataEntities, ODataProperty } from '../response';
+import { ODataEntity, ODataEntities, ODataProperty } from '../responses/index';
 import { ODataCallableConfig } from '../../models/config';
 import { ODataEntityParser } from '../../parsers/entity';
 

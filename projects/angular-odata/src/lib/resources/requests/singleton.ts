@@ -11,10 +11,10 @@ import { ODataNavigationPropertyResource } from './navigationproperty';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { HttpOptions, HttpEntityOptions } from '../http-options';
-import { ODataEntity } from '../response';
+import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataEntityConfig } from '../../models/config';
 import { ODataEntityParser } from '../../parsers/entity';
+import { ODataEntity } from '../responses/index';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory

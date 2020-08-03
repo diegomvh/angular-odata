@@ -19,11 +19,11 @@ export class ODataService<T> {
   }
 
   public model<M extends ODataModel<T>>(entity?: Partial<T>): M {
-    return this.entity(entity).toModel<M>(entity);
+    return this.entity(entity).model<M>(entity);
   }
 
   public collection<C extends ODataCollection<T, ODataModel<T>>>(entities?: Partial<T>[]): C {
-    return this.entities().toCollection<C>(entities);
+    return this.entities().collection<C>(entities);
   }
 
   // Models

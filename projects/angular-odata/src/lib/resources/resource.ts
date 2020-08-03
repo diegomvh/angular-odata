@@ -17,11 +17,14 @@ import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions
 } from './query-options';
-import { HttpOptions } from './http-options';
-import { ODataResponse } from './response';
-import { ODataCollection } from '../models/collection';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations } from '../models/annotations';
-import { ODataModel } from '../models/model';
+import { HttpOptions } from './requests/index';
+import { 
+  ODataModel,
+  ODataCollection,
+  ODataEntityAnnotations, 
+  ODataEntitiesAnnotations
+} from '../models/index';
+import { ODataResponse } from './responses';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -80,14 +83,14 @@ export class ODataResource<Type> {
     return value;
   }
 
-  toModel<M extends ODataModel<Type>>(entity: Partial<Type>, annots?: ODataEntityAnnotations): M {
+  model<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityAnnotations): M {
     let Model = this.client.modelForType(this.type());
-    return new Model(entity, {resource: this, annotations: annots}) as M;
+    return new Model(entity, {resource: this, meta}) as M;
   }
 
-  toCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], annots?: ODataEntitiesAnnotations): C {
+  collection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesAnnotations): C {
     let Collection = this.client.collectionForType(this.type());
-    return new Collection(entities, {resource: this, annotations: annots}) as C;
+    return new Collection(entities, {resource: this, meta}) as C;
   }
 
   // Testing
