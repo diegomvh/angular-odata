@@ -5,14 +5,14 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
-import { $REF as $REFERENCE, ODATA_ID, $ID } from '../../types';
 import { HttpOptions } from './options';
 import { PlainObject } from '../builder';
+import { $REF, $ID, ODATA_ID } from '../../constants';
 
 export class ODataReferenceResource extends ODataResource<any> {
   //#region Factory
   static factory<P>(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.reference, $REFERENCE);
+    segments.segment(PathSegmentNames.reference, $REF);
     options.clear();
     return new ODataReferenceResource(client, segments, options);
   }

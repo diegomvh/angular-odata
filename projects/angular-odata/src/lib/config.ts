@@ -1,4 +1,4 @@
-import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, CallableConfig, ParseOptions } from './types';
+import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, CallableConfig, ODataOptions } from './types';
 import { Types } from './utils';
 import { ODataModel } from './models/model';
 import { ODataCollection } from './models/collection';
@@ -8,18 +8,22 @@ import { ODataCallableParser } from './parsers/callable';
 import { EDM_PARSERS } from './parsers/edm';
 
 export class ODataApiConfig {
-  name: string;
   serviceRootUrl: string;
-  version: string;
+  metadataUrl?: string;
+  name?: string;
+  creation?: Date;
+  // Http
   params: { [param: string]: string | string[] };
   headers: { [param: string]: string | string[] };
-  metadataUrl?: string;
   withCredentials?: boolean;
+  // Options
+  version: '2.0' | '3.0' | '4.0';
   metadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
-  creation?: Date;
+  // Base Parsers
   parsers?: {[type: string]: Parser<any>};
+  // Schemas
   schemas?: Array<ODataSchemaConfig>;
 
   constructor(config: Configuration) {
@@ -28,14 +32,14 @@ export class ODataApiConfig {
       throw new Error("The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters");
     if (!this.serviceRootUrl.endsWith('/'))
       this.serviceRootUrl += '/';
+    this.metadataUrl = `${config.serviceRootUrl}$metadata`;
     this.name = config.name;
-    this.version = config.version;
+    this.creation = config.creation || new Date();
     this.params = config.params || {};
     this.headers = config.headers || {};
-    this.metadataUrl = `${config.serviceRootUrl}$metadata`;
-    this.creation = config.creation || new Date();
     this.withCredentials = config.withCredentials;
-    this.metadata = config.metadata || 'minimal';
+    this.version = config.version || '4.0';
+    this.metadata = config.metadata;
     this.ieee754Compatible = config.ieee754Compatible;
     this.stringAsEnum = config.stringAsEnum;
     this.parsers = config.parsers || EDM_PARSERS;
@@ -49,12 +53,12 @@ export class ODataApiConfig {
     });
   }
 
-  options(): ParseOptions {
+  options(): ODataOptions {
     return {
       version: this.version,
       metadata: this.metadata,
-      stringAsEnum: this.stringAsEnum,
-      ieee754Compatible: this.ieee754Compatible
+      ieee754Compatible: this.ieee754Compatible,
+      stringAsEnum: this.stringAsEnum
     }
   }
 

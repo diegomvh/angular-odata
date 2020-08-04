@@ -5,10 +5,8 @@ import {
   $COUNT,
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
-  QUERY_SEPARATOR,
-  parseQuery,
-  odataEtag
-} from '../types';
+  QUERY_SEPARATOR
+} from '../constants';
 import { ODataClient } from '../client';
 import { Types } from '../utils/index';
 
@@ -23,6 +21,7 @@ import {
   ODataCollection
 } from '../models/index';
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
+import { Urls, OData } from '../utils/index';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -66,7 +65,7 @@ export class ODataResource<Type> {
     if (path.indexOf(QUERY_SEPARATOR) !== -1) {
       let parts = path.split(QUERY_SEPARATOR);
       path = parts[0];
-      Object.assign(params, parseQuery(parts[1]));
+      Object.assign(params, Urls.parseQueryString(parts[1]));
     }
     return [path, params];
   }
@@ -143,7 +142,7 @@ export class ODataResource<Type> {
     }
     let etag = options.etag;
     if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
-      etag = odataEtag(options.attrs);
+      etag = OData['4.0'].etag(options.attrs);
     }
     const res$ = this.client.request(method, this, {
       body,

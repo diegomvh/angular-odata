@@ -1,46 +1,23 @@
-import { 
-  ODATA_COUNT, 
-  ODATA_NEXTLINK, 
-  ODATA_TYPE, 
-  ODATA_DELTALINK, 
-  ODATA_METADATAETAG, 
-  ODATA_MEDIA_EDITLINK, 
-  ODATA_MEDIA_ETAG, 
-  ODATA_MEDIA_READLINK, 
-  ODATA_MEDIA_CONTENTTYPE, 
-  ODATA_ID, 
-  ODATA_READLINK, 
-  ODATA_EDITLINK, 
-  ODATA_FUNCTION_PREFIX, 
-  ODATA_ANNOTATION_PREFIX,
-  odataAnnotations,
-  odataContext,
-  ODataContext,
-  odataType,
-  odataEtag
-} from '../../types';
-import { ResponseOptions } from './types';
+import { OData } from '../../utils/index';
+import { ODataContext, ODataOptions } from '../../types';
 
 export class ODataMeta {
-  annotations: {[name: string]: any};
-  options: ResponseOptions;
-  constructor(data: { [name: string]: any }, options?: ResponseOptions) {
-    this.options = options || {} as ResponseOptions;
-    switch(this.options.version) {
-      case "2.0":
-      case "3.0":
-        this.annotations = data;
-        break;
-      default:
-        this.annotations = odataAnnotations(data);
-    }
+  annotations: { [name: string]: any };
+  options?: ODataOptions;
+  protected get odv() {
+    return OData[this.options ? this.options.version : '4.0'];
+  }
+
+  constructor(data: { [name: string]: any }, options?: ODataOptions) {
+    this.annotations = OData[options ? options.version : '4.0'].annotations(data);
+    this.options = options;
   }
 
   // Context
   private _context: any;
   get context(): ODataContext {
     if (!this._context) {
-      this._context = odataContext(this.annotations) || {};
+      this._context = this.odv.context(this.annotations) || {};
     }
     return this._context;
   }
@@ -48,16 +25,7 @@ export class ODataMeta {
   private _properties: any;
   get properties() {
     if (!this._properties) {
-      this._properties = Object.keys(this.annotations)
-        .filter(k => k.indexOf(ODATA_ANNOTATION_PREFIX) > 0)
-        .reduce((acc, key) => {
-          let name = key.substr(0, key.indexOf(ODATA_ANNOTATION_PREFIX));
-          if (!(name in acc)) {
-            acc[name] = {};
-          }
-          Object.assign(acc[name], { [key.substr(key.indexOf(ODATA_ANNOTATION_PREFIX))]: this.annotations[key] });
-          return acc;
-        }, {});
+      this._properties = this.odv.properties(this.annotations) || {};
     }
     return this._properties;
   }
@@ -68,83 +36,69 @@ export class ODataMeta {
 
   // Method
   clone(): ODataMeta {
-    return new ODataMeta(this.annotations);
+    return new ODataMeta(this.annotations, this.options);
   };
 }
 
 export class ODataPropertyMeta extends ODataMeta {
   clone(): ODataPropertyMeta {
-    return new ODataPropertyMeta(this.annotations);
+    return new ODataPropertyMeta(this.annotations, this.options);
   };
 
   get type(): string {
-    return odataType(this.annotations);
-  }
-
-  get collection(): boolean {
-    return (ODATA_TYPE in this.annotations && this.annotations[ODATA_TYPE].substr(1).startsWith(`Collection`));
+    return this.odv.type(this.annotations);
   }
 }
 
 export class ODataEntityMeta extends ODataMeta {
   clone(): ODataEntityMeta {
-    return new ODataEntityMeta(this.annotations);
+    return new ODataEntityMeta(this.annotations, this.options);
   };
 
   get type(): string {
-    return odataType(this.annotations);
+    return this.odv.type(this.annotations);
   }
 
   get id() {
-    if (ODATA_ID in this.annotations)
-      return this.annotations[ODATA_ID] as string;
+    return this.odv.id(this.annotations);
   }
 
   get etag() {
-    return odataEtag(this.annotations)
+    return this.odv.etag(this.annotations)
   }
 
   get mediaEtag(): string {
-    if (ODATA_MEDIA_ETAG in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_MEDIA_ETAG] as string);
+    return this.odv.mediaEtag(this.annotations)
   }
 
   get metadataEtag() {
-    if (ODATA_METADATAETAG in this.annotations)
-      return this.annotations[ODATA_METADATAETAG] as string;
+    return this.odv.metadataEtag(this.annotations)
   }
 
   get readLink(): string {
-    if (ODATA_READLINK in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_READLINK] as string);
+    return this.odv.readLink(this.annotations)
   }
 
   get editLink(): string {
-    if (ODATA_EDITLINK in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_EDITLINK] as string);
+    return this.odv.editLink(this.annotations)
   }
 
   get mediaReadLink(): string {
-    if (ODATA_MEDIA_READLINK in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_MEDIA_READLINK] as string);
+    return this.odv.mediaReadLink(this.annotations)
   }
 
   get mediaEditLink(): string {
-    if (ODATA_MEDIA_EDITLINK in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_MEDIA_EDITLINK] as string);
+    return this.odv.mediaEditLink(this.annotations)
   }
 
   get mediaContentType(): string {
-    if (ODATA_MEDIA_CONTENTTYPE in this.annotations)
-      return this.annotations[ODATA_MEDIA_CONTENTTYPE] as string;
+    return this.odv.mediaContentType(this.annotations)
   }
 
   private _functions: any;
   get functions() {
     if (!this._functions) {
-      this._functions = Object.keys(this.annotations)
-        .filter(k => k.startsWith(ODATA_FUNCTION_PREFIX))
-        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: this.annotations[key] }), {});
+      this._functions = this.odv.functions(this.annotations) || {};
     }
     return this._functions;
   }
@@ -156,31 +110,23 @@ export class ODataEntityMeta extends ODataMeta {
 
 export class ODataEntitiesMeta extends ODataMeta {
   clone(): ODataEntitiesMeta {
-    return new ODataEntitiesMeta(this.annotations);
+    return new ODataEntitiesMeta(this.annotations, this.options);
   };
 
   get readLink(): string {
-    if (ODATA_READLINK in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_READLINK] as string);
+    return this.odv.readLink(this.annotations);
   }
 
   get count(): number {
-    if (ODATA_COUNT in this.annotations)
-      return Number(this.annotations[ODATA_COUNT]);
+    return this.odv.count(this.annotations);
   }
 
   get nextLink(): string {
-    if (this.options.version === "2.0" && '__next' in this.annotations)
-      return decodeURIComponent(this.annotations['__next'] as string);
-    else if (this.options.version === "3.0" && 'odata.nextLink' in this.annotations)
-      return decodeURIComponent(this.annotations['odata.nextLink'] as string);
-    else if (ODATA_NEXTLINK in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_NEXTLINK] as string);
+    return this.odv.nextLink(this.annotations);
   }
 
   get deltaLink(): string {
-    if (ODATA_DELTALINK in this.annotations)
-      return decodeURIComponent(this.annotations[ODATA_DELTALINK] as string);
+    return this.odv.deltaLink(this.annotations);
   }
 
   get top(): number {
@@ -201,9 +147,7 @@ export class ODataEntitiesMeta extends ODataMeta {
   private _functions: any;
   get functions() {
     if (!this._functions) {
-      this._functions = Object.keys(this.annotations)
-        .filter(k => k.startsWith(ODATA_FUNCTION_PREFIX))
-        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: this.annotations[key] }), {});
+      this._functions = this.odv.functions(this.annotations);
     }
     return this._functions;
   }

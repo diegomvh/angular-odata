@@ -1,5 +1,5 @@
 import { Enums } from '../utils';
-import { JsonSchemaExpandOptions, EnumConfig, ParseOptions, Parser } from '../types';
+import { JsonSchemaExpandOptions, EnumConfig, ODataOptions, Parser } from '../types';
 
 export class ODataEnumParser<Type> implements Parser<Type> {
   name: string;
@@ -15,7 +15,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: string, options: ParseOptions): Type {
+  deserialize(value: string, options: ODataOptions): Type {
     // string -> Type 
     if (this.flags) {
       return Enums.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
@@ -25,7 +25,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(value: Type, options: ParseOptions): string {
+  serialize(value: Type, options: ODataOptions): string {
     // Type -> string 
     if (this.flags) {
       let names = Enums.toNames(this.members, value);

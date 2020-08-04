@@ -1,4 +1,4 @@
-import { Parser, ParseOptions } from '../types';
+import { Parser, ODataOptions } from '../types';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
 
@@ -23,31 +23,31 @@ for (var i = 0; i < chars.length; i++) {
 
 export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   'Edm.Date': <Parser<Date>>{
-    deserialize(value: string, options: ParseOptions): Date {
+    deserialize(value: string, options: ODataOptions): Date {
       return new Date(`${value}T00:00:00.000Z`);
     },
-    serialize(value: Date, options: ParseOptions): string {
+    serialize(value: Date, options: ODataOptions): string {
       return value.toISOString().substring(0, 10);
     }
   },
   'Edm.TimeOfDay': <Parser<Date>>{
-    deserialize(value: string, options: ParseOptions): Date {
+    deserialize(value: string, options: ODataOptions): Date {
       return new Date(`1970-01-01T${value}Z`);
     },
-    serialize(value: Date, options: ParseOptions): string {
+    serialize(value: Date, options: ODataOptions): string {
       return value.toISOString().substring(11, 23);
     }
   },
   'Edm.DateTimeOffset': <Parser<Date>>{
-    deserialize(value: string, options: ParseOptions): Date {
+    deserialize(value: string, options: ODataOptions): Date {
       return new Date(value);
     },
-    serialize(value: Date, options: ParseOptions): string {
+    serialize(value: Date, options: ODataOptions): string {
       return value.toISOString();
     }
   },
   'Edm.Duration': <Parser<Duration>>{
-    deserialize(value: string, options: ParseOptions): Duration {
+    deserialize(value: string, options: ODataOptions): Duration {
       const matches = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(value);
       if (!matches || value.length < 3) {
         throw new TypeError(`duration invalid: "${value}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`)
@@ -61,7 +61,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         return acc;
       }, duration) as Duration;
     },
-    serialize(d: Duration, options: ParseOptions): string {
+    serialize(d: Duration, options: ODataOptions): string {
       return [
         (d.sign === -1) ? '-' : '',
         'P',
@@ -76,13 +76,13 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     }
   },
   'Edm.Decimal': <Parser<number>>{
-    deserialize(value: any, options: ParseOptions): number {
+    deserialize(value: any, options: ODataOptions): number {
       if (this.ieee754Compatible) {
         return parseFloat(value);
       }
       return value;
     },
-    serialize(value: number, options: ParseOptions): any {
+    serialize(value: number, options: ODataOptions): any {
       if (this.ieee754Compatible) {
         return parseFloat(value.toPrecision(this.precision)).toFixed(this.scale);
       }
@@ -90,27 +90,27 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     }
   },
   'Edm.Double': <Parser<number>>{
-    deserialize(value: any, options: ParseOptions): number {
+    deserialize(value: any, options: ODataOptions): number {
       if (value === 'INF') return Infinity;
       return value;
     },
-    serialize(value: number, options: ParseOptions): any {
+    serialize(value: number, options: ODataOptions): any {
       if (value === Infinity) return 'INF';
       return value;
     }
   },
   'Edm.Single': <Parser<number>>{
-    deserialize(value: any, options: ParseOptions): number {
+    deserialize(value: any, options: ODataOptions): number {
       if (value === 'INF') return Infinity;
       return value;
     },
-    serialize(value: number, options: ParseOptions): any {
+    serialize(value: number, options: ODataOptions): any {
       if (value === Infinity) return 'INF';
       return value;
     }
   },
   'Edm.Binary': <Parser<ArrayBuffer>>{
-    deserialize(base64: string, options: ParseOptions): ArrayBuffer {
+    deserialize(base64: string, options: ODataOptions): ArrayBuffer {
       var bufferLength = base64.length * 0.75,
         len = base64.length, i, p = 0,
         encoded1, encoded2, encoded3, encoded4;
@@ -138,7 +138,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
 
       return arraybuffer;
     },
-    serialize(arrayBuffer: ArrayBuffer, options: ParseOptions): string {
+    serialize(arrayBuffer: ArrayBuffer, options: ODataOptions): string {
       var bytes = new Uint8Array(arrayBuffer),
         i, len = bytes.length, base64 = "";
 

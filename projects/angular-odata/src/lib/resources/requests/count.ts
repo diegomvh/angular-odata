@@ -4,8 +4,8 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataResource } from '../resource';
 import { ODataClient } from '../../client';
-import { $COUNT } from '../../types';
 import { HttpOptions } from './options';
+import { $COUNT } from '../../constants';
 
 export class ODataCountResource extends ODataResource<any> {
   //#region Factory

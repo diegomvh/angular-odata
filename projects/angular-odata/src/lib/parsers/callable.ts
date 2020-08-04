@@ -1,9 +1,9 @@
 import { Types } from '../utils';
-import { Parser, ParseOptions, Parameter, CallableConfig } from '../types';
+import { Parser, ODataOptions, Parameter, CallableConfig } from '../types';
 
 const NONE_PARSER = {
-  deserialize(value: any, options: ParseOptions) {return value},
-  serialize(value: any, options: ParseOptions) {return value} 
+  deserialize(value: any, options: ODataOptions) {return value},
+  serialize(value: any, options: ODataOptions) {return value} 
 } as Parser<any>;
 
 export class ODataParameterParser<Type> implements Parser<Type> {
@@ -20,7 +20,7 @@ export class ODataParameterParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): Type {
+  deserialize(value: any, options: ODataOptions): Type {
     return this.parser.deserialize(value, options);
     /*
     if (this.parser instanceof ODataEntityParser) {
@@ -34,7 +34,7 @@ export class ODataParameterParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(value: Type, options: ParseOptions): any {
+  serialize(value: Type, options: ODataOptions): any {
     return this.parser.serialize(value, options);
     /*
     if (this.parser instanceof ODataEntityParser) {
@@ -68,12 +68,12 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   // Deserialize
-  deserialize(value: any, options: ParseOptions): R {
+  deserialize(value: any, options: ODataOptions): R {
     return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(params: any, options: ParseOptions): any {
+  serialize(params: any, options: ODataOptions): any {
     return Object.assign({}, this.parameters
       .filter(p => p.name in params && !Types.isNullOrUndefined(params[p.name]))
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})

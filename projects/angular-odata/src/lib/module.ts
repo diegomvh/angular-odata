@@ -3,8 +3,9 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ODataSettings } from './settings';
 import { ODataClient } from './client';
-import { Configuration, ODATA_CONFIGURATIONS } from './types';
 import { ODataServiceFactory } from './service';
+import { ODATA_CONFIGURATIONS } from './tokens';
+import { Configuration } from './types';
 
 export function createSettings(configs: Configuration[]) {
   return new ODataSettings(...configs);

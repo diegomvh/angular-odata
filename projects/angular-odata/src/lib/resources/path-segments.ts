@@ -5,7 +5,7 @@ import { PlainObject } from './builder';
 import { Types, Dates } from '../utils/index';
 
 import { OptionHandler } from './query-options';
-import { PATH_SEPARATOR } from '../types';
+import { PATH_SEPARATOR } from '../constants';
 
 export enum PathSegmentNames {
   batch = 'batch',

@@ -1,8 +1,7 @@
 import buildQuery, { alias, Alias } from './builder';
 import { PlainObject } from './builder';
 
-import { Dates, Types } from '../utils/index';
-import { parseQuery } from '../types';
+import { Dates, Types, Urls } from '../utils/index';
 
 export enum QueryOptionNames {
   // System options
@@ -44,7 +43,7 @@ export class ODataQueryOptions {
         .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
 
     let query = buildQuery(options);
-    let params = (query) ? parseQuery(query.substr(1)) : {};
+    let params = (query) ? Urls.parseQueryString(query.substr(1)) : {};
 
     // Custom
     let custom = this.options[QueryOptionNames.custom] || {};

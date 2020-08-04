@@ -4,8 +4,8 @@ import { ODataResource } from '../resource';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataClient } from '../../client';
-import { $VALUE } from '../../types';
 import { HttpOptions } from './options';
+import { $VALUE } from '../../constants';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   //#region Factory

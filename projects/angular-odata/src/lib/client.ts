@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@a
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { IF_MATCH_HEADER, Parser, ACCEPT } from './types';
 import { Types } from './utils/index';
 import { 
   ODataModel,
@@ -28,6 +27,8 @@ import {
 } from './resources/index';
 import { ODataApiConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './config';
 import { ODataSettings } from './settings';
+import { Parser } from './types';
+import { IF_MATCH_HEADER, ACCEPT } from './constants';
 
 @Injectable()
 export class ODataClient {
@@ -384,6 +385,8 @@ export class ODataClient {
       this.settings.configForTypes(resource.types());
     if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
+    const odata = config.options();
+
     // The Path and Params from resource
     const [resourcePath, resourceParams] = resource.pathAndParams();
 
@@ -394,11 +397,11 @@ export class ODataClient {
 
     let accept = [];
     // Metadata ?
-    if (!Types.isUndefined(config.metadata))
-      accept.push(`odata.metadata=${config.metadata}`);
+    if (!Types.isUndefined(odata.metadata))
+      accept.push(`odata.metadata=${odata.metadata}`);
     // IEEE754
-    if (!Types.isUndefined(config.ieee754Compatible))
-      accept.push(`IEEE754Compatible=${config.ieee754Compatible}`);
+    if (!Types.isUndefined(odata.ieee754Compatible))
+      accept.push(`IEEE754Compatible=${odata.ieee754Compatible}`);
     if (accept.length > 0)
       customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;
     let headers = this.mergeHttpHeaders(config.headers, customHeaders, options.headers);
