@@ -7,7 +7,7 @@ import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty, ODataResponseOptions } from './types';
 import { OData } from '../../utils';
-import { VALUE, APPLICATION_JSON } from '../../constants';
+import { VALUE, APPLICATION_JSON, ODATA_VERSION, ODATA_VERSION_HEADERS } from '../../constants';
 
 export class ODataResponse<T> {
   readonly body: any | null;
@@ -54,11 +54,10 @@ export class ODataResponse<T> {
           }
         });
       }
-      const version = this.headers.get("odata-version") ||
-        this.headers.get("OData-Version") ||
-        this.headers.get("dataserviceversion");
+      const key = this.headers.keys().find(k => ODATA_VERSION_HEADERS.indexOf(k) !== -1);
+      const version = this.headers.get(key).replace(/\;/g, "");
       if (version)
-        this._options.version = version.split(";")[0] as '2.0' | '3.0' | '4.0';
+        this._options.version = version as '2.0' | '3.0' | '4.0';
       const etag = this.headers.get("ETag");
       if (etag)
         this._options.etag = etag;

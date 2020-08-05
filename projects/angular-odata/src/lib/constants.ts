@@ -15,6 +15,7 @@ export const CONTENT_TYPE = 'Content-Type';
 export const HTTP11 = 'HTTP/1.1';
 export const ODATA_VERSION = 'OData-Version';
 export const ACCEPT = 'Accept';
+export const ODATA_VERSION_HEADERS = [ODATA_VERSION, ODATA_VERSION.toLowerCase(), 'dataserviceversion'];
 
 // HTTP HEADER VALUES
 export const APPLICATION_JSON = 'application/json';
