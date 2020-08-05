@@ -30,8 +30,8 @@ export class ODataSettings {
   }
 
   public apiConfigForTypes(types: string[]) {
-    if (this.configs.length > 1 && types.length > 1) {
-      const config = this.configs.find(c => c.schemas.some(s => types.some(type => type.startsWith(s.namespace))));
+    if (this.configs.length > 1) {
+      const config = this.configs.find(c => c.schemas.some(s => types.some(type => s.isNamespaceOf(type))));
       return config || this.configs.find(c => c.default);
     }
     return this.configs.find(c => c.default);

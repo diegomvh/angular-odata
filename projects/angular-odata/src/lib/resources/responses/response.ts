@@ -68,8 +68,8 @@ export class ODataResponse<T> {
   private parse(parser: Parser<T>, value: any): any {
     const opts = this.options();
     const type = Types.isObject(value) ? OData[opts.version].type(value) : undefined;
-    if (!Types.isUndefined(type) && parser instanceof ODataEntityParser && parser.type !== type) {
-      parser = parser.findParser(c => c.type === type);
+    if (!Types.isUndefined(type) && parser instanceof ODataEntityParser) {
+      parser = parser.findParser(c => c.isTypeOf(type));
     }
     return parser.deserialize(value, this.config.options());
   }

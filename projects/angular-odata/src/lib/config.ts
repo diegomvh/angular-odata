@@ -67,33 +67,33 @@ export class ODataApiConfig {
 
   //#region Find Config for Type
   private schemaForType(type: string) {
-    let schema = this.schemas.find(s => type.startsWith(s.namespace));
-    if (schema)
-      return schema;
+    let schemas = this.schemas.filter(s => s.isNamespaceOf(type));
+    if (schemas.length === 1) return schemas[0];
+    return schemas.sort((s1, s2) => s2.namespace.length - s1.namespace.length)[0];
   }
 
   public enumConfigForType<T>(type: string) {
     let schema = this.schemaForType(type);
     if (schema)
-      return schema.enums.find(e => e.type === type) as ODataEnumConfig<T>;
+      return schema.enums.find(e => e.isTypeOf(type)) as ODataEnumConfig<T>;
   }
 
   public entityConfigForType<T>(type: string) {
     let schema = this.schemaForType(type);
     if (schema)
-      return schema.entities.find(e => e.type === type) as ODataEntityConfig<T>;
+      return schema.entities.find(e => e.isTypeOf(type)) as ODataEntityConfig<T>;
   }
 
   public callableConfigForType<T>(type: string) {
     let schema = this.schemaForType(type);
     if (schema)
-      return schema.callables.find(e => e.type === type) as ODataCallableConfig<T>;
+      return schema.callables.find(e => e.isTypeOf(type)) as ODataCallableConfig<T>;
   }
 
   public serviceConfigForType(type: string) {
     let schema = this.schemaForType(type);
     if (schema) {
-      return schema.services.find(s => s.type === type) as ODataServiceConfig;
+      return schema.services.find(s => s.isTypeOf(type)) as ODataServiceConfig;
     }
   }
 
@@ -152,9 +152,12 @@ export class ODataApiConfig {
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
     }
-    let config = this.enumConfigForType<T>(type) || this.entityConfigForType<T>(type) || this.callableConfigForType<T>(type);
-    if (!Types.isUndefined(config))
-      return config.parser as Parser<T>;
+    // Not edms here
+    if (!type.startsWith("Edm.")) {
+      let config = this.enumConfigForType<T>(type) || this.entityConfigForType<T>(type) || this.callableConfigForType<T>(type);
+      if (!Types.isUndefined(config))
+        return config.parser as Parser<T>;
+    }
   }
 }
 
@@ -189,6 +192,10 @@ export class ODataSchemaConfig {
     this.containers = (schema.containers || []).map(container => new ODataContainerConfig(container, this));
   }
 
+  isNamespaceOf(type: string) {
+    return type.startsWith(this.namespace) || (this.alias && type.startsWith(this.alias));
+  }
+
   options() {
     return this.api.options();
   }
@@ -210,17 +217,22 @@ export class ODataSchemaConfig {
 export class ODataEnumConfig<Type> {
   schema: ODataSchemaConfig;
   name: string;
-  type: string;
   parser?: ODataEnumParser<Type>;
   members: {[name: string]: number} | {[value: number]: string};
   constructor(enu: EnumConfig<Type>, schema: ODataSchemaConfig) {
     this.schema = schema;
     this.name = enu.name;
     this.members = enu.members;
-    this.type = `${schema.namespace}.${this.name}`;
     this.parser = new ODataEnumParser(enu as EnumConfig<any>, schema.namespace);
   }
 
+  isTypeOf(type: string) {
+    var names = [`${this.schema.namespace}.${this.name}`];
+    if (this.schema.alias)
+      names.push(`${this.schema.alias}.${this.name}`);
+    return names.indexOf(type) !== -1;
+  }
+  
   options() {
     return this.schema.options();
   }
@@ -229,7 +241,6 @@ export class ODataEnumConfig<Type> {
 export class ODataEntityConfig<Type> {
   schema: ODataSchemaConfig;
   name: string;
-  type: string;
   annotations: any[];
   model?: { new(...any): any };
   collection?: { new(...any): any };
@@ -238,11 +249,17 @@ export class ODataEntityConfig<Type> {
   constructor(config: EntityConfig<Type>, schema: ODataSchemaConfig) {
     this.schema = schema;
     this.name = config.name;
-    this.type = `${schema.namespace}.${this.name}`;
     this.annotations = config.annotations;
     this.model = config.model;
     this.collection = config.collection;
-    this.parser = new ODataEntityParser(config, schema.namespace);
+    this.parser = new ODataEntityParser(config, schema.namespace, schema.alias);
+  }
+
+  isTypeOf(type: string) {
+    var names = [`${this.schema.namespace}.${this.name}`];
+    if (this.schema.alias)
+      names.push(`${this.schema.alias}.${this.name}`);
+    return names.indexOf(type) !== -1;
   }
 
   options() {
@@ -279,7 +296,6 @@ export class ODataEntityConfig<Type> {
 export class ODataCallableConfig<R> {
   schema: ODataSchemaConfig;
   name: string;
-  type: string;
   path?: string;
   bound?: boolean;
   composable?: boolean;
@@ -288,11 +304,17 @@ export class ODataCallableConfig<R> {
   constructor(config: CallableConfig, schema: ODataSchemaConfig) {
     this.schema = schema;
     this.name = config.name;
-    this.type = `${schema.namespace}.${config.name}`;
     this.path = config.path || (config.bound ? `${schema.namespace}.${config.name}` : config.name);
     this.bound = config.bound;
     this.composable = config.composable;
     this.parser = new ODataCallableParser(config, schema.namespace);
+  }
+
+  isTypeOf(type: string) {
+    var names = [`${this.schema.namespace}.${this.name}`];
+    if (this.schema.alias)
+      names.push(`${this.schema.alias}.${this.name}`);
+    return names.indexOf(type) !== -1;
   }
 
   options() {
@@ -307,13 +329,11 @@ export class ODataCallableConfig<R> {
 export class ODataContainerConfig {
   schema: ODataSchemaConfig;
   name: string;
-  type: string;
   annotations: any[];
   services?: Array<ODataServiceConfig>;
   constructor(config: ContainerConfig, schema: ODataSchemaConfig) {
     this.schema = schema;
     this.name = config.name;
-    this.type = `${schema.namespace}.${this.name}`;
     this.annotations = config.annotations;
     this.services = (config.services || []).map(config => new ODataServiceConfig(config, schema));
   }
@@ -326,13 +346,18 @@ export class ODataContainerConfig {
 export class ODataServiceConfig {
   schema: ODataSchemaConfig
   name: string;
-  type: string;
   annotations: any[];
   constructor(config: ServiceConfig, schema: ODataSchemaConfig) {
     this.schema = schema;
     this.name = config.name;
-    this.type = `${schema.namespace}.${this.name}`;
     this.annotations = config.annotations;
+  }
+
+  isTypeOf(type: string) {
+    var names = [`${this.schema.namespace}.${this.name}`];
+    if (this.schema.alias)
+      names.push(`${this.schema.alias}.${this.name}`);
+    return names.indexOf(type) !== -1;
   }
 
   options() {

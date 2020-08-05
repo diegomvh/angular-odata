@@ -9,7 +9,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
 
   constructor(meta: EnumConfig<Type>, namespace: string) {
     this.name = meta.name;
-    this.type = `${namespace}.${meta.name}`;
+    //this.type = `${namespace}.${meta.name}`;
     this.flags = meta.flags;
     this.members = meta.members;
   }

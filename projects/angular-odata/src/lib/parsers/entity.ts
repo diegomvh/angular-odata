@@ -34,8 +34,8 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   // Deserialize
   private parse(parser: ODataEntityParser<Type>, value: any, options: ODataOptions): any {
     const type = Types.isObject(value) ? OData[options.version].type(value) : undefined;
-    if (!Types.isUndefined(type) && parser.type !== type) {
-      return parser.findParser(c => c.type === type).deserialize(value, options);
+    if (!Types.isUndefined(type)) {
+      return parser.findParser(c => c.isTypeOf(type)).deserialize(value, options);
     }
     return parser.deserialize(value, options);
   }
@@ -53,8 +53,8 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   // Serialize
   private toJson(parser: ODataEntityParser<Type>, value: any, options: ODataOptions): any {
     const type = Types.isObject(value) ? OData[options.version].type(value) : undefined;
-    if (!Types.isUndefined(type) && parser.type !== type) {
-      return parser.findParser(c => c.type === type).serialize(value, options);
+    if (!Types.isUndefined(type)) {
+      return parser.findParser(c => c.isTypeOf(type)).serialize(value, options);
     }
     return parser.serialize(value, options);
   }
@@ -101,19 +101,28 @@ export class ODataFieldParser<Type> implements Parser<Type> {
 
 export class ODataEntityParser<Type> implements Parser<Type> {
   name: string;
-  type: string;
+  namespace: string;
+  alias?: string;
   base: string;
   parent: ODataEntityParser<any>;
   children: ODataEntityParser<any>[];
   fields: ODataFieldParser<any>[];
 
-  constructor(config: EntityConfig<Type>, namespace: string) {
+  constructor(config: EntityConfig<Type>, namespace: string, alias?: string) {
     this.name = config.name;
-    this.type = `${namespace}.${config.name}`;
     this.base = config.base;
+    this.namespace = namespace;
+    this.alias = alias;
     this.children = [];
     this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataFieldParser(name, f as Field));
+  }
+
+  isTypeOf(type: string) {
+    var names = [`${this.namespace}.${this.name}`];
+    if (this.alias)
+      names.push(`${this.alias}.${this.name}`);
+    return names.indexOf(type) !== -1;
   }
 
   // Deserialize
@@ -139,6 +148,8 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   configure(settings: { parserForType: (type: string) => Parser<any> }) {
     if (this.base) {
       const parent = settings.parserForType(this.base) as ODataEntityParser<any>;
+      if (parent === undefined)
+        console.log(this.base);
       parent.children.push(this);
       this.parent = parent;
     }

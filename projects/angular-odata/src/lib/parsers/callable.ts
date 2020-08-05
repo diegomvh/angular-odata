@@ -54,14 +54,14 @@ export class ODataParameterParser<Type> implements Parser<Type> {
 
 export class ODataCallableParser<R> implements Parser<R> {
   name: string;
-  type: string;
+  //type: string;
   return?: string;
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
 
   constructor(config: CallableConfig, namespace: string) {
     this.name = config.name;
-    this.type = `${namespace}.${config.name}`;
+    //this.type = `${namespace}.${config.name}`;
     this.return = config.return;
     this.parameters = Object.entries(config.parameters || [])
       .map(([name, p]) => new ODataParameterParser(name, p as Parameter));
