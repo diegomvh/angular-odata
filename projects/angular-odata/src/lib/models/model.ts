@@ -18,6 +18,7 @@ import { ODataMeta, ODataEntityMeta, ODataEntitiesMeta } from '../resources/resp
 import { ODataEntityConfig } from '../config';
 import { ODataFieldParser } from '../parsers/entity';
 import { OData } from '../utils';
+import { DEFAULT_VERSION } from '../constants';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;
@@ -91,7 +92,7 @@ export class ODataModel<T> {
   }
 
   protected populate(entity: any, meta?: ODataMeta) {
-    this._entity = OData['4.0'].attributes(entity) as T;
+    this._entity = OData[DEFAULT_VERSION].attributes(entity) as T;
     this._meta = meta || new ODataEntityMeta(entity);
     this._relations = {};
     Object.assign(this, this.parse(this._entity));

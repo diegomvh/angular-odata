@@ -5,7 +5,12 @@ import {
   $COUNT,
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
-  QUERY_SEPARATOR
+  QUERY_SEPARATOR,
+  DEFAULT_VERSION,
+  VERSION_4_0,
+  VERSION_3_0,
+  $INLINECOUNT,
+  VERSION_2_0
 } from '../constants';
 import { ODataClient } from '../client';
 import { Types } from '../utils/index';
@@ -56,7 +61,8 @@ export class ODataResource<Type> {
   // Proxy to client
   config() {
     let config = this.client.configFor(this);
-    return config.enumConfigForType<Type>(this.type()) || config.entityConfigForType<Type>(this.type()) || config.callableConfigForType<Type>(this.type());
+    if (config)
+      return config.enumConfigForType<Type>(this.type()) || config.entityConfigForType<Type>(this.type()) || config.callableConfigForType<Type>(this.type());
   }
 
   pathAndParams(): [string, PlainObject] {
@@ -126,8 +132,14 @@ export class ODataResource<Type> {
     }): Observable<any> {
 
     let params = options.params;
-    if (options.withCount)
-      params = this.client.mergeHttpParams(params, { [$COUNT]: 'true' })
+    if (options.withCount) {
+      const config = this.config();
+      const version = config ? config.options().version : DEFAULT_VERSION;
+      if (version === VERSION_2_0 || version === VERSION_3_0)
+        params = this.client.mergeHttpParams(params, { [$INLINECOUNT]: 'allpages' });
+      else if (version === VERSION_4_0)
+        params = this.client.mergeHttpParams(params, { [$COUNT]: 'true' });
+    }
 
     let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 
       (options.responseType && ['property', 'entity', 'entities'].indexOf(options.responseType) !== -1) ? 
@@ -142,7 +154,7 @@ export class ODataResource<Type> {
     }
     let etag = options.etag;
     if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
-      etag = OData['4.0'].etag(options.attrs);
+      etag = OData[DEFAULT_VERSION].etag(options.attrs);
     }
     const res$ = this.client.request(method, this, {
       body,

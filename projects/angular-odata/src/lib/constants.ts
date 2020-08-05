@@ -7,6 +7,7 @@ export const $BATCH = '$batch';
 export const $REF = '$ref';
 export const $VALUE = '$value';
 export const $COUNT = '$count';
+export const $INLINECOUNT = '$inlinecount';
 
 // HTTP HEADERS
 export const IF_MATCH_HEADER = 'If-Match';
@@ -19,11 +20,16 @@ export const ACCEPT = 'Accept';
 export const APPLICATION_JSON = 'application/json';
 export const APPLICATION_HTTP = 'application/http';
 export const TEXT_PLAIN = 'text/plain';
-export const VERSION_4_0 = '4.0';
 export const MULTIPART_MIXED = 'multipart/mixed';
 export const MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
 export const CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';
 export const CONTENT_ID = 'Content-ID';
+
+// VERSIONS
+export const VERSION_4_0 = '4.0';
+export const VERSION_3_0 = '3.0';
+export const VERSION_2_0 = '2.0';
+export const DEFAULT_VERSION = VERSION_4_0;
 
 export const BINARY = 'binary';
 export const BOUNDARY_PREFIX_SUFFIX = '--';

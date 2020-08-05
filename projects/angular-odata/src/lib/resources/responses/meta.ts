@@ -1,15 +1,16 @@
 import { OData } from '../../utils/index';
 import { ODataContext, ODataOptions } from '../../types';
+import { DEFAULT_VERSION } from '../../constants';
 
 export class ODataMeta {
   annotations: { [name: string]: any };
   options?: ODataOptions;
   protected get odv() {
-    return OData[this.options ? this.options.version : '4.0'];
+    return OData[this.options ? this.options.version : DEFAULT_VERSION];
   }
 
   constructor(data: { [name: string]: any }, options?: ODataOptions) {
-    this.annotations = OData[options ? options.version : '4.0'].annotations(data);
+    this.annotations = OData[options ? options.version : DEFAULT_VERSION].annotations(data);
     this.options = options;
   }
 

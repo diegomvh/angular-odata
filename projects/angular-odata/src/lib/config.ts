@@ -6,6 +6,7 @@ import { ODataEnumParser } from './parsers/enum';
 import { ODataEntityParser, ODataFieldParser } from './parsers/entity';
 import { ODataCallableParser } from './parsers/callable';
 import { EDM_PARSERS } from './parsers/edm';
+import { DEFAULT_VERSION } from './constants';
 
 export class ODataApiConfig {
   serviceRootUrl: string;
@@ -38,7 +39,7 @@ export class ODataApiConfig {
     this.params = config.params || {};
     this.headers = config.headers || {};
     this.withCredentials = config.withCredentials;
-    this.version = config.version || '4.0';
+    this.version = config.version || DEFAULT_VERSION;
     this.metadata = config.metadata;
     this.ieee754Compatible = config.ieee754Compatible;
     this.stringAsEnum = config.stringAsEnum;

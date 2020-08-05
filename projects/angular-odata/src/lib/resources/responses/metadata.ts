@@ -11,6 +11,7 @@ import { CsdlEntityContainer } from './csdl/csdl-entity-container';
 import { CsdlReference, CsdlInclude, CsdlIncludeAnnotations } from './csdl/csdl-reference';
 import { CsdlAnnotation, CsdlTerm, CsdlAnnotations } from './csdl/csdl-annotation';
 import { CsdlNavigationPropertyBinding } from './csdl/csdl-navigation-property-binding';
+import { VERSION_4_0 } from '../../constants';
 
 enum FieldType {
     ATTRIBUTE, TAG
@@ -149,7 +150,7 @@ export class ODataMetadata {
             throw new Error('OData version is not specified in the metadata');
         }
         const odataVersion: string = attr.nodeValue;
-        if (odataVersion !== '4.0') {
+        if (odataVersion !== VERSION_4_0) {
             throw new Error('OData version "' + odataVersion + '" is not supported');
         }
     }

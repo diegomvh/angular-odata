@@ -1,4 +1,5 @@
 import { ODataContext } from '../types';
+import { VERSION_3_0, VERSION_2_0, VERSION_4_0 } from '../constants';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
@@ -25,7 +26,7 @@ export interface ODataVersionTools {
 
 export const OData = {
   //#region Version 4.0
-  '4.0': <ODataVersionTools> {
+  [VERSION_4_0]: <ODataVersionTools> {
     ODATA_ANNOTATION_PREFIX: '@odata',
     ODATA_FUNCTION_PREFIX: '#',
     //odata.id: the ID of the entity
@@ -165,10 +166,12 @@ export const OData = {
   },
   //#endregion
   //#region Version 3.0
-  '3.0': <ODataVersionTools>{
+  [VERSION_3_0]: <ODataVersionTools>{
+    ODATA_CONTEXT: 'odata.metadata',
     ODATA_NEXTLINK: 'odata.nextLink',
-    annotations(value: Object){ return undefined; },
-    attributes(value: Object){ return undefined; },
+    ODATA_COUNT: 'odata.count',
+    annotations(value: Object){ return value; },
+    attributes(value: Object){ return value; },
     etag(value: Object) {
       if (this.ODATA_ETAG in value) {
         return value[this.ODATA_ETAG] as string;
@@ -191,14 +194,18 @@ export const OData = {
     mediaEditLink(value: Object){ return undefined; },
     mediaContentType(value: Object){ return undefined; },
     deltaLink(value: Object){ return undefined; },
-    count(value: Object){ return undefined; },
+    count(value: Object) {
+      if (this.ODATA_COUNT in value)
+        return Number(value[this.ODATA_COUNT]);
+    }
   },
   //#endregion
   //#region Version 2.0
-  '2.0': <ODataVersionTools>{
+  [VERSION_2_0]: <ODataVersionTools>{
     ODATA_NEXTLINK: '__next',
-    annotations(value: Object){ return undefined; },
-    attributes(value: Object){ return undefined; },
+    ODATA_COUNT: '__count',
+    annotations(value: Object){ return value; },
+    attributes(value: Object){ return value; },
     etag(value: Object) {
       if (this.ODATA_ETAG in value) {
         return value[this.ODATA_ETAG] as string;
@@ -221,7 +228,10 @@ export const OData = {
     mediaEditLink(value: Object){ return undefined; },
     mediaContentType(value: Object){ return undefined; },
     deltaLink(value: Object){ return undefined; },
-    count(value: Object){ return undefined; }
+    count(value: Object) {
+      if (this.ODATA_COUNT in value)
+        return Number(value[this.ODATA_COUNT]);
+    }
   }
   //#endregion
 }
