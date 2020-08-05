@@ -161,6 +161,7 @@ export class ODataApiConfig {
 export class ODataSchemaConfig {
   api: ODataApiConfig;
   namespace: string;
+  alias?: string;
   enums?: Array<ODataEnumConfig<any>>;
   entities?: Array<ODataEntityConfig<any>>;
   callables?: Array<ODataCallableConfig<any>>;
@@ -169,6 +170,7 @@ export class ODataSchemaConfig {
   constructor(schema: SchemaConfig, api: ODataApiConfig) {
     this.api = api;
     this.namespace = schema.namespace;
+    this.alias = schema.alias;
     this.enums = (schema.enums || []).map(config => new ODataEnumConfig(config, this));
     this.entities = (schema.entities || []).map(config => new ODataEntityConfig(config, this));
     // Merge callables

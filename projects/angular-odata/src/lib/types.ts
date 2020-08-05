@@ -67,6 +67,7 @@ export type ApiConfig = {
 
 export type SchemaConfig = {
   namespace: string;
+  alias?: string;
   annotations?: Array<any>;
   enums?: Array<EnumConfig<any>>;
   entities?: Array<EntityConfig<any>>;
