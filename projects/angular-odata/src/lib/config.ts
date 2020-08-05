@@ -1,4 +1,4 @@
-import { EntityConfig, EnumConfig, ServiceConfig, Schema, Container, Parser, Configuration, CallableConfig, ODataOptions } from './types';
+import { EntityConfig, EnumConfig, ServiceConfig, SchemaConfig, ContainerConfig, Parser, ApiConfig, CallableConfig, ODataOptions } from './types';
 import { Types } from './utils';
 import { ODataModel } from './models/model';
 import { ODataCollection } from './models/collection';
@@ -28,7 +28,7 @@ export class ODataApiConfig {
   // Schemas
   schemas?: Array<ODataSchemaConfig>;
 
-  constructor(config: Configuration) {
+  constructor(config: ApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
     if (this.serviceRootUrl.indexOf('?') != -1)
       throw new Error("The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters");
@@ -164,9 +164,9 @@ export class ODataSchemaConfig {
   enums?: Array<ODataEnumConfig<any>>;
   entities?: Array<ODataEntityConfig<any>>;
   callables?: Array<ODataCallableConfig<any>>;
-  containers?: Array<ODataContainer>;
+  containers?: Array<ODataContainerConfig>;
 
-  constructor(schema: Schema, api: ODataApiConfig) {
+  constructor(schema: SchemaConfig, api: ODataApiConfig) {
     this.api = api;
     this.namespace = schema.namespace;
     this.enums = (schema.enums || []).map(config => new ODataEnumConfig(config, this));
@@ -184,7 +184,7 @@ export class ODataSchemaConfig {
       return acc;
     }, []);
     this.callables = configs.map(config => new ODataCallableConfig(config, this));
-    this.containers = (schema.containers || []).map(container => new ODataContainer(container, this));
+    this.containers = (schema.containers || []).map(container => new ODataContainerConfig(container, this));
   }
 
   options() {
@@ -302,13 +302,13 @@ export class ODataCallableConfig<R> {
   }
 }
 
-export class ODataContainer {
+export class ODataContainerConfig {
   schema: ODataSchemaConfig;
   name: string;
   type: string;
   annotations: any[];
   services?: Array<ODataServiceConfig>;
-  constructor(config: Container, schema: ODataSchemaConfig) {
+  constructor(config: ContainerConfig, schema: ODataSchemaConfig) {
     this.schema = schema;
     this.name = config.name;
     this.type = `${schema.namespace}.${this.name}`;

@@ -35,25 +35,24 @@ export class ODataClient {
   private _batch: ODataBatchResource;
   constructor(protected http: HttpClient, protected settings: ODataSettings) { }
 
-  configFor(resource: ODataResource<any>): ODataApiConfig {
-    return this.settings.configForTypes(resource.types());
+  apiConfigFor(resource: ODataResource<any>): ODataApiConfig {
+    return this.settings.apiConfigForTypes(resource.types());
   }
 
   endpointUrl(resource: ODataResource<any>) {
-    const config = this.configFor(resource);
-    if (config)
-      return `${config.serviceRootUrl}${resource}`;
+    const config = this.apiConfigFor(resource);
+    return `${config.serviceRootUrl}${resource}`;
   }
 
   parserFor<T>(resource: ODataResource<any>): Parser<T> {
-    const config = this.configFor(resource);
-    if (config && resource.type())
+    const config = this.apiConfigFor(resource);
+    if (resource.type())
       return config.parserForType<T>(resource.type());
   }
 
   // Resolve Building Blocks
-  configForType(type: string): ODataApiConfig {
-    return this.settings.configForType(type);
+  apiConfigForType(type: string): ODataApiConfig {
+    return this.settings.apiConfigForType(type);
   }
 
   entityConfigForType<T>(type: string): ODataEntityConfig<T> {
@@ -381,8 +380,8 @@ export class ODataClient {
   } = {}): Observable<any> {
 
     let config = options.config ? 
-      this.settings.config(options.config) : 
-      this.settings.configForTypes(resource.types());
+      this.settings.apiConfig(options.config) : 
+      this.settings.apiConfigForTypes(resource.types());
     if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
     const odata = config.options();

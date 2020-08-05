@@ -17,7 +17,6 @@ import { ODataValueResource } from './value';
 import { ODataEntity } from '../responses/index';
 import { map, catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ODataEntityConfig } from '../../config';
 import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
@@ -33,7 +32,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   config() {
-    return super.config() as ODataEntityConfig<T>;
+    let config = this.client.apiConfigFor(this);
+    return config.entityConfigForName<T>(this.type());
   }
 
   //#region Inmutable Resource

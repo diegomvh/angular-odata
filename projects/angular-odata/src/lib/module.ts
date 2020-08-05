@@ -5,9 +5,9 @@ import { ODataSettings } from './settings';
 import { ODataClient } from './client';
 import { ODataServiceFactory } from './service';
 import { ODATA_CONFIGURATIONS } from './tokens';
-import { Configuration } from './types';
+import { ApiConfig } from './types';
 
-export function createSettings(configs: Configuration[]) {
+export function createSettings(configs: ApiConfig[]) {
   return new ODataSettings(...configs);
 }
 
@@ -16,7 +16,7 @@ export function createSettings(configs: Configuration[]) {
   providers: [ODataClient, ODataServiceFactory]
 })
 export class ODataModule {
-  public static forRoot(...configs: Configuration[]): ModuleWithProviders<ODataModule> {
+  public static forRoot(...configs: ApiConfig[]): ModuleWithProviders<ODataModule> {
     return {
       ngModule: ODataModule,
       providers: [

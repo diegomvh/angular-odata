@@ -49,7 +49,7 @@ export type Parser<T> = {
   serialize(value: T, options: ODataOptions): any;
 }
 
-export type Configuration = {
+export type ApiConfig = {
   serviceRootUrl: string,
   name?: string,
   default?: boolean,
@@ -62,19 +62,19 @@ export type Configuration = {
   ieee754Compatible?: boolean,
   creation?: Date,
   parsers?: {[type: string]: Parser<any>};
-  schemas?: Array<Schema>,
+  schemas?: Array<SchemaConfig>,
 }
 
-export type Schema = {
+export type SchemaConfig = {
   namespace: string;
   annotations?: Array<any>;
   enums?: Array<EnumConfig<any>>;
   entities?: Array<EntityConfig<any>>;
   callables?: Array<CallableConfig>;
-  containers?: Array<Container>
+  containers?: Array<ContainerConfig>
 }
 
-export type Container = {
+export type ContainerConfig = {
   name: string;
   annotations?: Array<any>;
   services?: Array<ServiceConfig>;

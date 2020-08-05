@@ -1,4 +1,4 @@
-import { Configuration, Parser } from './types';
+import { ApiConfig, Parser } from './types';
 import { ODataApiConfig } from './config';
 import { Types } from './utils';
 import { ODataCollection } from './models/collection';
@@ -7,7 +7,7 @@ import { ODataModel } from './models/model';
 export class ODataSettings {
   configs?: Array<ODataApiConfig>;
 
-  constructor(...configs: Configuration[]) {
+  constructor(...configs: ApiConfig[]) {
     this.configs = configs.map(config => new ODataApiConfig(config));
     if (this.configs.length > 1) {
       if (this.configs.some(c => Types.isUndefined(c.name)))
@@ -21,7 +21,7 @@ export class ODataSettings {
     this.configs.forEach(config => config.configure());
   }
 
-  public config(name?: string) {
+  public apiConfig(name?: string) {
     if (this.configs.length > 1 && !Types.isUndefined(name)) {
       const config = this.configs.find(c => c.name === name);
       return config || this.configs.find(c => c.default);
@@ -29,7 +29,7 @@ export class ODataSettings {
     return this.configs.find(c => c.default);
   }
 
-  public configForTypes(types: string[]) {
+  public apiConfigForTypes(types: string[]) {
     if (this.configs.length > 1 && types.length > 1) {
       const config = this.configs.find(c => c.schemas.some(s => types.some(type => type.startsWith(s.namespace))));
       return config || this.configs.find(c => c.default);
@@ -37,8 +37,8 @@ export class ODataSettings {
     return this.configs.find(c => c.default);
   }
 
-  public configForType(type: string) {
-    return this.configForTypes([type]);
+  public apiConfigForType(type: string) {
+    return this.apiConfigForTypes([type]);
   }
 
   //#region Configs shortcuts

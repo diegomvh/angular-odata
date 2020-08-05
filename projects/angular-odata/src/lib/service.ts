@@ -39,7 +39,7 @@ export class ODataService<T> {
 
   // Service Config 
   public config() {
-    return this.client.configForType(this.entityType);
+    return this.client.apiConfigForType(this.entityType);
   }
 
   // Service Config 

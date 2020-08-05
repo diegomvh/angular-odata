@@ -27,7 +27,8 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   config() {
-    return super.config() as ODataCallableConfig<R>;
+    let config = this.client.apiConfigFor(this);
+    return config.callableConfigForName<R>(this.type());
   }
 
   //#region Mutable Resource

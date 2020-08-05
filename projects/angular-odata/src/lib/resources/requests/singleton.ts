@@ -30,7 +30,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   config() {
-    return super.config() as ODataEntityConfig<T>;
+    let config = this.client.apiConfigFor(this);
+    return config.entityConfigForType<T>(this.type());
   }
 
   //#region Inmutable Resource

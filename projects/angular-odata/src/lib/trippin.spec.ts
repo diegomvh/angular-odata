@@ -1,5 +1,5 @@
 
-import { Configuration, EnumConfig, EntityConfig, ServiceConfig } from './types';
+import { ApiConfig, EnumConfig, EntityConfig, ServiceConfig } from './types';
 import { EDM_PARSERS } from './parsers/index';
 import { ODataEntityService } from './services';
 import { Injectable } from '@angular/core';
@@ -137,4 +137,4 @@ export const TripPinConfig = {
     }]
   }],
   parsers: EDM_PARSERS
-} as Configuration;
+} as ApiConfig;

@@ -1,4 +1,4 @@
 import { InjectionToken } from '@angular/core';
-import { Configuration } from './types';
+import { ApiConfig } from './types';
 
-export const ODATA_CONFIGURATIONS = new InjectionToken<Configuration>('odata.configuraions');
+export const ODATA_CONFIGURATIONS = new InjectionToken<ApiConfig>('odata.configuraions');

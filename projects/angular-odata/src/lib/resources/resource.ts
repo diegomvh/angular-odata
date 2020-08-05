@@ -58,13 +58,6 @@ export class ODataResource<Type> {
     return this.pathSegments.types();
   }
 
-  // Proxy to client
-  config() {
-    let config = this.client.configFor(this);
-    if (config)
-      return config.enumConfigForType<Type>(this.type()) || config.entityConfigForType<Type>(this.type()) || config.callableConfigForType<Type>(this.type());
-  }
-
   pathAndParams(): [string, PlainObject] {
     let path = this.pathSegments.path();
     let params = this.queryOptions.params();
@@ -77,7 +70,7 @@ export class ODataResource<Type> {
   }
 
   protected serialize(value: any): any {
-    let config = this.client.configFor(this);
+    let config = this.client.apiConfigFor(this);
     let parser = config.parserForType<Type>(this.type());
     if (!Types.isUndefined(parser) && 'serialize' in parser)
       return Array.isArray(value) ? 
@@ -131,10 +124,10 @@ export class ODataResource<Type> {
       withCount?: boolean
     }): Observable<any> {
 
+    const config = this.client.apiConfigFor(this);
     let params = options.params;
     if (options.withCount) {
-      const config = this.config();
-      const version = config ? config.options().version : DEFAULT_VERSION;
+      const version = config.options().version;
       if (version === VERSION_2_0 || version === VERSION_3_0)
         params = this.client.mergeHttpParams(params, { [$INLINECOUNT]: 'allpages' });
       else if (version === VERSION_4_0)

@@ -41,7 +41,7 @@ export class ODataModel<T> {
     let first = !this._resource;
     this._resource = resource;
     if (first) {
-      (this._resource.config() as ODataEntityConfig<T>).fields()
+      (this._resource.apiConfig() as ODataEntityConfig<T>).fields()
         .filter(field => field.navigation)
         .forEach(field => {
           Object.defineProperty(this, field.name, {
@@ -64,7 +64,7 @@ export class ODataModel<T> {
   }
 
   protected parse(entity: T) {
-    let fields = this._resource ? (this._resource.config() as ODataEntityConfig<T>).fields() : [];
+    let fields = this._resource ? (this._resource.apiConfig() as ODataEntityConfig<T>).fields() : [];
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
