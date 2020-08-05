@@ -7,7 +7,7 @@ import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty, ODataResponseOptions } from './types';
 import { OData } from '../../utils';
-import { VALUE, APPLICATION_JSON, ODATA_VERSION, ODATA_VERSION_HEADERS } from '../../constants';
+import { APPLICATION_JSON, ODATA_VERSION_HEADERS } from '../../constants';
 
 export class ODataResponse<T> {
   readonly body: any | null;
@@ -55,9 +55,9 @@ export class ODataResponse<T> {
         });
       }
       const key = this.headers.keys().find(k => ODATA_VERSION_HEADERS.indexOf(k) !== -1);
-      const version = this.headers.get(key).replace(/\;/g, "");
-      if (version)
-        this._options.version = version as '2.0' | '3.0' | '4.0';
+      if (key) {
+        this._options.version = this.headers.get(key).replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
+      }
       const etag = this.headers.get("ETag");
       if (etag)
         this._options.etag = etag;
@@ -86,13 +86,10 @@ export class ODataResponse<T> {
   entity(): ODataEntity<T> {
     let opts = this.options();
     if (this.body) {
-      const meta = opts.version === "2.0" ?
-        new ODataEntityMeta(this.body["d"]["__metadata"], opts) :
-        new ODataEntityMeta(this.body, opts);
-      const payload = opts.version === "2.0" ?
-        this.body["d"] :
-        this.body;
-      const entity = this.deserialize(this.resource.type(), payload) as T;
+      const payload = opts.version === "2.0" ? this.body["d"] : this.body;
+      const meta = new ODataEntityMeta(payload, opts);
+      const data = meta.data(payload);
+      const entity = this.deserialize(this.resource.type(), data) as T;
       return { entity, meta };
     }
   }
@@ -100,13 +97,15 @@ export class ODataResponse<T> {
   entities(): ODataEntities<T> {
     let opts = this.options();
     if (this.body) {
-      const meta = opts.version === "2.0" ?
-        new ODataEntitiesMeta(this.body["d"], opts) :
-        new ODataEntitiesMeta(this.body, opts);
-      const payload = opts.version === "2.0" ?
+      const payload = opts.version === "2.0" ? this.body["d"] : this.body;
+      const meta = new ODataEntitiesMeta(payload, opts);
+      const data = meta.data(payload);
+      /*
+      const payentitiesload = opts.version === "2.0" ?
         this.body["d"]["results"] :
         this.body[VALUE];
-      const entities = this.deserialize(this.resource.type(), payload) as T[];
+        */
+      const entities = this.deserialize(this.resource.type(), data) as T[];
       return { entities, meta };
     }
   }
@@ -114,13 +113,15 @@ export class ODataResponse<T> {
   property(): ODataProperty<T> {
     let opts = this.options();
     if (this.body) {
-      const meta = opts.version === "2.0" ?
-        new ODataPropertyMeta(this.body["d"], opts) :
-        new ODataPropertyMeta(this.body, opts);
+      const payload = opts.version === "2.0" ? this.body["d"] : this.body;
+      const meta = new ODataPropertyMeta(payload, opts);
+      const data = meta.data(payload);
+      /*
       const payload = opts.version === "2.0" ?
         (('results' in this.body["d"]) ? this.body['d']['results'] : Object.entries(this.body['d'])[0][1] as any) :
         ((VALUE in this.body) ? this.body[VALUE] : this.body);
-      const property = this.deserialize(this.resource.type(), payload) as T;
+        */
+      const property = this.deserialize(this.resource.type(), data) as T;
       return { property, meta };
     }
   }
@@ -128,9 +129,7 @@ export class ODataResponse<T> {
   value(): T {
     let opts = this.options();
     if (this.body) {
-      const payload = opts.version === "2.0" ?
-        this.body :
-        this.body;
+      const payload = opts.version === "2.0" ? this.body : this.body;
       return this.deserialize(this.resource.type(), payload) as T;
     }
   }

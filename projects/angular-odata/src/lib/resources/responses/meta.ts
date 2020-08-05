@@ -2,14 +2,14 @@ import { OData } from '../../utils/index';
 import { ODataContext, ODataOptions } from '../../types';
 import { DEFAULT_VERSION } from '../../constants';
 
-export class ODataMeta {
-  annotations: { [name: string]: any };
+export abstract class ODataMeta {
+  annotations: Object;
   options?: ODataOptions;
   protected get odv() {
     return OData[this.options ? this.options.version : DEFAULT_VERSION];
   }
 
-  constructor(data: { [name: string]: any }, options?: ODataOptions) {
+  constructor(data: Object, options?: ODataOptions) {
     this.annotations = OData[options ? options.version : DEFAULT_VERSION].annotations(data);
     this.options = options;
   }
@@ -36,15 +36,18 @@ export class ODataMeta {
   }
 
   // Method
-  clone(): ODataMeta {
-    return new ODataMeta(this.annotations, this.options);
-  };
+  abstract clone();
+  abstract data(data: Object);
 }
 
 export class ODataPropertyMeta extends ODataMeta {
   clone(): ODataPropertyMeta {
     return new ODataPropertyMeta(this.annotations, this.options);
-  };
+  }
+
+  data(data: Object) {
+    return this.odv.property(data, this.context);
+  }
 
   get type(): string {
     return this.odv.type(this.annotations);
@@ -54,7 +57,11 @@ export class ODataPropertyMeta extends ODataMeta {
 export class ODataEntityMeta extends ODataMeta {
   clone(): ODataEntityMeta {
     return new ODataEntityMeta(this.annotations, this.options);
-  };
+  }
+
+  data(data: Object) {
+    return this.odv.entity(data, this.context);
+  }
 
   get type(): string {
     return this.odv.type(this.annotations);
@@ -112,7 +119,11 @@ export class ODataEntityMeta extends ODataMeta {
 export class ODataEntitiesMeta extends ODataMeta {
   clone(): ODataEntitiesMeta {
     return new ODataEntitiesMeta(this.annotations, this.options);
-  };
+  }
+
+  data(data: Object) {
+    return this.odv.entities(data, this.context);
+  }
 
   get readLink(): string {
     return this.odv.readLink(this.annotations);

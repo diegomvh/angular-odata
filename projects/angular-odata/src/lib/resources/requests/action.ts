@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
@@ -9,8 +10,6 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
-import { map } from 'rxjs/operators';
-import { ODataCallableConfig } from '../../config';
 import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {

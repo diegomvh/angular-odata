@@ -1,4 +1,5 @@
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ODataClient } from '../../client';
 import { Types } from '../../utils/types';
@@ -6,7 +7,6 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX } from '../../constants';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;

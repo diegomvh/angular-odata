@@ -201,7 +201,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return this.put(attrs, options).pipe(map(({entity}) => entity));
   }
 
-  assign(entity: T, attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
+  assign(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
     if (this.segment.key().empty())
       return throwError("Resource without key");
     return this.patch(attrs, options).pipe(map(({entity}) => entity));

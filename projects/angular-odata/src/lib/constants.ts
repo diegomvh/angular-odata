@@ -46,4 +46,3 @@ export const ODATA_PARAM_PREFIX = '$';
 export const ODATA_ALIAS_PREFIX = '@';
 
 export const NEWLINE = '\r\n';
-export const VALUE = 'value';

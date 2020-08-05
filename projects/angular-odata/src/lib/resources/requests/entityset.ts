@@ -1,4 +1,5 @@
 import { Observable, empty } from 'rxjs';
+import { expand, concatMap, toArray, map } from 'rxjs/operators';
 
 import { Expand, Select, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { QueryOptionNames } from '../query-options';
@@ -12,7 +13,6 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
-import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
 import { ODataEntity, ODataEntities } from '../responses/index';

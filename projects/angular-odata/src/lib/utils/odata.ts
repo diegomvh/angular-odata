@@ -4,6 +4,9 @@ import { VERSION_3_0, VERSION_2_0, VERSION_4_0 } from '../constants';
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
 export interface ODataVersionTools {
+  entity(value: Object, context: ODataContext): any;
+  entities(value: Object, context: ODataContext): any;
+  property(value: Object, context: ODataContext): any;
   annotations(value: Object): Object;
   attributes(value: Object): Object;
   id(value: Object): string;
@@ -27,6 +30,7 @@ export interface ODataVersionTools {
 export const OData = {
   //#region Version 4.0
   [VERSION_4_0]: <ODataVersionTools> {
+    VALUE: 'value',
     ODATA_ANNOTATION_PREFIX: '@odata',
     ODATA_FUNCTION_PREFIX: '#',
     //odata.id: the ID of the entity
@@ -61,6 +65,9 @@ export const OData = {
     ODATA_MEDIA_READLINK: '@odata.mediaReadLink',
     //odata.mediaEditLink: the link used to edit/update the stream
     ODATA_MEDIA_EDITLINK: '@odata.mediaEditLink',
+    entity(data: Object, context: ODataContext) { return data; },
+    entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
+    property(data: Object, context: ODataContext) { return data; },
     context(value: Object) {
       if (this.ODATA_CONTEXT in value) {
         let ctx: ODataContext = {};
@@ -170,6 +177,10 @@ export const OData = {
     ODATA_CONTEXT: 'odata.metadata',
     ODATA_NEXTLINK: 'odata.nextLink',
     ODATA_COUNT: 'odata.count',
+    VALUE: 'value',
+    entity(data: Object, context: ODataContext) { return data; },
+    entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
+    property(data: Object, context: ODataContext) { return data; },
     annotations(value: Object){ return value; },
     attributes(value: Object){ return value; },
     etag(value: Object) {
@@ -204,6 +215,10 @@ export const OData = {
   [VERSION_2_0]: <ODataVersionTools>{
     ODATA_NEXTLINK: '__next',
     ODATA_COUNT: '__count',
+    RESULTS: 'results',
+    entity(data: Object, context: ODataContext) { return data; },
+    entities(data: Object, context: ODataContext) { return data[this.RESULTS]; },
+    property(data: Object, context: ODataContext) { return data; },
     annotations(value: Object){ return value; },
     attributes(value: Object){ return value; },
     etag(value: Object) {
