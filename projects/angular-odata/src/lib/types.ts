@@ -52,6 +52,7 @@ export type Parser<T> = {
 export type Configuration = {
   serviceRootUrl: string,
   name?: string,
+  default?: boolean,
   version?: '2.0' | '3.0' | '4.0',
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };

@@ -9,23 +9,32 @@ export class ODataSettings {
 
   constructor(...configs: Configuration[]) {
     this.configs = configs.map(config => new ODataApiConfig(config));
-    if (this.configs.length > 1 && this.configs.some(c => Types.isUndefined(c.name)))
-      throw new Error("Multiple APIs: Needs configuration names");
+    if (this.configs.length > 1) {
+      if (this.configs.some(c => Types.isUndefined(c.name)))
+        throw new Error("Multiple APIs: Needs configuration names");
+      if (this.configs.filter(c => c.default).length > 1)
+        throw new Error("Multiple APIs: Needs only one default api");
+    }
+    // If not default setup first config as default api
+    if (this.configs.every(c => !c.default))
+      this.configs[0].default = true;
     this.configs.forEach(config => config.configure());
   }
 
   public config(name?: string) {
-    if (this.configs.length === 1) return this.configs[0];
-    let config = this.configs.find(c => !Types.isUndefined(name) && c.name === name);
-    if (config)
-      return config;
+    if (this.configs.length > 1 && !Types.isUndefined(name)) {
+      const config = this.configs.find(c => c.name === name);
+      return config || this.configs.find(c => c.default);
+    }
+    return this.configs.find(c => c.default);
   }
 
   public configForTypes(types: string[]) {
-    if (this.configs.length === 1) return this.configs[0];
-    let config = this.configs.find(c => c.schemas.some(s => types.some(type => type.startsWith(s.namespace))));
-    if (config)
-      return config;
+    if (this.configs.length > 1 && types.length > 1) {
+      const config = this.configs.find(c => c.schemas.some(s => types.some(type => type.startsWith(s.namespace))));
+      return config || this.configs.find(c => c.default);
+    }
+    return this.configs.find(c => c.default);
   }
 
   public configForType(type: string) {

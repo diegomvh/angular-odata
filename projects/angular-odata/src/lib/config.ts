@@ -12,6 +12,7 @@ export class ODataApiConfig {
   serviceRootUrl: string;
   metadataUrl?: string;
   name?: string;
+  default?: boolean;
   creation?: Date;
   // Http
   params: { [param: string]: string | string[] };
@@ -35,6 +36,7 @@ export class ODataApiConfig {
       this.serviceRootUrl += '/';
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;
     this.name = config.name;
+    this.default = config.default || false;
     this.creation = config.creation || new Date();
     this.params = config.params || {};
     this.headers = config.headers || {};
