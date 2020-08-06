@@ -1,12 +1,16 @@
-import { ODataEntitySetResource, ODataEntityResource } from './resources';
+import { Injectable } from '@angular/core';
+import { ODataEntitySetResource, ODataEntityResource, ODataSingletonResource } from './resources';
 import { ODataClient } from "./client";
 import { EntityKey } from './types';
-import { Injectable } from '@angular/core';
 import { ODataCollection } from './models/collection';
 import { ODataModel } from './models/model';
 import { ODataEntityConfig } from './config';
 
-export class ODataService<T> {
+export class ODataApiService<T> {
+  constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
+}
+
+export class ODataEntityService<T> {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
 
   public entities(): ODataEntitySetResource<T> {
@@ -53,12 +57,54 @@ export class ODataService<T> {
   }
 }
 
+export class ODataSingletonService<T> {
+  constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
+
+  public entity(): ODataSingletonResource<T> {
+    return this.client.singleton(this.name, this.entityType);
+  }
+
+  public model<M extends ODataModel<T>>(entity?: Partial<T>): M {
+    return this.entity().model<M>(entity);
+  }
+
+  // Models
+  public attach<M extends ODataModel<T>>(value: M): M {
+    return value.attach(this.entity());
+  }
+
+  // Service Config 
+  public config() {
+    return this.client.apiConfigForType(this.entityType);
+  }
+
+  // Service Config 
+  public serviceConfig() {
+    return this.config().serviceConfigForName(this.name);
+  }
+
+  // Entity Config 
+  public entityConfig() {
+    return this.config().entityConfigForType(this.entityType) as ODataEntityConfig<T>;
+  }
+}
+
 @Injectable()
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) { }
 
-  create<T>(name: string, entityType?: string): ODataService<T> {
-    return new class extends ODataService<T> {
+  api<T>(name: string, entityType?: string): ODataApiService<T> {
+    return new class extends ODataApiService<T> {
+    }(this.client, name, entityType);
+  }
+
+  entity<T>(name: string, entityType?: string): ODataEntityService<T> {
+    return new class extends ODataEntityService<T> {
+    }(this.client, name, entityType);
+  }
+
+  singleton<T>(name: string, entityType?: string): ODataSingletonService<T> {
+    return new class extends ODataSingletonService<T> {
     }(this.client, name, entityType);
   }
 }
