@@ -2,14 +2,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
-  $COUNT,
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
-  QUERY_SEPARATOR,
-  VERSION_4_0,
-  VERSION_3_0,
-  $INLINECOUNT,
-  VERSION_2_0
+  QUERY_SEPARATOR
 } from '../constants';
 import { ODataClient } from '../client';
 import { Types } from '../utils/index';
@@ -26,7 +21,6 @@ import {
 } from '../models/index';
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
 import { Urls } from '../utils/index';
-import { ODataHelper } from '../helpers/index';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -128,10 +122,7 @@ export class ODataResource<Type> {
     const copts = config.options;
     let params = options.params;
     if (options.withCount) {
-      if (copts.version === VERSION_2_0 || copts.version === VERSION_3_0)
-        params = this.client.mergeHttpParams(params, { [$INLINECOUNT]: 'allpages' });
-      else if (copts.version === VERSION_4_0)
-        params = this.client.mergeHttpParams(params, { [$COUNT]: 'true' });
+      params = this.client.mergeHttpParams(params, copts.helper.countParam());
     }
 
     let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 
@@ -147,7 +138,7 @@ export class ODataResource<Type> {
     }
     let etag = options.etag;
     if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
-      etag = ODataHelper[copts.version].etag(options.attrs);
+      etag = copts.helper.etag(options.attrs);
     }
     const res$ = this.client.request(method, this, {
       body,

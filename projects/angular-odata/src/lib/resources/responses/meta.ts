@@ -1,17 +1,27 @@
-import { ODataHelper } from '../../helpers/index';
-import { ODataContext, Options } from '../../types';
-import { DEFAULT_VERSION } from '../../constants';
+import { ODataContext } from '../../types';
+import { ODataOptions } from '../../config';
+import { HttpHeaders } from '@angular/common/http';
 
 export abstract class ODataMeta {
   annotations: Object;
-  options?: Options;
+  options?: ODataOptions;
   protected get odv() {
-    return ODataHelper[this.options ? this.options.version : DEFAULT_VERSION];
+    if (!this.options)
+      throw Error("No helper");
+    return this.options.helper;
   }
 
-  constructor(data: Object, options?: Options) {
-    this.annotations = ODataHelper[options ? options.version : DEFAULT_VERSION].annotations(data);
-    this.options = options;
+  constructor(data: Object, opt: { 
+    options?: ODataOptions, 
+    headers?: HttpHeaders
+  } = {}) {
+    this.options = opt.options;
+    this.annotations = (this.options ? this.odv.annotations(data) : data) || {};
+    if (opt.headers) {
+      const etag = opt.headers.get("ETag");
+      if (etag)
+        this.odv.setEtag(this.annotations, etag);
+    }
   }
 
   // Context
@@ -42,7 +52,7 @@ export abstract class ODataMeta {
 
 export class ODataPropertyMeta extends ODataMeta {
   clone(): ODataPropertyMeta {
-    return new ODataPropertyMeta(this.annotations, this.options);
+    return new ODataPropertyMeta(this.annotations, {options: this.options});
   }
 
   data(data: Object) {
@@ -56,7 +66,7 @@ export class ODataPropertyMeta extends ODataMeta {
 
 export class ODataEntityMeta extends ODataMeta {
   clone(): ODataEntityMeta {
-    return new ODataEntityMeta(this.annotations, this.options);
+    return new ODataEntityMeta(this.annotations, {options: this.options});
   }
 
   data(data: Object) {
@@ -118,7 +128,7 @@ export class ODataEntityMeta extends ODataMeta {
 
 export class ODataEntitiesMeta extends ODataMeta {
   clone(): ODataEntitiesMeta {
-    return new ODataEntitiesMeta(this.annotations, this.options);
+    return new ODataEntitiesMeta(this.annotations, {options: this.options});
   }
 
   data(data: Object) {

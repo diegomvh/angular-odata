@@ -1,10 +1,10 @@
 import { Types } from '../utils/index';
-import { ODataHelper } from '../helpers/index';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, Options } from '../types';
+import { ODataOptions } from '../config';
 
 const NONE_PARSER = {
-  deserialize: (value: any, options: Options) => value,
-  serialize: (value: any, options: Options) => value
+  deserialize: (value: any, options: ODataOptions) => value,
+  serialize: (value: any, options: ODataOptions) => value
 } as Parser<any>;
 
 export class ODataFieldParser<Type> implements Parser<Type> {
@@ -33,15 +33,15 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  private parse(parser: ODataEntityParser<Type>, value: any, options: Options): any {
-    const type = Types.isObject(value) ? ODataHelper[options.version].type(value) : undefined;
+  private parse(parser: ODataEntityParser<Type>, value: any, options: ODataOptions): any {
+    const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (!Types.isUndefined(type)) {
       return parser.findParser(c => c.isTypeOf(type)).deserialize(value, options);
     }
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options: Options): Type {
+  deserialize(value: any, options: ODataOptions): Type {
     const parser = this.parser;
     if (parser instanceof ODataEntityParser) {
       return Array.isArray(value) ? 
@@ -52,15 +52,15 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  private toJson(parser: ODataEntityParser<Type>, value: any, options: Options): any {
-    const type = Types.isObject(value) ? ODataHelper[options.version].type(value) : undefined;
+  private toJson(parser: ODataEntityParser<Type>, value: any, options: ODataOptions): any {
+    const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (!Types.isUndefined(type)) {
       return parser.findParser(c => c.isTypeOf(type)).serialize(value, options);
     }
     return parser.serialize(value, options);
   }
 
-  serialize(value: Type, options: Options): any {
+  serialize(value: Type, options: ODataOptions): any {
     const parser = this.parser;
     if (parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
@@ -127,7 +127,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: Options): Type {
+  deserialize(value: any, options: ODataOptions): Type {
     if (this.parent)
       value = this.parent.deserialize(value, options);
     return Object.assign(value, this.fields
@@ -137,7 +137,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(entity: Type, options: Options): any {
+  serialize(entity: Type, options: ODataOptions): any {
     if (this.parent)
       entity = this.parent.serialize(entity, options);
     return Object.assign(entity, this.fields

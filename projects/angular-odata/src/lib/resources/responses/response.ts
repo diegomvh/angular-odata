@@ -2,11 +2,10 @@ import { HttpHeaders } from '@angular/common/http';
 import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 import { Parser } from '../../types';
 import { Types } from '../../utils/types';
-import { ODataApiConfig } from '../../config';
+import { ODataApiConfig, ODataOptions } from '../../config';
 import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
-import { ODataEntities, ODataEntity, ODataProperty, ODataResponseOptions } from './types';
-import { ODataHelper } from '../../helpers';
+import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS } from '../../constants';
 
 export class ODataResponse<T> {
@@ -33,41 +32,24 @@ export class ODataResponse<T> {
     this.resource = init.resource;
   }
 
-  _options: ODataResponseOptions
-  options(): ODataResponseOptions {
+  _options: ODataOptions
+  options(): ODataOptions {
     if (!this._options) {
-      this._options = this.config.options as ODataResponseOptions;
-      const appJson = this.headers.get("content-type").split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
-      if (appJson) {
-        appJson.split(";").forEach(o => {
-          let [k, v] = o.split("=");
-          switch (k) {
-            case 'odata.metadata':
-              this._options.metadata = v as 'full' | 'minimal' | 'none';
-              break;
-            case 'odata.streaming':
-              this._options.streaming = v == "true";
-              break;
-            case 'IEEE754Compatible':
-              this._options.ieee754Compatible = v == "true";
-              break;
-          }
-        });
-      }
+      this._options = this.config.options.clone();
+      const features = this.headers.get("content-type").split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
+      this._options.setFeatures(features);
       const key = this.headers.keys().find(k => ODATA_VERSION_HEADERS.indexOf(k) !== -1);
       if (key) {
-        this._options.version = this.headers.get(key).replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
+        const version = this.headers.get(key).replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
+        this._options.setVersion(version);
       }
-      const etag = this.headers.get("ETag");
-      if (etag)
-        this._options.etag = etag;
     }
     return this._options;
   }
 
   private parse(parser: Parser<T>, value: any): any {
     const opts = this.options();
-    const type = Types.isObject(value) ? ODataHelper[opts.version].type(value) : undefined;
+    const type = Types.isObject(value) ? opts.helper.type(value) : undefined;
     if (!Types.isUndefined(type) && parser instanceof ODataEntityParser) {
       parser = parser.findParser(c => c.isTypeOf(type));
     }
@@ -87,7 +69,7 @@ export class ODataResponse<T> {
     let opts = this.options();
     if (this.body) {
       const payload = opts.version === "2.0" ? this.body["d"] : this.body;
-      const meta = new ODataEntityMeta(payload, opts);
+      const meta = new ODataEntityMeta(payload, {options: opts, headers: this.headers});
       const data = meta.data(payload);
       const entity = this.deserialize(this.resource.type(), data) as T;
       return { entity, meta };
@@ -98,7 +80,7 @@ export class ODataResponse<T> {
     let opts = this.options();
     if (this.body) {
       const payload = opts.version === "2.0" ? this.body["d"] : this.body;
-      const meta = new ODataEntitiesMeta(payload, opts);
+      const meta = new ODataEntitiesMeta(payload, {options: opts, headers: this.headers});
       const data = meta.data(payload);
       /*
       const payentitiesload = opts.version === "2.0" ?
@@ -114,7 +96,7 @@ export class ODataResponse<T> {
     let opts = this.options();
     if (this.body) {
       const payload = opts.version === "2.0" ? this.body["d"] : this.body;
-      const meta = new ODataPropertyMeta(payload, opts);
+      const meta = new ODataPropertyMeta(payload, {options: opts, headers: this.headers});
       const data = meta.data(payload);
       /*
       const payload = opts.version === "2.0" ?

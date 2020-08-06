@@ -1,5 +1,5 @@
 import { ODataContext } from '../types';
-import { VERSION_3_0, VERSION_2_0, VERSION_4_0 } from '../constants';
+import { VERSION_3_0, VERSION_2_0, VERSION_4_0, $COUNT, $INLINECOUNT } from '../constants';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
@@ -14,6 +14,7 @@ export interface ODataVersionHelper {
   functions(value: Object): Object;
   properties(value: Object): Object;
   etag(value: Object): string;
+  setEtag(value: Object, etag: string);
   mediaEtag(value: Object): string;
   metadataEtag(value: Object): string;
   type(value: Object): string;
@@ -25,6 +26,7 @@ export interface ODataVersionHelper {
   mediaContentType(value: Object): string;
   deltaLink(value: Object): string;
   count(value: Object): number;
+  countParam(): {[name: string]: string};
 }
 
 export const ODataHelper = {
@@ -111,6 +113,9 @@ export const ODataHelper = {
         return value[this.ODATA_ETAG] as string;
       }
     },
+    setEtag(value: Object, etag: string) {
+      value[this.ODATA_ETAG] = etag;
+    },
     mediaEtag(value: Object) {
       if (this.ODATA_MEDIA_ETAG in value)
         return decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string);
@@ -131,6 +136,9 @@ export const ODataHelper = {
     count(value: Object) {
       if (this.ODATA_COUNT in value)
         return Number(value[this.ODATA_COUNT]);
+    },
+    countParam() {
+      return {[$COUNT]: 'true'};
     },
     annotations(value: Object) {
       return Object.keys(value)
@@ -179,6 +187,7 @@ export const ODataHelper = {
     ODATA_CONTEXT: 'odata.metadata',
     ODATA_NEXTLINK: 'odata.nextLink',
     ODATA_TYPE: 'odata.type',
+    ODATA_ETAG: 'odata.etag',
     ODATA_COUNT: 'odata.count',
     VALUE: 'value',
     entity(data: Object, context: ODataContext) { return data; },
@@ -209,6 +218,9 @@ export const ODataHelper = {
         return value[this.ODATA_ETAG] as string;
       }
     },
+    setEtag(value: Object, etag: string) {
+      value[this.ODATA_ETAG] = etag;
+    },
     nextLink(value: Object) {
       if (this.ODATA_NEXTLINK in value)
         return decodeURIComponent(value[this.ODATA_NEXTLINK] as string);
@@ -236,6 +248,9 @@ export const ODataHelper = {
     count(value: Object) {
       if (this.ODATA_COUNT in value)
         return Number(value[this.ODATA_COUNT]);
+    },
+    countParam() {
+      return {[$INLINECOUNT]: 'allpages'};
     }
   },
   //#endregion
@@ -246,6 +261,7 @@ export const ODataHelper = {
     ODATA_COUNT: '__count',
     ODATA_DEFERRED: '__deferred',
     ODATA_TYPE: 'type',
+    ODATA_ETAG: 'etag',
     RESULTS: 'results',
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.RESULTS]; },
@@ -260,6 +276,9 @@ export const ODataHelper = {
       if (this.ODATA_ETAG in value) {
         return value[this.ODATA_ETAG] as string;
       }
+    },
+    setEtag(value: Object, etag: string) {
+      value[this.ODATA_ETAG] = etag;
     },
     nextLink(value: Object) {
       if (this.ODATA_NEXTLINK in value)
@@ -289,6 +308,9 @@ export const ODataHelper = {
     count(value: Object) {
       if (this.ODATA_COUNT in value)
         return Number(value[this.ODATA_COUNT]);
+    },
+    countParam() {
+      return {[$INLINECOUNT]: 'allpages'};
     }
   }
   //#endregion

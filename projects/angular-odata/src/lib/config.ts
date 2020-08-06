@@ -6,19 +6,52 @@ import { ODataEnumParser } from './parsers/enum';
 import { ODataEntityParser, ODataFieldParser } from './parsers/entity';
 import { ODataCallableParser } from './parsers/callable';
 import { EDM_PARSERS } from './parsers/edm';
-import { DEFAULT_VERSION } from './constants';
+import { DEFAULT_VERSION, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from './constants';
+import { ODataHelper } from './helpers';
 
 export class ODataOptions implements Options {
   version: "2.0" | "3.0" | "4.0";
   metadata?: "minimal" | "full" | "none";
+  streaming?: boolean;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
 
-  constructor(config: ApiConfig) {
+  constructor(config: ApiConfig | Options) {
     this.version = config.version || DEFAULT_VERSION;
     this.metadata = config.metadata;
     this.stringAsEnum = config.stringAsEnum;
     this.ieee754Compatible = config.ieee754Compatible;
+  }
+
+  get helper() {
+    return ODataHelper[this.version];
+  }
+
+  clone() {
+    return new ODataOptions(this);
+  }
+
+  setFeatures(features: string) {
+    features.split(";").forEach(o => {
+      let [k, v] = o.split("=");
+      switch (k) {
+        case 'odata.metadata':
+          this.metadata = v as 'full' | 'minimal' | 'none';
+          break;
+        case 'odata.streaming':
+          this.streaming = v == "true";
+          break;
+        case 'IEEE754Compatible':
+          this.ieee754Compatible = v == "true";
+          break;
+      }
+    });
+  }
+
+  setVersion(version: string) {
+    const value = version.replace(/\;/g, "").trim();
+    if ([VERSION_2_0, VERSION_3_0, VERSION_4_0].indexOf(value) !== -1)
+      this.version = value as '2.0' | '3.0' | '4.0';
   }
 }
 
@@ -35,7 +68,7 @@ export class ODataApiConfig {
   // Options
   options: ODataOptions;
   // Base Parsers
-  parsers?: {[type: string]: Parser<any>};
+  parsers?: { [type: string]: Parser<any> };
   // Schemas
   schemas?: Array<ODataSchemaConfig>;
 
@@ -57,7 +90,7 @@ export class ODataApiConfig {
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchemaConfig(schema, this));
   }
-  
+
   configure() {
     this.schemas.forEach(schema => {
       schema.configure({ parserForType: (type: string) => this.parserForType(type) });
@@ -179,7 +212,7 @@ export class ODataSchemaConfig {
     let configs = (schema.callables || []);
     configs = configs.reduce((acc, config) => {
       if (acc.every(c => c.name !== config.name)) {
-        config = configs.filter(c => c.name === config.name).reduce((acc, c) => { 
+        config = configs.filter(c => c.name === config.name).reduce((acc, c) => {
           acc.parameters = Object.assign(acc.parameters || {}, c.parameters || {});
           return acc;
         }, config);
@@ -203,7 +236,7 @@ export class ODataSchemaConfig {
     return this.containers.reduce((acc, container) => [...acc, ...container.services], <ODataServiceConfig[]>[]);
   }
 
-  configure(settings: {parserForType: (type: string) => Parser<any>}) {
+  configure(settings: { parserForType: (type: string) => Parser<any> }) {
     // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));
@@ -217,7 +250,7 @@ export class ODataEnumConfig<Type> {
   schema: ODataSchemaConfig;
   name: string;
   parser?: ODataEnumParser<Type>;
-  members: {[name: string]: number} | {[value: number]: string};
+  members: { [name: string]: number } | { [value: number]: string };
   constructor(enu: EnumConfig<Type>, schema: ODataSchemaConfig) {
     this.schema = schema;
     this.name = enu.name;
@@ -231,7 +264,7 @@ export class ODataEnumConfig<Type> {
       names.push(`${this.schema.alias}.${this.name}`);
     return names.indexOf(type) !== -1;
   }
-  
+
   get options() {
     return this.schema.options;
   }
@@ -265,14 +298,14 @@ export class ODataEntityConfig<Type> {
     return this.schema.options;
   }
 
-  configure(settings: {parserForType: (type: string) => Parser<any>}) {
+  configure(settings: { parserForType: (type: string) => Parser<any> }) {
     this.parser.configure(settings);
   }
 
   fields(opts: {
     include_parents?: boolean,
     include_navigation?: boolean
-  } = {include_navigation: true, include_parents: true}): ODataFieldParser<any>[] {
+  } = { include_navigation: true, include_parents: true }): ODataFieldParser<any>[] {
     let parent = this.parser as ODataEntityParser<any>;
     let fields = <ODataFieldParser<any>[]>[];
     while (parent) {
@@ -320,7 +353,7 @@ export class ODataCallableConfig<R> {
     return this.schema.options;
   }
 
-  configure(settings: {parserForType: (type: string) => Parser<any>}) {
+  configure(settings: { parserForType: (type: string) => Parser<any> }) {
     this.parser.configure(settings);
   }
 }
