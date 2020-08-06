@@ -6,10 +6,6 @@ import { ODataCollection } from './models/collection';
 import { ODataModel } from './models/model';
 import { ODataEntityConfig } from './config';
 
-export class ODataApiService<T> {
-  constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
-}
-
 export class ODataEntityService<T> {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
 
@@ -92,11 +88,6 @@ export class ODataSingletonService<T> {
 @Injectable()
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) { }
-
-  api<T>(name: string, entityType?: string): ODataApiService<T> {
-    return new class extends ODataApiService<T> {
-    }(this.client, name, entityType);
-  }
 
   entity<T>(name: string, entityType?: string): ODataEntityService<T> {
     return new class extends ODataEntityService<T> {
