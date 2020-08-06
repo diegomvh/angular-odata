@@ -55,27 +55,27 @@ describe('ODataResource', () => {
 
   it('should create collection function', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', '', segments, options);
-    const fun: ODataFunctionResource<any> = set.function<any>("NS.MyFunction");
+    const fun: ODataFunctionResource<any, any> = set.function<any, any>("NS.MyFunction");
     expect(fun.toString()).toEqual('People/NS.MyFunction');
   });
 
   it('should create entity function', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', '', segments, options);
     const entity = set.entity('russellwhyte');
-    const fun: ODataFunctionResource<any> = entity.function<any>("NS.MyFunction");
+    const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction");
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
   });
 
   it('should create collection action', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', '', segments, options);
-    const act: ODataActionResource<any> = set.action<any>("NS.MyAction");
+    const act: ODataActionResource<any, any> = set.action<any, any>("NS.MyAction");
     expect(act.toString()).toEqual('People/NS.MyAction');
   });
 
   it('should create entity function', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', '', segments, options);
     const entity = set.entity('russellwhyte');
-    const act: ODataActionResource<any> = entity.action<any>("NS.MyAction");
+    const act: ODataActionResource<any, any> = entity.action<any, any>("NS.MyAction");
     expect(act.toString()).toEqual("People('russellwhyte')/NS.MyAction");
   });
 

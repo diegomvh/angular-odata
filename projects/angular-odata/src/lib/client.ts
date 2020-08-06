@@ -25,10 +25,10 @@ import {
   ODataQueryOptions,
   ODataResponse
 } from './resources/index';
-import { ODataApiConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './config';
 import { ODataSettings } from './settings';
 import { Parser } from './types';
 import { IF_MATCH_HEADER, ACCEPT } from './constants';
+import { ODataApiConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './configs';
 
 @Injectable()
 export class ODataClient {

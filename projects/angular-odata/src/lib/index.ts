@@ -1,10 +1,10 @@
 export * from './constants';
 export * from './types';
-export * from './config';
+export * from './configs';
 export * from './settings';
 export * from './client';
 export * from './module';
-export * from './service';
+export * from './services';
 export * from './tokens';
 
 // Utils

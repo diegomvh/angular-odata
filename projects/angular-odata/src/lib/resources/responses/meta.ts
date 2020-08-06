@@ -1,6 +1,6 @@
 import { ODataContext } from '../../types';
-import { ODataOptions } from '../../config';
 import { HttpHeaders } from '@angular/common/http';
+import { ODataOptions } from '../../configs';
 
 export abstract class ODataMeta {
   annotations: Object;

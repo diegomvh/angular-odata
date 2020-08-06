@@ -4,9 +4,9 @@ import { ODataClient } from './client';
 import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from './resources';
 import { ODataModule } from './module';
 import { ODataEntityParser } from './parsers/index';
-import { ODataEntityConfig } from './models';
 import { HttpHeaders } from '@angular/common/http';
 import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
+import { ODataEntityConfig } from './configs';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -78,17 +78,17 @@ describe('ODataClient', () => {
   });
 
   it('should create unbound function resource', () => {
-    const fun: ODataFunctionResource<any> = client.function<any>("NS.MyFunction")
+    const fun: ODataFunctionResource<any, any> = client.function<any, any>("NS.MyFunction")
     expect(client.endpointUrl(fun)).toEqual(SERVICE_ROOT + 'NS.MyFunction');
   });
 
   it('should create unbound action resource', () => {
-    const act: ODataActionResource<any> = client.action<any>("NS.MyAction")
+    const act: ODataActionResource<any, any> = client.action<any, any>("NS.MyAction")
     expect(client.endpointUrl(act)).toEqual(SERVICE_ROOT + 'NS.MyAction');
   });
 
   it('should create unbound action resource', () => {
-    const act: ODataActionResource<any> = client.action<any>("NS.MyAction")
+    const act: ODataActionResource<any, any> = client.action<any, any>("NS.MyAction")
     expect(client.endpointUrl(act)).toEqual(SERVICE_ROOT + 'NS.MyAction');
   });
 
@@ -158,10 +158,10 @@ describe('ODataClient', () => {
     };
     client.entitySet<Person>('People', `${NAMESPACE}.Person`)
     .top(2)
-    .get().subscribe(([people, annotations]) => {
-      expect(people.length).toBe(2);
-      expect(annotations.context.set).toEqual("People");
-      expect(people).toEqual(dummyPeople);
+    .get().subscribe(({entities, meta}) => {
+      expect(entities.length).toBe(2);
+      expect(meta.context.entitySet).toEqual("People");
+      expect(entities).toEqual(dummyPeople);
     });
 
     const req = httpMock.expectOne(`${SERVICE_ROOT}People?$top=2`);
@@ -184,10 +184,10 @@ describe('ODataClient', () => {
     });
     const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
 
-    entity.get().subscribe(([person, annotations]) => {
-      expect(annotations.context.set).toEqual("People");
-      expect(annotations.etag).toEqual('W/"08D814450D6BDB6F"');
-      expect(person).toEqual(person);
+    entity.get().subscribe(({entity, meta}) => {
+      expect(meta.context.entitySet).toEqual("People");
+      expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
+      expect(entity).toEqual(entity);
     });
 
     const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);
@@ -219,10 +219,9 @@ ${JSON.stringify(payload)}
     const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
     client.batch().post((batch) => {
       expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
-      entity.get().subscribe(([person, annotations]) => {
-        expect(annotations.context.set).toEqual("People");
-        expect(annotations.etag).toEqual('W/"08D814450D6BDB6F"');
-        expect(person).toEqual(person);
+      entity.get().subscribe(({meta}) => {
+        expect(meta.context.entitySet).toEqual("People");
+        expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
       });
     }).subscribe();
 

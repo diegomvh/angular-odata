@@ -16,7 +16,6 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
 import { ODataEntity, ODataEntities } from '../responses/index';
-import { ODataEntityConfig } from '../../config';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory

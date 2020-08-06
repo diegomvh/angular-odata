@@ -1,5 +1,5 @@
 import { ApiConfig, Parser } from './types';
-import { ODataApiConfig } from './config';
+import { ODataApiConfig } from './configs';
 import { Types } from './utils';
 import { ODataCollection } from './models/collection';
 import { ODataModel } from './models/model';

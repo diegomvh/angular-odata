@@ -1,5 +1,5 @@
 import { ODataPathSegments, PathSegmentNames } from './path-segments';
-import { $BATCH, $METADATA, $REF, $VALUE, $COUNT } from '../types';
+import { $BATCH, $METADATA, $REF, $VALUE, $COUNT } from '../constants';
 
 const ENTITY_SET = 'People';
 const SINGLETON = 'Me';

@@ -4,6 +4,7 @@ import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataEnumParser } from './enum';
 import { ODataEntityParser } from './entity';
+import { ODataApiConfig } from '../configs';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -30,44 +31,46 @@ describe('ODataClient', () => {
   it('should serialize enum', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
     const field = config.field('Gender');
-    expect(field.serialize(PersonGender.Female, {stringAsEnum: true})).toEqual('Female');
+    expect(field.serialize(PersonGender.Female, config.options)).toEqual('Female');
   });
 
   it('should deserialize enum', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
     const field = config.field('Gender');
-    expect(field.deserialize('Female', {stringAsEnum: true})).toEqual(PersonGender.Female);
+    expect(field.deserialize('Female', config.options)).toEqual(PersonGender.Female);
   });
 
   it('should serialize flags', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
-    const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
-    parser.flags = true;
+    const options = config.options;
+    options.stringAsEnum = true;
     const field = config.field('Gender');
-    expect(field.serialize(3, config.options())).toEqual('Male, Female, Unknown');
-    expect(field.serialize([0, 1, 2], config.options())).toEqual('Male, Female, Unknown');
+    expect(field.serialize(3, options)).toEqual('Male, Female, Unknown');
+    expect(field.serialize(PersonGender.Male | PersonGender.Female | PersonGender.Unknown, options)).toEqual('Male, Female, Unknown');
   });
 
   it('should deserialize flags', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
-    const parser = client.parserForType<PersonGender>(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
-    parser.flags = true;
+    const options = config.options;
+    options.stringAsEnum = true;
     const field = config.field('Gender');
-    expect(field.deserialize('Male, Female, Unknown', config.options())).toEqual(3);
+    expect(field.deserialize('Male, Female, Unknown', options)).toEqual(3);
   });
 
   it('should serialize entity', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
-    expect(config.parser.serialize({
+    const options = config.options;
+    options.stringAsEnum = false;
+    expect(config.parser.serialize(<Person>{
       FirstName: 'Name',
       Emails: [], 
       Gender: PersonGender.Male
-    }, {stringAsEnum: false})).toEqual({FirstName: 'Name', Emails: [], Gender: `${NAMESPACE}.PersonGender'Male'`}); 
+    }, options)).toEqual({FirstName: 'Name', Emails: [], Gender: `${NAMESPACE}.PersonGender'Male'`}); 
   });
 
   it('should deserialize primitive values', () => {
     enum Color { Red = 1, Yellow, Orange, Green, Black};
-    const config = new ODataConfig({
+    const config = new ODataApiConfig({
       serviceRootUrl: "http://foo",
       stringAsEnum: true,
       schemas: [{
@@ -129,7 +132,7 @@ describe('ODataClient', () => {
       "point": {"type": "point","coordinates":[142.1,64.1]}
     };
     const parser = config.parserForType('Primitive.Entity');
-    const result = parser.deserialize(primitives, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible});
-    expect(parser.serialize(result, {stringAsEnum: config.stringAsEnum, ieee754Compatible: config.ieee754Compatible})).toEqual(primitives);
+    const result = parser.deserialize(primitives, config.options);
+    expect(parser.serialize(result, config.options)).toEqual(primitives);
   });
 });

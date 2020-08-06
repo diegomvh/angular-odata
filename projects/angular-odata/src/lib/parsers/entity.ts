@@ -1,6 +1,6 @@
 import { Types } from '../utils/index';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, Options } from '../types';
-import { ODataOptions } from '../config';
+import { ODataOptions } from '../configs';
 
 const NONE_PARSER = {
   deserialize: (value: any, options: ODataOptions) => value,

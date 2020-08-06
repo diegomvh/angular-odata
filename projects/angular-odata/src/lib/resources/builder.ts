@@ -35,7 +35,7 @@ export type ExpandOptions<T> = {
   filter: Filter;
   orderBy: OrderBy<T>;
   top: number;
-  count: boolean;
+  count: boolean | Filter;
   expand: Expand<T>;
 }
 
@@ -68,7 +68,6 @@ export type QueryOptions<T> = ExpandOptions<T> & {
   skip: number;
   skiptoken: string;
   key: string | number | PlainObject;
-  count: boolean | Filter;
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;

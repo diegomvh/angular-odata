@@ -3,7 +3,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ODataSettings } from './settings';
 import { ODataClient } from './client';
-import { ODataServiceFactory } from './service';
+import { ODataServiceFactory } from './services';
 import { ODATA_CONFIGURATIONS } from './tokens';
 import { ApiConfig } from './types';
 

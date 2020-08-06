@@ -2,11 +2,11 @@ import { HttpHeaders } from '@angular/common/http';
 import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 import { Parser } from '../../types';
 import { Types } from '../../utils/types';
-import { ODataApiConfig, ODataOptions } from '../../config';
 import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
-import { APPLICATION_JSON, ODATA_VERSION_HEADERS } from '../../constants';
+import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE } from '../../constants';
+import { ODataApiConfig, ODataOptions } from '../../configs';
 
 export class ODataResponse<T> {
   readonly body: any | null;
@@ -36,8 +36,11 @@ export class ODataResponse<T> {
   options(): ODataOptions {
     if (!this._options) {
       this._options = this.config.options.clone();
-      const features = this.headers.get("content-type").split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
-      this._options.setFeatures(features);
+      const contentType = this.headers.get(CONTENT_TYPE);
+      if (contentType) {
+        const features = contentType.split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
+        this._options.setFeatures(features);
+      }
       const key = this.headers.keys().find(k => ODATA_VERSION_HEADERS.indexOf(k) !== -1);
       if (key) {
         const version = this.headers.get(key).replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
