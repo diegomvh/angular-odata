@@ -384,7 +384,7 @@ export class ODataClient {
       this.settings.apiConfigForTypes(resource.types());
     if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
-    const odata = config.options();
+    const odata = config.options;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = resource.pathAndParams();

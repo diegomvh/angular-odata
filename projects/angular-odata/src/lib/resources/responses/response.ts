@@ -6,7 +6,7 @@ import { ODataApiConfig } from '../../config';
 import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty, ODataResponseOptions } from './types';
-import { OData } from '../../utils';
+import { ODataHelper } from '../../helpers';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS } from '../../constants';
 
 export class ODataResponse<T> {
@@ -36,7 +36,7 @@ export class ODataResponse<T> {
   _options: ODataResponseOptions
   options(): ODataResponseOptions {
     if (!this._options) {
-      this._options = this.config.options() as ODataResponseOptions;
+      this._options = this.config.options as ODataResponseOptions;
       const appJson = this.headers.get("content-type").split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
       if (appJson) {
         appJson.split(";").forEach(o => {
@@ -67,11 +67,11 @@ export class ODataResponse<T> {
 
   private parse(parser: Parser<T>, value: any): any {
     const opts = this.options();
-    const type = Types.isObject(value) ? OData[opts.version].type(value) : undefined;
+    const type = Types.isObject(value) ? ODataHelper[opts.version].type(value) : undefined;
     if (!Types.isUndefined(type) && parser instanceof ODataEntityParser) {
       parser = parser.findParser(c => c.isTypeOf(type));
     }
-    return parser.deserialize(value, this.config.options());
+    return parser.deserialize(value, this.config.options);
   }
 
   private deserialize(type: string, value: any): any {

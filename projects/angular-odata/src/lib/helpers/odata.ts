@@ -3,7 +3,7 @@ import { VERSION_3_0, VERSION_2_0, VERSION_4_0 } from '../constants';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
-export interface ODataVersionTools {
+export interface ODataVersionHelper {
   entity(value: Object, context: ODataContext): any;
   entities(value: Object, context: ODataContext): any;
   property(value: Object, context: ODataContext): any;
@@ -27,9 +27,9 @@ export interface ODataVersionTools {
   count(value: Object): number;
 }
 
-export const OData = {
+export const ODataHelper = {
   //#region Version 4.0
-  [VERSION_4_0]: <ODataVersionTools> {
+  [VERSION_4_0]: <ODataVersionHelper> {
     VALUE: 'value',
     ODATA_ANNOTATION_PREFIX: '@odata',
     ODATA_FUNCTION_PREFIX: '#',
@@ -173,7 +173,7 @@ export const OData = {
   },
   //#endregion
   //#region Version 3.0
-  [VERSION_3_0]: <ODataVersionTools>{
+  [VERSION_3_0]: <ODataVersionHelper>{
     ODATA_ANNOTATION_PREFIX: 'odata.',
     ODATA_FUNCTION_PREFIX: '',
     ODATA_CONTEXT: 'odata.metadata',
@@ -240,7 +240,7 @@ export const OData = {
   },
   //#endregion
   //#region Version 2.0
-  [VERSION_2_0]: <ODataVersionTools>{
+  [VERSION_2_0]: <ODataVersionHelper>{
     ODATA_ANNOTATION: '__metadata',
     ODATA_NEXTLINK: '__next',
     ODATA_COUNT: '__count',

@@ -1,4 +1,4 @@
-import { EntityConfig, EnumConfig, ServiceConfig, SchemaConfig, ContainerConfig, Parser, ApiConfig, CallableConfig, ODataOptions } from './types';
+import { EntityConfig, EnumConfig, ServiceConfig, SchemaConfig, ContainerConfig, Parser, ApiConfig, CallableConfig, Options } from './types';
 import { Types } from './utils';
 import { ODataModel } from './models/model';
 import { ODataCollection } from './models/collection';
@@ -7,6 +7,20 @@ import { ODataEntityParser, ODataFieldParser } from './parsers/entity';
 import { ODataCallableParser } from './parsers/callable';
 import { EDM_PARSERS } from './parsers/edm';
 import { DEFAULT_VERSION } from './constants';
+
+export class ODataOptions implements Options {
+  version: "2.0" | "3.0" | "4.0";
+  metadata?: "minimal" | "full" | "none";
+  stringAsEnum?: boolean;
+  ieee754Compatible?: boolean;
+
+  constructor(config: ApiConfig) {
+    this.version = config.version || DEFAULT_VERSION;
+    this.metadata = config.metadata;
+    this.stringAsEnum = config.stringAsEnum;
+    this.ieee754Compatible = config.ieee754Compatible;
+  }
+}
 
 export class ODataApiConfig {
   serviceRootUrl: string;
@@ -19,10 +33,7 @@ export class ODataApiConfig {
   headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
   // Options
-  version: '2.0' | '3.0' | '4.0';
-  metadata?: 'minimal' | 'full' | 'none';
-  stringAsEnum?: boolean;
-  ieee754Compatible?: boolean;
+  options: ODataOptions;
   // Base Parsers
   parsers?: {[type: string]: Parser<any>};
   // Schemas
@@ -41,10 +52,7 @@ export class ODataApiConfig {
     this.params = config.params || {};
     this.headers = config.headers || {};
     this.withCredentials = config.withCredentials;
-    this.version = config.version || DEFAULT_VERSION;
-    this.metadata = config.metadata;
-    this.ieee754Compatible = config.ieee754Compatible;
-    this.stringAsEnum = config.stringAsEnum;
+    this.options = new ODataOptions(config);
     this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchemaConfig(schema, this));
@@ -54,15 +62,6 @@ export class ODataApiConfig {
     this.schemas.forEach(schema => {
       schema.configure({ parserForType: (type: string) => this.parserForType(type) });
     });
-  }
-
-  options(): ODataOptions {
-    return {
-      version: this.version,
-      metadata: this.metadata,
-      ieee754Compatible: this.ieee754Compatible,
-      stringAsEnum: this.stringAsEnum
-    }
   }
 
   //#region Find Config for Type
@@ -196,8 +195,8 @@ export class ODataSchemaConfig {
     return type.startsWith(this.namespace) || (this.alias && type.startsWith(this.alias));
   }
 
-  options() {
-    return this.api.options();
+  get options() {
+    return this.api.options;
   }
 
   get services(): Array<ODataServiceConfig> {
@@ -233,8 +232,8 @@ export class ODataEnumConfig<Type> {
     return names.indexOf(type) !== -1;
   }
   
-  options() {
-    return this.schema.options();
+  get options() {
+    return this.schema.options;
   }
 }
 
@@ -262,8 +261,8 @@ export class ODataEntityConfig<Type> {
     return names.indexOf(type) !== -1;
   }
 
-  options() {
-    return this.schema.options();
+  get options() {
+    return this.schema.options;
   }
 
   configure(settings: {parserForType: (type: string) => Parser<any>}) {
@@ -317,8 +316,8 @@ export class ODataCallableConfig<R> {
     return names.indexOf(type) !== -1;
   }
 
-  options() {
-    return this.schema.options();
+  get options() {
+    return this.schema.options;
   }
 
   configure(settings: {parserForType: (type: string) => Parser<any>}) {
@@ -338,8 +337,8 @@ export class ODataContainerConfig {
     this.services = (config.services || []).map(config => new ODataServiceConfig(config, schema));
   }
 
-  options() {
-    return this.schema.options();
+  get options() {
+    return this.schema.options;
   }
 }
 
@@ -360,7 +359,7 @@ export class ODataServiceConfig {
     return names.indexOf(type) !== -1;
   }
 
-  options() {
-    return this.schema.options();
+  get options() {
+    return this.schema.options;
   }
 }

@@ -37,7 +37,7 @@ export type Field = {
   ref?: string;
 }
 
-export type ODataOptions = {
+export interface Options {
   version: '2.0' | '3.0' | '4.0';
   metadata?: 'minimal' | 'full' | 'none';
   stringAsEnum?: boolean;
@@ -45,8 +45,8 @@ export type ODataOptions = {
 }
 
 export type Parser<T> = {
-  deserialize(value: any, options: ODataOptions): T;
-  serialize(value: T, options: ODataOptions): any;
+  deserialize(value: any, options: Options): T;
+  serialize(value: T, options: Options): any;
 }
 
 export type ApiConfig = {

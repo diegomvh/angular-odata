@@ -25,7 +25,8 @@ import {
   ODataCollection
 } from '../models/index';
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
-import { Urls, OData } from '../utils/index';
+import { Urls } from '../utils/index';
+import { ODataHelper } from '../helpers/index';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -73,8 +74,8 @@ export class ODataResource<Type> {
     let parser = config.parserForType<Type>(this.type());
     if (!Types.isUndefined(parser) && 'serialize' in parser)
       return Array.isArray(value) ? 
-        value.map(e => parser.serialize(e, config.options())) : 
-        parser.serialize(value, config.options());
+        value.map(e => parser.serialize(e, config.options)) : 
+        parser.serialize(value, config.options);
     return value;
   }
 
@@ -124,7 +125,7 @@ export class ODataResource<Type> {
     }): Observable<any> {
 
     const config = this.client.apiConfigFor(this);
-    const copts = config.options();
+    const copts = config.options;
     let params = options.params;
     if (options.withCount) {
       if (copts.version === VERSION_2_0 || copts.version === VERSION_3_0)
@@ -146,7 +147,7 @@ export class ODataResource<Type> {
     }
     let etag = options.etag;
     if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
-      etag = OData[copts.version].etag(options.attrs);
+      etag = ODataHelper[copts.version].etag(options.attrs);
     }
     const res$ = this.client.request(method, this, {
       body,

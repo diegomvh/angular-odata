@@ -16,7 +16,7 @@ import {
 } from '../resources/requests/options';
 import { ODataMeta, ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
 import { ODataFieldParser } from '../parsers/entity';
-import { OData } from '../utils';
+import { ODataHelper } from '../helpers/index';
 import { DEFAULT_VERSION } from '../constants';
 
 export class ODataModel<T> {
@@ -91,7 +91,7 @@ export class ODataModel<T> {
   }
 
   protected populate(entity: any, meta?: ODataMeta) {
-    this._entity = OData[DEFAULT_VERSION].attributes(entity) as T;
+    this._entity = ODataHelper[DEFAULT_VERSION].attributes(entity) as T;
     this._meta = meta || new ODataEntityMeta(entity);
     this._relations = {};
     Object.assign(this, this.parse(this._entity));
