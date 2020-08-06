@@ -6,7 +6,6 @@ import {
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
   QUERY_SEPARATOR,
-  DEFAULT_VERSION,
   VERSION_4_0,
   VERSION_3_0,
   $INLINECOUNT,
@@ -125,12 +124,12 @@ export class ODataResource<Type> {
     }): Observable<any> {
 
     const config = this.client.apiConfigFor(this);
+    const copts = config.options();
     let params = options.params;
     if (options.withCount) {
-      const version = config.options().version;
-      if (version === VERSION_2_0 || version === VERSION_3_0)
+      if (copts.version === VERSION_2_0 || copts.version === VERSION_3_0)
         params = this.client.mergeHttpParams(params, { [$INLINECOUNT]: 'allpages' });
-      else if (version === VERSION_4_0)
+      else if (copts.version === VERSION_4_0)
         params = this.client.mergeHttpParams(params, { [$COUNT]: 'true' });
     }
 
@@ -147,7 +146,7 @@ export class ODataResource<Type> {
     }
     let etag = options.etag;
     if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
-      etag = OData[DEFAULT_VERSION].etag(options.attrs);
+      etag = OData[copts.version].etag(options.attrs);
     }
     const res$ = this.client.request(method, this, {
       body,

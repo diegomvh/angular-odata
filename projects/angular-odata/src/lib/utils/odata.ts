@@ -174,14 +174,35 @@ export const OData = {
   //#endregion
   //#region Version 3.0
   [VERSION_3_0]: <ODataVersionTools>{
+    ODATA_ANNOTATION_PREFIX: 'odata.',
+    ODATA_FUNCTION_PREFIX: '',
     ODATA_CONTEXT: 'odata.metadata',
     ODATA_NEXTLINK: 'odata.nextLink',
+    ODATA_TYPE: 'odata.type',
     ODATA_COUNT: 'odata.count',
     VALUE: 'value',
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
     property(data: Object, context: ODataContext) { return data; },
-    annotations(value: Object){ return value; },
+    context(value: Object) {
+      if (this.ODATA_CONTEXT in value) {
+        let ctx: ODataContext = {};
+        const str = value[this.ODATA_CONTEXT] as string;
+        const index = str.lastIndexOf("#");
+        ctx.metadata = str.substr(0, index);
+        const parts = str.substr(index + 1).split("/");
+        ctx.entitySet = parts[0];
+        if (parts[parts.length - 1] === '@Element') {
+          ctx.entity = parts[1];
+        } 
+        return ctx;
+      }
+    },
+    annotations(value: Object) {
+      return Object.keys(value)
+        .filter(key => key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(this.ODATA_FUNCTION_PREFIX))
+        .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
+    },
     attributes(value: Object){ return value; },
     etag(value: Object) {
       if (this.ODATA_ETAG in value) {
@@ -193,12 +214,19 @@ export const OData = {
         return decodeURIComponent(value[this.ODATA_NEXTLINK] as string);
     },
     id(value: Object){ return undefined; },
-    context(value: Object){ return undefined; },
     functions(value: Object){ return undefined; },
     properties(value: Object){ return undefined; },
     mediaEtag(value: Object){ return undefined; },
     metadataEtag(value: Object){ return undefined; },
-    type(value: Object){ return undefined; },
+    type(value: Object) {
+      if (this.ODATA_TYPE in value) {
+        const type = value[this.ODATA_TYPE].substr(1) as string;
+        const matches = COLLECTION.exec(type);
+        if (matches)
+          return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
+        return type;
+      }
+    },
     readLink(value: Object){ return undefined; },
     mediaReadLink(value: Object){ return undefined; },
     editLink(value: Object){ return undefined; },
@@ -213,13 +241,20 @@ export const OData = {
   //#endregion
   //#region Version 2.0
   [VERSION_2_0]: <ODataVersionTools>{
+    ODATA_ANNOTATION: '__metadata',
     ODATA_NEXTLINK: '__next',
     ODATA_COUNT: '__count',
+    ODATA_DEFERRED: '__deferred',
+    ODATA_TYPE: 'type',
     RESULTS: 'results',
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.RESULTS]; },
     property(data: Object, context: ODataContext) { return data; },
-    annotations(value: Object){ return value; },
+    annotations(value: Object) {
+      if (this.ODATA_ANNOTATION in value)
+        return value[this.ODATA_ANNOTATION];
+      return value;
+    },
     attributes(value: Object){ return value; },
     etag(value: Object) {
       if (this.ODATA_ETAG in value) {
@@ -236,7 +271,15 @@ export const OData = {
     properties(value: Object){ return undefined; },
     mediaEtag(value: Object){ return undefined; },
     metadataEtag(value: Object){ return undefined; },
-    type(value: Object){ return undefined; },
+    type(value: Object) {
+      if (this.ODATA_TYPE in value) {
+        const type = value[this.ODATA_TYPE].substr(1) as string;
+        const matches = COLLECTION.exec(type);
+        if (matches)
+          return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
+        return type;
+      }
+    },
     readLink(value: Object){ return undefined; },
     mediaReadLink(value: Object){ return undefined; },
     editLink(value: Object){ return undefined; },

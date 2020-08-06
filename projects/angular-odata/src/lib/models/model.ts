@@ -15,7 +15,6 @@ import {
   HttpEntityOptions
 } from '../resources/requests/options';
 import { ODataMeta, ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
-import { ODataEntityConfig } from '../config';
 import { ODataFieldParser } from '../parsers/entity';
 import { OData } from '../utils';
 import { DEFAULT_VERSION } from '../constants';
