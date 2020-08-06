@@ -42,6 +42,8 @@ describe('ODataClient', () => {
 
   it('should serialize flags', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
+    const parser = client.parserForType(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
+    parser.flags = true;
     const options = config.options;
     options.stringAsEnum = true;
     const field = config.field('Gender');
@@ -51,10 +53,10 @@ describe('ODataClient', () => {
 
   it('should deserialize flags', () => {
     const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
-    const options = config.options;
-    options.stringAsEnum = true;
+    const parser = client.parserForType(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
+    parser.flags = true;
     const field = config.field('Gender');
-    expect(field.deserialize('Male, Female, Unknown', options)).toEqual(3);
+    expect(field.deserialize('Male, Female, Unknown', config.options)).toEqual(3);
   });
 
   it('should serialize entity', () => {
