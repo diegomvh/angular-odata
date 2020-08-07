@@ -613,8 +613,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="201"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:201</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="199"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:199</a></div>
                 </td>
             </tr>
 
@@ -683,8 +683,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="207"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:207</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="205"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:205</a></div>
                 </td>
             </tr>
 
@@ -753,8 +753,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="197"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:197</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="195"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:195</a></div>
                 </td>
             </tr>
 
@@ -862,8 +862,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="183"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:183</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="181"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:181</a></div>
                 </td>
             </tr>
 
@@ -901,8 +901,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="188"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:188</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="186"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:186</a></div>
                 </td>
             </tr>
 
@@ -1053,8 +1053,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="161"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:161</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="159"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:159</a></div>
                 </td>
             </tr>
 
@@ -1127,8 +1127,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="175"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:175</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="173"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/entity.ts:173</a></div>
                 </td>
             </tr>
 
@@ -1187,7 +1187,7 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../utils/index&#x27;;
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, Options } from &#x27;../types&#x27;;
-import { ODataOptions } from &#x27;../configs&#x27;;
+import { ODataOptions } from &#x27;../configs/options&#x27;;
 
 const NONE_PARSER &#x3D; {
   deserialize: (value: any, options: ODataOptions) &#x3D;&gt; value,
@@ -1336,8 +1336,6 @@ export class ODataEntityParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   configure(settings: { parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
     if (this.base) {
       const parent &#x3D; settings.parserForType(this.base) as ODataEntityParser&lt;any&gt;;
-      if (parent &#x3D;&#x3D;&#x3D; undefined)
-        console.log(this.base);
       parent.children.push(this);
       this.parent &#x3D; parent;
     }

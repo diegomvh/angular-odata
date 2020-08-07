@@ -1285,7 +1285,7 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../utils/index&#x27;;
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, Options } from &#x27;../types&#x27;;
-import { ODataOptions } from &#x27;../configs&#x27;;
+import { ODataOptions } from &#x27;../configs/options&#x27;;
 
 const NONE_PARSER &#x3D; {
   deserialize: (value: any, options: ODataOptions) &#x3D;&gt; value,
@@ -1434,8 +1434,6 @@ export class ODataEntityParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   configure(settings: { parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
     if (this.base) {
       const parent &#x3D; settings.parserForType(this.base) as ODataEntityParser&lt;any&gt;;
-      if (parent &#x3D;&#x3D;&#x3D; undefined)
-        console.log(this.base);
       parent.children.push(this);
       this.parent &#x3D; parent;
     }
