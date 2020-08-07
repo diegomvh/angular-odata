@@ -38,7 +38,7 @@ export class ODataResponse<T> {
     if (!this._options) {
       this._options = this.config.options.clone();
       const contentType = this.headers.get(CONTENT_TYPE);
-      if (contentType) {
+      if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
         const features = contentType.split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
         this._options.setFeatures(features);
       }
