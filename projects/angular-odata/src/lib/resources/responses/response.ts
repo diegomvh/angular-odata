@@ -6,7 +6,8 @@ import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE } from '../../constants';
-import { ODataApiConfig, ODataOptions } from '../../configs';
+import { ODataOptions } from '../../configs/options';
+import { ODataApiConfig } from '../../configs/api';
 
 export class ODataResponse<T> {
   readonly body: any | null;

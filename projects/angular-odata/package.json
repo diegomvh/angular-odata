@@ -1,6 +1,6 @@
 {
   "name": "angular-odata",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "license": "MIT",
   "description": "Client side OData typescript library for Angular",
   "repository": {
@@ -25,10 +25,10 @@
   "homepage": "https://github.com/diegomvh/angular-odata",
   "private": false,
   "peerDependencies": {
-    "@angular/common": "~10.0.8",
-    "@angular/core": "~10.0.8"
+    "@angular/common": "^10.0.6",
+    "@angular/core": "^10.0.6"
   },
   "dependencies": {
     "tslib": "^2.0.0"
-}
+  }
 }

@@ -1,8 +1,8 @@
 import { ApiConfig, Parser } from './types';
-import { ODataApiConfig } from './configs';
 import { Types } from './utils';
 import { ODataCollection } from './models/collection';
 import { ODataModel } from './models/model';
+import { ODataApiConfig } from './configs/api';
 
 export class ODataSettings {
   configs?: Array<ODataApiConfig>;

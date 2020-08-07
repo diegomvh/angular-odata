@@ -4,7 +4,7 @@ import { ODataClient } from "../client";
 import { EntityKey } from '../types';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
-import { ODataEntityConfig } from '../configs';
+import { ODataEntityConfig } from '../configs/entity';
 
 export class ODataEntityService<T> {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }

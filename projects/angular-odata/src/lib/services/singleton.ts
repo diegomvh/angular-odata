@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ODataClient } from "../client";
 import { ODataModel } from '../models/model';
 import { ODataSingletonResource } from '../resources';
-import { ODataEntityConfig } from '../configs';
+import { ODataEntityConfig } from '../configs/entity';
 
 export class ODataSingletonService<T> {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }

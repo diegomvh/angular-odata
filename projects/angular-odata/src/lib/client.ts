@@ -28,7 +28,10 @@ import {
 import { ODataSettings } from './settings';
 import { Parser } from './types';
 import { IF_MATCH_HEADER, ACCEPT } from './constants';
-import { ODataApiConfig, ODataEntityConfig, ODataCallableConfig, ODataServiceConfig } from './configs';
+import { ODataApiConfig } from './configs/api';
+import { ODataEntityConfig } from './configs/entity';
+import { ODataCallableConfig } from './configs/callable';
+import { ODataServiceConfig } from './configs/service';
 
 @Injectable()
 export class ODataClient {
