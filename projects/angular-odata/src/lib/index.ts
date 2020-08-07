@@ -3,7 +3,6 @@ export * from './types';
 export * from './settings';
 export * from './client';
 export * from './module';
-export * from './tokens';
 
 // Configs
 export * from './configs/index';
