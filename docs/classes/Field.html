@@ -111,7 +111,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:20</a></div>
                             </td>
                         </tr>
 
@@ -187,7 +187,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:20</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:21</a></div>
                             </td>
                         </tr>
 
@@ -215,7 +215,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:20</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:21</a></div>
                             </td>
                         </tr>
 
@@ -247,6 +247,7 @@ import { CsdlEntityContainer } from &#x27;./csdl/csdl-entity-container&#x27;;
 import { CsdlReference, CsdlInclude, CsdlIncludeAnnotations } from &#x27;./csdl/csdl-reference&#x27;;
 import { CsdlAnnotation, CsdlTerm, CsdlAnnotations } from &#x27;./csdl/csdl-annotation&#x27;;
 import { CsdlNavigationPropertyBinding } from &#x27;./csdl/csdl-navigation-property-binding&#x27;;
+import { VERSION_4_0 } from &#x27;../../constants&#x27;;
 
 enum FieldType {
     ATTRIBUTE, TAG
@@ -385,7 +386,7 @@ export class ODataMetadata {
             throw new Error(&#x27;OData version is not specified in the metadata&#x27;);
         }
         const odataVersion: string &#x3D; attr.nodeValue;
-        if (odataVersion !&#x3D;&#x3D; &#x27;4.0&#x27;) {
+        if (odataVersion !&#x3D;&#x3D; VERSION_4_0) {
             throw new Error(&#x27;OData version &quot;&#x27; + odataVersion + &#x27;&quot; is not supported&#x27;);
         }
     }

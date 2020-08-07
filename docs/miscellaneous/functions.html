@@ -85,10 +85,28 @@
                             <a href="#escapeIllegalChars" title="projects/angular-odata/src/lib/resources/builder.ts"><b>escapeIllegalChars</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
+                            <a href="#getBoundaryDelimiter" title="projects/angular-odata/src/lib/resources/requests/batch.ts"><b>getBoundaryDelimiter</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getBoundaryEnd" title="projects/angular-odata/src/lib/resources/requests/batch.ts"><b>getBoundaryEnd</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#getHeaderValue" title="projects/angular-odata/src/lib/resources/requests/batch.ts"><b>getHeaderValue</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
+                        </li>
+                        <li>
                             <a href="#handleValue" title="projects/angular-odata/src/lib/resources/builder.ts"><b>handleValue</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
+                            <a href="#now" title="projects/angular-odata/src/lib/resources/requests/batch.ts"><b>now</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
+                        </li>
+                        <li>
                             <a href="#parseNot" title="projects/angular-odata/src/lib/resources/builder.ts"><b>parseNot</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#pathSegmentsBuilder" title="projects/angular-odata/src/lib/resources/path-segments.ts"><b>pathSegmentsBuilder</b>&nbsp;&nbsp;&nbsp;(projects/.../path-segments.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#uniqid" title="projects/angular-odata/src/lib/resources/requests/batch.ts"><b>uniqid</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
                         </li>
                         <li>
                             <a href="#Unnamed function" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Unnamed function</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -821,6 +839,343 @@
                         </table>
                     </div>
                     <div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/requests/batch.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBoundaryDelimiter"></a>
+                    <span class="name">
+                        <b>
+                            getBoundaryDelimiter
+                        </b>
+                        <a href="#getBoundaryDelimiter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getBoundaryDelimiter(contentType)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>contentType</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBoundaryEnd"></a>
+                    <span class="name">
+                        <b>
+                            getBoundaryEnd
+                        </b>
+                        <a href="#getBoundaryEnd"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getBoundaryEnd(boundaryDelimiter)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>boundaryDelimiter</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getHeaderValue"></a>
+                    <span class="name">
+                        <b>
+                            getHeaderValue
+                        </b>
+                        <a href="#getHeaderValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>getHeaderValue(header)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>header</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="now"></a>
+                    <span class="name">
+                        <b>
+                            now
+                        </b>
+                        <a href="#now"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>now()</code>
+                </td>
+            </tr>
+
+
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uniqid"></a>
+                    <span class="name">
+                        <b>
+                            uniqid
+                        </b>
+                        <a href="#uniqid"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>uniqid(prefix?, suffix?)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>prefix</td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>suffix</td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/resources/path-segments.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pathSegmentsBuilder"></a>
+                    <span class="name">
+                        <b>
+                            pathSegmentsBuilder
+                        </b>
+                        <a href="#pathSegmentsBuilder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>pathSegmentsBuilder(segment)</code>
+                </td>
+            </tr>
+
+
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>segment</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>

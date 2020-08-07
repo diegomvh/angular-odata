@@ -99,15 +99,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>forRoot(configs: <a href="../undefineds/Configuration.html">Configuration[]</a>)</code>
+                    <code>forRoot(configs: <a href="../undefineds/ApiConfig.html">ApiConfig[]</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/module.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">projects/angular-odata/src/lib/module.ts:19</a></div>
                 </td>
             </tr>
 
@@ -129,7 +129,7 @@
                                 <tr>
                                     <td>configs</td>
                                     <td>
-                                                <code><a href="../miscellaneous/typealiases.html#Configuration" target="_self" >Configuration[]</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#ApiConfig" target="_self" >ApiConfig[]</a></code>
                                     </td>
 
                                     <td>
@@ -144,7 +144,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://angular.io/api/core/ModuleWithProviders" target="_blank" >ModuleWithProviders</a></code>
+                        <b>Returns : </b>    <code>ModuleWithProviders&lt;ODataModule&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -162,12 +162,13 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpClientModule } from &#x27;@angular/common/http&#x27;;
 import { NgModule, ModuleWithProviders } from &#x27;@angular/core&#x27;;
 
-import { ODataSettings } from &#x27;./models/settings&#x27;;
+import { ODataSettings } from &#x27;./settings&#x27;;
 import { ODataClient } from &#x27;./client&#x27;;
-import { ODataServiceFactory } from &#x27;./services/factory&#x27;;
-import { Configuration, ODATA_CONFIGURATIONS } from &#x27;./types&#x27;;
+import { ODataServiceFactory } from &#x27;./services&#x27;;
+import { ODATA_CONFIGURATIONS } from &#x27;./tokens&#x27;;
+import { ApiConfig } from &#x27;./types&#x27;;
 
-export function createSettings(configs: Configuration[]) {
+export function createSettings(configs: ApiConfig[]) {
   return new ODataSettings(...configs);
 }
 
@@ -176,7 +177,7 @@ export function createSettings(configs: Configuration[]) {
   providers: [ODataClient, ODataServiceFactory]
 })
 export class ODataModule {
-  public static forRoot(...configs: Configuration[]): ModuleWithProviders {
+  public static forRoot(...configs: ApiConfig[]): ModuleWithProviders&lt;ODataModule&gt; {
     return {
       ngModule: ODataModule,
       providers: [

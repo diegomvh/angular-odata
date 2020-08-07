@@ -35,12 +35,10 @@
 OData service for Angular.</p>
 <p>Please check also my other related project, <a href="https://github.com/diegomvh/ODataApiGen">OData Angular Generator</a></p>
 <h2 id="install">Install:</h2>
-<div><pre class="line-numbers"><code class="language-bash">npm i uuid
-npm i angular-odata</code></pre></div><h2 id="demo">Demo:</h2>
+<div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2 id="demo">Demo:</h2>
 <p>Full examples of the library:</p>
 <ul>
 <li><a href="https://github.com/diegomvh/AngularODataEntity">AngularODataEntity</a></li>
-<li><a href="https://github.com/diegomvh/AngularODataModel">AngularODataModel</a></li>
 </ul>
 <h2 id="usage">Usage:</h2>
 <h3 id="simple-usage-service-factory">Simple usage: Service Factory</h3>
@@ -96,53 +94,63 @@ export class AppComponent {
 
   queries() {
     // Use OData Service Factory
-    let airportsService = this.factory.createEntityService&lt;Airport&gt;(&quot;Airports&quot;);
-    let peopleService = this.factory.createEntityService&lt;Person&gt;(&quot;People&quot;);
+    let airportsService = this.factory.entity&lt;Airport&gt;(&quot;Airports&quot;, &#39;Microsoft.OData.SampleService.Models.TripPin.Airport&#39;);
+    let peopleService = this.factory.entity&lt;Person&gt;(&quot;People&quot;, &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;);
 
     let airports = airportsService.entities();
 
-    // Fetch set
-    airports.all()
-      .subscribe(aports =&gt; console.log(&quot;All: &quot;, aports));
+    // Fetch all airports
+    airports
+    .all()
+    .subscribe(aports =&gt; console.log(&quot;All: &quot;, aports));
 
-    // Fetch with count
-    airports.get({withCount: true})
-      .subscribe(([aports, annots]) =&gt; console.log(&quot;Airports: &quot;, aports, &quot;Annotations: &quot;, annots));
+    // Fetch airports with count
+    airports
+    .get({withCount: true})
+    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, meta));
 
-    // Fetch by key
-    let airport = airports.entity(&quot;CYYZ&quot;);
-    airport.get()
-      .subscribe(([aport, annots]) =&gt; console.log(&quot;Airport: &quot;, aport, &quot;Annotations: &quot;, annots));
+    // Fetch airport with key
+    airports
+    .entity(&quot;CYYZ&quot;).get()
+    .subscribe(({entity, meta}) =&gt; console.log(&quot;Airport: &quot;, entity, &quot;Annotations: &quot;, meta));
 
-    // Filter
-    airports.filter({Location: {City: {CountryRegion: &quot;United States&quot;}}});
-    airports.get()
-      .subscribe(([aports, annots]) =&gt; console.log(&quot;Airports of United States: &quot;, aports, &quot;Annotations: &quot;, annots));
+    // Filter airports (inmutable resource)
+    airports
+    .filter({Location: {City: {CountryRegion: &quot;United States&quot;}}})
+    .get()
+    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports of United States: &quot;, entities, &quot;Annotations: &quot;, meta));
 
-    // Add filter
-    airports.filter().push({Location: {City: {Region: &quot;California&quot;}}});
-    airports.get()
-      .subscribe(([aports, annots]) =&gt; console.log(&quot;Airports in California: &quot;, aports, &quot;Annotations: &quot;, annots));
+    // Add filter (mutable resource)
+    airports.query.filter().push({Location: {City: {Region: &quot;California&quot;}}});
+    airports
+    .get()
+    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports in California: &quot;, entities, &quot;Annotations: &quot;, meta));
 
-    // Remove filter
-    airports.filter().clear();
-    airports.get()
-      .subscribe(([aports, annots]) =&gt; console.log(&quot;Airports: &quot;, aports, &quot;Annotations: &quot;, annots));
+    // Remove filter (mutable resource)
+    airports.query.filter().clear();
+    airports
+    .get()
+    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, meta));
 
     let people = peopleService.entities();
 
-    // Expand
+    // Expand (inmutable resource)
     people.expand({
       Friends: { 
         expand: { Friends: { select: [&#39;AddressInfo&#39;]}} 
       }, 
       Trips: { select: [&#39;Name&#39;, &#39;Tags&#39;] },
-    });
-    people.get({withCount: true})
-      .subscribe(([peop, annots]) =&gt; console.log(&quot;People with Friends and Trips: &quot;, peop, &quot;Annotations: &quot;, annots));
+    })
+    .get({withCount: true})
+    .subscribe(({entities, meta}) =&gt; console.log(&quot;People with Friends and Trips: &quot;, entities, &quot;Annotations: &quot;, meta));
 
-    // Remove Expand
-    people.expand().clear();
+    // Batch
+    let batch = odata.batch();
+    batch.post(() =&gt; {
+      airports.get().subscribe(console.log);
+      airport.get().subscribe(console.log);
+      people.get({withCount: true}).subscribe(console.log);
+    }).subscribe();
   }
 }</code></pre></div><h3 id="advanced-usage-create-custom-services">Advanced usage: Create Custom Services</h3>
 <p>In this mode, services are created using custom definitions and corresponding configuration</p>
@@ -168,13 +176,13 @@ export interface Person {
 export const PersonConfig = {
   name: &quot;Person&quot;,
   fields: {
-    UserName: {type: &#39;string&#39;, key: true, ref: &#39;UserName&#39;, nullable: false}]},
-    FirstName: {type: &#39;string&#39;, nullable: false},
-    LastName: {type: &#39;string&#39;, nullable: false},
-    Emails: {type: &#39;string&#39;, collection: true},
+    UserName: {type: &#39;Edm.String&#39;, key: true, ref: &#39;UserName&#39;, nullable: false}]},
+    FirstName: {type: &#39;Edm.String&#39;, nullable: false},
+    LastName: {type: &#39;Edm.String&#39;, nullable: false},
+    Emails: {type: &#39;Edm.String&#39;, collection: true},
     AddressInfo: {type: &#39;Microsoft.OData.SampleService.Models.TripPin.Location&#39;, collection: true},
     Gender: {type: &#39;Microsoft.OData.SampleService.Models.TripPin.PersonGender&#39;},
-    Concurrency: {type: &#39;number&#39;, nullable: false},
+    Concurrency: {type: &#39;Edm.Int64&#39;, nullable: false},
     Friends: {type: &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;, collection: true, navigation: true},
     Trips: {type: &#39;Microsoft.OData.SampleService.Models.TripPin.Trip&#39;, collection: true, navigation: true},
     Photo: {type: &#39;Microsoft.OData.SampleService.Models.TripPin.Photo&#39;, navigation: true}
@@ -212,9 +220,9 @@ import { Person } from &#39;./person.entity&#39;;
 
 &#64;Injectable()
 export class PeopleService extends ODataEntityService&lt;Person&gt; {
-  static path: string = &#39;People&#39;;
-  static type: string = &#39;Microsoft.OData.SampleService.Models.TripPin.People&#39;;
-  static entity: string = &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;;
+  constructor(protected client: ODataClient) {
+    super(client, &#39;People&#39;, &#39;Microsoft.OData.SampleService.Models.TripPin.Person&#39;);
+  }
 }</code></pre></div><p>4) Add module to your project</p>
 <div><pre class="line-numbers"><code class="language-typescript">import { NgModule } from &#39;&#64;angular/core&#39;;
 import { ODataModule } from &#39;angular-odata&#39;;
@@ -247,25 +255,19 @@ export class AppComponent {
   }
 
   show(name: string) {
-    let person = this.people.entity({UserName: name});
-    person.expand({
+    this.people.entity({UserName: name})
+    .expand({
       Friends: {}, 
-      Trips: {
-        expand: {
-          Photos: {}, 
-          PlanItems: {}
-        }
-      }, 
+      Trips: { expand: { Photos: {}, PlanItems: {} } }, 
       Photo: {}
+    }).get()
+    .subscribe(([person, ]) =&gt; {
+      this.person = person;
+      if (person.Photo) {
+        let media = this.photos.entity(person.Photo).media();
+        media.blob().subscribe(console.log);
+      }
     });
-    person.get()
-      .subscribe(([person, ]) =&gt; {
-        this.person = person;
-        if (person.Photo) {
-          let media = this.photos.entity(person.Photo).media();
-          media.blob().subscribe(console.log);
-        }
-      });
   }
 }</code></pre></div><h3 id="advanced-usage-odata-generator">Advanced usage: OData Generator</h3>
 <p>1) If you choose using <a href="https://github.com/diegomvh/ODataApiGen">OData Angular Generator</a>, import the config and the module from generated source.</p>
@@ -282,12 +284,12 @@ import { TripPinConfig, TripPinModule } from &#39;./trippin&#39;;
   ]
   ...
 })
-export class AppModule {}</code></pre></div><p>For a deep query customizations the library use <code>odata-query</code> as a builder.</p>
-<h2 id="credits">Credits</h2>
-<p>Angular OData is built using the following open source projects:</p>
+export class AppModule {}</code></pre></div><h2 id="odata-v3-and-v2">OData V3 and V2</h2>
+<p>The library works mainly with OData V4, however, it incorporates basic support for versions 3 and 2.</p>
+<h2 id="queries">Queries</h2>
+<p>For a deep query customizations the library use <code>odata-query</code> as a builder.</p>
 <ul>
 <li><a href="https://github.com/techniq/odata-query">OData v4 query builder</a></li>
-<li><a href="https://github.com/uuidjs/uuid">Generate RFC-compliant UUIDs in JavaScript</a></li>
 </ul>
 
 

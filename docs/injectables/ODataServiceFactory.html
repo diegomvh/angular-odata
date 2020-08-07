@@ -76,10 +76,10 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#createEntityService">createEntityService</a>
+                                <a href="#entity">entity</a>
                             </li>
                             <li>
-                                <a href="#createModelService">createModelService</a>
+                                <a href="#singleton">singleton</a>
                             </li>
                         </ul>
                     </td>
@@ -104,7 +104,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:7</a></div>
                             </td>
                         </tr>
 
@@ -151,26 +151,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="createEntityService"></a>
+                    <a name="entity"></a>
                     <span class="name">
                         <b>
-                            createEntityService
+                            entity
                         </b>
-                        <a href="#createEntityService"><span class="icon ion-ios-link"></span></a>
+                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>createEntityService(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>entity(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, entityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:12</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="10"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:10</a></div>
                 </td>
             </tr>
 
@@ -198,7 +198,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>path</td>
+                                    <td>name</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -210,7 +210,7 @@
 
                                 </tr>
                                 <tr>
-                                    <td>type</td>
+                                    <td>entityType</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -227,7 +227,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../injectables/ODataEntityService.html" target="_self" >ODataEntityService&lt;T&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService&lt;T&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -241,26 +241,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="createModelService"></a>
+                    <a name="singleton"></a>
                     <span class="name">
                         <b>
-                            createModelService
+                            singleton
                         </b>
-                        <a href="#createModelService"><span class="icon ion-ios-link"></span></a>
+                        <a href="#singleton"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>createModelService(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>singleton(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, entityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="19"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:19</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="15"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/factory.ts:15</a></div>
                 </td>
             </tr>
 
@@ -269,8 +269,6 @@
                     <b>Type parameters :</b>
                     <ul class="type-parameters">
                         <li>T</li>
-                        <li>M</li>
-                        <li>C</li>
                     </ul>
                 </td>
             </tr>
@@ -290,7 +288,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>path</td>
+                                    <td>name</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -302,7 +300,7 @@
 
                                 </tr>
                                 <tr>
-                                    <td>type</td>
+                                    <td>entityType</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -319,7 +317,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../injectables/ODataModelService.html" target="_self" >ODataModelService&lt;T, M, C&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataSingletonService.html" target="_self" >ODataSingletonService&lt;T&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -336,28 +334,22 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-
 import { ODataClient } from &quot;../client&quot;;
 import { ODataEntityService } from &#x27;./entity&#x27;;
-import { ODataModel, ODataCollection } from &#x27;../models&#x27;;
-import { ODataModelService } from &#x27;./model&#x27;;
+import { ODataSingletonService } from &#x27;./singleton&#x27;;
 
 @Injectable()
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) { }
 
-  createEntityService&lt;T&gt;(path: string, type?: string): ODataEntityService&lt;T&gt; {
+  entity&lt;T&gt;(name: string, entityType?: string): ODataEntityService&lt;T&gt; {
     return new class extends ODataEntityService&lt;T&gt; {
-      static path &#x3D; path;
-      static entity &#x3D; type;
-    }(this.client);
+    }(this.client, name, entityType);
   }
 
-  createModelService&lt;T, M extends ODataModel&lt;T&gt;, C extends ODataCollection&lt;T, M&gt;&gt;(path: string, type?: string): ODataModelService&lt;T, M, C&gt; {
-    return new class extends ODataModelService&lt;T, M, C&gt; {
-      static path &#x3D; path;
-      static entity &#x3D; type;
-    }(this.client);
+  singleton&lt;T&gt;(name: string, entityType?: string): ODataSingletonService&lt;T&gt; {
+    return new class extends ODataSingletonService&lt;T&gt; {
+    }(this.client, name, entityType);
   }
 }
 </code></pre>

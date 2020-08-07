@@ -42,7 +42,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>ODataEnumParser</li>
+  <li>ODataParameterParser</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -60,7 +60,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/parsers/enum.ts</code>
+            <code>projects/angular-odata/src/lib/parsers/callable.ts</code>
         </p>
 
 
@@ -87,13 +87,19 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#flags">flags</a>
-                            </li>
-                            <li>
-                                <a href="#members">members</a>
+                                <a href="#collection">collection</a>
                             </li>
                             <li>
                                 <a href="#name">name</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#nullable">nullable</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#parser">parser</a>
                             </li>
                             <li>
                                 <a href="#type">type</a>
@@ -111,13 +117,13 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                <a href="#configure">configure</a>
+                            </li>
+                            <li>
                                 <a href="#deserialize">deserialize</a>
                             </li>
                             <li>
                                 <a href="#serialize">serialize</a>
-                            </li>
-                            <li>
-                                <a href="#toJsonSchema">toJsonSchema</a>
                             </li>
                         </ul>
                     </td>
@@ -137,12 +143,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(meta: <a href="../undefineds/EnumConfig.html">EnumConfig<Type></a>, namespace: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, parameter: <a href="../undefineds/Parameter.html">Parameter</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:14</a></div>
                             </td>
                         </tr>
 
@@ -160,10 +166,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>meta</td>
+                                                        <td>name</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#EnumConfig" target="_self" >EnumConfig&lt;Type&gt;</a></code>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -172,10 +178,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>namespace</td>
+                                                        <td>parameter</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#Parameter" target="_self" >Parameter</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -201,12 +207,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="flags"></a>
+                        <a name="collection"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Optional</span>
-                            flags</b>
-                            <a href="#flags"><span class="icon ion-ios-link"></span></a>
+                            collection</b>
+                            <a href="#collection"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -218,34 +224,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:7</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="members"></a>
-                        <span class="name">
-                            <b>
-                            members</b>
-                            <a href="#members"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>    <code>literal type | literal type</code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:8</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:13</a></div>
                             </td>
                         </tr>
 
@@ -272,7 +251,64 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:5</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:10</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="nullable"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Optional</span>
+                            nullable</b>
+                            <a href="#nullable"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:14</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="parser"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Private</span>
+                                <span class="modifier">Optional</span>
+                            parser</b>
+                            <a href="#parser"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#Parser" target="_self" >Parser&lt;Type&gt;</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:12</a></div>
                             </td>
                         </tr>
 
@@ -299,7 +335,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:6</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -317,6 +353,76 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="configure"></a>
+                    <span class="name">
+                        <b>
+                            configure
+                        </b>
+                        <a href="#configure"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>configure(settings: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:50</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>settings</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="deserialize"></a>
                     <span class="name">
                         <b>
@@ -328,15 +434,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options: <a href="../interfaces/Options.html">Options</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/Options.html">Options</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:23</a></div>
                 </td>
             </tr>
 
@@ -358,7 +464,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -417,8 +523,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:37</a></div>
                 </td>
             </tr>
 
@@ -467,80 +573,6 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="toJsonSchema"></a>
-                    <span class="name">
-                        <b>
-                            toJsonSchema
-                        </b>
-                        <a href="#toJsonSchema"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>toJsonSchema(options: <a href="../interfaces/Options.html">JsonSchemaExpandOptions<Type></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:44</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaExpandOptions&lt;Type&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
@@ -561,59 +593,94 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumHelper } from &#x27;../helpers/index&#x27;;
-import { JsonSchemaExpandOptions, EnumConfig, Options, Parser } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../utils/index&#x27;;
+import { Parser, Options, Parameter, CallableConfig } from &#x27;../types&#x27;;
 
-export class ODataEnumParser&lt;Type&gt; implements Parser&lt;Type&gt; {
+const NONE_PARSER &#x3D; {
+  deserialize(value: any, options: Options) {return value},
+  serialize(value: any, options: Options) {return value} 
+} as Parser&lt;any&gt;;
+
+export class ODataParameterParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   name: string;
   type: string;
-  flags?: boolean;
-  members: { [name: string]: number } | { [value: number]: string };
+  private parser?: Parser&lt;Type&gt;;
+  collection?: boolean;
+  nullable?: boolean;
 
-  constructor(meta: EnumConfig&lt;Type&gt;, namespace: string) {
-    this.name &#x3D; meta.name;
-    this.type &#x3D; &#x60;${namespace}.${meta.name}&#x60;;
-    this.flags &#x3D; meta.flags;
-    this.members &#x3D; meta.members;
+  constructor(name: string, parameter: Parameter) {
+    this.name &#x3D; name;
+    this.type &#x3D; parameter.type;
+    Object.assign(this, parameter);
   }
 
   // Deserialize
-  deserialize(value: string, options: Options): Type {
-    // string -&gt; Type 
-    if (this.flags) {
-      return EnumHelper.toValues(this.members, value).reduce((acc, v) &#x3D;&gt; acc | v, 0) as any;
-    } else {
-      return EnumHelper.toValue(this.members, value) as any;
+  deserialize(value: any, options: Options): Type {
+    return this.parser.deserialize(value, options);
+    /*
+    if (this.parser instanceof ODataEntityParser) {
+      return Array.isArray(value) ?
+        (value.map(v &#x3D;&gt; this.parser.deserialize(v, options)) as Partial&lt;Type&gt;[]):
+        (this.parser.deserialize(value, options) as Partial&lt;Type&gt;);
+    } else if (this.parser instanceof ODataEnumParser) {
+      return this.parser.deserialize(value, options);
     }
+    */
   }
 
   // Serialize
-  serialize(value: Type, options: Options): string {
-    // Type -&gt; string 
-    if (this.flags) {
-      let names &#x3D; EnumHelper.toNames(this.members, value);
-      if (!options.stringAsEnum)
-        names &#x3D; names.map(name &#x3D;&gt; &#x60;${this.type}&#x27;${name}&#x27;&#x60;)
-      return names.join(&quot;, &quot;);
-    } else {
-      let name &#x3D; EnumHelper.toName(this.members, value);
-      if (!options.stringAsEnum)
-        name &#x3D; &#x60;${this.type}&#x27;${name}&#x27;&#x60;;
-      return name;
+  serialize(value: Type, options: Options): any {
+    return this.parser.serialize(value, options);
+    /*
+    if (this.parser instanceof ODataEntityParser) {
+      return Array.isArray(value) ?
+        value.map(v &#x3D;&gt; this.parser.serialize(v, options)) :
+        this.parser.serialize(value, options);
+    } else if (this.parser instanceof ODataEnumParser) {
+      return this.parser.serialize(value, options);
     }
+    */
   }
 
-  // Json Schema
-  toJsonSchema(options: JsonSchemaExpandOptions&lt;Type&gt; &#x3D; {}) {
-    let property &#x3D; &lt;any&gt;{
-      title: &#x60;The ${this.name} field&#x60;,
-      type: &quot;string&quot;
-    };
-    property.enum &#x3D; EnumHelper.names(this.members);
-    return property;
+  configure(settings: { parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
+    this.parser &#x3D; settings.parserForType(this.type) || NONE_PARSER;
   }
 }
-</code></pre>
+
+export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
+  name: string;
+  //type: string;
+  return?: string;
+  parser: Parser&lt;any&gt;;
+  parameters: ODataParameterParser&lt;any&gt;[];
+
+  constructor(config: CallableConfig, namespace: string) {
+    this.name &#x3D; config.name;
+    //this.type &#x3D; &#x60;${namespace}.${config.name}&#x60;;
+    this.return &#x3D; config.return;
+    this.parameters &#x3D; Object.entries(config.parameters || [])
+      .map(([name, p]) &#x3D;&gt; new ODataParameterParser(name, p as Parameter));
+  }
+
+  // Deserialize
+  deserialize(value: any, options: Options): R {
+    return this.parser.deserialize(value, options);
+  }
+
+  // Serialize
+  serialize(params: any, options: Options): any {
+    return Object.assign({}, this.parameters
+      .filter(p &#x3D;&gt; p.name in params &amp;&amp; !Types.isNullOrUndefined(params[p.name]))
+      .reduce((acc, p) &#x3D;&gt; Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
+    );
+  }
+
+  configure(settings: { parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
+    if (this.return)
+      this.parser &#x3D; settings.parserForType(this.return) || NONE_PARSER;
+    this.parameters.forEach(p &#x3D;&gt; p.configure(settings));
+  }
+}</code></pre>
     </div>
 </div>
 
@@ -641,7 +708,7 @@ export class ODataEnumParser&lt;Type&gt; implements Parser&lt;Type&gt; {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ODataEnumParser.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataParameterParser.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
