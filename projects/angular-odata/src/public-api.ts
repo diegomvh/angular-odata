@@ -2,4 +2,4 @@
  * Public API Surface of angular-odata
  */
 
-export * from './lib/module';
+export * from './lib/index';
