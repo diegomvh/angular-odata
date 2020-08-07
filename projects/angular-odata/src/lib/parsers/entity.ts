@@ -29,7 +29,7 @@ export class ODataFieldParser<Type> implements Parser<Type> {
   }
 
   resolve(value: any) {
-    return this.ref.split('/').reduce((acc, name) => acc[name], value);
+    return (this.ref || this.name).split('/').reduce((acc, name) => acc[name], value);
   }
 
   // Deserialize
@@ -171,7 +171,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 
   typeFor(name: string): string {
-    let field = this.fields.find(f => f.name === name);
+    const field = this.fields.find(f => f.name === name);
     if (field)
       return field.type;
     else if (this.parent)
@@ -179,15 +179,21 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 
   keys() {
-    let keys = (this.parent) ? this.parent.keys() : [];
+    const keys = (this.parent) ? this.parent.keys() : [];
     return [...keys, ...this.fields.filter(f => f.key)];
   }
 
   resolveKey(attrs: any) {
     let key = this.keys()
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {});
-    if (Object.keys(key).length === 1)
-      key = Object.values(key)[0];
+    const values = Object.values(key);
+    if (values.length === 1) {
+      // Single primitive key value
+      key = values[0];
+    } else if (values.some(v => Types.isNullOrUndefined(v))) {
+      // Compose key, needs all values
+      key = null;
+    }
     if (!Types.isEmpty(key))
       return key;
   }
