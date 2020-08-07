@@ -4,6 +4,7 @@ import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataEnumParser } from './enum';
 import { ODataEntityParser } from './entity';
+import { ODataApiConfig } from '../configs/api';
 
 describe('ODataClient', () => {
   let client: ODataClient;
