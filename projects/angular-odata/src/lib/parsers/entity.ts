@@ -149,8 +149,6 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   configure(settings: { parserForType: (type: string) => Parser<any> }) {
     if (this.base) {
       const parent = settings.parserForType(this.base) as ODataEntityParser<any>;
-      if (parent === undefined)
-        console.log(this.base);
       parent.children.push(this);
       this.parent = parent;
     }
