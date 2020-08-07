@@ -36,9 +36,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   //#region Inmutable Resource
-  entity(key: EntityKey<T>) {
+  entity(key?: EntityKey<T>) {
     const entity = ODataEntityResource.factory<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
-    entity.segment.key(key);
+    if (!Types.isUndefined(key))
+      entity.segment.key(key);
     return entity;
   }
 
