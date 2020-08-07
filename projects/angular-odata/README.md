@@ -16,7 +16,6 @@ npm i angular-odata
 Full examples of the library:
 
  - [AngularODataEntity](https://github.com/diegomvh/AngularODataEntity)
- - [AngularODataModel](https://github.com/diegomvh/AngularODataModel)
 
 ## Usage:
 
@@ -87,36 +86,43 @@ export class AppComponent {
 
   queries() {
     // Use OData Service Factory
-    let airportsService = this.factory.createEntityService<Airport>("Airports", 'Microsoft.OData.SampleService.Models.TripPin.Airport');
-    let peopleService = this.factory.createEntityService<Person>("People", 'Microsoft.OData.SampleService.Models.TripPin.Person');
+    let airportsService = this.factory.entity<Airport>("Airports", 'Microsoft.OData.SampleService.Models.TripPin.Airport');
+    let peopleService = this.factory.entity<Person>("People", 'Microsoft.OData.SampleService.Models.TripPin.Person');
 
     let airports = airportsService.entities();
 
     // Fetch all airports
-    airports.all()
+    airports
+    .all()
     .subscribe(aports => console.log("All: ", aports));
 
     // Fetch airports with count
-    airports.get({withCount: true})
-    .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
+    airports
+    .get({withCount: true})
+    .subscribe(({entities, meta}) => console.log("Airports: ", entities, "Annotations: ", meta));
 
     // Fetch airport with key
-    airports.entity("CYYZ").get()
-    .subscribe(([aport, annots]) => console.log("Airport: ", aport, "Annotations: ", annots));
+    airports
+    .entity("CYYZ").get()
+    .subscribe(({entity, meta}) => console.log("Airport: ", entity, "Annotations: ", meta));
 
     // Filter airports (inmutable resource)
-    airports.filter({Location: {City: {CountryRegion: "United States"}}}).get()
-    .subscribe(([aports, annots]) => console.log("Airports of United States: ", aports, "Annotations: ", annots));
+    airports
+    .filter({Location: {City: {CountryRegion: "United States"}}})
+    .get()
+    .subscribe(({entities, meta}) => console.log("Airports of United States: ", entities, "Annotations: ", meta));
 
     // Add filter (mutable resource)
     airports.query.filter().push({Location: {City: {Region: "California"}}});
-    airports.get()
-    .subscribe(([aports, annots]) => console.log("Airports in California: ", aports, "Annotations: ", annots));
+    airports
+    .get()
+    .subscribe(({entities, meta}) => console.log("Airports in California: ", entities, "Annotations: ", meta));
 
     // Remove filter (mutable resource)
     airports.query.filter().clear();
-    airports.get()
-    .subscribe(([aports, annots]) => console.log("Airports: ", aports, "Annotations: ", annots));
+    airports
+    .get()
+    .subscribe(({entities, meta}) => console.log("Airports: ", entities, "Annotations: ", meta));
 
     let people = peopleService.entities();
 
@@ -126,8 +132,9 @@ export class AppComponent {
         expand: { Friends: { select: ['AddressInfo']}} 
       }, 
       Trips: { select: ['Name', 'Tags'] },
-    }).get({withCount: true})
-    .subscribe(([peop, annots]) => console.log("People with Friends and Trips: ", peop, "Annotations: ", annots));
+    })
+    .get({withCount: true})
+    .subscribe(({entities, meta}) => console.log("People with Friends and Trips: ", entities, "Annotations: ", meta));
 
     // Batch
     let batch = odata.batch();
@@ -222,9 +229,9 @@ import { Person } from './person.entity';
 
 @Injectable()
 export class PeopleService extends ODataEntityService<Person> {
-  static path: string = 'People';
-  static type: string = 'Microsoft.OData.SampleService.Models.TripPin.People';
-  static entityType: string = 'Microsoft.OData.SampleService.Models.TripPin.Person';
+  constructor(protected client: ODataClient) {
+    super(client, 'People', 'Microsoft.OData.SampleService.Models.TripPin.Person');
+  }
 }
 ```
 
@@ -305,8 +312,12 @@ import { TripPinConfig, TripPinModule } from './trippin';
 export class AppModule {}
 ```
 
+## OData V3 and V2
+
+The library works mainly with OData V4, however, it incorporates basic support for versions 3 and 2.
+
+## Queries
+
 For a deep query customizations the library use `odata-query` as a builder.
 
-## Credits
-Angular OData is built using the following open source projects:
 - [OData v4 query builder](https://github.com/techniq/odata-query)
