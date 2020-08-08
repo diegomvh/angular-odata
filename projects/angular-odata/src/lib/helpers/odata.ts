@@ -69,7 +69,7 @@ export const ODataHelper = {
     ODATA_MEDIA_EDITLINK: '@odata.mediaEditLink',
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
-    property(data: Object, context: ODataContext) { return data; },
+    property(data: Object, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
     context(value: Object) {
       if (this.ODATA_CONTEXT in value) {
         let ctx: ODataContext = {};
@@ -192,7 +192,7 @@ export const ODataHelper = {
     VALUE: 'value',
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
-    property(data: Object, context: ODataContext) { return data; },
+    property(data: Object, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
     context(value: Object) {
       if (this.ODATA_CONTEXT in value) {
         let ctx: ODataContext = {};
@@ -265,7 +265,7 @@ export const ODataHelper = {
     RESULTS: 'results',
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.RESULTS]; },
-    property(data: Object, context: ODataContext) { return data; },
+    property(data: Object, context: ODataContext) { return (this.RESULTS in data) ? data[this.RESULTS] : data; },
     annotations(value: Object) {
       if (this.ODATA_ANNOTATION in value)
         return value[this.ODATA_ANNOTATION];
