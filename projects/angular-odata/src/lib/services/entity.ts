@@ -61,27 +61,33 @@ export class ODataEntityService<T> {
   }
 
   public update(entity: Partial<T>, options?: HttpOptions): Observable<T> {
+    const odata = this.config().options.helper;
+    const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
       return throwError("Resource without key");
     return this.entity(entity as EntityKey<T>)
-      .put(entity, options)
+      .put(entity, Object.assign({etag}, options || {}))
       .pipe(map(({entity}) => entity));
   }
 
   public assign(entity: Partial<T>, attrs: Partial<T>, options?: HttpOptions): Observable<T> {
+    const odata = this.config().options.helper;
+    const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
       return throwError("Resource without key");
-    return res.patch(attrs, options)
-      .pipe(map(() => Object.assign(entity, attrs) as T));
+    return res.patch(attrs, Object.assign({etag}, options || {}))
+      .pipe(map((resp) => resp.entity ? resp.entity : Object.assign(entity, attrs) as T));
   }
 
   public destroy(entity: Partial<T>, options?: HttpOptions) {
+    const odata = this.config().options.helper;
+    const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
       return throwError("Resource without key");
-    return res.delete(options);
+    return res.delete(Object.assign({etag}, options || {}));
   }
 
   // Shortcuts
