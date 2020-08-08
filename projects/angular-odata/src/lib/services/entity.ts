@@ -78,7 +78,8 @@ export class ODataEntityService<T> {
     if (res.segment.key().empty())
       return throwError("Resource without key");
     return res.patch(attrs, Object.assign({etag}, options || {}))
-      .pipe(map((resp) => resp.entity ? resp.entity : Object.assign(entity, attrs) as T));
+      .pipe(map(({entity: newentity, meta}) => newentity ? newentity : 
+        Object.assign(entity, attrs, meta.annotations) as T));
   }
 
   public destroy(entity: Partial<T>, options?: HttpOptions) {
