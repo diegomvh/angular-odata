@@ -223,10 +223,5 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
         concatMap(({entities}) => entities),
         toArray());
   }
-
-  add(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
-    return this.post(attrs, options)
-      .pipe(map(({entity}) => entity))
-  }
   //#endregion
 }

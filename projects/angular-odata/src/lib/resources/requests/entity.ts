@@ -188,47 +188,5 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       return throwError("Resource without key");
     return this.get(options).pipe(map(({entity}) => entity));
   }
-
-  create(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
-    if (!this.segment.key().empty())
-      return throwError("Resource with key");
-    return this.post(attrs, options).pipe(map(({entity}) => entity));
-  }
-
-  update(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
-    if (this.segment.key().empty())
-      return throwError("Resource without key");
-    return this.put(attrs, options).pipe(map(({entity}) => entity));
-  }
-
-  assign(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<T> {
-    if (this.segment.key().empty())
-      return throwError("Resource without key");
-    return this.patch(attrs, options).pipe(map(({entity}) => entity));
-  }
-
-  destroy(options?: HttpOptions & { etag?: string }): Observable<any> {
-    if (this.segment.key().empty())
-      return throwError("Resource without key");
-    return this.delete(options);
-  }
-
-  fetchOrCreate(attrs: Partial<T>, options?: HttpOptions): Observable<T> {
-    return this.fetch(options)
-      .pipe(catchError((error: HttpErrorResponse) => {
-        if (error.status === 404) {
-          this.segment.key().clear();
-          return this.create(attrs, options);
-        } else {
-          return throwError(error);
-        }
-      }));
-  }
-
-  save(attrs: Partial<T>, options?: HttpOptions & {etag?: string}): Observable<T> {
-    if (this.segment.key().empty()) 
-      return this.create(attrs, options);
-    return this.update(attrs, options);
-  }
   //#endregion
 }
