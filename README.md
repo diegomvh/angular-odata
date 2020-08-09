@@ -279,12 +279,13 @@ export class AppComponent {
       Friends: {}, 
       Trips: { expand: { Photos: {}, PlanItems: {} } }, 
       Photo: {}
-    }).get()
-    .subscribe(([person, ]) => {
+    }).fetch()
+    .subscribe((person) => {
       this.person = person;
       if (person.Photo) {
-        let media = this.photos.entity(person.Photo).media();
-        media.blob().subscribe(console.log);
+        this.photos.entity(person.Photo)
+        .media()
+        .blob().subscribe(console.log);
       }
     });
   }
