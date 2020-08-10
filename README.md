@@ -260,7 +260,7 @@ export class AppModule {}
 ```typescript
 import { Component } from '@angular/core';
 import { ODataClient } from 'angular-odata';
-import { PeopleService } from './trippin';
+import { PeopleService, PhotosService } from './trippin';
 
 @Component({
   selector: 'app-root',
@@ -269,7 +269,7 @@ import { PeopleService } from './trippin';
 })
 export class AppComponent {
   title = 'AngularODataEntity';
-  constructor(private people: PeopleService) {
+  constructor(private people: PeopleService, private photos: PhotosService) {
     this.show('scottketchum');
   }
 
