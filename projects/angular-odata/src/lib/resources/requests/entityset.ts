@@ -30,10 +30,13 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  config() {
-    let config = this.client.apiConfigFor(this);
-    return config.entityConfigForType<T>(this.type());
+  //#region Entity Config
+  get config() {
+    return this.client
+    .apiConfigFor(this)
+    .entityConfigForType<T>(this.type());
   }
+  ////#endregion
 
   //#region Inmutable Resource
   entity(key?: EntityKey<T>) {

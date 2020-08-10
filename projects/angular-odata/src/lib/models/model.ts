@@ -14,7 +14,7 @@ import {
   HttpOptions,
   HttpEntityOptions
 } from '../resources/requests/options';
-import { ODataMeta, ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
+import { ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
 import { ODataFieldParser } from '../parsers/entity';
 import { ODataHelper } from '../helpers/index';
 import { DEFAULT_VERSION } from '../constants';
@@ -22,13 +22,13 @@ import { DEFAULT_VERSION } from '../constants';
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;
   protected _entity: T;
-  protected _meta: ODataMeta;
+  protected _meta: ODataEntityMeta;
   protected _relations: { [name: string]: { 
     rel: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
     field: ODataFieldParser<any>
   }}
 
-  constructor(entity?: any, options: { resource?: ODataResource<T>, meta?: ODataMeta } = {}) {
+  constructor(entity?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((entity || {}), options.meta);
@@ -40,7 +40,7 @@ export class ODataModel<T> {
     let first = !this._resource;
     this._resource = resource;
     if (first) {
-      (this._resource as ODataEntityResource<T>).config().fields()
+      this._config.fields()
         .filter(field => field.navigation)
         .forEach(field => {
           Object.defineProperty(this, field.name, {
@@ -63,7 +63,7 @@ export class ODataModel<T> {
   }
 
   protected parse(entity: T) {
-    let fields = this._resource ? (this._resource as ODataEntityResource<T>).config().fields() : [];
+    let fields = this._resource ? this._config.fields() : [];
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
@@ -90,7 +90,7 @@ export class ODataModel<T> {
     return attrs;
   }
 
-  protected populate(entity: any, meta?: ODataMeta) {
+  protected populate(entity: any, meta?: ODataEntityMeta) {
     this._entity = ODataHelper[DEFAULT_VERSION].attributes(entity) as T;
     this._meta = meta || new ODataEntityMeta(entity);
     this._relations = {};
@@ -192,6 +192,12 @@ export class ODataModel<T> {
       return this._resource.delete(Object.assign({ etag }, options || {}));
     }
     throw new Error(`Can't destroy`);
+  }
+
+  get _config() {
+    if (!this._resource)
+      throw new Error(`Can't call without ODataResource`);
+    return (this._resource as ODataEntityResource<T>).config;
   }
 
   get _segment() {

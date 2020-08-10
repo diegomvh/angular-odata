@@ -29,10 +29,13 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  config() {
-    let config = this.client.apiConfigFor(this);
-    return config.entityConfigForType<T>(this.type());
+  //#region Function Config
+  get config() {
+    return this.client
+    .apiConfigFor(this)
+    .entityConfigForType<T>(this.type());
   }
+  ////#endregion
 
   //#region Inmutable Resource
   navigationProperty<N>(name: string) {

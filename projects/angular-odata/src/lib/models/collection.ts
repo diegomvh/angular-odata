@@ -20,11 +20,11 @@ import {
   HttpOptions,
   HttpEntitiesOptions
 } from '../resources/requests/options';
-import { ODataMeta, ODataEntitiesMeta } from '../resources/responses/meta';
+import { ODataEntitiesMeta } from '../resources/responses/meta';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   protected _resource: ODataResource<T>;
-  protected _meta: ODataMeta;
+  protected _meta: ODataEntitiesMeta;
 
   protected _models: M[];
   get models() {
@@ -44,7 +44,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return Object.assign({}, this._state);
   }
 
-  constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataMeta } = {}) {
+  constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((values || []), options.meta);
@@ -64,15 +64,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   protected parse(values: any[]): M[] {
     let resource = this._resource ? this._resource.clone() : null;
     if (resource instanceof ODataEntitySetResource)
-      resource = resource.entity(null);
+      resource = resource.entity();
     return (values as T[]).map(value => {
       if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
         resource.segment.key(value);
-      return (resource ? resource.clone().model(value) : value) as M;
+      return (resource ? resource.clone().model(value, this._meta ? this._meta.entity(value) : null) : value) as M;
     });
   }
 
-  protected populate(values: any[], annots?: ODataMeta): this {
+  protected populate(values: any[], annots?: ODataEntitiesMeta): this {
     this._meta = annots;
 
     if (annots instanceof ODataEntitiesMeta) {

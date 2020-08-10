@@ -20,17 +20,17 @@ export class ODataSingletonService<T> {
   }
 
   // Service Config 
-  public config() {
+  get config() {
     return this.client.apiConfigForType(this.entityType);
   }
 
   // Service Config 
-  public serviceConfig() {
-    return this.config().serviceConfigForName(this.name);
+  get serviceConfig() {
+    return this.config.serviceConfigForName(this.name);
   }
 
   // Entity Config 
-  public entityConfig() {
-    return this.config().entityConfigForType(this.entityType) as ODataEntityConfig<T>;
+  get entityConfig() {
+    return this.config.entityConfigForType<T>(this.entityType);
   }
 }
