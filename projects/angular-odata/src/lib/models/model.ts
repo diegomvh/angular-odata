@@ -1,4 +1,4 @@
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import {
@@ -82,8 +82,8 @@ export class ODataModel<T> {
         if (value) {
           let prop = (this._resource as ODataEntityResource<T>).property<any>(f.name);
           value = f.collection ? 
-            prop.collection(value, new ODataEntitiesMeta(this._meta.property(f.name))) : 
-            prop.model(value, new ODataEntityMeta(value));
+            prop.collection(value, new ODataEntitiesMeta(this._meta.property(f.name), {options: this._meta.options})) : 
+            prop.model(value, new ODataEntityMeta(value, {options: this._meta.options}));
         }
         return Object.assign(acc, { [k]: value });
       }, {}));
@@ -157,20 +157,19 @@ export class ODataModel<T> {
       if (this._resource.segment.key().empty())
         throw new Error(`Can't update entity without key`);
       let resource = this._resource;
-      let etag = (this._meta && this._meta instanceof ODataEntityMeta) ? this._meta.etag : undefined;
       let entity = this.toEntity(); 
-      let rels = Object.values(this._relations)
-            .filter((value) => value.field.navigation && !value.field.collection)
-            .map((value) => {
-              let ref = (this._resource as ODataEntityResource<T>).navigationProperty<any>(value.field.name).reference();
-              delete entity[value.field.name];
-              return value.rel != null ? 
-                ref.set(value.rel.target() as ODataEntityResource<any>, {etag}) : 
-                ref.unset({etag})
-            });
-      return forkJoin(rels).pipe(
-        switchMap(() => resource.put(entity, Object.assign({ etag }, options || {}))),
-        map(({entity, meta}) => this.populate(entity, meta)));
+      return Object.values(this._relations)
+        .filter((value) => value.field.navigation && !value.field.collection)
+        .reduce((acc, value) => {
+          let ref = (this._resource as ODataEntityResource<T>).navigationProperty<any>(value.field.name).reference();
+          delete entity[value.field.name];
+          return acc.pipe(switchMap(({meta}) => value.rel != null ? 
+            ref.set(value.rel.target() as ODataEntityResource<any>, {etag: meta.etag}) : 
+            ref.unset({etag: meta.etag})));
+        }, of({meta: this._meta}))
+        .pipe(
+          switchMap(({meta}) => resource.put(entity, Object.assign({ etag: meta.etag }, options || {}))),
+          map(({entity, meta}) => this.populate(entity, meta)));
     }
     throw new Error(`Can't update`);
   }
@@ -185,11 +184,10 @@ export class ODataModel<T> {
 
   destroy(options?: HttpOptions): Observable<null> {
     if (this._resource instanceof ODataEntityResource) {
-      let etag = (this._meta && this._meta instanceof ODataEntityMeta) ? this._meta.etag : undefined;
       this._resource.segment.key(this);
       if (this._resource.segment.key().empty())
         throw new Error(`Can't destroy entity without key`);
-      return this._resource.delete(Object.assign({ etag }, options || {}));
+      return this._resource.delete(Object.assign({ etag: this._meta.etag }, options || {}));
     }
     throw new Error(`Can't destroy`);
   }
@@ -237,8 +235,8 @@ export class ODataModel<T> {
       let value = this._entity[field.name];
       let nav = (this._resource as ODataEntityResource<T>).navigationProperty<P>(field.name);
       let rel = field.collection ? 
-        nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name))) : 
-        nav.model(value, new ODataEntityMeta(value));
+        nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name), {options: this._meta.options})) : 
+        nav.model(value, new ODataEntityMeta(value, {options: this._meta.options}));
       this._relations[field.name] = {field, rel};
     }
     return this._relations[field.name].rel;
