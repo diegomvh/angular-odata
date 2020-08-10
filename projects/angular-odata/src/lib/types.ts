@@ -25,7 +25,7 @@ export type JsonSchemaExpandOptions<T> = {
 export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>; 
 
 // SETTINGS AND PARSERS
-export type Field = {
+export interface Field {
   type: string;
   default?: any;
   maxLength?: number;
@@ -34,6 +34,8 @@ export type Field = {
   nullable?: boolean;
   navigation?: boolean;
   field?: string;
+  precision?: number;
+  scale?: number;
   ref?: string;
 }
 
@@ -44,11 +46,16 @@ export interface Options {
   ieee754Compatible?: boolean;
 }
 
-export type Parser<T> = {
+export interface FieldOptions extends Options {
+  field: Field
+}
+
+export interface Parser<T> {
   deserialize(value: any, options: Options): T;
   serialize(value: T, options: Options): any;
 }
 
+//#region Configs
 export type ApiConfig = {
   serviceRootUrl: string,
   name?: string,
@@ -116,3 +123,4 @@ export type ServiceConfig = {
   name: string;
   annotations?: any[];
 }
+//#endregion

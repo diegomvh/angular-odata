@@ -7,7 +7,7 @@ const NONE_PARSER = {
   serialize: (value: any, options: ODataOptions) => value
 } as Parser<any>;
 
-export class ODataFieldParser<Type> implements Parser<Type> {
+export class ODataFieldParser<Type> implements Field, Parser<Type> {
   name: string;
   type: string;
   private parser?: Parser<Type>;
@@ -41,14 +41,14 @@ export class ODataFieldParser<Type> implements Parser<Type> {
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options: ODataOptions): Type {
+  deserialize(value: any, options: Options): Type {
     const parser = this.parser;
     if (parser instanceof ODataEntityParser) {
       return Array.isArray(value) ? 
-        value.map(v => this.parse(parser, v, options)) : 
-        this.parse(parser, value, options);
+        value.map(v => this.parse(parser, v, options as ODataOptions)) : 
+        this.parse(parser, value, options as ODataOptions);
     }
-    return parser.deserialize(value, options);
+    return parser.deserialize(value, Object.assign({field: this}, options));
   }
 
   // Serialize
@@ -60,14 +60,14 @@ export class ODataFieldParser<Type> implements Parser<Type> {
     return parser.serialize(value, options);
   }
 
-  serialize(value: Type, options: ODataOptions): any {
+  serialize(value: Type, options: Options): any {
     const parser = this.parser;
     if (parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
-        value.map(v => this.toJson(parser, v, options)) :
-        this.toJson(parser, value, options);
+        value.map(v => this.toJson(parser, v, options as ODataOptions)) :
+        this.toJson(parser, value, options as ODataOptions);
     }
-    return parser.serialize(value, options);
+    return parser.serialize(value, Object.assign({field: this}, options));
   }
 
   configure(settings: { parserForType: (type: string) => Parser<any> }) {
