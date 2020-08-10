@@ -15,8 +15,7 @@ import { Types } from '../../utils/types';
 import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataValueResource } from './value';
 import { ODataEntity } from '../responses/index';
-import { map, catchError } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 import { ODataEntityParser } from '../../parsers/entity';
 
 export class ODataEntityResource<T> extends ODataResource<T> {

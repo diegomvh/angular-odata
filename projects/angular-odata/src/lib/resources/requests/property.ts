@@ -24,6 +24,14 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
   //#endregion
 
+  //#region Function Config
+  get config() {
+    return this.client
+    .apiConfigFor(this)
+    .entityConfigForType<T>(this.type());
+  }
+  ////#endregion
+
   //#region Inmutable Resource
   value() {
     return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
