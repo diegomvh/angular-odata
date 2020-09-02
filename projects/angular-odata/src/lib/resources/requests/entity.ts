@@ -1,4 +1,4 @@
-import { Observable, throwError, empty } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 import { EntityKey } from '../../types';
 
@@ -32,8 +32,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   //#region Entity Config
   get config() {
-    return this.client
-    .apiConfigFor(this)
+    return this.apiConfig
     .entityConfigForType<T>(this.type());
   }
   ////#endregion

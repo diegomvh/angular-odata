@@ -40,18 +40,18 @@ export class ODataEntityService<T> {
   }
 
   // Service Config 
-  get config() {
+  get apiConfig() {
     return this.client.apiConfigForType(this.entityType);
   }
 
   // Service Config 
   get serviceConfig() {
-    return this.config.serviceConfigForName(this.name);
+    return this.apiConfig.serviceConfigForName(this.name);
   }
 
   // Entity Config 
   get entityConfig() {
-    return this.config.entityConfigForType<T>(this.entityType);
+    return this.apiConfig.entityConfigForType<T>(this.entityType);
   }
 
   public create(entity: Partial<T>, options?: HttpOptions): Observable<T> {
@@ -61,7 +61,7 @@ export class ODataEntityService<T> {
   }
 
   public update(entity: Partial<T>, options?: HttpOptions): Observable<T> {
-    const odata = this.config.options.helper;
+    const odata = this.apiConfig.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
@@ -72,7 +72,7 @@ export class ODataEntityService<T> {
   }
 
   public assign(entity: Partial<T>, attrs: Partial<T>, options?: HttpOptions): Observable<T> {
-    const odata = this.config.options.helper;
+    const odata = this.apiConfig.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
@@ -83,7 +83,7 @@ export class ODataEntityService<T> {
   }
 
   public destroy(entity: Partial<T>, options?: HttpOptions) {
-    const odata = this.config.options.helper;
+    const odata = this.apiConfig.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())

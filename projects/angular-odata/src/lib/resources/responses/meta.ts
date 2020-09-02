@@ -15,6 +15,7 @@ export abstract class ODataMeta {
     options?: ODataOptions, 
     headers?: HttpHeaders
   } = {}) {
+    //TODO: Default options
     this.options = opt.options;
     this.annotations = (this.options ? this.odv.annotations(data) : data) || {};
     if (opt.headers) {
@@ -71,6 +72,10 @@ export class ODataEntityMeta extends ODataMeta {
 
   data(data: Object) {
     return this.odv.entity(data, this.context);
+  }
+
+  attributes<T>(data: Object): T {
+    return this.odv.attributes(data) as T;
   }
 
   get type(): string {

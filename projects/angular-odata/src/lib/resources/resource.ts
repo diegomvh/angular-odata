@@ -21,6 +21,7 @@ import {
 } from '../models/index';
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
 import { Urls } from '../utils/index';
+import { ODataApiConfig } from '../configs';
 
 export class ODataResource<Type> {
   // VARIABLES
@@ -52,6 +53,13 @@ export class ODataResource<Type> {
     return this.pathSegments.types();
   }
 
+  //#region Api Config
+  get apiConfig(): ODataApiConfig {
+    return this.client
+    .apiConfigFor(this);
+  }
+  ////#endregion
+
   pathAndParams(): [string, PlainObject] {
     let path = this.pathSegments.path();
     let params = this.queryOptions.params();
@@ -64,7 +72,7 @@ export class ODataResource<Type> {
   }
 
   protected serialize(value: any): any {
-    let config = this.client.apiConfigFor(this);
+    let config = this.apiConfig;
     let parser = config.parserForType<Type>(this.type());
     if (!Types.isUndefined(parser) && 'serialize' in parser)
       return Array.isArray(value) ? 
@@ -118,7 +126,7 @@ export class ODataResource<Type> {
       withCount?: boolean
     }): Observable<any> {
 
-    const config = this.client.apiConfigFor(this);
+    const config = this.apiConfig;
     const copts = config.options;
     let params = options.params;
     if (options.withCount) {

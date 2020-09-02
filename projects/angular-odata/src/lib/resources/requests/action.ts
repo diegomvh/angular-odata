@@ -27,8 +27,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
   //#region Action Config
   get config() {
-    return this.client
-    .apiConfigFor(this)
+    return this.apiConfig
     .callableConfigForType<R>(this.type());
   }
   ////#endregion
