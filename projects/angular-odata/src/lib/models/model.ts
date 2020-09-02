@@ -1,4 +1,4 @@
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import {
@@ -16,8 +16,6 @@ import {
 } from '../resources/requests/options';
 import { ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
 import { ODataFieldParser } from '../parsers/entity';
-import { ODataHelper } from '../helpers/index';
-import { DEFAULT_VERSION } from '../constants';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T>;
@@ -28,10 +26,10 @@ export class ODataModel<T> {
     field: ODataFieldParser<any>
   }}
 
-  constructor(entity?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
+  constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
-    this.populate((entity || {}), options.meta);
+    this.populate(data || {}, options.meta);
   }
 
   attach(resource: ODataResource<T>) {
@@ -81,21 +79,20 @@ export class ODataModel<T> {
         let value = this._entity[f.name];
         if (value) {
           let prop = (this._resource as ODataEntityResource<T>).property<any>(f.name);
-          value = f.collection ? 
-            prop.collection(value, new ODataEntitiesMeta(this._meta.property(f.name), {options: this._meta.options})) : 
-            prop.model(value, new ODataEntityMeta(value, {options: this._meta.options}));
+          value = f.collection ?
+            prop.collection(value, new ODataEntitiesMeta(this._meta.property(f.name) || {}, {options: this._meta.options})) : 
+            prop.model(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
         }
         return Object.assign(acc, { [k]: value });
       }, {}));
     return attrs;
   }
 
-  protected populate(entity: any, meta?: ODataEntityMeta) {
-    this._entity = ODataHelper[DEFAULT_VERSION].attributes(entity) as T;
-    this._meta = meta || new ODataEntityMeta(entity);
+  protected populate(data: Object, meta?: ODataEntityMeta) {
+    this._meta = meta || new ODataEntityMeta(data, {options: this._resource ? this._resource.apiConfig.options : null});
+    this._entity = this._meta.attributes<T>(data);
     this._relations = {};
-    Object.assign(this, this.parse(this._entity));
-    return this;
+    return Object.assign(this, this.parse(this._entity));
   }
 
   toEntity(): T {
@@ -120,33 +117,34 @@ export class ODataModel<T> {
     return (new Ctor(this.toEntity(), { resource: this._resource.clone(), meta: this._meta })) as Mo;
   }
 
-  fetch(options?: HttpOptions): Observable<this | null> {
+  fetch(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
       this._resource.segment.key(this);
       if (this._resource.segment.key().empty())
         throw new Error(`Can't fetch entity without key`);
       return this._resource.get(options).pipe(
-        map(({entity, meta}) => entity ? this.populate(entity, meta) : null));
+        map(({entity, meta}) => this.populate(entity, meta)));
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       return this._resource.get(
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})).pipe(
-          map(({entity, meta}) => entity ? this.populate(entity, meta) : null));
+          map(({entity, meta}) => this.populate(entity, meta)));
     } else if (this._resource instanceof ODataPropertyResource) {
       return this._resource.get(
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})).pipe(
-          map(({entity, meta}) => entity ? this.populate(entity, meta) : null));
+          map(({entity, meta}) => this.populate(entity, meta)));
     } else if (this._resource instanceof ODataFunctionResource) {
       return this._resource.get(
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})).pipe(
-          map(({entity, meta}) => entity ? this.populate(entity, meta) : null));
+          map(({entity, meta}) => this.populate(entity, meta)));
     }
     throw new Error("Not Yet!");
   }
 
   create(options?: HttpOptions): Observable<this> {
     if (this._resource instanceof ODataEntityResource) {
-      let entity = this.toEntity(); 
-      return this._resource.post(entity, options).pipe(map(({entity, meta}) => this.populate(entity, meta)));
+      let attrs = this.toEntity();
+      return this._resource.post(attrs, options).pipe(
+        map(({entity, meta}) => this.populate(entity || attrs, meta)));
     }
     throw new Error(`Can't create`);
   }
@@ -157,19 +155,19 @@ export class ODataModel<T> {
       if (this._resource.segment.key().empty())
         throw new Error(`Can't update entity without key`);
       let resource = this._resource;
-      let entity = this.toEntity(); 
+      let attrs = this.toEntity(); 
       return Object.values(this._relations)
         .filter((value) => value.field.navigation && !value.field.collection)
         .reduce((acc, value) => {
           let ref = (this._resource as ODataEntityResource<T>).navigationProperty<any>(value.field.name).reference();
-          delete entity[value.field.name];
+          delete attrs[value.field.name];
           return acc.pipe(switchMap(({meta}) => value.rel != null ? 
             ref.set(value.rel.target() as ODataEntityResource<any>, {etag: meta.etag}) : 
             ref.unset({etag: meta.etag})));
         }, of({meta: this._meta}))
         .pipe(
-          switchMap(({meta}) => resource.put(entity, Object.assign({ etag: meta.etag }, options || {}))),
-          map(({entity, meta}) => this.populate(entity, meta)));
+          switchMap(({meta}) => resource.put(attrs, Object.assign({ etag: meta.etag }, options || {}))),
+          map(({entity, meta}) => this.populate(entity || attrs, meta)));
     }
     throw new Error(`Can't update`);
   }
@@ -235,8 +233,8 @@ export class ODataModel<T> {
       let value = this._entity[field.name];
       let nav = (this._resource as ODataEntityResource<T>).navigationProperty<P>(field.name);
       let rel = field.collection ? 
-        nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name), {options: this._meta.options})) : 
-        nav.model(value, new ODataEntityMeta(value, {options: this._meta.options}));
+        nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) : 
+        nav.model(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
       this._relations[field.name] = {field, rel};
     }
     return this._relations[field.name].rel;
