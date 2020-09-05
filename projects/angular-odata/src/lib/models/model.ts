@@ -219,7 +219,7 @@ export class ODataModel<T> {
   }
 
   // Function
-  protected _function<R>(path: string, returnType?: string) {
+  protected _function<R>(path: string) {
     if (!this._resource)
       throw new Error(`Can't navigationProperty without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {
@@ -231,7 +231,7 @@ export class ODataModel<T> {
   }
 
   // Action
-  protected _action<R>(path: string, returnType?: string) {
+  protected _action<R>(path: string) {
     if (!this._resource)
       throw new Error(`Can't navigationProperty without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {

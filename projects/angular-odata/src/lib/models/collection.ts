@@ -198,44 +198,35 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this._resource as ODataEntitySetResource<any>).count().get();
   }
 
-  protected get _segments() {
+  get _config() {
     if (!this._resource)
-      throw new Error(`Can't call without ODataResource`);
-    let resource = this._resource as ODataEntitySetResource<T>;
-    return {
-      // Function
-      function<P, R>(type: string): ODataFunctionResource<P, R> { return resource.function<P, R>(type); },
-      // Action
-      action<P, R>(type: string): ODataActionResource<P, R> { return resource.action<P, R>(type); },
-    };
+      throw new Error(`Can't config without ODataResource`);
+    return (this._resource as ODataEntitySetResource<T>).config;
   }
 
-  // Query options
+  get _segment() {
+    if (!this._resource)
+      throw new Error(`Can't call without ODataResource`);
+    return (this._resource as ODataEntitySetResource<T>).segment;
+  }
+
   get _query() {
     if (!this._resource)
       throw new Error(`Can't query without ODataResource`);
-    let resource = this._resource as ODataEntitySetResource<T>;
-    return {
-      // Top
-      top(top?: number) { return resource.top(top); },
-      // Skip
-      skip(skip?: number) { return resource.skip(skip); },
-      // Skiptoken
-      skiptoken(skiptoken?: string) { return resource.skiptoken(skiptoken); },
-      // Select
-      select(select?: Select<T>) { return resource.select(select); },
-      // Filter
-      filter(filter?: Filter) { return resource.filter(filter); },
-      // Search
-      search(search?: string) { return resource.search(search); },
-      // OrderBy
-      orderBy(orderBy?: OrderBy<T>) { return resource.orderBy(orderBy); },
-      // Expand
-      expand(expand?: Expand<T>) { return resource.expand(expand); },
-      // Transform
-      transform(transform?: Transform<T>) { return resource.transform(transform); },
-      // Alias value
-      alias(name: string, value?: any) { return resource.alias(name, value); }
-    };
+    return (this._resource as ODataEntitySetResource<T>).query;
+  }
+
+  // Function
+  protected _function<R>(path: string) {
+    if (!this._resource)
+      throw new Error(`Can't navigationProperty without ODataResource`);
+    return (this._resource as ODataEntitySetResource<T>).function<T, R>(path);
+  }
+
+  // Action
+  protected _action<R>(path: string) {
+    if (!this._resource)
+      throw new Error(`Can't navigationProperty without ODataResource`);
+    return (this._resource as ODataEntitySetResource<T>).action<T, R>(path);
   }
 }
