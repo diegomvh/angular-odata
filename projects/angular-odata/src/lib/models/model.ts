@@ -192,7 +192,7 @@ export class ODataModel<T> {
 
   get _config() {
     if (!this._resource)
-      throw new Error(`Can't call without ODataResource`);
+      throw new Error(`Can't config without ODataResource`);
     return (this._resource as ODataEntityResource<T>).config;
   }
 
@@ -205,16 +205,6 @@ export class ODataModel<T> {
         throw new Error(`Can't use without key`);
     }
     return (this._resource as ODataEntityResource<T>).segment;
-    /*
-    return {
-      // Function
-      function<R>(name: string, returnType?: string): ODataFunctionResource<R> { return resource.function<R>(name, returnType); },
-      // Action
-      action<R>(name: string, returnType?: string): ODataActionResource<R> { return resource.action<R>(name, returnType); },
-      // Navigation
-      navigationProperty<P>(name: string): ODataNavigationPropertyResource<P> { return resource.navigationProperty<P>(name); }
-    };
-    */
   }
 
   get _query() {
@@ -228,10 +218,46 @@ export class ODataModel<T> {
     return (this._resource as ODataEntityResource<T>).query;
   }
 
+  // Function
+  protected _function<R>(path: string, returnType?: string) {
+    if (!this._resource)
+      throw new Error(`Can't navigationProperty without ODataResource`);
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.segment.key(this);
+      if (this._resource.segment.key().empty())
+        throw new Error(`Can't navigationProperty without key`);
+    }
+    return (this._resource as ODataEntityResource<T>).function<T, R>(path);
+  }
+
+  // Action
+  protected _action<R>(path: string, returnType?: string) {
+    if (!this._resource)
+      throw new Error(`Can't navigationProperty without ODataResource`);
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.segment.key(this);
+      if (this._resource.segment.key().empty())
+        throw new Error(`Can't navigationProperty without key`);
+    }
+    return (this._resource as ODataEntityResource<T>).action<T, R>(path);
+  }
+
+  // Navigation
+  protected _navigationProperty<P>(path: string) {
+    if (!this._resource)
+      throw new Error(`Can't navigationProperty without ODataResource`);
+    if (this._resource instanceof ODataEntityResource) {
+      this._resource.segment.key(this);
+      if (this._resource.segment.key().empty())
+        throw new Error(`Can't navigationProperty without key`);
+    }
+    return (this._resource as ODataEntityResource<T>).navigationProperty<P>(path);
+  }
+
   protected getNavigationProperty<P>(field: ODataFieldParser<any>): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     if (!(field.name in this._relations)) {
       let value = this._entity[field.name];
-      let nav = (this._resource as ODataEntityResource<T>).navigationProperty<P>(field.name);
+      let nav = this._navigationProperty<P>(field.name);
       let rel = field.collection ? 
         nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) : 
         nav.model(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
