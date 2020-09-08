@@ -14,7 +14,7 @@ import {
   HttpOptions,
   HttpEntityOptions
 } from '../resources/requests/options';
-import { ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
+import { ODataEntityMeta, ODataEntitiesMeta, ODataMeta } from '../resources/responses/meta';
 import { ODataFieldParser } from '../parsers/entity';
 
 export class ODataModel<T> {
@@ -243,7 +243,7 @@ export class ODataModel<T> {
   }
 
   // Navigation
-  protected _navigationProperty<P>(path: string) {
+  protected _navigationProperty<P>(data: any, path: string, meta?: ODataEntitiesMeta | ODataEntityMeta): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     if (!this._resource)
       throw new Error(`Can't navigationProperty without ODataResource`);
     if (this._resource instanceof ODataEntityResource) {
@@ -251,16 +251,18 @@ export class ODataModel<T> {
       if (this._resource.segment.key().empty())
         throw new Error(`Can't navigationProperty without key`);
     }
-    return (this._resource as ODataEntityResource<T>).navigationProperty<P>(path);
+    let nav = (this._resource as ODataEntityResource<T>).navigationProperty<P>(path);
+    return Array.isArray(data) ? 
+      nav.collection(data, meta as ODataEntitiesMeta) :
+      nav.model(data, meta as ODataEntityMeta);
   }
 
   protected getNavigationProperty<P>(field: ODataFieldParser<any>): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     if (!(field.name in this._relations)) {
       let value = this._entity[field.name];
-      let nav = this._navigationProperty<P>(field.name);
-      let rel = field.collection ? 
-        nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) : 
-        nav.model(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
+      let meta = field.collection ? new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options}) : 
+        new ODataEntityMeta(value || {}, {options: this._meta.options});
+      let rel = this._navigationProperty<P>(value || (field.collection ? [] : {}), field.name, meta);
       this._relations[field.name] = {field, rel};
     }
     return this._relations[field.name].rel;
