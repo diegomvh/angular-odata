@@ -217,16 +217,16 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Function
-  protected _function<R>(path: string) {
+  protected _function<P, R>(path: string) {
     if (!this._resource)
       throw new Error(`Can't navigationProperty without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).function<T, R>(path);
+    return (this._resource as ODataEntitySetResource<T>).function<P, R>(path);
   }
 
   // Action
-  protected _action<R>(path: string) {
+  protected _action<P, R>(path: string) {
     if (!this._resource)
       throw new Error(`Can't navigationProperty without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).action<T, R>(path);
+    return (this._resource as ODataEntitySetResource<T>).action<P, R>(path);
   }
 }
