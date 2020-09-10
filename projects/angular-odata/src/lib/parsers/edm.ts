@@ -2,7 +2,7 @@ import { Parser, FieldOptions } from '../types';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
 
-export type Duration = {
+type Duration = {
   sign?: 1 | -1;
   years?: number;
   months?: number;
