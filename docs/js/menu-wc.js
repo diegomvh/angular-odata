@@ -334,10 +334,19 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? ' id="interfaces-links"' : 'id="xs-interfaces-links"' }>
                             <li class="link">
+                                <a href="interfaces/Field.html" data-type="entity-link">Field</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/FieldOptions.html" data-type="entity-link">FieldOptions</a>
+                            </li>
+                            <li class="link">
                                 <a href="interfaces/ODataVersionHelper.html" data-type="entity-link">ODataVersionHelper</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Options.html" data-type="entity-link">Options</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Parser.html" data-type="entity-link">Parser</a>
                             </li>
                         </ul>
                     </li>

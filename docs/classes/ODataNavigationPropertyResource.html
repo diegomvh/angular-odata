@@ -116,7 +116,7 @@
                                 <a href="#clone">clone</a>
                             </li>
                             <li>
-                                <a href="#config">config</a>
+                                <a href="#collection">collection</a>
                             </li>
                             <li>
                                 <a href="#count">count</a>
@@ -148,6 +148,9 @@
                             </li>
                             <li>
                                 <a href="#get">get</a>
+                            </li>
+                            <li>
+                                <a href="#model">model</a>
                             </li>
                             <li>
                                 <a href="#navigationProperty">navigationProperty</a>
@@ -186,10 +189,13 @@
                                 <a href="#alias">alias</a>
                             </li>
                             <li>
-                                <a href="#clone">clone</a>
+                                <a href="#asCollection">asCollection</a>
                             </li>
                             <li>
-                                <a href="#collection">collection</a>
+                                <a href="#asModel">asModel</a>
+                            </li>
+                            <li>
+                                <a href="#clone">clone</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -198,9 +204,6 @@
                             <li>
                                     <span class="modifier">Protected</span>
                                 <a href="#get">get</a>
-                            </li>
-                            <li>
-                                <a href="#model">model</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -254,6 +257,9 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
+                                    <a href="#config">config</a>
+                                </li>
+                                <li>
                                     <a href="#segment">segment</a>
                                 </li>
                                 <li>
@@ -299,7 +305,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:27</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:28</a></code>
 </div>
                             </td>
                         </tr>
@@ -334,7 +340,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:28</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:29</a></code>
 </div>
                             </td>
                         </tr>
@@ -369,7 +375,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:29</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:30</a></code>
 </div>
                             </td>
                         </tr>
@@ -406,8 +412,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="210"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:210</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="213"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:213</a></div>
                 </td>
             </tr>
 
@@ -476,8 +482,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="29"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:29</a></div>
                 </td>
             </tr>
 
@@ -497,26 +503,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="config"></a>
+                    <a name="collection"></a>
                     <span class="name">
                         <b>
-                            config
+                            collection
                         </b>
-                        <a href="#config"><span class="icon ion-ios-link"></span></a>
+                        <a href="#collection"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>config()</code>
+<code>collection(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:33</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="235"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:235</a></div>
                 </td>
             </tr>
 
@@ -525,8 +531,39 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
 
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -554,8 +591,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:64</a></div>
                 </td>
             </tr>
 
@@ -593,8 +630,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="125"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:125</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="128"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:128</a></div>
                 </td>
             </tr>
 
@@ -663,8 +700,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:74</a></div>
                 </td>
             </tr>
 
@@ -735,8 +772,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="22"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:22</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:23</a></div>
                 </td>
             </tr>
 
@@ -861,8 +898,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="232"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:232</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="241"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:241</a></div>
                 </td>
             </tr>
 
@@ -931,8 +968,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="89"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:89</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:92</a></div>
                 </td>
             </tr>
 
@@ -1001,8 +1038,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="101"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:101</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="104"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:104</a></div>
                 </td>
             </tr>
 
@@ -1071,8 +1108,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="202"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:202</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="205"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:205</a></div>
                 </td>
             </tr>
 
@@ -1141,8 +1178,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="203"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:203</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="206"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:206</a></div>
                 </td>
             </tr>
 
@@ -1211,8 +1248,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="204"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:204</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="207"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:207</a></div>
                 </td>
             </tr>
 
@@ -1259,6 +1296,76 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="model"></a>
+                    <span class="name">
+                        <b>
+                            model
+                        </b>
+                        <a href="#model"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>model(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="247"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:247</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataModel.html" target="_self" >Observable&lt;ODataModel&lt;T&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="navigationProperty"></a>
                     <span class="name">
                         <b>
@@ -1277,8 +1384,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="47"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:47</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:50</a></div>
                 </td>
             </tr>
 
@@ -1355,8 +1462,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="95"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:95</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="98"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:98</a></div>
                 </td>
             </tr>
 
@@ -1425,8 +1532,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:57</a></div>
                 </td>
             </tr>
 
@@ -1503,8 +1610,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="43"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:43</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="46"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:46</a></div>
                 </td>
             </tr>
 
@@ -1542,8 +1649,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:86</a></div>
                 </td>
             </tr>
 
@@ -1612,8 +1719,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="65"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:65</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:68</a></div>
                 </td>
             </tr>
 
@@ -1682,8 +1789,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="113"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:113</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="116"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:116</a></div>
                 </td>
             </tr>
 
@@ -1752,8 +1859,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="119"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:119</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="122"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:122</a></div>
                 </td>
             </tr>
 
@@ -1822,8 +1929,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:110</a></div>
                 </td>
             </tr>
 
@@ -1892,8 +1999,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="77"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:77</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="80"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:80</a></div>
                 </td>
             </tr>
 
@@ -1962,8 +2069,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="39"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:39</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="42"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:42</a></div>
                 </td>
             </tr>
 
@@ -2007,7 +2114,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:107</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:115</a></code>
 </div>
                 </td>
             </tr>
@@ -2071,18 +2178,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="clone"></a>
+                    <a name="asCollection"></a>
                     <span class="name">
                         <b>
-                            clone
+                            asCollection
                         </b>
-                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                        <a href="#asCollection"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>clone()</code>
+<code>asCollection(entities: Partial<Type>[], meta?: <a href="../classes/ODataEntitiesMeta.html">ODataEntitiesMeta</a>)</code>
                 </td>
             </tr>
 
@@ -2095,60 +2202,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:95</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>Re</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Re</code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="collection"></a>
-                    <span class="name">
-                        <b>
-                            collection
-                        </b>
-                        <a href="#collection"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>collection(entities: Partial<Type>[], meta?: <a href="../classes/ODataEntitiesMeta.html">ODataEntitiesMeta</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:81</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:89</a></code>
 </div>
                 </td>
             </tr>
@@ -2173,6 +2227,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2186,6 +2241,9 @@
                                         No
                                     </td>
 
+                                    <td>
+                                        <code>[]</code>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -2198,6 +2256,8 @@
                                         Yes
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -2211,6 +2271,161 @@
                     </div>
                     <div class="io-description">
                         
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="asModel"></a>
+                    <span class="name">
+                        <b>
+                            asModel
+                        </b>
+                        <a href="#asModel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>asModel(entity: Partial<Type>, meta?: <a href="../classes/ODataEntityMeta.html">ODataEntityMeta</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:84</a></code>
+</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>M</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>entity</td>
+                                    <td>
+                                            <code>Partial&lt;Type&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>meta</td>
+                                    <td>
+                                                <code><a href="../classes/ODataEntityMeta.html" target="_self" >ODataEntityMeta</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>M</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clone"></a>
+                    <span class="name">
+                        <b>
+                            clone
+                        </b>
+                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clone()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:103</a></code>
+</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>Re</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Re</code>
+
                     </div>
                 </td>
             </tr>
@@ -2246,7 +2461,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:198</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:206</a></code>
 </div>
                 </td>
             </tr>
@@ -2320,7 +2535,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:168</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:176</a></code>
 </div>
                 </td>
             </tr>
@@ -2368,102 +2583,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="model"></a>
-                    <span class="name">
-                        <b>
-                            model
-                        </b>
-                        <a href="#model"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>model(entity: Partial<Type>, meta?: <a href="../classes/ODataEntityMeta.html">ODataEntityMeta</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:76</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>M</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>entity</td>
-                                    <td>
-                                            <code>Partial&lt;Type&gt;</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>meta</td>
-                                    <td>
-                                                <code><a href="../classes/ODataEntityMeta.html" target="_self" >ODataEntityMeta</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>M</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="patch"></a>
                     <span class="name">
                         <b>
@@ -2490,7 +2609,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:190</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:198</a></code>
 </div>
                 </td>
             </tr>
@@ -2577,7 +2696,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:55</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:63</a></code>
 </div>
                 </td>
             </tr>
@@ -2615,7 +2734,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:175</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:183</a></code>
 </div>
                 </td>
             </tr>
@@ -2704,7 +2823,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:182</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:190</a></code>
 </div>
                 </td>
             </tr>
@@ -2793,7 +2912,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:112</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:120</a></code>
 </div>
                 </td>
             </tr>
@@ -2882,7 +3001,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:66</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:74</a></code>
 </div>
                 </td>
             </tr>
@@ -2958,7 +3077,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:100</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:108</a></code>
 </div>
                 </td>
             </tr>
@@ -3003,7 +3122,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:87</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:95</a></code>
 </div>
                 </td>
             </tr>
@@ -3048,7 +3167,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:43</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:44</a></code>
 </div>
                 </td>
             </tr>
@@ -3099,7 +3218,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:51</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:52</a></code>
 </div>
                 </td>
             </tr>
@@ -3136,6 +3255,28 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="config"></a>
+                        <span class="name"><b>config</b><a href="#config"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>config()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:35</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="segment"></a>
                         <span class="name"><b>segment</b><a href="#segment"><span class="icon ion-ios-link"></span></a></span>
                     </td>
@@ -3148,7 +3289,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="133" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:133</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:136</a></div>
                                 </td>
                             </tr>
 
@@ -3170,7 +3311,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="161" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:161</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="164" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/navigationproperty.ts:164</a></div>
                                 </td>
                             </tr>
 
@@ -3199,6 +3340,7 @@ import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from &#x27;./opti
 import { ODataEntities, ODataEntity } from &#x27;../responses/index&#x27;;
 import { ODataValueResource } from &#x27;./value&#x27;;
 import { ODataEntityParser } from &#x27;../../parsers/entity&#x27;;
+import { ODataModel, ODataCollection } from &#x27;../../models&#x27;;
 
 export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   //#region Factory
@@ -3213,10 +3355,12 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
   }
   //#endregion
   
-  config() {
-    let config &#x3D; this.client.apiConfigFor(this);
-    return config.entityConfigForType&lt;T&gt;(this.type());
+  //#region Function Config
+  get config() {
+    return this.apiConfig
+    .entityConfigForType&lt;T&gt;(this.type());
   }
+  ////#endregion
 
   //#region Inmutable Resource
   value() {
@@ -3412,10 +3556,22 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
         toArray());
   }
 
+  collection(options?: HttpOptions): Observable&lt;ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;&gt; {
+    return this.get(
+      Object.assign&lt;HttpEntitiesOptions, HttpOptions&gt;(&lt;HttpEntitiesOptions&gt;{responseType: &#x27;entities&#x27;}, options || {})
+    ).pipe(map(({entities, meta}) &#x3D;&gt; this.asCollection(entities, meta)));
+  }
+
   fetch(options?: HttpOptions): Observable&lt;T&gt; {
     return this.get(
       Object.assign&lt;HttpOptions, HttpEntityOptions&gt;(&lt;HttpEntityOptions&gt;{ responseType: &#x27;entity&#x27; }, options || {})
     ).pipe(map(({entity}) &#x3D;&gt; entity));
+  }
+
+  model(options?: HttpOptions): Observable&lt;ODataModel&lt;T&gt;&gt; {
+    return this.get(
+      Object.assign&lt;HttpOptions, HttpEntityOptions&gt;(&lt;HttpEntityOptions&gt;{ responseType: &#x27;entity&#x27; }, options || {})
+    ).pipe(map(({entity, meta}) &#x3D;&gt; this.asModel(entity, meta)));
   }
   //#endregion
 }

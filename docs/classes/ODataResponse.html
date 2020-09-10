@@ -515,8 +515,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:82</a></div>
                 </td>
             </tr>
 
@@ -627,7 +627,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>parse(parser: <a href="../undefineds/Parser.html">Parser<T></a>, value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    <code>parse(parser: <a href="../interfaces/Parser.html">Parser<T></a>, value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
                 </td>
             </tr>
 
@@ -657,7 +657,7 @@
                                 <tr>
                                     <td>parser</td>
                                     <td>
-                                                <code><a href="../miscellaneous/typealiases.html#Parser" target="_self" >Parser&lt;T&gt;</a></code>
+                                                <code><a href="../interfaces/Parser.html" target="_self" >Parser&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -716,8 +716,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="99"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:99</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:92</a></div>
                 </td>
             </tr>
 
@@ -755,8 +755,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="115"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:115</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="102"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:102</a></div>
                 </td>
             </tr>
 
@@ -765,7 +765,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>    <code>T</code>
+                        <b>Returns : </b>    <code>T | null</code>
 
                     </div>
                 </td>
@@ -822,7 +822,7 @@ export class ODataResponse&lt;T&gt; {
     if (!this._options) {
       this._options &#x3D; this.config.options.clone();
       const contentType &#x3D; this.headers.get(CONTENT_TYPE);
-      if (contentType) {
+      if (contentType &amp;&amp; contentType.indexOf(APPLICATION_JSON) !&#x3D;&#x3D; -1) {
         const features &#x3D; contentType.split(&quot;,&quot;).find(p &#x3D;&gt; p.startsWith(APPLICATION_JSON)) as string;
         this._options.setFeatures(features);
       }
@@ -854,54 +854,41 @@ export class ODataResponse&lt;T&gt; {
   }
 
   entity(): ODataEntity&lt;T&gt; {
-    let opts &#x3D; this.options();
-    if (this.body) {
-      const payload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body[&quot;d&quot;] : this.body;
-      const meta &#x3D; new ODataEntityMeta(payload, {options: opts, headers: this.headers});
-      const data &#x3D; meta.data(payload);
-      const entity &#x3D; this.deserialize(this.resource.type(), data) as T;
-      return { entity, meta };
-    }
+    const opts &#x3D; this.options();
+    const payload &#x3D; this.body &amp;&amp; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body[&quot;d&quot;] : this.body;
+    const meta &#x3D; new ODataEntityMeta(payload || {}, {options: opts, headers: this.headers});
+    const entity &#x3D; payload ? 
+      this.deserialize(this.resource.type(), meta.data(payload)) as T :
+      null;
+    return { entity, meta };
   }
 
   entities(): ODataEntities&lt;T&gt; {
-    let opts &#x3D; this.options();
-    if (this.body) {
-      const payload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body[&quot;d&quot;] : this.body;
-      const meta &#x3D; new ODataEntitiesMeta(payload, {options: opts, headers: this.headers});
-      const data &#x3D; meta.data(payload);
-      /*
-      const payentitiesload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ?
-        this.body[&quot;d&quot;][&quot;results&quot;] :
-        this.body[VALUE];
-        */
-      const entities &#x3D; this.deserialize(this.resource.type(), data) as T[];
-      return { entities, meta };
-    }
+    const opts &#x3D; this.options();
+    const payload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body[&quot;d&quot;] : this.body;
+    const meta &#x3D; new ODataEntitiesMeta(payload || {}, {options: opts, headers: this.headers});
+    const entities &#x3D; payload ? 
+      this.deserialize(this.resource.type(), meta.data(payload)) as T[] :
+      null;
+    return { entities, meta };
   }
 
   property(): ODataProperty&lt;T&gt; {
-    let opts &#x3D; this.options();
-    if (this.body) {
-      const payload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body[&quot;d&quot;] : this.body;
-      const meta &#x3D; new ODataPropertyMeta(payload, {options: opts, headers: this.headers});
-      const data &#x3D; meta.data(payload);
-      /*
-      const payload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ?
-        ((&#x27;results&#x27; in this.body[&quot;d&quot;]) ? this.body[&#x27;d&#x27;][&#x27;results&#x27;] : Object.entries(this.body[&#x27;d&#x27;])[0][1] as any) :
-        ((VALUE in this.body) ? this.body[VALUE] : this.body);
-        */
-      const property &#x3D; this.deserialize(this.resource.type(), data) as T;
-      return { property, meta };
-    }
+    const opts &#x3D; this.options();
+    const payload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body[&quot;d&quot;] : this.body;
+    const meta &#x3D; new ODataPropertyMeta(payload || {}, {options: opts, headers: this.headers});
+    const property &#x3D; payload ? 
+      this.deserialize(this.resource.type(), meta.data(payload)) as T :
+      null;
+    return { property, meta };
   }
 
-  value(): T {
+  value(): T | null {
     let opts &#x3D; this.options();
-    if (this.body) {
-      const payload &#x3D; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body : this.body;
-      return this.deserialize(this.resource.type(), payload) as T;
-    }
+    const payload &#x3D; this.body &amp;&amp; opts.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body : this.body;
+    return payload ?
+      this.deserialize(this.resource.type(), payload) as T :
+      null;
   }
 }</code></pre>
     </div>

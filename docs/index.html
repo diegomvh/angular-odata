@@ -241,7 +241,7 @@ import { TripPinConfig, PeopleService } from &#39;./trippin&#39;;
 export class AppModule {}</code></pre></div><p>5) Inject and use the entity service</p>
 <div><pre class="line-numbers"><code class="language-typescript">import { Component } from &#39;&#64;angular/core&#39;;
 import { ODataClient } from &#39;angular-odata&#39;;
-import { PeopleService } from &#39;./trippin&#39;;
+import { PeopleService, PhotosService } from &#39;./trippin&#39;;
 
 &#64;Component({
   selector: &#39;app-root&#39;,
@@ -250,7 +250,7 @@ import { PeopleService } from &#39;./trippin&#39;;
 })
 export class AppComponent {
   title = &#39;AngularODataEntity&#39;;
-  constructor(private people: PeopleService) {
+  constructor(private people: PeopleService, private photos: PhotosService) {
     this.show(&#39;scottketchum&#39;);
   }
 
@@ -260,12 +260,13 @@ export class AppComponent {
       Friends: {}, 
       Trips: { expand: { Photos: {}, PlanItems: {} } }, 
       Photo: {}
-    }).get()
-    .subscribe(([person, ]) =&gt; {
+    }).fetch()
+    .subscribe((person) =&gt; {
       this.person = person;
       if (person.Photo) {
-        let media = this.photos.entity(person.Photo).media();
-        media.blob().subscribe(console.log);
+        this.photos.entity(person.Photo)
+        .media()
+        .blob().subscribe(console.log);
       }
     });
   }

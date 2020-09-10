@@ -188,7 +188,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:28</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:29</a></code>
 </div>
                             </td>
                         </tr>
@@ -223,7 +223,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:36</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:37</a></code>
 </div>
                             </td>
                         </tr>
@@ -329,8 +329,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:55</a></div>
                 </td>
             </tr>
 
@@ -368,8 +368,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="58"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:58</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:59</a></div>
                 </td>
             </tr>
 
@@ -446,7 +446,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:49</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:50</a></code>
 </div>
                 </td>
             </tr>
@@ -493,7 +493,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:50</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:51</a></code>
 </div>
                 </td>
             </tr>
@@ -569,7 +569,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:44</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataMeta.html#source" target="_self" >ODataMeta:45</a></code>
 </div>
                 </td>
             </tr>
@@ -643,7 +643,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:62</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:63</a></div>
                                 </td>
                             </tr>
 
@@ -671,6 +671,7 @@ export abstract class ODataMeta {
     options?: ODataOptions, 
     headers?: HttpHeaders
   } &#x3D; {}) {
+    //TODO: Default options
     this.options &#x3D; opt.options;
     this.annotations &#x3D; (this.options ? this.odv.annotations(data) : data) || {};
     if (opt.headers) {
@@ -727,6 +728,10 @@ export class ODataEntityMeta extends ODataMeta {
 
   data(data: Object) {
     return this.odv.entity(data, this.context);
+  }
+
+  attributes&lt;T&gt;(data: Object): T {
+    return this.odv.attributes(data) as T;
   }
 
   get type(): string {
@@ -789,6 +794,10 @@ export class ODataEntitiesMeta extends ODataMeta {
 
   data(data: Object) {
     return this.odv.entities(data, this.context);
+  }
+
+  entity(data: Object) {
+    return new ODataEntityMeta(data, {options: this.options});
   }
 
   get readLink(): string {

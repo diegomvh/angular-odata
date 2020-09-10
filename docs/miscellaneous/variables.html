@@ -136,6 +136,9 @@
                             <a href="#DEFAULT_VERSION" title="projects/angular-odata/src/lib/constants.ts"><b>DEFAULT_VERSION</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#duration" title="projects/angular-odata/src/lib/resources/builder.ts"><b>duration</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#EDM_PARSERS" title="projects/angular-odata/src/lib/parsers/edm.ts"><b>EDM_PARSERS</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
@@ -1351,6 +1354,27 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="duration"></a>
+                        <span class="name">
+                            <b>
+                            duration</b>
+                            <a href="#duration"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>(value: string): Duration &#x3D;&gt; ({type: &#x27;duration&#x27;, value})</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="FUNCTION_REGEX"></a>
                         <span class="name">
                             <b>
@@ -1565,31 +1589,31 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
   &#x27;Edm.Date&#x27;: &lt;Parser&lt;Date&gt;&gt;{
-    deserialize(value: string, options: Options): Date {
+    deserialize(value: string, options: FieldOptions): Date {
       return new Date(&#x60;${value}T00:00:00.000Z&#x60;);
     },
-    serialize(value: Date, options: Options): string {
+    serialize(value: Date, options: FieldOptions): string {
       return value.toISOString().substring(0, 10);
     }
   },
   &#x27;Edm.TimeOfDay&#x27;: &lt;Parser&lt;Date&gt;&gt;{
-    deserialize(value: string, options: Options): Date {
+    deserialize(value: string, options: FieldOptions): Date {
       return new Date(&#x60;1970-01-01T${value}Z&#x60;);
     },
-    serialize(value: Date, options: Options): string {
+    serialize(value: Date, options: FieldOptions): string {
       return value.toISOString().substring(11, 23);
     }
   },
   &#x27;Edm.DateTimeOffset&#x27;: &lt;Parser&lt;Date&gt;&gt;{
-    deserialize(value: string, options: Options): Date {
+    deserialize(value: string, options: FieldOptions): Date {
       return new Date(value);
     },
-    serialize(value: Date, options: Options): string {
+    serialize(value: Date, options: FieldOptions): string {
       return value.toISOString();
     }
   },
   &#x27;Edm.Duration&#x27;: &lt;Parser&lt;Duration&gt;&gt;{
-    deserialize(value: string, options: Options): Duration {
+    deserialize(value: string, options: FieldOptions): Duration {
       const matches &#x3D; /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(value);
       if (!matches || value.length &lt; 3) {
         throw new TypeError(&#x60;duration invalid: &quot;${value}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;)
@@ -1603,7 +1627,7 @@
         return acc;
       }, duration) as Duration;
     },
-    serialize(d: Duration, options: Options): string {
+    serialize(d: Duration, options: FieldOptions): string {
       return [
         (d.sign &#x3D;&#x3D;&#x3D; -1) ? &#x27;-&#x27; : &#x27;&#x27;,
         &#x27;P&#x27;,
@@ -1618,41 +1642,41 @@
     }
   },
   &#x27;Edm.Decimal&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(value: any, options: Options): number {
-      if (this.ieee754Compatible) {
+    deserialize(value: any, options: FieldOptions): number {
+      if (options.ieee754Compatible) {
         return parseFloat(value);
       }
       return value;
     },
-    serialize(value: number, options: Options): any {
-      if (this.ieee754Compatible) {
-        return parseFloat(value.toPrecision(this.precision)).toFixed(this.scale);
+    serialize(value: number, options: FieldOptions): any {
+      if (options.ieee754Compatible) {
+        return parseFloat(value.toPrecision(options.field.precision)).toFixed(options.field.scale);
       }
       return value;
     }
   },
   &#x27;Edm.Double&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(value: any, options: Options): number {
+    deserialize(value: any, options: FieldOptions): number {
       if (value &#x3D;&#x3D;&#x3D; &#x27;INF&#x27;) return Infinity;
       return value;
     },
-    serialize(value: number, options: Options): any {
+    serialize(value: number, options: FieldOptions): any {
       if (value &#x3D;&#x3D;&#x3D; Infinity) return &#x27;INF&#x27;;
       return value;
     }
   },
   &#x27;Edm.Single&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(value: any, options: Options): number {
+    deserialize(value: any, options: FieldOptions): number {
       if (value &#x3D;&#x3D;&#x3D; &#x27;INF&#x27;) return Infinity;
       return value;
     },
-    serialize(value: number, options: Options): any {
+    serialize(value: number, options: FieldOptions): any {
       if (value &#x3D;&#x3D;&#x3D; Infinity) return &#x27;INF&#x27;;
       return value;
     }
   },
   &#x27;Edm.Binary&#x27;: &lt;Parser&lt;ArrayBuffer&gt;&gt;{
-    deserialize(base64: string, options: Options): ArrayBuffer {
+    deserialize(base64: string, options: FieldOptions): ArrayBuffer {
       var bufferLength &#x3D; base64.length * 0.75,
         len &#x3D; base64.length, i, p &#x3D; 0,
         encoded1, encoded2, encoded3, encoded4;
@@ -1680,7 +1704,7 @@
 
       return arraybuffer;
     },
-    serialize(arrayBuffer: ArrayBuffer, options: Options): string {
+    serialize(arrayBuffer: ArrayBuffer, options: FieldOptions): string {
       var bytes &#x3D; new Uint8Array(arrayBuffer),
         i, len &#x3D; bytes.length, base64 &#x3D; &quot;&quot;;
 
@@ -1812,7 +1836,7 @@
     ODATA_MEDIA_EDITLINK: &#x27;@odata.mediaEditLink&#x27;,
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
-    property(data: Object, context: ODataContext) { return data; },
+    property(data: Object, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
     context(value: Object) {
       if (this.ODATA_CONTEXT in value) {
         let ctx: ODataContext &#x3D; {};
@@ -1935,7 +1959,7 @@
     VALUE: &#x27;value&#x27;,
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
-    property(data: Object, context: ODataContext) { return data; },
+    property(data: Object, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
     context(value: Object) {
       if (this.ODATA_CONTEXT in value) {
         let ctx: ODataContext &#x3D; {};
@@ -2008,7 +2032,7 @@
     RESULTS: &#x27;results&#x27;,
     entity(data: Object, context: ODataContext) { return data; },
     entities(data: Object, context: ODataContext) { return data[this.RESULTS]; },
-    property(data: Object, context: ODataContext) { return data; },
+    property(data: Object, context: ODataContext) { return (this.RESULTS in data) ? data[this.RESULTS] : data; },
     annotations(value: Object) {
       if (this.ODATA_ANNOTATION in value)
         return value[this.ODATA_ANNOTATION];

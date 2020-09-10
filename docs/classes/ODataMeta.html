@@ -236,7 +236,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:28</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:29</a></div>
                             </td>
                         </tr>
 
@@ -264,7 +264,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:36</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:37</a></div>
                             </td>
                         </tr>
 
@@ -357,8 +357,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="49"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:49</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:50</a></div>
                 </td>
             </tr>
 
@@ -398,8 +398,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="50"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:50</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="51"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:51</a></div>
                 </td>
             </tr>
 
@@ -468,8 +468,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:44</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="45"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:45</a></div>
                 </td>
             </tr>
 
@@ -564,7 +564,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:29</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:30</a></div>
                                 </td>
                             </tr>
 
@@ -586,7 +586,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:37</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/meta.ts:38</a></div>
                                 </td>
                             </tr>
 
@@ -614,6 +614,7 @@ export abstract class ODataMeta {
     options?: ODataOptions, 
     headers?: HttpHeaders
   } &#x3D; {}) {
+    //TODO: Default options
     this.options &#x3D; opt.options;
     this.annotations &#x3D; (this.options ? this.odv.annotations(data) : data) || {};
     if (opt.headers) {
@@ -670,6 +671,10 @@ export class ODataEntityMeta extends ODataMeta {
 
   data(data: Object) {
     return this.odv.entity(data, this.context);
+  }
+
+  attributes&lt;T&gt;(data: Object): T {
+    return this.odv.attributes(data) as T;
   }
 
   get type(): string {
@@ -732,6 +737,10 @@ export class ODataEntitiesMeta extends ODataMeta {
 
   data(data: Object) {
     return this.odv.entities(data, this.context);
+  }
+
+  entity(data: Object) {
+    return new ODataEntityMeta(data, {options: this.options});
   }
 
   get readLink(): string {

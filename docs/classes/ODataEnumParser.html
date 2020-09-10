@@ -69,7 +69,7 @@
                 <h3>Implements</h3>
             </p>
             <p class="comment">
-                            <code><a href="../miscellaneous/typealiases.html#Parser" target="_self" >Parser</a></code>
+                            <code><a href="../interfaces/Parser.html" target="_self" >Parser</a></code>
             </p>
 
 
@@ -328,7 +328,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options: <a href="../interfaces/Options.html">Options</a>)</code>
+<code>deserialize(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options: <a href="../interfaces/FieldOptions.html">FieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -370,7 +370,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/FieldOptions.html" target="_self" >FieldOptions</a></code>
                                     </td>
 
                                     <td>
@@ -410,7 +410,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://angular.io/api/core/Type" target="_blank">Type</a>, options: <a href="../interfaces/Options.html">Options</a>)</code>
+<code>serialize(value: <a href="https://angular.io/api/core/Type" target="_blank">Type</a>, options: <a href="../interfaces/FieldOptions.html">FieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -452,7 +452,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/FieldOptions.html" target="_self" >FieldOptions</a></code>
                                     </td>
 
                                     <td>
@@ -562,7 +562,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumHelper } from &#x27;../helpers/index&#x27;;
-import { JsonSchemaExpandOptions, EnumConfig, Options, Parser } from &#x27;../types&#x27;;
+import { JsonSchemaExpandOptions, EnumConfig, Options, Parser, FieldOptions } from &#x27;../types&#x27;;
 
 export class ODataEnumParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   name: string;
@@ -578,7 +578,7 @@ export class ODataEnumParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   }
 
   // Deserialize
-  deserialize(value: string, options: Options): Type {
+  deserialize(value: string, options: FieldOptions): Type {
     // string -&gt; Type 
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) &#x3D;&gt; acc | v, 0) as any;
@@ -588,7 +588,7 @@ export class ODataEnumParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   }
 
   // Serialize
-  serialize(value: Type, options: Options): string {
+  serialize(value: Type, options: FieldOptions): string {
     // Type -&gt; string 
     if (this.flags) {
       let names &#x3D; EnumHelper.toNames(this.members, value);

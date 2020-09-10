@@ -82,7 +82,7 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#attach">attach</a>
+                                <a href="#assign">assign</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -94,11 +94,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#collection">collection</a>
+                                <a href="#attach">attach</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#config">config</a>
+                                <a href="#create">create</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#destroy">destroy</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -110,15 +114,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#entityConfig">entityConfig</a>
+                                <a href="#fetchOrCreate">fetchOrCreate</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#model">model</a>
+                                <a href="#save">save</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#serviceConfig">serviceConfig</a>
+                                <a href="#update">update</a>
                             </li>
                         </ul>
                     </td>
@@ -128,6 +132,26 @@
 
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#apiConfig">apiConfig</a>
+                                </li>
+                                <li>
+                                    <a href="#serviceConfig">serviceConfig</a>
+                                </li>
+                                <li>
+                                    <a href="#entityConfig">entityConfig</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
         </tbody>
     </table>
 </section>
@@ -143,7 +167,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -215,6 +239,102 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="assign"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            assign
+                        </b>
+                        <a href="#assign"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>assign(entity: Partial<T>, attrs: Partial<T>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:76</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>entity</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>attrs</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="attach"></a>
                     <span class="name">
                         <b>
@@ -235,8 +355,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:30</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="34"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:34</a></div>
                 </td>
             </tr>
 
@@ -315,8 +435,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="31"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:31</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="35"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:35</a></div>
                 </td>
             </tr>
 
@@ -395,8 +515,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:32</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:36</a></div>
                 </td>
             </tr>
 
@@ -447,39 +567,31 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="collection"></a>
+                    <a name="create"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Public</span>
-                            collection
+                            create
                         </b>
-                        <a href="#collection"><span class="icon ion-ios-link"></span></a>
+                        <a href="#create"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>collection(entities?: Partial<T>[])</code>
+                    <code>create(entity: Partial<T>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="25"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:25</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:59</a></div>
                 </td>
             </tr>
 
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>C</li>
-                    </ul>
-                </td>
-            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -496,9 +608,21 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>entities</td>
+                                    <td>entity</td>
                                     <td>
-                                            <code>Partial&lt;T&gt;[]</code>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
                                     </td>
 
                                     <td>
@@ -513,7 +637,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>C</code>
+                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -527,28 +651,28 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="config"></a>
+                    <a name="destroy"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Public</span>
-                            config
+                            destroy
                         </b>
-                        <a href="#config"><span class="icon ion-ios-link"></span></a>
+                        <a href="#destroy"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>config()</code>
+                    <code>destroy(entity: Partial<T>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="41"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:41</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="87"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:87</a></div>
                 </td>
             </tr>
 
@@ -557,8 +681,51 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>entity</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -588,8 +755,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:12</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="14"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:14</a></div>
                 </td>
             </tr>
 
@@ -629,8 +796,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="16"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:16</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="18"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:18</a></div>
                 </td>
             </tr>
 
@@ -681,80 +848,31 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="entityConfig"></a>
+                    <a name="fetchOrCreate"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Public</span>
-                            entityConfig
+                            fetchOrCreate
                         </b>
-                        <a href="#entityConfig"><span class="icon ion-ios-link"></span></a>
+                        <a href="#fetchOrCreate"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entityConfig()</code>
+                    <code>fetchOrCreate(entity: Partial<T>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:97</a></div>
                 </td>
             </tr>
 
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="model"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            model
-                        </b>
-                        <a href="#model"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>model(entity?: Partial<T>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="21"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:21</a></div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>M</li>
-                    </ul>
-                </td>
-            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -777,6 +895,18 @@
                                     </td>
 
                                     <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
                                         Yes
                                     </td>
 
@@ -788,7 +918,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>M</code>
+                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -802,28 +932,28 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="serviceConfig"></a>
+                    <a name="save"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Public</span>
-                            serviceConfig
+                            save
                         </b>
-                        <a href="#serviceConfig"><span class="icon ion-ios-link"></span></a>
+                        <a href="#save"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>serviceConfig()</code>
+                    <code>save(entity: Partial<T>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="46"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:46</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:107</a></div>
                 </td>
             </tr>
 
@@ -832,8 +962,135 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>entity</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            update
+                        </b>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(entity: Partial<T>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:65</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>entity</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -845,17 +1102,90 @@
 
 
 
+            <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="apiConfig"></a>
+                        <span class="name"><b>apiConfig</b><a href="#apiConfig"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>apiConfig()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:45</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="serviceConfig"></a>
+                        <span class="name"><b>serviceConfig</b><a href="#serviceConfig"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>serviceConfig()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:50</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="entityConfig"></a>
+                        <span class="name"><b>entityConfig</b><a href="#entityConfig"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>entityConfig()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:55</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
-import { ODataEntitySetResource, ODataEntityResource, ODataSingletonResource } from &#x27;../resources&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataEntitySetResource, ODataEntityResource, ODataSingletonResource, HttpOptions } from &#x27;../resources&#x27;;
 import { ODataClient } from &quot;../client&quot;;
 import { EntityKey } from &#x27;../types&#x27;;
 import { ODataCollection } from &#x27;../models/collection&#x27;;
 import { ODataModel } from &#x27;../models/model&#x27;;
 import { ODataEntityConfig } from &#x27;../configs/entity&#x27;;
+import { Observable, throwError } from &#x27;rxjs&#x27;;
+import { HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
+import { map, catchError } from &#x27;rxjs/operators&#x27;;
 
 export class ODataEntityService&lt;T&gt; {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
@@ -869,13 +1199,15 @@ export class ODataEntityService&lt;T&gt; {
       .entity(key);
   }
 
+  /*
   public model&lt;M extends ODataModel&lt;T&gt;&gt;(entity?: Partial&lt;T&gt;): M {
-    return this.entity(entity).model&lt;M&gt;(entity);
+    return this.entity(entity).asModel&lt;M&gt;(entity);
   }
 
   public collection&lt;C extends ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;&gt;(entities?: Partial&lt;T&gt;[]): C {
-    return this.entities().collection&lt;C&gt;(entities);
+    return this.entities().asCollection&lt;C&gt;(entities);
   }
+  */
 
   // Models
   public attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): M;
@@ -889,18 +1221,72 @@ export class ODataEntityService&lt;T&gt; {
   }
 
   // Service Config 
-  public config() {
+  get apiConfig() {
     return this.client.apiConfigForType(this.entityType);
   }
 
   // Service Config 
-  public serviceConfig() {
-    return this.config().serviceConfigForName(this.name);
+  get serviceConfig() {
+    return this.apiConfig.serviceConfigForName(this.name);
   }
 
   // Entity Config 
-  public entityConfig() {
-    return this.config().entityConfigForType(this.entityType) as ODataEntityConfig&lt;T&gt;;
+  get entityConfig() {
+    return this.apiConfig.entityConfigForType&lt;T&gt;(this.entityType);
+  }
+
+  public create(entity: Partial&lt;T&gt;, options?: HttpOptions): Observable&lt;T&gt; {
+    return this.entities()
+      .post(entity, options)
+      .pipe(map(({entity}) &#x3D;&gt; entity));
+  }
+
+  public update(entity: Partial&lt;T&gt;, options?: HttpOptions): Observable&lt;T&gt; {
+    const odata &#x3D; this.apiConfig.options.helper;
+    const etag &#x3D; odata.etag(entity);
+    const res &#x3D; this.entity(entity);
+    if (res.segment.key().empty())
+      return throwError(&quot;Resource without key&quot;);
+    return this.entity(entity as EntityKey&lt;T&gt;)
+      .put(entity, Object.assign({etag}, options || {}))
+      .pipe(map(({entity}) &#x3D;&gt; entity));
+  }
+
+  public assign(entity: Partial&lt;T&gt;, attrs: Partial&lt;T&gt;, options?: HttpOptions): Observable&lt;T&gt; {
+    const odata &#x3D; this.apiConfig.options.helper;
+    const etag &#x3D; odata.etag(entity);
+    const res &#x3D; this.entity(entity);
+    if (res.segment.key().empty())
+      return throwError(&quot;Resource without key&quot;);
+    return res.patch(attrs, Object.assign({etag}, options || {}))
+      .pipe(map(({entity: newentity, meta}) &#x3D;&gt; newentity ? newentity : 
+        Object.assign(entity, attrs, meta.annotations) as T));
+  }
+
+  public destroy(entity: Partial&lt;T&gt;, options?: HttpOptions) {
+    const odata &#x3D; this.apiConfig.options.helper;
+    const etag &#x3D; odata.etag(entity);
+    const res &#x3D; this.entity(entity);
+    if (res.segment.key().empty())
+      return throwError(&quot;Resource without key&quot;);
+    return res.delete(Object.assign({etag}, options || {}));
+  }
+
+  // Shortcuts
+  public fetchOrCreate(entity: Partial&lt;T&gt;, options?: HttpOptions): Observable&lt;T&gt; {
+    return this.entity(entity).fetch(options)
+      .pipe(catchError((error: HttpErrorResponse) &#x3D;&gt; {
+        if (error.status &#x3D;&#x3D;&#x3D; 404)
+          return this.create(entity, options);
+        else
+          return throwError(error);
+      }));
+  }
+
+  public save(entity: Partial&lt;T&gt;, options?: HttpOptions) {
+    return this.entity(entity).segment.key().empty() ? 
+      this.create(entity, options) : 
+      this.update(entity, options);
   }
 }
 </code></pre>
