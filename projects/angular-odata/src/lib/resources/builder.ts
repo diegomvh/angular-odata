@@ -49,13 +49,13 @@ export type GroupBy<T> = {
   transform?: Transform<T>;
 }
 
-export type Raw = { type: 'raw'; value: any; }
-export type Guid = { type: 'guid'; value: any; }
-export type Duration = { type: 'duration'; value: any; }
-export type Binary = { type: 'binary'; value: any; }
-export type Json = { type: 'json'; value: any; }
-export type Alias = { type: 'alias'; name: string; value: any; }
-export type Value = string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias; 
+type Raw = { type: 'raw'; value: any; }
+type Guid = { type: 'guid'; value: any; }
+type Duration = { type: 'duration'; value: any; }
+type Binary = { type: 'binary'; value: any; }
+type Json = { type: 'json'; value: any; }
+type Alias = { type: 'alias'; name: string; value: any; }
+type Value = string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias; 
 
 export const raw = (value: string): Raw => ({type: 'raw', value});
 export const guid = (value: string): Guid => ({type: 'guid', value});
