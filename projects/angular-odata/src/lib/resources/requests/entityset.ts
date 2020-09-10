@@ -16,6 +16,7 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
 import { ODataEntity, ODataEntities } from '../responses/index';
+import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -215,15 +216,17 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
         if (opts.top)
           res.query.top(opts.top);
       }
-      return res.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
-      );
+      return res.get(options);
     }
     return fetch()
       .pipe(
         expand(({meta})  => (meta.skip || meta.skiptoken) ? fetch(meta) : empty()),
         concatMap(({entities}) => entities),
         toArray());
+  }
+
+  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>>> {
+    return this.get(options).pipe(map(({entities, meta}) => this.asCollection(entities, meta)));
   }
   //#endregion
 }

@@ -80,8 +80,8 @@ export class ODataModel<T> {
         if (value) {
           let prop = (this._resource as ODataEntityResource<T>).property<any>(f.name);
           value = f.collection ?
-            prop.collection(value, new ODataEntitiesMeta(this._meta.property(f.name) || {}, {options: this._meta.options})) : 
-            prop.model(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
+            prop.asCollection(value, new ODataEntitiesMeta(this._meta.property(f.name) || {}, {options: this._meta.options})) : 
+            prop.asModel(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
         }
         return Object.assign(acc, { [k]: value });
       }, {}));
@@ -271,8 +271,8 @@ export class ODataModel<T> {
       let value = this._entity[field.name];
       let nav = this._navigationProperty<P>(field.name);
       let rel = field.collection ? 
-          nav.collection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) : 
-          nav.model(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
+          nav.asCollection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) : 
+          nav.asModel(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
       this._relations[field.name] = {field, rel};
     }
     return this._relations[field.name].rel;

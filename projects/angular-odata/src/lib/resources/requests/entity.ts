@@ -17,6 +17,7 @@ import { ODataValueResource } from './value';
 import { ODataEntity } from '../responses/index';
 import { map } from 'rxjs/operators';
 import { ODataEntityParser } from '../../parsers/entity';
+import { ODataModel } from '../../models';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
@@ -188,6 +189,12 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     if (this.segment.key().empty())
       return throwError("Resource without key");
     return this.get(options).pipe(map(({entity}) => entity));
+  }
+
+  model(options?: HttpOptions): Observable<ODataModel<T>> {
+    if (this.segment.key().empty())
+      return throwError("Resource without key");
+    return this.get(options).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
   }
   //#endregion
 }

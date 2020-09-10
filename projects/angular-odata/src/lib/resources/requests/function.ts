@@ -133,21 +133,21 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     responseType: 'property' | 'entity' | 'model' | 'entities' | 'collection',
     options?: HttpOptions
   ): Observable<any> {
-    const res = this.clone();
+    const res = this.clone() as ODataFunctionResource<P, R>;
     if (params)
       res.segment.parameters(params);
     const res$ = res.get(
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType }, options || {})
-    );
+    ) as Observable<any>;
     switch(responseType) {
       case 'entities':
         return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities}) => entities));
       case 'collection':
-        return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities, meta}) => res.collection(entities, meta)));
+        return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities, meta}) => res.asCollection(entities, meta)));
       case 'entity':
         return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity}) => entity));
       case 'model':
-        return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity, meta}) => res.model(entity, meta)));
+        return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity, meta}) => res.asModel(entity, meta)));
       case 'property':
         return (res$ as Observable<ODataProperty<R>>).pipe(map(({property}) => property));
       default:

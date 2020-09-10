@@ -15,6 +15,7 @@ import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntity } from '../responses/index';
 import { map } from 'rxjs/operators';
+import { ODataModel } from '../../models';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
@@ -143,6 +144,10 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Custom
   fetch(options?: HttpOptions): Observable<T> {
     return this.get(options).pipe(map(({entity}) => entity));
+  }
+
+  model(options?: HttpOptions): Observable<ODataModel<T>> {
+    return this.get(options).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
   }
   //#endregion
 }

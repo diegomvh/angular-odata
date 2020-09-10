@@ -16,6 +16,7 @@ import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
 import { ODataEntities, ODataEntity } from '../responses/index';
 import { ODataValueResource } from './value';
 import { ODataEntityParser } from '../../parsers/entity';
+import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -231,10 +232,22 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         toArray());
   }
 
+  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>>> {
+    return this.get(
+      Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+    ).pipe(map(({entities, meta}) => this.asCollection(entities, meta)));
+  }
+
   fetch(options?: HttpOptions): Observable<T> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
     ).pipe(map(({entity}) => entity));
+  }
+
+  model(options?: HttpOptions): Observable<ODataModel<T>> {
+    return this.get(
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+    ).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
   }
   //#endregion
 }

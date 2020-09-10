@@ -11,7 +11,7 @@ export class ODataSingletonService<T> {
   }
 
   public model<M extends ODataModel<T>>(entity?: Partial<T>): M {
-    return this.entity().model<M>(entity);
+    return this.entity().asModel<M>(entity);
   }
 
   // Models

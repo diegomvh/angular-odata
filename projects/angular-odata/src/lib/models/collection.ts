@@ -68,7 +68,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (values as T[]).map(value => {
       if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
         resource.segment.key(value);
-      return (resource ? resource.clone().model(value, this._meta ? this._meta.entity(value) : null) : value) as M;
+      return (resource ? resource.clone().asModel(value, this._meta ? this._meta.entity(value) : null) : value) as M;
     });
   }
 

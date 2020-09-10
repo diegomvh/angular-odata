@@ -10,6 +10,7 @@ import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOption
 import { ODataProperty, ODataEntities, ODataEntity } from '../responses/index';
 import { map } from 'rxjs/operators';
 import { ODataEntityParser } from '../../parsers/entity';
+import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -58,6 +59,18 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return this.get(
       Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options || {})
     ).pipe(map(({property}) => property));
+  }
+
+  model(options?: HttpOptions): Observable<ODataModel<T>> {
+    return this.get(
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+    ).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
+  }
+
+  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>>> {
+    return this.get(
+      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})
+    ).pipe(map(({entities, meta}) => this.asCollection(entities)));
   }
   //#endregion
 }
