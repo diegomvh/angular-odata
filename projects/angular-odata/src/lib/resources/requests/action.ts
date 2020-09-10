@@ -11,6 +11,7 @@ import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataEntityParser } from '../../parsers/entity';
+import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -114,9 +115,11 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   call(params: P | null, responseType?: 'entity', options?: HttpOptions): Observable<R>;
   call(params: P | null, responseType?: 'entities', options?: HttpOptions): Observable<R[]>;
   call(params: P | null, responseType?: 'property', options?: HttpOptions): Observable<R>;
+  call(params: P | null, responseType?: 'model', options?: HttpOptions): Observable<ODataModel<R>>;
+  call(params: P | null, responseType?: 'collection', options?: HttpOptions): Observable<ODataCollection<R, ODataModel<R>>>;
   call(
     params: P | null, 
-    responseType?: 'property' | 'entity' | 'entities', 
+    responseType?: 'property' | 'entity' | 'model' | 'entities' | 'collection',
     options?: HttpOptions
   ): Observable<any> {
     const res = this.clone();
@@ -125,11 +128,15 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     );
     switch(responseType) {
       case 'entities':
-        return res$.pipe(map((res: ODataEntities<R>) => res.entities));
+        return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities}) => entities));
+      case 'collection':
+        return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities, meta}) => res.collection(entities, meta)));
       case 'entity':
-        return res$.pipe(map((res: ODataEntity<R>) => res.entity));
+        return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity}) => entity));
+      case 'model':
+        return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity, meta}) => res.model(entity, meta)));
       case 'property':
-        return res$.pipe(map((res: ODataProperty<R>) => res.property));
+        return (res$ as Observable<ODataProperty<R>>).pipe(map(({property}) => property));
       default:
         return res$;
     }
