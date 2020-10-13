@@ -11,8 +11,8 @@ export abstract class ODataMeta {
     return this.options.helper;
   }
 
-  constructor(data: Object, opt: { 
-    options?: ODataOptions, 
+  constructor(data: Object, opt: {
+    options?: ODataOptions,
     headers?: HttpHeaders
   } = {}) {
     //TODO: Default options
@@ -21,7 +21,7 @@ export abstract class ODataMeta {
     if (opt.headers) {
       const etag = opt.headers.get("ETag");
       if (etag)
-        this.odv.setEtag(this.annotations, etag);
+        this.odv.etag(this.annotations, etag);
     }
   }
 

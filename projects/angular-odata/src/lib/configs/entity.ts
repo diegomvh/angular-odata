@@ -67,7 +67,7 @@ export class ODataEntityConfig<Type> {
       .reduce((acc, k) => Object.assign(acc, { [k]: value[k] }), {});
     if (opts.include_etag) {
       const etag = this.options.helper.etag(value);
-      this.options.helper.setEtag(attrs, etag);
+      this.options.helper.etag(attrs, etag);
     }
     return attrs;
   }
