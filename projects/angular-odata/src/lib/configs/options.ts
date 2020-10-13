@@ -1,5 +1,5 @@
 import { DEFAULT_VERSION, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from '../constants';
-import { ApiConfig, Options, Field, FieldOptions } from '../types';
+import { ApiConfig, Options } from '../types';
 import { ODataHelper } from '../helpers';
 
 export class ODataOptions implements Options {
