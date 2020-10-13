@@ -37,7 +37,7 @@ export class ODataEntityConfig<Type> {
   fields(opts: {
     include_parents?: boolean,
     include_navigation?: boolean
-  } = { include_navigation: true, include_parents: true }): ODataFieldParser<any>[] {
+  } = { include_navigation: false, include_parents: true }): ODataFieldParser<any>[] {
     let parent = this.parser as ODataEntityParser<any>;
     let fields = <ODataFieldParser<any>[]>[];
     while (parent) {
@@ -54,5 +54,21 @@ export class ODataEntityConfig<Type> {
 
   field<P extends keyof Type>(name: P): ODataFieldParser<Type[P]> {
     return this.fields().find(f => f.name === name);
+  }
+
+  pick(value: Object, opts: {
+    include_parents?: boolean,
+    include_navigation?: boolean,
+    include_etag?: boolean
+  } = { include_navigation: false, include_parents: true, include_etag: true }): Partial<Type> {
+    const names = this.fields(opts).map(f => f.name);
+    let attrs = Object.keys(value)
+      .filter(k => names.indexOf(k) !== -1)
+      .reduce((acc, k) => Object.assign(acc, { [k]: value[k] }), {});
+    if (opts.include_etag) {
+      const etag = this.options.helper.etag(value);
+      this.options.helper.setEtag(attrs, etag);
+    }
+    return attrs;
   }
 }
