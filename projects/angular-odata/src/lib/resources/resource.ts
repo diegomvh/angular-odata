@@ -15,7 +15,7 @@ import {
   ODataQueryOptions
 } from './query-options';
 import { HttpOptions } from './requests/index';
-import { 
+import {
   ODataModel,
   ODataCollection
 } from '../models/index';
@@ -75,8 +75,8 @@ export class ODataResource<Type> {
     let config = this.apiConfig;
     let parser = config.parserForType<Type>(this.type());
     if (!Types.isUndefined(parser) && 'serialize' in parser)
-      return Array.isArray(value) ? 
-        value.map(e => parser.serialize(e, config.options)) : 
+      return Array.isArray(value) ?
+        value.map(e => parser.serialize(e, config.options)) :
         parser.serialize(value, config.options);
     return value;
   }
@@ -106,9 +106,9 @@ export class ODataResource<Type> {
   }
 
   toJSON() {
-    return { 
+    return {
       segments: this.pathSegments.toJSON(),
-      options: this.queryOptions.toJSON()  
+      options: this.queryOptions.toJSON()
     };
   }
 
@@ -133,13 +133,13 @@ export class ODataResource<Type> {
       params = this.client.mergeHttpParams(params, copts.helper.countParam());
     }
 
-    let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 
-      (options.responseType && ['property', 'entity', 'entities'].indexOf(options.responseType) !== -1) ? 
-        'json' : 
-      (options.responseType === 'value') ? 
+    let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' =
+      (options.responseType && ['property', 'entity', 'entities'].indexOf(options.responseType) !== -1) ?
+        'json' :
+      (options.responseType === 'value') ?
         'text' :
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
-    
+
     let body = null;
     if (!Types.isNullOrUndefined(options.attrs)) {
       body = this.serialize(options.attrs);
@@ -173,30 +173,30 @@ export class ODataResource<Type> {
     }
   }
 
-  protected get(options: HttpOptions & { 
+  protected get(options: HttpOptions & {
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
     return this.request('GET', options);
   }
 
-  protected post(attrs: Partial<Type>, options: HttpOptions & { 
+  protected post(attrs: any, options: HttpOptions & {
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
     return this.request('POST', Object.assign(options, { attrs }));
   }
 
-  protected put(attrs: Partial<Type>, options: HttpOptions & {
-    etag?: string, 
+  protected put(attrs: any, options: HttpOptions & {
+    etag?: string,
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
-    withCount?: boolean 
+    withCount?: boolean
   }): Observable<any> {
     return this.request('PUT', Object.assign(options, { attrs }));
   }
 
-  protected patch(attrs: Partial<Type>, options: HttpOptions & {
-    etag?: string, 
+  protected patch(attrs: any, options: HttpOptions & {
+    etag?: string,
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {
@@ -204,7 +204,7 @@ export class ODataResource<Type> {
   }
 
   protected delete(options: HttpOptions & {
-    etag?: string, 
+    etag?: string,
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   }): Observable<any> {

@@ -103,22 +103,22 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Requests
-  post(body: P | null, options: HttpEntityOptions): Observable<ODataEntity<R>>;
-  post(body: P | null, options: HttpEntitiesOptions): Observable<ODataEntities<R>>;
-  post(body: P | null, options: HttpPropertyOptions): Observable<ODataProperty<R>>;
-  post(body: P | null, options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
-    return super.post(body, options);
+  post(params: P | null, options: HttpEntityOptions): Observable<ODataEntity<R>>;
+  post(params: P | null, options: HttpEntitiesOptions): Observable<ODataEntities<R>>;
+  post(params: P | null, options: HttpPropertyOptions): Observable<ODataProperty<R>>;
+  post(params: P | null, options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
+    return super.post(params, options);
   }
   //#endregion
 
-  //#region Custom 
+  //#region Custom
   call(params: P | null, responseType?: 'entity', options?: HttpOptions): Observable<R>;
   call(params: P | null, responseType?: 'entities', options?: HttpOptions): Observable<R[]>;
   call(params: P | null, responseType?: 'property', options?: HttpOptions): Observable<R>;
   call(params: P | null, responseType?: 'model', options?: HttpOptions): Observable<ODataModel<R>>;
   call(params: P | null, responseType?: 'collection', options?: HttpOptions): Observable<ODataCollection<R, ODataModel<R>>>;
   call(
-    params: P | null, 
+    params: P | null,
     responseType?: 'property' | 'entity' | 'model' | 'entities' | 'collection',
     options?: HttpOptions
   ): Observable<any> {
