@@ -215,7 +215,7 @@ Content-Type: application/json; odata.metadata=minimal
 OData-Version: 4.0
 
 ${JSON.stringify(payload)}
---batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b--`.split("\n").join("\r\n");
+--batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b--`;
     const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
     client.batch().post((batch) => {
       expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');

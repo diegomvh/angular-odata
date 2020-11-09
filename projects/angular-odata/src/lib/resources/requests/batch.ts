@@ -7,7 +7,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX } from '../../constants';
+import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX, NEWLINE_REGEXP } from '../../constants';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;
 
@@ -188,7 +188,7 @@ export class ODataBatchResource extends ODataResource<any> {
   //#endregion
 
   add(method: string, path: string, options?: {
-    body: any | null, 
+    body: any | null,
     config?: string,
     headers?: HttpHeaders,
     params?: HttpParams,
@@ -278,7 +278,7 @@ export class ODataBatchResource extends ODataResource<any> {
     const batchBoundary: string = getBoundaryDelimiter(contentType);
     const endLine: string = getBoundaryEnd(batchBoundary);
 
-    const lines: string[] = response.body.split(NEWLINE);
+    const lines: string[] = response.body.split(NEWLINE_REGEXP);
 
     let changesetResponses: string[][];
     let contentId: number;
