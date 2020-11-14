@@ -34,13 +34,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Entity Config
   get config() {
     return this.apiConfig
-    .entityConfigForType<T>(this.type());
+      .entityConfigForType<T>(this.type());
   }
   ////#endregion
 
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
-    const entity = this.clone(); 
+    const entity = this.clone();
     entity.segment.key(key);
     return entity;
   }
@@ -51,14 +51,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   navigationProperty<N>(name: string) {
     let parser = this.client.parserFor<N>(this);
-    let type = parser instanceof ODataEntityParser? 
+    let type = parser instanceof ODataEntityParser ?
       parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser? 
+    let type = parser instanceof ODataEntityParser ?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -157,30 +157,32 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Requests
   get(options?: HttpOptions): Observable<ODataEntity<T>> {
     return super.get(
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
-      );
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+    );
   }
 
   post(attrs: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
     return super.post(attrs,
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
     );
   }
 
   put(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
     return super.put(attrs,
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
     );
   }
 
   patch(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
     return super.patch(attrs,
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
     );
   }
 
   delete(options?: HttpOptions & { etag?: string }): Observable<any> {
-    return super.delete(options);
+    return super.delete(
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+    );
   }
   //#endregion
 
@@ -188,13 +190,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   fetch(options?: HttpOptions): Observable<T> {
     if (this.segment.key().empty())
       return throwError("Resource without key");
-    return this.get(options).pipe(map(({entity}) => entity));
+    return this.get(options).pipe(map(({ entity }) => entity));
   }
 
   model(options?: HttpOptions): Observable<ODataModel<T>> {
     if (this.segment.key().empty())
       return throwError("Resource without key");
-    return this.get(options).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
+    return this.get(options).pipe(map(({ entity, meta }) => this.asModel(entity, meta)));
   }
   //#endregion
 }
