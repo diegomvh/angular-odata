@@ -18,7 +18,7 @@ export type PlainObject = { [property: string]: any };
 export type Select<T> = string | keyof T | Array<keyof T>;
 export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | { [P in keyof T]?: OrderBy<T[P]> };
 export type Filter = string | PlainObject | Array<string | PlainObject>;
-export type NestedExpandOptions<T> = {[P in keyof T]?: (T[P] extends Array<infer E> ? Partial<ExpandOptions<E>> : Partial<ExpandOptions<T[P]>>) };
+export type NestedExpandOptions<T> = { [P in keyof T]?: (T[P] extends Array<infer E> ? Partial<ExpandOptions<E>> : Partial<ExpandOptions<T[P]>>) };
 export type Expand<T> = string | keyof T | NestedExpandOptions<T> | Array<keyof T | NestedExpandOptions<T>> | Array<string | NestedExpandOptions<T>>;
 export enum StandardAggregateMethods {
   sum = "sum",
@@ -29,7 +29,7 @@ export enum StandardAggregateMethods {
 }
 export type Aggregate = string | { [propertyName: string]: { with: StandardAggregateMethods, as: string } };
 
-export type OrderByOptions<T> = keyof T | [ keyof T, 'asc' | 'desc' ];
+export type OrderByOptions<T> = keyof T | [keyof T, 'asc' | 'desc'];
 export type ExpandOptions<T> = {
   select: Select<T>;
   filter: Filter;
@@ -55,13 +55,13 @@ export type Duration = { type: 'duration'; value: any; }
 export type Binary = { type: 'binary'; value: any; }
 export type Json = { type: 'json'; value: any; }
 export type Alias = { type: 'alias'; name: string; value: any; }
-export type Value = string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias; 
+export type Value = string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias;
 
-export const raw = (value: string): Raw => ({type: 'raw', value});
-export const guid = (value: string): Guid => ({type: 'guid', value});
-export const duration = (value: string): Duration => ({type: 'duration', value});
-export const binary = (value: string): Binary => ({type: 'binary', value});
-export const json = (value: PlainObject): Json => ({type: 'json', value});
+export const raw = (value: string): Raw => ({ type: 'raw', value });
+export const guid = (value: string): Guid => ({ type: 'guid', value });
+export const duration = (value: string): Duration => ({ type: 'duration', value });
+export const binary = (value: string): Binary => ({ type: 'binary', value });
+export const json = (value: PlainObject): Json => ({ type: 'json', value });
 export const alias = (name: string, value: PlainObject): Alias => ({ type: 'alias', name, value });
 
 export type QueryOptions<T> = ExpandOptions<T> & {
@@ -73,7 +73,7 @@ export type QueryOptions<T> = ExpandOptions<T> & {
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;
-  aliases: Alias[]; 
+  aliases: Alias[];
 }
 
 export default function <T>({
@@ -107,10 +107,10 @@ export default function <T>({
 
   if (transform)
     params.$apply = buildTransforms(transform);
-  
+
   if (expand)
     params.$expand = buildExpand(expand);
-  
+
   if (orderBy)
     params.$orderby = buildOrderBy(orderBy);
 
@@ -152,8 +152,8 @@ export default function <T>({
   }
 
   if (aliases.length > 0) {
-    Object.assign(params, aliases.reduce((acc, alias) => 
-      Object.assign(acc, {[`@${alias.name}`]: handleValue(alias.value)})
+    Object.assign(params, aliases.reduce((acc, alias) =>
+      Object.assign(acc, { [`@${alias.name}`]: handleValue(alias.value) })
       , {}));
   }
 
@@ -297,17 +297,29 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
   }
 
   function buildCollectionClause(lambdaParameter: string, value: any, op: string, propName: string) {
-    let clause = "";
-    if (value) {
+    let clause = '';
+
+    if (typeof value === 'string' || value instanceof String) {
+      clause = getStringCollectionClause(lambdaParameter, value, op, propName);
+
+    } else if (value) {
       // normalize {any:[{prop1: 1}, {prop2: 1}]} --> {any:{prop1: 1, prop2: 1}}; same for 'all'
       const filter = buildFilterCore(
         Array.isArray(value)
           ? value.reduce((acc, item) => ({ ...acc, ...item }), {})
           : value, aliases, lambdaParameter);
-      clause = `${propName}/${op}(${filter ? `${lambdaParameter}:${filter}` : ""})`;
+      clause = `${propName}/${op}(${filter ? `${lambdaParameter}:${filter}` : ''})`;
     }
     return clause;
   }
+}
+
+function getStringCollectionClause(lambdaParameter: string, value: any, collectionOperator: string, propName: string) {
+  let clause = '';
+  const conditionOperator = collectionOperator == 'all' ? 'ne' : 'eq';
+  clause = `${propName}/${collectionOperator}(${lambdaParameter}: ${lambdaParameter} ${conditionOperator} '${value}')`
+
+  return clause;
 }
 
 function escapeIllegalChars(string: string) {
@@ -402,7 +414,7 @@ function buildExpand<T>(expands: Expand<T>): string {
             case 'top':
               value = `${(expands as NestedExpandOptions<any>)[key]}`;
               break;
-            default: 
+            default:
               value = buildExpand((expands as NestedExpandOptions<any>)[key] as Expand<T>);
           }
           return `$${key.toLowerCase()}=${value}`;
@@ -491,8 +503,8 @@ function buildGroupBy<T>(groupBy: GroupBy<T>) {
 function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
   if (Array.isArray(orderBy)) {
     return (orderBy as OrderByOptions<T>[])
-      .map(value => 
-        (Array.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(' ') : value
+      .map(value =>
+        (Array.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1) ? value.join(' ') : value
       )
       .map(v => `${prefix}${v}`).join(',');
   } else if (typeof orderBy === 'object') {
