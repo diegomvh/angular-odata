@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ODataClient } from '../../client';
@@ -8,6 +8,8 @@ import { ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX, NEWLINE_REGEXP } from '../../constants';
+import { ODataRequest } from './request';
+import { ODataResponse } from '../responses';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;
 
@@ -45,47 +47,20 @@ function getBoundaryEnd(boundaryDelimiter: string): string {
   return boundaryEnd;
 }
 
-export class ODataBatchRequest extends Subject<any> {
-  body?: any | null;
-  config?: string;
-  observe?: 'body' | 'events' | 'response';
-  headers?: HttpHeaders;
-  params?: HttpParams;
-  responseType: 'arraybuffer' | 'blob' | 'json' | 'text';
-
-  constructor(
-    public method: string,
-    public path: string,
-    options?: {
-      body?: any | null,
-      config?: string,
-      headers?: HttpHeaders,
-      params?: HttpParams,
-      observe?: 'body' | 'events' | 'response',
-      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
-    }
-  ) {
+export class ODataBatchRequest<T> extends Subject<T | HttpResponse<T>> {
+  constructor(public request: ODataRequest<any>, public observe: 'body' | 'events' | 'response' = 'body')
+   {
     super();
-    Object.assign(this, { responseType: 'json', observe: 'body' }, options || {});
-  }
-
-  url() {
-    // Url
-    let url = `/${this.path}`;
-    if (this.params instanceof HttpParams && this.params.keys().length > 0) {
-      url = `${url}?${this.params}`;
-    }
-    return url;
   }
 
   toString() {
-    let res = [`${this.method} ${this.url()} ${HTTP11}`];
-    if (this.method === 'POST' || this.method === 'PATCH' || this.method === 'PUT') {
+    let res = [`${this.request.method} ${this.request.pathWithParams} ${HTTP11}`];
+    if (this.request.method === 'POST' || this.request.method === 'PATCH' || this.request.method === 'PUT') {
       res.push(`${CONTENT_TYPE}: ${APPLICATION_JSON}`);
     }
 
-    if (this.headers instanceof HttpHeaders) {
-      let headers = this.headers;
+    if (this.request.headers instanceof HttpHeaders) {
+      let headers = this.request.headers;
       res = [
         ...res,
         ...headers.keys().map(key => `${key}: ${headers.getAll(key).join(',')}`)
@@ -119,7 +94,7 @@ export class ODataBatchRequest extends Subject<any> {
     }
 
     let ok = status.code >= 200 && status.code < 300;
-    if (this.responseType === 'json' && typeof body === 'string') {
+    if (this.request.responseType === 'json' && typeof body === 'string') {
       const originalBody = body;
       body = body.replace(XSSI_PREFIX, '');
       try {
@@ -135,12 +110,12 @@ export class ODataBatchRequest extends Subject<any> {
     }
 
     if (ok) {
-      let resp = new HttpResponse({
+      let resp = new HttpResponse<any>({
         body,
         headers,
         status: status.code,
         statusText: status.text,
-        url: this.url()
+        url: this.request.urlWithParams
       });
       this.next(this.observe === 'body' ? resp.body : resp);
       this.complete();
@@ -152,7 +127,7 @@ export class ODataBatchRequest extends Subject<any> {
         headers,
         status: status.code,
         statusText: status.text,
-        url: this.url()
+        url: this.request.urlWithParams
       }));
     }
   }
@@ -162,7 +137,7 @@ export class ODataBatchRequest extends Subject<any> {
       error: content.join(NEWLINE),
       status: status.code || 0,
       statusText: status.text || 'Unknown Error',
-      url: this.url() || undefined,
+      url: this.request.urlWithParams || undefined,
     });
     this.error(res);
   }
@@ -170,7 +145,7 @@ export class ODataBatchRequest extends Subject<any> {
 
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
-  private requests: ODataBatchRequest[];
+  private requests: ODataBatchRequest<any>[];
   public batchBoundary: string;
 
   constructor(service: ODataClient, segments?: ODataPathSegments) {
@@ -187,30 +162,28 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   //#endregion
 
-  add(method: string, path: string, options?: {
-    body: any | null,
-    config?: string,
-    headers?: HttpHeaders,
-    params?: HttpParams,
-    observe?: 'body' | 'events' | 'response',
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text'
-  }
-  ): ODataBatchRequest {
-    //TODO: Allow only with same config name
-    let request = new ODataBatchRequest(method, path, options);
-    this.requests.push(request);
-    return request;
-  }
+  post(func: (batch?: ODataBatchResource) => void) {
+    const current = this.client.handler;
+    this.client.handler = (request: ODataRequest<any>, observe?: 'body' | 'events' | 'response'): ODataBatchRequest<any> => {
+      //TODO: Allow only with same config name
+      this.requests.push(new ODataBatchRequest<any>(request, observe));
+      return this.requests[this.requests.length - 1];
+    }
+    try {
+      func(this);
+    } finally {
+      this.client.handler = current;
+    }
 
-  post(func: (batch?: ODataBatchResource) => void, options?: HttpOptions) {
-    this.client.using(this, func);
-    let opts = Object.assign<any, HttpOptions>({ observe: 'response', responseType: 'text' }, options || {});
-    opts.headers = this.client.mergeHttpHeaders(opts.headers, {
-      [ODATA_VERSION]: VERSION_4_0,
-      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
-      [ACCEPT]: MULTIPART_MIXED
-    });
-    return this.client.post(this, this.body(), opts).pipe(
+    return this.client.post(this, this.body(), {
+      observe: 'response',
+      responseType: 'text',
+      headers: {
+        [ODATA_VERSION]: VERSION_4_0,
+        [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
+        [ACCEPT]: MULTIPART_MIXED
+      }
+    }).pipe(
       map((resp: any) => {
         this.handleResponse(resp);
         return resp;
@@ -223,9 +196,9 @@ export class ODataBatchResource extends ODataResource<any> {
     let changesetBoundary = null;
     let changesetId = 1;
 
-    for (const request of this.requests) {
+    for (const batch of this.requests) {
       // if method is GET and there is a changeset boundary open then close it
-      if (request.method === 'GET' && !Types.isNullOrUndefined(changesetBoundary)) {
+      if (batch.request.method === 'GET' && !Types.isNullOrUndefined(changesetBoundary)) {
         res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         changesetBoundary = null;
       }
@@ -236,7 +209,7 @@ export class ODataBatchResource extends ODataResource<any> {
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
-      if (request.method !== 'GET') {
+      if (batch.request.method !== 'GET') {
         if (Types.isNullOrUndefined(changesetBoundary)) {
           changesetBoundary = uniqid(CHANGESET_PREFIX);
           res.push(`${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}`);
@@ -248,17 +221,17 @@ export class ODataBatchResource extends ODataResource<any> {
       res.push(`${CONTENT_TYPE}: ${APPLICATION_HTTP}`);
       res.push(`${CONTENT_TRANSFER_ENCODING}: ${BINARY}`);
 
-      if (request.method !== 'GET') {
+      if (batch.request.method !== 'GET') {
         res.push(`${CONTENT_ID}: ${changesetId++}`);
       }
 
       res.push(NEWLINE);
-      res.push(`${request}`);
+      res.push(`${batch}`);
 
-      if (request.method === 'GET' || request.method === 'DELETE') {
+      if (batch.request.method === 'GET' || batch.request.method === 'DELETE') {
         res.push(NEWLINE);
       } else {
-        res.push(JSON.stringify(request.body));
+        res.push(JSON.stringify(batch.request.body));
       }
     }
 

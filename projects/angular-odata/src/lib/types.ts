@@ -60,6 +60,7 @@ export type ApiConfig = {
   serviceRootUrl: string,
   name?: string,
   default?: boolean,
+  cache?: CacheConfig, 
   version?: '2.0' | '3.0' | '4.0',
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
@@ -71,6 +72,8 @@ export type ApiConfig = {
   parsers?: {[type: string]: Parser<any>};
   schemas?: Array<SchemaConfig>,
 }
+
+export type CacheConfig = {}
 
 export type SchemaConfig = {
   namespace: string;

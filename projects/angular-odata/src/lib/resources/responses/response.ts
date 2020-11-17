@@ -18,8 +18,8 @@ export class ODataResponse<T> {
   readonly resource: ODataResource<T>;
 
   constructor(init: {
+    config: ODataApiConfig;
     body?: any | null;
-    config?: ODataApiConfig;
     headers?: HttpHeaders;
     status?: number;
     statusText?: string;
@@ -34,7 +34,7 @@ export class ODataResponse<T> {
   }
 
   _options: ODataOptions
-  options(): ODataOptions {
+  get options(): ODataOptions {
     if (!this._options) {
       this._options = this.config.options.clone();
       const contentType = this.headers.get(CONTENT_TYPE);
@@ -52,12 +52,11 @@ export class ODataResponse<T> {
   }
 
   private parse(parser: Parser<T>, value: any): any {
-    const opts = this.options();
-    const type = Types.isObject(value) ? opts.helper.type(value) : undefined;
+    const type = Types.isObject(value) ? this.options.helper.type(value) : undefined;
     if (!Types.isUndefined(type) && parser instanceof ODataEntityParser) {
       parser = parser.findParser(c => c.isTypeOf(type));
     }
-    return parser.deserialize(value, this.config.options);
+    return parser.deserialize(value, this.options);
   }
 
   private deserialize(type: string, value: any): any {
@@ -70,9 +69,8 @@ export class ODataResponse<T> {
   }
 
   entity(): ODataEntity<T> {
-    const opts = this.options();
-    const payload = this.body && opts.version === "2.0" ? this.body["d"] : this.body;
-    const meta = new ODataEntityMeta(payload || {}, {options: opts, headers: this.headers});
+    const payload = this.body && this.options.version === "2.0" ? this.body["d"] : this.body;
+    const meta = new ODataEntityMeta(payload || {}, {options: this.options, headers: this.headers});
     const entity = payload ? 
       this.deserialize(this.resource.type(), meta.data(payload)) as T :
       null;
@@ -80,9 +78,8 @@ export class ODataResponse<T> {
   }
 
   entities(): ODataEntities<T> {
-    const opts = this.options();
-    const payload = opts.version === "2.0" ? this.body["d"] : this.body;
-    const meta = new ODataEntitiesMeta(payload || {}, {options: opts, headers: this.headers});
+    const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
+    const meta = new ODataEntitiesMeta(payload || {}, {options: this.options, headers: this.headers});
     const entities = payload ? 
       this.deserialize(this.resource.type(), meta.data(payload)) as T[] :
       null;
@@ -90,9 +87,8 @@ export class ODataResponse<T> {
   }
 
   property(): ODataProperty<T> {
-    const opts = this.options();
-    const payload = opts.version === "2.0" ? this.body["d"] : this.body;
-    const meta = new ODataPropertyMeta(payload || {}, {options: opts, headers: this.headers});
+    const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
+    const meta = new ODataPropertyMeta(payload || {}, {options: this.options, headers: this.headers});
     const property = payload ? 
       this.deserialize(this.resource.type(), meta.data(payload)) as T :
       null;
@@ -100,8 +96,7 @@ export class ODataResponse<T> {
   }
 
   value(): T | null {
-    let opts = this.options();
-    const payload = this.body && opts.version === "2.0" ? this.body : this.body;
+    const payload = this.body && this.options.version === "2.0" ? this.body : this.body;
     return payload ?
       this.deserialize(this.resource.type(), payload) as T :
       null;

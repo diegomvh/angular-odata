@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Types } from './utils/index';
-import { 
+import {
   ODataModel,
   ODataCollection
 } from './models/index';
-import { 
+import {
   PlainObject,
-  ODataResource, 
-  ODataBatchResource, 
-  ODataMetadataResource, 
-  ODataEntitySetResource, 
-  ODataSingletonResource, 
-  ODataFunctionResource, 
-  ODataActionResource, 
+  ODataResource,
+  ODataBatchResource,
+  ODataMetadataResource,
+  ODataEntitySetResource,
+  ODataSingletonResource,
+  ODataFunctionResource,
+  ODataActionResource,
   ODataEntityResource,
-  SegmentOptionNames, 
+  SegmentOptionNames,
   PathSegmentNames,
   ODataPathSegments,
   ODataSegment,
@@ -27,16 +26,29 @@ import {
 } from './resources/index';
 import { ODataSettings } from './settings';
 import { Parser } from './types';
-import { IF_MATCH_HEADER, ACCEPT } from './constants';
 import { ODataApiConfig } from './configs/api';
 import { ODataEntityConfig } from './configs/entity';
 import { ODataCallableConfig } from './configs/callable';
 import { ODataServiceConfig } from './configs/service';
+import { ODataRequest } from './resources/requests/request';
 
 @Injectable()
 export class ODataClient {
-  private _batch: ODataBatchResource;
-  constructor(protected http: HttpClient, protected settings: ODataSettings) { }
+  handler: (request: ODataRequest<any>, observe?: 'body' | 'events' | 'response') => Observable<any>;
+
+  constructor(protected http: HttpClient, protected settings: ODataSettings) {
+    this.handler = (request: ODataRequest<any>, observe?: 'body' | 'events' | 'response'): Observable<any> => {
+      return this.http.request(request.method, `${request.url}`, {
+        body: request.body,
+        headers: request.headers,
+        observe: observe,
+        params: request.params,
+        reportProgress: request.reportProgress,
+        responseType: request.responseType,
+        withCredentials: request.withCredentials
+      });
+    }
+  }
 
   apiConfigFor(resource: ODataResource<any>): ODataApiConfig {
     return this.settings.apiConfigForTypes(resource.types());
@@ -82,7 +94,7 @@ export class ODataClient {
     return this.settings.collectionForType(type) || ODataCollection;
   }
 
-  fromJSON<T extends ODataResource<any>>(json: {segments: ODataSegment[], options: PlainObject}): T {
+  fromJSON<T extends ODataResource<any>>(json: { segments: ODataSegment[], options: PlainObject }): T {
     let lastSegment = json.segments[json.segments.length - 1];
     let Ctor = (lastSegment.name === PathSegmentNames.entitySet && lastSegment.options && SegmentOptionNames.key in lastSegment.options) ? ODataEntityResource :
       {
@@ -134,49 +146,6 @@ export class ODataClient {
     return ODataFunctionResource.factory<P, R>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  //Merge Headers
-  mergeHttpHeaders(...values: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
-    let headers = new HttpHeaders();
-    values.forEach(value => {
-      if (value instanceof HttpHeaders) {
-        value.keys().forEach(key => {
-          headers = value.getAll(key).reduce((acc, v) => acc.append(key, v), headers);
-        });
-      } else if (typeof value === 'object') {
-        Object.entries(value).forEach(([key, value]) => {
-          headers = (Array.isArray(value) ? value : [value]).reduce((acc, v) => acc.append(key, v), headers);
-        });
-      }
-    });
-    return headers; 
-  }
-
-  // Merge Params
-  mergeHttpParams(...values: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
-    let params = new HttpParams();
-    values.forEach(value => {
-      if (value instanceof HttpParams) {
-        value.keys().forEach(key => {
-          params = value.getAll(key).reduce((acc, v) => acc.append(key, v), params);
-        });
-      } else if (typeof value === 'object') {
-        Object.entries(value).forEach(([key, value]) => {
-          params = (Array.isArray(value) ? value : [value]).reduce((acc, v) => acc.append(key, v), params);
-        });
-      }
-    });
-    return params; 
-  }
-
-  using(batch: ODataBatchResource, func: (batch?: ODataBatchResource) => void) {
-    this._batch = batch;
-    try {
-      func(batch);
-    } finally {
-      this._batch = null;
-    }
-  }
-
   // Request headers, get, post, put, patch... etc
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
@@ -186,7 +155,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
@@ -198,7 +167,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<Blob>;
 
@@ -210,7 +179,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<string>;
 
@@ -220,9 +189,9 @@ export class ODataClient {
     config?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
-    observe: 'events', 
+    observe: 'events',
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
@@ -234,7 +203,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
@@ -246,7 +215,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
@@ -282,7 +251,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
@@ -294,7 +263,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
@@ -306,7 +275,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<ODataResponse<string>>;
 
@@ -382,68 +351,31 @@ export class ODataClient {
     withCredentials?: boolean
   } = {}): Observable<any> {
 
-    let config = options.config ? 
-      this.settings.apiConfig(options.config) : 
+    let config = options.config ?
+      this.settings.apiConfig(options.config) :
       this.settings.apiConfigForTypes(resource.types());
     if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
-    const odata = config.options;
+    const req = new ODataRequest(method, resource, {
+      body: options.body,
+      etag: options.etag,
+      config: config,
+      headers: options.headers,
+      params: options.params,
+      reportProgress: options.reportProgress,
+      responseType: options.responseType,
+      withCredentials: options.withCredentials
+    })
 
-    // The Path and Params from resource
-    const [resourcePath, resourceParams] = resource.pathAndParams();
-
-    // Headers
-    let customHeaders = {};
-    if (typeof options.etag === 'string')
-      customHeaders[IF_MATCH_HEADER] = options.etag;
-
-    let accept = [];
-    // Metadata ?
-    if (!Types.isUndefined(odata.metadata))
-      accept.push(`odata.metadata=${odata.metadata}`);
-    // IEEE754
-    if (!Types.isUndefined(odata.ieee754Compatible))
-      accept.push(`IEEE754Compatible=${odata.ieee754Compatible}`);
-    if (accept.length > 0)
-      customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;
-    let headers = this.mergeHttpHeaders(config.headers, customHeaders, options.headers);
-
-    // Params
-    let params = this.mergeHttpParams(config.params, resourceParams, options.params);
-
-    // Credentials ?
-    let withCredentials = options.withCredentials;
-    if (Types.isUndefined(withCredentials))
-      withCredentials = config.withCredentials;
-
-    const res$ = (this._batch instanceof ODataBatchResource)?
-      // Add request to batch
-      this._batch.add(method, resourcePath, {
-        body: options.body,
-        config: options.config,
-        headers: headers,
-        params: params,
-        observe: options.observe,
-        responseType: options.responseType
-      }) :
-      // Call http request
-      this.http.request(method, `${config.serviceRootUrl}${resourcePath}`, {
-        body: options.body,
-        headers: headers,
-        observe: options.observe,
-        params: params,
-        reportProgress: options.reportProgress,
-        responseType: options.responseType,
-        withCredentials: withCredentials
-      });
-    if (options.observe === 'response' && (options.responseType === 'json' || options.responseType === 'text')) {
+    const res$ = this.handler(req, options.observe);
+    if (options.observe === 'response' && (req.responseType === 'json' || req.responseType === 'text')) {
       return res$.pipe(map((res: HttpResponse<any>) => new ODataResponse({
         body: res.body,
         config: config,
         headers: res.headers,
         status: res.status,
         statusText: res.statusText,
-        resource: resource
+        resource: req.resource
       })));
     }
     return res$;
@@ -624,7 +556,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
@@ -634,7 +566,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<Blob>;
 
@@ -644,7 +576,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<string>;
 
@@ -654,7 +586,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
@@ -664,7 +596,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
@@ -782,7 +714,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
@@ -792,7 +724,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<Blob>;
 
@@ -802,7 +734,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<string>;
 
@@ -812,7 +744,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
@@ -822,7 +754,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
@@ -832,7 +764,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
@@ -862,7 +794,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
@@ -872,7 +804,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
@@ -882,7 +814,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<ODataResponse<string>>;
 
@@ -956,7 +888,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
@@ -966,7 +898,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<Blob>;
 
@@ -976,7 +908,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<string>;
 
@@ -986,7 +918,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
@@ -996,7 +928,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
@@ -1006,7 +938,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
@@ -1046,7 +978,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
@@ -1065,7 +997,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<ODataResponse<string>>;
 
@@ -1128,7 +1060,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
@@ -1139,7 +1071,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<Blob>;
 
@@ -1150,7 +1082,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<string>;
 
@@ -1161,7 +1093,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
@@ -1172,7 +1104,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
@@ -1183,7 +1115,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
@@ -1293,7 +1225,7 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PATCH', resource, Object.assign(options, {body}) as any);
+    return this.request<any>('PATCH', resource, Object.assign(options, { body }) as any);
   }
 
   post(resource: ODataResource<any>, body: any | null, options: {
@@ -1302,7 +1234,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
@@ -1312,7 +1244,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<Blob>;
 
@@ -1322,7 +1254,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<string>;
 
@@ -1332,7 +1264,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
@@ -1342,7 +1274,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
@@ -1352,7 +1284,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
@@ -1382,7 +1314,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpResponse<ArrayBuffer>>;
 
@@ -1392,7 +1324,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpResponse<Blob>>;
 
@@ -1402,7 +1334,7 @@ export class ODataClient {
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<ODataResponse<string>>;
 
@@ -1455,7 +1387,7 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('POST', resource, Object.assign(options, {body}) as any);
+    return this.request<any>('POST', resource, Object.assign(options, { body }) as any);
   }
 
   put(resource: ODataResource<any>, body: any | null, options?: {
@@ -1465,7 +1397,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<ArrayBuffer>;
 
@@ -1476,7 +1408,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<Blob>;
 
@@ -1487,7 +1419,7 @@ export class ODataClient {
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<string>;
 
@@ -1498,7 +1430,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'arraybuffer', 
+    responseType: 'arraybuffer',
     withCredentials?: boolean,
   }): Observable<HttpEvent<ArrayBuffer>>;
 
@@ -1509,7 +1441,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'blob', 
+    responseType: 'blob',
     withCredentials?: boolean,
   }): Observable<HttpEvent<Blob>>;
 
@@ -1520,7 +1452,7 @@ export class ODataClient {
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
     reportProgress?: boolean,
-    responseType: 'text', 
+    responseType: 'text',
     withCredentials?: boolean,
   }): Observable<HttpEvent<string>>;
 
@@ -1630,6 +1562,6 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PUT', resource, Object.assign(options, {body}) as any);
+    return this.request<any>('PUT', resource, Object.assign(options, { body }) as any);
   }
 }

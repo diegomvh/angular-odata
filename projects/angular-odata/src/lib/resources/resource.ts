@@ -7,7 +7,7 @@ import {
   QUERY_SEPARATOR
 } from '../constants';
 import { ODataClient } from '../client';
-import { Types } from '../utils/index';
+import { Http, Types } from '../utils/index';
 
 import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
@@ -130,7 +130,7 @@ export class ODataResource<Type> {
     const copts = config.options;
     let params = options.params;
     if (options.withCount) {
-      params = this.client.mergeHttpParams(params, copts.helper.countParam());
+      params = Http.mergeHttpParams(params, copts.helper.countParam());
     }
 
     let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' =

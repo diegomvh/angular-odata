@@ -7,6 +7,7 @@ import { ODataEntityParser } from './parsers/index';
 import { HttpHeaders } from '@angular/common/http';
 import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
 import { ODataEntityConfig } from './configs';
+import { Http } from './utils';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -107,7 +108,7 @@ describe('ODataClient', () => {
   });
 
   it('should merge headers', () => {
-    const headers = client.mergeHttpHeaders({
+    const headers = Http.mergeHttpHeaders({
       'Content-Type': 'application/json'
     }, {
       Authorization: 'Bearer token',
@@ -118,7 +119,7 @@ describe('ODataClient', () => {
   });
 
   it('should merge params', () => {
-    const params = client.mergeHttpParams({
+    const params = Http.mergeHttpParams({
       param1: 'value1',
       param2: 'value2',
       params: ['value1']
