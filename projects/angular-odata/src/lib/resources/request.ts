@@ -1,8 +1,8 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { ODataResource } from '../resource';
-import { ODataApiConfig, ODataOptions } from '../../configs';
-import { ACCEPT, IF_MATCH_HEADER } from '../../constants';
-import { Http, Types } from '../../utils';
+import { ODataResource } from './resource';
+import { ODataApiConfig, ODataOptions } from '../configs';
+import { ACCEPT, IF_MATCH_HEADER } from '../constants';
+import { Http, Types } from '../utils';
 
 export class ODataRequest<T> {
   readonly body: T | null = null;
@@ -28,7 +28,15 @@ export class ODataRequest<T> {
   }) {
     this.method = method;
     this.resource = resource;
+
     this.config = init.config;
+    this.body = init.body;
+    this.reportProgress = init.reportProgress;
+    this.responseType = init.responseType;
+
+    let withCredentials = init.withCredentials;
+    if (Types.isUndefined(withCredentials))
+      withCredentials = this.config.withCredentials;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = resource.pathAndParams();
@@ -52,18 +60,6 @@ export class ODataRequest<T> {
 
     // Params
     this.params = Http.mergeHttpParams(this.config.params, resourceParams, init.params);
-
-    // Credentials ?
-    let withCredentials = init.withCredentials;
-    if (Types.isUndefined(withCredentials))
-      withCredentials = init.withCredentials;
-    this.reportProgress = !!init.reportProgress;
-    this.withCredentials = !!init.withCredentials;
-
-    // Override default response type of 'json' if one is provided.
-    if (!!init.responseType) {
-      this.responseType = init.responseType;
-    } 
   }
 
   get url() {

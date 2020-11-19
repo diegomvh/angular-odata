@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -30,7 +30,7 @@ import { ODataApiConfig } from './configs/api';
 import { ODataEntityConfig } from './configs/entity';
 import { ODataCallableConfig } from './configs/callable';
 import { ODataServiceConfig } from './configs/service';
-import { ODataRequest } from './resources/requests/request';
+import { ODataRequest } from './resources/request';
 
 @Injectable()
 export class ODataClient {
@@ -365,7 +365,7 @@ export class ODataClient {
       reportProgress: options.reportProgress,
       responseType: options.responseType,
       withCredentials: options.withCredentials
-    })
+    });
 
     const res$ = this.handler(req, options.observe);
     if (options.observe === 'response' && (req.responseType === 'json' || req.responseType === 'text')) {

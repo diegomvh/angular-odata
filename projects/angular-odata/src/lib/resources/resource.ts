@@ -14,7 +14,7 @@ import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions
 } from './query-options';
-import { HttpOptions } from './requests/index';
+import { HttpOptions } from './types/index';
 import {
   ODataModel,
   ODataCollection

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ODataResource } from './resource';
-import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataBatchResource, ODataActionResource, ODataCountResource, ODataNavigationPropertyResource } from './requests';
+import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataBatchResource, ODataActionResource, ODataCountResource, ODataNavigationPropertyResource } from './types';
 import { ODataPathSegments } from './path-segments';
 import { ODataQueryOptions } from './query-options';
 import { ODataClient } from '../client';

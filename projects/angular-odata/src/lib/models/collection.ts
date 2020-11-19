@@ -6,20 +6,14 @@ import {
   ODataEntitySetResource,
   ODataEntityResource,
   ODataNavigationPropertyResource,
-  ODataFunctionResource,
-  ODataActionResource,
-  Filter,
-  Expand,
-  Select,
-  OrderBy,
-  Transform
+  ODataFunctionResource
 } from '../resources';
 
 import { ODataModel } from './model';
 import {
   HttpOptions,
   HttpEntitiesOptions
-} from '../resources/requests/options';
+} from '../resources/types/options';
 import { ODataEntitiesMeta } from '../resources/responses/meta';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {

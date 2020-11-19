@@ -1,9 +1,8 @@
-import { ODataEntitySetResource, ODataEntityResource, ODataSingletonResource, HttpOptions } from '../resources';
+import { ODataEntitySetResource, ODataEntityResource, HttpOptions } from '../resources';
 import { ODataClient } from "../client";
 import { EntityKey } from '../types';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
-import { ODataEntityConfig } from '../configs/entity';
 import { Observable, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
