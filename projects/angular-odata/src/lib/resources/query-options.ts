@@ -2,6 +2,7 @@ import buildQuery, { alias, Alias } from './builder';
 import { PlainObject } from './builder';
 
 import { Dates, Types, Urls } from '../utils/index';
+import { Type } from '@angular/core';
 
 export enum QueryOptionNames {
   // System options
@@ -47,6 +48,10 @@ export class ODataQueryOptions {
 
     // Custom
     let custom = this.options[QueryOptionNames.custom] || {};
+    if (Types.isArray(custom)) {
+      //TODO: split test for item type
+      custom = custom.reduce((acc, item) => Object.assign(acc, item), {});
+    }
     Object.assign(params, custom);
 
     return params;
@@ -158,7 +163,7 @@ export class OptionHandler<T> {
     return obj;
   }
 
-  set(path: string, value: any, customizer?: any) {
+  set(path: string, value: any) {
     let obj = this.assertObject(true);
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];

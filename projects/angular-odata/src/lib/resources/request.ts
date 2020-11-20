@@ -5,16 +5,16 @@ import { ACCEPT, IF_MATCH_HEADER } from '../constants';
 import { Http, Types } from '../utils';
 
 export class ODataRequest<T> {
-  readonly body: T | null = null;
-  readonly headers!: HttpHeaders;
-  readonly reportProgress: boolean = false;
-  readonly withCredentials: boolean = false;
-  readonly responseType: 'arraybuffer' | 'blob' | 'json' | 'text' = 'json';
   readonly method: string;
-  readonly params!: HttpParams;
-  readonly path: string;
-  readonly config: ODataApiConfig;
   readonly resource: ODataResource<T>;
+  readonly config: ODataApiConfig;
+  readonly body: T | null;
+  readonly reportProgress: boolean;
+  readonly withCredentials: boolean;
+  readonly responseType: 'arraybuffer' | 'blob' | 'json' | 'text';
+  readonly headers: HttpHeaders;
+  readonly params: HttpParams;
+  readonly path: string;
 
   constructor(method: string, resource: ODataResource<T>, init: {
     config: ODataApiConfig,
@@ -34,9 +34,9 @@ export class ODataRequest<T> {
     this.reportProgress = init.reportProgress;
     this.responseType = init.responseType;
 
-    let withCredentials = init.withCredentials;
-    if (Types.isUndefined(withCredentials))
-      withCredentials = this.config.withCredentials;
+    this.withCredentials = init.withCredentials;
+    if (Types.isUndefined(this.withCredentials))
+      this.withCredentials = this.config.withCredentials;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = resource.pathAndParams();
