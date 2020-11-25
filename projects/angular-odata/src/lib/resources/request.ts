@@ -1,12 +1,11 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { ODataResource } from './resource';
 import { ODataApiConfig, ODataOptions } from '../configs';
 import { ACCEPT, IF_MATCH_HEADER } from '../constants';
 import { Http, Types } from '../utils';
+import { ODataResource } from './resource';
 
 export class ODataRequest<T> {
   readonly method: string;
-  readonly resource: ODataResource<T>;
   readonly config: ODataApiConfig;
   readonly body: T | null;
   readonly reportProgress: boolean;
@@ -27,7 +26,6 @@ export class ODataRequest<T> {
     withCredentials?: boolean,
   }) {
     this.method = method;
-    this.resource = resource;
 
     this.config = init.config;
     this.body = init.body;
@@ -61,19 +59,6 @@ export class ODataRequest<T> {
     // Params
     this.params = Http.mergeHttpParams(this.config.params, resourceParams, init.params);
   }
-
-  get url() {
-    return `${this.config.serviceRootUrl}${this.path}`;
-  }
-
-  get urlWithParams() {
-    let url = this.url;
-    if (this.params.keys().length > 0) {
-      url = `${url}?${this.params}`;
-    }
-    return url;
-  }
-
   get pathWithParams() {
     let path = this.path;
     if (this.params.keys().length > 0) {
@@ -81,7 +66,13 @@ export class ODataRequest<T> {
     }
     return path;
   }
+  get url() {
+    return `${this.config.serviceRootUrl}${this.path}`;
+  }
 
+  get urlWithParams() {
+    return `${this.config.serviceRootUrl}${this.pathWithParams}`;
+  }
   get options(): ODataOptions {
     return this.config.options.clone();
   }

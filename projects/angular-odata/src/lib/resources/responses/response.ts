@@ -71,7 +71,7 @@ export class ODataResponse<T> {
   entity(): ODataEntity<T> {
     const payload = this.body && this.options.version === "2.0" ? this.body["d"] : this.body;
     const meta = new ODataEntityMeta(payload || {}, {options: this.options, headers: this.headers});
-    const entity = payload ? 
+    const entity = payload ?
       this.deserialize(this.resource.type(), meta.data(payload)) as T :
       null;
     return { entity, meta };
@@ -80,7 +80,7 @@ export class ODataResponse<T> {
   entities(): ODataEntities<T> {
     const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
     const meta = new ODataEntitiesMeta(payload || {}, {options: this.options, headers: this.headers});
-    const entities = payload ? 
+    const entities = payload ?
       this.deserialize(this.resource.type(), meta.data(payload)) as T[] :
       null;
     return { entities, meta };
@@ -89,7 +89,7 @@ export class ODataResponse<T> {
   property(): ODataProperty<T> {
     const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
     const meta = new ODataPropertyMeta(payload || {}, {options: this.options, headers: this.headers});
-    const property = payload ? 
+    const property = payload ?
       this.deserialize(this.resource.type(), meta.data(payload)) as T :
       null;
     return { property, meta };

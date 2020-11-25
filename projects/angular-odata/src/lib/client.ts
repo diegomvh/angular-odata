@@ -34,10 +34,10 @@ import { ODataRequest } from './resources/request';
 
 @Injectable()
 export class ODataClient {
-  handler: (request: ODataRequest<any>, observe?: 'body' | 'events' | 'response') => Observable<any>;
+  handler: (request: ODataRequest<any>, observe?: 'events' | 'response') => Observable<any>;
 
   constructor(protected http: HttpClient, protected settings: ODataSettings) {
-    this.handler = (request: ODataRequest<any>, observe?: 'body' | 'events' | 'response'): Observable<any> => {
+    this.handler = (request: ODataRequest<any>, observe?: 'events' | 'response'): Observable<any> => {
       return this.http.request(request.method, `${request.url}`, {
         body: request.body,
         headers: request.headers,
@@ -356,7 +356,9 @@ export class ODataClient {
       this.settings.apiConfigForTypes(resource.types());
     if (!config) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
-    const req = new ODataRequest(method, resource, {
+    const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe;
+
+    const request = new ODataRequest(method, resource, {
       body: options.body,
       etag: options.etag,
       config: config,
@@ -367,18 +369,29 @@ export class ODataClient {
       withCredentials: options.withCredentials
     });
 
-    const res$ = this.handler(req, options.observe);
-    if (options.observe === 'response' && (req.responseType === 'json' || req.responseType === 'text')) {
-      return res$.pipe(map((res: HttpResponse<any>) => new ODataResponse({
+    const res$ = this.handler(request, observe);
+
+    if (request.method === 'GET' && observe === 'response') {
+      const cache = config.cache;
+      console.log("Use Cache!!!");
+      console.log(request.pathWithParams, cache);
+    }
+
+    if (observe === 'events') {
+      return res$;
+    }
+
+    return res$.pipe(
+      map((res: HttpResponse<any>) => new ODataResponse({
         body: res.body,
         config: config,
         headers: res.headers,
         status: res.status,
         statusText: res.statusText,
-        resource: req.resource
-      })));
-    }
-    return res$;
+        resource: resource
+      })),
+      map((res: ODataResponse<any>) => options.observe === 'body'? res.body : res)
+    );
   }
 
   delete(resource: ODataResource<any>, options?: {

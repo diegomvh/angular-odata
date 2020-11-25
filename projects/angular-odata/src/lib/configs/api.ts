@@ -43,6 +43,7 @@ export class ODataApiConfig {
     this.headers = config.headers || {};
     this.withCredentials = config.withCredentials;
     this.options = new ODataOptions(config);
+    this.cache = new ODataCache(config.cache);
     this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchemaConfig(schema, this));

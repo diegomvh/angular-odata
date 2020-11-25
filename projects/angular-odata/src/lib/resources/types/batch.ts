@@ -45,8 +45,8 @@ function getBoundaryEnd(boundaryDelimiter: string): string {
   return boundaryEnd;
 }
 
-export class ODataBatchRequest<T> extends Subject<T | HttpResponse<T>> {
-  constructor(public request: ODataRequest<any>, public observe: 'body' | 'events' | 'response' = 'body')
+export class ODataBatchRequest<T> extends Subject<HttpResponse<T>> {
+  constructor(public request: ODataRequest<any>)
    {
     super();
   }
@@ -115,7 +115,7 @@ export class ODataBatchRequest<T> extends Subject<T | HttpResponse<T>> {
         statusText: status.text,
         url: this.request.urlWithParams
       });
-      this.next(this.observe === 'body' ? resp.body : resp);
+      this.next(resp);
       this.complete();
     } else {
       // An unsuccessful request is delivered on the error channel.
@@ -162,9 +162,11 @@ export class ODataBatchResource extends ODataResource<any> {
 
   post(func: (batch?: ODataBatchResource) => void) {
     const current = this.client.handler;
-    this.client.handler = (request: ODataRequest<any>, observe?: 'body' | 'events' | 'response'): ODataBatchRequest<any> => {
+    this.client.handler = (request: ODataRequest<any>, observe?: 'events' | 'response'): ODataBatchRequest<any> => {
       //TODO: Allow only with same config name
-      this.requests.push(new ODataBatchRequest<any>(request, observe));
+      if (observe === 'events')
+        throw new Error("Batch Request does not allows observe == 'events'.");
+      this.requests.push(new ODataBatchRequest<any>(request));
       return this.requests[this.requests.length - 1];
     }
     try {
