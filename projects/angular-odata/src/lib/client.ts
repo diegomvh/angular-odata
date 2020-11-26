@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 
 import {
   ODataModel,
@@ -31,22 +31,52 @@ import { ODataEntityConfig } from './configs/entity';
 import { ODataCallableConfig } from './configs/callable';
 import { ODataServiceConfig } from './configs/service';
 import { ODataRequest } from './resources/request';
+import { ODataCache } from './cache';
 
 @Injectable()
 export class ODataClient {
   handler: (request: ODataRequest<any>, observe?: 'events' | 'response') => Observable<any>;
 
-  constructor(protected http: HttpClient, protected settings: ODataSettings) {
-    this.handler = (request: ODataRequest<any>, observe?: 'events' | 'response'): Observable<any> => {
-      return this.http.request(request.method, `${request.url}`, {
-        body: request.body,
-        headers: request.headers,
+  constructor(
+    protected http: HttpClient,
+    protected cache: ODataCache,
+    protected settings: ODataSettings,
+    ) {
+    this.handler = (req: ODataRequest<any>, observe?: 'events' | 'response'): Observable<any> => {
+      let res$ = this.http.request(req.method, `${req.url}`, {
+        body: req.body,
+        headers: req.headers,
         observe: observe,
-        params: request.params,
-        reportProgress: request.reportProgress,
-        responseType: request.responseType,
-        withCredentials: request.withCredentials
+        params: req.params,
+        reportProgress: req.reportProgress,
+        responseType: req.responseType,
+        withCredentials: req.withCredentials
       });
+
+      if (observe === 'events') {
+        return res$;
+      }
+
+      res$ = res$.pipe(
+        map((res: HttpResponse<any>) => new ODataResponse({
+          body: res.body,
+          config: req.config,
+          headers: res.headers,
+          status: res.status,
+          statusText: res.statusText,
+          resource: req.resource
+        })
+      ));
+
+      if (!this.cache.isCacheable(req)) {
+        return res$;
+      }
+
+      const cached = this.cache.get(req);
+      res$ = res$.pipe( tap((res: ODataResponse<any>) => this.cache.put(req, res)) );
+      return cached ?
+        ( req.headers.get('x-refresh') ? res$.pipe( startWith(cached) ) : of(cached) ) :
+        res$;
     }
   }
 
@@ -369,29 +399,8 @@ export class ODataClient {
       withCredentials: options.withCredentials
     });
 
-    const res$ = this.handler(request, observe);
-
-    if (request.method === 'GET' && observe === 'response') {
-      const cache = config.cache;
-      console.log("Use Cache!!!");
-      console.log(request.pathWithParams, cache);
-    }
-
-    if (observe === 'events') {
-      return res$;
-    }
-
-    return res$.pipe(
-      map((res: HttpResponse<any>) => new ODataResponse({
-        body: res.body,
-        config: config,
-        headers: res.headers,
-        status: res.status,
-        statusText: res.statusText,
-        resource: resource
-      })),
-      map((res: ODataResponse<any>) => options.observe === 'body'? res.body : res)
-    );
+    return this.handler(request, observe)
+      .pipe(map((res: ODataResponse<any>) => options.observe === 'body'? res.body : res));
   }
 
   delete(resource: ODataResource<any>, options?: {

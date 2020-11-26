@@ -8,7 +8,6 @@ import { ODataCallableConfig } from './callable';
 import { ODataServiceConfig } from './service';
 import { ODataModel, ODataCollection } from '../models';
 import { Types } from '../utils';
-import { ODataCache } from '../cache';
 
 export class ODataApiConfig {
   serviceRootUrl: string;
@@ -26,8 +25,6 @@ export class ODataApiConfig {
   parsers?: { [type: string]: Parser<any> };
   // Schemas
   schemas?: Array<ODataSchemaConfig>;
-  // Cache
-  cache?: ODataCache;
 
   constructor(config: ApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
@@ -43,7 +40,6 @@ export class ODataApiConfig {
     this.headers = config.headers || {};
     this.withCredentials = config.withCredentials;
     this.options = new ODataOptions(config);
-    this.cache = new ODataCache(config.cache);
     this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchemaConfig(schema, this));

@@ -14,6 +14,7 @@ export class ODataRequest<T> {
   readonly headers: HttpHeaders;
   readonly params: HttpParams;
   readonly path: string;
+  readonly resource: ODataResource<T>;
 
   constructor(method: string, resource: ODataResource<T>, init: {
     config: ODataApiConfig,
@@ -23,9 +24,10 @@ export class ODataRequest<T> {
     reportProgress?: boolean,
     params?: HttpParams | { [param: string]: string | string[] },
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
-    withCredentials?: boolean,
+    withCredentials?: boolean
   }) {
     this.method = method;
+    this.resource = resource;
 
     this.config = init.config;
     this.body = init.body;
@@ -59,6 +61,7 @@ export class ODataRequest<T> {
     // Params
     this.params = Http.mergeHttpParams(this.config.params, resourceParams, init.params);
   }
+
   get pathWithParams() {
     let path = this.path;
     if (this.params.keys().length > 0) {
@@ -66,6 +69,7 @@ export class ODataRequest<T> {
     }
     return path;
   }
+
   get url() {
     return `${this.config.serviceRootUrl}${this.path}`;
   }
