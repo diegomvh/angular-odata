@@ -31,7 +31,7 @@ export const PhotoConfig = {
     Id: {type: 'Number', key: true, ref: 'Id', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
     Name: {type: 'String'}
   }
-} as EntityConfig<Photo>;
+} as StructuredTypeConfig<Photo>;
 
 export interface PlanItem {
   PlanItemId: number;
@@ -50,7 +50,7 @@ export const PlanItemConfig = {
     EndsAt: {type: 'Date'},
     Duration: {type: 'String'}
   }
-} as EntityConfig<PlanItem>;
+} as StructuredTypeConfig<PlanItem>;
 
 export interface Trip {
   TripId: number;
@@ -79,7 +79,7 @@ export const TripConfig = {
     Photos: {type: `${NAMESPACE}.Photo`, collection: true, navigation: true},
     PlanItems: {type: `${NAMESPACE}.PlanItem`, collection: true, navigation: true}
   }
-} as EntityConfig<Trip>;
+} as StructuredTypeConfig<Trip>;
 
 export interface Person {
   UserName: string;
@@ -105,7 +105,7 @@ export const PersonConfig = {
     Trips: {type: `${NAMESPACE}.Trip`, collection: true, navigation: true},
     Photo: {type: `${NAMESPACE}.Photo`, navigation: true}
   }
-} as EntityConfig<Person>;
+} as StructuredTypeConfig<Person>;
 //#endregion
 
 //#region Services
@@ -122,7 +122,9 @@ export const PeopleServiceConfig = {
 
 export const TripPinConfig = {
   serviceRootUrl: SERVICE_ROOT,
-  stringAsEnum: true,
+  options: {
+    stringAsEnum: true,
+  },
   schemas: [{
     namespace: `${NAMESPACE}`,
     enums: [ PersonGenderConfig ],

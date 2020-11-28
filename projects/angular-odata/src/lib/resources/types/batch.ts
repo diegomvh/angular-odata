@@ -148,7 +148,7 @@ export class ODataBatchResource extends ODataResource<any> {
   private _api: ODataApi;
   batchBoundary: string;
 
-  constructor(api: ODataApi, client: ODataClient, segments?: ODataPathSegments) {
+  constructor(client: ODataClient, api: ODataApi, segments?: ODataPathSegments) {
     super(client, segments);
     this._api = api;
     this.batchBoundary = uniqid(BATCH_PREFIX);
@@ -156,10 +156,10 @@ export class ODataBatchResource extends ODataResource<any> {
   }
 
   //#region Factory
-  static factory(api: ODataApi, client: ODataClient) {
+  static factory(client: ODataClient, api: ODataApi) {
     let segments = new ODataPathSegments();
     segments.segment(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(api, client, segments);
+    return new ODataBatchResource(client, api, segments);
   }
   //#endregion
 

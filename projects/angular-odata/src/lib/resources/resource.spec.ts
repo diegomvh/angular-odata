@@ -22,8 +22,8 @@ describe('ODataResource', () => {
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
-    segments = new ODataPathSegments(); 
-    options = new ODataQueryOptions(); 
+    segments = new ODataPathSegments();
+    options = new ODataQueryOptions();
   });
 
   it('should create resource', () => {
@@ -33,17 +33,17 @@ describe('ODataResource', () => {
   });
 
   it('should create batch resource', () => {
-    const metadata: ODataBatchResource = ODataBatchResource.factory(client);
+    const metadata: ODataBatchResource = ODataBatchResource.factory(client, null);
     expect(metadata.toString()).toEqual('$batch');
   });
 
   it('should create metadata resource', () => {
-    const metadata: ODataMetadataResource = ODataMetadataResource.factory(client);
+    const metadata: ODataMetadataResource = ODataMetadataResource.factory(client, null);
     expect(metadata.toString()).toEqual('$metadata');
   });
 
   it('should create entitySet resource', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', '', segments, options); 
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', '', segments, options);
     expect(set.toString()).toEqual('People');
   });
 

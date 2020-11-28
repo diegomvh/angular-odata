@@ -72,7 +72,7 @@ describe('ODataClient', () => {
 
   it('should deserialize primitive values', () => {
     enum Color { Red = 1, Yellow, Orange, Green, Black};
-    const config = new ODataApi({
+    const config = new ODataApi(null, {
       serviceRootUrl: "http://foo",
       options: {
         stringAsEnum: true,

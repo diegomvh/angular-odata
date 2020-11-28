@@ -107,7 +107,9 @@ export type ApiConfig = {
   schemas?: Array<SchemaConfig>;
 }
 
-export type CacheConfig = {}
+export type CacheConfig = {
+  maxAge: number;
+}
 
 export type SchemaConfig = {
   namespace: string;

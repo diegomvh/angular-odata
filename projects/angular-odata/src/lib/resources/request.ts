@@ -13,6 +13,7 @@ export class ODataRequest<T> {
   readonly reportProgress: boolean;
   readonly withCredentials: boolean;
   readonly responseType: 'arraybuffer' | 'blob' | 'json' | 'text';
+  readonly fetchPolicy: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
   readonly headers: HttpHeaders;
   readonly params: HttpParams;
   readonly path: string;
@@ -27,6 +28,7 @@ export class ODataRequest<T> {
     reportProgress?: boolean,
     params?: HttpParams | { [param: string]: string | string[] },
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     withCredentials?: boolean
   }) {
     this.method = method;
@@ -38,9 +40,8 @@ export class ODataRequest<T> {
     this.responseType = init.responseType;
     this.observe = init.observe;
 
-    this.withCredentials = init.withCredentials;
-    if (Types.isUndefined(this.withCredentials))
-      this.withCredentials = this.options.withCredentials;
+    this.withCredentials = (Types.isUndefined(init.withCredentials)) ? this.options.withCredentials : init.withCredentials;
+    this.fetchPolicy = init.fetchPolicy || this.options.fetchPolicy;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = resource.pathAndParams();

@@ -33,7 +33,7 @@ import { ODataRequest } from './resources/request';
 @Injectable()
 export class ODataClient {
 
-  constructor(protected settings: ODataSettings) {}
+  constructor(protected settings: ODataSettings) { }
 
   apiFor(resource: ODataResource<any>): ODataApi {
     return this.settings.apiForTypesOrDefault(resource.types());
@@ -95,12 +95,12 @@ export class ODataClient {
   // Requests
   metadata(apiName?: string): ODataMetadataResource {
     let api = this.settings.apiByNameOrDefault(apiName);
-    return ODataMetadataResource.factory(api, this);
+    return ODataMetadataResource.factory(this, api);
   }
 
   batch(apiName?: string): ODataBatchResource {
     let api = this.settings.apiByNameOrDefault(apiName);
-    return ODataBatchResource.factory(api, this);
+    return ODataBatchResource.factory(this, api);
   }
 
   singleton<T>(name: string, type?: string) {
@@ -137,7 +137,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -149,7 +150,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -161,7 +163,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -173,7 +176,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe: 'events',
@@ -185,7 +189,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -197,7 +202,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -209,7 +215,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -221,7 +228,8 @@ export class ODataClient {
   request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'events',
@@ -233,7 +241,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -245,7 +254,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -257,7 +267,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -269,7 +280,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -281,7 +293,8 @@ export class ODataClient {
   request<R>(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
     observe: 'response',
@@ -293,7 +306,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -305,7 +319,8 @@ export class ODataClient {
   request<R>(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -317,7 +332,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options?: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     params?: HttpParams | { [param: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
@@ -329,7 +345,8 @@ export class ODataClient {
   request(method: string, resource: ODataResource<any>, options: {
     body?: any,
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -338,9 +355,7 @@ export class ODataClient {
     withCredentials?: boolean
   } = {}): Observable<any> {
 
-    let api = options.apiName ?
-      this.settings.apiByNameOrDefault(options.apiName) :
-      this.settings.apiForTypesOrDefault(resource.types());
+    let api = options.apiName ? this.settings.apiByNameOrDefault(options.apiName) : resource.api;
     if (!api) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
     const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe;
@@ -358,12 +373,13 @@ export class ODataClient {
     });
 
     return api.request(request)
-      .pipe(map((res: ODataResponse<any>) => options.observe === 'body'? res.body : res));
+      .pipe(map((res: ODataResponse<any>) => options.observe === 'body' ? res.body : res));
   }
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -373,7 +389,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -383,7 +400,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -393,7 +411,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -403,7 +422,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -413,7 +433,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -423,7 +444,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -434,7 +456,8 @@ export class ODataClient {
 
   delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -445,7 +468,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -455,7 +479,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -465,7 +490,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -475,7 +501,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -486,7 +513,8 @@ export class ODataClient {
 
   delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -497,7 +525,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -508,7 +537,8 @@ export class ODataClient {
 
   delete<T>(resource: ODataResource<any>, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -519,7 +549,8 @@ export class ODataClient {
 
   delete(resource: ODataResource<any>, options: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -531,7 +562,8 @@ export class ODataClient {
   }
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -541,7 +573,8 @@ export class ODataClient {
   }): Observable<ArrayBuffer>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -551,7 +584,8 @@ export class ODataClient {
   }): Observable<Blob>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -561,7 +595,8 @@ export class ODataClient {
   }): Observable<string>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -571,7 +606,8 @@ export class ODataClient {
   }): Observable<HttpEvent<ArrayBuffer>>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -581,7 +617,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Blob>>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -590,7 +627,8 @@ export class ODataClient {
   }): Observable<HttpEvent<string>>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -600,7 +638,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Object>>;
 
   get<T>(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -610,7 +649,8 @@ export class ODataClient {
   }): Observable<HttpEvent<T>>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -619,7 +659,8 @@ export class ODataClient {
   }): Observable<HttpResponse<ArrayBuffer>>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -628,7 +669,8 @@ export class ODataClient {
   }): Observable<HttpResponse<Blob>>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -637,7 +679,8 @@ export class ODataClient {
   }): Observable<ODataResponse<string>>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -647,7 +690,8 @@ export class ODataClient {
   }): Observable<ODataResponse<Object>>;
 
   get<T>(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -657,7 +701,8 @@ export class ODataClient {
   }): Observable<ODataResponse<T>>;
 
   get(resource: ODataResource<any>, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -667,7 +712,8 @@ export class ODataClient {
   }): Observable<Object>;
 
   get<T>(resource: ODataResource<any>, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -677,7 +723,8 @@ export class ODataClient {
   }): Observable<T>;
 
   get(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -689,7 +736,8 @@ export class ODataClient {
   }
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -699,7 +747,8 @@ export class ODataClient {
   }): Observable<ArrayBuffer>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -709,7 +758,8 @@ export class ODataClient {
   }): Observable<Blob>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -719,7 +769,8 @@ export class ODataClient {
   }): Observable<string>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -729,7 +780,8 @@ export class ODataClient {
   }): Observable<HttpEvent<ArrayBuffer>>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -739,7 +791,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Blob>>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -749,7 +802,8 @@ export class ODataClient {
   }): Observable<HttpEvent<string>>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -759,7 +813,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Object>>;
 
   head<T>(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -769,7 +824,8 @@ export class ODataClient {
   }): Observable<HttpEvent<T>>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -779,7 +835,8 @@ export class ODataClient {
   }): Observable<HttpResponse<ArrayBuffer>>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -789,7 +846,8 @@ export class ODataClient {
   }): Observable<HttpResponse<Blob>>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -799,7 +857,8 @@ export class ODataClient {
   }): Observable<ODataResponse<string>>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -809,7 +868,8 @@ export class ODataClient {
   }): Observable<ODataResponse<Object>>;
 
   head<T>(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -819,7 +879,8 @@ export class ODataClient {
   }): Observable<ODataResponse<T>>;
 
   head(resource: ODataResource<any>, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -829,7 +890,8 @@ export class ODataClient {
   }): Observable<Object>;
 
   head<T>(resource: ODataResource<any>, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -839,7 +901,8 @@ export class ODataClient {
   }): Observable<T>;
 
   head(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -863,7 +926,8 @@ export class ODataClient {
   }
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -873,7 +937,8 @@ export class ODataClient {
   }): Observable<ArrayBuffer>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -883,7 +948,8 @@ export class ODataClient {
   }): Observable<Blob>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -893,7 +959,8 @@ export class ODataClient {
   }): Observable<string>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -903,7 +970,8 @@ export class ODataClient {
   }): Observable<HttpEvent<ArrayBuffer>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -913,7 +981,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Blob>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -923,7 +992,8 @@ export class ODataClient {
   }): Observable<HttpEvent<string>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -933,7 +1003,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Object>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -943,7 +1014,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Object>>;
 
   options<T>(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -953,7 +1025,8 @@ export class ODataClient {
   }): Observable<HttpEvent<T>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -963,7 +1036,8 @@ export class ODataClient {
   }): Observable<HttpResponse<ArrayBuffer>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -972,7 +1046,8 @@ export class ODataClient {
   }): Observable<HttpResponse<Blob>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -982,7 +1057,8 @@ export class ODataClient {
   }): Observable<ODataResponse<string>>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -992,7 +1068,8 @@ export class ODataClient {
   }): Observable<ODataResponse<Object>>;
 
   options<T>(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1002,7 +1079,8 @@ export class ODataClient {
   }): Observable<ODataResponse<T>>;
 
   options(resource: ODataResource<any>, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1012,7 +1090,8 @@ export class ODataClient {
   }): Observable<Object>;
 
   options<T>(resource: ODataResource<any>, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1022,7 +1101,8 @@ export class ODataClient {
   }): Observable<T>;
 
   options(resource: ODataResource<any>, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1035,7 +1115,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1046,7 +1127,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1057,7 +1139,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1068,7 +1151,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1079,7 +1163,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1090,7 +1175,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1101,7 +1187,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1112,7 +1199,8 @@ export class ODataClient {
 
   patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1123,7 +1211,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1133,7 +1222,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1143,7 +1233,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1153,7 +1244,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1164,7 +1256,8 @@ export class ODataClient {
 
   patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1175,7 +1268,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1186,7 +1280,8 @@ export class ODataClient {
 
   patch<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1197,7 +1292,8 @@ export class ODataClient {
 
   patch(resource: ODataResource<any>, body: any | null, options: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1209,7 +1305,8 @@ export class ODataClient {
   }
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1219,7 +1316,8 @@ export class ODataClient {
   }): Observable<ArrayBuffer>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1229,7 +1327,8 @@ export class ODataClient {
   }): Observable<Blob>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1239,7 +1338,8 @@ export class ODataClient {
   }): Observable<string>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1249,7 +1349,8 @@ export class ODataClient {
   }): Observable<HttpEvent<ArrayBuffer>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1259,7 +1360,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Blob>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1269,7 +1371,8 @@ export class ODataClient {
   }): Observable<HttpEvent<string>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1279,7 +1382,8 @@ export class ODataClient {
   }): Observable<HttpEvent<Object>>;
 
   post<T>(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1289,7 +1393,8 @@ export class ODataClient {
   }): Observable<HttpEvent<T>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1299,7 +1404,8 @@ export class ODataClient {
   }): Observable<HttpResponse<ArrayBuffer>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1309,7 +1415,8 @@ export class ODataClient {
   }): Observable<HttpResponse<Blob>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1319,7 +1426,8 @@ export class ODataClient {
   }): Observable<ODataResponse<string>>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1329,7 +1437,8 @@ export class ODataClient {
   }): Observable<ODataResponse<Object>>;
 
   post<T>(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1339,7 +1448,8 @@ export class ODataClient {
   }): Observable<ODataResponse<T>>;
 
   post(resource: ODataResource<any>, body: any | null, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1349,7 +1459,8 @@ export class ODataClient {
   }): Observable<Object>;
 
   post<T>(resource: ODataResource<any>, body: any | null, options?: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1359,7 +1470,8 @@ export class ODataClient {
   }): Observable<T>;
 
   post(resource: ODataResource<any>, body: any | null, options: {
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1372,7 +1484,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1383,7 +1496,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1394,7 +1508,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1405,7 +1520,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1416,7 +1532,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1427,7 +1544,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1438,7 +1556,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1449,7 +1568,8 @@ export class ODataClient {
 
   put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'events',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1460,7 +1580,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1470,7 +1591,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1480,7 +1602,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1490,7 +1613,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1501,7 +1625,8 @@ export class ODataClient {
 
   put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe: 'response',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1512,7 +1637,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1523,7 +1649,8 @@ export class ODataClient {
 
   put<T>(resource: ODataResource<any>, body: any | null, options?: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body',
     params?: HttpParams | { [param: string]: string | string[] },
@@ -1534,7 +1661,8 @@ export class ODataClient {
 
   put(resource: ODataResource<any>, body: any | null, options: {
     etag?: string,
-    apiName?: string
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     headers?: HttpHeaders | { [header: string]: string | string[] },
     observe?: 'body' | 'events' | 'response',
     params?: HttpParams | { [param: string]: string | string[] },

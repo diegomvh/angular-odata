@@ -6,7 +6,6 @@ import { ODataClient } from './client';
 import { ODataServiceFactory } from './services';
 import { ApiConfig } from './types';
 import { ODATA_CONFIGURATIONS } from './tokens';
-import { ODataCache } from './cache';
 
 export function createSettings(http: HttpClient, configs: ApiConfig[]) {
   return new ODataSettings(http, ...configs);
@@ -14,7 +13,7 @@ export function createSettings(http: HttpClient, configs: ApiConfig[]) {
 
 @NgModule({
   imports: [HttpClientModule],
-  providers: [ODataCache, ODataClient, ODataServiceFactory]
+  providers: [ODataClient, ODataServiceFactory]
 })
 export class ODataModule {
   public static forRoot(...configs: ApiConfig[]): ModuleWithProviders<ODataModule> {

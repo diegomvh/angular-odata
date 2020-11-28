@@ -7,12 +7,11 @@ export interface RequestCacheEntry {
   lastRead: number;
 }
 
-const maxAge = 30000;
 
 export class ODataCache {
   responses = new Map<string, RequestCacheEntry>();
 
-  constructor(config: CacheConfig) { }
+  constructor(private config: CacheConfig) { }
 
   isCacheable(req: ODataRequest<any>) {
     return req.method === 'GET';
@@ -25,7 +24,7 @@ export class ODataCache {
     this.responses.set(url, newEntry);
 
     // remove expired cache entries
-    const expired = Date.now() - maxAge;
+    const expired = Date.now() - this.config.maxAge;
     this.responses.forEach(entry => {
       if (entry.lastRead < expired) {
         this.responses.delete(entry.url);
@@ -41,7 +40,7 @@ export class ODataCache {
       return undefined;
     }
 
-    const isExpired = cached.lastRead < (Date.now() - maxAge);
+    const isExpired = cached.lastRead < (Date.now() - this.config.maxAge);
     return isExpired ? undefined : cached.response;
   }
 }

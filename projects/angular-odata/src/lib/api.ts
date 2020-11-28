@@ -36,8 +36,8 @@ export class ODataApi {
     this.name = config.name;
     this.default = config.default || false;
     this.creation = config.creation || new Date();
-    this.options = new ODataOptions(config.options);
-    this.cache = config.cache;
+    this.options = new ODataOptions(config.options || {});
+    this.cache = config.cache || new ODataCache({maxAge: 30000});
     this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema, this));
