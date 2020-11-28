@@ -36,6 +36,7 @@ export const BINARY = 'binary';
 export const BOUNDARY_PREFIX_SUFFIX = '--';
 export const BATCH_PREFIX = 'batch_';
 export const CHANGESET_PREFIX = 'changeset_';
+export const DEFAULT_FETCH_POLICY = 'cache-first';
 
 // URL PARTS
 export const QUERY_SEPARATOR = '?';

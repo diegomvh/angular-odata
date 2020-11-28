@@ -70,7 +70,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this._meta = annots;
 
     if (annots instanceof ODataEntitiesMeta) {
-      this._state = {}; 
+      this._state = {};
       if (annots.top)
         this._state.top = annots.top;
       if (annots.skip)
@@ -195,7 +195,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   get _config() {
     if (!this._resource)
       throw new Error(`Can't config without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).config;
+    return (this._resource as ODataEntitySetResource<T>).schema;
   }
 
   get _segment() {

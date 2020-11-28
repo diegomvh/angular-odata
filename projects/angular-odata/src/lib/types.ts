@@ -1,3 +1,5 @@
+import { ODataCache } from './cache';
+
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
@@ -22,7 +24,7 @@ export type JsonSchemaExpandOptions<T> = {
   expand?: JsonSchemaExpand<T>;
 }
 
-export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>; 
+export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
 
 // SETTINGS AND PARSERS
 export interface Field {
@@ -39,11 +41,49 @@ export interface Field {
   ref?: string;
 }
 
+/* Api Options
+  version:
+  metadata:
+  params:
+  headers:
+  stringAsEnum:
+  ieee754Compatible:
+  fetchPolicy:
+    note: from Apollo https://medium.com/@galen.corey/understanding-apollo-fetch-policies-705b5ad71980
+    cache-first:
+      1 You query for some data. Client checks the cache for the data.
+        If all of the data is present in the cache, skip directly to step 4.
+      2 If the cache is missing some of the data you asked for,
+        Client will make a network request to your API.
+      3 The API responds with the data, Client uses it to update the cache.
+      4 The requested data is returned.
+    cache-and-network:
+      1 You query for some data. Client checks the cache for the data.
+      2 If the data is in the cache, return that cached data.
+      3 Regardless of whether any data was found in step two,
+        pass the query along to the API to get the most up-to-date data.
+      4 Update the cache with any new data from the API.
+      5 Return the updated API data.
+    network-only:
+      1 Client makes a network request for your data without checking the cache.
+      2 The server responds with your data and the cache is updated.
+      3 The data is returned.
+    no-cache:
+      1 Client makes a network request for your data without checking the cache.
+      2 The server responds and the data is returned without updating the cache.
+    cache-only:
+      1 Client checks the cache for queried data.
+      2 If all the data is present in the cache, it is returned (otherwise, an error is thrown).
+*/
 export interface Options {
-  version: '2.0' | '3.0' | '4.0';
+  version?: '2.0' | '3.0' | '4.0';
   metadata?: 'minimal' | 'full' | 'none';
+  params?: { [param: string]: string | string[] };
+  headers?: { [param: string]: string | string[] };
+  withCredentials?: boolean;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
+  fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
 }
 
 export interface FieldOptions extends Options {
@@ -57,20 +97,14 @@ export interface Parser<T> {
 
 //#region Configs
 export type ApiConfig = {
-  serviceRootUrl: string,
-  name?: string,
-  default?: boolean,
-  cache?: CacheConfig, 
-  version?: '2.0' | '3.0' | '4.0',
-  params?: { [param: string]: string | string[] };
-  headers?: { [param: string]: string | string[] };
-  withCredentials?: boolean,
-  metadata?: 'minimal' | 'full' | 'none';
-  stringAsEnum?: boolean,
-  ieee754Compatible?: boolean,
-  creation?: Date,
+  serviceRootUrl: string;
+  name?: string;
+  default?: boolean;
+  creation?: Date;
+  cache?: ODataCache;
+  options?: Options;
   parsers?: {[type: string]: Parser<any>};
-  schemas?: Array<SchemaConfig>,
+  schemas?: Array<SchemaConfig>;
 }
 
 export type CacheConfig = {}
@@ -79,25 +113,25 @@ export type SchemaConfig = {
   namespace: string;
   alias?: string;
   annotations?: Array<any>;
-  enums?: Array<EnumConfig<any>>;
-  entities?: Array<EntityConfig<any>>;
+  enums?: Array<EnumTypeConfig<any>>;
+  entities?: Array<StructuredTypeConfig<any>>;
   callables?: Array<CallableConfig>;
-  containers?: Array<ContainerConfig>
+  containers?: Array<EntityContainerConfig>
 }
 
-export type ContainerConfig = {
+export type EntityContainerConfig = {
   name: string;
   annotations?: Array<any>;
-  services?: Array<ServiceConfig>;
+  services?: Array<EntitySetConfig>;
 }
 
-export type EnumConfig<T> = {
+export type EnumTypeConfig<T> = {
   name: string;
   flags?: boolean;
   members: {[name: string]: number} | {[value: number]: string};
 }
 
-export type EntityConfig<T> = {
+export type StructuredTypeConfig<T> = {
   name: string;
   base?: string;
   open?: boolean;
@@ -122,7 +156,7 @@ export type CallableConfig = {
   return?: string;
 }
 
-export type ServiceConfig = {
+export type EntitySetConfig = {
   name: string;
   annotations?: any[];
 }

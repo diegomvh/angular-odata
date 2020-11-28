@@ -8,6 +8,7 @@ import { ODataResource } from '../resource';
 import { HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX, NEWLINE_REGEXP } from '../../constants';
 import { ODataRequest } from '../request';
+import { ODataApi } from '../../api';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;
 
@@ -144,27 +145,36 @@ export class ODataBatchRequest<T> extends Subject<HttpResponse<T>> {
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
   private requests: ODataBatchRequest<any>[];
-  public batchBoundary: string;
+  private _api: ODataApi;
+  batchBoundary: string;
 
-  constructor(service: ODataClient, segments?: ODataPathSegments) {
-    super(service, segments);
+  constructor(api: ODataApi, client: ODataClient, segments?: ODataPathSegments) {
+    super(client, segments);
+    this._api = api;
     this.batchBoundary = uniqid(BATCH_PREFIX);
     this.requests = [];
   }
 
   //#region Factory
-  static factory(client: ODataClient) {
+  static factory(api: ODataApi, client: ODataClient) {
     let segments = new ODataPathSegments();
     segments.segment(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(client, segments);
+    return new ODataBatchResource(api, client, segments);
   }
   //#endregion
 
+  //#region Api Config
+  get api(): ODataApi {
+    return this._api;
+  }
+  ////#endregion
+
   post(func: (batch?: ODataBatchResource) => void) {
-    const current = this.client.handler;
-    this.client.handler = (request: ODataRequest<any>, observe?: 'events' | 'response'): ODataBatchRequest<any> => {
-      //TODO: Allow only with same config name
-      if (observe === 'events')
+    const current = this.api.request;
+    this.api.request = (request: ODataRequest<any>): ODataBatchRequest<any> => {
+      if (request.api !== this.api)
+        throw new Error("Batch Request are for the same api.");
+      if (request.observe === 'events')
         throw new Error("Batch Request does not allows observe == 'events'.");
       this.requests.push(new ODataBatchRequest<any>(request));
       return this.requests[this.requests.length - 1];
@@ -172,7 +182,7 @@ export class ODataBatchResource extends ODataResource<any> {
     try {
       func(this);
     } finally {
-      this.client.handler = current;
+      this.api.request = current;
     }
 
     return this.client.post(this, this.body(), {

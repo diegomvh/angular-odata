@@ -2,125 +2,126 @@ import { ApiConfig, Parser } from './types';
 import { Types } from './utils';
 import { ODataCollection } from './models/collection';
 import { ODataModel } from './models/model';
-import { ODataApiConfig } from './configs/api';
+import { ODataApi } from './api';
+import { HttpClient } from '@angular/common/http';
 
 export class ODataSettings {
-  configs?: Array<ODataApiConfig>;
+  apis?: Array<ODataApi>;
 
-  constructor(...configs: ApiConfig[]) {
-    this.configs = configs.map(config => new ODataApiConfig(config));
-    if (this.configs.length > 1) {
-      if (this.configs.some(c => Types.isUndefined(c.name)))
+  constructor(http: HttpClient, ...configs: ApiConfig[]) {
+    this.apis = configs.map(config => new ODataApi(http, config));
+    if (this.apis.length > 1) {
+      if (this.apis.some(c => Types.isUndefined(c.name)))
         throw new Error("Multiple APIs: Needs configuration names");
-      if (this.configs.filter(c => c.default).length > 1)
+      if (this.apis.filter(c => c.default).length > 1)
         throw new Error("Multiple APIs: Needs only one default api");
     }
     // If not default setup first config as default api
-    if (this.configs.every(c => !c.default))
-      this.configs[0].default = true;
-    this.configs.forEach(config => config.configure());
+    if (this.apis.every(c => !c.default))
+      this.apis[0].default = true;
+    this.apis.forEach(api => api.configure());
   }
 
-  public apiConfig(name?: string) {
-    if (this.configs.length > 1 && !Types.isUndefined(name)) {
-      const config = this.configs.find(c => c.name === name);
-      return config || this.configs.find(c => c.default);
+  public apiByNameOrDefault(name?: string) {
+    if (this.apis.length > 1 && !Types.isUndefined(name)) {
+      const api = this.apis.find(c => c.name === name);
+      if (api) return api;
     }
-    return this.configs.find(c => c.default);
+    return this.apis.find(c => c.default);
   }
 
-  public apiConfigForTypes(types: string[]) {
-    if (this.configs.length > 1) {
-      const config = this.configs.find(c => c.schemas.some(s => types.some(type => s.isNamespaceOf(type))));
-      return config || this.configs.find(c => c.default);
+  public apiForTypesOrDefault(types: string[]) {
+    if (this.apis.length > 1) {
+      const api = this.apis.find(c => c.schemas.some(s => types.some(type => s.isNamespaceOf(type))));
+      if (api) return api;
     }
-    return this.configs.find(c => c.default);
+    return this.apis.find(c => c.default);
   }
 
-  public apiConfigForType(type: string) {
-    return this.apiConfigForTypes([type]);
+  public apiForType(type: string) {
+    return this.apiForTypesOrDefault([type]);
   }
 
   //#region Configs shortcuts
-  public enumConfigForType<T>(type: string) {
-    let values = this.configs.map(config => config.enumConfigForType<T>(type)).filter(e => e);
+  public enumTypeForType<T>(type: string) {
+    let values = this.apis.map(api => api.enumTypeForType<T>(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public entityConfigForType<T>(type: string) {
-    let values = this.configs.map(config => config.entityConfigForType<T>(type)).filter(e => e);
+  public structuredTypeForType<T>(type: string) {
+    let values = this.apis.map(api => api.structuredTypeForType<T>(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public callableConfigForType<T>(type: string) {
-    let values = this.configs.map(config => config.callableConfigForType<T>(type)).filter(e => e);
+  public callableFor<T>(type: string) {
+    let values = this.apis.map(api => api.callableForType<T>(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public serviceConfigForType(type: string) {
-    let values = this.configs.map(config => config.serviceConfigForType(type)).filter(e => e);
+  public entitySetForType(type: string) {
+    let values = this.apis.map(api => api.entitySetForType(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
   public parserForType<T>(type: string): Parser<T> {
-    let values = this.configs.map(config => config.parserForType<T>(type)).filter(e => e);
+    let values = this.apis.map(api => api.parserForType<T>(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0] as Parser<T>;
   }
 
   public modelForType(type: string): typeof ODataModel {
-    let values = this.configs.map(config => config.modelForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.modelForType(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
   public collectionForType(type: string): typeof ODataCollection {
-    let values = this.configs.map(config => config.collectionForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.collectionForType(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public enumConfigForName<T>(name: string) {
-    let values = this.configs.map(config => config.enumConfigForName<T>(name)).filter(e => e);
+  public enumTypeByName<T>(name: string) {
+    let values = this.apis.map(api => api.enumTypeByName<T>(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public entityConfigForName<T>(name: string) {
-    let values = this.configs.map(config => config.entityConfigForName<T>(name)).filter(e => e);
+  public structuredTypeByName<T>(name: string) {
+    let values = this.apis.map(api => api.structuredTypeByName<T>(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public serviceConfigForName(name: string) {
-    let values = this.configs.map(config => config.serviceConfigForName(name)).filter(e => e);
+  public entitySetByName(name: string) {
+    let values = this.apis.map(api => api.entitySetByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public modelForName(name: string): typeof ODataModel {
-    let values = this.configs.map(config => config.modelForName(name)).filter(e => e);
+  public modelByName(name: string): typeof ODataModel {
+    let values = this.apis.map(api => api.modelByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];
   }
 
-  public collectionForName(name: string): typeof ODataCollection {
-    let values = this.configs.map(config => config.collectionForName(name)).filter(e => e);
+  public collectionByName(name: string): typeof ODataCollection {
+    let values = this.apis.map(api => api.collectionByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0];

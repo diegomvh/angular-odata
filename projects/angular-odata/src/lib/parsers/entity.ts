@@ -1,6 +1,6 @@
 import { Types } from '../utils/index';
-import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, Options } from '../types';
-import { ODataOptions } from '../configs/options';
+import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Options } from '../types';
+import { ODataOptions } from '../options';
 
 const NONE_PARSER = {
   deserialize: (value: any, options: ODataOptions) => value,
@@ -44,8 +44,8 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
   deserialize(value: any, options: Options): Type {
     const parser = this.parser;
     if (parser instanceof ODataEntityParser) {
-      return Array.isArray(value) ? 
-        value.map(v => this.parse(parser, v, options as ODataOptions)) : 
+      return Array.isArray(value) ?
+        value.map(v => this.parse(parser, v, options as ODataOptions)) :
         this.parse(parser, value, options as ODataOptions);
     }
     return parser.deserialize(value, Object.assign({field: this}, options));
@@ -109,7 +109,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   children: ODataEntityParser<any>[];
   fields: ODataFieldParser<any>[];
 
-  constructor(config: EntityConfig<Type>, namespace: string, alias?: string) {
+  constructor(config: StructuredTypeConfig<Type>, namespace: string, alias?: string) {
     this.name = config.name;
     this.base = config.base;
     this.namespace = namespace;
@@ -201,7 +201,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   isComplexType() {
     return this.keys().length === 0;
   }
-  
+
   find(predicate: (p: ODataEntityParser<any>) => boolean): ODataEntityParser<any> {
     if (predicate(this))
       return this;

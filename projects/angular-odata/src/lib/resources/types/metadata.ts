@@ -7,17 +7,27 @@ import { ODataClient } from '../../client';
 import { HttpOptions } from './options';
 import { ODataMetadata } from '../responses/index';
 import { $METADATA } from '../../constants';
+import { ODataApi } from '../../api';
 
 export class ODataMetadataResource extends ODataResource<any> {
-  //#region Factory
-  static factory(client: ODataClient) {
-    let segments = new ODataPathSegments();
-    segments.segment(PathSegmentNames.metadata, $METADATA);
-    return new ODataMetadataResource(client, segments);
+  private _api: ODataApi;
+
+  constructor(api: ODataApi, client: ODataClient, segments?: ODataPathSegments) {
+    super(client, segments);
+    this._api = api;
   }
 
-  clone() {
-    return super.clone<ODataMetadataResource>();
+  //#region Factory
+  static factory(api: ODataApi, client: ODataClient) {
+    let segments = new ODataPathSegments();
+    segments.segment(PathSegmentNames.metadata, $METADATA);
+    return new ODataMetadataResource(api, client, segments);
+  }
+  //#endregion
+
+  //#region Api Config
+  get api(): ODataApi {
+    return this._api;
   }
   //#endregion
 

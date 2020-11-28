@@ -26,9 +26,9 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Function Config
-  get config() {
-    return this.apiConfig
-    .entityConfigForType<T>(this.type());
+  get schema() {
+    return this.api
+    .structuredTypeForType<T>(this.type());
   }
   ////#endregion
 
@@ -39,7 +39,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser? 
+    let type = parser instanceof ODataEntityParser?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -54,7 +54,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom 
+  //#region Custom
   fetch(options?: HttpOptions): Observable<T> {
     return this.get(
       Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options || {})

@@ -1,16 +1,16 @@
 import { ODataFieldParser, ODataEntityParser } from '../parsers';
-import { Parser, EntityConfig } from '../types';
-import { ODataSchemaConfig } from './schema';
+import { Parser, StructuredTypeConfig } from '../types';
+import { ODataSchema } from './schema';
 
-export class ODataEntityConfig<Type> {
-  schema: ODataSchemaConfig;
+export class ODataStructuredType<T> {
+  schema: ODataSchema;
   name: string;
   annotations: any[];
   model?: { new(...any): any };
   collection?: { new(...any): any };
-  parser?: ODataEntityParser<Type>;
+  parser?: ODataEntityParser<T>;
 
-  constructor(config: EntityConfig<Type>, schema: ODataSchemaConfig) {
+  constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
     this.annotations = config.annotations;
@@ -52,7 +52,7 @@ export class ODataEntityConfig<Type> {
     return fields;
   }
 
-  field<P extends keyof Type>(name: P): ODataFieldParser<Type[P]> {
+  field<P extends keyof T>(name: P): ODataFieldParser<T[P]> {
     return this.fields().find(f => f.name === name);
   }
 
@@ -60,7 +60,7 @@ export class ODataEntityConfig<Type> {
     include_parents?: boolean,
     include_navigation?: boolean,
     include_etag?: boolean
-  } = { include_navigation: false, include_parents: true, include_etag: true }): Partial<Type> {
+  } = { include_navigation: false, include_parents: true, include_etag: true }): Partial<T> {
     const names = this.fields(opts).map(f => f.name);
     let attrs = Object.keys(value)
       .filter(k => names.indexOf(k) !== -1)

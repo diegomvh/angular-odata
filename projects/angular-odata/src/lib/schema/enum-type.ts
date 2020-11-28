@@ -1,17 +1,17 @@
-import { ODataSchemaConfig } from './schema';
+import { ODataSchema } from './schema';
 import { ODataEnumParser } from '../parsers';
-import { EnumConfig } from '../types';
+import { EnumTypeConfig } from '../types';
 
-export class ODataEnumConfig<Type> {
-  schema: ODataSchemaConfig;
+export class ODataEnumType<E> {
+  schema: ODataSchema;
   name: string;
-  parser?: ODataEnumParser<Type>;
+  parser?: ODataEnumParser<E>;
   members: { [name: string]: number } | { [value: number]: string };
-  constructor(enu: EnumConfig<Type>, schema: ODataSchemaConfig) {
+  constructor(enu: EnumTypeConfig<E>, schema: ODataSchema) {
     this.schema = schema;
     this.name = enu.name;
     this.members = enu.members;
-    this.parser = new ODataEnumParser(enu as EnumConfig<any>, schema.namespace);
+    this.parser = new ODataEnumParser(enu as EnumTypeConfig<any>, schema.namespace);
   }
 
   isTypeOf(type: string) {

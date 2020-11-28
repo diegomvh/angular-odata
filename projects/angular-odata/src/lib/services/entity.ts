@@ -40,19 +40,19 @@ export class ODataEntityService<T> {
     }
   }
 
-  // Service Config 
-  get apiConfig() {
-    return this.client.apiConfigForType(this.entityType);
+  // Service Config
+  get api() {
+    return this.client.apiForType(this.entityType);
   }
 
-  // Service Config 
-  get serviceConfig() {
-    return this.apiConfig.serviceConfigForName(this.name);
+  // Service Config
+  get entitySetSchema() {
+    return this.api.entitySetByName(this.name);
   }
 
-  // Entity Config 
-  get entityConfig() {
-    return this.apiConfig.entityConfigForType<T>(this.entityType);
+  // Entity Config
+  get entitySchema() {
+    return this.api.structuredTypeForType<T>(this.entityType);
   }
 
   public create(entity: Partial<T>, options?: HttpOptions): Observable<T> {
@@ -62,7 +62,7 @@ export class ODataEntityService<T> {
   }
 
   public update(entity: Partial<T>, options?: HttpOptions): Observable<T> {
-    const odata = this.apiConfig.options.helper;
+    const odata = this.api.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
@@ -73,18 +73,18 @@ export class ODataEntityService<T> {
   }
 
   public assign(entity: Partial<T>, attrs: Partial<T>, options?: HttpOptions): Observable<T> {
-    const odata = this.apiConfig.options.helper;
+    const odata = this.api.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
       return throwError("Resource without key");
     return res.patch(attrs, Object.assign({etag}, options || {}))
-      .pipe(map(({entity: newentity, meta}) => newentity ? newentity : 
+      .pipe(map(({entity: newentity, meta}) => newentity ? newentity :
         Object.assign(entity, attrs, meta.annotations) as T));
   }
 
   public destroy(entity: Partial<T>, options?: HttpOptions) {
-    const odata = this.apiConfig.options.helper;
+    const odata = this.api.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
     if (res.segment.key().empty())
@@ -104,8 +104,8 @@ export class ODataEntityService<T> {
   }
 
   public save(entity: Partial<T>, options?: HttpOptions) {
-    return this.entity(entity).segment.key().empty() ? 
-      this.create(entity, options) : 
+    return this.entity(entity).segment.key().empty() ?
+      this.create(entity, options) :
       this.update(entity, options);
   }
 }

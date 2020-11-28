@@ -1,5 +1,5 @@
 
-import { ApiConfig, EnumConfig, EntityConfig, ServiceConfig } from './types';
+import { ApiConfig, EnumTypeConfig, StructuredTypeConfig, EntitySetConfig } from './types';
 import { EDM_PARSERS } from './parsers/index';
 import { ODataEntityService } from './services';
 import { Injectable } from '@angular/core';
@@ -16,7 +16,7 @@ export enum PersonGender {
 export const PersonGenderConfig = {
   name: "PersonGender",
   members: PersonGender
-} as EnumConfig<PersonGender>;
+} as EnumTypeConfig<PersonGender>;
 //#endregion
 
 //#region Entities
@@ -117,7 +117,7 @@ export class PeopleService extends ODataEntityService<Person> {
 }
 export const PeopleServiceConfig = {
   name: "People",
-} as ServiceConfig;
+} as EntitySetConfig;
 //#endregion
 
 export const TripPinConfig = {

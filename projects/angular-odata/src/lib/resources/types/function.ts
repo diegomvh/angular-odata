@@ -29,9 +29,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Function Config
-  get config() {
-    return this.apiConfig
-    .callableConfigForType<R>(this.type());
+  get schema() {
+    return this.api
+      .callableForType<R>(this.type());
   }
   ////#endregion
 
@@ -122,14 +122,14 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  //#region Custom 
+  //#region Custom
   call(params: P | null, responseType: 'entity', options?: HttpOptions): Observable<R>;
   call(params: P | null, responseType: 'entities', options?: HttpOptions): Observable<R[]>;
   call(params: P | null, responseType: 'property', options?: HttpOptions): Observable<R>;
   call(params: P | null, responseType: 'model', options?: HttpOptions): Observable<ODataModel<R>>;
   call(params: P | null, responseType: 'collection', options?: HttpOptions): Observable<ODataCollection<R, ODataModel<R>>>;
   call(
-    params: P | null, 
+    params: P | null,
     responseType: 'property' | 'entity' | 'model' | 'entities' | 'collection',
     options?: HttpOptions
   ): Observable<any> {

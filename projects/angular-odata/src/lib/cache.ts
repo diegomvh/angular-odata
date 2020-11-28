@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
 import { ODataRequest, ODataResponse } from './resources';
-import { ODataSettings } from './settings';
+import { CacheConfig } from './types';
 
 export interface RequestCacheEntry {
   url: string;
@@ -8,16 +7,12 @@ export interface RequestCacheEntry {
   lastRead: number;
 }
 
-const CACHE_KEY = "ODATA_CACHE";
 const maxAge = 30000;
 
-@Injectable()
 export class ODataCache {
   responses = new Map<string, RequestCacheEntry>();
 
-  constructor(
-    protected settings: ODataSettings
-  ) { }
+  constructor(config: CacheConfig) { }
 
   isCacheable(req: ODataRequest<any>) {
     return req.method === 'GET';

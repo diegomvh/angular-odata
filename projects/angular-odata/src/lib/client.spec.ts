@@ -6,7 +6,7 @@ import { ODataModule } from './module';
 import { ODataEntityParser } from './parsers/index';
 import { HttpHeaders } from '@angular/common/http';
 import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
-import { ODataEntityConfig } from './configs';
+import { ODataStructuredType } from './schema';
 import { Http } from './utils';
 
 describe('ODataClient', () => {
@@ -49,13 +49,13 @@ describe('ODataClient', () => {
   });
 
   it('should return undefined entity config', () => {
-    const config = client.entityConfigForType<Person>(`${NAMESPACE}.Foo`);
+    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Foo`);
     expect(config).toBeUndefined();
   });
 
   it('should return person entity config', () => {
-    const config = client.entityConfigForType<Person>(`${NAMESPACE}.Person`);
-    expect(config instanceof ODataEntityConfig).toBeTruthy();
+    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    expect(config instanceof ODataStructuredType).toBeTruthy();
   });
 
   it('should create metadata resource', () => {

@@ -30,11 +30,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return super.clone<ODataNavigationPropertyResource<T>>();
   }
   //#endregion
-  
+
   //#region Function Config
-  get config() {
-    return this.apiConfig
-    .entityConfigForType<T>(this.type());
+  get schema() {
+    return this.api
+    .structuredTypeForType<T>(this.type());
   }
   ////#endregion
 
@@ -49,14 +49,14 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   navigationProperty<N>(name: string) {
     let parser = this.client.parserFor<N>(this);
-    let type = parser instanceof ODataEntityParser? 
-      parser.typeFor(name) : null; 
+    let type = parser instanceof ODataEntityParser?
+      parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser? 
+    let type = parser instanceof ODataEntityParser?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -209,7 +209,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom 
+  //#region Custom
   all(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {

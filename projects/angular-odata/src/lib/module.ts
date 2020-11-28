@@ -1,5 +1,5 @@
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { ODataSettings } from './settings';
 import { ODataClient } from './client';
@@ -8,8 +8,8 @@ import { ApiConfig } from './types';
 import { ODATA_CONFIGURATIONS } from './tokens';
 import { ODataCache } from './cache';
 
-export function createSettings(configs: ApiConfig[]) {
-  return new ODataSettings(...configs);
+export function createSettings(http: HttpClient, configs: ApiConfig[]) {
+  return new ODataSettings(http, ...configs);
 }
 
 @NgModule({
@@ -25,9 +25,8 @@ export class ODataModule {
         {
           provide: ODataSettings,
           useFactory: createSettings,
-          deps: [ODATA_CONFIGURATIONS]
+          deps: [HttpClient, ODATA_CONFIGURATIONS]
         },
-        ODataCache,
         ODataClient,
         ODataServiceFactory
       ]

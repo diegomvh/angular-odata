@@ -1,5 +1,5 @@
 import { EnumHelper } from '../helpers/index';
-import { JsonSchemaExpandOptions, EnumConfig, Options, Parser, FieldOptions } from '../types';
+import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, FieldOptions } from '../types';
 
 export class ODataEnumParser<Type> implements Parser<Type> {
   name: string;
@@ -7,7 +7,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
 
-  constructor(meta: EnumConfig<Type>, namespace: string) {
+  constructor(meta: EnumTypeConfig<Type>, namespace: string) {
     this.name = meta.name;
     this.type = `${namespace}.${meta.name}`;
     this.flags = meta.flags;
@@ -16,7 +16,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
 
   // Deserialize
   deserialize(value: string, options: FieldOptions): Type {
-    // string -> Type 
+    // string -> Type
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
     } else {
@@ -26,7 +26,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
 
   // Serialize
   serialize(value: Type, options: FieldOptions): string {
-    // Type -> string 
+    // Type -> string
     if (this.flags) {
       let names = EnumHelper.toNames(this.members, value);
       if (!options.stringAsEnum)

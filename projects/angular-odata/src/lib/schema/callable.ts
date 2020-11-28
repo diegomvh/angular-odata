@@ -1,16 +1,16 @@
 import { Parser, CallableConfig } from '../types';
-import { ODataSchemaConfig } from './schema';
+import { ODataSchema } from './schema';
 import { ODataCallableParser } from '../parsers';
 
-export class ODataCallableConfig<R> {
-  schema: ODataSchemaConfig;
+export class ODataCallable<R> {
+  schema: ODataSchema;
   name: string;
   path?: string;
   bound?: boolean;
   composable?: boolean;
   parser?: ODataCallableParser<R>;
 
-  constructor(config: CallableConfig, schema: ODataSchemaConfig) {
+  constructor(config: CallableConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
     this.path = config.path || (config.bound ? `${schema.namespace}.${config.name}` : config.name);

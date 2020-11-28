@@ -1,11 +1,10 @@
 export * from './types';
 export * from './settings';
+export * from './api';
 export * from './client';
+export * from './cache';
 export * from './tokens';
 export * from './module';
-
-// Configs
-export * from './configs/index';
 
 // Utils
 export * from './utils/index';

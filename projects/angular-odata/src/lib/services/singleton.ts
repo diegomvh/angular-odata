@@ -1,7 +1,6 @@
 import { ODataClient } from "../client";
 import { ODataModel } from '../models/model';
 import { ODataSingletonResource } from '../resources';
-import { ODataEntityConfig } from '../configs/entity';
 
 export class ODataSingletonService<T> {
   constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
@@ -19,18 +18,19 @@ export class ODataSingletonService<T> {
     return value.attach(this.entity());
   }
 
-  // Service Config 
-  get config() {
-    return this.client.apiConfigForType(this.entityType);
+  // Service Config
+  get api() {
+    return this.client.apiForType(this.entityType);
   }
 
-  // Service Config 
-  get serviceConfig() {
-    return this.config.serviceConfigForName(this.name);
+  // Service Config
+  get entitySetSchema() {
+    return this.api.entitySetByName(this.name);
   }
 
-  // Entity Config 
-  get entityConfig() {
-    return this.config.entityConfigForType<T>(this.entityType);
+  // Entity Config
+  get structuredSchema() {
+    return this.api.structuredTypeForType<T>(this.entityType);
   }
 }
+

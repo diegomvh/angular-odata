@@ -31,35 +31,35 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Function Config
-  get config() {
-    return this.apiConfig
-    .entityConfigForType<T>(this.type());
+  get schema() {
+    return this.api
+    .structuredTypeForType<T>(this.type());
   }
   ////#endregion
 
   //#region Inmutable Resource
   navigationProperty<N>(name: string) {
     let parser = this.client.parserFor<N>(this);
-    let type = parser instanceof ODataEntityParser? 
+    let type = parser instanceof ODataEntityParser?
       parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser? 
+    let type = parser instanceof ODataEntityParser?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   action<P, R>(type: string) {
-    const config = this.client.callableConfigForType<R>(type);
+    const config = this.client.callableForType<R>(type);
     const path = config ? config.path : type;
     return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(type: string) {
-    const config = this.client.callableConfigForType<R>(type);
+    const config = this.client.callableForType<R>(type);
     const path = config ? config.path : type;
     return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }

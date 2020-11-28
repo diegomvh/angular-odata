@@ -32,9 +32,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Entity Config
-  get config() {
-    return this.apiConfig
-      .entityConfigForType<T>(this.type());
+  get schema() {
+    return this.api
+      .structuredTypeForType<T>(this.type());
   }
   ////#endregion
 
@@ -64,13 +64,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(type: string) {
-    const config = this.client.callableConfigForType<R>(type);
+    const config = this.client.callableForType<R>(type);
     const path = config ? config.path : type;
     return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(type: string) {
-    const config = this.client.callableConfigForType<R>(type);
+    const config = this.client.callableForType<R>(type);
     const path = config ? config.path : type;
     return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }

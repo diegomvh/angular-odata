@@ -1,11 +1,11 @@
-import { ODataSchemaConfig } from './schema';
-import { ServiceConfig } from '../types';
+import { ODataSchema } from './schema';
+import { EntitySetConfig } from '../types';
 
-export class ODataServiceConfig {
-  schema: ODataSchemaConfig
+export class ODataEntitySet {
+  schema: ODataSchema
   name: string;
   annotations: any[];
-  constructor(config: ServiceConfig, schema: ODataSchemaConfig) {
+  constructor(config: EntitySetConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
     this.annotations = config.annotations;

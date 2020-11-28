@@ -6,19 +6,19 @@ import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE } from '../../constants';
-import { ODataOptions } from '../../configs/options';
-import { ODataApiConfig } from '../../configs/api';
+import { ODataOptions } from '../../options';
+import { ODataApi } from '../../api';
 
 export class ODataResponse<T> {
   readonly body: any | null;
-  readonly config: ODataApiConfig;
+  readonly config: ODataApi;
   readonly headers: HttpHeaders;
   readonly status: number;
   readonly statusText: string;
   readonly resource: ODataResource<T>;
 
   constructor(init: {
-    config: ODataApiConfig;
+    config: ODataApi;
     body?: any | null;
     headers?: HttpHeaders;
     status?: number;

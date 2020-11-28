@@ -14,7 +14,7 @@ import {
   HttpOptions,
   HttpEntityOptions
 } from '../resources/types/options';
-import { ODataEntityMeta, ODataEntitiesMeta, ODataMeta } from '../resources/responses/meta';
+import { ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
 import { ODataFieldParser } from '../parsers/entity';
 
 export class ODataModel<T> {
@@ -89,7 +89,7 @@ export class ODataModel<T> {
   }
 
   protected populate(data: Object, meta?: ODataEntityMeta) {
-    this._meta = meta || new ODataEntityMeta(data, {options: this._resource ? this._resource.apiConfig.options : null});
+    this._meta = meta || new ODataEntityMeta(data, {options: this._resource ? this._resource.api.options : null});
     this._entity = this._meta.attributes<T>(data);
     this._relations = {};
     return Object.assign(this, this.parse(this._entity));
@@ -193,7 +193,7 @@ export class ODataModel<T> {
   get _config() {
     if (!this._resource)
       throw new Error(`Can't config without ODataResource`);
-    return (this._resource as ODataEntityResource<T>).config;
+    return (this._resource as ODataEntityResource<T>).schema;
   }
 
   get _segment() {
