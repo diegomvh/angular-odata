@@ -1,6 +1,6 @@
 import { DEFAULT_FETCH_POLICY, DEFAULT_VERSION, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from './constants';
 import { Options } from './types';
-import { ODataHelper } from './helpers';
+import { ODataHelper } from './helpers/index';
 
 export class ODataOptions implements Options {
   version: '2.0' | '3.0' | '4.0';
