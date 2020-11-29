@@ -1,14 +1,15 @@
+import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ODataOptions } from './options';
 import { ApiConfig, Parser } from './types';
-import { EDM_PARSERS } from './parsers';
-import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema';
-import { ODataModel, ODataCollection } from './models';
-import { Types } from './utils';
-import { ODataRequest, ODataResponse } from './resources';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { ODataCache, ODataCacheMemoryStorage } from './cache';
+import { EDM_PARSERS } from './parsers/index';
+import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
+import { ODataModel, ODataCollection } from './models/index';
+import { Types } from './utils/index';
+import { ODataRequest, ODataResponse } from './resources/index';
+import { ODataCache, ODataCacheMemoryStorage } from './cache/index';
 
 export class ODataApi {
   requester: (request: ODataRequest<any>) => Observable<any>;
