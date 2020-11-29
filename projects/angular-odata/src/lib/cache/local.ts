@@ -14,14 +14,15 @@ export interface ODataCacheLocalStorageEntry {
 }
 
 export class ODataCacheLocalStorage extends ODataCacheStorage {
+  backend: any;
   responses: Map<string, ODataCacheLocalStorageEntry>;
 
-  constructor(maxAge: number, name: string) {
-    super(maxAge);
-    this.responses = new Map<string, ODataCacheLocalStorageEntry>(JSON.parse(localStorage.getItem(name) || "[]"));
-    window.addEventListener("beforeunload", ((key, responses) => function() {
-      localStorage.setItem(key, JSON.stringify(Array.from(responses.entries())))
-    })(name, this.responses));
+  constructor(name: string, backend: any = sessionStorage) {
+    super();
+    this.responses = new Map<string, ODataCacheLocalStorageEntry>(JSON.parse(backend.getItem(name) || "[]"));
+    window.addEventListener("beforeunload", ((backend, key, responses) => function() {
+      backend.setItem(key, JSON.stringify(Array.from(responses.entries())))
+    })(backend, name, this.responses));
   }
 
   put(req: ODataRequest<any>, response: ODataResponse<any>) {
@@ -39,9 +40,11 @@ export class ODataCacheLocalStorage extends ODataCacheStorage {
       },
       lastRead: Date.now() } as ODataCacheLocalStorageEntry;
     this.responses.set(url, newEntry);
+  }
 
+  remove(options: {maxAge: number}) {
     // remove expired cache entries
-    const expired = Date.now() - this.maxAge;
+    const expired = Date.now() - options.maxAge;
     this.responses.forEach(entry => {
       if (entry.lastRead < expired) {
         this.responses.delete(entry.url);
@@ -49,7 +52,7 @@ export class ODataCacheLocalStorage extends ODataCacheStorage {
     });
   }
 
-  get(req: ODataRequest<any>): ODataResponse<any> | undefined {
+  get(req: ODataRequest<any>, options: {maxAge: number}): ODataResponse<any> | undefined {
     const url = req.urlWithParams;
     const cached = this.responses.get(url);
 
@@ -57,7 +60,7 @@ export class ODataCacheLocalStorage extends ODataCacheStorage {
       return undefined;
     }
 
-    const isExpired = cached.lastRead < (Date.now() - this.maxAge);
+    const isExpired = cached.lastRead < (Date.now() - options.maxAge);
     return isExpired ? undefined : new ODataResponse<any>({
       api: req.api,
       body: cached.response.body,

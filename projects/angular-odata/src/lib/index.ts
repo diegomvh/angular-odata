@@ -2,7 +2,6 @@ export * from './types';
 export * from './settings';
 export * from './api';
 export * from './client';
-export * from './cache/cache';
 export * from './tokens';
 export * from './module';
 
@@ -21,3 +20,5 @@ export * from './models';
 // Resources
 export * from './resources';
 
+// Cache
+export * from './cache';

@@ -94,9 +94,9 @@ export interface Parser<T> {
 }
 
 export interface CacheStorage {
-  maxAge: number;
   put(key: any, value: any);
-  get(key: any);
+  remove(options: {maxAge: number});
+  get(key: any, options: {maxAge: number});
 }
 
 //#region Configs
@@ -112,6 +112,7 @@ export type ApiConfig = {
 }
 
 export type CacheConfig = {
+  maxAge?: number;
   storage: CacheStorage;
 }
 

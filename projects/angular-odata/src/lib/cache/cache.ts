@@ -1,13 +1,16 @@
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
+import { DEFAULT_MAX_AGE } from '../constants';
 import { ODataRequest, ODataResponse } from '../resources';
 import { CacheConfig } from '../types';
 import { ODataCacheStorage } from './storage';
 
 export class ODataCache {
+  maxAge: number;
   storage: ODataCacheStorage;
 
   constructor(config: CacheConfig) {
+    this.maxAge = config.maxAge || DEFAULT_MAX_AGE;
     this.storage = config.storage;
   }
 
@@ -17,7 +20,7 @@ export class ODataCache {
 
   handle(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
     const policy = req.fetchPolicy;
-    const cached = this.storage.get(req);
+    const cached = this.storage.get(req, {maxAge: this.maxAge});
     if (policy === 'no-cache') {
       return res$;
     }

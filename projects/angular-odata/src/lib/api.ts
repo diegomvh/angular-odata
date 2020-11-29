@@ -5,12 +5,10 @@ import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructu
 import { ODataModel, ODataCollection } from './models';
 import { Types } from './utils';
 import { ODataRequest, ODataResponse } from './resources';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
-import { map, startWith, tap } from 'rxjs/operators';
-import { ODataCache } from './cache';
-import { ODataCacheLocalStorage } from './cache/local';
-import { DEFAULT_MAX_AGE } from './constants';
+import { map } from 'rxjs/operators';
+import { ODataCache, ODataCacheMemoryStorage } from './cache';
 
 export class ODataApi {
   requester: (request: ODataRequest<any>) => Observable<any>;
@@ -41,7 +39,7 @@ export class ODataApi {
     this.options = new ODataOptions(config.options || {});
 
     this.cache = new ODataCache(config.cache || {
-      storage: new ODataCacheLocalStorage(DEFAULT_MAX_AGE, this.name)
+      storage: new ODataCacheMemoryStorage()
     });
 
     this.parsers = config.parsers || EDM_PARSERS;

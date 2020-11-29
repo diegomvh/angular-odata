@@ -37,7 +37,7 @@ export const BOUNDARY_PREFIX_SUFFIX = '--';
 export const BATCH_PREFIX = 'batch_';
 export const CHANGESET_PREFIX = 'changeset_';
 export const DEFAULT_FETCH_POLICY = 'cache-first';
-export const DEFAULT_MAX_AGE = 300000;
+export const DEFAULT_MAX_AGE = 300000; //5m
 
 // URL PARTS
 export const QUERY_SEPARATOR = '?';

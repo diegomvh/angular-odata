@@ -15,9 +15,11 @@ export class ODataCacheMemoryStorage extends ODataCacheStorage {
 
     const newEntry = { url, response, lastRead: Date.now() };
     this.responses.set(url, newEntry);
+  }
 
+  remove(options: {maxAge: number}) {
     // remove expired cache entries
-    const expired = Date.now() - this.maxAge;
+    const expired = Date.now() - options.maxAge;
     this.responses.forEach(entry => {
       if (entry.lastRead < expired) {
         this.responses.delete(entry.url);
@@ -25,7 +27,7 @@ export class ODataCacheMemoryStorage extends ODataCacheStorage {
     });
   }
 
-  get(req: ODataRequest<any>): ODataResponse<any> | undefined {
+  get(req: ODataRequest<any>, options: { maxAge: number }): ODataResponse<any> | undefined {
     const url = req.urlWithParams;
     const cached = this.responses.get(url);
 
@@ -33,7 +35,7 @@ export class ODataCacheMemoryStorage extends ODataCacheStorage {
       return undefined;
     }
 
-    const isExpired = cached.lastRead < (Date.now() - this.maxAge);
+    const isExpired = cached.lastRead < (Date.now() - options.maxAge);
     return isExpired ? undefined : cached.response;
   }
 }
