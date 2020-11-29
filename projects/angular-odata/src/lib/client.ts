@@ -6,7 +6,7 @@ import { map, startWith, tap } from 'rxjs/operators';
 import {
   ODataModel,
   ODataCollection
-} from './models/index';
+} from './models';
 import {
   PlainObject,
   ODataResource,
@@ -23,11 +23,11 @@ import {
   ODataSegment,
   ODataQueryOptions,
   ODataResponse
-} from './resources/index';
+} from './resources';
 import { ODataSettings } from './settings';
 import { Parser } from './types';
 import { ODataApi } from './api';
-import { ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
+import { ODataCallable, ODataEntitySet, ODataStructuredType } from './schema';
 import { ODataRequest } from './resources/request';
 
 @Injectable()

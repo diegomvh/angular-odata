@@ -13,7 +13,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataEntityParser } from '../../parsers/entity';
-import { ODataEntity } from '../responses/index';
+import { ODataEntity } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
 

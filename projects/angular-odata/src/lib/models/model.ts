@@ -9,7 +9,7 @@ import {
 } from '../resources';
 
 import { ODataCollection } from './collection';
-import { ODataNavigationPropertyResource } from '../resources/index';
+import { ODataNavigationPropertyResource } from '../resources';
 import {
   HttpOptions,
   HttpEntityOptions

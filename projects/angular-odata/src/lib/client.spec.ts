@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ODataClient } from './client';
 import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from './resources';
 import { ODataModule } from './module';
-import { ODataEntityParser } from './parsers/index';
+import { ODataEntityParser } from './parsers';
 import { HttpHeaders } from '@angular/common/http';
 import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
 import { ODataStructuredType } from './schema';

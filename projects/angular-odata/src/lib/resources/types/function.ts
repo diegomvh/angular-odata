@@ -11,7 +11,7 @@ import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataResource } from '../resource';
-import { ODataEntity, ODataEntities, ODataProperty } from '../responses/index';
+import { ODataEntity, ODataEntities, ODataProperty } from '../responses';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataModel, ODataCollection } from '../../models';
 

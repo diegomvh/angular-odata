@@ -1,7 +1,7 @@
 import { ODataOptions } from './options';
 import { ApiConfig, Parser } from './types';
 import { EDM_PARSERS } from './parsers';
-import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
+import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema';
 import { ODataModel, ODataCollection } from './models';
 import { Types } from './utils';
 import { ODataRequest, ODataResponse } from './resources';
@@ -9,6 +9,8 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
 import { map, startWith, tap } from 'rxjs/operators';
 import { ODataCache } from './cache';
+import { ODataCacheLocalStorage } from './cache/local';
+import { DEFAULT_MAX_AGE } from './constants';
 
 export class ODataApi {
   requester: (request: ODataRequest<any>) => Observable<any>;
@@ -37,7 +39,11 @@ export class ODataApi {
     this.default = config.default || false;
     this.creation = config.creation || new Date();
     this.options = new ODataOptions(config.options || {});
-    this.cache = config.cache || new ODataCache({maxAge: 30000});
+
+    this.cache = new ODataCache(config.cache || {
+      storage: new ODataCacheLocalStorage(DEFAULT_MAX_AGE, this.name)
+    });
+
     this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema, this));
@@ -69,7 +75,7 @@ export class ODataApi {
     res$ = res$.pipe(
       map((res: HttpResponse<any>) => new ODataResponse({
         body: res.body,
-        config: req.api,
+        api: req.api,
         headers: res.headers,
         status: res.status,
         statusText: res.statusText,
@@ -77,17 +83,8 @@ export class ODataApi {
       })
     ));
 
-    if (!this.cache)
-      return res$;
-
-    if (!this.cache.isCacheable(req)) {
-      return res$;
-    }
-
-    const cached = this.cache.get(req);
-    res$ = res$.pipe(tap((res: ODataResponse<any>) => this.cache.put(req, res)));
-    return cached ?
-      (req.headers.get('x-refresh') ? res$.pipe(startWith(cached)) : of(cached)) :
+    return (this.cache.isCacheable(req)) ?
+      this.cache.handle(req, res$) :
       res$;
   }
 

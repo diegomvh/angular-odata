@@ -1,7 +1,7 @@
 import buildQuery, { alias, Alias } from './builder';
 import { PlainObject } from './builder';
 
-import { Dates, Types, Urls } from '../utils/index';
+import { Dates, Types, Urls } from '../utils';
 import { Type } from '@angular/core';
 
 export enum QueryOptionNames {

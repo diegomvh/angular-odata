@@ -5,7 +5,7 @@ import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataClient } from '../../client';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
-import { ODataProperty, ODataEntities, ODataEntity } from '../responses/index';
+import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';

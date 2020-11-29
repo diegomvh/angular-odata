@@ -1,21 +1,14 @@
-import { ODataRequest, ODataResponse } from './resources';
-import { CacheConfig } from './types';
+import { ODataRequest, ODataResponse } from '../resources';
+import { ODataCacheStorage } from './storage';
 
-export interface RequestCacheEntry {
+export interface ODataCacheMemoryStorageEntry {
   url: string;
   response: ODataResponse<any>;
   lastRead: number;
 }
 
-
-export class ODataCache {
-  responses = new Map<string, RequestCacheEntry>();
-
-  constructor(private config: CacheConfig) { }
-
-  isCacheable(req: ODataRequest<any>) {
-    return req.method === 'GET';
-  }
+export class ODataCacheMemoryStorage extends ODataCacheStorage {
+  responses = new Map<string, ODataCacheMemoryStorageEntry>();
 
   put(req: ODataRequest<any>, response: ODataResponse<any>) {
     const url = req.urlWithParams;
@@ -24,7 +17,7 @@ export class ODataCache {
     this.responses.set(url, newEntry);
 
     // remove expired cache entries
-    const expired = Date.now() - this.config.maxAge;
+    const expired = Date.now() - this.maxAge;
     this.responses.forEach(entry => {
       if (entry.lastRead < expired) {
         this.responses.delete(entry.url);
@@ -40,7 +33,7 @@ export class ODataCache {
       return undefined;
     }
 
-    const isExpired = cached.lastRead < (Date.now() - this.config.maxAge);
+    const isExpired = cached.lastRead < (Date.now() - this.maxAge);
     return isExpired ? undefined : cached.response;
   }
 }

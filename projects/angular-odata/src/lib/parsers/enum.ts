@@ -1,4 +1,4 @@
-import { EnumHelper } from '../helpers/index';
+import { EnumHelper } from '../helpers';
 import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, FieldOptions } from '../types';
 
 export class ODataEnumParser<Type> implements Parser<Type> {

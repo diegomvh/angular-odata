@@ -42,7 +42,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>ODataEnumParser</li>
+  <li>ODataCacheLocalStorage</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -60,17 +60,17 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/parsers/enum.ts</code>
+            <code>projects/angular-odata/src/lib/cache/local.ts</code>
         </p>
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="../interfaces/CacheStorage.html" target="_self" >ODataCacheStorage</a></code>
+            </p>
 
-            <p class="comment">
-                <h3>Implements</h3>
-            </p>
-            <p class="comment">
-                            <code><a href="../interfaces/Parser.html" target="_self" >Parser</a></code>
-            </p>
 
 
             <section>
@@ -86,17 +86,10 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#flags">flags</a>
+                                <a href="#responses">responses</a>
                             </li>
                             <li>
-                                <a href="#members">members</a>
-                            </li>
-                            <li>
-                                <a href="#name">name</a>
-                            </li>
-                            <li>
-                                <a href="#type">type</a>
+                                <a href="#maxAge">maxAge</a>
                             </li>
                         </ul>
                     </td>
@@ -111,13 +104,18 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#deserialize">deserialize</a>
+                                <a href="#get">get</a>
                             </li>
                             <li>
-                                <a href="#serialize">serialize</a>
+                                <a href="#put">put</a>
                             </li>
                             <li>
-                                <a href="#toJsonSchema">toJsonSchema</a>
+                                    <span class="modifier">Abstract</span>
+                                <a href="#get">get</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Abstract</span>
+                                <a href="#put">put</a>
                             </li>
                         </ul>
                     </td>
@@ -137,12 +135,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(meta: <a href="../undefineds/EnumTypeConfig.html">EnumTypeConfig<Type></a>, namespace: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(maxAge: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/cache/local.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -160,10 +158,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>meta</td>
+                                                        <td>maxAge</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#EnumTypeConfig" target="_self" >EnumTypeConfig&lt;Type&gt;</a></code>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -172,7 +170,7 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>namespace</td>
+                                                        <td>name</td>
                                                   
                                                         <td>
                                                                         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
@@ -201,24 +199,23 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="flags"></a>
+                        <a name="responses"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Optional</span>
-                            flags</b>
-                            <a href="#flags"><span class="icon ion-ios-link"></span></a>
+                            responses</b>
+                            <a href="#responses"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                            <i>Type : </i>        <code><a href="../interfaces/ODataCacheLocalStorageEntry.html" target="_self" >Map&lt;string | ODataCacheLocalStorageEntry&gt;</a></code>
 
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:7</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/cache/local.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -229,77 +226,30 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="members"></a>
+                        <a name="maxAge"></a>
                         <span class="name">
                             <b>
-                            members</b>
-                            <a href="#members"><span class="icon ion-ios-link"></span></a>
+                            maxAge</b>
+                            <a href="#maxAge"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>    <code>literal type | literal type</code>
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 
                         </td>
                     </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Inherited from         <code><a href="../interfaces/CacheStorage.html" target="_self" >ODataCacheStorage</a></code>
+</div>
+                                </td>
+                            </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:8</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="name"></a>
-                        <span class="name">
-                            <b>
-                            name</b>
-                            <a href="#name"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:5</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="type"></a>
-                        <span class="name">
-                            <b>
-                            type</b>
-                            <a href="#type"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:6</a></div>
+                                    <div class="io-line">Defined in         <code><a href="../interfaces/CacheStorage.html#source" target="_self" >ODataCacheStorage:5</a></code>
+</div>
                             </td>
                         </tr>
 
@@ -317,26 +267,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="deserialize"></a>
+                    <a name="get"></a>
                     <span class="name">
                         <b>
-                            deserialize
+                            get
                         </b>
-                        <a href="#deserialize"><span class="icon ion-ios-link"></span></a>
+                        <a href="#get"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options: <a href="../interfaces/FieldOptions.html">FieldOptions</a>)</code>
+<code>get(req: <a href="../classes/ODataRequest.html">ODataRequest<any></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="52"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/local.ts:52</a></div>
                 </td>
             </tr>
 
@@ -356,21 +306,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>value</td>
+                                    <td>req</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/FieldOptions.html" target="_self" >FieldOptions</a></code>
+                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -385,7 +323,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://angular.io/api/core/Type" target="_blank" >Type</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse | undefined</a></code>
 
                     </div>
                     <div class="io-description">
@@ -399,26 +337,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="serialize"></a>
+                    <a name="put"></a>
                     <span class="name">
                         <b>
-                            serialize
+                            put
                         </b>
-                        <a href="#serialize"><span class="icon ion-ios-link"></span></a>
+                        <a href="#put"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://angular.io/api/core/Type" target="_blank">Type</a>, options: <a href="../interfaces/FieldOptions.html">FieldOptions</a>)</code>
+<code>put(req: <a href="../classes/ODataRequest.html">ODataRequest<any></a>, response: <a href="../classes/ODataResponse.html">ODataResponse<any></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="27"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/local.ts:27</a></div>
                 </td>
             </tr>
 
@@ -438,9 +376,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>value</td>
+                                    <td>req</td>
                                     <td>
-                                                <code><a href="https://angular.io/api/core/Type" target="_blank" >Type</a></code>
+                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -450,9 +388,9 @@
 
                                 </tr>
                                 <tr>
-                                    <td>options</td>
+                                    <td>response</td>
                                     <td>
-                                                <code><a href="../interfaces/FieldOptions.html" target="_self" >FieldOptions</a></code>
+                                                <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -467,7 +405,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                     <div class="io-description">
@@ -481,26 +419,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="toJsonSchema"></a>
+                    <a name="get"></a>
                     <span class="name">
                         <b>
-                            toJsonSchema
+                            <span class="modifier">Abstract</span>
+                            get
                         </b>
-                        <a href="#toJsonSchema"><span class="icon ion-ios-link"></span></a>
+                        <a href="#get"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toJsonSchema(options: <a href="../interfaces/Options.html">JsonSchemaExpandOptions<Type></a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>get(req: <a href="../classes/ODataRequest.html">ODataRequest<any></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum.ts:44</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../interfaces/CacheStorage.html" target="_self" >ODataCacheStorage</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../interfaces/CacheStorage.html#source" target="_self" >ODataCacheStorage:10</a></code>
+</div>
                 </td>
             </tr>
 
@@ -516,23 +462,109 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>options</td>
+                                    <td>req</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaExpandOptions&lt;Type&gt;</a></code>
+                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
                                     </td>
 
                                     <td>
                                         No
                                     </td>
 
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="put"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Abstract</span>
+                            put
+                        </b>
+                        <a href="#put"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>put(req: <a href="../classes/ODataRequest.html">ODataRequest<any></a>, response: <a href="../classes/ODataResponse.html">ODataResponse<any></a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../interfaces/CacheStorage.html" target="_self" >ODataCacheStorage</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../interfaces/CacheStorage.html#source" target="_self" >ODataCacheStorage:9</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
                                     <td>
-                                        <code>{}</code>
+                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
                                     </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>response</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
 
                                 </tr>
                             </tbody>
@@ -561,56 +593,74 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumHelper } from &#x27;../helpers&#x27;;
-import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, FieldOptions } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpHeaders } from &#x27;@angular/common/http&#x27;;
+import { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
+import { ODataCacheStorage } from &#x27;./storage&#x27;;
 
-export class ODataEnumParser&lt;Type&gt; implements Parser&lt;Type&gt; {
-  name: string;
-  type: string;
-  flags?: boolean;
-  members: { [name: string]: number } | { [value: number]: string };
+export interface ODataCacheLocalStorageEntry {
+  url: string;
+  response: {
+    body: any | null;
+    headers: {[name: string]: string | string[]};
+    status: number;
+    statusText: string;
+  };
+  lastRead: number;
+}
 
-  constructor(meta: EnumTypeConfig&lt;Type&gt;, namespace: string) {
-    this.name &#x3D; meta.name;
-    this.type &#x3D; &#x60;${namespace}.${meta.name}&#x60;;
-    this.flags &#x3D; meta.flags;
-    this.members &#x3D; meta.members;
+export class ODataCacheLocalStorage extends ODataCacheStorage {
+  responses: Map&lt;string, ODataCacheLocalStorageEntry&gt;;
+
+  constructor(maxAge: number, name: string) {
+    super(maxAge);
+    this.responses &#x3D; new Map&lt;string, ODataCacheLocalStorageEntry&gt;(JSON.parse(localStorage.getItem(name) || &quot;[]&quot;));
+    window.addEventListener(&quot;beforeunload&quot;, ((key, responses) &#x3D;&gt; function() {
+      localStorage.setItem(key, JSON.stringify(Array.from(responses.entries())))
+    })(name, this.responses));
   }
 
-  // Deserialize
-  deserialize(value: string, options: FieldOptions): Type {
-    // string -&gt; Type
-    if (this.flags) {
-      return EnumHelper.toValues(this.members, value).reduce((acc, v) &#x3D;&gt; acc | v, 0) as any;
-    } else {
-      return EnumHelper.toValue(this.members, value) as any;
+  put(req: ODataRequest&lt;any&gt;, response: ODataResponse&lt;any&gt;) {
+    const url &#x3D; req.urlWithParams;
+
+    const newEntry &#x3D; {
+      url,
+      response: {
+        body: response.body,
+        headers: response.headers.keys()
+          .map(name &#x3D;&gt; ({[name]: response.headers.getAll(name)}))
+          .reduce((acc, header) &#x3D;&gt; Object.assign(acc, header), {}),
+        status: response.status,
+        statusText: response.statusText
+      },
+      lastRead: Date.now() } as ODataCacheLocalStorageEntry;
+    this.responses.set(url, newEntry);
+
+    // remove expired cache entries
+    const expired &#x3D; Date.now() - this.maxAge;
+    this.responses.forEach(entry &#x3D;&gt; {
+      if (entry.lastRead &lt; expired) {
+        this.responses.delete(entry.url);
+      }
+    });
+  }
+
+  get(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
+    const url &#x3D; req.urlWithParams;
+    const cached &#x3D; this.responses.get(url);
+
+    if (!cached) {
+      return undefined;
     }
-  }
 
-  // Serialize
-  serialize(value: Type, options: FieldOptions): string {
-    // Type -&gt; string
-    if (this.flags) {
-      let names &#x3D; EnumHelper.toNames(this.members, value);
-      if (!options.stringAsEnum)
-        names &#x3D; names.map(name &#x3D;&gt; &#x60;${this.type}&#x27;${name}&#x27;&#x60;)
-      return names.join(&quot;, &quot;);
-    } else {
-      let name &#x3D; EnumHelper.toName(this.members, value);
-      if (!options.stringAsEnum)
-        name &#x3D; &#x60;${this.type}&#x27;${name}&#x27;&#x60;;
-      return name;
-    }
-  }
-
-  // Json Schema
-  toJsonSchema(options: JsonSchemaExpandOptions&lt;Type&gt; &#x3D; {}) {
-    let property &#x3D; &lt;any&gt;{
-      title: &#x60;The ${this.name} field&#x60;,
-      type: &quot;string&quot;
-    };
-    property.enum &#x3D; EnumHelper.names(this.members);
-    return property;
+    const isExpired &#x3D; cached.lastRead &lt; (Date.now() - this.maxAge);
+    return isExpired ? undefined : new ODataResponse&lt;any&gt;({
+      api: req.api,
+      body: cached.response.body,
+      headers: new HttpHeaders(cached.response.headers),
+      status: cached.response.status,
+      statusText: cached.response.statusText,
+      resource: req.resource
+    });
   }
 }
 </code></pre>
@@ -641,7 +691,7 @@ export class ODataEnumParser&lt;Type&gt; implements Parser&lt;Type&gt; {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ODataEnumParser.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataCacheLocalStorage.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

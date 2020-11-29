@@ -175,7 +175,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#apiConfig">apiConfig</a>
+                                    <a href="#api">api</a>
                                 </li>
                             </ul>
                         </td>
@@ -827,7 +827,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>patch(attrs: Partial<Type>, options)</code>
+                    <code>patch(attrs: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
                 </td>
             </tr>
 
@@ -857,7 +857,7 @@
                                 <tr>
                                     <td>attrs</td>
                                     <td>
-                                            <code>Partial&lt;Type&gt;</code>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -940,7 +940,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>post(attrs: Partial<Type>, options)</code>
+                    <code>post(attrs: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
                 </td>
             </tr>
 
@@ -970,7 +970,7 @@
                                 <tr>
                                     <td>attrs</td>
                                     <td>
-                                            <code>Partial&lt;Type&gt;</code>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -1023,7 +1023,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>put(attrs: Partial<Type>, options)</code>
+                    <code>put(attrs: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
                 </td>
             </tr>
 
@@ -1053,7 +1053,7 @@
                                 <tr>
                                     <td>attrs</td>
                                     <td>
-                                            <code>Partial&lt;Type&gt;</code>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -1426,14 +1426,14 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="apiConfig"></a>
-                        <span class="name"><b>apiConfig</b><a href="#apiConfig"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="api"></a>
+                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>apiConfig()</code></span>
+                        <span class="accessor"><b>get</b><code>api()</code></span>
                     </td>
                 </tr>
                             <tr>
@@ -1458,21 +1458,21 @@ import {
   QUERY_SEPARATOR
 } from &#x27;../constants&#x27;;
 import { ODataClient } from &#x27;../client&#x27;;
-import { Types } from &#x27;../utils/index&#x27;;
+import { Http, Types } from &#x27;../utils&#x27;;
 
 import { PlainObject } from &#x27;./builder&#x27;;
 import { ODataPathSegments } from &#x27;./path-segments&#x27;;
 import {
   ODataQueryOptions
 } from &#x27;./query-options&#x27;;
-import { HttpOptions } from &#x27;./requests/index&#x27;;
-import { 
+import { HttpOptions } from &#x27;./types&#x27;;
+import {
   ODataModel,
   ODataCollection
-} from &#x27;../models/index&#x27;;
+} from &#x27;../models&#x27;;
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from &#x27;./responses&#x27;;
-import { Urls } from &#x27;../utils/index&#x27;;
-import { ODataApiConfig } from &#x27;../configs&#x27;;
+import { Urls } from &#x27;../utils&#x27;;
+import { ODataApi } from &#x27;../api&#x27;;
 
 export class ODataResource&lt;Type&gt; {
   // VARIABLES
@@ -1505,9 +1505,9 @@ export class ODataResource&lt;Type&gt; {
   }
 
   //#region Api Config
-  get apiConfig(): ODataApiConfig {
+  get api(): ODataApi {
     return this.client
-    .apiConfigFor(this);
+      .apiFor(this);
   }
   ////#endregion
 
@@ -1523,11 +1523,11 @@ export class ODataResource&lt;Type&gt; {
   }
 
   protected serialize(value: any): any {
-    let config &#x3D; this.apiConfig;
+    let config &#x3D; this.api;
     let parser &#x3D; config.parserForType&lt;Type&gt;(this.type());
     if (!Types.isUndefined(parser) &amp;&amp; &#x27;serialize&#x27; in parser)
-      return Array.isArray(value) ? 
-        value.map(e &#x3D;&gt; parser.serialize(e, config.options)) : 
+      return Array.isArray(value) ?
+        value.map(e &#x3D;&gt; parser.serialize(e, config.options)) :
         parser.serialize(value, config.options);
     return value;
   }
@@ -1557,9 +1557,9 @@ export class ODataResource&lt;Type&gt; {
   }
 
   toJSON() {
-    return { 
+    return {
       segments: this.pathSegments.toJSON(),
-      options: this.queryOptions.toJSON()  
+      options: this.queryOptions.toJSON()
     };
   }
 
@@ -1577,20 +1577,20 @@ export class ODataResource&lt;Type&gt; {
       withCount?: boolean
     }): Observable&lt;any&gt; {
 
-    const config &#x3D; this.apiConfig;
+    const config &#x3D; this.api;
     const copts &#x3D; config.options;
     let params &#x3D; options.params;
     if (options.withCount) {
-      params &#x3D; this.client.mergeHttpParams(params, copts.helper.countParam());
+      params &#x3D; Http.mergeHttpParams(params, copts.helper.countParam());
     }
 
-    let responseType: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;json&#x27; | &#x27;text&#x27; &#x3D; 
-      (options.responseType &amp;&amp; [&#x27;property&#x27;, &#x27;entity&#x27;, &#x27;entities&#x27;].indexOf(options.responseType) !&#x3D;&#x3D; -1) ? 
-        &#x27;json&#x27; : 
-      (options.responseType &#x3D;&#x3D;&#x3D; &#x27;value&#x27;) ? 
+    let responseType: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;json&#x27; | &#x27;text&#x27; &#x3D;
+      (options.responseType &amp;&amp; [&#x27;property&#x27;, &#x27;entity&#x27;, &#x27;entities&#x27;].indexOf(options.responseType) !&#x3D;&#x3D; -1) ?
+        &#x27;json&#x27; :
+      (options.responseType &#x3D;&#x3D;&#x3D; &#x27;value&#x27;) ?
         &#x27;text&#x27; :
         &lt;&#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;json&#x27; | &#x27;text&#x27;&gt;options.responseType;
-    
+
     let body &#x3D; null;
     if (!Types.isNullOrUndefined(options.attrs)) {
       body &#x3D; this.serialize(options.attrs);
@@ -1602,7 +1602,7 @@ export class ODataResource&lt;Type&gt; {
     const res$ &#x3D; this.client.request(method, this, {
       body,
       etag,
-      config: options.config,
+      apiName: options.apiName,
       headers: options.headers,
       observe: &#x27;response&#x27;,
       params: params,
@@ -1624,30 +1624,30 @@ export class ODataResource&lt;Type&gt; {
     }
   }
 
-  protected get(options: HttpOptions &amp; { 
+  protected get(options: HttpOptions &amp; {
     responseType?: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;value&#x27; | &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27;,
     withCount?: boolean
   }): Observable&lt;any&gt; {
     return this.request(&#x27;GET&#x27;, options);
   }
 
-  protected post(attrs: Partial&lt;Type&gt;, options: HttpOptions &amp; { 
+  protected post(attrs: any, options: HttpOptions &amp; {
     responseType?: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;value&#x27; | &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27;,
     withCount?: boolean
   }): Observable&lt;any&gt; {
     return this.request(&#x27;POST&#x27;, Object.assign(options, { attrs }));
   }
 
-  protected put(attrs: Partial&lt;Type&gt;, options: HttpOptions &amp; {
-    etag?: string, 
+  protected put(attrs: any, options: HttpOptions &amp; {
+    etag?: string,
     responseType?: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;value&#x27; | &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27;,
-    withCount?: boolean 
+    withCount?: boolean
   }): Observable&lt;any&gt; {
     return this.request(&#x27;PUT&#x27;, Object.assign(options, { attrs }));
   }
 
-  protected patch(attrs: Partial&lt;Type&gt;, options: HttpOptions &amp; {
-    etag?: string, 
+  protected patch(attrs: any, options: HttpOptions &amp; {
+    etag?: string,
     responseType?: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;value&#x27; | &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27;,
     withCount?: boolean
   }): Observable&lt;any&gt; {
@@ -1655,7 +1655,7 @@ export class ODataResource&lt;Type&gt; {
   }
 
   protected delete(options: HttpOptions &amp; {
-    etag?: string, 
+    etag?: string,
     responseType?: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;value&#x27; | &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27;,
     withCount?: boolean
   }): Observable&lt;any&gt; {

@@ -42,7 +42,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>ODataSchemaConfig</li>
+  <li>ODataStructuredType</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -60,7 +60,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/configs/schema.ts</code>
+            <code>projects/angular-odata/src/lib/schema/structured-type.ts</code>
         </p>
 
 
@@ -80,30 +80,25 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#alias">alias</a>
-                            </li>
-                            <li>
-                                <a href="#api">api</a>
+                                <a href="#annotations">annotations</a>
                             </li>
                             <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#callables">callables</a>
+                                <a href="#collection">collection</a>
                             </li>
                             <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#containers">containers</a>
+                                <a href="#model">model</a>
+                            </li>
+                            <li>
+                                <a href="#name">name</a>
                             </li>
                             <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#entities">entities</a>
+                                <a href="#parser">parser</a>
                             </li>
                             <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#enums">enums</a>
-                            </li>
-                            <li>
-                                <a href="#namespace">namespace</a>
+                                <a href="#schema">schema</a>
                             </li>
                         </ul>
                     </td>
@@ -121,7 +116,16 @@
                                 <a href="#configure">configure</a>
                             </li>
                             <li>
-                                <a href="#isNamespaceOf">isNamespaceOf</a>
+                                <a href="#field">field</a>
+                            </li>
+                            <li>
+                                <a href="#fields">fields</a>
+                            </li>
+                            <li>
+                                <a href="#isTypeOf">isTypeOf</a>
+                            </li>
+                            <li>
+                                <a href="#pick">pick</a>
                             </li>
                         </ul>
                     </td>
@@ -142,9 +146,6 @@
                                 <li>
                                     <a href="#options">options</a>
                                 </li>
-                                <li>
-                                    <a href="#services">services</a>
-                                </li>
                             </ul>
                         </td>
                     </tr>
@@ -158,12 +159,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(schema: <a href="../undefineds/SchemaConfig.html">SchemaConfig</a>, api: <a href="../classes/ODataApiConfig.html">ODataApiConfig</a>)</code>
+<code>constructor(config: <a href="../undefineds/StructuredTypeConfig.html">StructuredTypeConfig<T></a>, schema: <a href="../classes/ODataSchema.html">ODataSchema</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -181,10 +182,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>schema</td>
+                                                        <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#SchemaConfig" target="_self" >SchemaConfig</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#StructuredTypeConfig" target="_self" >StructuredTypeConfig&lt;T&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -193,10 +194,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>api</td>
+                                                        <td>schema</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../classes/ODataApiConfig.html" target="_self" >ODataApiConfig</a></code>
+                                                                        <code><a href="../classes/ODataSchema.html" target="_self" >ODataSchema</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -222,12 +223,94 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="alias"></a>
+                        <a name="annotations"></a>
+                        <span class="name">
+                            <b>
+                            annotations</b>
+                            <a href="#annotations"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>any[]</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:8</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="collection"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Optional</span>
-                            alias</b>
-                            <a href="#alias"><span class="icon ion-ios-link"></span></a>
+                            collection</b>
+                            <a href="#collection"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>literal type</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:10</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="model"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Optional</span>
+                            model</b>
+                            <a href="#model"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>literal type</code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:9</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="name"></a>
+                        <span class="name">
+                            <b>
+                            name</b>
+                            <a href="#name"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -239,7 +322,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:12</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:7</a></div>
                             </td>
                         </tr>
 
@@ -250,51 +333,24 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="api"></a>
-                        <span class="name">
-                            <b>
-                            api</b>
-                            <a href="#api"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../classes/ODataApiConfig.html" target="_self" >ODataApiConfig</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:10</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="callables"></a>
+                        <a name="parser"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Optional</span>
-                            callables</b>
-                            <a href="#callables"><span class="icon ion-ios-link"></span></a>
+                            parser</b>
+                            <a href="#parser"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../classes/ODataCallableConfig.html" target="_self" >Array&lt;ODataCallableConfig&lt;any&gt;&gt;</a></code>
+                            <i>Type : </i>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEntityParser&lt;T&gt;</a></code>
 
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:15</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:11</a></div>
                             </td>
                         </tr>
 
@@ -305,107 +361,23 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="containers"></a>
+                        <a name="schema"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Optional</span>
-                            containers</b>
-                            <a href="#containers"><span class="icon ion-ios-link"></span></a>
+                            schema</b>
+                            <a href="#schema"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../classes/ODataContainerConfig.html" target="_self" >Array&lt;ODataContainerConfig&gt;</a></code>
+                            <i>Type : </i>        <code><a href="../classes/ODataSchema.html" target="_self" >ODataSchema</a></code>
 
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:16</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="entities"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            entities</b>
-                            <a href="#entities"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../classes/ODataEntityConfig.html" target="_self" >Array&lt;ODataEntityConfig&lt;any&gt;&gt;</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:14</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="enums"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            enums</b>
-                            <a href="#enums"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../classes/ODataEnumConfig.html" target="_self" >Array&lt;ODataEnumConfig&lt;any&gt;&gt;</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:13</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="namespace"></a>
-                        <span class="name">
-                            <b>
-                            namespace</b>
-                            <a href="#namespace"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:11</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:6</a></div>
                             </td>
                         </tr>
 
@@ -441,8 +413,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:52</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:33</a></div>
                 </td>
             </tr>
 
@@ -493,26 +465,178 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="isNamespaceOf"></a>
+                    <a name="field"></a>
                     <span class="name">
                         <b>
-                            isNamespaceOf
+                            field
                         </b>
-                        <a href="#isNamespaceOf"><span class="icon ion-ios-link"></span></a>
+                        <a href="#field"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>isNamespaceOf(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>field(name: P)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="40"
-                            class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:40</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:55</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>P</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                            <code>P</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>ODataFieldParser&lt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fields"></a>
+                    <span class="name">
+                        <b>
+                            fields
+                        </b>
+                        <a href="#fields"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fields(opts: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:37</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{ include_navigation: false, include_parents: true }</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>ODataFieldParser[]</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTypeOf"></a>
+                    <span class="name">
+                        <b>
+                            isTypeOf
+                        </b>
+                        <a href="#isTypeOf"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isTypeOf(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="22"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:22</a></div>
                 </td>
             </tr>
 
@@ -549,7 +673,95 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="pick"></a>
+                    <span class="name">
+                        <b>
+                            pick
+                        </b>
+                        <a href="#pick"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>pick(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank">Object</a>, opts: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank" >Object</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{ include_navigation: false, include_parents: true, include_etag: true }</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Partial&lt;T&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -585,29 +797,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:44</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="services"></a>
-                        <span class="name"><b>services</b><a href="#services"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>services()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/configs/schema.ts:48</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:29</a></div>
                                 </td>
                             </tr>
 
@@ -618,64 +808,78 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataEntityConfig } from &#x27;./entity&#x27;;
-import { ODataCallableConfig } from &#x27;./callable&#x27;;
-import { ODataContainerConfig } from &#x27;./container&#x27;;
-import { ODataEnumConfig } from &#x27;./enum&#x27;;
-import { ODataApiConfig } from &#x27;./api&#x27;;
-import { SchemaConfig, Parser } from &#x27;../types&#x27;;
-import { ODataServiceConfig } from &#x27;./service&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataFieldParser, ODataEntityParser } from &#x27;../parsers&#x27;;
+import { Parser, StructuredTypeConfig } from &#x27;../types&#x27;;
+import { ODataSchema } from &#x27;./schema&#x27;;
 
-export class ODataSchemaConfig {
-  api: ODataApiConfig;
-  namespace: string;
-  alias?: string;
-  enums?: Array&lt;ODataEnumConfig&lt;any&gt;&gt;;
-  entities?: Array&lt;ODataEntityConfig&lt;any&gt;&gt;;
-  callables?: Array&lt;ODataCallableConfig&lt;any&gt;&gt;;
-  containers?: Array&lt;ODataContainerConfig&gt;;
+export class ODataStructuredType&lt;T&gt; {
+  schema: ODataSchema;
+  name: string;
+  annotations: any[];
+  model?: { new(...any): any };
+  collection?: { new(...any): any };
+  parser?: ODataEntityParser&lt;T&gt;;
 
-  constructor(schema: SchemaConfig, api: ODataApiConfig) {
-    this.api &#x3D; api;
-    this.namespace &#x3D; schema.namespace;
-    this.alias &#x3D; schema.alias;
-    this.enums &#x3D; (schema.enums || []).map(config &#x3D;&gt; new ODataEnumConfig(config, this));
-    this.entities &#x3D; (schema.entities || []).map(config &#x3D;&gt; new ODataEntityConfig(config, this));
-    // Merge callables
-    let configs &#x3D; (schema.callables || []);
-    configs &#x3D; configs.reduce((acc, config) &#x3D;&gt; {
-      if (acc.every(c &#x3D;&gt; c.name !&#x3D;&#x3D; config.name)) {
-        config &#x3D; configs.filter(c &#x3D;&gt; c.name &#x3D;&#x3D;&#x3D; config.name).reduce((acc, c) &#x3D;&gt; {
-          acc.parameters &#x3D; Object.assign(acc.parameters || {}, c.parameters || {});
-          return acc;
-        }, config);
-        return [...acc, config];
-      }
-      return acc;
-    }, []);
-    this.callables &#x3D; configs.map(config &#x3D;&gt; new ODataCallableConfig(config, this));
-    this.containers &#x3D; (schema.containers || []).map(container &#x3D;&gt; new ODataContainerConfig(container, this));
+  constructor(config: StructuredTypeConfig&lt;T&gt;, schema: ODataSchema) {
+    this.schema &#x3D; schema;
+    this.name &#x3D; config.name;
+    this.annotations &#x3D; config.annotations;
+    this.model &#x3D; config.model;
+    this.collection &#x3D; config.collection;
+    this.parser &#x3D; new ODataEntityParser(config, schema.namespace, schema.alias);
   }
 
-  isNamespaceOf(type: string) {
-    return type.startsWith(this.namespace) || (this.alias &amp;&amp; type.startsWith(this.alias));
+  isTypeOf(type: string) {
+    var names &#x3D; [&#x60;${this.schema.namespace}.${this.name}&#x60;];
+    if (this.schema.alias)
+      names.push(&#x60;${this.schema.alias}.${this.name}&#x60;);
+    return names.indexOf(type) !&#x3D;&#x3D; -1;
   }
 
   get options() {
-    return this.api.options;
-  }
-
-  get services(): Array&lt;ODataServiceConfig&gt; {
-    return this.containers.reduce((acc, container) &#x3D;&gt; [...acc, ...container.services], &lt;ODataServiceConfig[]&gt;[]);
+    return this.schema.options;
   }
 
   configure(settings: { parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
-    // Configure Entities
-    this.entities
-      .forEach(config &#x3D;&gt; config.configure(settings));
-    // Configure callables
-    this.callables
-      .forEach(callable &#x3D;&gt; callable.configure(settings));
+    this.parser.configure(settings);
+  }
+
+  fields(opts: {
+    include_parents?: boolean,
+    include_navigation?: boolean
+  } &#x3D; { include_navigation: false, include_parents: true }): ODataFieldParser&lt;any&gt;[] {
+    let parent &#x3D; this.parser as ODataEntityParser&lt;any&gt;;
+    let fields &#x3D; &lt;ODataFieldParser&lt;any&gt;[]&gt;[];
+    while (parent) {
+      fields &#x3D; [
+        ...parent.fields.filter(field &#x3D;&gt; opts.include_navigation || !field.navigation),
+        ...fields
+      ];
+      if (!opts.include_parents)
+        break;
+      parent &#x3D; parent.parent;
+    }
+    return fields;
+  }
+
+  field&lt;P extends keyof T&gt;(name: P): ODataFieldParser&lt;T[P]&gt; {
+    return this.fields().find(f &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; name);
+  }
+
+  pick(value: Object, opts: {
+    include_parents?: boolean,
+    include_navigation?: boolean,
+    include_etag?: boolean
+  } &#x3D; { include_navigation: false, include_parents: true, include_etag: true }): Partial&lt;T&gt; {
+    const names &#x3D; this.fields(opts).map(f &#x3D;&gt; f.name);
+    let attrs &#x3D; Object.keys(value)
+      .filter(k &#x3D;&gt; names.indexOf(k) !&#x3D;&#x3D; -1)
+      .reduce((acc, k) &#x3D;&gt; Object.assign(acc, { [k]: value[k] }), {});
+    if (opts.include_etag) {
+      const etag &#x3D; this.options.helper.etag(value);
+      this.options.helper.etag(attrs, etag);
+    }
+    return attrs;
   }
 }
 </code></pre>
@@ -706,7 +910,7 @@ export class ODataSchemaConfig {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ODataSchemaConfig.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataStructuredType.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

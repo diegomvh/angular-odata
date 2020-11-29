@@ -7,20 +7,20 @@ import {
   QUERY_SEPARATOR
 } from '../constants';
 import { ODataClient } from '../client';
-import { Http, Types } from '../utils/index';
+import { Http, Types } from '../utils';
 
 import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions
 } from './query-options';
-import { HttpOptions } from './types/index';
+import { HttpOptions } from './types';
 import {
   ODataModel,
   ODataCollection
-} from '../models/index';
+} from '../models';
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
-import { Urls } from '../utils/index';
+import { Urls } from '../utils';
 import { ODataApi } from '../api';
 
 export class ODataResource<Type> {

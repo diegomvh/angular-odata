@@ -60,7 +60,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/requests/batch.ts</code>
+            <code>projects/angular-odata/src/lib/resources/types/batch.ts</code>
         </p>
 
 
@@ -86,35 +86,8 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#body">body</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#config">config</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#headers">headers</a>
-                            </li>
-                            <li>
                                     <span class="modifier">Public</span>
-                                <a href="#method">method</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#observe">observe</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#params">params</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#path">path</a>
-                            </li>
-                            <li>
-                                <a href="#responseType">responseType</a>
+                                <a href="#request">request</a>
                             </li>
                         </ul>
                     </td>
@@ -137,9 +110,6 @@
                             <li>
                                 <a href="#toString">toString</a>
                             </li>
-                            <li>
-                                <a href="#url">url</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -158,12 +128,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(method: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, options?: literal type)</code>
+<code>constructor(request: <a href="../classes/ODataRequest.html">ODataRequest<any></a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:54</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:50</a></div>
                             </td>
                         </tr>
 
@@ -181,38 +151,14 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>method</td>
+                                                        <td>request</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                                        <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
                                                             No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>path</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>options</td>
-                                                  
-                                                        <td>
-                                                                    <code>literal type</code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
                                                     </td>
                                                     
                                                 </tr>
@@ -234,219 +180,24 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="body"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            body</b>
-                            <a href="#body"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>    <code>any | null</code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:49</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="config"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            config</b>
-                            <a href="#config"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:50</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="headers"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            headers</b>
-                            <a href="#headers"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://angular.io/api/common/http/HttpHeaders" target="_blank" >HttpHeaders</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:52</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="method"></a>
+                        <a name="request"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Public</span>
-                            method</b>
-                            <a href="#method"><span class="icon ion-ios-link"></span></a>
+                            request</b>
+                            <a href="#request"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                            <i>Type : </i>        <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
 
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:57</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="observe"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            observe</b>
-                            <a href="#observe"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>    <code>&quot;body&quot; | &quot;events&quot; | &quot;response&quot;</code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:51</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="params"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            params</b>
-                            <a href="#params"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://angular.io/api/common/http/HttpParams" target="_blank" >HttpParams</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:53</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="path"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Public</span>
-                            path</b>
-                            <a href="#path"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:58</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="responseType"></a>
-                        <span class="name">
-                            <b>
-                            responseType</b>
-                            <a href="#responseType"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../miscellaneous/variables.html#json" target="_self" >&quot;arraybuffer&quot; | &quot;blob&quot; | &quot;json&quot; | &quot;text&quot;</a></code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:54</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:51</a></div>
                             </td>
                         </tr>
 
@@ -482,8 +233,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="160"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:160</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="136"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:136</a></div>
                 </td>
             </tr>
 
@@ -564,8 +315,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="98"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:98</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:74</a></div>
                 </td>
             </tr>
 
@@ -646,8 +397,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="81"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:81</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:56</a></div>
                 </td>
             </tr>
 
@@ -657,45 +408,6 @@
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="url"></a>
-                    <span class="name">
-                        <b>
-                            url
-                        </b>
-                        <a href="#url"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>url()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="72"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/requests/batch.ts:72</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                     </div>
                 </td>
@@ -719,9 +431,11 @@ import { ODataClient } from &#x27;../../client&#x27;;
 import { Types } from &#x27;../../utils/types&#x27;;
 import { ODataPathSegments, PathSegmentNames } from &#x27;../path-segments&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
-import { HttpOptions } from &#x27;./options&#x27;;
-import { HttpHeaders, HttpResponse, HttpParams, HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
-import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX } from &#x27;../../constants&#x27;;
+import { HttpHeaders, HttpResponse, HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
+import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX, NEWLINE_REGEXP } from &#x27;../../constants&#x27;;
+import { ODataRequest } from &#x27;../request&#x27;;
+import { ODataApi } from &#x27;../../api&#x27;;
+import { ODataResponse } from &#x27;../responses&#x27;;
 
 const XSSI_PREFIX &#x3D; /^\)\]\}&#x27;,?\n/;
 
@@ -759,47 +473,21 @@ function getBoundaryEnd(boundaryDelimiter: string): string {
   return boundaryEnd;
 }
 
-export class ODataBatchRequest extends Subject&lt;any&gt; {
-  body?: any | null;
-  config?: string;
-  observe?: &#x27;body&#x27; | &#x27;events&#x27; | &#x27;response&#x27;;
-  headers?: HttpHeaders;
-  params?: HttpParams;
-  responseType: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;json&#x27; | &#x27;text&#x27;;
-
-  constructor(
-    public method: string,
-    public path: string,
-    options?: {
-      body?: any | null,
-      config?: string,
-      headers?: HttpHeaders,
-      params?: HttpParams,
-      observe?: &#x27;body&#x27; | &#x27;events&#x27; | &#x27;response&#x27;,
-      responseType?: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;json&#x27; | &#x27;text&#x27;
-    }
-  ) {
+export class ODataBatchRequest&lt;T&gt; extends Subject&lt;HttpResponse&lt;T&gt;&gt; {
+  constructor(public request: ODataRequest&lt;any&gt;)
+   {
     super();
-    Object.assign(this, { responseType: &#x27;json&#x27;, observe: &#x27;body&#x27; }, options || {});
-  }
-
-  url() {
-    // Url
-    let url &#x3D; &#x60;/${this.path}&#x60;;
-    if (this.params instanceof HttpParams &amp;&amp; this.params.keys().length &gt; 0) {
-      url &#x3D; &#x60;${url}?${this.params}&#x60;;
-    }
-    return url;
   }
 
   toString() {
-    let res &#x3D; [&#x60;${this.method} ${this.url()} ${HTTP11}&#x60;];
-    if (this.method &#x3D;&#x3D;&#x3D; &#x27;POST&#x27; || this.method &#x3D;&#x3D;&#x3D; &#x27;PATCH&#x27; || this.method &#x3D;&#x3D;&#x3D; &#x27;PUT&#x27;) {
+    //TODO: Relative or Absolute url ?
+    let res &#x3D; [&#x60;${this.request.method} ${this.request.pathWithParams} ${HTTP11}&#x60;];
+    if (this.request.method &#x3D;&#x3D;&#x3D; &#x27;POST&#x27; || this.request.method &#x3D;&#x3D;&#x3D; &#x27;PATCH&#x27; || this.request.method &#x3D;&#x3D;&#x3D; &#x27;PUT&#x27;) {
       res.push(&#x60;${CONTENT_TYPE}: ${APPLICATION_JSON}&#x60;);
     }
 
-    if (this.headers instanceof HttpHeaders) {
-      let headers &#x3D; this.headers;
+    if (this.request.headers instanceof HttpHeaders) {
+      let headers &#x3D; this.request.headers;
       res &#x3D; [
         ...res,
         ...headers.keys().map(key &#x3D;&gt; &#x60;${key}: ${headers.getAll(key).join(&#x27;,&#x27;)}&#x60;)
@@ -833,7 +521,7 @@ export class ODataBatchRequest extends Subject&lt;any&gt; {
     }
 
     let ok &#x3D; status.code &gt;&#x3D; 200 &amp;&amp; status.code &lt; 300;
-    if (this.responseType &#x3D;&#x3D;&#x3D; &#x27;json&#x27; &amp;&amp; typeof body &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+    if (this.request.responseType &#x3D;&#x3D;&#x3D; &#x27;json&#x27; &amp;&amp; typeof body &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
       const originalBody &#x3D; body;
       body &#x3D; body.replace(XSSI_PREFIX, &#x27;&#x27;);
       try {
@@ -849,14 +537,14 @@ export class ODataBatchRequest extends Subject&lt;any&gt; {
     }
 
     if (ok) {
-      let resp &#x3D; new HttpResponse({
+      let resp &#x3D; new HttpResponse&lt;any&gt;({
         body,
         headers,
         status: status.code,
         statusText: status.text,
-        url: this.url()
+        url: this.request.urlWithParams
       });
-      this.next(this.observe &#x3D;&#x3D;&#x3D; &#x27;body&#x27; ? resp.body : resp);
+      this.next(resp);
       this.complete();
     } else {
       // An unsuccessful request is delivered on the error channel.
@@ -866,7 +554,7 @@ export class ODataBatchRequest extends Subject&lt;any&gt; {
         headers,
         status: status.code,
         statusText: status.text,
-        url: this.url()
+        url: this.request.urlWithParams
       }));
     }
   }
@@ -876,7 +564,7 @@ export class ODataBatchRequest extends Subject&lt;any&gt; {
       error: content.join(NEWLINE),
       status: status.code || 0,
       statusText: status.text || &#x27;Unknown Error&#x27;,
-      url: this.url() || undefined,
+      url: this.request.urlWithParams || undefined,
     });
     this.error(res);
   }
@@ -884,48 +572,57 @@ export class ODataBatchRequest extends Subject&lt;any&gt; {
 
 export class ODataBatchResource extends ODataResource&lt;any&gt; {
   // VARIABLES
-  private requests: ODataBatchRequest[];
-  public batchBoundary: string;
+  private requests: ODataBatchRequest&lt;any&gt;[];
+  private _api: ODataApi;
+  batchBoundary: string;
 
-  constructor(service: ODataClient, segments?: ODataPathSegments) {
-    super(service, segments);
+  constructor(client: ODataClient, api: ODataApi, segments?: ODataPathSegments) {
+    super(client, segments);
+    this._api &#x3D; api;
     this.batchBoundary &#x3D; uniqid(BATCH_PREFIX);
     this.requests &#x3D; [];
   }
 
   //#region Factory
-  static factory(client: ODataClient) {
+  static factory(client: ODataClient, api: ODataApi) {
     let segments &#x3D; new ODataPathSegments();
     segments.segment(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(client, segments);
+    return new ODataBatchResource(client, api, segments);
   }
   //#endregion
 
-  add(method: string, path: string, options?: {
-    body: any | null, 
-    config?: string,
-    headers?: HttpHeaders,
-    params?: HttpParams,
-    observe?: &#x27;body&#x27; | &#x27;events&#x27; | &#x27;response&#x27;,
-    responseType?: &#x27;arraybuffer&#x27; | &#x27;blob&#x27; | &#x27;json&#x27; | &#x27;text&#x27;
+  //#region Api Config
+  get api(): ODataApi {
+    return this._api;
   }
-  ): ODataBatchRequest {
-    //TODO: Allow only with same config name
-    let request &#x3D; new ODataBatchRequest(method, path, options);
-    this.requests.push(request);
-    return request;
-  }
+  ////#endregion
 
-  post(func: (batch?: ODataBatchResource) &#x3D;&gt; void, options?: HttpOptions) {
-    this.client.using(this, func);
-    let opts &#x3D; Object.assign&lt;any, HttpOptions&gt;({ observe: &#x27;response&#x27;, responseType: &#x27;text&#x27; }, options || {});
-    opts.headers &#x3D; this.client.mergeHttpHeaders(opts.headers, {
-      [ODATA_VERSION]: VERSION_4_0,
-      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
-      [ACCEPT]: MULTIPART_MIXED
-    });
-    return this.client.post(this, this.body(), opts).pipe(
-      map((resp: any) &#x3D;&gt; {
+  post(func: (batch?: ODataBatchResource) &#x3D;&gt; void) {
+    const current &#x3D; this.api.request;
+    this.api.request &#x3D; (request: ODataRequest&lt;any&gt;): ODataBatchRequest&lt;any&gt; &#x3D;&gt; {
+      if (request.api !&#x3D;&#x3D; this.api)
+        throw new Error(&quot;Batch Request are for the same api.&quot;);
+      if (request.observe &#x3D;&#x3D;&#x3D; &#x27;events&#x27;)
+        throw new Error(&quot;Batch Request does not allows observe &#x3D;&#x3D; &#x27;events&#x27;.&quot;);
+      this.requests.push(new ODataBatchRequest&lt;any&gt;(request));
+      return this.requests[this.requests.length - 1];
+    }
+    try {
+      func(this);
+    } finally {
+      this.api.request &#x3D; current;
+    }
+
+    return this.client.post(this, this.body(), {
+      observe: &#x27;response&#x27;,
+      responseType: &#x27;text&#x27;,
+      headers: {
+        [ODATA_VERSION]: VERSION_4_0,
+        [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
+        [ACCEPT]: MULTIPART_MIXED
+      }
+    }).pipe(
+      map((resp: ODataResponse&lt;any&gt;) &#x3D;&gt; {
         this.handleResponse(resp);
         return resp;
       })
@@ -937,9 +634,9 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     let changesetBoundary &#x3D; null;
     let changesetId &#x3D; 1;
 
-    for (const request of this.requests) {
+    for (const batch of this.requests) {
       // if method is GET and there is a changeset boundary open then close it
-      if (request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; !Types.isNullOrUndefined(changesetBoundary)) {
+      if (batch.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; !Types.isNullOrUndefined(changesetBoundary)) {
         res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;);
         changesetBoundary &#x3D; null;
       }
@@ -950,7 +647,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
-      if (request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
+      if (batch.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
         if (Types.isNullOrUndefined(changesetBoundary)) {
           changesetBoundary &#x3D; uniqid(CHANGESET_PREFIX);
           res.push(&#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;);
@@ -962,17 +659,17 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       res.push(&#x60;${CONTENT_TYPE}: ${APPLICATION_HTTP}&#x60;);
       res.push(&#x60;${CONTENT_TRANSFER_ENCODING}: ${BINARY}&#x60;);
 
-      if (request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
+      if (batch.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
         res.push(&#x60;${CONTENT_ID}: ${changesetId++}&#x60;);
       }
 
       res.push(NEWLINE);
-      res.push(&#x60;${request}&#x60;);
+      res.push(&#x60;${batch}&#x60;);
 
-      if (request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; || request.method &#x3D;&#x3D;&#x3D; &#x27;DELETE&#x27;) {
+      if (batch.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; || batch.request.method &#x3D;&#x3D;&#x3D; &#x27;DELETE&#x27;) {
         res.push(NEWLINE);
       } else {
-        res.push(JSON.stringify(request.body));
+        res.push(JSON.stringify(batch.request.body));
       }
     }
 
@@ -986,13 +683,13 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     return res.join(NEWLINE);
   }
 
-  handleResponse(response: HttpResponse&lt;any&gt;) {
+  handleResponse(response: ODataResponse&lt;any&gt;) {
     let chunks: string[][] &#x3D; [];
     const contentType: string &#x3D; response.headers.get(CONTENT_TYPE);
     const batchBoundary: string &#x3D; getBoundaryDelimiter(contentType);
     const endLine: string &#x3D; getBoundaryEnd(batchBoundary);
 
-    const lines: string[] &#x3D; response.body.split(NEWLINE);
+    const lines: string[] &#x3D; response.body.split(NEWLINE_REGEXP);
 
     let changesetResponses: string[][];
     let contentId: number;

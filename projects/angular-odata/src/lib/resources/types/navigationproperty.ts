@@ -13,7 +13,7 @@ import { ODataPropertyResource } from './property';
 import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
-import { ODataEntities, ODataEntity } from '../responses/index';
+import { ODataEntities, ODataEntity } from '../responses';
 import { ODataValueResource } from './value';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataModel, ODataCollection } from '../../models';

@@ -1671,19 +1671,19 @@ import {
 } from &#x27;../resources&#x27;;
 
 import { ODataCollection } from &#x27;./collection&#x27;;
-import { ODataNavigationPropertyResource } from &#x27;../resources/requests/navigationproperty&#x27;;
+import { ODataNavigationPropertyResource } from &#x27;../resources&#x27;;
 import {
   HttpOptions,
   HttpEntityOptions
-} from &#x27;../resources/requests/options&#x27;;
-import { ODataEntityMeta, ODataEntitiesMeta, ODataMeta } from &#x27;../resources/responses/meta&#x27;;
+} from &#x27;../resources/types/options&#x27;;
+import { ODataEntityMeta, ODataEntitiesMeta } from &#x27;../resources/responses/meta&#x27;;
 import { ODataFieldParser } from &#x27;../parsers/entity&#x27;;
 
 export class ODataModel&lt;T&gt; {
   protected _resource: ODataResource&lt;T&gt;;
   protected _entity: T;
   protected _meta: ODataEntityMeta;
-  protected _relations: { [name: string]: { 
+  protected _relations: { [name: string]: {
     rel: ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt; | null,
     field: ODataFieldParser&lt;any&gt;
   }}
@@ -1700,8 +1700,8 @@ export class ODataModel&lt;T&gt; {
     let first &#x3D; !this._resource;
     this._resource &#x3D; resource;
     if (first) {
-      this._config.fields()
-        .filter(field &#x3D;&gt; field.navigation)
+      this._config.fields({include_navigation: true, include_parents: true})
+        .filter(field &#x3D;&gt; field.isNavigation())
         .forEach(field &#x3D;&gt; {
           Object.defineProperty(this, field.name, {
             get() {
@@ -1723,7 +1723,7 @@ export class ODataModel&lt;T&gt; {
   }
 
   protected parse(entity: T) {
-    let fields &#x3D; this._resource ? this._config.fields() : [];
+    let fields &#x3D; this._resource ? this._config.fields({include_navigation: true, include_parents: true}) : [];
     let entries &#x3D; Object.entries(entity)
       .map(([key, value]) &#x3D;&gt; [key, value, fields.find(f &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; key)]);
     //Attributes
@@ -1742,7 +1742,7 @@ export class ODataModel&lt;T&gt; {
         if (value) {
           let prop &#x3D; (this._resource as ODataEntityResource&lt;T&gt;).property&lt;any&gt;(f.name);
           value &#x3D; f.collection ?
-            prop.asCollection(value, new ODataEntitiesMeta(this._meta.property(f.name) || {}, {options: this._meta.options})) : 
+            prop.asCollection(value, new ODataEntitiesMeta(this._meta.property(f.name) || {}, {options: this._meta.options})) :
             prop.asModel(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
         }
         return Object.assign(acc, { [k]: value });
@@ -1751,7 +1751,7 @@ export class ODataModel&lt;T&gt; {
   }
 
   protected populate(data: Object, meta?: ODataEntityMeta) {
-    this._meta &#x3D; meta || new ODataEntityMeta(data, {options: this._resource ? this._resource.apiConfig.options : null});
+    this._meta &#x3D; meta || new ODataEntityMeta(data, {options: this._resource ? this._resource.api.options : null});
     this._entity &#x3D; this._meta.attributes&lt;T&gt;(data);
     this._relations &#x3D; {};
     return Object.assign(this, this.parse(this._entity));
@@ -1759,18 +1759,18 @@ export class ODataModel&lt;T&gt; {
 
   toEntity(): T {
     return Object.entries(
-      Object.assign({}, 
-        this._entity, 
+      Object.assign({},
+        this._entity,
         Object.entries(this)
           .filter(([key, ]) &#x3D;&gt; !(key.startsWith(&quot;_&quot;)))
           .reduce((acc, [k, v]) &#x3D;&gt; Object.assign(acc, { [k]: v }), {}),
         Object.entries(this._relations).reduce((acc, [k, v]) &#x3D;&gt; Object.assign(acc, {[k]: v.rel}), {})
       )
-    ).reduce((acc, [k, value]) &#x3D;&gt; 
-      Object.assign(acc, { [k]: (value instanceof ODataModel) ? 
-        value.toEntity() : 
+    ).reduce((acc, [k, value]) &#x3D;&gt;
+      Object.assign(acc, { [k]: (value instanceof ODataModel) ?
+        value.toEntity() :
         (value instanceof ODataCollection) ?
-        value.toEntities() : value }), 
+        value.toEntities() : value }),
       {}) as T;
   }
 
@@ -1817,14 +1817,14 @@ export class ODataModel&lt;T&gt; {
       if (this._resource.segment.key().empty())
         throw new Error(&#x60;Can&#x27;t update entity without key&#x60;);
       let resource &#x3D; this._resource;
-      let attrs &#x3D; this.toEntity(); 
+      let attrs &#x3D; this.toEntity();
       return Object.values(this._relations)
         .filter((value) &#x3D;&gt; value.field.navigation &amp;&amp; !value.field.collection)
         .reduce((acc, value) &#x3D;&gt; {
           let ref &#x3D; (this._resource as ODataEntityResource&lt;T&gt;).navigationProperty&lt;any&gt;(value.field.name).reference();
           delete attrs[value.field.name];
-          return acc.pipe(switchMap(({meta}) &#x3D;&gt; value.rel !&#x3D; null ? 
-            ref.set(value.rel.target() as ODataEntityResource&lt;any&gt;, {etag: meta.etag}) : 
+          return acc.pipe(switchMap(({meta}) &#x3D;&gt; value.rel !&#x3D; null ?
+            ref.set(value.rel.target() as ODataEntityResource&lt;any&gt;, {etag: meta.etag}) :
             ref.unset({etag: meta.etag})));
         }, of({meta: this._meta}))
         .pipe(
@@ -1855,7 +1855,7 @@ export class ODataModel&lt;T&gt; {
   get _config() {
     if (!this._resource)
       throw new Error(&#x60;Can&#x27;t config without ODataResource&#x60;);
-    return (this._resource as ODataEntityResource&lt;T&gt;).config;
+    return (this._resource as ODataEntityResource&lt;T&gt;).schema;
   }
 
   get _segment() {
@@ -1932,8 +1932,8 @@ export class ODataModel&lt;T&gt; {
     if (!(field.name in this._relations)) {
       let value &#x3D; this._entity[field.name];
       let nav &#x3D; this._navigationProperty&lt;P&gt;(field.name);
-      let rel &#x3D; field.collection ? 
-          nav.asCollection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) : 
+      let rel &#x3D; field.collection ?
+          nav.asCollection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) :
           nav.asModel(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
       this._relations[field.name] &#x3D; {field, rel};
     }

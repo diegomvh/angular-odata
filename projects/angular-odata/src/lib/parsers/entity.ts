@@ -1,4 +1,4 @@
-import { Types } from '../utils/index';
+import { Types } from '../utils';
 import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Options } from '../types';
 import { ODataOptions } from '../options';
 

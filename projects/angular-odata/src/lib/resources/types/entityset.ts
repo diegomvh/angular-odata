@@ -15,7 +15,7 @@ import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
-import { ODataEntity, ODataEntities } from '../responses/index';
+import { ODataEntity, ODataEntities } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {

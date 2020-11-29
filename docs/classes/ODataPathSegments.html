@@ -802,7 +802,7 @@
 import { PlainObject } from &#x27;./builder&#x27;;
 //import buildQuery from &#x27;odata-query&#x27;;
 
-import { Types, Dates } from &#x27;../utils/index&#x27;;
+import { Types, Dates } from &#x27;../utils&#x27;;
 
 import { OptionHandler } from &#x27;./query-options&#x27;;
 import { PATH_SEPARATOR } from &#x27;../constants&#x27;;
@@ -873,12 +873,12 @@ export class ODataPathSegments {
   }
 
   toJSON() {
-    return this.segments.map(segment &#x3D;&gt; { 
+    return this.segments.map(segment &#x3D;&gt; {
       let json &#x3D; &lt;any&gt;{ name: segment.name, path: segment.path, type: segment.type };
       let options &#x3D; Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
       if (!Types.isEmpty(options))
         json.options &#x3D; options;
-      return json; 
+      return json;
     });
   }
 

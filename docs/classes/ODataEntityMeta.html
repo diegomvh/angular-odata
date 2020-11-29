@@ -1090,9 +1090,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataContext } from &#x27;../../types&#x27;;
-import { HttpHeaders } from &#x27;@angular/common/http&#x27;;
-import { ODataOptions } from &#x27;../../configs/options&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpHeaders } from &#x27;@angular/common/http&#x27;;
+import { ODataContext } from &#x27;../../types&#x27;;
+import { ODataOptions } from &#x27;../../options&#x27;;
 
 export abstract class ODataMeta {
   annotations: Object;
@@ -1103,8 +1103,8 @@ export abstract class ODataMeta {
     return this.options.helper;
   }
 
-  constructor(data: Object, opt: { 
-    options?: ODataOptions, 
+  constructor(data: Object, opt: {
+    options?: ODataOptions,
     headers?: HttpHeaders
   } &#x3D; {}) {
     //TODO: Default options
@@ -1113,7 +1113,7 @@ export abstract class ODataMeta {
     if (opt.headers) {
       const etag &#x3D; opt.headers.get(&quot;ETag&quot;);
       if (etag)
-        this.odv.setEtag(this.annotations, etag);
+        this.odv.etag(this.annotations, etag);
     }
   }
 
@@ -1278,7 +1278,8 @@ export class ODataEntitiesMeta extends ODataMeta {
   function(name: string) {
     return this.functions[name];
   }
-}</code></pre>
+}
+</code></pre>
     </div>
 </div>
 

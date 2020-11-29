@@ -1,6 +1,6 @@
 
 import { ApiConfig, EnumTypeConfig, StructuredTypeConfig, EntitySetConfig } from './types';
-import { EDM_PARSERS } from './parsers/index';
+import { EDM_PARSERS } from './parsers';
 import { ODataEntityService } from './services';
 import { Injectable } from '@angular/core';
 

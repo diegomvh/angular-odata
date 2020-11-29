@@ -557,12 +557,12 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../utils/index&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../utils&#x27;;
 import { Parser, Options, Parameter, CallableConfig } from &#x27;../types&#x27;;
 
 const NONE_PARSER &#x3D; {
   deserialize(value: any, options: Options) {return value},
-  serialize(value: any, options: Options) {return value} 
+  serialize(value: any, options: Options) {return value}
 } as Parser&lt;any&gt;;
 
 export class ODataParameterParser&lt;Type&gt; implements Parser&lt;Type&gt; {
@@ -644,7 +644,8 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
       this.parser &#x3D; settings.parserForType(this.return) || NONE_PARSER;
     this.parameters.forEach(p &#x3D;&gt; p.configure(settings));
   }
-}</code></pre>
+}
+</code></pre>
     </div>
 </div>
 

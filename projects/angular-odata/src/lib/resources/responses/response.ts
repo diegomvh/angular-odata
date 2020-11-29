@@ -11,14 +11,14 @@ import { ODataApi } from '../../api';
 
 export class ODataResponse<T> {
   readonly body: any | null;
-  readonly config: ODataApi;
+  readonly api: ODataApi;
   readonly headers: HttpHeaders;
   readonly status: number;
   readonly statusText: string;
   readonly resource: ODataResource<T>;
 
   constructor(init: {
-    config: ODataApi;
+    api: ODataApi;
     body?: any | null;
     headers?: HttpHeaders;
     status?: number;
@@ -26,7 +26,7 @@ export class ODataResponse<T> {
     resource?: ODataResource<T>;
   }) {
     this.body = init.body;
-    this.config = init.config;
+    this.api = init.api;
     this.headers = init.headers;
     this.status = init.status;
     this.statusText = init.statusText;
@@ -36,7 +36,7 @@ export class ODataResponse<T> {
   _options: ODataOptions
   get options(): ODataOptions {
     if (!this._options) {
-      this._options = this.config.options.clone();
+      this._options = this.api.options.clone();
       const contentType = this.headers.get(CONTENT_TYPE);
       if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
         const features = contentType.split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
@@ -60,7 +60,7 @@ export class ODataResponse<T> {
   }
 
   private deserialize(type: string, value: any): any {
-    const parser = !Types.isNullOrUndefined(type) ? this.config.parserForType<T>(type) : undefined;
+    const parser = !Types.isNullOrUndefined(type) ? this.api.parserForType<T>(type) : undefined;
     if (!Types.isUndefined(parser) && 'deserialize' in parser)
       return Array.isArray(value) ?
         value.map(v => this.parse(parser, v)) :

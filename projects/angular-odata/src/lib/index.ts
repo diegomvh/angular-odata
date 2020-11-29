@@ -2,22 +2,22 @@ export * from './types';
 export * from './settings';
 export * from './api';
 export * from './client';
-export * from './cache';
+export * from './cache/cache';
 export * from './tokens';
 export * from './module';
 
 // Utils
-export * from './utils/index';
+export * from './utils';
 
 // Services
-export * from './services/index';
+export * from './services';
 
 // Parsers
-export * from './parsers/index';
+export * from './parsers';
 
 // Models
-export * from './models/index';
+export * from './models';
 
 // Resources
-export * from './resources/index';
+export * from './resources';
 

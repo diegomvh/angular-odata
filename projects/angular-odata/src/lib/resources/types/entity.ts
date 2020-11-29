@@ -14,7 +14,7 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataValueResource } from './value';
-import { ODataEntity } from '../responses/index';
+import { ODataEntity } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataModel } from '../../models';

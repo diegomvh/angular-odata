@@ -1,5 +1,3 @@
-import { ODataCache } from './cache';
-
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
@@ -95,20 +93,26 @@ export interface Parser<T> {
   serialize(value: T, options: Options): any;
 }
 
+export interface CacheStorage {
+  maxAge: number;
+  put(key: any, value: any);
+  get(key: any);
+}
+
 //#region Configs
 export type ApiConfig = {
   serviceRootUrl: string;
   name?: string;
   default?: boolean;
   creation?: Date;
-  cache?: ODataCache;
+  cache?: CacheConfig;
   options?: Options;
   parsers?: {[type: string]: Parser<any>};
   schemas?: Array<SchemaConfig>;
 }
 
 export type CacheConfig = {
-  maxAge: number;
+  storage: CacheStorage;
 }
 
 export type SchemaConfig = {

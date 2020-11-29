@@ -159,8 +159,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpClientModule } from &#x27;@angular/common/http&#x27;;
-import { NgModule, ModuleWithProviders, InjectionToken } from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpClient, HttpClientModule } from &#x27;@angular/common/http&#x27;;
+import { NgModule, ModuleWithProviders } from &#x27;@angular/core&#x27;;
 
 import { ODataSettings } from &#x27;./settings&#x27;;
 import { ODataClient } from &#x27;./client&#x27;;
@@ -168,8 +168,8 @@ import { ODataServiceFactory } from &#x27;./services&#x27;;
 import { ApiConfig } from &#x27;./types&#x27;;
 import { ODATA_CONFIGURATIONS } from &#x27;./tokens&#x27;;
 
-export function createSettings(configs: ApiConfig[]) {
-  return new ODataSettings(...configs);
+export function createSettings(http: HttpClient, configs: ApiConfig[]) {
+  return new ODataSettings(http, ...configs);
 }
 
 @NgModule({
@@ -182,10 +182,10 @@ export class ODataModule {
       ngModule: ODataModule,
       providers: [
         { provide: ODATA_CONFIGURATIONS, useValue: configs },
-        { 
-          provide: ODataSettings, 
+        {
+          provide: ODataSettings,
           useFactory: createSettings,
-          deps: [ODATA_CONFIGURATIONS]
+          deps: [HttpClient, ODATA_CONFIGURATIONS]
         },
         ODataClient,
         ODataServiceFactory

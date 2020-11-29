@@ -5,7 +5,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { map } from 'rxjs/operators';
 import { ODataClient } from '../../client';
 import { HttpOptions } from './options';
-import { ODataMetadata } from '../responses/index';
+import { ODataMetadata } from '../responses';
 import { $METADATA } from '../../constants';
 import { ODataApi } from '../../api';
 

@@ -170,7 +170,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(config: <a href="../undefineds/EntityConfig.html">EntityConfig<Type></a>, namespace: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(config: <a href="../undefineds/StructuredTypeConfig.html">StructuredTypeConfig<Type></a>, namespace: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -196,7 +196,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#EntityConfig" target="_self" >EntityConfig&lt;Type&gt;</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#StructuredTypeConfig" target="_self" >StructuredTypeConfig&lt;Type&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -1185,9 +1185,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../utils/index&#x27;;
-import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, EntityConfig, Options } from &#x27;../types&#x27;;
-import { ODataOptions } from &#x27;../configs/options&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Types } from &#x27;../utils&#x27;;
+import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Options } from &#x27;../types&#x27;;
+import { ODataOptions } from &#x27;../options&#x27;;
 
 const NONE_PARSER &#x3D; {
   deserialize: (value: any, options: ODataOptions) &#x3D;&gt; value,
@@ -1231,8 +1231,8 @@ export class ODataFieldParser&lt;Type&gt; implements Field, Parser&lt;Type&gt; {
   deserialize(value: any, options: Options): Type {
     const parser &#x3D; this.parser;
     if (parser instanceof ODataEntityParser) {
-      return Array.isArray(value) ? 
-        value.map(v &#x3D;&gt; this.parse(parser, v, options as ODataOptions)) : 
+      return Array.isArray(value) ?
+        value.map(v &#x3D;&gt; this.parse(parser, v, options as ODataOptions)) :
         this.parse(parser, value, options as ODataOptions);
     }
     return parser.deserialize(value, Object.assign({field: this}, options));
@@ -1296,7 +1296,7 @@ export class ODataEntityParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   children: ODataEntityParser&lt;any&gt;[];
   fields: ODataFieldParser&lt;any&gt;[];
 
-  constructor(config: EntityConfig&lt;Type&gt;, namespace: string, alias?: string) {
+  constructor(config: StructuredTypeConfig&lt;Type&gt;, namespace: string, alias?: string) {
     this.name &#x3D; config.name;
     this.base &#x3D; config.base;
     this.namespace &#x3D; namespace;
@@ -1388,7 +1388,7 @@ export class ODataEntityParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   isComplexType() {
     return this.keys().length &#x3D;&#x3D;&#x3D; 0;
   }
-  
+
   find(predicate: (p: ODataEntityParser&lt;any&gt;) &#x3D;&gt; boolean): ODataEntityParser&lt;any&gt; {
     if (predicate(this))
       return this;
@@ -1398,7 +1398,8 @@ export class ODataEntityParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   findParser(predicate: (p: ODataEntityParser&lt;any&gt;) &#x3D;&gt; boolean): Parser&lt;any&gt; {
     return this.find(predicate) || NONE_PARSER;
   }
-}</code></pre>
+}
+</code></pre>
     </div>
 </div>
 
