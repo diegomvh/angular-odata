@@ -9,6 +9,7 @@ import { HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/ht
 import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX, NEWLINE_REGEXP } from '../../constants';
 import { ODataRequest } from '../request';
 import { ODataApi } from '../../api';
+import { ODataResponse } from '../responses';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;
 
@@ -53,6 +54,7 @@ export class ODataBatchRequest<T> extends Subject<HttpResponse<T>> {
   }
 
   toString() {
+    //TODO: Relative or Absolute url ?
     let res = [`${this.request.method} ${this.request.pathWithParams} ${HTTP11}`];
     if (this.request.method === 'POST' || this.request.method === 'PATCH' || this.request.method === 'PUT') {
       res.push(`${CONTENT_TYPE}: ${APPLICATION_JSON}`);
@@ -194,7 +196,7 @@ export class ODataBatchResource extends ODataResource<any> {
         [ACCEPT]: MULTIPART_MIXED
       }
     }).pipe(
-      map((resp: any) => {
+      map((resp: ODataResponse<any>) => {
         this.handleResponse(resp);
         return resp;
       })
@@ -255,7 +257,7 @@ export class ODataBatchResource extends ODataResource<any> {
     return res.join(NEWLINE);
   }
 
-  handleResponse(response: HttpResponse<any>) {
+  handleResponse(response: ODataResponse<any>) {
     let chunks: string[][] = [];
     const contentType: string = response.headers.get(CONTENT_TYPE);
     const batchBoundary: string = getBoundaryDelimiter(contentType);

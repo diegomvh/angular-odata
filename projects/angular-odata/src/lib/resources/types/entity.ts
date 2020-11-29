@@ -49,11 +49,17 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  navigationProperty<N>(name: string) {
+  navigationProperty<N>(path: string) {
     let parser = this.client.parserFor<N>(this);
+    let [baseType, name] = path.split('/');
+    if (name !== undefined) {
+      parser = this.client.parserForType(baseType);
+    } else {
+      name = baseType;
+    }
     let type = parser instanceof ODataEntityParser ?
-      parser.typeFor(name) : null;
-    return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+        parser.typeFor(name) : null;
+    return ODataNavigationPropertyResource.factory<N>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
@@ -64,14 +70,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(type: string) {
-    const config = this.client.callableForType<R>(type);
-    const path = config ? config.path : type;
+    const callable = this.client.callableForType<R>(type);
+    const path = callable ? callable.path : type;
     return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(type: string) {
-    const config = this.client.callableForType<R>(type);
-    const path = config ? config.path : type;
+    const callable = this.client.callableForType<R>(type);
+    const path = callable ? callable.path : type;
     return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
