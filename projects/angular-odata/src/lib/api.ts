@@ -47,7 +47,7 @@ export class ODataApi {
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema, this));
   }
 
-  configure(settings: { requester: (request: ODataRequest<any>) => Observable<any> }) {
+  configure(settings: { requester?: (request: ODataRequest<any>) => Observable<any> } = {}) {
     this.requester = settings.requester;
     this.schemas.forEach(schema => {
       schema.configure({ findParserForType: (type: string) => this.findParserForType(type) });

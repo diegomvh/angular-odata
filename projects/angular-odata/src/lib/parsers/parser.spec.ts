@@ -7,11 +7,10 @@ import { ODataEntityParser, ODataFieldParser } from './entity';
 import { ODataApi } from '../api';
 import { ODataStructuredType } from '../schema';
 import { Parser } from '../types';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ODataClient', () => {
   let client: ODataClient;
-  let http: HttpClient;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -19,7 +18,6 @@ describe('ODataClient', () => {
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
-    http = TestBed.inject<HttpClient>(HttpClient);
   });
 
   it('should return parser for type', () => {
@@ -85,7 +83,7 @@ describe('ODataClient', () => {
 
   it('should deserialize primitive values', () => {
     enum Color { Red = 1, Yellow, Orange, Green, Black};
-    const config = new ODataApi(http, {
+    const config = new ODataApi({
       serviceRootUrl: "http://foo",
       options: {
         stringAsEnum: true,

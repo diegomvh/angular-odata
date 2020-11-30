@@ -22,7 +22,7 @@ export class ODataSettings {
       this.apis[0].default = true;
   }
 
-  configure(settings: { requester: (request: ODataRequest<any>) => Observable<any> }) {
+  configure(settings: { requester?: (request: ODataRequest<any>) => Observable<any> }) {
     this.apis.forEach(api => api.configure(settings));
   }
 
