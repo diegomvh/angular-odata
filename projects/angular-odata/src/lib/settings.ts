@@ -3,12 +3,14 @@ import { Types } from './utils';
 import { ODataApi } from './api';
 import { HttpClient } from '@angular/common/http';
 import { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } from './schema';
+import { ODataRequest } from './resources';
+import { Observable } from 'rxjs';
 
 export class ODataSettings {
   apis: Array<ODataApi>;
 
-  constructor(http: HttpClient, ...configs: ApiConfig[]) {
-    this.apis = configs.map(config => new ODataApi(http, config));
+  constructor(...configs: ApiConfig[]) {
+    this.apis = configs.map(config => new ODataApi(config));
     if (this.apis.length > 1) {
       if (this.apis.some(c => Types.isUndefined(c.name)))
         throw new Error("Multiple APIs: Needs configuration names");
@@ -18,7 +20,10 @@ export class ODataSettings {
     // If not default setup first config as default api
     if (this.apis.every(c => !c.default))
       this.apis[0].default = true;
-    this.apis.forEach(api => api.configure());
+  }
+
+  configure(settings: { requester: (request: ODataRequest<any>) => Observable<any> }) {
+    this.apis.forEach(api => api.configure(settings));
   }
 
   public defaultApi() {

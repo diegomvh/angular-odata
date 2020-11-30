@@ -7,7 +7,7 @@ import {
   QUERY_SEPARATOR
 } from '../constants';
 import { ODataClient } from '../client';
-import { Http, Types } from '../utils';
+import { Http, Types, Urls } from '../utils/index';
 
 import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
@@ -18,9 +18,8 @@ import { HttpOptions } from './types';
 import {
   ODataModel,
   ODataCollection
-} from '../models';
-import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
-import { Urls } from '../utils';
+} from '../models/index';
+import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses/index';
 import { ODataApi } from '../api';
 import { Parser } from '../types';
 

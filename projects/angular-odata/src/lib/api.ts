@@ -1,5 +1,5 @@
 import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ODataOptions } from './options';
@@ -7,12 +7,11 @@ import { ApiConfig, Parser } from './types';
 import { EDM_PARSERS } from './parsers/index';
 import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
-import { Types } from './utils/index';
 import { ODataRequest, ODataResponse } from './resources/index';
 import { ODataCache, ODataCacheMemoryStorage } from './cache/index';
 
 export class ODataApi {
-  requester: (request: ODataRequest<any>) => Observable<any>;
+  requester?: (request: ODataRequest<any>) => Observable<any>;
   serviceRootUrl: string;
   metadataUrl?: string;
   name?: string;
@@ -27,7 +26,7 @@ export class ODataApi {
   // Schemas
   schemas: Array<ODataSchema>;
 
-  constructor(http: HttpClient, config: ApiConfig) {
+  constructor(config: ApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;
     if (this.serviceRootUrl.indexOf('?') != -1)
       throw new Error("The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters");
@@ -46,28 +45,17 @@ export class ODataApi {
     this.parsers = config.parsers || EDM_PARSERS;
 
     this.schemas = (config.schemas || []).map(schema => new ODataSchema(schema, this));
-
-    this.requester = (req: ODataRequest<any>): Observable<any> => {
-      return http.request(req.method, `${req.url}`, {
-        body: req.body,
-        headers: req.headers,
-        observe: req.observe,
-        params: req.params,
-        reportProgress: req.reportProgress,
-        responseType: req.responseType,
-        withCredentials: req.withCredentials
-      });
-    }
   }
 
-  configure() {
+  configure(settings: { requester: (request: ODataRequest<any>) => Observable<any> }) {
+    this.requester = settings.requester;
     this.schemas.forEach(schema => {
       schema.configure({ findParserForType: (type: string) => this.findParserForType(type) });
     });
   }
 
   request(req: ODataRequest<any>): Observable<ODataResponse<any> | HttpEvent<any>> {
-    let res$ = this.requester(req);
+    let res$ = this.requester !== undefined ? this.requester(req) : NEVER;
     if (req.observe === 'events') {
       return res$;
     }

@@ -5,16 +5,15 @@ import {
   ODataResource,
   ODataEntityResource,
   ODataPropertyResource,
-  ODataFunctionResource
-} from '../resources';
+  ODataFunctionResource,
+  ODataNavigationPropertyResource,
+  HttpOptions,
+  HttpEntityOptions,
+  ODataEntityMeta,
+  ODataEntitiesMeta
+} from '../resources/index';
 
 import { ODataCollection } from './collection';
-import { ODataNavigationPropertyResource } from '../resources';
-import {
-  HttpOptions,
-  HttpEntityOptions
-} from '../resources/types/options';
-import { ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta';
 import { ODataFieldParser } from '../parsers/entity';
 
 export class ODataModel<T> {

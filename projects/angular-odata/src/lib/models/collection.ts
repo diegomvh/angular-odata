@@ -6,15 +6,13 @@ import {
   ODataEntitySetResource,
   ODataEntityResource,
   ODataNavigationPropertyResource,
-  ODataFunctionResource
-} from '../resources';
-
-import { ODataModel } from './model';
-import {
+  ODataFunctionResource,
+  ODataEntitiesMeta,
   HttpOptions,
   HttpEntitiesOptions
-} from '../resources/types/options';
-import { ODataEntitiesMeta } from '../resources/responses/meta';
+} from '../resources/index';
+
+import { ODataModel } from './model';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   protected _resource: ODataResource<T> | null;

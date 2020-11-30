@@ -31,7 +31,21 @@ import { ODataRequest } from './resources/index';
 @Injectable()
 export class ODataClient {
 
-  constructor(protected settings: ODataSettings) { }
+  constructor(protected http: HttpClient, protected settings: ODataSettings) {
+    settings.configure({
+      requester: (req: ODataRequest<any>): Observable<any> => {
+        return http.request(req.method, `${req.url}`, {
+          body: req.body,
+          headers: req.headers,
+          observe: req.observe,
+          params: req.params,
+          reportProgress: req.reportProgress,
+          responseType: req.responseType,
+          withCredentials: req.withCredentials
+        });
+      }
+    })
+  }
 
   apiFor(resource: ODataResource<any>): ODataApi {
     return this.settings.findForTypes(resource.types()) || this.settings.defaultApi();
