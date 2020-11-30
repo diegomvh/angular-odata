@@ -15,8 +15,10 @@ import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.action, path).setType(type);
+  static factory<P, R>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.segment(PathSegmentNames.action, path)
+    if (type)
+      segment.setType(type);
     options.clear();
     return new ODataActionResource<P, R>(client, segments, options);
   }
@@ -29,7 +31,8 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Action Config
   get schema() {
     let type = this.type();
-    return type ? this.api.callableForType<R>(type) : null;
+    if (type === null) return null;
+    return this.client.callableForType<R>(type);
   }
   ////#endregion
 

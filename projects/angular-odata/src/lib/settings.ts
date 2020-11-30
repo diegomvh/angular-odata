@@ -1,9 +1,8 @@
 import { ApiConfig, Parser } from './types';
 import { Types } from './utils';
-import { ODataCollection } from './models/collection';
-import { ODataModel } from './models/model';
 import { ODataApi } from './api';
 import { HttpClient } from '@angular/common/http';
+import { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } from './schema';
 
 export class ODataSettings {
   apis: Array<ODataApi>;
@@ -22,71 +21,81 @@ export class ODataSettings {
     this.apis.forEach(api => api.configure());
   }
 
-  public apiByNameOrDefault(name?: string) : ODataApi {
-    if (this.apis.length > 1 && !Types.isUndefined(name)) {
-      const api = this.apis.find(c => c.name === name);
-      if (api) return api;
-    }
+  public defaultApi() {
     return this.apis.find(c => c.default) as ODataApi;
   }
 
-  public apiForTypesOrDefault(types: string[]) {
-    if (this.apis.length > 1) {
-      const api = this.apis.find(c => c.schemas.some(s => types.some(type => s.isNamespaceOf(type))));
-      if (api) return api;
-    }
-    return this.apis.find(c => c.default) as ODataApi;
+  public apiByName(name: string) {
+    const api = this.apis.find(c => c.name === name);
+    if (api === undefined)
+      throw new Error(`No API for name: ${name}`);
+    return api;
   }
 
-  public apiForType(type?: string) {
-    return type ? this.apiForTypesOrDefault([type]) : this.apiByNameOrDefault();
+  public findForTypes(types: string[]) {
+    return this.apis.find(c => c.schemas.some(s => types.some(type => s.isNamespaceOf(type))));
+  }
+
+  public apiForType(type: string) {
+    const api = this.apis.find(c => c.name === name);
+    if (api === undefined)
+      throw new Error(`No API for type: ${type}`);
+    return api;
   }
 
   //#region Configs shortcuts
   public enumTypeForType<T>(type: string) {
-    let values = this.apis.map(api => api.enumTypeForType<T>(type)).filter(e => e);
+    let values = this.apis.map(api => api.findEnumTypeForType(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Enum for type ${type} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values[0] as ODataEnumType<T>;
   }
 
   public structuredTypeForType<T>(type: string) {
-    let values = this.apis.map(api => api.structuredTypeForType<T>(type)).filter(e => e);
+    let values = this.apis.map(api => api.findStructuredTypeForType(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Structured for type ${type} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values[0] as ODataStructuredType<T>;
   }
 
   public callableFor<T>(type: string) {
-    let values = this.apis.map(api => api.callableForType<T>(type)).filter(e => e);
+    let values = this.apis.map(api => api.findCallableForType(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Callable for type ${type} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values[0] as ODataCallable<T>;
   }
 
   public entitySetForType(type: string) {
-    let values = this.apis.map(api => api.entitySetForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.findEntitySetForType(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No EntitySet for type ${type} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values[0] as ODataEntitySet;
   }
 
   public parserForType<T>(type: string) {
-    let values = this.apis.map(api => api.parserForType<T>(type)).filter(e => e);
+    let values = this.apis.map(api => api.findParserForType<T>(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values.length === 1 ? values[0] as Parser<T> : null;
   }
 
   public modelForType(type: string) {
-    let values = this.apis.map(api => api.modelForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.findModelForType(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values.length === 1 ? values[0] : null;
   }
 
   public collectionForType(type: string) {
-    let values = this.apis.map(api => api.collectionForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.findCollectionForType(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values.length === 1 ? values[0] : null;

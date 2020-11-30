@@ -6,16 +6,20 @@ import { ODataEnumParser } from './enum';
 import { ODataEntityParser, ODataFieldParser } from './entity';
 import { ODataApi } from '../api';
 import { ODataStructuredType } from '../schema';
+import { Parser } from '../types';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 describe('ODataClient', () => {
   let client: ODataClient;
+  let http: HttpClient;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ODataModule.forRoot(TripPinConfig)]
+      imports: [HttpClientModule, ODataModule.forRoot(TripPinConfig)]
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
+    http = TestBed.inject<HttpClient>(HttpClient);
   });
 
   it('should return parser for type', () => {
@@ -33,50 +37,55 @@ describe('ODataClient', () => {
   it('should serialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
     expect(schema !== null).toBeTruthy();
-    const field = (schema as ODataStructuredType<Person>).field('Gender');
+    const field = (schema as ODataStructuredType<Person>).findField('Gender');
     expect(field !== undefined).toBeTruthy();
     expect((field as ODataFieldParser<any>).serialize(PersonGender.Female, (schema as ODataStructuredType<Person>).options)).toEqual('Female');
   });
 
   it('should deserialize enum', () => {
-    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
-    const field = config.field('Gender');
-    expect(field.deserialize('Female', config.options)).toEqual(PersonGender.Female);
+    const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    const field = schema.findField('Gender') as ODataFieldParser<PersonGender>;
+    expect(field !== undefined).toBeTruthy();
+    expect(field.deserialize('Female', schema.options)).toEqual(PersonGender.Female);
   });
 
   it('should serialize flags', () => {
-    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredType<Person>;
     const parser = client.parserForType(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
     parser.flags = true;
-    const options = config.options;
+    const options = schema.options;
     options.stringAsEnum = true;
-    const field = config.field('Gender');
+    const field = (schema as ODataStructuredType<Person>).findField('Gender') as Parser<PersonGender>;
+    expect(field !== undefined).toBeTruthy();
     expect(field.serialize(3, options)).toEqual('Male, Female, Unknown');
     expect(field.serialize(PersonGender.Male | PersonGender.Female | PersonGender.Unknown, options)).toEqual('Male, Female, Unknown');
   });
 
   it('should deserialize flags', () => {
-    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
+    const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredType<Person>;
     const parser = client.parserForType(`${NAMESPACE}.PersonGender`) as ODataEnumParser<PersonGender>;
     parser.flags = true;
-    const field = config.field('Gender');
-    expect(field.deserialize('Male, Female, Unknown', config.options)).toEqual(3);
+    const field = (schema as ODataStructuredType<Person>).findField('Gender') as Parser<PersonGender>;
+    expect(field !== undefined).toBeTruthy();
+    expect(field.deserialize('Male, Female, Unknown', schema.options)).toEqual(3);
   });
 
   it('should serialize entity', () => {
-    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
-    const options = config.options;
+    const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredType<Person>;
+    const options = schema.options;
     options.stringAsEnum = false;
-    expect(config.parser.serialize(<Person>{
+    expect(schema.parser.serialize(<Person>{
       FirstName: 'Name',
+      LastName: 'Name',
+      UserName: 'name',
       Emails: [],
       Gender: PersonGender.Male
-    }, options)).toEqual({FirstName: 'Name', Emails: [], Gender: `${NAMESPACE}.PersonGender'Male'`});
+    }, options)).toEqual({FirstName: 'Name', LastName: 'Name', UserName: 'name', Emails: [], Gender: `${NAMESPACE}.PersonGender'Male'`});
   });
 
   it('should deserialize primitive values', () => {
     enum Color { Red = 1, Yellow, Orange, Green, Black};
-    const config = new ODataApi(null, {
+    const config = new ODataApi(http, {
       serviceRootUrl: "http://foo",
       options: {
         stringAsEnum: true,
@@ -139,7 +148,7 @@ describe('ODataClient', () => {
       "enumeration": "Yellow",
       "point": {"type": "point","coordinates":[142.1,64.1]}
     };
-    const parser = config.parserForType('Primitive.Entity');
+    const parser = config.findParserForType<any>('Primitive.Entity') as Parser<any>;
     const result = parser.deserialize(primitives, config.options);
     expect(parser.serialize(result, config.options)).toEqual(primitives);
   });

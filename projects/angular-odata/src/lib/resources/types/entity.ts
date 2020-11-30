@@ -34,7 +34,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Entity Config
   get schema() {
     let type = this.type();
-    return type ? this.api.structuredTypeForType<T>(type) : null;
+    if (type === null) return null;
+    return this.client.structuredTypeForType<T>(type);
   }
   ////#endregion
 
@@ -69,15 +70,23 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  action<P, R>(type: string) {
-    const callable = this.client.callableForType<R>(type);
-    const path = callable ? callable.path : type;
+  action<P, R>(name: string) {
+    let type = null;
+    let path = name;
+    const callable = this.api.findCallableForType(name);
+    if (callable !== undefined) {
+      path = callable.path;
+    }
     return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  function<P, R>(type: string) {
-    const callable = this.client.callableForType<R>(type);
-    const path = callable ? callable.path : type;
+  function<P, R>(name: string) {
+    let type = null;
+    let path = name;
+    const callable = this.api.findCallableForType(name);
+    if (callable !== undefined) {
+      path = callable.path;
+    }
     return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 

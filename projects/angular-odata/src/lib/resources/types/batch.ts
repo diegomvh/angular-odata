@@ -176,7 +176,7 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   ////#endregion
 
-  post(func: (batch?: ODataBatchResource) => void) {
+  post(func: (batch: ODataBatchResource) => void) {
     const current = this.api.request;
     this.api.request = (request: ODataRequest<any>): ODataBatchRequest<any> => {
       if (request.api !== this.api)

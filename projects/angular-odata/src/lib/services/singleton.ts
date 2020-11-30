@@ -26,7 +26,7 @@ export class ODataSingletonService<T> {
 
   // Entity Config
   get structuredSchema() {
-    return this.entityType ? this.api.structuredTypeForType<T>(this.entityType) : null;
+    return this.entityType ? this.api.findStructuredTypeForType(this.entityType) : null;
   }
 }
 

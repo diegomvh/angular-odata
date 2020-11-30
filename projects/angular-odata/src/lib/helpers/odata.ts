@@ -58,12 +58,12 @@ const ODataVersionBaseHelper = <any> {
         }, {});
     },
     id(value: {[name: string]: any}, id?: string) {
-      if (id === undefined)
+      if (id !== undefined)
         value[this.ODATA_ID] = id;
       return value[this.ODATA_ID] as string;
     },
     etag(value: {[name: string]: any}, etag?: string) {
-      if (etag === undefined)
+      if (etag !== undefined)
         value[this.ODATA_ETAG] = etag;
       return value[this.ODATA_ETAG] as string;
     },

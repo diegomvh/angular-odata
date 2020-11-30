@@ -1,3 +1,5 @@
+import { HttpClient } from '@angular/common/http';
+
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;

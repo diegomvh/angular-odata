@@ -60,8 +60,8 @@ export class ODataResponse<T> {
   }
 
   private deserialize(type: string, value: any): any {
-    const parser = this.api.parserForType<T>(type);
-    if (parser !== null && 'deserialize' in parser)
+    const parser = this.api.findParserForType<T>(type);
+    if (parser !== undefined && 'deserialize' in parser)
       return Array.isArray(value) ?
         value.map(v => this.parse(parser, v)) :
         this.parse(parser, value);

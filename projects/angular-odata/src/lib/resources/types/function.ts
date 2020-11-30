@@ -17,8 +17,10 @@ import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.function, path).setType(type);
+  static factory<P, R>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.segment(PathSegmentNames.function, path);
+    if (type)
+      segment.setType(type);
     options.clear();
     return new ODataFunctionResource<P, R>(client, segments, options);
   }
@@ -31,7 +33,8 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Action Config
   get schema() {
     let type = this.type();
-    return type ? this.api.callableForType<R>(type) : null;
+    if (type === null) return null;
+    return this.client.callableForType<R>(type);
   }
   ////#endregion
 

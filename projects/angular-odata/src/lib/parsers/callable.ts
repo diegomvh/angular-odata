@@ -48,8 +48,8 @@ export class ODataParameterParser<Type> implements Parser<Type> {
     */
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
-    this.parser = settings.parserForType(this.type) || NONE_PARSER;
+  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+    this.parser = settings.findParserForType(this.type) || NONE_PARSER;
   }
 }
 
@@ -82,9 +82,9 @@ export class ODataCallableParser<R> implements Parser<R> {
     );
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
     if (this.return)
-      this.parser = settings.parserForType(this.return) || NONE_PARSER;
+      this.parser = settings.findParserForType(this.return) || NONE_PARSER;
     this.parameters.forEach(p => p.configure(settings));
   }
 }

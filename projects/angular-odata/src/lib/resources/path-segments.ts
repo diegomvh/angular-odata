@@ -30,7 +30,7 @@ export enum SegmentOptionNames {
 export type ODataSegment = {
   name: string;
   path: string;
-  type: string;
+  type?: string;
   options: PlainObject;
 }
 
@@ -65,7 +65,7 @@ export class ODataPathSegments {
   }
 
   types(): string[] {
-    return this.segments.map(s => s.type).filter(t => !Types.isNullOrUndefined(t));
+    return this.segments.map(s => s.type).filter(t => t !== undefined) as string[];
   }
 
   toString(): string {
@@ -130,7 +130,7 @@ export class SegmentHandler {
   }
 
   get type() {
-    return this.segment.type;
+    return this.segment.type || null;
   }
 
   setType(value: string) {

@@ -71,8 +71,8 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
     return parser.serialize(value, Object.assign({field: this}, options));
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
-    this.parser = settings.parserForType(this.type) || NONE_PARSER;
+  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+    this.parser = settings.findParserForType(this.type) || NONE_PARSER;
   }
 
   // Json Schema
@@ -147,9 +147,9 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     );
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
     if (this.base) {
-      const parent = settings.parserForType(this.base) as ODataEntityParser<any>;
+      const parent = settings.findParserForType(this.base) as ODataEntityParser<any>;
       parent.children.push(this);
       this.parent = parent;
     }

@@ -49,7 +49,7 @@ export class ODataSchema {
     return this.containers.reduce((acc, container) => [...acc, ...container.services], <ODataEntitySet[]>[]);
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
     // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));

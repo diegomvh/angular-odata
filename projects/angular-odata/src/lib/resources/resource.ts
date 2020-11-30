@@ -43,8 +43,8 @@ export abstract class ODataResource<Type> {
    * @returns string The type of the resource
    */
   type() {
-    let segment = this.pathSegments.last();
-    return segment ? segment.type : null;
+    const segment = this.pathSegments.last();
+    return segment !== null ? segment.type : null;
   }
   /**
    * @returns string All covered types of the resource
@@ -75,8 +75,8 @@ export abstract class ODataResource<Type> {
     let config = this.api;
     let type = this.type();
     if (type !== null) {
-      let parser = config.parserForType<Type>(type);
-      if (parser !== null && 'serialize' in parser) {
+      let parser = config.findParserForType<Type>(type);
+      if (parser !== undefined && 'serialize' in parser) {
         return Array.isArray(value) ?
           value.map(e => (parser as Parser<Type>).serialize(e, config.options)) :
           parser.serialize(value, config.options);

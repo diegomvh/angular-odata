@@ -28,8 +28,8 @@ export const PhotoConfig = {
   name: "Photo",
   annotations: [{"type":"Org.OData.Core.V1.AcceptableMediaTypes"}],
   fields: {
-    Id: {type: 'Number', key: true, ref: 'Id', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    Name: {type: 'String'}
+    Id: {type: 'Edm.Int64', key: true, ref: 'Id', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    Name: {type: 'Edm.String'}
   }
 } as StructuredTypeConfig<Photo>;
 
@@ -44,11 +44,11 @@ export const PlanItemConfig = {
   name: "PlanItem",
   annotations: [],
   fields: {
-    PlanItemId: {type: 'Number', key: true, ref: 'PlanItemId', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    ConfirmationCode: {type: 'String'},
-    StartsAt: {type: 'Date'},
-    EndsAt: {type: 'Date'},
-    Duration: {type: 'String'}
+    PlanItemId: {type: 'Edm.Int64', key: true, ref: 'PlanItemId', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    ConfirmationCode: {type: 'Edm.String'},
+    StartsAt: {type: 'Edm.Date'},
+    EndsAt: {type: 'Edm.Date'},
+    Duration: {type: 'Edm.String'}
   }
 } as StructuredTypeConfig<PlanItem>;
 
@@ -68,14 +68,14 @@ export const TripConfig = {
   name: "Trip",
   annotations: [],
   fields: {
-    TripId: {type: 'Number', key: true, ref: 'TripId', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    ShareId: {type: 'String'},
-    Description: {type: 'String'},
-    Name: {type: 'String', nullable: false},
-    Budget: {type: 'Number', nullable: false, annotations: [{"type":"Org.OData.Measures.V1.ISOCurrency","string":"USD"},{"type":"Org.OData.Measures.V1.Scale","int":2}]},
-    StartsAt: {type: 'Date', nullable: false},
-    EndsAt: {type: 'Date', nullable: false},
-    Tags: {type: 'String', nullable: false, collection: true},
+    TripId: {type: 'Edm.Int64', key: true, ref: 'TripId', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    ShareId: {type: 'Edm.String'},
+    Description: {type: 'Edm.String'},
+    Name: {type: 'Edm.String', nullable: false},
+    Budget: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Measures.V1.ISOCurrency","string":"USD"},{"type":"Org.OData.Measures.V1.Scale","int":2}]},
+    StartsAt: {type: 'Edm.Date', nullable: false},
+    EndsAt: {type: 'Edm.Date', nullable: false},
+    Tags: {type: 'Edm.String', nullable: false, collection: true},
     Photos: {type: `${NAMESPACE}.Photo`, collection: true, navigation: true},
     PlanItems: {type: `${NAMESPACE}.PlanItem`, collection: true, navigation: true}
   }
@@ -95,12 +95,12 @@ export const PersonConfig = {
   name: "Person",
   annotations: [],
   fields: {
-    UserName: {type: 'String', key: true, ref: 'UserName', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    FirstName: {type: 'String', nullable: false},
-    LastName: {type: 'String', nullable: false},
-    Emails: {type: 'String', collection: true},
+    UserName: {type: 'Edm.String', key: true, ref: 'UserName', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    FirstName: {type: 'Edm.String', nullable: false},
+    LastName: {type: 'Edm.String', nullable: false},
+    Emails: {type: 'Edm.String', collection: true},
     Gender: {type: `${NAMESPACE}.PersonGender`},
-    Concurrency: {type: 'Number', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Computed","bool":true}]},
+    Concurrency: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Computed","bool":true}]},
     Friends: {type: `${NAMESPACE}.Person`, collection: true, navigation: true},
     Trips: {type: `${NAMESPACE}.Trip`, collection: true, navigation: true},
     Photo: {type: `${NAMESPACE}.Photo`, navigation: true}
@@ -124,6 +124,7 @@ export const TripPinConfig = {
   serviceRootUrl: SERVICE_ROOT,
   options: {
     stringAsEnum: true,
+    fetchPolicy: 'no-cache'
   },
   schemas: [{
     namespace: `${NAMESPACE}`,

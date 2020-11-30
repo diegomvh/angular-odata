@@ -30,7 +30,8 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Function Config
   get schema() {
     let type = this.type();
-    return type ? this.api.structuredTypeForType<T>(type) : null;
+    if (type === null) return null;
+    return this.client.structuredTypeForType<T>(type);
   }
   ////#endregion
 

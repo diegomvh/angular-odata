@@ -62,7 +62,7 @@ export class ODataApi {
 
   configure() {
     this.schemas.forEach(schema => {
-      schema.configure({ parserForType: (type: string) => this.parserForType(type) });
+      schema.configure({ findParserForType: (type: string) => this.findParserForType(type) });
     });
   }
 
@@ -88,41 +88,43 @@ export class ODataApi {
   }
 
   //#region Find Config for Type
-  private schemaForType(type: string): ODataSchema | null {
+  private findSchemaForType(type: string) {
     let schemas = this.schemas.filter(s => s.isNamespaceOf(type));
+    if (schemas.length > 1)
+      return schemas.sort((s1, s2) => s1.namespace.length - s2.namespace.length).pop();
     if (schemas.length === 1) return schemas[0];
-    return schemas.sort((s1, s2) => s2.namespace.length - s1.namespace.length)[0] || null;
+    return undefined;
   }
 
-  public enumTypeForType<T>(type: string) {
-    let schema = this.schemaForType(type);
-    return schema !== null ? schema.enums.find(e => e.isTypeOf(type)) as ODataEnumType<T> : null;
+  public findEnumTypeForType(type: string) {
+    let schema = this.findSchemaForType(type);
+    return schema !== undefined ? schema.enums.find(e => e.isTypeOf(type)) : undefined;
   }
 
-  public structuredTypeForType<T>(type: string) {
-    let schema = this.schemaForType(type);
-    return schema !== null ? schema.entities.find(e => e.isTypeOf(type)) as ODataStructuredType<T> : null;
+  public findStructuredTypeForType(type: string) {
+    let schema = this.findSchemaForType(type);
+    return schema !== undefined ? schema.entities.find(e => e.isTypeOf(type)) : undefined;
   }
 
-  public callableForType<T>(type: string) {
-    let schema = this.schemaForType(type);
-    return schema !== null ? schema.callables.find(e => e.isTypeOf(type)) as ODataCallable<T> : null;
+  public findCallableForType(type: string) {
+    let schema = this.findSchemaForType(type);
+    return schema !== undefined ? schema.callables.find(e => e.isTypeOf(type)) : undefined;
   }
 
-  public entitySetForType(type: string) {
-    let schema = this.schemaForType(type);
-    return schema ? schema.services.find(e => e.isTypeOf(type)) as ODataEntitySet : null;
+  public findEntitySetForType(type: string) {
+    let schema = this.findSchemaForType(type);
+    return schema !== undefined ? schema.services.find(e => e.isTypeOf(type)) : undefined;
   }
 
   //#region Model and Collection for type
-  public modelForType(type: string) {
-    let schema = this.structuredTypeForType<any>(type);
-    return schema ? schema.model as typeof ODataModel : null;
+  public findModelForType(type: string) {
+    let schema = this.findStructuredTypeForType(type);
+    return schema !== undefined ? schema.model as typeof ODataModel : undefined;
   }
 
-  public collectionForType(type: string) {
-    let schema = this.structuredTypeForType<any>(type);
-    return schema ? schema.collection as typeof ODataCollection : null;
+  public findCollectionForType(type: string) {
+    let schema = this.findStructuredTypeForType(type);
+    return schema !== undefined ? schema.collection as typeof ODataCollection : undefined;
   }
   //#endregion
   //#endregion
@@ -161,15 +163,15 @@ export class ODataApi {
   //#endregion
   //#endregion
 
-  public parserForType<T>(type: string) {
+  public findParserForType<T>(type: string) {
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
     }
     // Not edms here
     if (!type.startsWith("Edm.")) {
-      let value = this.enumTypeForType<T>(type) || this.structuredTypeForType<T>(type) || this.callableForType<T>(type);
-      return value ? value.parser as Parser<T> : null;
+      let value = this.findEnumTypeForType(type) || this.findStructuredTypeForType(type) || this.findCallableForType(type);
+      return value !== undefined ? value.parser as Parser<T> : undefined;
     }
-    return null;
+    return undefined;
   }
 }

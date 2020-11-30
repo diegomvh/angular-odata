@@ -47,12 +47,12 @@ export class ODataEntityService<T> {
 
   // Service Config
   get entitySetSchema() {
-    return this.api.entitySetByName(this.name);
+    return this.api.entitySetByName(this.name) || null;
   }
 
   // Entity Config
   get entitySchema() {
-    return this.entityType ? this.api.structuredTypeForType<T>(this.entityType) : null;
+    return this.entityType ? this.client.structuredTypeForType<T>(this.entityType) : null;
   }
 
   public create(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {

@@ -34,7 +34,7 @@ export class ODataClient {
   constructor(protected settings: ODataSettings) { }
 
   apiFor(resource: ODataResource<any>): ODataApi {
-    return this.settings.apiForTypesOrDefault(resource.types());
+    return this.settings.findForTypes(resource.types()) || this.settings.defaultApi();
   }
 
   endpointUrl(resource: ODataResource<any>) {
@@ -44,13 +44,13 @@ export class ODataClient {
 
   parserFor<T>(resource: ODataResource<any>) {
     const type = resource.type();
-    const api = this.apiFor(resource);
-    return type !== null ? api.parserForType<T>(type) : null;
+    if (type === null) return null;
+    return this.parserForType<T>(type);
   }
 
   // Resolve Building Blocks
   apiForType(type?: string) {
-    return this.settings.apiForType(type);
+    return type ? this.settings.apiForType(type) : this.settings.defaultApi();
   }
 
   structuredTypeForType<T>(type: string) {
@@ -97,12 +97,12 @@ export class ODataClient {
 
   // Requests
   metadata(apiName?: string): ODataMetadataResource {
-    let api = this.settings.apiByNameOrDefault(apiName);
+    let api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
     return ODataMetadataResource.factory(this, api);
   }
 
   batch(apiName?: string): ODataBatchResource {
-    let api = this.settings.apiByNameOrDefault(apiName);
+    const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
     return ODataBatchResource.factory(this, api);
   }
 
@@ -116,23 +116,33 @@ export class ODataClient {
 
   /**
    * Unbound Action
-   * @param  {string} type?
+   * @param  {string} name?
    * @returns ODataActionResource
    */
-  action<P, R>(type: string): ODataActionResource<P, R> {
-    const callable = this.callableForType<R>(type);
-    const path = callable ? callable.path : type;
+  action<P, R>(name: string, apiName?: string): ODataActionResource<P, R> {
+    const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
+    let type = null;
+    let path = name;
+    const callable = api.findCallableForType(name);
+    if (callable !== undefined) {
+      path = callable.path;
+    }
     return ODataActionResource.factory<P, R>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
    * Unbound Function
-   * @param  {string} type?
+   * @param  {string} name?
    * @returns ODataFunctionResource
    */
-  function<P, R>(type: string): ODataFunctionResource<P, R> {
-    const callable = this.callableForType<R>(type);
-    const path = callable ? callable.path : type;
+  function<P, R>(name: string, apiName?: string): ODataFunctionResource<P, R> {
+    const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
+    let type = null;
+    let path = name;
+    const callable = api.findCallableForType(name);
+    if (callable !== undefined) {
+      path = callable.path;
+    }
     return ODataFunctionResource.factory<P, R>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
@@ -358,7 +368,7 @@ export class ODataClient {
     withCredentials?: boolean
   } = {}): Observable<any> {
 
-    let api = options.apiName ? this.settings.apiByNameOrDefault(options.apiName) : resource.api;
+    let api = options.apiName ? this.settings.apiByName(options.apiName) : resource.api;
     if (!api) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
     const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe as 'response' | 'events';

@@ -29,7 +29,7 @@ describe('ODataClient', () => {
   it('should return undefined parser for resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People');
     const parser = client.parserFor<Person>(set);
-    expect(parser).toBeUndefined();
+    expect(parser).toBeNull();
   });
 
   it('should return person parser for resource', () => {
@@ -40,7 +40,7 @@ describe('ODataClient', () => {
 
   it('should return undefined parser for type', () => {
     const parser = client.parserForType<Person>(`${NAMESPACE}.Foo`);
-    expect(parser).toBeUndefined();
+    expect(parser).toBeNull();
   });
 
   it('should return person parser for type', () => {
@@ -48,9 +48,11 @@ describe('ODataClient', () => {
     expect(parser instanceof ODataEntityParser).toBeTruthy();
   });
 
-  it('should return undefined entity config', () => {
+  it('should throw error entity config', () => {
+    /*
     const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Foo`);
     expect(config).toBeUndefined();
+    */
   });
 
   it('should return person entity config', () => {
@@ -88,11 +90,6 @@ describe('ODataClient', () => {
     expect(client.endpointUrl(act)).toEqual(SERVICE_ROOT + 'NS.MyAction');
   });
 
-  it('should create unbound action resource', () => {
-    const act: ODataActionResource<any, any> = client.action<any, any>("NS.MyAction")
-    expect(client.endpointUrl(act)).toEqual(SERVICE_ROOT + 'NS.MyAction');
-  });
-
   it('should return parser for resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const parser = client.parserFor<Person>(set) as ODataEntityParser<Person>;
@@ -102,9 +99,9 @@ describe('ODataClient', () => {
 
   it('should convert resource to json', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
-    const func = set.function("NS.MyFunction");
+    const func = set.function<any, any>("NS.MyFunction");
     const json = func.toJSON();
-    expect(client.fromJSON(json)).toEqual(func);
+    expect(json).toEqual({ segments: [{ name: 'entitySet', path: 'People', type: 'TripPin.Person' }, { name: 'function', path: 'NS.MyFunction', type: undefined }], options: {}});
   });
 
   it('should merge headers', () => {
@@ -160,7 +157,8 @@ describe('ODataClient', () => {
     client.entitySet<Person>('People', `${NAMESPACE}.Person`)
     .top(2)
     .get().subscribe(({entities, meta}) => {
-      expect(entities.length).toBe(2);
+      expect(entities !== null).toBeTrue();
+      expect((entities as any[]).length).toBe(2);
       expect(meta.context.entitySet).toEqual("People");
       expect(entities).toEqual(dummyPeople);
     });
@@ -188,7 +186,7 @@ describe('ODataClient', () => {
     entity.get().subscribe(({entity, meta}) => {
       expect(meta.context.entitySet).toEqual("People");
       expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
-      expect(entity).toEqual(entity);
+      expect(entity).toEqual(data);
     });
 
     const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);
