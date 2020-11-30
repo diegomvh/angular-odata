@@ -3,17 +3,17 @@ import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';
 import { ODataEnumType } from './enum-type';
 import { ODataApi } from '../api';
-import { SchemaConfig, Parser } from '../types';
+import { SchemaConfig, Parser, CallableConfig } from '../types';
 import { ODataEntitySet } from './entity-set';
 
 export class ODataSchema {
   api: ODataApi;
   namespace: string;
   alias?: string;
-  enums?: Array<ODataEnumType<any>>;
-  entities?: Array<ODataStructuredType<any>>;
-  callables?: Array<ODataCallable<any>>;
-  containers?: Array<ODataEntityContainer>;
+  enums: Array<ODataEnumType<any>>;
+  entities: Array<ODataStructuredType<any>>;
+  callables: Array<ODataCallable<any>>;
+  containers: Array<ODataEntityContainer>;
 
   constructor(schema: SchemaConfig, api: ODataApi) {
     this.api = api;
@@ -23,7 +23,7 @@ export class ODataSchema {
     this.entities = (schema.entities || []).map(config => new ODataStructuredType(config, this));
     // Merge callables
     let configs = (schema.callables || []);
-    configs = configs.reduce((acc, config) => {
+    configs = configs.reduce((acc: CallableConfig[], config) => {
       if (acc.every(c => c.name !== config.name)) {
         config = configs.filter(c => c.name === config.name).reduce((acc, c) => {
           acc.parameters = Object.assign(acc.parameters || {}, c.parameters || {});
@@ -49,7 +49,7 @@ export class ODataSchema {
     return this.containers.reduce((acc, container) => [...acc, ...container.services], <ODataEntitySet[]>[]);
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
     // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));

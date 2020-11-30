@@ -8,7 +8,7 @@ export class ODataEntitySet {
   constructor(config: EntitySetConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
-    this.annotations = config.annotations;
+    this.annotations = config.annotations || [];
   }
 
   isTypeOf(type: string) {

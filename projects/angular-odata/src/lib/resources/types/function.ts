@@ -24,14 +24,14 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   clone() {
-    return super.clone<ODataFunctionResource<P, R>>();
+    return new ODataFunctionResource<P, R>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
-  //#region Function Config
+  //#region Action Config
   get schema() {
-    return this.api
-      .callableForType<R>(this.type());
+    let type = this.type();
+    return type ? this.api.callableForType<R>(type) : null;
   }
   ////#endregion
 
@@ -45,7 +45,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (!segment)
           throw new Error(`CallableResource dosn't have segment for entitySet`);
-        if (!Types.isUndefined(name))
+        if (name !== undefined)
           segment.setPath(name);
         return segment;
       },
@@ -143,11 +143,11 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       case 'entities':
         return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities}) => entities));
       case 'collection':
-        return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities, meta}) => res.asCollection(entities, meta)));
+        return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities, meta}) => res.asCollection(entities || [], meta)));
       case 'entity':
         return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity}) => entity));
       case 'model':
-        return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity, meta}) => res.asModel(entity, meta)));
+        return (res$ as Observable<ODataEntity<R>>).pipe(map(({entity, meta}) => res.asModel(entity || {}, meta)));
       case 'property':
         return (res$ as Observable<ODataProperty<R>>).pipe(map(({property}) => property));
       default:

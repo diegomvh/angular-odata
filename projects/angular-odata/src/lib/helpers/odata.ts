@@ -1,37 +1,140 @@
 import { ODataContext } from '../types';
 import { VERSION_3_0, VERSION_2_0, VERSION_4_0, $COUNT, $INLINECOUNT } from '../constants';
-import { Types } from '../utils';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
 export interface ODataVersionHelper {
-  entity(value: Object, context: ODataContext): any;
-  entities(value: Object, context: ODataContext): any;
-  property(value: Object, context: ODataContext): any;
-  annotations(value: Object): Object;
-  attributes(value: Object): Object;
-  id(value: Object, id?: string): string;
-  etag(value: Object, etag?: string): string;
-  context(value: Object): ODataContext;
-  functions(value: Object): Object;
-  properties(value: Object): Object;
-  mediaEtag(value: Object): string;
-  metadataEtag(value: Object): string;
-  type(value: Object): string;
-  nextLink(value: Object): string;
-  readLink(value: Object): string;
-  mediaReadLink(value: Object): string;
-  editLink(value: Object): string;
-  mediaEditLink(value: Object): string;
-  mediaContentType(value: Object): string;
-  deltaLink(value: Object): string;
-  count(value: Object): number;
+  VALUE: string;
+  ODATA_ANNOTATION_PREFIX: string;
+  ODATA_FUNCTION_PREFIX: string;
+  ODATA_ID: string;
+  ODATA_COUNT: string;
+  ODATA_ETAG: string;
+  ODATA_CONTEXT: string;
+  ODATA_MEDIA_ETAG: string;
+  entity(value: {[name: string]: any}, context: ODataContext): any;
+  entities(value: {[name: string]: any}, context: ODataContext): any;
+  property(value: {[name: string]: any}, context: ODataContext): any;
+  annotations(value: {[name: string]: any}): {[name: string]: any};
+  attributes(value: {[name: string]: any}): {[name: string]: any};
+  id(value: {[name: string]: any}, id?: string): string;
+  etag(value: {[name: string]: any}, etag?: string): string;
+  context(value: {[name: string]: any}): ODataContext;
+  functions(value: {[name: string]: any}): {[name: string]: any};
+  properties(value: {[name: string]: any}): {[name: string]: any};
+  mediaEtag(value: {[name: string]: any}): string;
+  metadataEtag(value: {[name: string]: any}): string;
+  type(value: {[name: string]: any}): string;
+  nextLink(value: {[name: string]: any}): string;
+  readLink(value: {[name: string]: any}): string;
+  mediaReadLink(value: {[name: string]: any}): string;
+  editLink(value: {[name: string]: any}): string;
+  mediaEditLink(value: {[name: string]: any}): string;
+  mediaContentType(value: {[name: string]: any}): string;
+  deltaLink(value: {[name: string]: any}): string;
+  count(value: {[name: string]: any}): number;
   countParam(): {[name: string]: string};
+}
+
+const ODataVersionBaseHelper = <any> {
+    entity(data: {[name: string]: any}, context: ODataContext) { return data; },
+    entities(data: {[name: string]: any}, context: ODataContext) { return data[this.VALUE]; },
+    property(data: {[name: string]: any}, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
+    functions(value: {[name: string]: any}) {
+      return Object.keys(value)
+        .filter(k => k.startsWith(this.ODATA_FUNCTION_PREFIX))
+        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: value[key] }), {});
+    },
+    properties(value: {[name: string]: any}) {
+      return Object.keys(value)
+        .filter(k => k.indexOf(this.ODATA_ANNOTATION_PREFIX) > 0)
+        .reduce((acc: {[name: string]: any}, key) => {
+          let name = key.substr(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
+          if (!(name in acc)) {
+            acc[name] = {};
+          }
+          Object.assign(acc[name], {[key.substr(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key] });
+          return acc;
+        }, {});
+    },
+    id(value: {[name: string]: any}, id?: string) {
+      if (id === undefined)
+        value[this.ODATA_ID] = id;
+      return value[this.ODATA_ID] as string;
+    },
+    etag(value: {[name: string]: any}, etag?: string) {
+      if (etag === undefined)
+        value[this.ODATA_ETAG] = etag;
+      return value[this.ODATA_ETAG] as string;
+    },
+    mediaEtag(value: {[name: string]: any}) {
+      return (this.ODATA_MEDIA_ETAG in value) ?
+        decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string) : undefined;
+    },
+    metadataEtag(value: {[name: string]: any}) {
+      return (this.ODATA_METADATA_ETAG in value) ?
+        decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string) : undefined;
+    },
+    type(value: {[name: string]: any}) {
+      if (this.ODATA_TYPE in value) {
+        const type = value[this.ODATA_TYPE].substr(1) as string;
+        const matches = COLLECTION.exec(type);
+        if (matches)
+          return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
+        return type;
+      }
+      return undefined;
+    },
+    count(value: {[name: string]: any}) {
+      return (this.ODATA_COUNT in value) ?
+        Number(value[this.ODATA_COUNT]) :
+        undefined;
+    },
+    countParam() {
+      return {[$COUNT]: 'true'};
+    },
+    annotations(value: {[name: string]: any}) {
+      return Object.keys(value)
+        .filter(key => key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(this.ODATA_FUNCTION_PREFIX))
+        .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
+    },
+    attributes(value: {[name: string]: any}) {
+      return Object.keys(value)
+        .filter(key => key.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(this.ODATA_FUNCTION_PREFIX))
+        .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
+    },
+    nextLink(value: {[name: string]: any}) {
+      return (this.ODATA_NEXTLINK in value) ? decodeURIComponent(value[this.ODATA_NEXTLINK] as string) : undefined;
+    },
+    readLink(value: {[name: string]: any}) {
+      return (this.ODATA_READLINK in value) ?
+        decodeURIComponent(value[this.ODATA_READLINK] as string) : undefined;
+    },
+    mediaReadLink(value: {[name: string]: any}) {
+      return (this.ODATA_MEDIA_READLINK in value) ?
+        decodeURIComponent(value[this.ODATA_MEDIA_READLINK] as string) : undefined;
+    },
+    editLink(value: {[name: string]: any}) {
+      return (this.ODATA_EDITLINK in value) ?
+        decodeURIComponent(value[this.ODATA_EDITLINK] as string) : undefined;
+    },
+    mediaEditLink(value: {[name: string]: any}) {
+      return (this.ODATA_MEDIA_EDITLINK in value) ?
+        decodeURIComponent(value[this.ODATA_MEDIA_EDITLINK] as string) : undefined;
+    },
+    deltaLink(value: {[name: string]: any}) {
+      return (this.ODATA_DELTALINK in value) ?
+        decodeURIComponent(value[this.ODATA_DELTALINK] as string) : undefined;
+    },
+    mediaContentType(value: {[name: string]: any}) {
+      return (this.ODATA_MEDIA_CONTENTTYPE in value) ?
+        decodeURIComponent(value[this.ODATA_MEDIA_CONTENTTYPE] as string) : undefined;
+    }
 }
 
 export const ODataHelper = {
   //#region Version 4.0
-  [VERSION_4_0]: <ODataVersionHelper> {
+  [VERSION_4_0]: <ODataVersionHelper> Object.assign({
     VALUE: 'value',
     ODATA_ANNOTATION_PREFIX: '@odata',
     ODATA_FUNCTION_PREFIX: '#',
@@ -44,7 +147,7 @@ export const ODataHelper = {
     //odata.etag: the ETag of the entity
     ODATA_ETAG: '@odata.etag',
     ODATA_METADATA_ETAG: '@odata.metadataEtag',
-    //odata.type: the type of the containing object or targeted property if the type of the object or targeted property cannot be heuristically determined
+    //odata.type: the type of the containing {[name: string]: any} or targeted property if the type of the {[name: string]: any} or targeted property cannot be heuristically determined
     ODATA_TYPE: '@odata.type',
     //odata.nextLink: the next link of a collection with partial results
     ODATA_NEXTLINK: '@odata.nextLink',
@@ -67,12 +170,9 @@ export const ODataHelper = {
     ODATA_MEDIA_READLINK: '@odata.mediaReadLink',
     //odata.mediaEditLink: the link used to edit/update the stream
     ODATA_MEDIA_EDITLINK: '@odata.mediaEditLink',
-    entity(data: Object, context: ODataContext) { return data; },
-    entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
-    property(data: Object, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
-    context(value: Object) {
+    context(value: {[name: string]: any}) {
+      let ctx: ODataContext = {};
       if (this.ODATA_CONTEXT in value) {
-        let ctx: ODataContext = {};
         const str = value[this.ODATA_CONTEXT] as string;
         const index = str.lastIndexOf("#");
         ctx.metadata = str.substr(0, index);
@@ -83,102 +183,13 @@ export const ODataHelper = {
         } else if (parts.length > 1) {
           ctx.property = parts[1];
         }
-        return ctx;
       }
+      return ctx;
     },
-    functions(value: Object) {
-      return Object.keys(value)
-        .filter(k => k.startsWith(this.ODATA_FUNCTION_PREFIX))
-        .reduce((acc, key) => Object.assign(acc, { [key.substr(1)]: value[key] }), {});
-    },
-    properties(value: Object) {
-      return Object.keys(value)
-        .filter(k => k.indexOf(this.ODATA_ANNOTATION_PREFIX) > 0)
-        .reduce((acc, key) => {
-          let name = key.substr(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
-          if (!(name in acc)) {
-            acc[name] = {};
-          }
-          Object.assign(acc[name], { [key.substr(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key] });
-          return acc;
-        }, {});
-    },
-    id(value: Object, id?: string) {
-      if (!Types.isNullOrUndefined(id))
-        value[this.ODATA_ID] = id;
-      return value[this.ODATA_ID] as string;
-    },
-    etag(value: Object, etag?: string) {
-      if (!Types.isNullOrUndefined(etag))
-        value[this.ODATA_ETAG] = etag;
-      return value[this.ODATA_ETAG] as string;
-    },
-    mediaEtag(value: Object) {
-      if (this.ODATA_MEDIA_ETAG in value)
-        return decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string);
-    },
-    metadataEtag(value: Object) {
-      if (this.ODATA_METADATA_ETAG in value)
-        return decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string);
-    },
-    type(value: Object) {
-      if (this.ODATA_TYPE in value) {
-        const type = value[this.ODATA_TYPE].substr(1) as string;
-        const matches = COLLECTION.exec(type);
-        if (matches)
-          return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
-        return type;
-      }
-    },
-    count(value: Object) {
-      if (this.ODATA_COUNT in value)
-        return Number(value[this.ODATA_COUNT]);
-    },
-    countParam() {
-      return {[$COUNT]: 'true'};
-    },
-    annotations(value: Object) {
-      return Object.keys(value)
-        .filter(key => key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(this.ODATA_FUNCTION_PREFIX))
-        .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
-    },
-    attributes(value: Object) {
-      return Object.keys(value)
-        .filter(key => key.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 && !key.startsWith(this.ODATA_FUNCTION_PREFIX))
-        .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
-    },
-    nextLink(value: Object) {
-      if (this.ODATA_NEXTLINK in value)
-        return decodeURIComponent(value[this.ODATA_NEXTLINK] as string);
-    },
-    readLink(value: Object) {
-      if (this.ODATA_READLINK in value)
-        return decodeURIComponent(value[this.ODATA_READLINK] as string);
-    },
-    mediaReadLink(value: Object) {
-      if (this.ODATA_MEDIA_READLINK in value)
-        return decodeURIComponent(value[this.ODATA_MEDIA_READLINK] as string);
-    },
-    editLink(value: Object) {
-      if (this.ODATA_EDITLINK in value)
-        return decodeURIComponent(value[this.ODATA_EDITLINK] as string);
-    },
-    mediaEditLink(value: Object) {
-      if (this.ODATA_MEDIA_EDITLINK in value)
-        return decodeURIComponent(value[this.ODATA_MEDIA_EDITLINK] as string);
-    },
-    deltaLink(value: Object) {
-      if (this.ODATA_DELTALINK in value)
-        return decodeURIComponent(value[this.ODATA_DELTALINK] as string);
-    },
-    mediaContentType(value: Object) {
-      if (this.ODATA_MEDIA_CONTENTTYPE in value)
-        return value[this.ODATA_MEDIA_CONTENTTYPE] as string;
-    }
-  },
+  }, ODataVersionBaseHelper),
   //#endregion
   //#region Version 3.0
-  [VERSION_3_0]: <ODataVersionHelper>{
+  [VERSION_3_0]: <ODataVersionHelper> Object.assign({
     ODATA_ANNOTATION_PREFIX: 'odata.',
     ODATA_FUNCTION_PREFIX: '',
     ODATA_ID: 'odata.id',
@@ -188,12 +199,9 @@ export const ODataHelper = {
     ODATA_TYPE: 'odata.type',
     ODATA_COUNT: 'odata.count',
     VALUE: 'value',
-    entity(data: Object, context: ODataContext) { return data; },
-    entities(data: Object, context: ODataContext) { return data[this.VALUE]; },
-    property(data: Object, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
-    context(value: Object) {
+    context(value: {[name: string]: any}) {
+      let ctx: ODataContext = {};
       if (this.ODATA_CONTEXT in value) {
-        let ctx: ODataContext = {};
         const str = value[this.ODATA_CONTEXT] as string;
         const index = str.lastIndexOf("#");
         ctx.metadata = str.substr(0, index);
@@ -202,59 +210,16 @@ export const ODataHelper = {
         if (parts[parts.length - 1] === '@Element') {
           ctx.entity = parts[1];
         }
-        return ctx;
       }
-    },
-    annotations(value: Object) {
-      return Object.keys(value)
-        .filter(key => key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(this.ODATA_FUNCTION_PREFIX))
-        .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
-    },
-    attributes(value: Object){ return value; },
-    id(value: Object, id?: string) {
-      if (!Types.isNullOrUndefined(id))
-        value[this.ODATA_ID] = id;
-      return value[this.ODATA_ID] as string;
-    },
-    etag(value: Object, etag?: string) {
-      if (!Types.isNullOrUndefined(etag))
-        value[this.ODATA_ETAG] = etag;
-      return value[this.ODATA_ETAG] as string;
-    },
-    nextLink(value: Object) {
-      if (this.ODATA_NEXTLINK in value)
-        return decodeURIComponent(value[this.ODATA_NEXTLINK] as string);
-    },
-    functions(value: Object){ return undefined; },
-    properties(value: Object){ return undefined; },
-    mediaEtag(value: Object){ return undefined; },
-    metadataEtag(value: Object){ return undefined; },
-    type(value: Object) {
-      if (this.ODATA_TYPE in value) {
-        const type = value[this.ODATA_TYPE].substr(1) as string;
-        const matches = COLLECTION.exec(type);
-        if (matches)
-          return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
-        return type;
-      }
-    },
-    readLink(value: Object){ return undefined; },
-    mediaReadLink(value: Object){ return undefined; },
-    editLink(value: Object){ return undefined; },
-    mediaEditLink(value: Object){ return undefined; },
-    mediaContentType(value: Object){ return undefined; },
-    deltaLink(value: Object){ return undefined; },
-    count(value: Object) {
-      if (this.ODATA_COUNT in value)
-        return Number(value[this.ODATA_COUNT]);
+      return ctx;
     },
     countParam() {
       return {[$INLINECOUNT]: 'allpages'};
     }
-  },
+  }, ODataVersionBaseHelper),
   //#endregion
   //#region Version 2.0
-  [VERSION_2_0]: <ODataVersionHelper>{
+  [VERSION_2_0]: <ODataVersionHelper> Object.assign({
     ODATA_ID: 'id',
     ODATA_ETAG: 'etag',
     ODATA_ANNOTATION: '__metadata',
@@ -262,57 +227,16 @@ export const ODataHelper = {
     ODATA_COUNT: '__count',
     ODATA_DEFERRED: '__deferred',
     ODATA_TYPE: 'type',
-    RESULTS: 'results',
-    entity(data: Object, context: ODataContext) { return data; },
-    entities(data: Object, context: ODataContext) { return data[this.RESULTS]; },
-    property(data: Object, context: ODataContext) { return (this.RESULTS in data) ? data[this.RESULTS] : data; },
-    annotations(value: Object) {
+    VALUE: 'results',
+    annotations(value: {[name: string]: any}) {
       if (this.ODATA_ANNOTATION in value)
         return value[this.ODATA_ANNOTATION];
       return value;
     },
-    attributes(value: Object){ return value; },
-    id(value: Object, id?: string) {
-      if (!Types.isNullOrUndefined(id))
-        value[this.ODATA_ID] = id;
-      return value[this.ODATA_ID] as string;
-    },
-    etag(value: Object, etag?: string) {
-      if (!Types.isNullOrUndefined(etag))
-        value[this.ODATA_ETAG] = etag;
-      return value[this.ODATA_ETAG] as string;
-    },
-    nextLink(value: Object) {
-      if (this.ODATA_NEXTLINK in value)
-        return decodeURIComponent(value[this.ODATA_NEXTLINK] as string);
-    },
-    context(value: Object){ return undefined; },
-    functions(value: Object){ return undefined; },
-    properties(value: Object){ return undefined; },
-    mediaEtag(value: Object){ return undefined; },
-    metadataEtag(value: Object){ return undefined; },
-    type(value: Object) {
-      if (this.ODATA_TYPE in value) {
-        const type = value[this.ODATA_TYPE].substr(1) as string;
-        const matches = COLLECTION.exec(type);
-        if (matches)
-          return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
-        return type;
-      }
-    },
-    readLink(value: Object){ return undefined; },
-    mediaReadLink(value: Object){ return undefined; },
-    editLink(value: Object){ return undefined; },
-    mediaEditLink(value: Object){ return undefined; },
-    mediaContentType(value: Object){ return undefined; },
-    deltaLink(value: Object){ return undefined; },
-    count(value: Object) {
-      if (this.ODATA_COUNT in value)
-        return Number(value[this.ODATA_COUNT]);
-    },
+    attributes(value: {[name: string]: any}){ return value; },
     countParam() {
       return {[$INLINECOUNT]: 'allpages'};
     }
-  }
+  }, ODataVersionBaseHelper)
   //#endregion
 }

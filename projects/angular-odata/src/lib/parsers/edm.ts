@@ -54,7 +54,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       }
       let duration: Duration = {};
       duration.sign = (matches[1] === '-') ? -1 : 1;
-      return ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].reduce((acc, name, index) => {
+      return ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].reduce((acc: any, name, index) => {
         const v = parseFloat(matches[index + 3]);
         if (!Number.isNaN(v))
           acc[name] = v;

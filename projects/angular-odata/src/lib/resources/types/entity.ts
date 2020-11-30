@@ -27,14 +27,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return super.clone<ODataEntityResource<T>>();
+    return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
   //#region Entity Config
   get schema() {
-    return this.api
-      .structuredTypeForType<T>(this.type());
+    let type = this.type();
+    return type ? this.api.structuredTypeForType<T>(type) : null;
   }
   ////#endregion
 
@@ -122,7 +122,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (!segment)
           throw new Error(`EntityResourse dosn't have segment for entitySet`);
-        if (!Types.isUndefined(name))
+        if (name !== undefined)
           segment.setPath(name);
         return segment;
       },
@@ -193,16 +193,16 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetch(options?: HttpOptions): Observable<T> {
+  fetch(options?: HttpOptions): Observable<T | null> {
     if (this.segment.key().empty())
       return throwError("Resource without key");
     return this.get(options).pipe(map(({ entity }) => entity));
   }
 
-  model(options?: HttpOptions): Observable<ODataModel<T>> {
+  model(options?: HttpOptions): Observable<ODataModel<T> | null> {
     if (this.segment.key().empty())
       return throwError("Resource without key");
-    return this.get(options).pipe(map(({ entity, meta }) => this.asModel(entity, meta)));
+    return this.get(options).pipe(map(({ entity, meta }) => entity ? this.asModel(entity, meta) : null));
   }
   //#endregion
 }

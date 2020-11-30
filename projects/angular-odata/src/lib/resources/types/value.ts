@@ -9,14 +9,16 @@ import { $VALUE } from '../../constants';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<V>(client: ODataClient, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.value, $VALUE).setType(type);
+  static factory<V>(client: ODataClient, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.segment(PathSegmentNames.value, $VALUE);
+    if (type)
+      segment.setType(type);
     options.clear();
     return new ODataValueResource<V>(client, segments, options);
   }
 
   clone() {
-    return super.clone<ODataValueResource<T>>();
+    return new ODataValueResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

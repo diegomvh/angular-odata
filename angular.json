@@ -42,6 +42,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "angular-odata"
 }

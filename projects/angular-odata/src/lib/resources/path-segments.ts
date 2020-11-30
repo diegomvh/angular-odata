@@ -93,19 +93,20 @@ export class ODataPathSegments {
       (Types.isUndefined(path) || s.path === path));
   }
 
-  last(): SegmentHandler {
-    if (this.segments.length > 0)
-      return new SegmentHandler(this.segments[this.segments.length - 1]);
+  last() {
+    return (this.segments.length > 0) ?
+       new SegmentHandler(this.segments[this.segments.length - 1]) : null;
   }
 
-  segment(name: string, path?: string): SegmentHandler {
+  segment(name: string, path?: string) {
     let segment = this.find(name, path);
-    if (!segment && !Types.isUndefined(path)) {
+    if (!segment && path !== undefined) {
       segment = { name, path, options: {} } as ODataSegment;
       this.segments.push(segment);
     }
-    if (segment)
-      return new SegmentHandler(segment);
+    if (segment === undefined)
+      throw new Error(`No segment with name: ${name}`)
+    return new SegmentHandler(segment);
   }
 
   has(name: string, path?: string) {
@@ -119,7 +120,7 @@ export class ODataPathSegments {
 }
 
 export class SegmentHandler {
-  options?: PlainObject
+  options: PlainObject
   constructor(private segment: ODataSegment) {
     this.options = this.segment.options;
   }
@@ -146,7 +147,7 @@ export class SegmentHandler {
 
   // Option Handler
   option<T>(type: SegmentOptionNames, opts?: T) {
-    if (!Types.isUndefined(opts))
+    if (opts !== undefined)
       this.options[type] = opts;
     return new OptionHandler<T>(this.options, type as any);
   }

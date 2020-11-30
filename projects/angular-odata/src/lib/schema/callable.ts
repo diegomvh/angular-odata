@@ -5,10 +5,10 @@ import { ODataCallableParser } from '../parsers';
 export class ODataCallable<R> {
   schema: ODataSchema;
   name: string;
-  path?: string;
+  path: string;
   bound?: boolean;
   composable?: boolean;
-  parser?: ODataCallableParser<R>;
+  parser: ODataCallableParser<R>;
 
   constructor(config: CallableConfig, schema: ODataSchema) {
     this.schema = schema;
@@ -30,7 +30,7 @@ export class ODataCallable<R> {
     return this.schema.options;
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
     this.parser.configure(settings);
   }
 }

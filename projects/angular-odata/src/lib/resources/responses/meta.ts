@@ -47,8 +47,8 @@ export abstract class ODataMeta {
   }
 
   // Method
-  abstract clone();
-  abstract data(data: Object);
+  abstract clone() : ODataMeta;
+  abstract data(data: Object) : Object;
 }
 
 export class ODataPropertyMeta extends ODataMeta {
@@ -160,19 +160,19 @@ export class ODataEntitiesMeta extends ODataMeta {
     return this.odv.deltaLink(this.annotations);
   }
 
-  get top(): number {
+  get top() {
     let match = (this.nextLink || "").match(/[&?]{1}\$top=(\d+)/);
-    if (match) return Number(match[1]);
+    return match !== null ? Number(match[1]) : undefined;
   }
 
-  get skip(): number {
+  get skip() {
     let match = (this.nextLink || "").match(/[&?]{1}\$skip=(\d+)/);
-    if (match) return Number(match[1]);
+    return match !== null ? Number(match[1]) : undefined;
   }
 
-  get skiptoken(): string {
+  get skiptoken() {
     let match = (this.nextLink || "").match(/[&?]{1}\$skiptoken=([\d\w\s']+)/);
-    if (match) return match[1];
+    return match !== null ? match[1] : undefined;
   }
 
   private _functions: any;

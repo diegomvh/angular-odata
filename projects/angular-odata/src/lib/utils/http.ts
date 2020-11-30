@@ -7,7 +7,7 @@ export const Http = {
     values.forEach(value => {
       if (value instanceof HttpHeaders) {
         value.keys().forEach(key => {
-          headers = value.getAll(key).reduce((acc, v) => acc.append(key, v), headers);
+          headers = ((value as HttpHeaders).getAll(key) || []).reduce((acc, v) => acc.append(key, v), headers);
         });
       } else if (typeof value === 'object') {
         Object.entries(value).forEach(([key, value]) => {
@@ -24,7 +24,7 @@ export const Http = {
     values.forEach(value => {
       if (value instanceof HttpParams) {
         value.keys().forEach(key => {
-          params = value.getAll(key).reduce((acc, v) => acc.append(key, v), params);
+          params = ((value as HttpParams).getAll(key) || []).reduce((acc, v) => acc.append(key, v), params);
         });
       } else if (typeof value === 'object') {
         Object.entries(value).forEach(([key, value]) => {

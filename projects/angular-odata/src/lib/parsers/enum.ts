@@ -33,7 +33,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
         names = names.map(name => `${this.type}'${name}'`)
       return names.join(", ");
     } else {
-      let name = EnumHelper.toName(this.members, value);
+      let name = EnumHelper.toName(this.members, (<any>value) as number);
       if (!options.stringAsEnum)
         name = `${this.type}'${name}'`;
       return name;

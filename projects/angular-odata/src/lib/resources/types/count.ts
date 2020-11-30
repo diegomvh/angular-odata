@@ -16,7 +16,7 @@ export class ODataCountResource extends ODataResource<any> {
   }
 
   clone() {
-    return super.clone<ODataCountResource>();
+    return new ODataCountResource(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

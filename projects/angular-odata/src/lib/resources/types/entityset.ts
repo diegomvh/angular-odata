@@ -20,21 +20,23 @@ import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.entitySet, path).setType(type);
+  static factory<E>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.segment(PathSegmentNames.entitySet, path)
+    if (type)
+      segment.setType(type);
     options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
     return new ODataEntitySetResource<E>(client, segments, options);
   }
 
   clone() {
-    return super.clone<ODataEntitySetResource<T>>();
+    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
   //#region Entity Config
   get schema() {
-    return this.api
-      .structuredTypeForType<T>(this.type());
+    let type = this.type();
+    return type ? this.api.structuredTypeForType<T>(type) : null;
   }
   ////#endregion
 
@@ -143,7 +145,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (!segment)
           throw new Error(`EntityResourse dosn't have segment for entitySet`);
-        if (!Types.isUndefined(name))
+        if (name !== undefined)
           segment.setPath(name);
         return segment;
       }
@@ -221,12 +223,12 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return fetch()
       .pipe(
         expand(({meta})  => (meta.skip || meta.skiptoken) ? fetch(meta) : empty()),
-        concatMap(({entities}) => entities),
+        concatMap(({entities}) => entities || []),
         toArray());
   }
 
   collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>>> {
-    return this.get(options).pipe(map(({entities, meta}) => this.asCollection(entities, meta)));
+    return this.get(options).pipe(map(({entities, meta}) => this.asCollection(entities || [], meta)));
   }
   //#endregion
 }

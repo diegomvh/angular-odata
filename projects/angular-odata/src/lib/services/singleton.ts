@@ -9,10 +9,6 @@ export class ODataSingletonService<T> {
     return this.client.singleton(this.name, this.entityType);
   }
 
-  public model<M extends ODataModel<T>>(entity?: Partial<T>): M {
-    return this.entity().asModel<M>(entity);
-  }
-
   // Models
   public attach<M extends ODataModel<T>>(value: M): M {
     return value.attach(this.entity());
@@ -30,7 +26,7 @@ export class ODataSingletonService<T> {
 
   // Entity Config
   get structuredSchema() {
-    return this.api.structuredTypeForType<T>(this.entityType);
+    return this.entityType ? this.api.structuredTypeForType<T>(this.entityType) : null;
   }
 }
 

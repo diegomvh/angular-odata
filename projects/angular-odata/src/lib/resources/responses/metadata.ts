@@ -145,32 +145,29 @@ export class ODataMetadata {
         if (Types.isNullOrUndefined(attributes)) {
             throw new Error('OData version is not specified in the metadata');
         }
-        const attr: Attr = attributes.getNamedItem('Version');
+        const attr: Attr | null = attributes.getNamedItem('Version');
         if (Types.isNullOrUndefined(attr)) {
             throw new Error('OData version is not specified in the metadata');
         }
-        const odataVersion: string = attr.nodeValue;
+        const odataVersion = attr?.nodeValue;
         if (odataVersion !== VERSION_4_0) {
             throw new Error('OData version "' + odataVersion + '" is not supported');
         }
     }
 
     protected getObjects(parentElement: Element, tag: string, fieldNames: Field[]): any[] {
-        let objects: any[];
+        let objects: any[] = [];
 
         const children: HTMLCollection = parentElement.children;
         for (let index = 0; index < children.length; index++) {
-            const element: Element = children.item(index);
+            const element = children.item(index);
 
-            if (element.nodeName !== tag) {
+            if (!element || element.nodeName !== tag) {
                 continue;
             }
 
             const attributes: NamedNodeMap = element.attributes;
             const fieldValues: any[] = this.getFieldValues(fieldNames, attributes, element);
-            if (Types.isNullOrUndefined(objects)) {
-                objects = [];
-            }
             switch (tag) {
                 case ODataMetadata.TAG_REFERENCE:
                     objects.push(new CsdlReference(
@@ -376,17 +373,17 @@ export class ODataMetadata {
         let object: any;
 
         const children: HTMLCollection = parentElement.children;
-        let element: Element;
+        let element: Element | undefined | null;
         for (let index = 0; index < children.length; index++) {
-            if (children.item(index).nodeName === tag) {
-                if (!Types.isNullOrUndefined(element)) {
+            if (children && children.item(index)?.nodeName === tag) {
+                if (element !== undefined && element !== null) {
                     throw new Error('Expected one ' + tag);
                 }
                 element = children.item(index);
             }
         }
 
-        if (!Types.isNullOrUndefined(element)) {
+        if (element !== undefined && element !== null) {
             const attributes: NamedNodeMap = element.attributes;
             const fieldValues: any[] = this.getFieldValues(fieldNames, attributes, element);
             switch (tag) {
@@ -688,19 +685,16 @@ export class ODataMetadata {
         }
     }
 
-    protected getAttributeValue(attributes: NamedNodeMap, attributeName: string): string {
-        const attribute: Attr = attributes.getNamedItem(attributeName);
-        if (!Types.isNullOrUndefined(attribute)) {
-            return attribute.nodeValue;
-        }
-        return undefined;
+    protected getAttributeValue(attributes: NamedNodeMap, attributeName: string) {
+        const attribute: Attr | null = attributes.getNamedItem(attributeName);
+        return (attribute !== null && attribute.nodeValue) ? attribute.nodeValue : undefined;
     }
 
-    protected propertyValueToNumber(attributeValue: string): number {
-        return !Types.isNullOrUndefined(attributeValue) ? Number(attributeValue) : undefined;
+    protected propertyValueToNumber(attributeValue?: string) {
+        return attributeValue !== undefined ? Number(attributeValue) : undefined;
     }
 
-    protected propertyValueToBoolean(attributeValue: string): boolean {
-        return !Types.isNullOrUndefined(attributeValue) ? attributeValue === 'true' : undefined;
+    protected propertyValueToBoolean(attributeValue?: string) {
+        return attributeValue !== undefined ? attributeValue === 'true' : false;
     }
 }

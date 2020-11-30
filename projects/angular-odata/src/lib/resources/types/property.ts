@@ -14,21 +14,23 @@ import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<P>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.property, path).setType(type)
+  static factory<P>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.segment(PathSegmentNames.property, path)
+    if (type)
+      segment.setType(type)
     options.clear();
     return new ODataPropertyResource<P>(client, segments, options);
   }
 
   clone() {
-    return super.clone<ODataPropertyResource<T>>();
+    return new ODataPropertyResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
   //#region Function Config
   get schema() {
-    return this.api
-    .structuredTypeForType<T>(this.type());
+    let type = this.type();
+    return type ? this.api.structuredTypeForType<T>(type) : null;
   }
   ////#endregion
 
@@ -55,22 +57,22 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetch(options?: HttpOptions): Observable<T> {
+  fetch(options?: HttpOptions): Observable<T | null> {
     return this.get(
       Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options || {})
     ).pipe(map(({property}) => property));
   }
 
-  model(options?: HttpOptions): Observable<ODataModel<T>> {
+  model(options?: HttpOptions): Observable<ODataModel<T> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
-    ).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
+    ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
 
-  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>>> {
+  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})
-    ).pipe(map(({entities, meta}) => this.asCollection(entities)));
+    ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
   }
   //#endregion
 }

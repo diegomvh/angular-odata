@@ -9,13 +9,14 @@ const NONE_PARSER = {
 export class ODataParameterParser<Type> implements Parser<Type> {
   name: string;
   type: string;
-  private parser?: Parser<Type>;
+  private parser: Parser<Type>;
   collection?: boolean;
   nullable?: boolean;
 
   constructor(name: string, parameter: Parameter) {
     this.name = name;
     this.type = parameter.type;
+    this.parser = NONE_PARSER;
     Object.assign(this, parameter);
   }
 
@@ -47,7 +48,7 @@ export class ODataParameterParser<Type> implements Parser<Type> {
     */
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
     this.parser = settings.parserForType(this.type) || NONE_PARSER;
   }
 }
@@ -63,6 +64,7 @@ export class ODataCallableParser<R> implements Parser<R> {
     this.name = config.name;
     //this.type = `${namespace}.${config.name}`;
     this.return = config.return;
+    this.parser = NONE_PARSER;
     this.parameters = Object.entries(config.parameters || [])
       .map(([name, p]) => new ODataParameterParser(name, p as Parameter));
   }
@@ -80,7 +82,7 @@ export class ODataCallableParser<R> implements Parser<R> {
     );
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
     if (this.return)
       this.parser = settings.parserForType(this.return) || NONE_PARSER;
     this.parameters.forEach(p => p.configure(settings));

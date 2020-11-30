@@ -64,7 +64,7 @@ export class ODataBatchRequest<T> extends Subject<HttpResponse<T>> {
       let headers = this.request.headers;
       res = [
         ...res,
-        ...headers.keys().map(key => `${key}: ${headers.getAll(key).join(',')}`)
+        ...headers.keys().map(key => `${key}: ${(headers.getAll(key) || []).join(',')}`)
       ];
     }
 
@@ -150,15 +150,20 @@ export class ODataBatchResource extends ODataResource<any> {
   private _api: ODataApi;
   batchBoundary: string;
 
-  constructor(client: ODataClient, api: ODataApi, segments?: ODataPathSegments) {
+  constructor(client: ODataClient, api?: ODataApi, segments?: ODataPathSegments) {
     super(client, segments);
-    this._api = api;
+    this._api = api || client.apiFor(this);
     this.batchBoundary = uniqid(BATCH_PREFIX);
     this.requests = [];
   }
 
+  clone() {
+    //TODO: Clone
+    return new ODataBatchResource(this.client, this._api, this.pathSegments.clone());
+  }
+
   //#region Factory
-  static factory(client: ODataClient, api: ODataApi) {
+  static factory(client: ODataClient, api?: ODataApi) {
     let segments = new ODataPathSegments();
     segments.segment(PathSegmentNames.batch, $BATCH);
     return new ODataBatchResource(client, api, segments);
@@ -259,14 +264,14 @@ export class ODataBatchResource extends ODataResource<any> {
 
   handleResponse(response: ODataResponse<any>) {
     let chunks: string[][] = [];
-    const contentType: string = response.headers.get(CONTENT_TYPE);
+    const contentType: string = response.headers.get(CONTENT_TYPE) || "";
     const batchBoundary: string = getBoundaryDelimiter(contentType);
     const endLine: string = getBoundaryEnd(batchBoundary);
 
     const lines: string[] = response.body.split(NEWLINE_REGEXP);
 
-    let changesetResponses: string[][];
-    let contentId: number;
+    let changesetResponses: string[][] | undefined;
+    let contentId: number | undefined;
     let changesetBoundary;
     let changesetEndLine;
     let startIndex;
@@ -283,7 +288,7 @@ export class ODataBatchResource extends ODataResource<any> {
           startIndex = undefined;
         }
         continue;
-      } else if (!Types.isNullOrUndefined(changesetResponses) && line.startsWith(CONTENT_ID)) {
+      } else if (changesetResponses !== undefined && line.startsWith(CONTENT_ID)) {
         contentId = Number(getHeaderValue(line));
       } else if (line.startsWith(HTTP11)) {
         startIndex = index;
@@ -293,7 +298,7 @@ export class ODataBatchResource extends ODataResource<any> {
           continue;
         }
         const chunk = lines.slice(startIndex, index);
-        if (!Types.isNullOrUndefined(changesetResponses)) {
+        if (changesetResponses !== undefined && contentId !== undefined) {
           changesetResponses[contentId] = chunk;
         } else {
           chunks.push(chunk);
@@ -302,7 +307,7 @@ export class ODataBatchResource extends ODataResource<any> {
         if (line === batchBoundary || line === changesetBoundary) {
           startIndex = index + 1;
         } else if (line === endLine || line === changesetEndLine) {
-          if (!Types.isNullOrUndefined(changesetResponses)) {
+          if (changesetResponses !== undefined) {
             for (const response of changesetResponses) {
               if (!Types.isNullOrUndefined(response)) {
                 chunks.push(response);

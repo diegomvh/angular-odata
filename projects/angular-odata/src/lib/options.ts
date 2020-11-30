@@ -10,8 +10,8 @@ export class ODataOptions implements Options {
   fetchPolicy: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
   streaming?: boolean;
   // Http
-  params?: { [param: string]: string | string[] };
-  headers?: { [param: string]: string | string[] };
+  params: { [param: string]: string | string[] };
+  headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
 
   constructor(config: Options) {

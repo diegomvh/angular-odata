@@ -17,8 +17,8 @@ import {
 import { ODataEntitiesMeta } from '../resources/responses/meta';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
-  protected _resource: ODataResource<T>;
-  protected _meta: ODataEntitiesMeta;
+  protected _resource: ODataResource<T> | null;
+  protected _meta: ODataEntitiesMeta | null;
 
   protected _models: M[];
   get models() {
@@ -39,6 +39,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {}) {
+    this._resource = null;
+    this._meta = null;
+    this._models = [];
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((values || []), options.meta);
@@ -52,7 +55,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   target() {
-    return this._resource.clone() as ODataResource<T>;
+    return this._resource !== null ? this._resource.clone() as ODataResource<T> : null;
   }
 
   protected parse(values: any[]): M[] {
@@ -62,12 +65,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (values as T[]).map(value => {
       if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
         resource.segment.key(value);
-      return (resource ? resource.clone().asModel(value, this._meta ? this._meta.entity(value) : null) : value) as M;
+      return (resource ? resource.clone().asModel(value, this._meta !== null ? this._meta.entity(value) : undefined) : value) as M;
     });
   }
 
   protected populate(values: any[], annots?: ODataEntitiesMeta): this {
-    this._meta = annots;
+    this._meta = annots || null;
 
     if (annots instanceof ODataEntitiesMeta) {
       this._state = {};
@@ -100,8 +103,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   clone() {
+    let options: {resource?: ODataResource<T>, meta?: ODataEntitiesMeta} = {};
+    if (this._resource)
+      options.resource = this._resource.clone();
+    if (this._meta)
+      options.meta = this._meta.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
-    return (new Ctor(this.models, { resource: this._resource.clone(), meta: this._meta })) as ODataCollection<T, ODataModel<T>>;
+    return new Ctor(this.models, options);
   }
 
   // Iterable
@@ -122,15 +130,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   fetch(options?: HttpOptions & {withCount?: boolean}): Observable<this> {
     if (this._resource instanceof ODataEntitySetResource) {
       return this._resource.get(options).pipe(
-      map(({entities, meta}) => this.populate(entities, meta)));
+      map(({entities, meta}) => this.populate(entities || [], meta)));
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       return this._resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
-      map(({entities, meta}) => this.populate(entities, meta)));
+      map(({entities, meta}) => this.populate(entities || [], meta)));
     } else if (this._resource instanceof ODataFunctionResource) {
       return this._resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
-      map(({entities, meta}) => this.populate(entities, meta)));
+      map(({entities, meta}) => this.populate(entities || [], meta)));
     }
     throw new Error("Not Yet!");
   }
@@ -153,9 +161,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       obs$ = this._resource.all();
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       obs$ = this._resource.all();
-    }
-    if (!obs$)
+    } else {
       throw new Error("Not Yet!");
+    }
     return obs$.pipe(
       map(entities => this.populate(entities)));
   }
@@ -168,9 +176,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       let ref = this._resource.reference();
       obs$ = ref.add(model.target() as ODataEntityResource<T>);
-    }
-    if (!obs$)
+    } else {
       throw new Error(`Can't add`);
+    }
     return obs$.pipe(map(() => this));
   }
 
@@ -181,9 +189,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       let ref = this._resource.reference();
       obs$ = ref.remove(model.target() as ODataEntityResource<T>);
-    }
-    if (!obs$)
+    } else {
       throw new Error(`Can't remove`);
+    }
     return obs$.pipe(map(() => this));
   }
 

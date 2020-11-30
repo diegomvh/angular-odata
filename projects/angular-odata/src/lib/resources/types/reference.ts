@@ -18,7 +18,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   }
 
   clone() {
-    return super.clone<ODataReferenceResource>();
+    return new ODataReferenceResource(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -75,7 +75,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   remove(target?: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     return this.delete(Object.assign({target}, options));
   }
-  //#region 
+  //#region
 
   //#region Custom for single
   set(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any>  {
@@ -85,5 +85,5 @@ export class ODataReferenceResource extends ODataResource<any> {
   unset(options?: HttpOptions & { etag?: string }): Observable<any>  {
     return this.delete(options);
   }
-  //#region 
+  //#region
 }

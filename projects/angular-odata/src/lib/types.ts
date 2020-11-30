@@ -94,9 +94,9 @@ export interface Parser<T> {
 }
 
 export interface CacheStorage {
-  put(key: any, value: any);
-  remove(options: {maxAge: number});
-  get(key: any, options: {maxAge: number});
+  put(key: any, value: any): any;
+  remove(options: {maxAge: number}): any;
+  get(key: any, options: {maxAge: number}): any;
 }
 
 //#region Configs
@@ -142,8 +142,8 @@ export type StructuredTypeConfig<T> = {
   name: string;
   base?: string;
   open?: boolean;
-  model?: { new(...any): any };
-  collection?: { new(...any): any };
+  model?: { new(...params: any[]): any };
+  collection?: { new(...params: any[]): any };
   annotations?: any[];
   fields: { [P in keyof T]?: Field };
 }

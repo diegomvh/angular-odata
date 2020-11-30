@@ -2,7 +2,6 @@ import buildQuery, { alias, Alias } from './builder';
 import { PlainObject } from './builder';
 
 import { Dates, Types, Urls } from '../utils';
-import { Type } from '@angular/core';
 
 export enum QueryOptionNames {
   // System options
@@ -21,7 +20,7 @@ export enum QueryOptionNames {
 }
 
 export class ODataQueryOptions {
-  options?: PlainObject;
+  options: PlainObject;
 
   constructor(options?: PlainObject) {
     this.options = options || {};
@@ -50,7 +49,7 @@ export class ODataQueryOptions {
     let custom = this.options[QueryOptionNames.custom] || {};
     if (Types.isArray(custom)) {
       //TODO: split test for item type
-      custom = custom.reduce((acc, item) => Object.assign(acc, item), {});
+      custom = custom.reduce((acc: {[name: string]: any}, item: {[name: string]: any}) => Object.assign(acc, item), {});
     }
     Object.assign(params, custom);
 
@@ -90,7 +89,7 @@ export class ODataQueryOptions {
 
   keep(...names: QueryOptionNames[]) {
     this.options = Object.keys(this.options)
-      .filter((k: QueryOptionNames) => names.indexOf(k) !== -1)
+      .filter(k => names.indexOf(k as QueryOptionNames) !== -1)
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
@@ -194,7 +193,7 @@ export class OptionHandler<T> {
     }, obj);
 
     if (Types.isArray(this.o[this.n])) {
-      this.o[this.n] = this.o[this.n].filter(v => !Types.isEmpty(v));
+      this.o[this.n] = this.o[this.n].filter((v: any) => !Types.isEmpty(v));
       if (this.o[this.n].length === 1)
         this.o[this.n] = this.o[this.n][0];
     }

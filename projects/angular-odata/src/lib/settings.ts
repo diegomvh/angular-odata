@@ -6,7 +6,7 @@ import { ODataApi } from './api';
 import { HttpClient } from '@angular/common/http';
 
 export class ODataSettings {
-  apis?: Array<ODataApi>;
+  apis: Array<ODataApi>;
 
   constructor(http: HttpClient, ...configs: ApiConfig[]) {
     this.apis = configs.map(config => new ODataApi(http, config));
@@ -22,12 +22,12 @@ export class ODataSettings {
     this.apis.forEach(api => api.configure());
   }
 
-  public apiByNameOrDefault(name?: string) {
+  public apiByNameOrDefault(name?: string) : ODataApi {
     if (this.apis.length > 1 && !Types.isUndefined(name)) {
       const api = this.apis.find(c => c.name === name);
       if (api) return api;
     }
-    return this.apis.find(c => c.default);
+    return this.apis.find(c => c.default) as ODataApi;
   }
 
   public apiForTypesOrDefault(types: string[]) {
@@ -35,11 +35,11 @@ export class ODataSettings {
       const api = this.apis.find(c => c.schemas.some(s => types.some(type => s.isNamespaceOf(type))));
       if (api) return api;
     }
-    return this.apis.find(c => c.default);
+    return this.apis.find(c => c.default) as ODataApi;
   }
 
-  public apiForType(type: string) {
-    return this.apiForTypesOrDefault([type]);
+  public apiForType(type?: string) {
+    return type ? this.apiForTypesOrDefault([type]) : this.apiByNameOrDefault();
   }
 
   //#region Configs shortcuts
@@ -71,60 +71,60 @@ export class ODataSettings {
     return values[0];
   }
 
-  public parserForType<T>(type: string): Parser<T> {
+  public parserForType<T>(type: string) {
     let values = this.apis.map(api => api.parserForType<T>(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0] as Parser<T>;
+    return values.length === 1 ? values[0] as Parser<T> : null;
   }
 
-  public modelForType(type: string): typeof ODataModel {
+  public modelForType(type: string) {
     let values = this.apis.map(api => api.modelForType(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values.length === 1 ? values[0] : null;
   }
 
-  public collectionForType(type: string): typeof ODataCollection {
+  public collectionForType(type: string) {
     let values = this.apis.map(api => api.collectionForType(type)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values.length === 1 ? values[0] : null;
   }
 
   public enumTypeByName<T>(name: string) {
     let values = this.apis.map(api => api.enumTypeByName<T>(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values.length === 1 ? values[0] : null;
   }
 
   public structuredTypeByName<T>(name: string) {
     let values = this.apis.map(api => api.structuredTypeByName<T>(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values.length === 1 ? values[0] : null;
   }
 
   public entitySetByName(name: string) {
     let values = this.apis.map(api => api.entitySetByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values.length === 1 ? values[0] : null;
   }
 
-  public modelByName(name: string): typeof ODataModel {
+  public modelByName(name: string) {
     let values = this.apis.map(api => api.modelByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values.length === 1 ? values[0] : null;
   }
 
-  public collectionByName(name: string): typeof ODataCollection {
+  public collectionByName(name: string) {
     let values = this.apis.map(api => api.collectionByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values[0];
+    return values.length === 1 ? values[0] : null;
   }
   //#endregion
 }

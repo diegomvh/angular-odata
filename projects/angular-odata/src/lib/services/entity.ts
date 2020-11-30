@@ -52,16 +52,16 @@ export class ODataEntityService<T> {
 
   // Entity Config
   get entitySchema() {
-    return this.api.structuredTypeForType<T>(this.entityType);
+    return this.entityType ? this.api.structuredTypeForType<T>(this.entityType) : null;
   }
 
-  public create(entity: Partial<T>, options?: HttpOptions): Observable<T> {
+  public create(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
     return this.entities()
       .post(entity, options)
       .pipe(map(({entity}) => entity));
   }
 
-  public update(entity: Partial<T>, options?: HttpOptions): Observable<T> {
+  public update(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
     const odata = this.api.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
@@ -93,7 +93,7 @@ export class ODataEntityService<T> {
   }
 
   // Shortcuts
-  public fetchOrCreate(entity: Partial<T>, options?: HttpOptions): Observable<T> {
+  public fetchOrCreate(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
     return this.entity(entity).fetch(options)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)

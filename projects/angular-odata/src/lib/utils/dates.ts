@@ -1,7 +1,7 @@
 const ISO_REGEX = /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))/;
 
 export const Dates = {
-  isoStringToDate(value) {
+  isoStringToDate(value: any): any {
     if (typeof value === "string" && value.search(ISO_REGEX) === 0) {
       return new Date(value);
     } else if (Array.isArray(value)) {

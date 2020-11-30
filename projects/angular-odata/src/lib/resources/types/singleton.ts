@@ -19,21 +19,23 @@ import { ODataModel } from '../../models';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<R>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.singleton, path).setType(type);
+  static factory<R>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.segment(PathSegmentNames.singleton, path)
+    if (type !== null)
+      segment.setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(client, segments, options);
   }
 
   clone() {
-    return super.clone<ODataSingletonResource<T>>();
+    return new ODataSingletonResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
   //#region Function Config
   get schema() {
-    return this.api
-    .structuredTypeForType<T>(this.type());
+    let type = this.type();
+    return type ? this.api.structuredTypeForType<T>(type) : null;
   }
   ////#endregion
 
@@ -142,12 +144,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetch(options?: HttpOptions): Observable<T> {
+  fetch(options?: HttpOptions): Observable<T | null> {
     return this.get(options).pipe(map(({entity}) => entity));
   }
 
-  model(options?: HttpOptions): Observable<ODataModel<T>> {
-    return this.get(options).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
+  model(options?: HttpOptions): Observable<ODataModel<T> | null> {
+    return this.get(options).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
   //#endregion
 }

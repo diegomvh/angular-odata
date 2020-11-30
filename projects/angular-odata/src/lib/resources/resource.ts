@@ -22,8 +22,9 @@ import {
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses';
 import { Urls } from '../utils';
 import { ODataApi } from '../api';
+import { Parser } from '../types';
 
-export class ODataResource<Type> {
+export abstract class ODataResource<Type> {
   // VARIABLES
   protected client: ODataClient;
   protected pathSegments: ODataPathSegments;
@@ -41,10 +42,9 @@ export class ODataResource<Type> {
   /**
    * @returns string The type of the resource
    */
-  type(): string {
+  type() {
     let segment = this.pathSegments.last();
-    if (segment)
-      return segment.type;
+    return segment ? segment.type : null;
   }
   /**
    * @returns string All covered types of the resource
@@ -73,21 +73,33 @@ export class ODataResource<Type> {
 
   protected serialize(value: any): any {
     let config = this.api;
-    let parser = config.parserForType<Type>(this.type());
-    if (!Types.isUndefined(parser) && 'serialize' in parser)
-      return Array.isArray(value) ?
-        value.map(e => parser.serialize(e, config.options)) :
-        parser.serialize(value, config.options);
+    let type = this.type();
+    if (type !== null) {
+      let parser = config.parserForType<Type>(type);
+      if (parser !== null && 'serialize' in parser) {
+        return Array.isArray(value) ?
+          value.map(e => (parser as Parser<Type>).serialize(e, config.options)) :
+          parser.serialize(value, config.options);
+      }
+    }
     return value;
   }
 
-  asModel<M extends ODataModel<Type>>(entity: Partial<Type> = {}, meta?: ODataEntityMeta): M {
-    let Model = this.client.modelForType(this.type());
+  asModel<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityMeta): M {
+    let Model = ODataModel;
+    let type = this.type();
+    if (type !== null) {
+      Model = this.client.modelForType(type);
+    }
     return new Model(entity, {resource: this, meta}) as M;
   }
 
-  asCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[] = [], meta?: ODataEntitiesMeta): C {
-    let Collection = this.client.collectionForType(this.type());
+  asCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesMeta): C {
+    let Collection = ODataCollection;
+    let type = this.type();
+    if (type !== null) {
+      Collection = this.client.collectionForType(type);
+    }
     return new Collection(entities, {resource: this, meta}) as C;
   }
 
@@ -100,10 +112,7 @@ export class ODataResource<Type> {
     return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
   }
 
-  clone<Re extends ODataResource<Type>>(): Re {
-    let Ctor = <typeof ODataResource>this.constructor;
-    return (new Ctor(this.client, this.pathSegments.clone(), this.queryOptions.clone())) as Re;
-  }
+  abstract clone(): ODataResource<Type>;
 
   toJSON() {
     return {
@@ -128,7 +137,7 @@ export class ODataResource<Type> {
 
     const config = this.api;
     const copts = config.options;
-    let params = options.params;
+    let params = options.params || {};
     if (options.withCount) {
       params = Http.mergeHttpParams(params, copts.helper.countParam());
     }

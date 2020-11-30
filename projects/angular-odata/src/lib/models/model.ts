@@ -18,22 +18,26 @@ import { ODataEntityMeta, ODataEntitiesMeta } from '../resources/responses/meta'
 import { ODataFieldParser } from '../parsers/entity';
 
 export class ODataModel<T> {
-  protected _resource: ODataResource<T>;
+  protected _resource: ODataResource<T> | null;
   protected _entity: T;
-  protected _meta: ODataEntityMeta;
+  protected _meta: ODataEntityMeta | null;
   protected _relations: { [name: string]: {
     rel: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
     field: ODataFieldParser<any>
-  }}
+  }};
 
   constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
+    this._resource = null;
+    this._entity = {} as T;
+    this._meta = null;
+    this._relations = {};
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate(data || {}, options.meta);
   }
 
   attach(resource: ODataResource<T>) {
-    if (this._resource && this._resource.type() !== resource.type())
+    if (this._resource !== null && this._resource.type() !== resource.type())
       throw new Error(`Can't reattach ${resource.type()} with ${this._resource.type()}`);
     let first = !this._resource;
     this._resource = resource;
@@ -51,13 +55,13 @@ export class ODataModel<T> {
           });
         });
       if (this._entity)
-        this.populate(this._entity, this._meta);
+        this.populate(this._entity, this._meta !== null ? this._meta : undefined);
     }
     return this;
   }
 
   target() {
-    return this._resource.clone() as ODataResource<T>;
+    return this._resource !== null ? this._resource.clone() as ODataResource<T> : null;
   }
 
   protected parse(entity: T) {
@@ -76,9 +80,11 @@ export class ODataModel<T> {
     Object.assign(attrs, entries
       .filter(([, , f]) => f && f.isComplexType())
       .reduce((acc, [k, , f]) => {
-        let value = this._entity[f.name];
+        let value = (this._entity as any)[f.name];
         if (value) {
           let prop = (this._resource as ODataEntityResource<T>).property<any>(f.name);
+          if (this._meta === null)
+            throw("No metadata value");
           value = f.collection ?
             prop.asCollection(value, new ODataEntitiesMeta(this._meta.property(f.name) || {}, {options: this._meta.options})) :
             prop.asModel(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
@@ -89,7 +95,7 @@ export class ODataModel<T> {
   }
 
   protected populate(data: Object, meta?: ODataEntityMeta) {
-    this._meta = meta || new ODataEntityMeta(data, {options: this._resource ? this._resource.api.options : null});
+    this._meta = meta || new ODataEntityMeta(data, {options: this._resource ? this._resource.api.options : undefined});
     this._entity = this._meta.attributes<T>(data);
     this._relations = {};
     return Object.assign(this, this.parse(this._entity));
@@ -112,9 +118,14 @@ export class ODataModel<T> {
       {}) as T;
   }
 
-  clone<Mo extends ODataModel<T>>() {
+  clone() {
+    let options: {resource?: ODataResource<T>, meta?: ODataEntityMeta} = {};
+    if (this._resource)
+      options.resource = this._resource.clone();
+    if (this._meta)
+      options.meta = this._meta.clone();
     let Ctor = <typeof ODataModel>this.constructor;
-    return (new Ctor(this.toEntity(), { resource: this._resource.clone(), meta: this._meta })) as Mo;
+    return new Ctor(this.toEntity(), options);
   }
 
   fetch(options?: HttpOptions): Observable<this> {
@@ -155,7 +166,7 @@ export class ODataModel<T> {
       if (this._resource.segment.key().empty())
         throw new Error(`Can't update entity without key`);
       let resource = this._resource;
-      let attrs = this.toEntity();
+      let attrs = this.toEntity() as any;
       return Object.values(this._relations)
         .filter((value) => value.field.navigation && !value.field.collection)
         .reduce((acc, value) => {
@@ -164,7 +175,7 @@ export class ODataModel<T> {
           return acc.pipe(switchMap(({meta}) => value.rel != null ?
             ref.set(value.rel.target() as ODataEntityResource<any>, {etag: meta.etag}) :
             ref.unset({etag: meta.etag})));
-        }, of({meta: this._meta}))
+        }, of({meta: this._meta as ODataEntityMeta}))
         .pipe(
           switchMap(({meta}) => resource.put(attrs, Object.assign({ etag: meta.etag }, options || {}))),
           map(({entity, meta}) => this.populate(entity || attrs, meta)));
@@ -185,7 +196,7 @@ export class ODataModel<T> {
       this._resource.segment.key(this);
       if (this._resource.segment.key().empty())
         throw new Error(`Can't destroy entity without key`);
-      return this._resource.delete(Object.assign({ etag: this._meta.etag }, options || {}));
+      return this._resource.delete(Object.assign({ etag: this._meta !== null ? this._meta.etag : undefined }, options || {}));
     }
     throw new Error(`Can't destroy`);
   }
@@ -193,7 +204,10 @@ export class ODataModel<T> {
   get _config() {
     if (!this._resource)
       throw new Error(`Can't config without ODataResource`);
-    return (this._resource as ODataEntityResource<T>).schema;
+    let schema = (this._resource as ODataEntityResource<T>).schema;
+    if (schema === null)
+      throw new Error(`Can't config without schema`);
+    return schema;
   }
 
   get _segment() {
@@ -266,10 +280,12 @@ export class ODataModel<T> {
     return (this._resource as ODataEntityResource<T>).navigationProperty<P>(path);
   }
 
-  protected getNavigationProperty<P>(field: ODataFieldParser<any>): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
+  protected getNavigationProperty<P>(field: ODataFieldParser<any>): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
     if (!(field.name in this._relations)) {
-      let value = this._entity[field.name];
+      let value = (this._entity as any)[field.name];
       let nav = this._navigationProperty<P>(field.name);
+      if (this._meta === null)
+        throw new Error("No Meta")
       let rel = field.collection ?
           nav.asCollection(value, new ODataEntitiesMeta(this._meta.property(field.name) || {}, {options: this._meta.options})) :
           nav.asModel(value, new ODataEntityMeta(value || {}, {options: this._meta.options}));
@@ -279,10 +295,11 @@ export class ODataModel<T> {
   }
 
   protected setNavigationProperty<P, Pm extends ODataModel<P>>(field: ODataFieldParser<any>, model: Pm | null) {
+    let target = model?.target();
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
-    if (model instanceof ODataModel && model.target().type() !== field.type)
-      throw new Error(`Can't set ${model.target().type()} to ${field.type}`);
+    if (model instanceof ODataModel && target && target.type() !== field.type)
+      throw new Error(`Can't set ${target.type()} to ${field.type}`);
     this._relations[field.name] = {rel: model, field};
   }
 }

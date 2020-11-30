@@ -25,9 +25,7 @@ import {
   ODataResponse
 } from './resources/index';
 import { ODataSettings } from './settings';
-import { Parser } from './types';
 import { ODataApi } from './api';
-import { ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
 import { ODataRequest } from './resources/index';
 
 @Injectable()
@@ -44,30 +42,30 @@ export class ODataClient {
     return `${api.serviceRootUrl}${resource}`;
   }
 
-  parserFor<T>(resource: ODataResource<any>): Parser<T> {
+  parserFor<T>(resource: ODataResource<any>) {
+    const type = resource.type();
     const api = this.apiFor(resource);
-    if (resource.type())
-      return api.parserForType<T>(resource.type());
+    return type !== null ? api.parserForType<T>(type) : null;
   }
 
   // Resolve Building Blocks
-  apiForType(type: string): ODataApi {
+  apiForType(type?: string) {
     return this.settings.apiForType(type);
   }
 
-  structuredTypeForType<T>(type: string): ODataStructuredType<T> {
+  structuredTypeForType<T>(type: string) {
     return this.settings.structuredTypeForType<T>(type);
   }
 
-  callableForType<T>(type: string): ODataCallable<T> {
+  callableForType<T>(type: string) {
     return this.settings.callableFor<T>(type);
   }
 
-  entitySetForType(type: string): ODataEntitySet {
+  entitySetForType(type: string) {
     return this.settings.entitySetForType(type);
   }
 
-  parserForType<T>(type: string): Parser<T> {
+  parserForType<T>(type: string) {
     return this.settings.parserForType<T>(type);
   }
 
@@ -79,17 +77,22 @@ export class ODataClient {
     return this.settings.collectionForType(type) || ODataCollection;
   }
 
-  fromJSON<T extends ODataResource<any>>(json: { segments: ODataSegment[], options: PlainObject }): T {
+  fromJSON(json: { segments: ODataSegment[], options: PlainObject }) {
     let lastSegment = json.segments[json.segments.length - 1];
-    let Ctor = (lastSegment.name === PathSegmentNames.entitySet && lastSegment.options && SegmentOptionNames.key in lastSegment.options) ? ODataEntityResource :
-      {
-        [PathSegmentNames.metadata]: ODataMetadataResource,
-        [PathSegmentNames.singleton]: ODataSingletonResource,
-        [PathSegmentNames.entitySet]: ODataEntitySetResource,
-        [PathSegmentNames.action]: ODataActionResource,
-        [PathSegmentNames.function]: ODataFunctionResource
-      }[lastSegment.name];
-    return new Ctor(this, new ODataPathSegments(json.segments), new ODataQueryOptions(json.options)) as T;
+    const segments = new ODataPathSegments(json.segments);
+    const query = new ODataQueryOptions(json.options);
+    switch (lastSegment.name as PathSegmentNames) {
+      case PathSegmentNames.entitySet:
+        if (lastSegment.options && SegmentOptionNames.key in lastSegment.options) {
+          return new ODataEntityResource(this, segments, query);
+        } else {
+          return new ODataEntitySetResource(this, segments, query);
+        }
+      case PathSegmentNames.singleton: return new ODataSingletonResource(this, segments, query);
+      case PathSegmentNames.action: return new ODataActionResource(this, segments, query);
+      case PathSegmentNames.function: return new ODataFunctionResource(this, segments, query);
+    }
+    throw new Error("No Resource for json")
   }
 
   // Requests
@@ -104,11 +107,11 @@ export class ODataClient {
   }
 
   singleton<T>(name: string, type?: string) {
-    return ODataSingletonResource.factory<T>(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
+    return ODataSingletonResource.factory<T>(this, name, type || null, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    return ODataEntitySetResource.factory<T>(this, name, type, new ODataPathSegments(), new ODataQueryOptions());
+    return ODataEntitySetResource.factory<T>(this, name, type || null, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
@@ -358,7 +361,7 @@ export class ODataClient {
     let api = options.apiName ? this.settings.apiByNameOrDefault(options.apiName) : resource.api;
     if (!api) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
-    const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe;
+    const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe as 'response' | 'events';
 
     const request = new ODataRequest(method, resource, {
       body: options.body,
@@ -373,7 +376,7 @@ export class ODataClient {
     });
 
     return api.request(request)
-      .pipe(map((res: ODataResponse<any>) => options.observe === 'body' ? res.body : res));
+      .pipe(map((res: any) => options.observe === 'body' ? res.body : res));
   }
 
   delete(resource: ODataResource<any>, options?: {

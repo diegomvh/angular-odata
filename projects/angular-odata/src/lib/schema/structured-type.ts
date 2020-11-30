@@ -6,14 +6,14 @@ export class ODataStructuredType<T> {
   schema: ODataSchema;
   name: string;
   annotations: any[];
-  model?: { new(...any): any };
-  collection?: { new(...any): any };
-  parser?: ODataEntityParser<T>;
+  model?: { new(...params: any[]): any };
+  collection?: { new(...params: any[]): any };
+  parser: ODataEntityParser<T>;
 
   constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
-    this.annotations = config.annotations;
+    this.annotations = config.annotations || [];
     this.model = config.model;
     this.collection = config.collection;
     this.parser = new ODataEntityParser(config, schema.namespace, schema.alias);
@@ -30,7 +30,7 @@ export class ODataStructuredType<T> {
     return this.schema.options;
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
     this.parser.configure(settings);
   }
 
@@ -38,9 +38,9 @@ export class ODataStructuredType<T> {
     include_parents?: boolean,
     include_navigation?: boolean
   } = { include_navigation: false, include_parents: true }): ODataFieldParser<any>[] {
-    let parent = this.parser as ODataEntityParser<any>;
+    let parent = this.parser as ODataEntityParser<any> | undefined;
     let fields = <ODataFieldParser<any>[]>[];
-    while (parent) {
+    while (parent !== undefined) {
       fields = [
         ...parent.fields.filter(field => opts.include_navigation || !field.navigation),
         ...fields
@@ -52,11 +52,11 @@ export class ODataStructuredType<T> {
     return fields;
   }
 
-  field<P extends keyof T>(name: P): ODataFieldParser<T[P]> {
+  field<P extends keyof T>(name: P) {
     return this.fields().find(f => f.name === name);
   }
 
-  pick(value: Object, opts: {
+  pick(value: {[name:string]: any}, opts: {
     include_parents?: boolean,
     include_navigation?: boolean,
     include_etag?: boolean

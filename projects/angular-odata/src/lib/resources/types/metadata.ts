@@ -12,13 +12,17 @@ import { ODataApi } from '../../api';
 export class ODataMetadataResource extends ODataResource<any> {
   private _api: ODataApi;
 
-  constructor(client: ODataClient, api: ODataApi, segments?: ODataPathSegments) {
+  constructor(client: ODataClient, api?: ODataApi, segments?: ODataPathSegments) {
     super(client, segments);
-    this._api = api;
+    this._api = api || client.apiFor(this);
+  }
+
+  clone() {
+    return new ODataMetadataResource(this.client, this._api, this.pathSegments.clone());
   }
 
   //#region Factory
-  static factory(client: ODataClient, api: ODataApi) {
+  static factory(client: ODataClient, api?: ODataApi) {
     let segments = new ODataPathSegments();
     segments.segment(PathSegmentNames.metadata, $METADATA);
     return new ODataMetadataResource(client, api, segments);

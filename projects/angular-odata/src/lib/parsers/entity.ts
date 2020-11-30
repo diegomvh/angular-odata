@@ -10,7 +10,7 @@ const NONE_PARSER = {
 export class ODataFieldParser<Type> implements Field, Parser<Type> {
   name: string;
   type: string;
-  private parser?: Parser<Type>;
+  private parser: Parser<Type>;
   default?: any;
   maxLength?: number;
   key?: boolean;
@@ -25,6 +25,7 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
   constructor(name: string, field: Field) {
     this.name = name;
     this.type = field.type;
+    this.parser = NONE_PARSER;
     Object.assign(this, field);
   }
 
@@ -35,7 +36,7 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
   // Deserialize
   private parse(parser: ODataEntityParser<Type>, value: any, options: ODataOptions): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
-    if (!Types.isUndefined(type)) {
+    if (type !== undefined) {
       return parser.findParser(c => c.isTypeOf(type)).deserialize(value, options);
     }
     return parser.deserialize(value, options);
@@ -54,7 +55,7 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
   // Serialize
   private toJson(parser: ODataEntityParser<Type>, value: any, options: ODataOptions): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
-    if (!Types.isUndefined(type)) {
+    if (type !== undefined) {
       return parser.findParser(c => c.isTypeOf(type)).serialize(value, options);
     }
     return parser.serialize(value, options);
@@ -70,13 +71,13 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
     return parser.serialize(value, Object.assign({field: this}, options));
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
     this.parser = settings.parserForType(this.type) || NONE_PARSER;
   }
 
   // Json Schema
   toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
-    let property = this.parser instanceof ODataEntityParser ? this.parser.toJsonSchema(options) : <any>{
+    let property: any = this.parser instanceof ODataEntityParser ? this.parser.toJsonSchema(options) : <any>{
       title: `The ${this.name} field`,
       type: this.parser ? "object" : this.type
     };
@@ -104,8 +105,8 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   name: string;
   namespace: string;
   alias?: string;
-  base: string;
-  parent: ODataEntityParser<any>;
+  base?: string;
+  parent?: ODataEntityParser<any>;
   children: ODataEntityParser<any>[];
   fields: ODataFieldParser<any>[];
 
@@ -141,12 +142,12 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     if (this.parent)
       entity = this.parent.serialize(entity, options);
     return Object.assign(entity, this.fields
-      .filter(f => f.name in entity && !Types.isNullOrUndefined(entity[f.name]))
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize(entity[f.name], options) }), {})
+      .filter(f => f.name in entity && !Types.isNullOrUndefined((entity as any)[f.name]))
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize((entity as any)[f.name], options) }), {})
     );
   }
 
-  configure(settings: { parserForType: (type: string) => Parser<any> }) {
+  configure(settings: { parserForType: (type: string) => Parser<any> | null }) {
     if (this.base) {
       const parent = settings.parserForType(this.base) as ODataEntityParser<any>;
       parent.children.push(this);
@@ -157,9 +158,9 @@ export class ODataEntityParser<Type> implements Parser<Type> {
 
   // Json Schema
   toJsonSchema(config: JsonSchemaConfig<Type> = {}) {
-    let properties = this.fields
+    let properties: any = this.fields
       .filter(f => (!f.navigation || (config.expand && f.name in config.expand)) && (!config.select || (<string[]>config.select).indexOf(f.name) !== -1))
-      .map(f => ({ [f.name]: f.toJsonSchema(config[f.name]) }))
+      .map(f => ({ [f.name]: f.toJsonSchema((config as any)[f.name]) }))
       .reduce((acc, v) => Object.assign(acc, v), {});
     return {
       title: `The ${this.name} schema`,
@@ -170,22 +171,21 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     };
   }
 
-  typeFor(name: string): string {
+  typeFor(name: string): string | null {
     const field = this.fields.find(f => f.name === name);
-    if (field)
-      return field.type;
-    else if (this.parent)
+    if (field === undefined && this.parent !== undefined)
       return this.parent.typeFor(name);
+    return field !== undefined ? field.type : null;
   }
 
   keys() {
-    const keys = (this.parent) ? this.parent.keys() : [];
+    const keys: ODataFieldParser<any>[] = (this.parent) ? this.parent.keys() : [];
     return [...keys, ...this.fields.filter(f => f.key)];
   }
 
   resolveKey(attrs: any) {
     let key = this.keys()
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {});
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
     const values = Object.values(key);
     if (values.length === 1) {
       // Single primitive key value
@@ -202,7 +202,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     return this.keys().length === 0;
   }
 
-  find(predicate: (p: ODataEntityParser<any>) => boolean): ODataEntityParser<any> {
+  find(predicate: (p: ODataEntityParser<any>) => boolean): ODataEntityParser<any> | undefined {
     if (predicate(this))
       return this;
     return this.children.find(c => c.find(predicate));

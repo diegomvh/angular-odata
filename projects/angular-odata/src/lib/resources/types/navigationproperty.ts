@@ -20,21 +20,23 @@ import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(client: ODataClient, path: string, type: string, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.navigationProperty, path).setType(type);
+  static factory<E>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.segment(PathSegmentNames.navigationProperty, path)
+    if (type)
+      segment.setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataNavigationPropertyResource<E>(client, segments, options);
   }
 
   clone() {
-    return super.clone<ODataNavigationPropertyResource<T>>();
+    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
   //#region Function Config
   get schema() {
-    return this.api
-    .structuredTypeForType<T>(this.type());
+    let type = this.type();
+    return type ? this.api.structuredTypeForType<T>(type) : null;
   }
   ////#endregion
 
@@ -58,7 +60,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     let parser = this.client.parserFor<P>(this);
     let type = parser instanceof ODataEntityParser?
       parser.typeFor(name) : null;
-    return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataPropertyResource.factory<P>(this.client, name, type || null, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {
@@ -142,7 +144,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (!segment)
           throw new Error(`NavigationPropertyResource dosn't have segment for entitySet`);
-        if (!Types.isUndefined(name))
+        if (name !== undefined)
           segment.setPath(name);
         return segment;
       },
@@ -228,26 +230,26 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return fetch()
       .pipe(
         expand(({meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : empty()),
-        concatMap(({entities}) => entities),
+        concatMap(({entities}) => entities || []),
         toArray());
   }
 
-  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>>> {
+  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.get(
       Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
-    ).pipe(map(({entities, meta}) => this.asCollection(entities, meta)));
+    ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
   }
 
-  fetch(options?: HttpOptions): Observable<T> {
+  fetch(options?: HttpOptions): Observable<T | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
     ).pipe(map(({entity}) => entity));
   }
 
-  model(options?: HttpOptions): Observable<ODataModel<T>> {
+  model(options?: HttpOptions): Observable<ODataModel<T> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
-    ).pipe(map(({entity, meta}) => this.asModel(entity, meta)));
+    ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
   //#endregion
 }

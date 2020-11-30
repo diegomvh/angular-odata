@@ -19,11 +19,11 @@ export class ODataResponse<T> {
 
   constructor(init: {
     api: ODataApi;
-    body?: any | null;
-    headers?: HttpHeaders;
-    status?: number;
-    statusText?: string;
-    resource?: ODataResource<T>;
+    body: any | null;
+    headers: HttpHeaders;
+    status: number;
+    statusText: string;
+    resource: ODataResource<T>;
   }) {
     this.body = init.body;
     this.api = init.api;
@@ -33,9 +33,9 @@ export class ODataResponse<T> {
     this.resource = init.resource;
   }
 
-  _options: ODataOptions
+  _options: ODataOptions | null = null;
   get options(): ODataOptions {
-    if (!this._options) {
+    if (this._options === null) {
       this._options = this.api.options.clone();
       const contentType = this.headers.get(CONTENT_TYPE);
       if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
@@ -44,7 +44,7 @@ export class ODataResponse<T> {
       }
       const key = this.headers.keys().find(k => ODATA_VERSION_HEADERS.indexOf(k) !== -1);
       if (key) {
-        const version = this.headers.get(key).replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
+        const version = (this.headers.get(key) || "").replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
         this._options.setVersion(version);
       }
     }
@@ -53,15 +53,15 @@ export class ODataResponse<T> {
 
   private parse(parser: Parser<T>, value: any): any {
     const type = Types.isObject(value) ? this.options.helper.type(value) : undefined;
-    if (!Types.isUndefined(type) && parser instanceof ODataEntityParser) {
+    if (type !== undefined && parser instanceof ODataEntityParser) {
       parser = parser.findParser(c => c.isTypeOf(type));
     }
     return parser.deserialize(value, this.options);
   }
 
   private deserialize(type: string, value: any): any {
-    const parser = !Types.isNullOrUndefined(type) ? this.api.parserForType<T>(type) : undefined;
-    if (!Types.isUndefined(parser) && 'deserialize' in parser)
+    const parser = this.api.parserForType<T>(type);
+    if (parser !== null && 'deserialize' in parser)
       return Array.isArray(value) ?
         value.map(v => this.parse(parser, v)) :
         this.parse(parser, value);
@@ -71,8 +71,9 @@ export class ODataResponse<T> {
   entity(): ODataEntity<T> {
     const payload = this.body && this.options.version === "2.0" ? this.body["d"] : this.body;
     const meta = new ODataEntityMeta(payload || {}, {options: this.options, headers: this.headers});
+    const type = this.resource.type();
     const entity = payload ?
-      this.deserialize(this.resource.type(), meta.data(payload)) as T :
+      (type !== null ? this.deserialize(type, meta.data(payload)) : payload) as T:
       null;
     return { entity, meta };
   }
@@ -80,8 +81,9 @@ export class ODataResponse<T> {
   entities(): ODataEntities<T> {
     const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
     const meta = new ODataEntitiesMeta(payload || {}, {options: this.options, headers: this.headers});
+    const type = this.resource.type();
     const entities = payload ?
-      this.deserialize(this.resource.type(), meta.data(payload)) as T[] :
+      (type !== null ? this.deserialize(type, meta.data(payload)) : payload) as T[]:
       null;
     return { entities, meta };
   }
@@ -89,16 +91,18 @@ export class ODataResponse<T> {
   property(): ODataProperty<T> {
     const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
     const meta = new ODataPropertyMeta(payload || {}, {options: this.options, headers: this.headers});
+    const type = this.resource.type();
     const property = payload ?
-      this.deserialize(this.resource.type(), meta.data(payload)) as T :
+      (type !== null ? this.deserialize(type, meta.data(payload)) : payload) as T:
       null;
     return { property, meta };
   }
 
   value(): T | null {
     const payload = this.body && this.options.version === "2.0" ? this.body : this.body;
+    const type = this.resource.type();
     return payload ?
-      this.deserialize(this.resource.type(), payload) as T :
+      (type !== null ? this.deserialize(type, payload) : payload) as T:
       null;
   }
 }

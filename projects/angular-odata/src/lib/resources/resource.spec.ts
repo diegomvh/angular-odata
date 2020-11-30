@@ -26,19 +26,13 @@ describe('ODataResource', () => {
     options = new ODataQueryOptions();
   });
 
-  it('should create resource', () => {
-    const resource: ODataResource<Person> = new ODataResource<Person>(client);
-    expect(resource).toBeTruthy();
-    expect(resource.toString()).toEqual('');
-  });
-
   it('should create batch resource', () => {
-    const metadata: ODataBatchResource = ODataBatchResource.factory(client, null);
+    const metadata: ODataBatchResource = ODataBatchResource.factory(client);
     expect(metadata.toString()).toEqual('$batch');
   });
 
   it('should create metadata resource', () => {
-    const metadata: ODataMetadataResource = ODataMetadataResource.factory(client, null);
+    const metadata: ODataMetadataResource = ODataMetadataResource.factory(client);
     expect(metadata.toString()).toEqual('$metadata');
   });
 

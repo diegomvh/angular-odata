@@ -9,10 +9,10 @@ export class ODataRequest<T> {
   readonly method: string;
   readonly api: ODataApi;
   readonly body: T | null;
-  readonly observe: 'events' | 'response'
-  readonly reportProgress: boolean;
-  readonly withCredentials: boolean;
-  readonly responseType: 'arraybuffer' | 'blob' | 'json' | 'text';
+  readonly observe?: 'events' | 'response'
+  readonly reportProgress?: boolean;
+  readonly withCredentials?: boolean;
+  readonly responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   readonly fetchPolicy: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
   readonly headers: HttpHeaders;
   readonly params: HttpParams;
@@ -21,7 +21,7 @@ export class ODataRequest<T> {
 
   constructor(method: string, resource: ODataResource<T>, init: {
     api: ODataApi,
-    body?: T | null,
+    body: T | null,
     observe?: 'events' | 'response',
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
@@ -40,7 +40,7 @@ export class ODataRequest<T> {
     this.responseType = init.responseType;
     this.observe = init.observe;
 
-    this.withCredentials = (Types.isUndefined(init.withCredentials)) ? this.options.withCredentials : init.withCredentials;
+    this.withCredentials = (init.withCredentials === undefined) ? this.options.withCredentials : init.withCredentials;
     this.fetchPolicy = init.fetchPolicy || this.options.fetchPolicy;
 
     // The Path and Params from resource
@@ -48,7 +48,7 @@ export class ODataRequest<T> {
     this.path = resourcePath;
 
     // Headers
-    let customHeaders = {};
+    let customHeaders: {[name: string]: string | string[]} = {};
     if (typeof init.etag === 'string')
       customHeaders[IF_MATCH_HEADER] = init.etag;
 
@@ -61,10 +61,10 @@ export class ODataRequest<T> {
       accept.push(`IEEE754Compatible=${this.options.ieee754Compatible}`);
     if (accept.length > 0)
       customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;
-    this.headers = Http.mergeHttpHeaders(this.options.headers, customHeaders, init.headers);
+    this.headers = Http.mergeHttpHeaders(this.options.headers, customHeaders, init.headers || {});
 
     // Params
-    this.params = Http.mergeHttpParams(this.options.params, resourceParams, init.params);
+    this.params = Http.mergeHttpParams(this.options.params, resourceParams, init.params || {});
   }
 
   get pathWithParams() {
