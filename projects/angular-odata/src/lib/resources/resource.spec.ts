@@ -59,6 +59,13 @@ describe('ODataResource', () => {
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
   });
 
+  it('should create entity function with params', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', null, segments, options);
+    const entity = set.entity('russellwhyte');
+    const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction");
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1, arg2=2)");
+  });
+
   it('should create collection action', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', null, segments, options);
     const act: ODataActionResource<any, any> = set.action<any, any>("NS.MyAction");

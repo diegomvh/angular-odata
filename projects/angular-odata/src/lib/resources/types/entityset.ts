@@ -153,7 +153,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       entitySet(name?: string) {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (!segment)
-          throw new Error(`EntityResourse dosn't have segment for entitySet`);
+          throw new Error(`EntityResourse dosn't have segment for entitySet, WTF?`);
         if (name !== undefined)
           segment.setPath(name);
         return segment;

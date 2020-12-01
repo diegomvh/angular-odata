@@ -36,7 +36,18 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     if (type === null) return null;
     return this.client.callableForType<R>(type);
   }
-  ////#endregion
+  //#endregion
+
+  //#region Inmutable Resource
+  parameters(params: P | null) {
+    let segments = this.pathSegments.clone();
+    let segment = segments.segment(PathSegmentNames.function);
+    if (!segment)
+      throw new Error(`FunctionResource dosn't have segment for function`);
+    segment.option(SegmentOptionNames.parameters, this.serialize(params));
+    return new ODataFunctionResource<P, R>(this.client, segments, this.queryOptions.clone());
+  }
+  //#endregion
 
   //#region Mutable Resource
   get segment() {
@@ -67,7 +78,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       parameters(params?: P) {
         let segment = segments.segment(PathSegmentNames.function);
         if (!segment)
-          throw new Error(`FunctionResource dosn't have segment for function`);
+          throw new Error(`FunctionResource dosn't have segment for function, WTF?`);
         if (!Types.isUndefined(params)) {
           segment.option(SegmentOptionNames.parameters, res.serialize(params));
         }
