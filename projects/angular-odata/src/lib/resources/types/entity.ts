@@ -139,7 +139,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (!segment)
           throw new Error(`EntityResourse dosn't have segment for key`);
-        if (!Types.isUndefined(key)) {
+        if (key !== undefined) {
           let parser = client.parserFor<T>(res);
           if (parser instanceof ODataEntityParser && Types.isObject(key))
             key = parser.resolveKey(key);

@@ -142,11 +142,11 @@ export class ODataMetadata {
     protected checkVersion(document: Document) {
         // check version
         const attributes: NamedNodeMap = document.documentElement.attributes;
-        if (Types.isNullOrUndefined(attributes)) {
+        if (!attributes) {
             throw new Error('OData version is not specified in the metadata');
         }
         const attr: Attr | null = attributes.getNamedItem('Version');
-        if (Types.isNullOrUndefined(attr)) {
+        if (attr === null) {
             throw new Error('OData version is not specified in the metadata');
         }
         const odataVersion = attr?.nodeValue;

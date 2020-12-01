@@ -12,7 +12,7 @@ export class ODataSettings {
   constructor(...configs: ApiConfig[]) {
     this.apis = configs.map(config => new ODataApi(config));
     if (this.apis.length > 1) {
-      if (this.apis.some(c => Types.isUndefined(c.name)))
+      if (this.apis.some(c => c.name === undefined))
         throw new Error("Multiple APIs: Needs configuration names");
       if (this.apis.filter(c => c.default).length > 1)
         throw new Error("Multiple APIs: Needs only one default api");
@@ -42,7 +42,7 @@ export class ODataSettings {
   }
 
   public apiForType(type: string) {
-    const api = this.apis.find(c => c.name === name);
+    const api = this.apis.find(a => a.schemas.some(s => s.isNamespaceOf(type)));
     if (api === undefined)
       throw new Error(`No API for type: ${type}`);
     return api;

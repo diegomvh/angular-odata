@@ -73,14 +73,14 @@ export class ODataQueryOptions {
 
   // Option Handler
   option<T>(name: QueryOptionNames, opts?: T) {
-    if (!Types.isUndefined(opts))
+    if (opts !== undefined)
       this.options[name] = opts;
     return new OptionHandler<T>(this.options, name);
   }
 
   // Query Options tools
   has(name: QueryOptionNames) {
-    return !Types.isUndefined(this.options[name]);
+    return this.options[name] !== undefined;
   }
 
   remove(...names: QueryOptionNames[]) {
@@ -121,14 +121,14 @@ export class OptionHandler<T> {
 
   //#region Primitive Value
   value(v?: any) {
-    return !Types.isUndefined(v) && (this.o[this.n] = v) || this.o[this.n];
+    return v !== undefined && (this.o[this.n] = v) || this.o[this.n];
   }
   //#endregion
 
   //#region Array Value
   private assertArray(): Array<any> {
     if (!Types.isArray(this.o[this.n]))
-      this.o[this.n] = !Types.isUndefined(this.o[this.n]) ? [this.o[this.n]] : [];
+      this.o[this.n] = this.o[this.n] !== undefined ? [this.o[this.n]] : [];
     return this.o[this.n];
   }
 

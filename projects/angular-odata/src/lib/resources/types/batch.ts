@@ -210,24 +210,24 @@ export class ODataBatchResource extends ODataResource<any> {
 
   body(): string {
     let res = [];
-    let changesetBoundary = null;
+    let changesetBoundary: string | null = null;
     let changesetId = 1;
 
     for (const batch of this.requests) {
       // if method is GET and there is a changeset boundary open then close it
-      if (batch.request.method === 'GET' && !Types.isNullOrUndefined(changesetBoundary)) {
+      if (batch.request.method === 'GET' && changesetBoundary !== null) {
         res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         changesetBoundary = null;
       }
 
       // if there is no changeset boundary open then open a batch boundary
-      if (Types.isNullOrUndefined(changesetBoundary)) {
+      if (changesetBoundary === null) {
         res.push(`${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}`);
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (batch.request.method !== 'GET') {
-        if (Types.isNullOrUndefined(changesetBoundary)) {
+        if (changesetBoundary === null) {
           changesetBoundary = uniqid(CHANGESET_PREFIX);
           res.push(`${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}`);
           res.push(NEWLINE);
@@ -253,7 +253,7 @@ export class ODataBatchResource extends ODataResource<any> {
     }
 
     if (res.length) {
-      if (!Types.isNullOrUndefined(changesetBoundary)) {
+      if (changesetBoundary !== null) {
         res.push(`${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}`);
         changesetBoundary = null;
       }
@@ -270,11 +270,11 @@ export class ODataBatchResource extends ODataResource<any> {
 
     const lines: string[] = response.body.split(NEWLINE_REGEXP);
 
-    let changesetResponses: string[][] | undefined;
-    let contentId: number | undefined;
-    let changesetBoundary;
-    let changesetEndLine;
-    let startIndex;
+    let changesetResponses: string[][] | null = null;
+    let contentId: number | null = null;
+    let changesetBoundary: string | null = null;
+    let changesetEndLine: string | null = null;
+    let startIndex: number | null = null;
     for (let index = 0; index < lines.length; index++) {
       const line = lines[index];
 
@@ -282,13 +282,13 @@ export class ODataBatchResource extends ODataResource<any> {
         const contentTypeValue: string = getHeaderValue(line);
         if (contentTypeValue === MULTIPART_MIXED) {
           changesetResponses = [];
-          contentId = undefined;
+          contentId = null;
           changesetBoundary = getBoundaryDelimiter(line);
           changesetEndLine = getBoundaryEnd(changesetBoundary);
-          startIndex = undefined;
+          startIndex = null;
         }
         continue;
-      } else if (changesetResponses !== undefined && line.startsWith(CONTENT_ID)) {
+      } else if (changesetResponses !== null && line.startsWith(CONTENT_ID)) {
         contentId = Number(getHeaderValue(line));
       } else if (line.startsWith(HTTP11)) {
         startIndex = index;
@@ -298,7 +298,7 @@ export class ODataBatchResource extends ODataResource<any> {
           continue;
         }
         const chunk = lines.slice(startIndex, index);
-        if (changesetResponses !== undefined && contentId !== undefined) {
+        if (changesetResponses !== null && contentId !== null) {
           changesetResponses[contentId] = chunk;
         } else {
           chunks.push(chunk);
@@ -307,17 +307,17 @@ export class ODataBatchResource extends ODataResource<any> {
         if (line === batchBoundary || line === changesetBoundary) {
           startIndex = index + 1;
         } else if (line === endLine || line === changesetEndLine) {
-          if (changesetResponses !== undefined) {
+          if (changesetResponses !== null) {
             for (const response of changesetResponses) {
-              if (!Types.isNullOrUndefined(response)) {
+              if (response) {
                 chunks.push(response);
               }
             }
           }
-          changesetResponses = undefined;
-          changesetBoundary = undefined;
-          changesetEndLine = undefined;
-          startIndex = undefined;
+          changesetResponses = null;
+          changesetBoundary = null;
+          changesetEndLine = null;
+          startIndex = null;
         }
       }
     }

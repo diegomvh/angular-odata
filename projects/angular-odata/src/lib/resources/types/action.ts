@@ -54,7 +54,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (!segment)
           throw new Error(`CallableResource dosn't have segment for key`);
-        if (!Types.isUndefined(key)) {
+        if (key !== undefined) {
           let parser = client.parserFor<E>(res);
           if (parser instanceof ODataEntityParser && Types.isObject(key))
             key = parser.resolveKey(key);

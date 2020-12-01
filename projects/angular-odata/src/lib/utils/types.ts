@@ -1,19 +1,7 @@
 export const Types = {
-  isNull(value: any): boolean {
-    return value === null;
-  },
-
-  isUndefined(value: any): boolean {
-    return value === undefined;
-  },
-
-  isNullOrUndefined(value: any): boolean {
-    return Types.isNull(value) || Types.isUndefined(value);
-  },
-
   isObject(value: any): boolean {
     var type = typeof value;
-    return !Types.isNull(value) && (type === 'object' || type === 'function');
+    return value != null && (type === 'object' || type === 'function');
   },
 
   isFunction(value: any): boolean {
@@ -25,7 +13,8 @@ export const Types = {
   },
 
   isEmpty(value: any): boolean {
-    return Types.isNullOrUndefined(value)
+    return value === undefined
+      || value === null
       || (typeof (value) === 'string' && !value.length)
       || (Types.isArray(value) && !value.length)
       || (Types.isFunction(value.isEmpty) && value.isEmpty())

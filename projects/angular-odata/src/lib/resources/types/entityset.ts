@@ -13,7 +13,6 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
-import { Types } from '../../utils';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
 import { ODataEntity, ODataEntities } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
@@ -44,7 +43,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   entity(key?: EntityKey<T>) {
     const entity = ODataEntityResource.factory<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
-    if (!Types.isUndefined(key))
+    if (key !== undefined)
       entity.segment.key(key);
     return entity;
   }

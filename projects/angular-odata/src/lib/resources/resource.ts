@@ -149,11 +149,11 @@ export abstract class ODataResource<Type> {
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
     let body = null;
-    if (!Types.isNullOrUndefined(options.attrs)) {
+    if (options.attrs !== undefined) {
       body = this.serialize(options.attrs);
     }
     let etag = options.etag;
-    if (Types.isNullOrUndefined(etag) && !Types.isNullOrUndefined(options.attrs)) {
+    if (etag === undefined && options.attrs !== undefined) {
       etag = copts.helper.etag(options.attrs);
     }
     const res$ = this.client.request(method, this, {

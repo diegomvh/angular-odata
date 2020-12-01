@@ -57,17 +57,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return {
       entitySet(name?: string) {
         let segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`CallableResource dosn't have segment for entitySet`);
         if (name !== undefined)
           segment.setPath(name);
         return segment;
       },
       key<E>(key?: EntityKey<E>) {
         let segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`CallableResource dosn't have segment for key`);
-        if (!Types.isUndefined(key)) {
+        if (key !== undefined) {
           let parser = client.parserFor<E>(res);
           if (parser instanceof ODataEntityParser && Types.isObject(key))
             key = parser.resolveKey(key);
@@ -77,9 +73,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       },
       parameters(params?: P) {
         let segment = segments.segment(PathSegmentNames.function);
-        if (!segment)
-          throw new Error(`FunctionResource dosn't have segment for function, WTF?`);
-        if (!Types.isUndefined(params)) {
+        if (params !== undefined) {
           segment.option(SegmentOptionNames.parameters, res.serialize(params));
         }
         return segment.option(SegmentOptionNames.parameters);
@@ -147,9 +141,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     responseType: 'property' | 'entity' | 'model' | 'entities' | 'collection',
     options?: HttpOptions
   ): Observable<any> {
-    const res = this.clone() as ODataFunctionResource<P, R>;
-    if (params)
-      res.segment.parameters(params);
+    const res = this.parameters(params);
     const res$ = res.get(
       Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType }, options || {})
     ) as Observable<any>;

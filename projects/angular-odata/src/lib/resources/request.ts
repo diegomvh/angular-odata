@@ -54,10 +54,10 @@ export class ODataRequest<T> {
 
     let accept = [];
     // Metadata ?
-    if (!Types.isUndefined(this.options.metadata))
+    if (this.options.metadata !== undefined)
       accept.push(`odata.metadata=${this.options.metadata}`);
     // IEEE754
-    if (!Types.isUndefined(this.options.ieee754Compatible))
+    if (this.options.ieee754Compatible !== undefined)
       accept.push(`IEEE754Compatible=${this.options.ieee754Compatible}`);
     if (accept.length > 0)
       customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;

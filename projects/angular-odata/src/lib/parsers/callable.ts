@@ -77,7 +77,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   // Serialize
   serialize(params: any, options: Options): any {
     return Object.assign({}, this.parameters
-      .filter(p => p.name in params && !Types.isNullOrUndefined(params[p.name]))
+      .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
     );
   }
