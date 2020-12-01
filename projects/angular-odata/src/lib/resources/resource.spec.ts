@@ -59,11 +59,25 @@ describe('ODataResource', () => {
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
   });
 
-  it('should create entity function with params', () => {
+  it('should create entity function with all parameters', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', null, segments, options);
     const entity = set.entity('russellwhyte');
-    const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction");
-    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1, arg2=2)");
+    const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: 2})
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1,arg2=2)");
+  });
+
+  it('should create entity function with some parameters', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', null, segments, options);
+    const entity = set.entity('russellwhyte');
+    const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: undefined})
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1)");
+  });
+
+  it('should create entity function with null parameter', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', null, segments, options);
+    const entity = set.entity('russellwhyte');
+    const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: null})
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1,arg2=null)");
   });
 
   it('should create collection action', () => {
@@ -72,7 +86,7 @@ describe('ODataResource', () => {
     expect(act.toString()).toEqual('People/NS.MyAction');
   });
 
-  it('should create entity function', () => {
+  it('should create entity action', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(client, 'People', null, segments, options);
     const entity = set.entity('russellwhyte');
     const act: ODataActionResource<any, any> = entity.action<any, any>("NS.MyAction");

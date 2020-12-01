@@ -141,10 +141,12 @@ export default function <T>({
       path += `/${func}`;
     } else if (typeof func === 'object') {
       const [funcName] = Object.keys(func);
-      const funcArgs = Object.keys(func[funcName]).reduce(
-        (acc: string[], item) => [...acc, `${item}=${handleValue(func[funcName][item], aliases)}`],
-        []
-      );
+      const funcArgs = Object.entries(func[funcName])
+        .filter(([, v]) => v !== undefined)
+        .reduce(
+          (acc: string[], [k, v]) => [...acc, `${k}=${handleValue(v, aliases)}`],
+          []
+        );
 
       path += `/${funcName}`;
       if (funcArgs.length) {
