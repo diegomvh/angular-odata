@@ -17,10 +17,8 @@ const INDEXOF_REGEX = /(?!indexof)\((\w+)\)/;
 
 export type PlainObject = { [property: string]: any };
 export type Select<T> = string | keyof T | Array<keyof T>;
-export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | { [P in keyof T]?: OrderBy<T[P]> };
 export type Filter = string | PlainObject | Array<string | PlainObject>;
-export type NestedExpandOptions<T> = { [P in keyof T]?: (T[P] extends Array<infer E> ? Partial<ExpandOptions<E>> : Partial<ExpandOptions<T[P]>>) };
-export type Expand<T> = string | keyof T | NestedExpandOptions<T> | Array<keyof T | NestedExpandOptions<T>> | Array<string | NestedExpandOptions<T>>;
+
 export enum StandardAggregateMethods {
   sum = "sum",
   min = "min",
@@ -30,15 +28,24 @@ export enum StandardAggregateMethods {
 }
 export type Aggregate = string | { [propertyName: string]: { with: StandardAggregateMethods, as: string } };
 
+// OrderBy
+export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | { [P in keyof T]?: OrderBy<T[P]> };
 export type OrderByOptions<T> = keyof T | [keyof T, 'asc' | 'desc'];
+
+// Expand
+export type Expand<T> = string | ExpandObject<T> | ExpandObject<T>[];
+export type ExpandObject<T> = keyof T | NestedExpandOptions<T>;
+export type NestedExpandOptions<T> = {
+  [P in keyof T]?: T[P] extends (infer E)[] ? ExpandOptions<E> : ExpandOptions<T[P]>;
+};
 export type ExpandOptions<T> = {
-  select: Select<T>;
-  filter: Filter;
-  orderBy: OrderBy<T>;
-  top: number;
-  levels: number | 'max';
-  count: boolean | Filter;
-  expand: Expand<T>;
+  select?: Select<T>;
+  filter?: Filter;
+  orderBy?: OrderBy<T>;
+  top?: number;
+  levels?: number | 'max';
+  count?: boolean | Filter;
+  expand?: Expand<T>;
 }
 
 export type Transform<T> = {
