@@ -131,7 +131,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   deserialize(value: any, options: ODataOptions): Type {
     if (this.parent)
       value = this.parent.deserialize(value, options);
-    return Object.assign(value, this.fields
+    return Object.assign({}, value, this.fields
       .filter(f => f.name in value && value[f.name] !== undefined && value[f.name] !== null)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.deserialize(value[f.name], options) }), {})
     );
@@ -141,7 +141,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   serialize(value: Type, options: ODataOptions): any {
     if (this.parent)
       value = this.parent.serialize(value, options);
-    return Object.assign(value, this.fields
+    return Object.assign({}, value, this.fields
       .filter(f => f.name in value && (value as any)[f.name] !== undefined && (value as any)[f.name] !== null)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize((value as any)[f.name], options) }), {})
     );
@@ -190,7 +190,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     if (values.length === 1) {
       // Single primitive key value
       key = values[0];
-    } else if (values.some(v => v !== undefined)) {
+    } else if (values.some(v => v === undefined)) {
       // Compose key, needs all values
       key = null;
     }

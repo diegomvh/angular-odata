@@ -7,7 +7,7 @@ import {
   QUERY_SEPARATOR
 } from '../constants';
 import { ODataClient } from '../client';
-import { Http, Types, Urls } from '../utils/index';
+import { Http, Urls } from '../utils/index';
 
 import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
@@ -21,7 +21,6 @@ import {
 } from '../models/index';
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses/index';
 import { ODataApi } from '../api';
-import { Parser } from '../types';
 
 export abstract class ODataResource<Type> {
   // VARIABLES
@@ -54,7 +53,7 @@ export abstract class ODataResource<Type> {
     return this.pathSegments.types();
   }
 
-  //#region Api Config
+  //#region Api
   get api(): ODataApi {
     return this.client
       .apiFor(this);

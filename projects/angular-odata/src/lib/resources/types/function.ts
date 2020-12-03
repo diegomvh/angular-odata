@@ -38,7 +38,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  private serialize(value: any): any {
+  private serialize(value: P): any {
     let type = this.type();
     if (type !== null) {
       let parser = this.api.findParserForType<P>(type);
@@ -55,7 +55,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     let segment = segments.segment(PathSegmentNames.function);
     if (!segment)
       throw new Error(`FunctionResource dosn't have segment for function`);
-    segment.option(SegmentOptionNames.parameters, this.serialize(params));
+    segment.option(SegmentOptionNames.parameters, params !== null ? this.serialize(params) : null);
     return new ODataFunctionResource<P, R>(this.client, segments, this.queryOptions.clone());
   }
   //#endregion

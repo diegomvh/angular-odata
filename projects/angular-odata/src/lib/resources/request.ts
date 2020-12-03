@@ -2,7 +2,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ODataOptions } from '../options';
 import { ODataApi } from '../api';
 import { ACCEPT, IF_MATCH_HEADER } from '../constants';
-import { Http, Types } from '../utils';
+import { Http } from '../utils';
 import { ODataResource } from './resource';
 
 export class ODataRequest<T> {
