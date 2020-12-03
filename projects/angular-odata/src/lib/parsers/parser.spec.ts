@@ -140,7 +140,7 @@ describe('ODataClient', () => {
       "binary": "T0RhdGE=",
       "date": "2012-12-03",
       "timeOfDay": "07:59:59.999",
-      "dateTimeOffset": "2012-12-03T07:16:23Z",
+      "dateTimeOffset": "2012-12-03T07:16:23.000Z",
       "duration": "P12DT23H59M59.999999999999S",
       "guid": "01234567-89ab-cdef-0123-456789abcdef",
       "enumeration": "Yellow",

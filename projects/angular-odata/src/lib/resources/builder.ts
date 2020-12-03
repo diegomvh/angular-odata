@@ -33,7 +33,8 @@ export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> |
 export type OrderByOptions<T> = keyof T | [keyof T, 'asc' | 'desc'];
 
 // Expand
-export type Expand<T> = string | ExpandObject<T> | ExpandObject<T>[];
+export type Expand<T> = ExpandType<T> | ExpandType<T>[];
+export type ExpandType<T> = string | ExpandObject<T>;
 export type ExpandObject<T> = keyof T | NestedExpandOptions<T>;
 export type NestedExpandOptions<T> = {
   [P in keyof T]?: T[P] extends (infer E)[] ? ExpandOptions<E> : ExpandOptions<T[P]>;
@@ -49,7 +50,7 @@ export type ExpandOptions<T> = {
 }
 
 export type Transform<T> = {
-  aggregate?: Aggregate | Array<Aggregate>;
+  aggregate?: Aggregate | Aggregate[];
   filter?: Filter;
   groupBy?: GroupBy<T>;
 }
