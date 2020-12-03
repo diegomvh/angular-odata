@@ -21,7 +21,7 @@ export class ODataSingletonService<T> {
 
   // Service Config
   get entitySetSchema() {
-    return this.api.entitySetByName(this.name);
+    return this.api.findEntitySetByName(this.name);
   }
 
   // Entity Config

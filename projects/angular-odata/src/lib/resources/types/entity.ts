@@ -1,6 +1,6 @@
 import { Observable, throwError } from 'rxjs';
 
-import { EntityKey } from '../../types';
+import { EntityKey, Parser } from '../../types';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
@@ -28,6 +28,20 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   clone() {
     return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+  }
+
+  serialize(value: any): any {
+    let api = this.api;
+    let type = this.type();
+    if (type !== null) {
+      let parser = api.findParserForType<T>(type);
+      if (parser !== undefined && 'serialize' in parser) {
+        return Array.isArray(value) ?
+          value.map(e => (parser as Parser<T>).serialize(e, api.options)) :
+          parser.serialize(value, api.options);
+      }
+    }
+    return value;
   }
   //#endregion
 
@@ -76,6 +90,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
+      type = callable.parser.type;
     }
     return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -86,6 +101,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
+      type = callable.parser.return || null;
     }
     return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }

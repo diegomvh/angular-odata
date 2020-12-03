@@ -75,9 +75,9 @@ export class ODataApi {
       res$;
   }
 
-  //#region Find Config for Type
+  //#region Find Schema for Type
   private findSchemaForType(type: string) {
-    let schemas = this.schemas.filter(s => s.isNamespaceOf(type));
+    const schemas = this.schemas.filter(s => s.isNamespaceOf(type));
     if (schemas.length > 1)
       return schemas.sort((s1, s2) => s1.namespace.length - s2.namespace.length).pop();
     if (schemas.length === 1) return schemas[0];
@@ -85,67 +85,67 @@ export class ODataApi {
   }
 
   public findEnumTypeForType(type: string) {
-    let schema = this.findSchemaForType(type);
-    return schema !== undefined ? schema.enums.find(e => e.isTypeOf(type)) : undefined;
+    const schema = this.findSchemaForType(type);
+    return schema?.findEnumTypeForType(type);
   }
 
   public findStructuredTypeForType(type: string) {
-    let schema = this.findSchemaForType(type);
-    return schema !== undefined ? schema.entities.find(e => e.isTypeOf(type)) : undefined;
+    const schema = this.findSchemaForType(type);
+    return schema?.findStructuredTypeForType(type);
   }
 
   public findCallableForType(type: string) {
-    let schema = this.findSchemaForType(type);
-    return schema !== undefined ? schema.callables.find(e => e.isTypeOf(type)) : undefined;
+    const schema = this.findSchemaForType(type);
+    return schema?.findCallableForType(type);
   }
 
   public findEntitySetForType(type: string) {
-    let schema = this.findSchemaForType(type);
-    return schema !== undefined ? schema.entitySets.find(e => e.isTypeOf(type)) : undefined;
+    const schema = this.findSchemaForType(type);
+    return schema?.findEntitySetForType(type);
   }
 
   //#region Model and Collection for type
   public findModelForType(type: string) {
-    let schema = this.findStructuredTypeForType(type);
-    return schema !== undefined ? schema.model as typeof ODataModel : undefined;
+    const schema = this.findStructuredTypeForType(type);
+    return schema?.model as typeof ODataModel;
   }
 
   public findCollectionForType(type: string) {
-    let schema = this.findStructuredTypeForType(type);
-    return schema !== undefined ? schema.collection as typeof ODataCollection : undefined;
+    const schema = this.findStructuredTypeForType(type);
+    return schema?.collection as typeof ODataCollection;
   }
   //#endregion
   //#endregion
 
   //#region Find Config for Name
-  public enumTypeByName<T>(name: string) {
+  public findEnumTypeByName<T>(name: string) {
     return this.schemas.reduce((acc, schema) => [...acc, ...schema.enums], <ODataEnumType<any>[]>[])
       .find(e => e.name === name);
   }
 
-  public structuredTypeByName<T>(name: string) {
+  public findStructuredTypeByName<T>(name: string) {
     return this.schemas.reduce((acc, schema) => [...acc, ...schema.entities], <ODataStructuredType<any>[]>[])
       .find(e => e.name === name);
   }
 
-  public callableByName<T>(name: string) {
+  public findCallableByName<T>(name: string) {
     return this.schemas.reduce((acc, schema) => [...acc, ...schema.callables], <ODataCallable<any>[]>[])
       .find(e => e.name === name);
   }
 
-  public entitySetByName(name: string) {
+  public findEntitySetByName(name: string) {
     return this.schemas.reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
       .find(e => e.name === name);
   }
 
   //#region Model and Collection for type
-  public modelByName(name: string) {
-    let schema = this.structuredTypeByName(name);
+  public findModelByName(name: string) {
+    let schema = this.findStructuredTypeByName(name);
     return schema !== undefined ? schema.model as typeof ODataModel : null;
   }
 
-  public collectionByName(name: string) {
-    let schema = this.structuredTypeByName(name);
+  public findCollectionByName(name: string) {
+    let schema = this.findStructuredTypeByName(name);
     return schema !== undefined ? schema.collection as typeof ODataCollection : null;
   }
   //#endregion

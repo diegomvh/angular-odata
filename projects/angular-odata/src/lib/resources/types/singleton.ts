@@ -55,15 +55,25 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  action<P, R>(type: string) {
-    const config = this.client.callableForType<R>(type);
-    const path = config ? config.path : type;
+  action<P, R>(name: string) {
+    let type = null;
+    let path = name;
+    const callable = this.api.findCallableForType(name);
+    if (callable !== undefined) {
+      path = callable.path;
+      type = callable.parser.type;
+    }
     return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  function<P, R>(type: string) {
-    const config = this.client.callableForType<R>(type);
-    const path = config ? config.path : type;
+  function<P, R>(name: string) {
+    let type = null;
+    let path = name;
+    const callable = this.api.findCallableForType(name);
+    if (callable !== undefined) {
+      path = callable.path;
+      type = callable.parser.type;
+    }
     return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 

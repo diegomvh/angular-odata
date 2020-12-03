@@ -38,6 +38,17 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
+  private serialize(value: any): any {
+    let type = this.type();
+    if (type !== null) {
+      let parser = this.api.findParserForType<P>(type);
+      if (parser !== undefined) {
+          value = parser.serialize(value, this.api.options);
+      }
+    }
+    return value;
+  }
+
   //#region Inmutable Resource
   parameters(params: P | null) {
     let segments = this.pathSegments.clone();

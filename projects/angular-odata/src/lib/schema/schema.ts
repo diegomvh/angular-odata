@@ -10,10 +10,10 @@ export class ODataSchema {
   api: ODataApi;
   namespace: string;
   alias?: string;
-  enums: Array<ODataEnumType<any>>;
-  entities: Array<ODataStructuredType<any>>;
-  callables: Array<ODataCallable<any>>;
-  containers: Array<ODataEntityContainer>;
+  enums: ODataEnumType<any>[];
+  entities: ODataStructuredType<any>[];
+  callables: ODataCallable<any>[];
+  containers: ODataEntityContainer[];
 
   constructor(schema: SchemaConfig, api: ODataApi) {
     this.api = api;
@@ -45,9 +45,29 @@ export class ODataSchema {
     return this.api.options;
   }
 
-  get entitySets(): ODataEntitySet[] {
-    return this.containers.reduce((acc, container) => [...acc, ...container.entitySets], [] as ODataEntitySet[]);
+  get entitySets() {
+    return this.containers
+      .reduce(
+        (acc, container) => [...acc, ...container.entitySets], [] as ODataEntitySet[]);
   }
+
+  //#region Find for Type
+  public findEnumTypeForType(type: string) {
+    return this.enums.find(e => e.isTypeOf(type));
+  }
+
+  public findStructuredTypeForType(type: string) {
+    return this.entities.find(e => e.isTypeOf(type));
+  }
+
+  public findCallableForType(type: string) {
+    return this.callables.find(e => e.isTypeOf(type));
+  }
+
+  public findEntitySetForType(type: string) {
+      return this.entitySets.find(e => e.isTypeOf(type));
+  }
+  //#endregion
 
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
     // Configure Entities

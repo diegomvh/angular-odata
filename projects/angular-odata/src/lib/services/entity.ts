@@ -47,7 +47,7 @@ export class ODataEntityService<T> {
 
   // Service Config
   get entitySetSchema() {
-    return this.api.entitySetByName(this.name) || null;
+    return this.api.findEntitySetByName(this.name) || null;
   }
 
   // Entity Config

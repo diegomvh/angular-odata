@@ -15,7 +15,7 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
   maxLength?: number;
   key?: boolean;
   collection?: boolean;
-  nullable?: boolean;
+  nullable: boolean = true;
   navigation?: boolean;
   field?: string;
   precision?: number;
@@ -132,18 +132,18 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     if (this.parent)
       value = this.parent.deserialize(value, options);
     return Object.assign(value, this.fields
-      .filter(f => f.name in value && value[f.name] !== undefined)
+      .filter(f => f.name in value && value[f.name] !== undefined && value[f.name] !== null)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.deserialize(value[f.name], options) }), {})
     );
   }
 
   // Serialize
-  serialize(entity: Type, options: ODataOptions): any {
+  serialize(value: Type, options: ODataOptions): any {
     if (this.parent)
-      entity = this.parent.serialize(entity, options);
-    return Object.assign(entity, this.fields
-      .filter(f => f.name in entity && (entity as any)[f.name] !== undefined)
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize((entity as any)[f.name], options) }), {})
+      value = this.parent.serialize(value, options);
+    return Object.assign(value, this.fields
+      .filter(f => f.name in value && (value as any)[f.name] !== undefined && (value as any)[f.name] !== null)
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize((value as any)[f.name], options) }), {})
     );
   }
 

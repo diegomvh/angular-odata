@@ -38,6 +38,7 @@ export abstract class ODataResource<Type> {
     this.pathSegments = segments || new ODataPathSegments();
     this.queryOptions = options || new ODataQueryOptions();
   }
+
   /**
    * @returns string The type of the resource
    */
@@ -45,6 +46,7 @@ export abstract class ODataResource<Type> {
     const segment = this.pathSegments.last();
     return segment !== null ? segment.type : null;
   }
+
   /**
    * @returns string All covered types of the resource
    */
@@ -68,20 +70,6 @@ export abstract class ODataResource<Type> {
       Object.assign(params, Urls.parseQueryString(parts[1]));
     }
     return [path, params];
-  }
-
-  protected serialize(value: any): any {
-    let config = this.api;
-    let type = this.type();
-    if (type !== null) {
-      let parser = config.findParserForType<Type>(type);
-      if (parser !== undefined && 'serialize' in parser) {
-        return Array.isArray(value) ?
-          value.map(e => (parser as Parser<Type>).serialize(e, config.options)) :
-          parser.serialize(value, config.options);
-      }
-    }
-    return value;
   }
 
   asModel<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityMeta): M {
@@ -134,8 +122,7 @@ export abstract class ODataResource<Type> {
       withCount?: boolean
     }): Observable<any> {
 
-    const config = this.api;
-    const copts = config.options;
+    const copts = this.api.options;
     let params = options.params || {};
     if (options.withCount) {
       params = Http.mergeHttpParams(params, copts.helper.countParam());
@@ -150,8 +137,17 @@ export abstract class ODataResource<Type> {
 
     let body = null;
     if (options.attrs !== undefined) {
-      body = this.serialize(options.attrs);
+      let type = this.type();
+      if (type !== null) {
+        let parser = this.api.findParserForType<Type>(type);
+        if (parser !== undefined) {
+            body = parser.serialize(options.attrs, copts);
+        }
+      } else  {
+        body = options.attrs;
+      }
     }
+
     let etag = options.etag;
     if (etag === undefined && options.attrs !== undefined) {
       etag = copts.helper.etag(options.attrs);

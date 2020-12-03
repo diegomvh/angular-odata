@@ -60,6 +60,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
+      type = callable.parser.type;
     }
     return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -70,6 +71,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
+      type = callable.parser.type;
     }
     return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
