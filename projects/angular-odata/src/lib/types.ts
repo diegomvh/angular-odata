@@ -129,7 +129,7 @@ export type SchemaConfig = {
 export type EntityContainerConfig = {
   name: string;
   annotations?: Array<any>;
-  services?: Array<EntitySetConfig>;
+  entitySets?: Array<EntitySetConfig>;
 }
 
 export type EnumTypeConfig<T> = {

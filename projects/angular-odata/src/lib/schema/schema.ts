@@ -45,8 +45,8 @@ export class ODataSchema {
     return this.api.options;
   }
 
-  get services(): Array<ODataEntitySet> {
-    return this.containers.reduce((acc, container) => [...acc, ...container.services], <ODataEntitySet[]>[]);
+  get entitySets(): ODataEntitySet[] {
+    return this.containers.reduce((acc, container) => [...acc, ...container.entitySets], [] as ODataEntitySet[]);
   }
 
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {

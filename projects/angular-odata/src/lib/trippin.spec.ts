@@ -136,7 +136,7 @@ export const TripPinConfig = {
       TripConfig
     ],
     containers: [{
-      services: [ PeopleServiceConfig ]
+      entitySets: [ PeopleServiceConfig ]
     }]
   }],
   parsers: EDM_PARSERS

@@ -6,12 +6,12 @@ export class ODataEntityContainer {
   schema: ODataSchema;
   name: string;
   annotations: any[];
-  services: Array<ODataEntitySet>;
+  entitySets: ODataEntitySet[];
   constructor(config: EntityContainerConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
     this.annotations = (config.annotations || []);
-    this.services = (config.services || []).map(config => new ODataEntitySet(config, schema));
+    this.entitySets = (config.entitySets || []).map(config => new ODataEntitySet(config, schema));
   }
 
   get options() {

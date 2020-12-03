@@ -101,7 +101,7 @@ export class ODataApi {
 
   public findEntitySetForType(type: string) {
     let schema = this.findSchemaForType(type);
-    return schema !== undefined ? schema.services.find(e => e.isTypeOf(type)) : undefined;
+    return schema !== undefined ? schema.entitySets.find(e => e.isTypeOf(type)) : undefined;
   }
 
   //#region Model and Collection for type
@@ -134,7 +134,7 @@ export class ODataApi {
   }
 
   public entitySetByName(name: string) {
-    return this.schemas.reduce((acc, schema) => [...acc, ...schema.services], <ODataEntitySet[]>[])
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
       .find(e => e.name === name);
   }
 
