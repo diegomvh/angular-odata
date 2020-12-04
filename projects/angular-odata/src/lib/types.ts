@@ -2,7 +2,6 @@ export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
 
-
 export type ODataContext = {
   metadata?: string;
   singleton?: string;
@@ -73,15 +72,18 @@ export interface Field {
       1 Client checks the cache for queried data.
       2 If all the data is present in the cache, it is returned (otherwise, an error is thrown).
 */
+export type ODataVersion = '2.0' | '3.0' | '4.0';
+export type FetchPolicy = 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
+export type ODataMetadata = 'minimal' | 'full' | 'none';
 export interface Options {
-  version?: '2.0' | '3.0' | '4.0';
-  metadata?: 'minimal' | 'full' | 'none';
+  version?: ODataVersion;
+  metadata?: ODataMetadata;
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
-  fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
+  fetchPolicy?: FetchPolicy;
 }
 
 export interface FieldOptions extends Options {
@@ -103,6 +105,7 @@ export interface CacheStorage {
 export type ApiConfig = {
   serviceRootUrl: string;
   name?: string;
+  version?: ODataVersion;
   default?: boolean;
   creation?: Date;
   cache?: CacheConfig;
