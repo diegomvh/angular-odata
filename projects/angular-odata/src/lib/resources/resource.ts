@@ -148,7 +148,7 @@ export abstract class ODataResource<Type> {
     }
 
     let etag = options.etag;
-    if (etag === undefined && options.attrs !== undefined) {
+    if (etag === undefined && options.attrs != null) {
       etag = copts.helper.etag(options.attrs);
     }
     const res$ = this.client.request(method, this, {

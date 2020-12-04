@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import {
   ODataModel,
@@ -22,7 +22,8 @@ import {
   ODataPathSegments,
   ODataSegment,
   ODataQueryOptions,
-  ODataResponse
+  ODataResponse,
+  ODataNavigationPropertyResource
 } from './resources/index';
 import { ODataSettings } from './settings';
 import { ODataApi } from './api';
@@ -91,6 +92,8 @@ export class ODataClient {
     return this.settings.collectionForType(type) || ODataCollection;
   }
 
+  fromJSON<P, R>(json: { segments: ODataSegment[], options: PlainObject }): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
+  fromJSON<E>(json: { segments: ODataSegment[], options: PlainObject }): ODataEntityResource<E> | ODataEntitySetResource<E> | ODataNavigationPropertyResource<E> | ODataSingletonResource<E>;
   fromJSON(json: { segments: ODataSegment[], options: PlainObject }) {
     let lastSegment = json.segments[json.segments.length - 1];
     const segments = new ODataPathSegments(json.segments);
@@ -102,6 +105,7 @@ export class ODataClient {
         } else {
           return new ODataEntitySetResource(this, segments, query);
         }
+      case PathSegmentNames.navigationProperty: return new ODataNavigationPropertyResource(this, segments, query);
       case PathSegmentNames.singleton: return new ODataSingletonResource(this, segments, query);
       case PathSegmentNames.action: return new ODataActionResource(this, segments, query);
       case PathSegmentNames.function: return new ODataFunctionResource(this, segments, query);
