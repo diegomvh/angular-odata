@@ -3,6 +3,7 @@ import { startWith, tap } from 'rxjs/operators';
 import { DEFAULT_MAX_AGE } from '../constants';
 import { ODataRequest, ODataResponse } from '../resources';
 import { CacheConfig } from '../types';
+import { ODataCacheMemoryStorage } from './memory';
 import { ODataCacheStorage } from './storage';
 
 export class ODataCache {
@@ -11,7 +12,7 @@ export class ODataCache {
 
   constructor(config: CacheConfig) {
     this.maxAge = config.maxAge || DEFAULT_MAX_AGE;
-    this.storage = config.storage;
+    this.storage = config.storage || new ODataCacheMemoryStorage();
   }
 
   isCacheable(req: ODataRequest<any>) {

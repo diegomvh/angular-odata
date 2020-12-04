@@ -113,7 +113,7 @@ export type ApiConfig = {
 
 export type CacheConfig = {
   maxAge?: number;
-  storage: CacheStorage;
+  storage?: CacheStorage;
 }
 
 export type SchemaConfig = {

@@ -38,9 +38,7 @@ export class ODataApi {
     this.creation = config.creation || new Date();
     this.options = new ODataOptions(config.options || {});
 
-    this.cache = new ODataCache(config.cache || {
-      storage: new ODataCacheMemoryStorage()
-    });
+    this.cache = new ODataCache(config.cache || {});
 
     this.parsers = config.parsers || EDM_PARSERS;
 
