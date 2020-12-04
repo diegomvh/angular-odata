@@ -90,9 +90,6 @@ const ODataVersionBaseHelper = <any> {
         Number(value[this.ODATA_COUNT]) :
         undefined;
     },
-    countParam() {
-      return {[$COUNT]: 'true'};
-    },
     annotations(value: {[name: string]: any}) {
       return Object.keys(value)
         .filter(key => key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 || key.startsWith(this.ODATA_FUNCTION_PREFIX))
@@ -134,7 +131,7 @@ const ODataVersionBaseHelper = <any> {
 
 export const ODataHelper = {
   //#region Version 4.0
-  [VERSION_4_0]: <ODataVersionHelper> Object.assign({
+  [VERSION_4_0]: <ODataVersionHelper> Object.assign({}, ODataVersionBaseHelper, {
     VALUE: 'value',
     ODATA_ANNOTATION_PREFIX: '@odata',
     ODATA_FUNCTION_PREFIX: '#',
@@ -186,10 +183,13 @@ export const ODataHelper = {
       }
       return ctx;
     },
-  }, ODataVersionBaseHelper),
+    countParam() {
+      return {[$COUNT]: 'true'};
+    }
+  }),
   //#endregion
   //#region Version 3.0
-  [VERSION_3_0]: <ODataVersionHelper> Object.assign({
+  [VERSION_3_0]: <ODataVersionHelper> Object.assign({}, ODataVersionBaseHelper, {
     ODATA_ANNOTATION_PREFIX: 'odata.',
     ODATA_FUNCTION_PREFIX: '',
     ODATA_ID: 'odata.id',
@@ -216,10 +216,10 @@ export const ODataHelper = {
     countParam() {
       return {[$INLINECOUNT]: 'allpages'};
     }
-  }, ODataVersionBaseHelper),
+  }),
   //#endregion
   //#region Version 2.0
-  [VERSION_2_0]: <ODataVersionHelper> Object.assign({
+  [VERSION_2_0]: <ODataVersionHelper> Object.assign({}, ODataVersionBaseHelper, {
     ODATA_ID: 'id',
     ODATA_ETAG: 'etag',
     ODATA_ANNOTATION: '__metadata',
@@ -237,6 +237,6 @@ export const ODataHelper = {
     countParam() {
       return {[$INLINECOUNT]: 'allpages'};
     }
-  }, ODataVersionBaseHelper)
+  })
   //#endregion
 }

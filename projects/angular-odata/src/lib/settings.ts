@@ -1,7 +1,5 @@
 import { ApiConfig, Parser } from './types';
-import { Types } from './utils';
 import { ODataApi } from './api';
-import { HttpClient } from '@angular/common/http';
 import { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } from './schema';
 import { ODataRequest } from './resources';
 import { Observable } from 'rxjs';

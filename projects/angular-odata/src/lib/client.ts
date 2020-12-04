@@ -52,6 +52,10 @@ export class ODataClient {
     return this.settings.findForTypes(resource.types()) || this.settings.defaultApi();
   }
 
+  apiByName(name: string): ODataApi {
+    return this.settings.apiByName(name);
+  }
+
   endpointUrl(resource: ODataResource<any>) {
     const api = this.apiFor(resource);
     return `${api.serviceRootUrl}${resource}`;
