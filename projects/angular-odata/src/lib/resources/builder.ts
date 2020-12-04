@@ -15,9 +15,12 @@ const SUPPORTED_EXPAND_PROPERTIES = [
 const FUNCTION_REGEX = /\((.*)\)/;
 const INDEXOF_REGEX = /(?!indexof)\((\w+)\)/;
 
+export type Unpacked<T> = T extends (infer U)[] ? U : T;
 export type PlainObject = { [property: string]: any };
-export type Select<T> = string | keyof T | Array<keyof T>;
-export type Filter = string | PlainObject | Array<string | PlainObject>;
+export type Select<T> = SelectType<T> | SelectType<T>[];
+export type SelectType<T> = string | keyof T;
+export type Filter = FilterType | FilterType[];
+export type FilterType = string | PlainObject;
 
 export enum StandardAggregateMethods {
   sum = "sum",
@@ -29,15 +32,16 @@ export enum StandardAggregateMethods {
 export type Aggregate = string | { [propertyName: string]: { with: StandardAggregateMethods, as: string } };
 
 // OrderBy
-export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | { [P in keyof T]?: OrderBy<T[P]> };
-export type OrderByOptions<T> = keyof T | [keyof T, 'asc' | 'desc'];
+export type OrderBy<T> = OrderByType<T> | OrderByType<T>[];
+export type OrderByType<T> = string | OrderByObject<T>;
+export type OrderByObject<T> = keyof T | [keyof T, 'asc' | 'desc'] | { [P in keyof T]?: OrderBy<T[P]> };
 
 // Expand
 export type Expand<T> = ExpandType<T> | ExpandType<T>[];
 export type ExpandType<T> = string | ExpandObject<T>;
 export type ExpandObject<T> = keyof T | NestedExpandOptions<T>;
 export type NestedExpandOptions<T> = {
-  [P in keyof T]?: T[P] extends (infer E)[] ? ExpandOptions<E> : ExpandOptions<T[P]>;
+  [P in keyof T]?: ExpandOptions<Unpacked<T[P]>>;
 };
 export type ExpandOptions<T> = {
   select?: Select<T>;
@@ -515,7 +519,7 @@ function buildGroupBy<T>(groupBy: GroupBy<T>) {
 
 function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
   if (Array.isArray(orderBy)) {
-    return (orderBy as OrderByOptions<T>[])
+    return (orderBy as OrderByObject<T>[])
       .map(value =>
         (Array.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1) ? value.join(' ') : value
       )
