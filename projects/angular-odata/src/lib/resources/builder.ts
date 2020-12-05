@@ -84,11 +84,14 @@ export type QueryOptions<T> = ExpandOptions<T> & {
   skip: number;
   skiptoken: string;
   key: string | number | PlainObject;
+  count: boolean | Filter;
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;
   aliases: Alias[];
 }
+
+export const ITEM_ROOT = "";
 
 export default function <T>({
   select: $select,
@@ -114,7 +117,7 @@ export default function <T>({
   // key is not (null, undefined)
   if (key != undefined) {
     path += `(${handleValue(key as Value, aliases)})`;
-  }
+    }
 
   if (filter || typeof count === 'object')
     params.$filter = buildFilter(typeof count === 'object' ? count : filter, aliases);
@@ -140,7 +143,7 @@ export default function <T>({
     params.$top = top;
   }
 
-  if (skip) {
+  if (typeof skip === 'number') {
     params.$skip = skip;
   }
 
@@ -153,16 +156,11 @@ export default function <T>({
       path += `/${func}`;
     } else if (typeof func === 'object') {
       const [funcName] = Object.keys(func);
-      const funcArgs = Object.entries(func[funcName])
-        .filter(([, v]) => v !== undefined)
-        .reduce(
-          (acc: string[], [k, v]) => [...acc, `${k}=${handleValue(v, aliases)}`],
-          []
-        );
+      const funcArgs = handleValue(func[funcName] as Value, aliases);
 
       path += `/${funcName}`;
-      if (funcArgs.length) {
-        path += `(${funcArgs.join(',')})`;
+      if (funcArgs !== "") {
+        path += `(${funcArgs})`;
       }
     }
   }
@@ -176,7 +174,11 @@ export default function <T>({
   return buildUrl(path, { $select, $search, $skiptoken, $format, ...params });
 }
 
-function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: string = ''): string {
+function renderPrimitiveValue(key: string, val: any, aliases: Alias[] = []) {
+  return `${key} eq ${handleValue(val, aliases)}`
+}
+
+function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix = ''): string {
   return ((Array.isArray(filters) ? filters : [filters])
     .reduce((acc: string[], filter) => {
       if (filter) {
@@ -199,15 +201,23 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
           const value = (filter as any)[filterKey];
           let propName = '';
           if (propPrefix) {
-            if (INDEXOF_REGEX.test(filterKey)) {
-              propName = filterKey.replace(INDEXOF_REGEX, `(${propPrefix}/$1)`);
+            if (filterKey === ITEM_ROOT) {
+              propName = propPrefix;
+            } else if (INDEXOF_REGEX.test(filterKey)) {
+              propName = filterKey.replace(INDEXOF_REGEX, (_,$1)=>$1.trim() === ITEM_ROOT ? `(${propPrefix})` : `(${propPrefix}/${$1.trim()})`);
             } else if (FUNCTION_REGEX.test(filterKey)) {
-              propName = filterKey.replace(FUNCTION_REGEX, `(${propPrefix}/$1)`);
+              propName = filterKey.replace(FUNCTION_REGEX, (_,$1)=>$1.trim() === ITEM_ROOT ? `(${propPrefix})` : `(${propPrefix}/${$1.trim()})`);
             } else {
               propName = `${propPrefix}/${filterKey}`;
             }
           } else {
             propName = filterKey;
+          }
+
+          if (filterKey === ITEM_ROOT && Array.isArray(value)) {
+            return result.concat(
+                value.map((arrayValue: any) => renderPrimitiveValue(propName, arrayValue))
+            )
           }
 
           if (
@@ -216,7 +226,7 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
             value === null
           ) {
             // Simple key/value handled as equals operator
-            result.push(`${propName} eq ${handleValue(value, aliases)}`);
+            result.push(renderPrimitiveValue(propName, value, aliases));
           } else if (Array.isArray(value)) {
             const op = filterKey;
             const builtFilters = value
@@ -250,7 +260,7 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
             }
           } else if (typeof value === 'object') {
             if ('type' in value) {
-              result.push(`${propName} eq ${handleValue(value, aliases)}`);
+              result.push(renderPrimitiveValue(propName, value, aliases));
             } else {
               const operators = Object.keys(value);
               operators.forEach(op => {
@@ -317,13 +327,22 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
 
     if (typeof value === 'string' || value instanceof String) {
       clause = getStringCollectionClause(lambdaParameter, value, op, propName);
-
     } else if (value) {
-      // normalize {any:[{prop1: 1}, {prop2: 1}]} --> {any:{prop1: 1, prop2: 1}}; same for 'all'
-      const filter = buildFilterCore(
-        Array.isArray(value)
-          ? value.reduce((acc, item) => ({ ...acc, ...item }), {})
-          : value, aliases, lambdaParameter);
+      // normalize {any:[{prop1: 1}, {prop2: 1}]} --> {any:{prop1: 1, prop2: 1}}; same for 'all',
+      // simple values collection: {any:[{'': 'simpleVal1'}, {'': 'simpleVal2'}]} --> {any:{'': ['simpleVal1', 'simpleVal2']}}; same for 'all',
+      const filterValue = Array.isArray(value) ?
+          value.reduce((acc, item) => {
+            if (item.hasOwnProperty(ITEM_ROOT)) {
+              if (!acc.hasOwnProperty(ITEM_ROOT)) {
+                acc[ITEM_ROOT] = [];
+              }
+              acc[ITEM_ROOT].push(item[ITEM_ROOT])
+              return acc;
+            }
+            return {...acc, ...item}
+          }, {}) : value;
+
+      const filter = buildFilterCore(filterValue, aliases, lambdaParameter);
       clause = `${propName}/${op}(${filter ? `${lambdaParameter}:${filter}` : ''})`;
     }
     return clause;
@@ -331,11 +350,11 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix: st
 }
 
 function getStringCollectionClause(lambdaParameter: string, value: any, collectionOperator: string, propName: string) {
-  let clause = '';
-  const conditionOperator = collectionOperator == 'all' ? 'ne' : 'eq';
-  clause = `${propName}/${collectionOperator}(${lambdaParameter}: ${lambdaParameter} ${conditionOperator} '${value}')`
+	let clause = '';
+	const conditionOperator = collectionOperator == 'all' ? 'ne' : 'eq';
+	clause = `${propName}/${collectionOperator}(${lambdaParameter}: ${lambdaParameter} ${conditionOperator} '${value}')`
 
-  return clause;
+	return clause;
 }
 
 function escapeIllegalChars(string: string) {
@@ -364,28 +383,31 @@ function handleValue(value: Value, aliases?: Alias[]): any {
     if (value.type === 'raw') {
       return value.value;
     } else if (value.type === 'guid') {
-      return value.value;
+        return value.value;
     } else if (value.type === 'duration') {
-      return `duration'${value.value}'`;
+        return `duration'${value.value}'`;
     } else if (value.type === 'binary') {
-      return `binary'${value.value}'`;
+        return `binary'${value.value}'`;
     } else if (value.type === 'alias') {
       // Store
       if (Array.isArray(aliases))
         aliases.push(value as Alias);
       return `@${(value as Alias).name}`;
     } else if (value.type === 'json') {
-      return escape(JSON.stringify(value.value));
+        return escape(JSON.stringify(value.value));
     } else {
-      return Object.keys(value)
-        .map(k => `${k}=${handleValue(value[k], aliases)}`).join(',');
+      return Object.entries(value)
+        .filter(([, v]) => v !== undefined)
+        .map(([k, v]) => `${k}=${handleValue(v as Value, aliases)}`).join(',');
     }
   }
   return value;
 }
 
 function buildExpand<T>(expands: Expand<T>): string {
-  if (typeof expands === 'string') {
+  if (typeof expands === 'number') {
+    return expands as any;
+  } else if (typeof expands === 'string') {
     if (expands.indexOf('/') === -1) {
       return expands;
     }
@@ -521,7 +543,7 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
   if (Array.isArray(orderBy)) {
     return (orderBy as OrderByObject<T>[])
       .map(value =>
-        (Array.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1) ? value.join(' ') : value
+        (Array.isArray(value) && value.length === 2 && ['asc', 'desc'].indexOf(value[1]) !== -1)? value.join(' ') : value
       )
       .map(v => `${prefix}${v}`).join(',');
   } else if (typeof orderBy === 'object') {
