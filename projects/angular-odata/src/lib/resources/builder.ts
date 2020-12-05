@@ -143,7 +143,7 @@ export default function <T>({
     params.$top = top;
   }
 
-  if (typeof skip === 'number') {
+  if (skip) {
     params.$skip = skip;
   }
 
