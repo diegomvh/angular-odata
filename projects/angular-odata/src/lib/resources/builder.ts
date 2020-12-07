@@ -429,7 +429,7 @@ function buildExpand<T>(expands: Expand<T>): string {
         }
       }, '');
   } else if (Array.isArray(expands)) {
-    return `${(expands as Array<NestedExpandOptions<any>>).map(e => buildExpand(e)).join(',')}`;
+    return `${(expands as NestedExpandOptions<any>[]).map(e => buildExpand(e)).join(',')}`;
   } else if (typeof expands === 'object') {
     const expandKeys = Object.keys(expands);
 

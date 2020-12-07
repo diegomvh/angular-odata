@@ -1,14 +1,15 @@
 import { ODataSchema } from './schema';
 import { EntitySetConfig } from '../types';
+import { ODataAnnotation } from './annotation';
 
 export class ODataEntitySet {
   schema: ODataSchema
   name: string;
-  annotations: any[];
+  annotations: ODataAnnotation[];
   constructor(config: EntitySetConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
-    this.annotations = config.annotations || [];
+    this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
 
   isTypeOf(type: string) {

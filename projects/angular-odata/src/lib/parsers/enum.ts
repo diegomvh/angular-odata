@@ -1,14 +1,17 @@
 import { EnumHelper } from '../helpers';
-import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, StructuredTypeFieldOptions, EnumTypeField } from '../types';
+import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, StructuredTypeFieldOptions, EnumTypeField, Annotation } from '../types';
 
 export class ODataEnumFieldParser<Type> implements EnumTypeField {
   name: string;
-  value: string;
-
+  value: number;
+  annotations: Annotation[];
   constructor(name: string, field: EnumTypeField) {
     this.name = name;
     this.value = field.value;
-    Object.assign(this, field);
+    this.annotations = field.annotations || [];
+  }
+  annotation(type: string) {
+    return this.annotations.find(annot => annot.type === type);
   }
 }
 
@@ -24,8 +27,8 @@ export class ODataEnumParser<Type> implements Parser<Type> {
     this.type = `${namespace}.${config.name}`;
     this.flags = config.flags;
     this.members = config.members;
-    this.fields = Object.entries(config.fields || [])
-      .map(([name, f]) => new ODataEnumFieldParser(name, f as EnumTypeField));
+    this.fields = Object.entries(config.fields)
+      .map(([name, f]) => new ODataEnumFieldParser<Type>(name, f as EnumTypeField));
   }
 
   // Deserialize

@@ -1,22 +1,23 @@
 import { ODataEntityFieldParser, ODataEntityParser } from '../parsers';
 import { Parser, StructuredTypeConfig } from '../types';
+import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 
 export class ODataStructuredType<T> {
   schema: ODataSchema;
   name: string;
-  annotations: any[];
   model?: { new(...params: any[]): any };
   collection?: { new(...params: any[]): any };
   parser: ODataEntityParser<T>;
+  annotations: ODataAnnotation[];
 
   constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
-    this.annotations = config.annotations || [];
     this.model = config.model;
     this.collection = config.collection;
     this.parser = new ODataEntityParser(config, schema.namespace, schema.alias);
+    this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
 
   isTypeOf(type: string) {

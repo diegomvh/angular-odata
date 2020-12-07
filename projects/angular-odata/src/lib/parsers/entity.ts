@@ -1,5 +1,5 @@
 import { Types } from '../utils';
-import { Parser, StructuredTypeField, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Options } from '../types';
+import { Parser, StructuredTypeField, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Options, Annotation } from '../types';
 import { ODataOptions } from '../options';
 
 const NONE_PARSER = {
@@ -13,20 +13,34 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
   private parser: Parser<Type>;
   default?: any;
   maxLength?: number;
-  key?: boolean;
-  collection?: boolean;
-  nullable: boolean = true;
-  navigation?: boolean;
+  key: boolean;
+  collection: boolean;
+  nullable: boolean;
+  navigation: boolean;
   field?: string;
   precision?: number;
   scale?: number;
   ref?: string;
+  annotations: Annotation[];
 
   constructor(name: string, field: StructuredTypeField) {
     this.name = name;
     this.type = field.type;
     this.parser = NONE_PARSER;
-    Object.assign(this, field);
+    this.annotations = field.annotations || [];
+    this.default = field.default;
+    this.maxLength = field.maxLength;
+    this.key = field.key !== undefined ? field.key : false;
+    this.collection = field.collection !== undefined ? field.collection : false;
+    this.nullable = field.nullable !== undefined ? field.nullable : true;
+    this.navigation = field.navigation !== undefined ? field.navigation : false;
+    this.field = field.field;
+    this.precision = field.precision;
+    this.scale = field.scale;
+    this.ref = field.ref;
+  }
+  annotation(type: string) {
+    return this.annotations.find(annot => annot.type === type);
   }
 
   resolve(value: any) {
@@ -116,7 +130,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     this.namespace = namespace;
     this.alias = alias;
     this.children = [];
-    this.fields = Object.entries(config.fields || [])
+    this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataEntityFieldParser(name, f as StructuredTypeField));
   }
 

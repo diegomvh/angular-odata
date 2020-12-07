@@ -5,6 +5,7 @@ import { ODataEnumType } from './enum-type';
 import { ODataApi } from '../api';
 import { SchemaConfig, Parser, CallableConfig } from '../types';
 import { ODataEntitySet } from './entity-set';
+import { ODataAnnotation } from './annotation';
 
 export class ODataSchema {
   api: ODataApi;
@@ -14,27 +15,29 @@ export class ODataSchema {
   entities: ODataStructuredType<any>[];
   callables: ODataCallable<any>[];
   containers: ODataEntityContainer[];
+  annotations: ODataAnnotation[];
 
-  constructor(schema: SchemaConfig, api: ODataApi) {
+  constructor(config: SchemaConfig, api: ODataApi) {
     this.api = api;
-    this.namespace = schema.namespace;
-    this.alias = schema.alias;
-    this.enums = (schema.enums || []).map(config => new ODataEnumType(config, this));
-    this.entities = (schema.entities || []).map(config => new ODataStructuredType(config, this));
+    this.namespace = config.namespace;
+    this.alias = config.alias;
+    this.enums = (config.enums || []).map(config => new ODataEnumType(config, this));
+    this.entities = (config.entities || []).map(config => new ODataStructuredType(config, this));
     // Merge callables
-    let configs = (schema.callables || []);
-    configs = configs.reduce((acc: CallableConfig[], config) => {
+    let callableConfigs = (config.callables || []);
+    callableConfigs = callableConfigs.reduce((acc: CallableConfig[], config) => {
       if (acc.every(c => c.name !== config.name)) {
-        config = configs.filter(c => c.name === config.name).reduce((acc, c) => {
+        config = callableConfigs.filter(c => c.name === config.name).reduce((acc, c) => {
           acc.parameters = Object.assign(acc.parameters || {}, c.parameters || {});
           return acc;
         }, config);
         return [...acc, config];
       }
       return acc;
-    }, []);
-    this.callables = configs.map(config => new ODataCallable(config, this));
-    this.containers = (schema.containers || []).map(container => new ODataEntityContainer(container, this));
+    }, [] as CallableConfig[]);
+    this.callables = callableConfigs.map(config => new ODataCallable(config, this));
+    this.containers = (config.containers || []).map(container => new ODataEntityContainer(container, this));
+    this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
 
   isNamespaceOf(type: string) {

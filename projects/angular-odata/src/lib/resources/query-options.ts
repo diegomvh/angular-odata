@@ -126,7 +126,7 @@ export class OptionHandler<T> {
   //#endregion
 
   //#region Array Value
-  private assertArray(): Array<any> {
+  private assertArray(): any[] {
     if (!Types.isArray(this.o[this.n]))
       this.o[this.n] = this.o[this.n] !== undefined ? [this.o[this.n]] : [];
     return this.o[this.n];

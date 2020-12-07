@@ -1,17 +1,20 @@
 import { ODataSchema } from './schema';
 import { ODataEnumFieldParser, ODataEnumParser } from '../parsers';
 import { EnumTypeConfig } from '../types';
+import { ODataAnnotation } from './annotation';
 
 export class ODataEnumType<E> {
   schema: ODataSchema;
   name: string;
-  parser?: ODataEnumParser<E>;
+  parser: ODataEnumParser<E>;
   members: { [name: string]: number } | { [value: number]: string };
-  constructor(enu: EnumTypeConfig<E>, schema: ODataSchema) {
+  annotations: ODataAnnotation[];
+  constructor(config: EnumTypeConfig<E>, schema: ODataSchema) {
     this.schema = schema;
-    this.name = enu.name;
-    this.members = enu.members;
-    this.parser = new ODataEnumParser(enu as EnumTypeConfig<any>, schema.namespace);
+    this.name = config.name;
+    this.members = config.members;
+    this.parser = new ODataEnumParser<E>(config, schema.namespace);
+    this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
 
   isTypeOf(type: string) {
@@ -25,8 +28,8 @@ export class ODataEnumType<E> {
     return this.schema.options;
   }
 
-  fields(): ODataEnumFieldParser<any>[] {
-    return this.parser?.fields || [];
+  fields(): ODataEnumFieldParser<E>[] {
+    return this.parser.fields;
   }
 
   findField(name: string) {

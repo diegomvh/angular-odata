@@ -24,7 +24,7 @@ export class ODataApi {
   // Base Parsers
   parsers: { [type: string]: Parser<any> };
   // Schemas
-  schemas: Array<ODataSchema>;
+  schemas: ODataSchema[];
 
   constructor(config: ApiConfig) {
     this.serviceRootUrl = config.serviceRootUrl;

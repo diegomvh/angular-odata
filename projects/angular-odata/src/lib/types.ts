@@ -23,7 +23,12 @@ export type JsonSchemaExpandOptions<T> = {
 
 export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
 
-// SETTINGS AND PARSERS
+export interface Annotation {
+  type: string;
+  string?: string;
+  boolean?: boolean;
+  int?: number;
+}
 export interface StructuredTypeField {
   type: string;
   default?: any;
@@ -34,14 +39,14 @@ export interface StructuredTypeField {
   navigation?: boolean;
   field?: string;
   precision?: number;
+  annotations?: Annotation[];
   scale?: number;
   ref?: string;
-  annotations?: {term: string, string?: string, bool?: boolean}[];
 }
 
 export interface EnumTypeField {
-  value: string;
-  annotations?: {term: string, string?: string, bool?: boolean}[];
+  value: number;
+  annotations?: Annotation[];
 }
 
 /* Api Options
@@ -117,35 +122,40 @@ export type ApiConfig = {
   cache?: CacheConfig;
   options?: Options;
   parsers?: {[type: string]: Parser<any>};
-  schemas?: Array<SchemaConfig>;
+  schemas?: SchemaConfig[];
 }
 
 export type CacheConfig = {
   maxAge?: number;
   storage?: CacheStorage;
 }
-
+export type AnnotationConfig = {
+  type: string;
+  string?: string;
+  bool?: boolean;
+}
 export type SchemaConfig = {
   namespace: string;
   alias?: string;
-  annotations?: Array<any>;
-  enums?: Array<EnumTypeConfig<any>>;
-  entities?: Array<StructuredTypeConfig<any>>;
-  callables?: Array<CallableConfig>;
-  containers?: Array<EntityContainerConfig>
+  annotations?: AnnotationConfig[];
+  enums?: EnumTypeConfig<any>[];
+  entities?: StructuredTypeConfig<any>[];
+  callables?: CallableConfig[];
+  containers?: EntityContainerConfig[]
 }
 
 export type EntityContainerConfig = {
   name: string;
-  annotations?: Array<any>;
-  entitySets?: Array<EntitySetConfig>;
+  annotations?: AnnotationConfig[];
+  entitySets?: EntitySetConfig[];
 }
 
 export type EnumTypeConfig<T> = {
   name: string;
   flags?: boolean;
+  annotations?: AnnotationConfig[];
   members: {[name: string]: number} | {[value: number]: string};
-  fields: { [P in keyof T]?: EnumTypeField };
+  fields: { [member: string]: EnumTypeField };
 }
 
 export type StructuredTypeConfig<T> = {
@@ -154,7 +164,7 @@ export type StructuredTypeConfig<T> = {
   open?: boolean;
   model?: { new(...params: any[]): any };
   collection?: { new(...params: any[]): any };
-  annotations?: any[];
+  annotations?: AnnotationConfig[];
   fields: { [P in keyof T]?: StructuredTypeField };
 }
 
@@ -172,9 +182,8 @@ export type CallableConfig = {
   parameters?: { [name: string]: Parameter };
   return?: string;
 }
-
 export type EntitySetConfig = {
   name: string;
-  annotations?: any[];
+  annotations?: AnnotationConfig[];
 }
 //#endregion

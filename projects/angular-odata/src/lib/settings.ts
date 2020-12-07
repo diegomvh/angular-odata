@@ -5,7 +5,7 @@ import { ODataRequest } from './resources';
 import { Observable } from 'rxjs';
 
 export class ODataSettings {
-  apis: Array<ODataApi>;
+  apis: ODataApi[];
 
   constructor(...configs: ApiConfig[]) {
     this.apis = configs.map(config => new ODataApi(config));
