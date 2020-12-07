@@ -1,5 +1,5 @@
 import { Types } from '../utils';
-import { Parser, Field, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Options } from '../types';
+import { Parser, StructuredTypeField, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Options } from '../types';
 import { ODataOptions } from '../options';
 
 const NONE_PARSER = {
@@ -7,7 +7,7 @@ const NONE_PARSER = {
   serialize: (value: any, options: ODataOptions) => value
 } as Parser<any>;
 
-export class ODataFieldParser<Type> implements Field, Parser<Type> {
+export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser<Type> {
   name: string;
   type: string;
   private parser: Parser<Type>;
@@ -22,7 +22,7 @@ export class ODataFieldParser<Type> implements Field, Parser<Type> {
   scale?: number;
   ref?: string;
 
-  constructor(name: string, field: Field) {
+  constructor(name: string, field: StructuredTypeField) {
     this.name = name;
     this.type = field.type;
     this.parser = NONE_PARSER;
@@ -108,7 +108,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   base?: string;
   parent?: ODataEntityParser<any>;
   children: ODataEntityParser<any>[];
-  fields: ODataFieldParser<any>[];
+  fields: ODataEntityFieldParser<any>[];
 
   constructor(config: StructuredTypeConfig<Type>, namespace: string, alias?: string) {
     this.name = config.name;
@@ -116,8 +116,8 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     this.namespace = namespace;
     this.alias = alias;
     this.children = [];
-    this.fields = Object.entries(config.fields)
-      .map(([name, f]) => new ODataFieldParser(name, f as Field));
+    this.fields = Object.entries(config.fields || [])
+      .map(([name, f]) => new ODataEntityFieldParser(name, f as StructuredTypeField));
   }
 
   isTypeOf(type: string) {
@@ -179,7 +179,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 
   keys() {
-    const keys: ODataFieldParser<any>[] = (this.parent) ? this.parent.keys() : [];
+    const keys: ODataEntityFieldParser<any>[] = (this.parent) ? this.parent.keys() : [];
     return [...keys, ...this.fields.filter(f => f.key)];
   }
 

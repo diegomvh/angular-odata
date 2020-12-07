@@ -1,21 +1,35 @@
 import { EnumHelper } from '../helpers';
-import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, FieldOptions } from '../types';
+import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, StructuredTypeFieldOptions, EnumTypeField } from '../types';
+
+export class ODataEnumFieldParser<Type> implements EnumTypeField {
+  name: string;
+  value: string;
+
+  constructor(name: string, field: EnumTypeField) {
+    this.name = name;
+    this.value = field.value;
+    Object.assign(this, field);
+  }
+}
 
 export class ODataEnumParser<Type> implements Parser<Type> {
   name: string;
   type: string;
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
+  fields: ODataEnumFieldParser<any>[];
 
-  constructor(meta: EnumTypeConfig<Type>, namespace: string) {
-    this.name = meta.name;
-    this.type = `${namespace}.${meta.name}`;
-    this.flags = meta.flags;
-    this.members = meta.members;
+  constructor(config: EnumTypeConfig<Type>, namespace: string) {
+    this.name = config.name;
+    this.type = `${namespace}.${config.name}`;
+    this.flags = config.flags;
+    this.members = config.members;
+    this.fields = Object.entries(config.fields || [])
+      .map(([name, f]) => new ODataEnumFieldParser(name, f as EnumTypeField));
   }
 
   // Deserialize
-  deserialize(value: string, options: FieldOptions): Type {
+  deserialize(value: string, options: StructuredTypeFieldOptions): Type {
     // string -> Type
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
@@ -25,7 +39,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(value: Type, options: FieldOptions): string {
+  serialize(value: Type, options: StructuredTypeFieldOptions): string {
     // Type -> string
     if (this.flags) {
       let names = EnumHelper.toNames(this.members, value);

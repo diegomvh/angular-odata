@@ -1,5 +1,5 @@
 import { ODataSchema } from './schema';
-import { ODataEnumParser } from '../parsers';
+import { ODataEnumFieldParser, ODataEnumParser } from '../parsers';
 import { EnumTypeConfig } from '../types';
 
 export class ODataEnumType<E> {
@@ -23,5 +23,13 @@ export class ODataEnumType<E> {
 
   get options() {
     return this.schema.options;
+  }
+
+  fields(): ODataEnumFieldParser<any>[] {
+    return this.parser?.fields || [];
+  }
+
+  findField(name: string) {
+    return this.fields().find(f => f.name === name);
   }
 }

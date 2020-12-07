@@ -24,7 +24,7 @@ export type JsonSchemaExpandOptions<T> = {
 export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
 
 // SETTINGS AND PARSERS
-export interface Field {
+export interface StructuredTypeField {
   type: string;
   default?: any;
   maxLength?: number;
@@ -36,6 +36,12 @@ export interface Field {
   precision?: number;
   scale?: number;
   ref?: string;
+  annotations?: {term: string, string?: string, bool?: boolean}[];
+}
+
+export interface EnumTypeField {
+  value: string;
+  annotations?: {term: string, string?: string, bool?: boolean}[];
 }
 
 /* Api Options
@@ -86,8 +92,8 @@ export interface Options {
   fetchPolicy?: FetchPolicy;
 }
 
-export interface FieldOptions extends Options {
-  field: Field
+export interface StructuredTypeFieldOptions extends Options {
+  field: StructuredTypeField
 }
 
 export interface Parser<T> {
@@ -139,6 +145,7 @@ export type EnumTypeConfig<T> = {
   name: string;
   flags?: boolean;
   members: {[name: string]: number} | {[value: number]: string};
+  fields: { [P in keyof T]?: EnumTypeField };
 }
 
 export type StructuredTypeConfig<T> = {
@@ -148,7 +155,7 @@ export type StructuredTypeConfig<T> = {
   model?: { new(...params: any[]): any };
   collection?: { new(...params: any[]): any };
   annotations?: any[];
-  fields: { [P in keyof T]?: Field };
+  fields: { [P in keyof T]?: StructuredTypeField };
 }
 
 export type Parameter = {
