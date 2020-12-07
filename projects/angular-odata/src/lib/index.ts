@@ -14,6 +14,9 @@ export * from './services/index';
 // Parsers
 export * from './parsers/index';
 
+// Schema
+export * from './schema/index';
+
 // Models
 export * from './models/index';
 
