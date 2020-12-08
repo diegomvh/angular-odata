@@ -26,8 +26,9 @@ export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
 export interface Annotation {
   type: string;
   string?: string;
-  boolean?: boolean;
+  bool?: boolean;
   int?: number;
+  permissions?: string[];
 }
 export interface StructuredTypeField {
   type: string;
@@ -133,6 +134,7 @@ export type AnnotationConfig = {
   type: string;
   string?: string;
   bool?: boolean;
+  int?: number;
   permissions?: string[];
 }
 export type SchemaConfig = {
