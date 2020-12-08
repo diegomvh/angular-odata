@@ -90,7 +90,7 @@ describe('ODataClient', () => {
       },
       schemas: [{
         namespace: "Primitive",
-        enums: [{name: "Color", members: Color}],
+        enums: [{name: "Color", members: Color, fields: {}}],
         entities: [
           {
             name: "Entity",

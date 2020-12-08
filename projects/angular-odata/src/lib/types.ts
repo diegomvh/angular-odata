@@ -133,6 +133,7 @@ export type AnnotationConfig = {
   type: string;
   string?: string;
   bool?: boolean;
+  permissions?: string[];
 }
 export type SchemaConfig = {
   namespace: string;

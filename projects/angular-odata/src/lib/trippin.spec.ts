@@ -15,7 +15,8 @@ export enum PersonGender {
 }
 export const PersonGenderConfig = {
   name: "PersonGender",
-  members: PersonGender
+  members: PersonGender,
+  fields: {}
 } as EnumTypeConfig<PersonGender>;
 //#endregion
 
