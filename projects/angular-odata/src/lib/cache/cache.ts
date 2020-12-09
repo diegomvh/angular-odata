@@ -7,11 +7,11 @@ import { ODataCacheMemoryStorage } from './memory';
 import { ODataCacheStorage } from './storage';
 
 export class ODataCache {
-  maxAge: number;
+  defaultMaxAge: number;
   storage: ODataCacheStorage;
 
   constructor(config: CacheConfig) {
-    this.maxAge = config.maxAge || DEFAULT_MAX_AGE;
+    this.defaultMaxAge = config.defaultMaxAge || DEFAULT_MAX_AGE;
     this.storage = config.storage || new ODataCacheMemoryStorage();
   }
 
@@ -21,7 +21,7 @@ export class ODataCache {
 
   handle(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
     const policy = req.fetchPolicy;
-    const cached = this.storage.get(req, {maxAge: this.maxAge});
+    const cached = this.storage.get(req, {maxAge: this.defaultMaxAge});
     if (policy === 'no-cache') {
       return res$;
     }

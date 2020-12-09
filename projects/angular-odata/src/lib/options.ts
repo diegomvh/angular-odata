@@ -1,13 +1,13 @@
 import { DEFAULT_FETCH_POLICY, DEFAULT_VERSION, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from './constants';
-import { Options } from './types';
+import { FetchPolicy, ODataMetadataType, ODataVersion, Options } from './types';
 import { ODataHelper } from './helpers/index';
 
 export class ODataOptions implements Options {
-  version: '2.0' | '3.0' | '4.0';
-  metadata?: 'minimal' | 'full' | 'none';
+  version: ODataVersion;
+  metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
-  fetchPolicy: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
+  fetchPolicy: FetchPolicy;
   streaming?: boolean;
   // Http
   params: { [param: string]: string | string[] };
@@ -38,7 +38,7 @@ export class ODataOptions implements Options {
       let [k, v] = o.split("=");
       switch (k) {
         case 'odata.metadata':
-          this.metadata = v as 'full' | 'minimal' | 'none';
+          this.metadata = v as ODataMetadataType;
           break;
         case 'odata.streaming':
           this.streaming = v == "true";
@@ -53,6 +53,6 @@ export class ODataOptions implements Options {
   setVersion(version: string) {
     const value = version.replace(/\;/g, "").trim();
     if ([VERSION_2_0, VERSION_3_0, VERSION_4_0].indexOf(value) !== -1)
-      this.version = value as '2.0' | '3.0' | '4.0';
+      this.version = value as ODataVersion;
   }
 }

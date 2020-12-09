@@ -15,8 +15,9 @@ export class ODataApi {
   serviceRootUrl: string;
   metadataUrl?: string;
   name?: string;
-  default?: boolean;
-  creation?: Date;
+  version?: string;
+  default: boolean;
+  creation: Date;
   // Cache
   cache!: ODataCache;
   // Options
@@ -34,9 +35,10 @@ export class ODataApi {
       this.serviceRootUrl += '/';
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;
     this.name = config.name;
+    this.version = config.version;
     this.default = config.default || false;
     this.creation = config.creation || new Date();
-    this.options = new ODataOptions(config.options || {});
+    this.options = new ODataOptions(Object.assign({version: this.version}, config.options || {}));
 
     this.cache = new ODataCache(config.cache || {});
 

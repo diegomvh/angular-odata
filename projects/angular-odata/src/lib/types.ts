@@ -127,7 +127,7 @@ export type ApiConfig = {
 }
 
 export type CacheConfig = {
-  maxAge?: number;
+  defaultMaxAge?: number;
   storage?: CacheStorage;
 }
 export type AnnotationConfig = {
