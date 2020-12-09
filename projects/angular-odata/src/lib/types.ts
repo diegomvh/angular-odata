@@ -29,6 +29,7 @@ export interface Annotation {
   bool?: boolean;
   int?: number;
   permissions?: string[];
+  properties?: string[];
 }
 export interface StructuredTypeField {
   type: string;
@@ -136,6 +137,7 @@ export type AnnotationConfig = {
   bool?: boolean;
   int?: number;
   permissions?: string[];
+  properties?: string[];
 }
 export type SchemaConfig = {
   namespace: string;
