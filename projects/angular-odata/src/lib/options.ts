@@ -36,7 +36,7 @@ export class ODataOptions implements Options {
   setFeatures(features: string) {
     features.split(";").forEach(o => {
       let [k, v] = o.split("=");
-      switch (k) {
+      switch (k.trim()) {
         case 'odata.metadata':
           this.metadata = v as ODataMetadataType;
           break;
