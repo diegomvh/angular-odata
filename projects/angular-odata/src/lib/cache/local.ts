@@ -9,6 +9,7 @@ export interface ODataCacheLocalStorageEntry {
     headers: {[name: string]: string | string[]};
     status: number;
     statusText: string;
+    url: string;
   };
   lastRead: number;
 }
@@ -25,19 +26,12 @@ export class ODataCacheLocalStorage extends ODataCacheStorage {
     })(backend, name, this.responses));
   }
 
-  put(req: ODataRequest<any>, response: ODataResponse<any>) {
+  put(req: ODataRequest<any>, res: ODataResponse<any>) {
     const url = req.urlWithParams;
 
     const newEntry = {
       url,
-      response: {
-        body: response.body,
-        headers: response.headers.keys()
-          .map(name => ({[name]: response.headers.getAll(name)}))
-          .reduce((acc, header) => Object.assign(acc, header), {}),
-        status: response.status,
-        statusText: response.statusText
-      },
+      response: res.toJSON(),
       lastRead: Date.now() } as ODataCacheLocalStorageEntry;
     this.responses.set(url, newEntry);
   }
@@ -61,13 +55,6 @@ export class ODataCacheLocalStorage extends ODataCacheStorage {
     }
 
     const isExpired = cached.lastRead < (Date.now() - options.maxAge);
-    return isExpired ? undefined : new ODataResponse<any>({
-      api: req.api,
-      body: cached.response.body,
-      headers: new HttpHeaders(cached.response.headers),
-      status: cached.response.status,
-      statusText: cached.response.statusText,
-      resource: req.resource
-    });
+    return isExpired ? undefined : ODataResponse.fromJSON(req, cached.response);
   }
 }

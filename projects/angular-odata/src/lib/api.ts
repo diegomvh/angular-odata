@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -54,23 +54,14 @@ export class ODataApi {
     });
   }
 
-  request(req: ODataRequest<any>): Observable<ODataResponse<any> | HttpEvent<any>> {
+  request(req: ODataRequest<any>): Observable<any> {
     let res$ = this.requester !== undefined ? this.requester(req) : NEVER;
-    if (req.observe === 'events') {
-      return res$;
-    }
     res$ = res$.pipe(
-      map((res: HttpResponse<any>) => new ODataResponse({
-        body: res.body,
-        api: req.api,
-        headers: res.headers,
-        status: res.status,
-        statusText: res.statusText,
-        resource: req.resource
-      })
+      map((res: HttpEvent<any>) =>
+        res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res
     ));
 
-    return (this.cache.isCacheable(req)) ?
+    return (req.observe === 'response' && this.cache.isCacheable(req)) ?
       this.cache.handle(req, res$) :
       res$;
   }

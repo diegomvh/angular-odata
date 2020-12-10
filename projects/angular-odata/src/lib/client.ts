@@ -34,8 +34,8 @@ export class ODataClient {
 
   constructor(protected http: HttpClient, protected settings: ODataSettings) {
     settings.configure({
-      requester: (req: ODataRequest<any>): Observable<any> => {
-        return http.request(req.method, `${req.url}`, {
+      requester: (req: ODataRequest<any>): Observable<any> =>
+        http.request(req.method, `${req.url}`, {
           body: req.body,
           headers: req.headers,
           observe: req.observe,
@@ -43,8 +43,7 @@ export class ODataClient {
           reportProgress: req.reportProgress,
           responseType: req.responseType,
           withCredentials: req.withCredentials
-        });
-      }
+        })
     })
   }
 
@@ -397,11 +396,13 @@ export class ODataClient {
 
     const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe as 'response' | 'events';
 
-    const request = new ODataRequest(method, resource, {
+    const request = new ODataRequest({
+      method,
+      resource,
+      api,
       body: options.body,
       etag: options.etag,
       observe: observe,
-      api: api,
       headers: options.headers,
       params: options.params,
       reportProgress: options.reportProgress,

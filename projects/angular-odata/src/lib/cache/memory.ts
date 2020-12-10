@@ -10,10 +10,10 @@ export interface ODataCacheMemoryStorageEntry {
 export class ODataCacheMemoryStorage extends ODataCacheStorage {
   responses = new Map<string, ODataCacheMemoryStorageEntry>();
 
-  put(req: ODataRequest<any>, response: ODataResponse<any>) {
+  put(req: ODataRequest<any>, res: ODataResponse<any>) {
     const url = req.urlWithParams;
 
-    const newEntry = { url, response, lastRead: Date.now() };
+    const newEntry = { url, response: res, lastRead: Date.now() };
     this.responses.set(url, newEntry);
   }
 
