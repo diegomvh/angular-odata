@@ -1,4 +1,4 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 import { Parser } from '../../types';
 import { Types } from '../../utils/types';
@@ -8,29 +8,66 @@ import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE } from '../../constants';
 import { ODataOptions } from '../../options';
 import { ODataApi } from '../../api';
+import { ODataRequest } from '../request';
 
-export class ODataResponse<T> {
-  readonly body: any | null;
+export class ODataResponse<T> extends HttpResponse<T> {
   readonly api: ODataApi;
-  readonly headers: HttpHeaders;
-  readonly status: number;
-  readonly statusText: string;
   readonly resource: ODataResource<T>;
 
   constructor(init: {
-    api: ODataApi;
-    body: any | null;
-    headers: HttpHeaders;
-    status: number;
-    statusText: string;
-    resource: ODataResource<T>;
+      api: ODataApi,
+      resource: ODataResource<T>,
+      body: T | null;
+      headers: HttpHeaders;
+      status: number;
+      statusText: string;
+      url?: string;
   }) {
-    this.body = init.body;
+    super(init);
     this.api = init.api;
-    this.headers = init.headers;
-    this.status = init.status;
-    this.statusText = init.statusText;
     this.resource = init.resource;
+  }
+
+  static fromHttpResponse<T>(req: ODataRequest<T>, res: HttpResponse<T>) {
+    return new ODataResponse<T>({
+      api: req.api,
+      resource: req.resource,
+      body: res.body,
+      headers: res.headers,
+      status: res.status,
+      statusText: res.statusText,
+      url: res.url || undefined,
+    });
+  }
+
+  static fromJSON<T>(req: ODataRequest<T>, json: {
+      body: T | null;
+      headers: {[name: string]: string | string[]};
+      status: number;
+      statusText: string;
+      url?: string;
+  }) {
+    return new ODataResponse<T>({
+      api: req.api,
+      resource: req.resource,
+      body: json.body,
+      headers: new HttpHeaders(json.headers),
+      status: json.status,
+      statusText: json.statusText,
+      url: json.url,
+    });
+  }
+
+  toJSON() {
+    return {
+      body: this.body,
+      headers: this.headers.keys()
+        .map(name => ({[name]: this.headers.getAll(name)}))
+        .reduce((acc, header) => Object.assign(acc, header), {}),
+      status: this.status,
+      statusText: this.statusText,
+      url: this.url
+    }
   }
 
   _options: ODataOptions | null = null;
@@ -69,7 +106,7 @@ export class ODataResponse<T> {
   }
 
   entity(): ODataEntity<T> {
-    const payload = this.body && this.options.version === "2.0" ? this.body["d"] : this.body;
+    const payload = this.body && this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
     const meta = new ODataEntityMeta(payload || {}, {options: this.options, headers: this.headers});
     //TODO: View the type in meta.context
     const type = this.resource.type();
@@ -80,7 +117,7 @@ export class ODataResponse<T> {
   }
 
   entities(): ODataEntities<T> {
-    const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
+    const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
     const meta = new ODataEntitiesMeta(payload || {}, {options: this.options, headers: this.headers});
     //TODO: View the type in meta.context
     const type = this.resource.type();
@@ -91,7 +128,7 @@ export class ODataResponse<T> {
   }
 
   property(): ODataProperty<T> {
-    const payload = this.options.version === "2.0" ? this.body["d"] : this.body;
+    const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
     const meta = new ODataPropertyMeta(payload || {}, {options: this.options, headers: this.headers});
     //TODO: View the type in meta.context
     const type = this.resource.type();

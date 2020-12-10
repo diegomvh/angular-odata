@@ -19,8 +19,10 @@ export class ODataRequest<T> {
   readonly path: string;
   readonly resource: ODataResource<T>;
 
-  constructor(method: string, resource: ODataResource<T>, init: {
+  constructor(init: {
+    method: string,
     api: ODataApi,
+    resource: ODataResource<T>,
     body: T | null,
     observe?: 'events' | 'response',
     etag?: string,
@@ -31,8 +33,8 @@ export class ODataRequest<T> {
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
     withCredentials?: boolean
   }) {
-    this.method = method;
-    this.resource = resource;
+    this.method = init.method;
+    this.resource = init.resource;
 
     this.api = init.api;
     this.body = init.body;
@@ -44,7 +46,7 @@ export class ODataRequest<T> {
     this.fetchPolicy = init.fetchPolicy || this.options.fetchPolicy;
 
     // The Path and Params from resource
-    const [resourcePath, resourceParams] = resource.pathAndParams();
+    const [resourcePath, resourceParams] = init.resource.pathAndParams();
     this.path = resourcePath;
 
     // Headers
