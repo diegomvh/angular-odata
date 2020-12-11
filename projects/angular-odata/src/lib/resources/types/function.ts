@@ -153,9 +153,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     options?: HttpOptions
   ): Observable<any> {
     const res = this.parameters(params);
-    const res$ = res.get(
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType }, options || {})
-    ) as Observable<any>;
+    const opts = responseType === 'model' ? Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options || {}) :
+      responseType === 'collection' ? Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options || {}) :
+      Object.assign(<HttpOptions>{responseType}, options || {});
+    const res$ = res.get(opts) as Observable<any>;
     switch(responseType) {
       case 'entities':
         return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities}) => entities));

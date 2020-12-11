@@ -126,9 +126,10 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     options?: HttpOptions
   ): Observable<any> {
     const res = this.clone() as ODataActionResource<P, R>;
-    const res$ = res.post(params,
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType }, options || {})
-    ) as Observable<any>;
+    const opts = responseType === 'model' ? Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options || {}) :
+      responseType === 'collection' ? Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options || {}) :
+      Object.assign(<HttpOptions>{responseType}, options || {});
+    const res$ = res.post(params, opts) as Observable<any>;
     switch(responseType) {
       case 'entities':
         return (res$ as Observable<ODataEntities<R>>).pipe(map(({entities}) => entities));

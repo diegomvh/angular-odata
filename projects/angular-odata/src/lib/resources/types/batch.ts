@@ -1,11 +1,10 @@
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ODataClient } from '../../client';
-import { Types } from '../../utils/types';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
-import { HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpHeaders, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX, NEWLINE_REGEXP } from '../../constants';
 import { ODataRequest } from '../request';
 import { ODataApi } from '../../api';
@@ -47,7 +46,7 @@ function getBoundaryEnd(boundaryDelimiter: string): string {
   return boundaryEnd;
 }
 
-export class ODataBatchRequest<T> extends Subject<HttpResponse<T>> {
+export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
   constructor(public request: ODataRequest<any>)
    {
     super();
@@ -111,14 +110,14 @@ export class ODataBatchRequest<T> extends Subject<HttpResponse<T>> {
     }
 
     if (ok) {
-      let resp = new HttpResponse<any>({
+      let res = new HttpResponse<any>({
         body,
         headers,
         status: status.code,
         statusText: status.text,
         url: this.request.urlWithParams
       });
-      this.next(resp);
+      this.next(ODataResponse.fromHttpResponse(this.request, res));
       this.complete();
     } else {
       // An unsuccessful request is delivered on the error channel.
@@ -178,12 +177,12 @@ export class ODataBatchResource extends ODataResource<any> {
 
   post(func: (batch: ODataBatchResource) => void) {
     const current = this.api.request;
-    this.api.request = (request: ODataRequest<any>): ODataBatchRequest<any> => {
-      if (request.api !== this.api)
+    this.api.request = (req: ODataRequest<any>): Observable<any> => {
+      if (req.api !== this.api)
         throw new Error("Batch Request are for the same api.");
-      if (request.observe === 'events')
+      if (req.observe === 'events')
         throw new Error("Batch Request does not allows observe == 'events'.");
-      this.requests.push(new ODataBatchRequest<any>(request));
+      this.requests.push(new ODataBatchRequest<any>(req));
       return this.requests[this.requests.length - 1];
     }
     try {
