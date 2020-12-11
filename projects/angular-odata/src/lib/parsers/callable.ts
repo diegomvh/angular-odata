@@ -1,5 +1,4 @@
-import { Types } from '../utils';
-import { Parser, Options, Parameter, CallableConfig } from '../types';
+import { Parser, Options, Parameter, CallableConfig, OptionsHelper, StructuredTypeFieldOptions } from '../types';
 
 const NONE_PARSER = {
   deserialize(value: any, options: Options) {return value},
@@ -21,31 +20,13 @@ export class ODataParameterParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: Options): Type {
+  deserialize(value: any, options: StructuredTypeFieldOptions): Type {
     return this.parser.deserialize(value, options);
-    /*
-    if (this.parser instanceof ODataEntityParser) {
-      return Array.isArray(value) ?
-        (value.map(v => this.parser.deserialize(v, options)) as Partial<Type>[]):
-        (this.parser.deserialize(value, options) as Partial<Type>);
-    } else if (this.parser instanceof ODataEnumParser) {
-      return this.parser.deserialize(value, options);
-    }
-    */
   }
 
   // Serialize
-  serialize(value: Type, options: Options): any {
+  serialize(value: Type, options: StructuredTypeFieldOptions): any {
     return this.parser.serialize(value, options);
-    /*
-    if (this.parser instanceof ODataEntityParser) {
-      return Array.isArray(value) ?
-        value.map(v => this.parser.serialize(v, options)) :
-        this.parser.serialize(value, options);
-    } else if (this.parser instanceof ODataEnumParser) {
-      return this.parser.serialize(value, options);
-    }
-    */
   }
 
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
@@ -70,12 +51,12 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   // Deserialize
-  deserialize(value: any, options: Options): R {
+  deserialize(value: any, options: StructuredTypeFieldOptions): R {
     return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(params: any, options: Options): any {
+  serialize(params: any, options: StructuredTypeFieldOptions): any {
     return Object.assign({}, this.parameters
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})

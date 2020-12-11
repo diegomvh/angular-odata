@@ -123,11 +123,14 @@ export type FetchPolicy = 'cache-first' | 'cache-and-network' | 'network-only' |
 export type ODataMetadataType = 'minimal' | 'full' | 'none';
 
 export interface Options {
-  version: ODataVersion;
-  helper: ODataVersionHelper;
+  version?: ODataVersion;
   metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
+}
+
+export interface OptionsHelper extends Options {
+  helper: ODataVersionHelper;
 }
 
 export interface ApiOptions extends Options {
@@ -137,13 +140,17 @@ export interface ApiOptions extends Options {
   fetchPolicy?: FetchPolicy;
 }
 
-export interface StructuredTypeFieldOptions extends Options {
+export interface ResponseOptions extends Options {
+  streaming?: boolean;
+}
+
+export interface StructuredTypeFieldOptions extends OptionsHelper {
   field: StructuredTypeField
 }
 
 export interface Parser<T> {
-  deserialize(value: any, options: Options): T;
-  serialize(value: T, options: Options): any;
+  deserialize(value: any, options: OptionsHelper): T;
+  serialize(value: T, options: OptionsHelper): any;
 }
 
 export interface CacheStorage {

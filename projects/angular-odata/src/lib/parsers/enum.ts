@@ -1,5 +1,5 @@
 import { EnumHelper } from '../helpers';
-import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, StructuredTypeFieldOptions, EnumTypeField, Annotation } from '../types';
+import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, StructuredTypeFieldOptions, EnumTypeField, Annotation, OptionsHelper } from '../types';
 
 export class ODataEnumFieldParser<Type> implements EnumTypeField {
   name: string;
@@ -32,7 +32,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: string, options: StructuredTypeFieldOptions): Type {
+  deserialize(value: string, options: OptionsHelper): Type {
     // string -> Type
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
@@ -42,7 +42,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(value: Type, options: StructuredTypeFieldOptions): string {
+  serialize(value: Type, options: OptionsHelper): string {
     // Type -> string
     if (this.flags) {
       let names = EnumHelper.toNames(this.members, value);

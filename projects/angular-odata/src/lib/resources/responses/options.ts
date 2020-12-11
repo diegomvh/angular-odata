@@ -1,8 +1,8 @@
 import { DEFAULT_VERSION, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from '../../constants';
 import { ODataHelper } from '../../helpers/odata';
-import { ODataMetadataType, ODataVersion, Options } from '../../types';
+import { ODataMetadataType, ODataVersion, Options, OptionsHelper, ResponseOptions } from '../../types';
 
-export class ODataResponseOptions implements Options {
+export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
   version: ODataVersion;
   streaming?: boolean;
   // OData
