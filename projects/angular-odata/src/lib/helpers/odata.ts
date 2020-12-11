@@ -1,40 +1,7 @@
-import { ODataContext } from '../types';
+import { ODataContext, ODataVersionHelper } from '../types';
 import { VERSION_3_0, VERSION_2_0, VERSION_4_0, $COUNT, $INLINECOUNT } from '../constants';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
-
-export interface ODataVersionHelper {
-  VALUE: string;
-  ODATA_ANNOTATION_PREFIX: string;
-  ODATA_FUNCTION_PREFIX: string;
-  ODATA_ID: string;
-  ODATA_COUNT: string;
-  ODATA_ETAG: string;
-  ODATA_CONTEXT: string;
-  ODATA_MEDIA_ETAG: string;
-  entity(value: {[name: string]: any}, context: ODataContext): any;
-  entities(value: {[name: string]: any}, context: ODataContext): any;
-  property(value: {[name: string]: any}, context: ODataContext): any;
-  annotations(value: {[name: string]: any}): {[name: string]: any};
-  attributes(value: {[name: string]: any}): {[name: string]: any};
-  id(value: {[name: string]: any}, id?: string): string;
-  etag(value: {[name: string]: any}, etag?: string): string;
-  context(value: {[name: string]: any}): ODataContext;
-  functions(value: {[name: string]: any}): {[name: string]: any};
-  properties(value: {[name: string]: any}): {[name: string]: any};
-  mediaEtag(value: {[name: string]: any}): string;
-  metadataEtag(value: {[name: string]: any}): string;
-  type(value: {[name: string]: any}): string;
-  nextLink(value: {[name: string]: any}): string;
-  readLink(value: {[name: string]: any}): string;
-  mediaReadLink(value: {[name: string]: any}): string;
-  editLink(value: {[name: string]: any}): string;
-  mediaEditLink(value: {[name: string]: any}): string;
-  mediaContentType(value: {[name: string]: any}): string;
-  deltaLink(value: {[name: string]: any}): string;
-  count(value: {[name: string]: any}): number;
-  countParam(): {[name: string]: string};
-}
 
 const ODataVersionBaseHelper = <any> {
     entity(data: {[name: string]: any}, context: ODataContext) { return data; },

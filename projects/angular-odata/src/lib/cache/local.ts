@@ -1,4 +1,3 @@
-import { HttpHeaders } from '@angular/common/http';
 import { ODataRequest, ODataResponse } from '../resources';
 import { ODataCacheStorage } from './storage';
 

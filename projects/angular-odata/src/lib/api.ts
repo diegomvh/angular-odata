@@ -2,13 +2,42 @@ import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/com
 import { NEVER, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataOptions } from './options';
-import { ApiConfig, Parser } from './types';
+import { ApiConfig, ApiOptions, FetchPolicy, ODataMetadataType, ODataVersion, Parser } from './types';
 import { EDM_PARSERS } from './parsers/index';
 import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
 import { ODataRequest, ODataResponse } from './resources/index';
-import { ODataCache, ODataCacheMemoryStorage } from './cache/index';
+import { ODataCache } from './cache/index';
+import { DEFAULT_FETCH_POLICY, DEFAULT_VERSION } from './constants';
+import { ODataHelper } from './helpers';
+
+export class ODataApiOptions implements ApiOptions {
+  version: ODataVersion;
+  metadata?: ODataMetadataType;
+  stringAsEnum?: boolean;
+  ieee754Compatible?: boolean;
+  fetchPolicy: FetchPolicy;
+  streaming?: boolean;
+  // Http
+  params: { [param: string]: string | string[] };
+  headers: { [param: string]: string | string[] };
+  withCredentials?: boolean;
+
+  constructor(config: ApiOptions) {
+    this.version = config.version;
+    this.metadata = config.metadata;
+    this.stringAsEnum = config.stringAsEnum;
+    this.ieee754Compatible = config.ieee754Compatible;
+    this.params = config.params || {};
+    this.headers = config.headers || {};
+    this.withCredentials = config.withCredentials;
+    this.fetchPolicy = config.fetchPolicy || DEFAULT_FETCH_POLICY;
+  }
+
+  get helper() {
+    return ODataHelper[this.version];
+  }
+}
 
 export class ODataApi {
   requester?: (request: ODataRequest<any>) => Observable<any>;
@@ -21,7 +50,7 @@ export class ODataApi {
   // Cache
   cache!: ODataCache;
   // Options
-  options: ODataOptions;
+  options: ODataApiOptions;
   // Base Parsers
   parsers: { [type: string]: Parser<any> };
   // Schemas
@@ -35,10 +64,10 @@ export class ODataApi {
       this.serviceRootUrl += '/';
     this.metadataUrl = `${config.serviceRootUrl}$metadata`;
     this.name = config.name;
-    this.version = config.version;
+    this.version = config.version || DEFAULT_VERSION;
     this.default = config.default || false;
     this.creation = config.creation || new Date();
-    this.options = new ODataOptions(Object.assign({version: this.version}, config.options || {}));
+    this.options = new ODataApiOptions(Object.assign(<ApiOptions>{version: this.version}, config.options || {}));
 
     this.cache = new ODataCache(config.cache || {});
 
@@ -61,7 +90,7 @@ export class ODataApi {
         res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res
     ));
 
-    return (req.observe === 'response' && this.cache.isCacheable(req)) ?
+    return (this.cache.isCacheable(req)) ?
       this.cache.handle(req, res$) :
       res$;
   }

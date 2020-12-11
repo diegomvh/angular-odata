@@ -6,9 +6,9 @@ import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE } from '../../constants';
-import { ODataOptions } from '../../options';
 import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
+import { ODataResponseOptions } from './options';
 
 export class ODataResponse<T> extends HttpResponse<T> {
   readonly api: ODataApi;
@@ -70,10 +70,10 @@ export class ODataResponse<T> extends HttpResponse<T> {
     }
   }
 
-  _options: ODataOptions | null = null;
-  get options(): ODataOptions {
+  _options: ODataResponseOptions | null = null;
+  get options(): ODataResponseOptions {
     if (this._options === null) {
-      this._options = this.api.options.clone();
+      this._options = new ODataResponseOptions(this.api.options);
       const contentType = this.headers.get(CONTENT_TYPE);
       if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
         const features = contentType.split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;

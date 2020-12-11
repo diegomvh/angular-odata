@@ -51,6 +51,39 @@ export interface EnumTypeField {
   annotations?: Annotation[];
 }
 
+export interface ODataVersionHelper {
+  VALUE: string;
+  ODATA_ANNOTATION_PREFIX: string;
+  ODATA_FUNCTION_PREFIX: string;
+  ODATA_ID: string;
+  ODATA_COUNT: string;
+  ODATA_ETAG: string;
+  ODATA_CONTEXT: string;
+  ODATA_MEDIA_ETAG: string;
+  entity(value: {[name: string]: any}, context: ODataContext): any;
+  entities(value: {[name: string]: any}, context: ODataContext): any;
+  property(value: {[name: string]: any}, context: ODataContext): any;
+  annotations(value: {[name: string]: any}): {[name: string]: any};
+  attributes(value: {[name: string]: any}): {[name: string]: any};
+  id(value: {[name: string]: any}, id?: string): string;
+  etag(value: {[name: string]: any}, etag?: string): string;
+  context(value: {[name: string]: any}): ODataContext;
+  functions(value: {[name: string]: any}): {[name: string]: any};
+  properties(value: {[name: string]: any}): {[name: string]: any};
+  mediaEtag(value: {[name: string]: any}): string;
+  metadataEtag(value: {[name: string]: any}): string;
+  type(value: {[name: string]: any}): string;
+  nextLink(value: {[name: string]: any}): string;
+  readLink(value: {[name: string]: any}): string;
+  mediaReadLink(value: {[name: string]: any}): string;
+  editLink(value: {[name: string]: any}): string;
+  mediaEditLink(value: {[name: string]: any}): string;
+  mediaContentType(value: {[name: string]: any}): string;
+  deltaLink(value: {[name: string]: any}): string;
+  count(value: {[name: string]: any}): number;
+  countParam(): {[name: string]: string};
+}
+
 /* Api Options
   version:
   metadata:
@@ -88,14 +121,19 @@ export interface EnumTypeField {
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy = 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
 export type ODataMetadataType = 'minimal' | 'full' | 'none';
+
 export interface Options {
-  version?: ODataVersion;
+  version: ODataVersion;
+  helper: ODataVersionHelper;
   metadata?: ODataMetadataType;
+  stringAsEnum?: boolean;
+  ieee754Compatible?: boolean;
+}
+
+export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
-  stringAsEnum?: boolean;
-  ieee754Compatible?: boolean;
   fetchPolicy?: FetchPolicy;
 }
 
@@ -122,7 +160,7 @@ export type ApiConfig = {
   default?: boolean;
   creation?: Date;
   cache?: CacheConfig;
-  options?: Options;
+  options?: ApiOptions;
   parsers?: {[type: string]: Parser<any>};
   schemas?: SchemaConfig[];
 }

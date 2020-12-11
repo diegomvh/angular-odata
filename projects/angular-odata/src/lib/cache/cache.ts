@@ -16,7 +16,7 @@ export class ODataCache {
   }
 
   isCacheable(req: ODataRequest<any>) {
-    return req.method === 'GET';
+    return req.observe === 'response' && req.method === 'GET';
   }
 
   handle(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {

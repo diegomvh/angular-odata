@@ -1,5 +1,4 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { ODataOptions } from '../options';
 import { ODataApi } from '../api';
 import { ACCEPT, IF_MATCH_HEADER } from '../constants';
 import { Http } from '../utils';
@@ -42,8 +41,8 @@ export class ODataRequest<T> {
     this.responseType = init.responseType;
     this.observe = init.observe;
 
-    this.withCredentials = (init.withCredentials === undefined) ? this.options.withCredentials : init.withCredentials;
-    this.fetchPolicy = init.fetchPolicy || this.options.fetchPolicy;
+    this.withCredentials = (init.withCredentials === undefined) ? this.api.options.withCredentials : init.withCredentials;
+    this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = init.resource.pathAndParams();
@@ -56,17 +55,17 @@ export class ODataRequest<T> {
 
     let accept = [];
     // Metadata ?
-    if (this.options.metadata !== undefined)
-      accept.push(`odata.metadata=${this.options.metadata}`);
+    if (this.api.options.metadata !== undefined)
+      accept.push(`odata.metadata=${this.api.options.metadata}`);
     // IEEE754
-    if (this.options.ieee754Compatible !== undefined)
-      accept.push(`IEEE754Compatible=${this.options.ieee754Compatible}`);
+    if (this.api.options.ieee754Compatible !== undefined)
+      accept.push(`IEEE754Compatible=${this.api.options.ieee754Compatible}`);
     if (accept.length > 0)
       customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;
-    this.headers = Http.mergeHttpHeaders(this.options.headers, customHeaders, init.headers || {});
+    this.headers = Http.mergeHttpHeaders(this.api.options.headers, customHeaders, init.headers || {});
 
     // Params
-    this.params = Http.mergeHttpParams(this.options.params, resourceParams, init.params || {});
+    this.params = Http.mergeHttpParams(this.api.options.params, resourceParams, init.params || {});
   }
 
   get pathWithParams() {
@@ -83,9 +82,5 @@ export class ODataRequest<T> {
 
   get urlWithParams() {
     return `${this.api.serviceRootUrl}${this.pathWithParams}`;
-  }
-
-  get options(): ODataOptions {
-    return this.api.options.clone();
   }
 }

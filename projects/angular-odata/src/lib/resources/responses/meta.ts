@@ -1,10 +1,9 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ODataContext } from '../../types';
-import { ODataOptions } from '../../options';
+import { ODataContext, Options } from '../../types';
 
 export abstract class ODataMeta {
   annotations: Object;
-  options?: ODataOptions;
+  options?: Options;
   protected get odv() {
     if (!this.options)
       throw Error("No helper");
@@ -12,7 +11,7 @@ export abstract class ODataMeta {
   }
 
   constructor(data: Object, opt: {
-    options?: ODataOptions,
+    options?: Options,
     headers?: HttpHeaders
   } = {}) {
     //TODO: Default options
