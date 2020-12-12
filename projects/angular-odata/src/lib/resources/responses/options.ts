@@ -9,6 +9,7 @@ export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
   metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
+  maxAge?: number;
 
   constructor(config: Options) {
     this.version = config.version || DEFAULT_VERSION;
@@ -46,5 +47,11 @@ export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
     const value = version.replace(/\;/g, "").trim();
     if ([VERSION_2_0, VERSION_3_0, VERSION_4_0].indexOf(value) !== -1)
       this.version = value as ODataVersion;
+  }
+
+  setMaxAge(maxAge: string) {
+    const value = Number(maxAge);
+    if (!Number.isNaN(value))
+      this.maxAge = value * 1000;
   }
 }

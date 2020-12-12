@@ -7,9 +7,9 @@ import { EDM_PARSERS } from './parsers/index';
 import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
 import { ODataRequest, ODataResponse } from './resources/index';
-import { ODataCache } from './cache/index';
+import { ODataCache, ODataInMemoryCache } from './cache/index';
 import { ODataApiOptions } from './options';
-import { DEFAULT_VERSION } from './constants';
+import { DEFAULT_MAX_AGE, DEFAULT_VERSION } from './constants';
 
 export class ODataApi {
   requester?: (request: ODataRequest<any>) => Observable<any>;
@@ -20,7 +20,7 @@ export class ODataApi {
   default: boolean;
   creation: Date;
   // Cache
-  cache!: ODataCache;
+  cache!: ODataCache<any>;
   // Options
   options: ODataApiOptions;
   // Base Parsers
@@ -41,7 +41,7 @@ export class ODataApi {
     this.creation = config.creation || new Date();
     this.options = new ODataApiOptions(Object.assign(<ApiOptions>{version: this.version}, config.options || {}));
 
-    this.cache = new ODataCache(config.cache || {});
+    this.cache = config.cache || new ODataInMemoryCache();
 
     this.parsers = config.parsers || EDM_PARSERS;
 

@@ -1,3 +1,5 @@
+import { ODataCache } from './cache';
+
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
@@ -166,15 +168,10 @@ export type ApiConfig = {
   version?: ODataVersion;
   default?: boolean;
   creation?: Date;
-  cache?: CacheConfig;
+  cache?: ODataCache<any>;
   options?: ApiOptions;
   parsers?: {[type: string]: Parser<any>};
   schemas?: SchemaConfig[];
-}
-
-export type CacheConfig = {
-  defaultMaxAge?: number;
-  storage?: CacheStorage;
 }
 export type AnnotationConfig = {
   type: string;

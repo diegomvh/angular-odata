@@ -5,7 +5,7 @@ import { Types } from '../../utils/types';
 import { ODataResource } from '../resource';
 import { ODataEntityParser } from '../../parsers/entity';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
-import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE } from '../../constants';
+import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE, CACHE_CONTROL, MAX_AGE } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
 import { ODataResponseOptions } from './options';
@@ -45,7 +45,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
       headers: {[name: string]: string | string[]};
       status: number;
       statusText: string;
-      url?: string;
+      url: string | null;
   }) {
     return new ODataResponse<T>({
       api: req.api,
@@ -54,7 +54,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
       headers: new HttpHeaders(json.headers),
       status: json.status,
       statusText: json.statusText,
-      url: json.url,
+      url: json.url || undefined,
     });
   }
 
@@ -62,7 +62,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return {
       body: this.body,
       headers: this.headers.keys()
-        .map(name => ({[name]: this.headers.getAll(name)}))
+        .map(name => ({[name]: this.headers.getAll(name) || []}))
         .reduce((acc, header) => Object.assign(acc, header), {}),
       status: this.status,
       statusText: this.statusText,
@@ -83,6 +83,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
       if (key) {
         const version = (this.headers.get(key) || "").replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
         this._options.setVersion(version);
+      }
+      const cacheControl = this.headers.get(CACHE_CONTROL);
+      if (cacheControl && cacheControl.indexOf(MAX_AGE) !== -1) {
+        const maxAge = cacheControl.split(",").find(p => p.startsWith(MAX_AGE))?.split("=")[1] as string;
+        this._options.setMaxAge(maxAge);
       }
     }
     return this._options;

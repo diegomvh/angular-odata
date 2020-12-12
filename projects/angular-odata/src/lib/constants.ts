@@ -12,6 +12,7 @@ export const $INLINECOUNT = '$inlinecount';
 // HTTP HEADERS
 export const IF_MATCH_HEADER = 'If-Match';
 export const CONTENT_TYPE = 'Content-Type';
+export const CACHE_CONTROL = 'Cache-Control';
 export const HTTP11 = 'HTTP/1.1';
 export const ODATA_VERSION = 'OData-Version';
 export const ACCEPT = 'Accept';
@@ -25,6 +26,7 @@ export const MULTIPART_MIXED = 'multipart/mixed';
 export const MULTIPART_MIXED_BOUNDARY = 'multipart/mixed;boundary=';
 export const CONTENT_TRANSFER_ENCODING = 'Content-Transfer-Encoding';
 export const CONTENT_ID = 'Content-ID';
+export const MAX_AGE = 'max-age';
 
 // VERSIONS
 export const VERSION_4_0 = '4.0';
@@ -37,7 +39,7 @@ export const BOUNDARY_PREFIX_SUFFIX = '--';
 export const BATCH_PREFIX = 'batch_';
 export const CHANGESET_PREFIX = 'changeset_';
 export const DEFAULT_FETCH_POLICY = 'cache-first';
-export const DEFAULT_MAX_AGE = 300000; //5m
+export const DEFAULT_MAX_AGE = 60 * 1000; //60s
 
 // URL PARTS
 export const QUERY_SEPARATOR = '?';
