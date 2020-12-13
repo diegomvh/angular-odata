@@ -108,28 +108,35 @@ export class ODataSettings {
     let values = this.apis.map(api => api.findEnumTypeByName<T>(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] : null;
+    return values.length === 1 ? values[0] as ODataEnumType<T> : null;
   }
 
   public structuredTypeByName<T>(name: string) {
     let values = this.apis.map(api => api.findStructuredTypeByName<T>(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] : null;
+    return values.length === 1 ? values[0] as ODataStructuredType<T> : null;
+  }
+
+  public callableByName<T>(name: string) {
+    let values = this.apis.map(api => api.findCallableByName(name)).filter(e => e);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values.length === 1 ? values[0] as ODataCallable<T> : null;
   }
 
   public entitySetByName(name: string) {
     let values = this.apis.map(api => api.findEntitySetByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] : null;
+    return values.length === 1 ? values[0] as ODataEntitySet : null;
   }
 
   public modelByName(name: string) {
     let values = this.apis.map(api => api.findModelByName(name)).filter(e => e);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] : null;
+    return values.length === 1 ? values[0]: null;
   }
 
   public collectionByName(name: string) {

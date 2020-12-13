@@ -32,7 +32,15 @@ export class ODataEnumType<E> {
     return this.parser.fields;
   }
 
-  findField(name: string) {
+  findFieldByName(name: string) {
     return this.fields().find(f => f.name === name);
+  }
+
+  findFieldByValue(value: number) {
+    return this.fields().find(f => f.value === value);
+  }
+
+  mapFields<T>(mapper: (field: ODataEnumFieldParser<E>) => T) {
+    return this.fields().map(mapper);
   }
 }
