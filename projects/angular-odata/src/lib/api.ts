@@ -1,28 +1,30 @@
-import { HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
-import { ApiConfig, ApiOptions, FetchPolicy, ODataMetadataType, ODataVersion, Parser } from './types';
+import { ApiConfig, ApiOptions, Parser } from './types';
 import { EDM_PARSERS } from './parsers/index';
 import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
 import { ODataRequest, ODataResponse } from './resources/index';
 import { ODataCache, ODataInMemoryCache } from './cache/index';
 import { ODataApiOptions } from './options';
-import { DEFAULT_MAX_AGE, DEFAULT_VERSION } from './constants';
+import { DEFAULT_VERSION } from './constants';
 
 export class ODataApi {
   requester?: (request: ODataRequest<any>) => Observable<any>;
   serviceRootUrl: string;
-  metadataUrl?: string;
+  metadataUrl: string;
   name?: string;
-  version?: string;
+  version: string;
   default: boolean;
   creation: Date;
-  // Cache
-  cache!: ODataCache<any>;
   // Options
   options: ODataApiOptions;
+  // Cache
+  cache!: ODataCache<any>;
+  // Error Handler
+  errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;
   // Base Parsers
   parsers: { [type: string]: Parser<any> };
   // Schemas
@@ -41,7 +43,8 @@ export class ODataApi {
     this.creation = config.creation || new Date();
     this.options = new ODataApiOptions(Object.assign(<ApiOptions>{version: this.version}, config.options || {}));
 
-    this.cache = config.cache || new ODataInMemoryCache();
+    this.cache = (config.cache as ODataCache<any>) || new ODataInMemoryCache();
+    this.errorHandler = config.errorHandler;
 
     this.parsers = config.parsers || EDM_PARSERS;
 
@@ -62,6 +65,9 @@ export class ODataApi {
         res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res
     ));
 
+    if (this.errorHandler !== undefined)
+      res$ = res$.pipe(catchError(this.errorHandler));
+
     return (this.cache.isCacheable(req)) ?
       this.cache.handle(req, res$) :
       res$;
@@ -76,52 +82,46 @@ export class ODataApi {
     return undefined;
   }
 
-  public findEnumTypeForType(type: string) {
-    const schema = this.findSchemaForType(type);
-    return schema?.findEnumTypeForType(type);
+  public findEnumTypeForType<T>(type: string) {
+    return this.findSchemaForType(type)?.findEnumTypeForType(type);
   }
 
-  public findStructuredTypeForType(type: string) {
-    const schema = this.findSchemaForType(type);
-    return schema?.findStructuredTypeForType(type);
+  public findStructuredTypeForType<T>(type: string) {
+    return this.findSchemaForType(type)?.findStructuredTypeForType(type);
   }
 
-  public findCallableForType(type: string) {
-    const schema = this.findSchemaForType(type);
-    return schema?.findCallableForType(type);
+  public findCallableForType<T>(type: string) {
+    return this.findSchemaForType(type)?.findCallableForType(type);
   }
 
   public findEntitySetForType(type: string) {
-    const schema = this.findSchemaForType(type);
-    return schema?.findEntitySetForType(type);
+    return this.findSchemaForType(type)?.findEntitySetForType(type);
   }
 
   //#region Model and Collection for type
   public findModelForType(type: string) {
-    const schema = this.findStructuredTypeForType(type);
-    return schema?.model as typeof ODataModel;
+    return this.findStructuredTypeForType(type)?.model;
   }
 
   public findCollectionForType(type: string) {
-    const schema = this.findStructuredTypeForType(type);
-    return schema?.collection as typeof ODataCollection;
+    return this.findStructuredTypeForType(type)?.collection;
   }
   //#endregion
   //#endregion
 
   //#region Find Config for Name
   public findEnumTypeByName<T>(name: string) {
-    return this.schemas.reduce((acc, schema) => [...acc, ...schema.enums], <ODataEnumType<any>[]>[])
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.enums], <ODataEnumType<T>[]>[])
       .find(e => e.name === name);
   }
 
   public findStructuredTypeByName<T>(name: string) {
-    return this.schemas.reduce((acc, schema) => [...acc, ...schema.entities], <ODataStructuredType<any>[]>[])
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.entities], <ODataStructuredType<T>[]>[])
       .find(e => e.name === name);
   }
 
   public findCallableByName<T>(name: string) {
-    return this.schemas.reduce((acc, schema) => [...acc, ...schema.callables], <ODataCallable<any>[]>[])
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.callables], <ODataCallable<T>[]>[])
       .find(e => e.name === name);
   }
 
@@ -149,8 +149,8 @@ export class ODataApi {
     }
     // Not edms here
     if (!type.startsWith("Edm.")) {
-      let value = this.findEnumTypeForType(type) || this.findStructuredTypeForType(type) || this.findCallableForType(type);
-      return value !== undefined ? value.parser as Parser<T> : undefined;
+      let value = this.findEnumTypeForType<T>(type) || this.findStructuredTypeForType<T>(type) || this.findCallableForType<T>(type);
+      return value?.parser as Parser<T>;
     }
     return undefined;
   }

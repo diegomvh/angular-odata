@@ -3,6 +3,7 @@ import { ODataApi } from './api';
 import { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } from './schema';
 import { ODataRequest } from './resources';
 import { Observable } from 'rxjs';
+import { ODataCollection, ODataModel } from './models';
 
 export class ODataSettings {
   apis: ODataApi[];
@@ -48,7 +49,7 @@ export class ODataSettings {
 
   //#region Configs shortcuts
   public enumTypeForType<T>(type: string) {
-    let values = this.apis.map(api => api.findEnumTypeForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.findEnumTypeForType<T>(type)).filter(e => e);
     if (values.length === 0)
       throw Error(`No Enum for type ${type} was found`);
     if (values.length > 1)
@@ -57,7 +58,7 @@ export class ODataSettings {
   }
 
   public structuredTypeForType<T>(type: string) {
-    let values = this.apis.map(api => api.findStructuredTypeForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.findStructuredTypeForType<T>(type)).filter(e => e);
     if (values.length === 0)
       throw Error(`No Structured for type ${type} was found`);
     if (values.length > 1)
@@ -66,7 +67,7 @@ export class ODataSettings {
   }
 
   public callableFor<T>(type: string) {
-    let values = this.apis.map(api => api.findCallableForType(type)).filter(e => e);
+    let values = this.apis.map(api => api.findCallableForType<T>(type)).filter(e => e);
     if (values.length === 0)
       throw Error(`No Callable for type ${type} was found`);
     if (values.length > 1)
@@ -85,65 +86,83 @@ export class ODataSettings {
 
   public parserForType<T>(type: string) {
     let values = this.apis.map(api => api.findParserForType<T>(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Parser for type ${type} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] as Parser<T> : null;
+    return values[0] as Parser<T>;
   }
 
   public modelForType(type: string) {
     let values = this.apis.map(api => api.findModelForType(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Model for type ${type} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] : null;
+    return values[0] as typeof ODataModel;
   }
 
   public collectionForType(type: string) {
     let values = this.apis.map(api => api.findCollectionForType(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Collection for type ${type} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] : null;
+    return values[0] as typeof ODataCollection;
   }
 
   public enumTypeByName<T>(name: string) {
     let values = this.apis.map(api => api.findEnumTypeByName<T>(name)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Enum for name ${name} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] as ODataEnumType<T> : null;
+    return values[0] as ODataEnumType<T>;
   }
 
   public structuredTypeByName<T>(name: string) {
     let values = this.apis.map(api => api.findStructuredTypeByName<T>(name)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Structured for name ${name} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] as ODataStructuredType<T> : null;
+    return values[0] as ODataStructuredType<T>;
   }
 
   public callableByName<T>(name: string) {
-    let values = this.apis.map(api => api.findCallableByName(name)).filter(e => e);
+    let values = this.apis.map(api => api.findCallableByName<T>(name)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Callable for name ${name} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] as ODataCallable<T> : null;
+    return values[0] as ODataCallable<T>;
   }
 
   public entitySetByName(name: string) {
     let values = this.apis.map(api => api.findEntitySetByName(name)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No EntitySet for name ${name} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] as ODataEntitySet : null;
+    return values[0] as ODataEntitySet;
   }
 
   public modelByName(name: string) {
     let values = this.apis.map(api => api.findModelByName(name)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Model for name ${name} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0]: null;
+    return values[0] as typeof ODataModel;
   }
 
   public collectionByName(name: string) {
     let values = this.apis.map(api => api.findCollectionByName(name)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Collection for name ${name} was found`);
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
-    return values.length === 1 ? values[0] : null;
+    return values[0] as typeof ODataCollection;
   }
   //#endregion
 }
