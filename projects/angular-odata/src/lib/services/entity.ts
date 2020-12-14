@@ -42,7 +42,9 @@ export class ODataEntityService<T> {
 
   // Entity Config
   get entitySchema() {
-    return this.entityType ? this.client.structuredTypeForType<T>(this.entityType) : null;
+    if (this.entityType === undefined)
+      return null;
+    return this.api.findStructuredTypeForType<T>(this.entityType) || null;
   }
 
   public create(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {

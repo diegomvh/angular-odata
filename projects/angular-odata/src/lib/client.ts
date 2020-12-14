@@ -71,6 +71,14 @@ export class ODataClient {
     return type ? this.settings.apiForType(type) : this.settings.defaultApi();
   }
 
+  parserForType<T>(type: string) {
+    return this.settings.parserForType<T>(type);
+  }
+
+  enumTypeForType<T>(type: string) {
+    return this.settings.enumTypeForType<T>(type);
+  }
+
   structuredTypeForType<T>(type: string) {
     return this.settings.structuredTypeForType<T>(type);
   }
@@ -81,10 +89,6 @@ export class ODataClient {
 
   entitySetForType(type: string) {
     return this.settings.entitySetForType(type);
-  }
-
-  parserForType<T>(type: string) {
-    return this.settings.parserForType<T>(type);
   }
 
   modelForType(type: string): typeof ODataModel {

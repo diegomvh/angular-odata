@@ -38,21 +38,27 @@ describe('ODataClient', () => {
     expect(parser instanceof ODataEntityParser).toBeTruthy();
   });
 
-  it('should return undefined parser for type', () => {
-    const parser = client.parserForType<Person>(`${NAMESPACE}.Foo`);
-    expect(parser).toBeNull();
+  it('should throw error parser for type', () => {
+    expect(function() {
+      client.parserForType<Person>(`${NAMESPACE}.Foo`);
+    }).toThrow(new Error("No Parser for type TripPin.Foo was found"));
+  });
+
+  it('should throw error entity config', () => {
+    expect(function() {
+      client.enumTypeForType<Person>(`${NAMESPACE}.Foo`);
+    }).toThrow(new Error("No Enum for type TripPin.Foo was found"));
+  });
+
+  it('should throw error entity config', () => {
+    expect(function() {
+      client.structuredTypeForType<Person>(`${NAMESPACE}.Foo`);
+    }).toThrow(new Error("No Structured for type TripPin.Foo was found"));
   });
 
   it('should return person parser for type', () => {
     const parser = client.parserForType<Person>(`${NAMESPACE}.Person`);
     expect(parser instanceof ODataEntityParser).toBeTruthy();
-  });
-
-  it('should throw error entity config', () => {
-    /*
-    const config = client.structuredTypeForType<Person>(`${NAMESPACE}.Foo`);
-    expect(config).toBeUndefined();
-    */
   });
 
   it('should return person entity config', () => {

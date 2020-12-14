@@ -34,7 +34,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   get schema() {
     let type = this.type();
     if (type === null) return null;
-    return this.client.callableForType<R>(type);
+    return this.api.findCallableForType<R>(type) || null;
   }
   //#endregion
 

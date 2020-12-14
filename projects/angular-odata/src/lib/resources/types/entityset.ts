@@ -36,7 +36,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   get schema() {
     let type = this.type();
     if (type === null) return null;
-    return this.client.structuredTypeForType<T>(type);
+    return this.api.findStructuredTypeForType<T>(type) || null;
   }
   ////#endregion
 
