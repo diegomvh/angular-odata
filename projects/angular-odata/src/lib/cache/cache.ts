@@ -76,7 +76,7 @@ export abstract class ODataCache<T> implements Cache<T> {
     if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
       res$ = res$.pipe(tap((res: ODataResponse<any>) => this.putRequest(req, res)));
     }
-    return cached ?
+    return (cached !== undefined && policy !== 'network-only') ?
       (policy === 'cache-and-network' ? res$.pipe(startWith(cached)) : of(cached)) :
       res$;
   }
