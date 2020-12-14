@@ -39,7 +39,7 @@ export const BOUNDARY_PREFIX_SUFFIX = '--';
 export const BATCH_PREFIX = 'batch_';
 export const CHANGESET_PREFIX = 'changeset_';
 export const DEFAULT_FETCH_POLICY = 'network-only';
-export const DEFAULT_MAX_AGE = 60 * 1000; //60s
+export const DEFAULT_TIMEOUT = 60; // Time in seconds
 
 // URL PARTS
 export const QUERY_SEPARATOR = '?';

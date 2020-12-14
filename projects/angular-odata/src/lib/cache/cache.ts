@@ -1,38 +1,38 @@
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
-import { DEFAULT_MAX_AGE } from '../constants';
+import { DEFAULT_TIMEOUT } from '../constants';
 import { Cache } from '../types';
 import { ODataRequest, ODataResponse } from '../resources';
 
 export interface ODataCacheEntry<T> {
   payload: T;
   lastRead: number;
-  maxAge?: number;
+  timeout?: number;
 }
 
 export abstract class ODataCache<T> implements Cache<T> {
-  maxAge: number;
+  timeout: number;
   entries: Map<string, ODataCacheEntry<T>>;
-  constructor(init?: {maxAge?: number}) {
-    this.maxAge = init?.maxAge || DEFAULT_MAX_AGE;
+  constructor(init?: {timeout?: number}) {
+    this.timeout = init?.timeout || DEFAULT_TIMEOUT;
     this.entries = new Map<string, ODataCacheEntry<T>>();
   }
-  abstract getRequest(req: ODataRequest<any>): ODataResponse<any> | undefined;
-  abstract putRequest(req: ODataRequest<any>, res: ODataResponse<any>): void;
+  abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
+  abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
 
-  buildEntry(payload: T, maxAge?: number) {
+  buildEntry(payload: T, timeout?: number) {
     return {
       payload,
       lastRead: Date.now(),
-      maxAge: maxAge
+      timeout: timeout
     };
   }
 
-  put(key: string, payload: T, maxAge?: number) {
+  put(key: string, payload: T, timeout?: number) {
     const entry = {
       payload,
       lastRead: Date.now(),
-      maxAge: maxAge
+      timeout: timeout
     } as ODataCacheEntry<T>;
     this.entries.set(key, entry);
     this.remove();
@@ -53,16 +53,16 @@ export abstract class ODataCache<T> implements Cache<T> {
   }
 
   isExpired(entry: ODataCacheEntry<any>) {
-    return entry.lastRead < (Date.now() - (entry.maxAge || this.maxAge));
+    return entry.lastRead < (Date.now() - ((entry.timeout || this.timeout) * 1000));
   }
 
   isCacheable(req: ODataRequest<any>) {
     return req.observe === 'response' && req.method === 'GET';
   }
 
-  handle(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
+  handleRequest(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
     const policy = req.fetchPolicy;
-    const cached = this.getRequest(req);
+    const cached = this.getResponse(req);
     if (policy === 'no-cache') {
       return res$;
     }
@@ -74,7 +74,10 @@ export abstract class ODataCache<T> implements Cache<T> {
       }
     }
     if (policy === 'cache-first' || policy === 'cache-and-network' || policy === 'network-only') {
-      res$ = res$.pipe(tap((res: ODataResponse<any>) => this.putRequest(req, res)));
+      res$ = res$.pipe(tap((res: ODataResponse<any>) => {
+        if (res.options.cacheability !== 'no-store')
+          this.putResponse(req, res);
+      }));
     }
     return (cached !== undefined && policy !== 'network-only') ?
       (policy === 'cache-and-network' ? res$.pipe(startWith(cached)) : of(cached)) :

@@ -69,7 +69,7 @@ export class ODataApi {
       res$ = res$.pipe(catchError(this.errorHandler));
 
     return (this.cache.isCacheable(req)) ?
-      this.cache.handle(req, res$) :
+      this.cache.handleRequest(req, res$) :
       res$;
   }
 

@@ -124,12 +124,14 @@ export interface ODataVersionHelper {
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy = 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only';
 export type ODataMetadataType = 'minimal' | 'full' | 'none';
+export type CacheCacheability = 'public' | 'private' | 'no-cache' | 'no-store';
 
 export interface Options {
   version?: ODataVersion;
   metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
+  streaming?: boolean;
 }
 
 export interface OptionsHelper extends Options {
@@ -144,7 +146,8 @@ export interface ApiOptions extends Options {
 }
 
 export interface ResponseOptions extends Options {
-  streaming?: boolean;
+  cacheability?: CacheCacheability;
+  maxAge?: number;
 }
 
 export interface StructuredTypeFieldOptions extends OptionsHelper {

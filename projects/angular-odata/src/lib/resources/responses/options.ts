@@ -1,6 +1,6 @@
-import { DEFAULT_VERSION, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from '../../constants';
+import { DEFAULT_VERSION, MAX_AGE, VERSION_2_0, VERSION_3_0, VERSION_4_0 } from '../../constants';
 import { ODataHelper } from '../../helpers/odata';
-import { ODataMetadataType, ODataVersion, Options, OptionsHelper, ResponseOptions } from '../../types';
+import { CacheCacheability, ODataMetadataType, ODataVersion, Options, OptionsHelper, ResponseOptions } from '../../types';
 
 export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
   version: ODataVersion;
@@ -9,6 +9,8 @@ export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
   metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
+  // Cache
+  cacheability?: 'public' | 'private' | 'no-cache' | 'no-store';
   maxAge?: number;
 
   constructor(config: Options) {
@@ -49,9 +51,16 @@ export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
       this.version = value as ODataVersion;
   }
 
-  setMaxAge(maxAge: string) {
-    const value = Number(maxAge);
-    if (!Number.isNaN(value))
-      this.maxAge = value * 1000;
+  setCache(cacheControl: string) {
+    cacheControl.split(",").forEach(directive => {
+      if (directive.startsWith(MAX_AGE)) {
+        let maxAge = Number(directive.split("=")[1]);
+        if (!Number.isNaN(maxAge))
+          this.maxAge = maxAge;
+      }
+      if (['public', 'private', 'no-cache', 'no-store'].indexOf(directive) !== -1) {
+        this.cacheability = directive as CacheCacheability;
+      }
+    });
   }
 }

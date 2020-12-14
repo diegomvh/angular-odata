@@ -10,7 +10,7 @@ interface StoragePayload {
 }
 
 export class ODataInStorageCache extends ODataCache<StoragePayload> {
-  constructor(init: {maxAge?: number, name: string, storage?: Storage}) {
+  constructor(init: {timeout?: number, name: string, storage?: Storage}) {
     super(init);
     const name = init.name;
     const storage = init.storage || sessionStorage;
@@ -20,11 +20,11 @@ export class ODataInStorageCache extends ODataCache<StoragePayload> {
     })(storage, name, this.entries));
   }
 
-  putRequest(req: ODataRequest<any>, res: ODataResponse<any>) {
+  putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     this.put(req.urlWithParams, res.toJSON(), res.options.maxAge);
   }
 
-  getRequest(req: ODataRequest<any>): ODataResponse<any> | undefined {
+  getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
     const data = this.get(req.urlWithParams);
 
     return data !== undefined ? ODataResponse.fromJSON(req, data) : undefined;

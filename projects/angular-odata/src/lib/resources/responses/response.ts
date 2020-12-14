@@ -70,7 +70,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     }
   }
 
-  _options: ODataResponseOptions | null = null;
+  private _options: ODataResponseOptions | null = null;
   get options(): ODataResponseOptions {
     if (this._options === null) {
       this._options = new ODataResponseOptions(this.api.options);
@@ -85,9 +85,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
         this._options.setVersion(version);
       }
       const cacheControl = this.headers.get(CACHE_CONTROL);
-      if (cacheControl && cacheControl.indexOf(MAX_AGE) !== -1) {
-        const maxAge = cacheControl.split(",").find(p => p.startsWith(MAX_AGE))?.split("=")[1] as string;
-        this._options.setMaxAge(maxAge);
+      if (cacheControl) {
+        this._options.setCache(cacheControl);
       }
     }
     return this._options;
