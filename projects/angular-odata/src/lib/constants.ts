@@ -38,7 +38,7 @@ export const BINARY = 'binary';
 export const BOUNDARY_PREFIX_SUFFIX = '--';
 export const BATCH_PREFIX = 'batch_';
 export const CHANGESET_PREFIX = 'changeset_';
-export const DEFAULT_FETCH_POLICY = 'cache-first';
+export const DEFAULT_FETCH_POLICY = 'network-only';
 export const DEFAULT_MAX_AGE = 60 * 1000; //60s
 
 // URL PARTS
