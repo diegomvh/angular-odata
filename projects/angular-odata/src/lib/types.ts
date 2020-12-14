@@ -1,4 +1,5 @@
-import { ODataCache } from './cache';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
@@ -155,10 +156,9 @@ export interface Parser<T> {
   serialize(value: T, options: OptionsHelper): any;
 }
 
-export interface CacheStorage {
-  put(key: any, value: any): any;
-  remove(options: {maxAge: number}): any;
-  get(key: any, options: {maxAge: number}): any;
+export interface Cache<T> {
+  put(key: string, payload: T): void;
+  get(key: string): T | undefined;
 }
 
 //#region Configs
@@ -168,7 +168,8 @@ export type ApiConfig = {
   version?: ODataVersion;
   default?: boolean;
   creation?: Date;
-  cache?: ODataCache<any>;
+  cache?: Cache<any>;
+  errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;
   options?: ApiOptions;
   parsers?: {[type: string]: Parser<any>};
   schemas?: SchemaConfig[];

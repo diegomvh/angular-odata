@@ -1,5 +1,6 @@
 import { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, ODataCacheEntry } from './cache';
+
 interface StoragePayload {
     body: any | null;
     headers: {[name: string]: string | string[]};
@@ -19,14 +20,13 @@ export class ODataInStorageCache extends ODataCache<StoragePayload> {
     })(storage, name, this.entries));
   }
 
-  put(req: ODataRequest<any>, res: ODataResponse<any>) {
-    const entry = this.buildEntry(res.toJSON(), res.options.maxAge);
-    this.setEntry(req.urlWithParams, entry);
+  putRequest(req: ODataRequest<any>, res: ODataResponse<any>) {
+    this.put(req.urlWithParams, res.toJSON(), res.options.maxAge);
   }
 
-  get(req: ODataRequest<any>): ODataResponse<any> | undefined {
-    const entry = this.getEntry(req.urlWithParams);
+  getRequest(req: ODataRequest<any>): ODataResponse<any> | undefined {
+    const data = this.get(req.urlWithParams);
 
-    return entry !== undefined ? ODataResponse.fromJSON(req, entry.payload) : undefined;
+    return data !== undefined ? ODataResponse.fromJSON(req, data) : undefined;
   }
 }
