@@ -29,6 +29,33 @@ import { ODataSettings } from './settings';
 import { ODataApi } from './api';
 import { ODataRequest } from './resources/index';
 
+function addBody<T>(
+  options: {
+    etag?: string,
+    apiName?: string,
+    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
+    headers?: HttpHeaders|{[header: string]: string | string[]},
+    observe?: 'body'|'events'|'response',
+    params?: HttpParams|{[param: string]: string | string[]},
+    reportProgress?: boolean,
+    responseType?: 'arraybuffer'|'blob'|'json'|'text',
+    withCredentials?: boolean,
+  },
+  body: T|null): any {
+return {
+  body,
+  etag: options.etag,
+  apiName: options.apiName,
+  fetchPolicy: options.fetchPolicy,
+  headers: options.headers,
+  observe: options.observe,
+  params: options.params,
+  reportProgress: options.reportProgress,
+  responseType: options.responseType,
+  withCredentials: options.withCredentials,
+};
+}
+
 @Injectable()
 export class ODataClient {
 
@@ -175,7 +202,7 @@ export class ODataClient {
 
   // Request headers, get, post, put, patch... etc
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -188,7 +215,7 @@ export class ODataClient {
   }): Observable<ArrayBuffer>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -201,7 +228,7 @@ export class ODataClient {
   }): Observable<Blob>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -214,7 +241,7 @@ export class ODataClient {
   }): Observable<string>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -227,7 +254,7 @@ export class ODataClient {
   }): Observable<HttpEvent<ArrayBuffer>>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -240,7 +267,7 @@ export class ODataClient {
   }): Observable<HttpEvent<Blob>>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -253,7 +280,7 @@ export class ODataClient {
   }): Observable<HttpEvent<string>>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -266,7 +293,7 @@ export class ODataClient {
   }): Observable<HttpEvent<any>>;
 
   request<R>(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -279,7 +306,7 @@ export class ODataClient {
   }): Observable<HttpEvent<R>>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -292,7 +319,7 @@ export class ODataClient {
   }): Observable<HttpResponse<ArrayBuffer>>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -305,7 +332,7 @@ export class ODataClient {
   }): Observable<HttpResponse<Blob>>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -318,7 +345,7 @@ export class ODataClient {
   }): Observable<ODataResponse<string>>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -331,7 +358,7 @@ export class ODataClient {
   }): Observable<ODataResponse<Object>>;
 
   request<R>(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -343,8 +370,8 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<ODataResponse<R>>;
 
-  request(method: string, resource: ODataResource<any>, options?: {
-    body?: any,
+  request(method: string, resource: ODataResource<any>, options: {
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -356,8 +383,8 @@ export class ODataClient {
     withCredentials?: boolean,
   }): Observable<Object>;
 
-  request<R>(method: string, resource: ODataResource<any>, options?: {
-    body?: any,
+  request<R>(method: string, resource: ODataResource<any>, options: {
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -370,7 +397,7 @@ export class ODataClient {
   }): Observable<R>;
 
   request(method: string, resource: ODataResource<any>, options?: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -383,7 +410,7 @@ export class ODataClient {
   }): Observable<any>;
 
   request(method: string, resource: ODataResource<any>, options: {
-    body?: any,
+    body: any | null,
     etag?: string,
     apiName?: string,
     fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'no-cache' | 'cache-only',
@@ -393,26 +420,14 @@ export class ODataClient {
     reportProgress?: boolean,
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean
-  } = {}): Observable<any> {
+  }): Observable<any> {
 
     let api = options.apiName ? this.settings.apiByName(options.apiName) : resource.api;
     if (!api) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
     const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe as 'response' | 'events';
 
-    const request = new ODataRequest({
-      method,
-      resource,
-      api,
-      body: options.body,
-      etag: options.etag,
-      observe: observe,
-      headers: options.headers,
-      params: options.params,
-      reportProgress: options.reportProgress,
-      responseType: options.responseType,
-      withCredentials: options.withCredentials
-    });
+    const request = new ODataRequest(Object.assign({method, api, resource, observe}, options));
 
     return api.request(request)
       .pipe(map((res: any) => options.observe === 'body' ? res.body : res));
@@ -600,7 +615,7 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('DELETE', resource, options as any);
+    return this.request<any>('DELETE', resource, addBody<any>(options, null));
   }
 
   get(resource: ODataResource<any>, options: {
@@ -961,6 +976,7 @@ export class ODataClient {
 
   jsonp<T>(resource: ODataResource<any>, callbackParam: string): Observable<T> {
     return this.request<any>('JSONP', resource, {
+      body: null,
       params: new HttpParams().append(callbackParam, 'JSONP_CALLBACK'),
       observe: 'body',
       responseType: 'json',
@@ -1343,7 +1359,7 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PATCH', resource, Object.assign(options, { body }) as any);
+    return this.request<any>('PATCH', resource, addBody(options, body));
   }
 
   post(resource: ODataResource<any>, body: any | null, options: {
@@ -1521,7 +1537,7 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('POST', resource, Object.assign(options, { body }) as any);
+    return this.request<any>('POST', resource, addBody(options, body));
   }
 
   put(resource: ODataResource<any>, body: any | null, options?: {
@@ -1712,6 +1728,6 @@ export class ODataClient {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text',
     withCredentials?: boolean,
   } = {}): Observable<any> {
-    return this.request<any>('PUT', resource, Object.assign(options, { body }) as any);
+    return this.request<any>('PUT', resource, addBody(options, body));
   }
 }

@@ -161,7 +161,8 @@ export abstract class ODataResource<Type> {
       params: params,
       responseType: responseType,
       reportProgress: options.reportProgress,
-      withCredentials: options.withCredentials
+      withCredentials: options.withCredentials,
+      fetchPolicy: options.fetchPolicy
     });
     switch (options.responseType) {
       case 'entities':
