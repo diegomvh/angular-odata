@@ -21,6 +21,7 @@ import {
 } from '../models/index';
 import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses/index';
 import { ODataApi } from '../api';
+import { Parser } from '../types';
 
 export abstract class ODataResource<Type> {
   // VARIABLES
@@ -99,6 +100,20 @@ export abstract class ODataResource<Type> {
   }
 
   abstract clone(): ODataResource<Type>;
+
+  serialize(value: any): any {
+    let api = this.api;
+    let type = this.type();
+    if (type !== null) {
+      let parser = api.findParserForType<Type>(type);
+      if (parser !== undefined && 'serialize' in parser) {
+        return Array.isArray(value) ?
+          value.map(e => (parser as Parser<Type>).serialize(e, api.options)) :
+          parser.serialize(value, api.options);
+      }
+    }
+    return value;
+  }
 
   toJSON() {
     return {

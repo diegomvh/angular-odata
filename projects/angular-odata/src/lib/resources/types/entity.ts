@@ -30,19 +30,6 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return new ODataEntityResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  serialize(value: any): any {
-    let api = this.api;
-    let type = this.type();
-    if (type !== null) {
-      let parser = api.findParserForType<T>(type);
-      if (parser !== undefined && 'serialize' in parser) {
-        return Array.isArray(value) ?
-          value.map(e => (parser as Parser<T>).serialize(e, api.options)) :
-          parser.serialize(value, api.options);
-      }
-    }
-    return value;
-  }
   //#endregion
 
   //#region Entity Config
