@@ -44,26 +44,20 @@ export class ODataReferenceResource extends ODataResource<any> {
   //#region Requests
   post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     let related = this.client.endpointUrl(target);
-    return this.client.post(this, {[ODATA_ID]: related},
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
-    );
+    return super.post({[ODATA_ID]: related}, options);
   }
 
   put(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any> {
     let related = this.client.endpointUrl(target);
-    return this.client.put(this, {[ODATA_ID]: related},
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
-    );
+    return super.post({[ODATA_ID]: related}, options);
   }
 
   delete(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
     if (options && options.target) {
       let related = this.client.endpointUrl(options.target);
-      this.query.custom({[$ID]: related});
+      options.params = {[$ID]: related};
     }
-    return this.client.delete(this,
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{responseType: 'json'}, options || {})
-    );
+    return super.delete(options);
   }
   //#endregion
 

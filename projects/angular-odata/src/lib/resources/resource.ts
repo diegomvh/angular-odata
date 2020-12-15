@@ -181,14 +181,14 @@ export abstract class ODataResource<Type> {
   protected get(options: HttpOptions & {
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
-  }): Observable<any> {
+  } = {}): Observable<any> {
     return this.request('GET', options);
   }
 
   protected post(attrs: any, options: HttpOptions & {
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
-  }): Observable<any> {
+  } = {}): Observable<any> {
     return this.request('POST', Object.assign(options, { attrs }));
   }
 
@@ -196,7 +196,7 @@ export abstract class ODataResource<Type> {
     etag?: string,
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
-  }): Observable<any> {
+  } = {}): Observable<any> {
     return this.request('PUT', Object.assign(options, { attrs }));
   }
 
@@ -204,7 +204,7 @@ export abstract class ODataResource<Type> {
     etag?: string,
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
-  }): Observable<any> {
+  } = {}): Observable<any> {
     return this.request('PATCH', Object.assign(options, { attrs }));
   }
 
@@ -212,7 +212,7 @@ export abstract class ODataResource<Type> {
     etag?: string,
     responseType?: 'arraybuffer' | 'blob' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
-  }): Observable<any> {
+  } = {}): Observable<any> {
     return this.request('DELETE', options);
   }
 }

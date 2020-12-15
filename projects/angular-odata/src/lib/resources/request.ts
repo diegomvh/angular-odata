@@ -8,7 +8,7 @@ export class ODataRequest<T> {
   readonly method: string;
   readonly api: ODataApi;
   readonly body: T | null;
-  readonly observe?: 'events' | 'response'
+  readonly observe: 'events' | 'response'
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
   readonly responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
@@ -23,7 +23,7 @@ export class ODataRequest<T> {
     api: ODataApi,
     resource: ODataResource<T>,
     body: T | null,
-    observe?: 'events' | 'response',
+    observe: 'events' | 'response',
     etag?: string,
     headers?: HttpHeaders | { [header: string]: string | string[] },
     reportProgress?: boolean,
