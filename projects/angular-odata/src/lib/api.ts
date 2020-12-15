@@ -61,8 +61,7 @@ export class ODataApi {
   request(req: ODataRequest<any>): Observable<any> {
     let res$ = this.requester !== undefined ? this.requester(req) : NEVER;
     res$ = res$.pipe(
-      map((res: HttpEvent<any>) =>
-        res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res
+      map((res: HttpEvent<any>) => res.type === HttpEventType.Response ? ODataResponse.fromHttpResponse<any>(req, res) : res
     ));
 
     if (this.errorHandler !== undefined)

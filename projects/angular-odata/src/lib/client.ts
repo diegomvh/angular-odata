@@ -425,12 +425,23 @@ export class ODataClient {
     let api = options.apiName ? this.settings.apiByName(options.apiName) : resource.api;
     if (!api) throw new Error(`The types: '[${resource.types().join(", ")}]' does not belongs to any known configuration`);
 
-    const observe: 'response' | 'events' = options.observe === 'body' ? 'response' : options.observe as 'response' | 'events';
-
-    const request = new ODataRequest(Object.assign({method, api, resource, observe}, options));
+    const request = new ODataRequest({
+      method,
+      api,
+      resource,
+      body: options.body,
+      observe: options.observe === 'events' ? 'events' : 'response',
+      etag: options.etag,
+      headers: options.headers,
+      reportProgress: options.reportProgress,
+      params: options.params,
+      responseType: options.responseType,
+      fetchPolicy: options.fetchPolicy,
+      withCredentials: options.withCredentials
+    });
 
     return api.request(request)
-      .pipe(map((res: any) => options.observe === 'body' ? res.body : res));
+      .pipe(map((res: any) => (options.observe === undefined || options.observe === 'body') ? res.body : res));
   }
 
   delete(resource: ODataResource<any>, options?: {
