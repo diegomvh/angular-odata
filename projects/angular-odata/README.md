@@ -91,10 +91,19 @@ export class AppComponent {
 
     let airports = airportsService.entities();
 
+    console.log(airportsService.entities());
+
     // Fetch all airports
     airports
     .all()
     .subscribe(aports => console.log("All: ", aports));
+
+    this.products.entities()
+    .get({withCount: true, fetchPolicy: 'cache-only', apiName: 'North3'})
+    .subscribe(
+      ({entities, meta}) => {console.log(entities)},
+      (err) => console.log(err)
+    );
 
     // Fetch airports with count
     airports
@@ -104,6 +113,7 @@ export class AppComponent {
     // Fetch airport with key
     airports
     .entity("CYYZ").get()
+    .pipe(switchMap(() => airports.entity("CYYZ").get({fetchPolicy: 'cache-first'}))) // From Cache!
     .subscribe(({entity, meta}) => console.log("Airport: ", entity, "Annotations: ", meta));
 
     // Filter airports (inmutable resource)
@@ -118,6 +128,9 @@ export class AppComponent {
     .get()
     .subscribe(({entities, meta}) => console.log("Airports in California: ", entities, "Annotations: ", meta));
 
+    console.log(airports.toJSON());
+    console.log(this.odata.fromJSON(airports.toJSON()));
+
     // Remove filter (mutable resource)
     airports.query.filter().clear();
     airports
@@ -128,17 +141,18 @@ export class AppComponent {
 
     // Expand (inmutable resource)
     people.expand({
-      Friends: { 
-        expand: { Friends: { select: ['AddressInfo']}} 
-      }, 
+      Friends: {
+        expand: { Friends: { select: ['AddressInfo']}}
+      },
       Trips: { select: ['Name', 'Tags'] },
     })
     .get({withCount: true})
     .subscribe(({entities, meta}) => console.log("People with Friends and Trips: ", entities, "Annotations: ", meta));
 
-    // Batch
-    let batch = odata.batch();
-    batch.post(() => {
+    console.log(people.toJSON());
+    console.log(this.odata.fromJSON(people.toJSON()));
+
+    this.odata.batch("TripPin").post(batch => {
       airports.get().subscribe(console.log);
       airport.get().subscribe(console.log);
       people.get({withCount: true}).subscribe(console.log);
