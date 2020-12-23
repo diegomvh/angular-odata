@@ -1,6 +1,6 @@
 # Angular OData
 
-[![build](https://github.com/diegomvh/angular-odata/workflows/Node.js CI/badge.svg)](https://github.com/diegomvh/angular-odata/actions?query=workflow%3A%22Node.js+CI%22)
+[![build](https://github.com/diegomvh/angular-odata/workflows/Node.js%20CI/badge.svg)](https://github.com/diegomvh/angular-odata/actions?query=workflow%3A%22Node.js+CI%22)
 [![npm version](https://badge.fury.io/js/angular-odata.svg)](http://badge.fury.io/js/angular-odata)
 
 A fluent API for querying, creating, updating and deleting OData resources in Angular.
