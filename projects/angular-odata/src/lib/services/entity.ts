@@ -32,7 +32,7 @@ export class ODataEntityService<T> {
 
   // Service Config
   get api() {
-    return this.client.apiForType(this.entityType);
+    return this.client.apiFor(this.entityType);
   }
 
   // Service Config

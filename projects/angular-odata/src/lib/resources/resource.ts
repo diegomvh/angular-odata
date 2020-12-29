@@ -136,8 +136,8 @@ export abstract class ODataResource<Type> {
       withCount?: boolean
     }): Observable<any> {
 
-    let api = options.apiName ? this.client.apiByName(options.apiName) : this.api;
-    const copts = api.options;
+    //let api = options.apiName ? this.client.apiByName(options.apiName) : this.api;
+    const copts = this.api.options;
     let params = options.params || {};
     if (options.withCount) {
       params = Http.mergeHttpParams(params, copts.helper.countParam());
@@ -150,18 +150,7 @@ export abstract class ODataResource<Type> {
         'text' :
         <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
-    let body = null;
-    if (options.attrs !== undefined) {
-      let type = this.type();
-      if (type !== null) {
-        let parser = api.findParserForType<Type>(type);
-        if (parser !== undefined) {
-            body = parser.serialize(options.attrs, copts);
-        }
-      } else  {
-        body = options.attrs;
-      }
-    }
+    let body = options.attrs !== undefined ? this.serialize(options.attrs) : null;
 
     let etag = options.etag;
     if (etag === undefined && options.attrs != null) {
@@ -170,7 +159,7 @@ export abstract class ODataResource<Type> {
     const res$ = this.client.request(method, this, {
       body,
       etag,
-      apiName: options.apiName,
+      apiName: this.api.name,
       headers: options.headers,
       observe: 'response',
       params: params,
