@@ -1,7 +1,7 @@
 import { HttpHeaders, HttpParams } from "@angular/common/http";
 
 export type HttpOptions = {
-  apiName?: string,
+  //apiName?: string,
   headers?: HttpHeaders | {[header: string]: string | string[]},
   params?: HttpParams | {[param: string]: string | string[]},
   reportProgress?: boolean,

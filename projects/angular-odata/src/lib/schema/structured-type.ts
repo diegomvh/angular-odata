@@ -1,5 +1,5 @@
 import { ODataEntityFieldParser, ODataEntityParser } from '../parsers';
-import { Parser, StructuredTypeConfig } from '../types';
+import { JsonSchemaExpandOptions, Parser, StructuredTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 
@@ -19,14 +19,12 @@ export class ODataStructuredType<T> {
     this.parser = new ODataEntityParser(config, schema.namespace, schema.alias);
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
-
   isTypeOf(type: string) {
     var names = [`${this.schema.namespace}.${this.name}`];
     if (this.schema.alias)
       names.push(`${this.schema.alias}.${this.name}`);
     return names.indexOf(type) !== -1;
   }
-
   get options() {
     return this.schema.options;
   }
@@ -71,5 +69,8 @@ export class ODataStructuredType<T> {
       this.options.helper.etag(attrs, etag);
     }
     return attrs;
+  }
+  toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
+    return this.parser.toJsonSchema(options);
   }
 }

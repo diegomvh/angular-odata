@@ -74,56 +74,62 @@ export class ODataClient {
     })
   }
 
-  apiFor(resource: ODataResource<any>): ODataApi {
-    return this.settings.findForTypes(resource.types()) || this.settings.defaultApi();
+  // Resolve Building Blocks
+  apiFor(value?: ODataResource<any> | string): ODataApi {
+    let api = this.settings.defaultApi();
+    if (value instanceof ODataResource)
+      api = this.settings.findApiForTypes(value.types()) || this.settings.defaultApi();
+    else if (typeof value === 'string')
+      api = this.settings.findApiForType(value) || this.settings.findApiByName(value) || this.settings.defaultApi();
+    return api;
   }
-
-  apiByName(name: string): ODataApi {
-    return this.settings.apiByName(name);
+  parserForType<T>(type: string) {
+    return this.settings.parserForType<T>(type);
   }
-
+  enumTypeForType<T>(type: string) {
+    return this.settings.enumTypeForType<T>(type);
+  }
+  enumTypeByName<T>(name: string) {
+    return this.settings.enumTypeByName<T>(name);
+  }
+  structuredTypeForType<T>(type: string) {
+    return this.settings.structuredTypeForType<T>(type);
+  }
+  structuredTypeByName<T>(name: string) {
+    return this.settings.structuredTypeByName<T>(name);
+  }
+  callableForType<T>(type: string) {
+    return this.settings.callableForType<T>(type);
+  }
+  callableByName<T>(name: string) {
+    return this.settings.callableByName<T>(name);
+  }
+  entitySetForType(type: string) {
+    return this.settings.entitySetForType(type);
+  }
+  entitySetByName(name: string) {
+    return this.settings.entitySetByName(name);
+  }
+  modelForType(type: string): typeof ODataModel {
+    return this.settings.modelForType(type);
+  }
+  modelByName(name: string): typeof ODataModel {
+    return this.settings.modelByName(name);
+  }
+  collectionForType(type: string): typeof ODataCollection {
+    return this.settings.collectionForType(type);
+  }
+  collectionByName(name: string): typeof ODataCollection {
+    return this.settings.collectionByName(name);
+  }
   endpointUrl(resource: ODataResource<any>) {
     const api = this.apiFor(resource);
     return `${api.serviceRootUrl}${resource}`;
   }
-
   parserFor<T>(resource: ODataResource<any>) {
     const type = resource.type();
     if (type === null) return null;
     return this.parserForType<T>(type);
-  }
-
-  // Resolve Building Blocks
-  apiForType(type?: string) {
-    return type ? this.settings.apiForType(type) : this.settings.defaultApi();
-  }
-
-  parserForType<T>(type: string) {
-    return this.settings.parserForType<T>(type);
-  }
-
-  enumTypeForType<T>(type: string) {
-    return this.settings.enumTypeForType<T>(type);
-  }
-
-  structuredTypeForType<T>(type: string) {
-    return this.settings.structuredTypeForType<T>(type);
-  }
-
-  callableForType<T>(type: string) {
-    return this.settings.callableFor<T>(type);
-  }
-
-  entitySetForType(type: string) {
-    return this.settings.entitySetForType(type);
-  }
-
-  modelForType(type: string): typeof ODataModel {
-    return this.settings.modelForType(type) || ODataModel;
-  }
-
-  collectionForType(type: string): typeof ODataCollection {
-    return this.settings.collectionForType(type) || ODataCollection;
   }
 
   fromJSON<P, R>(json: { segments: ODataSegment[], options: PlainObject }): ODataActionResource<P, R> | ODataFunctionResource<P, R>;

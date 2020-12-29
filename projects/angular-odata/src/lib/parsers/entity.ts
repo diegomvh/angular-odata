@@ -78,7 +78,7 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
     const parser = this.parser;
     if (parser instanceof ODataEntityParser) {
       return Array.isArray(value) ?
-        value.map(v => this.toJson(parser, v, options)) :
+        (value as any[]).map(v => this.toJson(parser, v, options)) :
         this.toJson(parser, value, options);
     }
     return parser.serialize(value, Object.assign({field: this}, options));
@@ -108,7 +108,6 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
   isNavigation() {
     return this.navigation;
   }
-
   isComplexType() {
     return this.parser instanceof ODataEntityParser && this.parser.isComplexType();
   }
