@@ -63,7 +63,7 @@ export class ODataEnumParser<Type> implements Parser<Type> {
       title: `The ${this.name} field`,
       type: "string"
     };
-    property.enum = EnumHelper.names(this.members);
+    property.oneOf = this.fields.map(f => ({title: f.name, const: f.value}));
     return property;
   }
 }

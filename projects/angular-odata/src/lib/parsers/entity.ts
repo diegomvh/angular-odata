@@ -1,9 +1,10 @@
 import { Types } from '../utils';
 import { Parser, StructuredTypeField, JsonSchemaExpandOptions, JsonSchemaConfig, StructuredTypeConfig, Annotation, OptionsHelper } from '../types';
+import { ODataEnumParser } from './enum';
 
 const NONE_PARSER = {
   deserialize: (value: any, options: OptionsHelper) => value,
-  serialize: (value: any, options: OptionsHelper) => value
+  serialize: (value: any, options: OptionsHelper) => value,
 } as Parser<any>;
 
 export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser<Type> {
@@ -89,13 +90,35 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
   }
 
   // Json Schema
+  // https://json-schema.org/
   toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
-    let property: any = this.parser instanceof ODataEntityParser ? this.parser.toJsonSchema(options) : <any>{
-      title: `The ${this.name} field`,
-      type: this.parser ? "object" : this.type
-    };
-    if (this.maxLength)
-      property.maxLength = this.maxLength;
+    let property: any = (this.parser instanceof ODataEntityFieldParser ||
+      this.parser instanceof ODataEntityParser ||
+      this.parser instanceof ODataEnumParser) ?
+    this.parser.toJsonSchema(options) : {title: `The ${this.name} field`, type: "object"} as any;
+
+    if (["Edm.String", "Edm.Date", "Edm.TimeOfDay", "Edm.DateTimeOffset", "Edm.Guid", "Edm.Binary"].indexOf(this.type) !== -1) {
+      property.type = "string";
+      if (this.type === "Edm.Date")
+        property.format = "date";
+      else if (this.type === "Edm.TimeOfDay")
+        property.format = "time";
+      else if (this.type === "Edm.DateTimeOffset")
+        property.format = "date-time";
+      else if (this.type === "Edm.Guid")
+        property.pattern = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+      else if (this.type === "Edm.Binary")
+        property.contentEncoding = "base64";
+      else if (this.type === "Edm.String" && this.maxLength)
+        property.maxLength = this.maxLength;
+    } else if (["Edm.Int64", "Edm.Int32", "Edm.Int16", "Edm.Byte", "Edm.SByte"].indexOf(this.type) !== -1) {
+      //TODO: Range
+      property.type = "integer";
+    } else if (["Edm.Decimal", "Edm.Double"].indexOf(this.type) !== -1) {
+      property.type = "number";
+    } else if (["Edm.Boolean"].indexOf(this.type) !== -1) {
+      property.type = "boolean";
+    }
     if (this.collection)
       property = {
         type: "array",
@@ -170,8 +193,10 @@ export class ODataEntityParser<Type> implements Parser<Type> {
 
   // Json Schema
   toJsonSchema(config: JsonSchemaConfig<Type> = {}) {
-    let properties: any = this.fields
-      .filter(f => (!f.navigation || (config.expand && f.name in config.expand)) && (!config.select || (<string[]>config.select).indexOf(f.name) !== -1))
+    const fields = this.fields
+      //.filter(f => (!f.navigation || (config.expand && f.name in config.expand)) && (!config.select || (<string[]>config.select).indexOf(f.name) !== -1));
+      .filter(f => (!f.navigation || (config.expand && f.name in config.expand)) && (!config.select || (<string[]>config.select).indexOf(f.name) !== -1));
+    let properties: any = fields
       .map(f => ({ [f.name]: f.toJsonSchema((config as any)[f.name]) }))
       .reduce((acc, v) => Object.assign(acc, v), {});
     return {
@@ -179,7 +204,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
       type: "object",
       description: `The ${this.name} configuration`,
       properties: properties,
-      required: this.fields.filter(f => !f.nullable).map(f => f.name)
+      required: fields.filter(f => !f.nullable).map(f => f.name)
     };
   }
 
