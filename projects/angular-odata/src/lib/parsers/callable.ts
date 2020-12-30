@@ -35,7 +35,6 @@ export class ODataCallableParser<R> implements Parser<R> {
   return?: string;
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
-
   constructor(config: CallableConfig, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${config.name}`;
@@ -57,7 +56,6 @@ export class ODataCallableParser<R> implements Parser<R> {
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
     );
   }
-
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
     if (this.return)
       this.parser = settings.findParserForType(this.return) || NONE_PARSER;
