@@ -10,11 +10,10 @@ export class ODataEnumFieldParser<Type> implements EnumTypeField {
     this.value = field.value;
     this.annotations = field.annotations || [];
   }
-  annotation(type: string) {
-    return this.annotations.find(annot => annot.type === type);
+  findAnnotation(predicate: (annot: Annotation) => boolean) {
+    return this.annotations.find(predicate);
   }
 }
-
 export class ODataEnumParser<Type> implements Parser<Type> {
   name: string;
   type: string;

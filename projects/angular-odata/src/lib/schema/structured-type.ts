@@ -1,5 +1,5 @@
 import { ODataEntityFieldParser, ODataEntityParser } from '../parsers';
-import { JsonSchemaExpandOptions, Parser, StructuredTypeConfig } from '../types';
+import { Annotation, JsonSchemaExpandOptions, Parser, StructuredTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 
@@ -29,6 +29,9 @@ export class ODataStructuredType<T> {
     return this.schema.options;
   }
 
+  findAnnotation(predicate: (annot: Annotation) => boolean) {
+    return this.annotations.find(predicate);
+  }
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
     this.parser.configure(settings);
   }
