@@ -95,7 +95,7 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
     let property: any = (this.parser instanceof ODataEntityFieldParser ||
       this.parser instanceof ODataEntityParser ||
       this.parser instanceof ODataEnumParser) ?
-    this.parser.toJsonSchema(options) : {title: `The ${this.name} field`, type: "object"} as any;
+    this.parser.toJsonSchema(options) : {title: this.name, type: "object"} as any;
 
     if (["Edm.String", "Edm.Date", "Edm.TimeOfDay", "Edm.DateTimeOffset", "Edm.Guid", "Edm.Binary"].indexOf(this.type) !== -1) {
       property.type = "string";
@@ -119,6 +119,8 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
     } else if (["Edm.Boolean"].indexOf(this.type) !== -1) {
       property.type = "boolean";
     }
+    if (this.default)
+      property.default = this.default;
     if (this.collection)
       property = {
         type: "array",
@@ -193,19 +195,18 @@ export class ODataEntityParser<Type> implements Parser<Type> {
 
   // Json Schema
   toJsonSchema(config: JsonSchemaConfig<Type> = {}) {
+    let schema = {
+      title: this.name,
+      type: "object"
+    } as any;
     const fields = this.fields
-      //.filter(f => (!f.navigation || (config.expand && f.name in config.expand)) && (!config.select || (<string[]>config.select).indexOf(f.name) !== -1));
       .filter(f => (!f.navigation || (config.expand && f.name in config.expand)) && (!config.select || (<string[]>config.select).indexOf(f.name) !== -1));
-    let properties: any = fields
+    schema.properties = fields
       .map(f => ({ [f.name]: f.toJsonSchema((config as any)[f.name]) }))
       .reduce((acc, v) => Object.assign(acc, v), {});
-    return {
-      title: `The ${this.name} schema`,
-      type: "object",
-      description: `The ${this.name} configuration`,
-      properties: properties,
-      required: fields.filter(f => !f.nullable).map(f => f.name)
-    };
+    //schema.description = `The ${this.name} configuration`;
+    schema.required = fields.filter(f => !f.nullable).map(f => f.name);
+    return schema;
   }
 
   typeFor(name: string): string | null {
