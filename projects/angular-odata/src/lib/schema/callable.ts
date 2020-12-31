@@ -31,6 +31,7 @@ export class ODataCallable<R> {
   }
 
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
-    this.parser.configure(settings);
+    const parserSettings = Object.assign({options: this.options}, settings);
+    this.parser.configure(parserSettings);
   }
 }

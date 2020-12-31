@@ -1,4 +1,4 @@
-import { ODataEntityFieldParser, ODataEntityParser } from '../parsers';
+import { ODataStructuredFieldParser, ODataEntityParser } from '../parsers';
 import { Annotation, JsonSchemaExpandOptions, Parser, StructuredTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
@@ -28,20 +28,20 @@ export class ODataStructuredType<T> {
   get options() {
     return this.schema.options;
   }
-
   findAnnotation(predicate: (annot: Annotation) => boolean) {
     return this.annotations.find(predicate);
   }
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
-    this.parser.configure(settings);
+    const parserSettings = Object.assign({options: this.options}, settings);
+    this.parser.configure(parserSettings);
   }
 
   fields(opts: {
     include_parents?: boolean,
     include_navigation?: boolean
-  } = { include_navigation: false, include_parents: true }): ODataEntityFieldParser<any>[] {
+  } = { include_navigation: false, include_parents: true }): ODataStructuredFieldParser<any>[] {
     let parent = this.parser as ODataEntityParser<any> | undefined;
-    let fields = <ODataEntityFieldParser<any>[]>[];
+    let fields = <ODataStructuredFieldParser<any>[]>[];
     while (parent !== undefined) {
       fields = [
         ...parent.fields.filter(field => opts.include_navigation || !field.navigation),

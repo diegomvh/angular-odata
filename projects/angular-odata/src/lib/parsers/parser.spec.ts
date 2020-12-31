@@ -3,7 +3,7 @@ import { TripPinConfig, Person, NAMESPACE, PersonGender } from '../trippin.spec'
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataEnumParser } from './enum';
-import { ODataEntityParser, ODataEntityFieldParser } from './entity';
+import { ODataEntityParser, ODataStructuredFieldParser } from './entity';
 import { ODataApi } from '../api';
 import { ODataStructuredType } from '../schema';
 import { Parser } from '../types';
@@ -37,12 +37,12 @@ describe('ODataClient', () => {
     expect(schema !== null).toBeTruthy();
     const field = (schema as ODataStructuredType<Person>).findField('Gender');
     expect(field !== undefined).toBeTruthy();
-    expect((field as ODataEntityFieldParser<any>).serialize(PersonGender.Female, (schema as ODataStructuredType<Person>).options)).toEqual('Female');
+    expect((field as ODataStructuredFieldParser<any>).serialize(PersonGender.Female, (schema as ODataStructuredType<Person>).options)).toEqual('Female');
   });
 
   it('should deserialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
-    const field = schema.findField('Gender') as ODataEntityFieldParser<PersonGender>;
+    const field = schema.findField('Gender') as ODataStructuredFieldParser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
     expect(field.deserialize('Female', schema.options)).toEqual(PersonGender.Female);
   });

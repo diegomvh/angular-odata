@@ -7,7 +7,7 @@ const NONE_PARSER = {
   serialize: (value: any, options: OptionsHelper) => value,
 } as Parser<any>;
 
-export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser<Type> {
+export class ODataStructuredFieldParser<Type> implements StructuredTypeField, Parser<Type> {
   name: string;
   type: string;
   private parser: Parser<Type>;
@@ -85,14 +85,19 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
     return parser.serialize(value, Object.assign({field: this}, options));
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+  configure(settings: {
+    findParserForType: (type: string) => Parser<any> | undefined,
+    options: OptionsHelper
+  }) {
     this.parser = settings.findParserForType(this.type) || NONE_PARSER;
+    if (this.default !== undefined)
+      this.default = this.deserialize(this.default, settings.options);
   }
 
   // Json Schema
   // https://json-schema.org/
   toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
-    let property: any = (this.parser instanceof ODataEntityFieldParser ||
+    let property: any = (this.parser instanceof ODataStructuredFieldParser ||
       this.parser instanceof ODataEntityParser ||
       this.parser instanceof ODataEnumParser) ?
     this.parser.toJsonSchema(options) : {title: this.name, type: "object"} as any;
@@ -145,7 +150,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   base?: string;
   parent?: ODataEntityParser<any>;
   children: ODataEntityParser<any>[];
-  fields: ODataEntityFieldParser<any>[];
+  fields: ODataStructuredFieldParser<any>[];
 
   constructor(config: StructuredTypeConfig<Type>, namespace: string, alias?: string) {
     this.name = config.name;
@@ -154,7 +159,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     this.alias = alias;
     this.children = [];
     this.fields = Object.entries(config.fields)
-      .map(([name, f]) => new ODataEntityFieldParser(name, f as StructuredTypeField));
+      .map(([name, f]) => new ODataStructuredFieldParser(name, f as StructuredTypeField));
   }
 
   isTypeOf(type: string) {
@@ -184,7 +189,10 @@ export class ODataEntityParser<Type> implements Parser<Type> {
     );
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+  configure(settings: {
+    findParserForType: (type: string) => Parser<any> | undefined,
+    options: OptionsHelper
+  }) {
     if (this.base) {
       const parent = settings.findParserForType(this.base) as ODataEntityParser<any>;
       parent.children.push(this);
@@ -217,7 +225,7 @@ export class ODataEntityParser<Type> implements Parser<Type> {
   }
 
   keys() {
-    const keys: ODataEntityFieldParser<any>[] = (this.parent) ? this.parent.keys() : [];
+    const keys: ODataStructuredFieldParser<any>[] = (this.parent) ? this.parent.keys() : [];
     return [...keys, ...this.fields.filter(f => f.key)];
   }
 
