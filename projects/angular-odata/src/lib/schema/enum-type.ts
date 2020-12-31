@@ -1,6 +1,6 @@
 import { ODataSchema } from './schema';
 import { ODataEnumFieldParser, ODataEnumParser } from '../parsers';
-import { EnumTypeConfig } from '../types';
+import { Annotation, EnumTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 
 export class ODataEnumType<E> {
@@ -28,6 +28,9 @@ export class ODataEnumType<E> {
     return this.schema.options;
   }
 
+  findAnnotation(predicate: (annot: Annotation) => boolean) {
+    return this.annotations.find(predicate);
+  }
   fields(): ODataEnumFieldParser<E>[] {
     return this.parser.fields;
   }

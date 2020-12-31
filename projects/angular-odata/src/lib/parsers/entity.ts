@@ -39,8 +39,8 @@ export class ODataEntityFieldParser<Type> implements StructuredTypeField, Parser
     this.scale = field.scale;
     this.ref = field.ref;
   }
-  annotation(type: string) {
-    return this.annotations.find(annot => annot.type === type);
+  findAnnotation(predicate: (annot: Annotation) => boolean) {
+    return this.annotations.find(predicate);
   }
 
   resolve(value: any) {
