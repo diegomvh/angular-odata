@@ -238,6 +238,8 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
   // Json Schema
   toJsonSchema(options: JsonSchemaOptions<Type> = {}) {
     let schema = {
+      $schema: "http://json-schema.org/draft-07/schema#",
+      $id: `${this.namespace}.${this.name}`,
       title: this.name,
       type: "object"
     } as any;
