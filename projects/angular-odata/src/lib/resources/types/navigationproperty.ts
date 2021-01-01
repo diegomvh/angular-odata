@@ -15,7 +15,7 @@ import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
 import { ODataEntities, ODataEntity } from '../responses';
 import { ODataValueResource } from './value';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
@@ -52,14 +52,14 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   navigationProperty<N>(name: string) {
     let parser = this.client.parserFor<N>(this);
-    let type = parser instanceof ODataEntityParser?
+    let type = parser instanceof ODataStructuredTypeParser?
       parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser?
+    let type = parser instanceof ODataStructuredTypeParser?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type || null, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -151,7 +151,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         let segment = segments.segment(PathSegmentNames.navigationProperty);
         if (key !== undefined) {
           let parser = client.parserFor<T>(res);
-          if (parser instanceof ODataEntityParser && Types.isObject(key))
+          if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
         }

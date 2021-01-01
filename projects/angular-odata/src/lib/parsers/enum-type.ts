@@ -1,7 +1,7 @@
 import { EnumHelper } from '../helpers';
-import { JsonSchemaExpandOptions, EnumTypeConfig, Parser, StructuredTypeFieldOptions, EnumTypeField, Annotation, OptionsHelper } from '../types';
+import { EnumTypeConfig, Parser, OptionsHelper, EnumTypeField, Annotation } from '../types';
 
-export class ODataEnumFieldParser<Type> implements EnumTypeField {
+export class ODataEnumTypeFieldParser implements EnumTypeField {
   name: string;
   value: number;
   annotations: Annotation[];
@@ -14,20 +14,19 @@ export class ODataEnumFieldParser<Type> implements EnumTypeField {
     return this.annotations.find(predicate);
   }
 }
-export class ODataEnumParser<Type> implements Parser<Type> {
+export class ODataEnumTypeParser<Type> implements Parser<Type> {
   name: string;
   type: string;
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
-  fields: ODataEnumFieldParser<any>[];
-
+  fields: ODataEnumTypeFieldParser[];
   constructor(config: EnumTypeConfig<Type>, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${config.name}`;
     this.flags = config.flags;
     this.members = config.members;
     this.fields = Object.entries(config.fields)
-      .map(([name, f]) => new ODataEnumFieldParser<Type>(name, f as EnumTypeField));
+      .map(([name, f]) => new ODataEnumTypeFieldParser(name, f as EnumTypeField));
   }
 
   // Deserialize
@@ -57,12 +56,12 @@ export class ODataEnumParser<Type> implements Parser<Type> {
   }
 
   // Json Schema
-  toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
+  toJsonSchema() {
     let property = <any>{
-      title: `The ${this.name} field`,
+      title: this.name,
       type: "string"
     };
-    property.oneOf = this.fields.map(f => ({title: f.name, const: f.value}));
+    property.enum = this.fields.map(f => f.name);
     return property;
   }
 }

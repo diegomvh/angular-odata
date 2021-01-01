@@ -9,7 +9,7 @@ import { ODataClient } from '../../client';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
 import { map } from 'rxjs/operators';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -42,7 +42,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser?
+    let type = parser instanceof ODataStructuredTypeParser?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }

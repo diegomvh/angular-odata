@@ -16,7 +16,7 @@ import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataValueResource } from './value';
 import { ODataEntity } from '../responses';
 import { map } from 'rxjs/operators';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
 
 export class ODataEntityResource<T> extends ODataResource<T> {
@@ -59,14 +59,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     } else {
       name = baseType;
     }
-    let type = parser instanceof ODataEntityParser ?
+    let type = parser instanceof ODataStructuredTypeParser ?
         parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser ?
+    let type = parser instanceof ODataStructuredTypeParser ?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -144,7 +144,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
           throw new Error(`EntityResourse dosn't have segment for key`);
         if (key !== undefined) {
           let parser = client.parserFor<T>(res);
-          if (parser instanceof ODataEntityParser && Types.isObject(key))
+          if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
         }

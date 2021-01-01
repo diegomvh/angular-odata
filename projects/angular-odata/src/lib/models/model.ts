@@ -14,7 +14,7 @@ import {
 } from '../resources/index';
 
 import { ODataCollection } from './collection';
-import { ODataStructuredFieldParser } from '../parsers/entity';
+import { ODataStructuredTypeFieldParser } from '../parsers/structured-type';
 
 export class ODataModel<T> {
   protected _resource: ODataResource<T> | null;
@@ -22,7 +22,7 @@ export class ODataModel<T> {
   protected _meta: ODataEntityMeta | null;
   protected _relations: { [name: string]: {
     rel: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
-    field: ODataStructuredFieldParser<any>
+    field: ODataStructuredTypeFieldParser<any>
   }};
 
   constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
@@ -279,7 +279,7 @@ export class ODataModel<T> {
     return (this._resource as ODataEntityResource<T>).navigationProperty<P>(path);
   }
 
-  protected getNavigationProperty<P>(field: ODataStructuredFieldParser<any>): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
+  protected getNavigationProperty<P>(field: ODataStructuredTypeFieldParser<any>): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
     if (!(field.name in this._relations)) {
       let value = (this._entity as any)[field.name];
       let nav = this._navigationProperty<P>(field.name);
@@ -293,7 +293,7 @@ export class ODataModel<T> {
     return this._relations[field.name].rel;
   }
 
-  protected setNavigationProperty<P, Pm extends ODataModel<P>>(field: ODataStructuredFieldParser<any>, model: Pm | null) {
+  protected setNavigationProperty<P, Pm extends ODataModel<P>>(field: ODataStructuredTypeFieldParser<any>, model: Pm | null) {
     let target = model?.target();
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
