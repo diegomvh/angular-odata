@@ -3,7 +3,7 @@ import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 import { Parser } from '../../types';
 import { Types } from '../../utils/types';
 import { ODataResource } from '../resource';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE, CACHE_CONTROL, MAX_AGE } from '../../constants';
 import { ODataApi } from '../../api';
@@ -94,7 +94,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
 
   private parse(parser: Parser<T>, value: any): any {
     const type = Types.isObject(value) ? this.options.helper.type(value) : undefined;
-    if (type !== undefined && parser instanceof ODataEntityParser) {
+    if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
       parser = parser.findParser(c => c.isTypeOf(type));
     }
     return parser.deserialize(value, this.options);

@@ -12,7 +12,7 @@ import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataResource } from '../resource';
 import { ODataEntity, ODataEntities, ODataProperty } from '../responses';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
@@ -65,7 +65,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (key !== undefined) {
           let parser = client.parserFor<E>(res);
-          if (parser instanceof ODataEntityParser && Types.isObject(key))
+          if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
         }

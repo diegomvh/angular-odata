@@ -1,10 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
-
 export type ODataContext = {
   metadata?: string;
   singleton?: string;
@@ -12,20 +9,6 @@ export type ODataContext = {
   property?: string;
   entity?: string;
 }
-
-// JSON SCHEMA
-type JsonSchemaSelect<T> = Array<keyof T>;
-type JsonSchemaOrder<T> = Array<keyof T>;
-type JsonSchemaExpand<T> = {[P in keyof T]?: JsonSchemaConfig<T[P]> };
-
-export type JsonSchemaExpandOptions<T> = {
-  select?: JsonSchemaSelect<T>;
-  order?: JsonSchemaOrder<T>;
-  expand?: JsonSchemaExpand<T>;
-}
-
-export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
-
 export interface Annotation {
   type: string;
   string?: string;

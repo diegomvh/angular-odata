@@ -10,7 +10,7 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
@@ -56,7 +56,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
           throw new Error(`CallableResource dosn't have segment for key`);
         if (key !== undefined) {
           let parser = client.parserFor<E>(res);
-          if (parser instanceof ODataEntityParser && Types.isObject(key))
+          if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
             key = parser.resolveKey(key);
           segment.option(SegmentOptionNames.key, key);
         }

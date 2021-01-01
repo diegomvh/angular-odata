@@ -12,7 +12,7 @@ import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { HttpOptions, HttpEntityOptions } from './options';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntity } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
@@ -43,14 +43,14 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   navigationProperty<N>(name: string) {
     let parser = this.client.parserFor<N>(this);
-    let type = parser instanceof ODataEntityParser?
+    let type = parser instanceof ODataStructuredTypeParser?
       parser.typeFor(name) : null;
     return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(name: string) {
     let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser?
+    let type = parser instanceof ODataStructuredTypeParser?
       parser.typeFor(name) : null;
     return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
   }

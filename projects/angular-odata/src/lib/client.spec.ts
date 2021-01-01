@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ODataClient } from './client';
 import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from './resources';
 import { ODataModule } from './module';
-import { ODataEntityParser } from './parsers';
+import { ODataStructuredTypeParser } from './parsers';
 import { HttpHeaders } from '@angular/common/http';
 import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
 import { ODataStructuredType } from './schema';
@@ -35,7 +35,7 @@ describe('ODataClient', () => {
   it('should return person parser for resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const parser = client.parserFor<Person>(set);
-    expect(parser instanceof ODataEntityParser).toBeTruthy();
+    expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
 
   it('should throw error parser for type', () => {
@@ -58,7 +58,7 @@ describe('ODataClient', () => {
 
   it('should return person parser for type', () => {
     const parser = client.parserForType<Person>(`${NAMESPACE}.Person`);
-    expect(parser instanceof ODataEntityParser).toBeTruthy();
+    expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
 
   it('should return person entity config', () => {
@@ -98,8 +98,8 @@ describe('ODataClient', () => {
 
   it('should return parser for resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
-    const parser = client.parserFor<Person>(set) as ODataEntityParser<Person>;
-    expect(parser instanceof ODataEntityParser).toBeTruthy();
+    const parser = client.parserFor<Person>(set) as ODataStructuredTypeParser<Person>;
+    expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
     expect(parser.fields.length).toEqual(9);
   });
 
