@@ -138,6 +138,8 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
     }
     if (this.default)
       schema.default = this.default;
+    if (this.nullable)
+      schema.type = [schema.type, 'null'];
     if (this.collection)
       schema = {
         type: "array",
