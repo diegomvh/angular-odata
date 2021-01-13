@@ -1198,7 +1198,7 @@ describe('pagination', () => {
 
   it('should support skip = 0', () => {
     const skip = 0;
-    const expected = '';
+    const expected = '?$skip=0';
     const actual = buildQuery({ skip });
     expect(actual).toEqual(expected);
   });

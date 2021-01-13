@@ -54,7 +54,7 @@ export type ExpandOptions<T> = {
 }
 
 export type Transform<T> = {
-  aggregate?: Aggregate | Aggregate[];
+  aggregate?: Aggregate | Array<Aggregate>;
   filter?: Filter;
   groupBy?: GroupBy<T>;
 }
@@ -69,7 +69,8 @@ export type Duration = { type: 'duration'; value: any; }
 export type Binary = { type: 'binary'; value: any; }
 export type Json = { type: 'json'; value: any; }
 export type Alias = { type: 'alias'; name: string; value: any; }
-export type Value = string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias;
+export type Decimal = { type: 'decimal'; value: any; }
+export type Value = string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias | Decimal;
 
 export const raw = (value: string): Raw => ({ type: 'raw', value });
 export const guid = (value: string): Guid => ({ type: 'guid', value });
@@ -77,6 +78,7 @@ export const duration = (value: string): Duration => ({ type: 'duration', value 
 export const binary = (value: string): Binary => ({ type: 'binary', value });
 export const json = (value: PlainObject): Json => ({ type: 'json', value });
 export const alias = (name: string, value: PlainObject): Alias => ({ type: 'alias', name, value });
+export const decimal = (value: string): Decimal => ({ type: 'decimal', value });
 
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
@@ -143,7 +145,7 @@ export default function <T>({
     params.$top = top;
   }
 
-  if (skip) {
+  if (typeof skip === 'number') {
     params.$skip = skip;
   }
 
@@ -380,25 +382,27 @@ function handleValue(value: Value, aliases?: Alias[]): any {
   } else if (value === null) {
     return value;
   } else if (typeof value === 'object') {
-    if (value.type === 'raw') {
-      return value.value;
-    } else if (value.type === 'guid') {
+    switch (value.type) {
+      case 'raw':
+      case 'guid':
         return value.value;
-    } else if (value.type === 'duration') {
+      case 'duration':
         return `duration'${value.value}'`;
-    } else if (value.type === 'binary') {
+      case 'binary':
         return `binary'${value.value}'`;
-    } else if (value.type === 'alias') {
-      // Store
-      if (Array.isArray(aliases))
-        aliases.push(value as Alias);
-      return `@${(value as Alias).name}`;
-    } else if (value.type === 'json') {
+      case 'alias':
+        // Store
+        if (Array.isArray(aliases))
+          aliases.push(value as Alias);
+        return `@${(value as Alias).name}`;
+      case 'json':
         return escape(JSON.stringify(value.value));
-    } else {
-      return Object.entries(value)
-        .filter(([, v]) => v !== undefined)
-        .map(([k, v]) => `${k}=${handleValue(v as Value, aliases)}`).join(',');
+      case 'decimal':
+        return `${value.value}M`;
+      default:
+        return Object.entries(value)
+            .filter(([, v]) => v !== undefined)
+            .map(([k, v]) => `${k}=${handleValue(v as Value, aliases)}`).join(',');
     }
   }
   return value;
@@ -429,7 +433,7 @@ function buildExpand<T>(expands: Expand<T>): string {
         }
       }, '');
   } else if (Array.isArray(expands)) {
-    return `${(expands as NestedExpandOptions<any>[]).map(e => buildExpand(e)).join(',')}`;
+    return `${(expands as Array<NestedExpandOptions<any>>).map(e => buildExpand(e)).join(',')}`;
   } else if (typeof expands === 'object') {
     const expandKeys = Object.keys(expands);
 

@@ -109,7 +109,7 @@ describe('ODataQueryOptions', () => {
     expect(queryOptions.toString()).toEqual('');
     //
     queryOptions.option(QueryOptionNames.skip, 0);
-    expect(queryOptions.toString()).toEqual('');
+    expect(queryOptions.toString()).toEqual('$skip=0');
   });
 
   it('test top', () => {
