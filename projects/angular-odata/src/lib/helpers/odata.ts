@@ -27,12 +27,12 @@ const ODataVersionBaseHelper = <any> {
     id(value: {[name: string]: any}, id?: string) {
       if (id !== undefined)
         value[this.ODATA_ID] = id;
-      return value[this.ODATA_ID] as string;
+      return (this.ODATA_ID in value) ? value[this.ODATA_ID] as string : undefined;
     },
     etag(value: {[name: string]: any}, etag?: string) {
       if (etag !== undefined)
         value[this.ODATA_ETAG] = etag;
-      return value[this.ODATA_ETAG] as string;
+      return (this.ODATA_ETAG in value) ? value[this.ODATA_ETAG] as string : undefined;
     },
     mediaEtag(value: {[name: string]: any}) {
       return (this.ODATA_MEDIA_ETAG in value) ?

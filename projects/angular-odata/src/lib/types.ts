@@ -51,22 +51,22 @@ export interface ODataVersionHelper {
   property(value: {[name: string]: any}, context: ODataContext): any;
   annotations(value: {[name: string]: any}): {[name: string]: any};
   attributes(value: {[name: string]: any}): {[name: string]: any};
-  id(value: {[name: string]: any}, id?: string): string;
-  etag(value: {[name: string]: any}, etag?: string): string;
+  id(value: {[name: string]: any}, id?: string): string | undefined;
+  etag(value: {[name: string]: any}, etag?: string): string | undefined;
   context(value: {[name: string]: any}): ODataContext;
   functions(value: {[name: string]: any}): {[name: string]: any};
   properties(value: {[name: string]: any}): {[name: string]: any};
-  mediaEtag(value: {[name: string]: any}): string;
-  metadataEtag(value: {[name: string]: any}): string;
-  type(value: {[name: string]: any}): string;
-  nextLink(value: {[name: string]: any}): string;
-  readLink(value: {[name: string]: any}): string;
-  mediaReadLink(value: {[name: string]: any}): string;
-  editLink(value: {[name: string]: any}): string;
-  mediaEditLink(value: {[name: string]: any}): string;
-  mediaContentType(value: {[name: string]: any}): string;
-  deltaLink(value: {[name: string]: any}): string;
-  count(value: {[name: string]: any}): number;
+  mediaEtag(value: {[name: string]: any}): string | undefined;
+  metadataEtag(value: {[name: string]: any}): string | undefined;
+  type(value: {[name: string]: any}): string | undefined;
+  nextLink(value: {[name: string]: any}): string | undefined;
+  readLink(value: {[name: string]: any}): string | undefined;
+  mediaReadLink(value: {[name: string]: any}): string | undefined;
+  editLink(value: {[name: string]: any}): string | undefined;
+  mediaEditLink(value: {[name: string]: any}): string | undefined;
+  mediaContentType(value: {[name: string]: any}): string | undefined;
+  deltaLink(value: {[name: string]: any}): string | undefined;
+  count(value: {[name: string]: any}): number | undefined;
   countParam(): {[name: string]: string};
 }
 

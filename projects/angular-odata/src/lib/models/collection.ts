@@ -70,27 +70,21 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   protected populate(values: any[], annots?: ODataEntitiesMeta): this {
     this._meta = annots || null;
 
-    if (annots instanceof ODataEntitiesMeta) {
-      this._state = {};
-      if (annots.top)
-        this._state.top = annots.top;
-      if (annots.skip)
-        this._state.size = this._state.skip = annots.skip;
-      if (annots.skiptoken)
-        this._state.skiptoken = annots.skiptoken;
-      if (annots.count) {
-        this._state.records = annots.count;
-      if (this._state.records && this._state.size)
-        this._state.pages = Math.ceil(this._state.records / this._state.size);
-      if (this._state.top && this._state.size)
-        this._state.page = (this._state.top / this._state.size) + 1;
-      }
-    } else {
-      this._state = {
-        records: values.length, size: values.length,
-        page: 1, pages: 1
-      };
-    }
+    this._state = (annots instanceof ODataEntitiesMeta) ?
+    {
+      top: annots.top,
+      size: annots.skip, skip: annots.skip, skiptoken: annots.skiptoken,
+      records: annots.count
+    } : {
+      top: values.length,
+      size: values.length, skip: values.length,
+      records: values.length
+    };
+
+    if (this._state.records !== undefined && this._state.size !== undefined)
+      this._state.pages = Math.ceil(this._state.records / this._state.size);
+    if (this._state.top !== undefined && this._state.size !== undefined)
+      this._state.page = (this._state.top / this._state.size) + 1;
 
     this._models = this.parse(values);
     return this;
@@ -101,7 +95,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   clone() {
-    let options: {resource?: ODataResource<T>, meta?: ODataEntitiesMeta} = {};
+    let options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {};
     if (this._resource)
       options.resource = this._resource.clone();
     if (this._meta)
@@ -125,23 +119,23 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Requests
-  fetch(options?: HttpOptions & {withCount?: boolean}): Observable<this> {
+  fetch(options?: HttpOptions & { withCount?: boolean }): Observable<this> {
     if (this._resource instanceof ODataEntitySetResource) {
       return this._resource.get(options).pipe(
-      map(({entities, meta}) => this.populate(entities || [], meta)));
+        map(({ entities, meta }) => this.populate(entities || [], meta)));
     } else if (this._resource instanceof ODataNavigationPropertyResource) {
       return this._resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
-      map(({entities, meta}) => this.populate(entities || [], meta)));
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})).pipe(
+          map(({ entities, meta }) => this.populate(entities || [], meta)));
     } else if (this._resource instanceof ODataFunctionResource) {
       return this._resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})).pipe(
-      map(({entities, meta}) => this.populate(entities || [], meta)));
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})).pipe(
+          map(({ entities, meta }) => this.populate(entities || [], meta)));
     }
     throw new Error("Not Yet!");
   }
 
-  next(options?: HttpOptions & {withCount?: boolean}) {
+  next(options?: HttpOptions & { withCount?: boolean }) {
     if (this._state.skip) {
       this._query.skip(this._state.skip);
       return this.fetch(options);
@@ -166,7 +160,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       map(entities => this.populate(entities)));
   }
 
-  // Mutate
+  //TODO: add and remove like backbone
   add(model: M): Observable<this> {
     let obs$: Observable<any>;
     if (this._resource instanceof ODataEntitySetResource) {
