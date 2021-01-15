@@ -97,7 +97,6 @@ export class ODataApi {
   public findEntitySetForType(type: string) {
     return this.findSchemaForType(type)?.findEntitySetForType(type);
   }
-
   //#region Model and Collection for type
   public findModelForType(type: string) {
     return this.findStructuredTypeForType(type)?.model as typeof ODataModel | undefined;
@@ -109,6 +108,12 @@ export class ODataApi {
 
   public findServiceForType(type: string) {
     return this.findEntitySetForType(type)?.service as typeof ODataEntityService | undefined;
+  }
+  //#endregion
+  //#region find Config for Entity Type
+  public findServiceForEntityType(type: string) {
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
+      .find(e => e.entityType === type)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
   //#endregion

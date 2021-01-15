@@ -63,7 +63,6 @@ return {
 export class ODataClient {
 
   constructor(private http: HttpClient, private settings: ODataSettings, private injector: Injector) {
-    console.log(this.injector);
     this.settings.configure({
       requester: (req: ODataRequest<any>): Observable<any> =>
         this.http.request(req.method, `${req.url}`, {
@@ -126,11 +125,14 @@ export class ODataClient {
   collectionByName(name: string): typeof ODataCollection {
     return this.settings.collectionByName(name);
   }
-  serviceForType(type: string): typeof ODataEntityService {
-    return this.settings.serviceForType(type);
+  serviceForType(type: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceForType(type));
   }
-  serviceByName(name: string): typeof ODataEntityService {
-    return this.settings.serviceByName(name);
+  serviceForEntityType(type: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceForEntityType(type));
+  }
+  serviceByName(name: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceByName(name));
   }
   endpointUrl(resource: ODataResource<any>) {
     const api = this.apiFor(resource);
