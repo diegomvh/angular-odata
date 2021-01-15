@@ -4,11 +4,14 @@ import { ODataAnnotation } from './annotation';
 export class ODataEntitySet {
   schema: ODataSchema
   name: string;
-  service?: { new(...params: any[]): any };
+  entityType: string;
+  service: { new(...params: any[]): any };
   annotations: ODataAnnotation[];
   constructor(config: EntitySetConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
+    this.entityType = config.entityType;
+    this.service = config.service;
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
 
