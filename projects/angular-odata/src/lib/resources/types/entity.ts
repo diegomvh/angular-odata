@@ -4,7 +4,7 @@ import { EntityKey, Parser } from '../../types';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { ODataNavigationPropertyResource } from './navigationproperty';
+import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
 import { Expand, Select, PlainObject } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';

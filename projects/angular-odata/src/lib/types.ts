@@ -218,6 +218,7 @@ export type CallableConfig = {
 }
 export type EntitySetConfig = {
   name: string;
+  service?: { new(...params: any[]): any };
   annotations?: AnnotationConfig[];
 }
 //#endregion
