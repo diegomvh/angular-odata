@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -28,6 +28,7 @@ import {
 import { ODataSettings } from './settings';
 import { ODataApi } from './api';
 import { ODataRequest } from './resources/index';
+import { ODataEntityService } from './services/entity';
 
 function addBody<T>(
   options: {
@@ -56,13 +57,16 @@ return {
 };
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ODataClient {
 
-  constructor(protected http: HttpClient, protected settings: ODataSettings) {
-    settings.configure({
+  constructor(private http: HttpClient, private settings: ODataSettings, private injector: Injector) {
+    console.log(this.injector);
+    this.settings.configure({
       requester: (req: ODataRequest<any>): Observable<any> =>
-        http.request(req.method, `${req.url}`, {
+        this.http.request(req.method, `${req.url}`, {
           body: req.body,
           headers: req.headers,
           observe: req.observe,
@@ -71,7 +75,7 @@ export class ODataClient {
           responseType: req.responseType,
           withCredentials: req.withCredentials
         })
-    })
+    });
   }
 
   // Resolve Building Blocks
@@ -122,6 +126,12 @@ export class ODataClient {
   collectionByName(name: string): typeof ODataCollection {
     return this.settings.collectionByName(name);
   }
+  serviceForType(type: string): typeof ODataEntityService {
+    return this.settings.serviceForType(type);
+  }
+  serviceByName(name: string): typeof ODataEntityService {
+    return this.settings.serviceByName(name);
+  }
   endpointUrl(resource: ODataResource<any>) {
     const api = this.apiFor(resource);
     return `${api.serviceRootUrl}${resource}`;
@@ -164,24 +174,23 @@ export class ODataClient {
     return ODataBatchResource.factory(this, api);
   }
 
-  singleton<T>(name: string, type?: string) {
-    return ODataSingletonResource.factory<T>(this, name, type || null, new ODataPathSegments(), new ODataQueryOptions());
+  singleton<T>(path: string, type?: string) {
+    return ODataSingletonResource.factory<T>(this, path, type || null, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    return ODataEntitySetResource.factory<T>(this, name, type || null, new ODataPathSegments(), new ODataQueryOptions());
+  entitySet<T>(path: string, type?: string): ODataEntitySetResource<T> {
+    return ODataEntitySetResource.factory<T>(this, path, type || null, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
    * Unbound Action
-   * @param  {string} name?
+   * @param  {string} path?
    * @returns ODataActionResource
    */
-  action<P, R>(name: string, apiName?: string): ODataActionResource<P, R> {
+  action<P, R>(path: string, apiName?: string): ODataActionResource<P, R> {
     const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
     let type = null;
-    let path = name;
-    const callable = api.findCallableForType(name);
+    const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path;
       type = callable.parser.type;
@@ -191,14 +200,13 @@ export class ODataClient {
 
   /**
    * Unbound Function
-   * @param  {string} name?
+   * @param  {string} path?
    * @returns ODataFunctionResource
    */
-  function<P, R>(name: string, apiName?: string): ODataFunctionResource<P, R> {
+  function<P, R>(path: string, apiName?: string): ODataFunctionResource<P, R> {
     const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
     let type = null;
-    let path = name;
-    const callable = api.findCallableForType(name);
+    const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path;
       type = callable.parser.type;

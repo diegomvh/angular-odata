@@ -4,6 +4,7 @@ import { ODataCallable, ODataEntitySet, ODataEnumType, ODataStructuredType } fro
 import { ODataRequest } from './resources';
 import { Observable } from 'rxjs';
 import { ODataCollection, ODataModel } from './models';
+import { ODataEntityService } from './services/entity';
 
 export class ODataSettings {
   apis: ODataApi[];
@@ -113,6 +114,15 @@ export class ODataSettings {
     return values[0] as typeof ODataCollection;
   }
 
+  public serviceForType(type: string) {
+    let values = this.apis.map(api => api.findServiceForType(type)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Service for type ${type} was found`);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0] as typeof ODataEntityService;
+  }
+
   public enumTypeByName<T>(name: string) {
     let values = this.apis.map(api => api.findEnumTypeByName<T>(name)).filter(e => e);
     if (values.length === 0)
@@ -165,6 +175,14 @@ export class ODataSettings {
     if (values.length > 1)
       throw Error("Multiple APIs: More than one value was found");
     return values[0] as typeof ODataCollection;
+  }
+  public serviceByName(name: string) {
+    let values = this.apis.map(api => api.findServiceByName(name)).filter(e => e);
+    if (values.length === 0)
+      throw Error(`No Service for name ${name} was found`);
+    if (values.length > 1)
+      throw Error("Multiple APIs: More than one value was found");
+    return values[0] as typeof ODataEntityService;
   }
   //#endregion
 }

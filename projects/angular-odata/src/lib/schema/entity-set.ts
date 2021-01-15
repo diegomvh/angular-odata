@@ -1,10 +1,10 @@
 import { ODataSchema } from './schema';
 import { Annotation, EntitySetConfig } from '../types';
 import { ODataAnnotation } from './annotation';
-
 export class ODataEntitySet {
   schema: ODataSchema
   name: string;
+  service?: { new(...params: any[]): any };
   annotations: ODataAnnotation[];
   constructor(config: EntitySetConfig, schema: ODataSchema) {
     this.schema = schema;

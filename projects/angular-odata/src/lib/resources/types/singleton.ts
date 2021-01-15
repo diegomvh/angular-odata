@@ -7,7 +7,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
 
-import { ODataNavigationPropertyResource } from './navigationproperty';
+import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
