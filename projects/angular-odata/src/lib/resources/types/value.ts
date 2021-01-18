@@ -18,7 +18,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataValueResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataValueResource<T>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

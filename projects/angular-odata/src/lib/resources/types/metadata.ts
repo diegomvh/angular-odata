@@ -18,7 +18,7 @@ export class ODataMetadataResource extends ODataResource<any> {
   }
 
   clone() {
-    return new ODataMetadataResource(this.client, this._api, this.pathSegments.clone());
+    return new ODataMetadataResource(this._client, this._api, this.pathSegments.clone());
   }
 
   //#region Factory
@@ -37,8 +37,8 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   //#region Requests
   get(options?: HttpOptions): Observable<ODataMetadata> {
-    let opts = Object.assign<any, HttpOptions>({ observe: 'body', responseType: 'text' }, options || {});
-    return this.client.get(this, opts).pipe(map((body: any) => new ODataMetadata(body)));
+    let opts = Object.assign<any, HttpOptions>({ responseType: 'text' }, options || {});
+    return super.get(opts).pipe(map((body: any) => new ODataMetadata(body)));
   }
   //#endregion
 }

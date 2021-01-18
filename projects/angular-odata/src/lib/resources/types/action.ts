@@ -24,7 +24,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   }
 
   clone() {
-    return new ODataActionResource<P, R>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataActionResource<P, R>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -39,25 +39,24 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Mutable Resource
   get segment() {
     const res = this;
-    const client = this.client;
     const segments = this.pathSegments;
     return {
       entitySet(name?: string) {
-        let segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`CallableResource dosn't have segment for entitySet`);
+        const segment = segments.segment(PathSegmentNames.entitySet);
         if (name !== undefined)
           segment.setPath(name);
         return segment;
       },
       key<E>(key?: EntityKey<E>) {
-        let segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`CallableResource dosn't have segment for key`);
+        const api = res.api;
+        const segment = segments.segment(PathSegmentNames.entitySet);
         if (key !== undefined) {
-          let parser = client.parserFor<E>(res);
-          if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
-            key = parser.resolveKey(key);
+          const type = res.type();
+          if (type !== null) {
+            let parser = api.findParserForType<E>(type);
+            if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
+              key = parser.resolveKey(key);
+          }
           segment.option(SegmentOptionNames.key, key);
         }
         return segment.option<EntityKey<E>>(SegmentOptionNames.key);

@@ -23,7 +23,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataPropertyResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataPropertyResource<T>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -37,14 +37,17 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   //#region Inmutable Resource
   value() {
-    return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataValueResource.factory<T>(this._client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  property<P>(name: string) {
-    let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataStructuredTypeParser?
-      parser.typeFor(name) : null;
-    return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  property<P>(path: string) {
+    let type = this.type();
+    if (type !== null) {
+      let parser = this.api.findParserForType<P>(type);
+      type = parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : null;
+    }
+    return ODataPropertyResource.factory<P>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

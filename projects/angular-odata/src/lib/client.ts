@@ -134,15 +134,6 @@ export class ODataClient {
   serviceByName(name: string): ODataEntityService<any> {
     return this.injector.get(this.settings.serviceByName(name));
   }
-  endpointUrl(resource: ODataResource<any>) {
-    const api = this.apiFor(resource);
-    return `${api.serviceRootUrl}${resource}`;
-  }
-  parserFor<T>(resource: ODataResource<any>) {
-    const type = resource.type();
-    if (type === null) return null;
-    return this.parserForType<T>(type);
-  }
 
   fromJSON<P, R>(json: { segments: ODataSegment[], options: PlainObject }): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
   fromJSON<E>(json: { segments: ODataSegment[], options: PlainObject }): ODataEntityResource<E> | ODataEntitySetResource<E> | ODataNavigationPropertyResource<E> | ODataSingletonResource<E>;

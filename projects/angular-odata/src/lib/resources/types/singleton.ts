@@ -28,7 +28,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataSingletonResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -41,18 +41,24 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   ////#endregion
 
   //#region Inmutable Resource
-  navigationProperty<N>(name: string) {
-    let parser = this.client.parserFor<N>(this);
-    let type = parser instanceof ODataStructuredTypeParser?
-      parser.typeFor(name) : null;
-    return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  navigationProperty<N>(path: string) {
+    let type = this.type();
+    if (type !== null) {
+      let parser = this.api.findParserForType<N>(type);
+      type = parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : null;
+    }
+    return ODataNavigationPropertyResource.factory<N>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  property<P>(name: string) {
-    let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataStructuredTypeParser?
-      parser.typeFor(name) : null;
-    return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  property<P>(path: string) {
+    let type = this.type();
+    if (type !== null) {
+      let parser = this.api.findParserForType<P>(type);
+      type = parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : null;
+    }
+    return ODataPropertyResource.factory<P>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   action<P, R>(name: string) {
@@ -63,7 +69,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataActionResource.factory<P, R>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(name: string) {
@@ -74,31 +80,31 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataFunctionResource.factory<P, R>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   select(opts: Select<T>) {
     let options = this.queryOptions.clone();
     options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataSingletonResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
   }
 
   expand(opts: Expand<T>) {
     let options = this.queryOptions.clone();
     options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataSingletonResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
   }
 
   format(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.format, opts);
-    return new ODataSingletonResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
   }
 
   custom(opts: PlainObject) {
     let options = this.queryOptions.clone();
     options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataSingletonResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
   }
   //#endregion
 
