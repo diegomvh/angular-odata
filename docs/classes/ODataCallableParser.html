@@ -145,7 +145,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:42</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:37</a></div>
                             </td>
                         </tr>
 
@@ -220,7 +220,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:38</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -247,7 +247,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:42</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:37</a></div>
                             </td>
                         </tr>
 
@@ -274,7 +274,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:41</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:36</a></div>
                             </td>
                         </tr>
 
@@ -302,7 +302,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:40</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:35</a></div>
                             </td>
                         </tr>
 
@@ -329,7 +329,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:39</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:34</a></div>
                             </td>
                         </tr>
 
@@ -365,8 +365,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="66"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:66</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="61"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:61</a></div>
                 </td>
             </tr>
 
@@ -435,8 +435,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="49"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:49</a></div>
                 </td>
             </tr>
 
@@ -517,8 +517,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="59"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:59</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:54</a></div>
                 </td>
             </tr>
 
@@ -587,14 +587,13 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, Options, Parameter, CallableConfig, OptionsHelper, StructuredTypeFieldOptions } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, Options, Parameter, CallableConfig, StructuredTypeFieldOptions } from &#x27;../types&#x27;;
 
 const NONE_PARSER &#x3D; {
-  deserialize(value: any, options: Options) {return value},
   serialize(value: any, options: Options) {return value}
 } as Parser&lt;any&gt;;
 
-export class ODataParameterParser&lt;Type&gt; implements Parser&lt;Type&gt; {
+export class ODataParameterParser&lt;Type&gt; {
   name: string;
   type: string;
   private parser: Parser&lt;Type&gt;;
@@ -608,14 +607,10 @@ export class ODataParameterParser&lt;Type&gt; implements Parser&lt;Type&gt; {
     Object.assign(this, parameter);
   }
 
-  // Deserialize
-  deserialize(value: any, options: StructuredTypeFieldOptions): Type {
-    return this.parser.deserialize(value, options);
-  }
-
-  // Serialize
   serialize(value: Type, options: StructuredTypeFieldOptions): any {
-    return this.parser.serialize(value, options);
+    return Array.isArray(value) ?
+      value.map(v &#x3D;&gt; this.parser.serialize(v, options)) :
+      this.parser.serialize(value, options);
   }
 
   configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; | undefined }) {
