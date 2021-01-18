@@ -1,5 +1,4 @@
 import { ODataEntitySetResource, ODataEntityResource, HttpOptions } from '../resources';
-import { ODataClient } from "../client";
 import { EntityKey } from '../types';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
@@ -10,7 +9,7 @@ import { ODataEntityService } from './entity';
 
 export class ODataEntitySetService<T> extends ODataEntityService<T> {
   public entities(): ODataEntitySetResource<T> {
-    return this.client.entitySet<T>(this.name, this.entityType);
+    return this.client.entitySet<T>(this.name, this.apiNameOrEntityType);
   }
 
   public entity(key?: EntityKey<T>): ODataEntityResource<T> {

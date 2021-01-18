@@ -3,22 +3,22 @@ import { Observable } from 'rxjs';
 import { ODataResource } from '../resource';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
-import { ODataClient } from '../../client';
 import { HttpOptions } from './options';
 import { $VALUE } from '../../constants';
+import { ODataApi } from '../../api';
 
 export class ODataValueResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<V>(client: ODataClient, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<V>(api: ODataApi, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.value, $VALUE);
     if (type)
       segment.setType(type);
     options.clear();
-    return new ODataValueResource<V>(client, segments, options);
+    return new ODataValueResource<V>(api, segments, options);
   }
 
   clone() {
-    return new ODataValueResource<T>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataValueResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

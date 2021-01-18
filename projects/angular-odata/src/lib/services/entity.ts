@@ -4,7 +4,7 @@ import { EntityKey } from '../types';
 import { ODataModel } from '../models/model';
 
 export abstract class ODataEntityService<T> {
-  constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
+  constructor(protected client: ODataClient, protected name: string, protected apiNameOrEntityType?: string) { }
 
   public abstract entity(key?: EntityKey<T>): ODataResource<T>;
   // Models
@@ -14,13 +14,13 @@ export abstract class ODataEntityService<T> {
 
   // Api Config
   get api() {
-    return this.client.apiFor(this.entityType);
+    return this.client.apiFor(this.apiNameOrEntityType);
   }
 
   // Entity Config
   get structuredTypeSchema() {
-    if (this.entityType === undefined)
+    if (this.apiNameOrEntityType === undefined)
       return null;
-    return this.api.findStructuredTypeForType<T>(this.entityType) || null;
+    return this.api.findStructuredTypeForType<T>(this.apiNameOrEntityType) || null;
   }
 }

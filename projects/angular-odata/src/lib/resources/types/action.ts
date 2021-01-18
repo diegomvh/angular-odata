@@ -3,7 +3,6 @@ import { map } from 'rxjs/operators';
 
 import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { ODataClient } from '../../client';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
 import { ODataResource } from '../resource';
@@ -12,19 +11,20 @@ import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
+import { ODataApi } from '../../api';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<P, R>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.action, path)
     if (type)
       segment.setType(type);
     options.clear();
-    return new ODataActionResource<P, R>(client, segments, options);
+    return new ODataActionResource<P, R>(api, segments, options);
   }
 
   clone() {
-    return new ODataActionResource<P, R>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataActionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

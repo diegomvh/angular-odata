@@ -7,13 +7,13 @@ import { ODataSingletonService } from './singleton';
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) { }
 
-  entitySet<T>(name: string, entityType?: string): ODataEntitySetService<T> {
+  entitySet<T>(path: string, apiNameOrEntityType?: string): ODataEntitySetService<T> {
     return new class extends ODataEntitySetService<T> {
-    }(this.client, name, entityType);
+    }(this.client, path, apiNameOrEntityType);
   }
 
-  singleton<T>(name: string, entityType?: string): ODataSingletonService<T> {
+  singleton<T>(path: string, apiNameOrEntityType?: string): ODataSingletonService<T> {
     return new class extends ODataSingletonService<T> {
-    }(this.client, name, entityType);
+    }(this.client, path, apiNameOrEntityType);
   }
 }

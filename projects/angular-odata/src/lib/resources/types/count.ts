@@ -3,20 +3,20 @@ import { Observable } from 'rxjs';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataResource } from '../resource';
-import { ODataClient } from '../../client';
 import { HttpOptions } from './options';
 import { $COUNT } from '../../constants';
+import { ODataApi } from '../../api';
 
 export class ODataCountResource extends ODataResource<any> {
   //#region Factory
-  static factory(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
     segments.segment(PathSegmentNames.count, $COUNT).setType('Edm.Int32');
     options.keep(QueryOptionNames.filter, QueryOptionNames.search);
-    return new ODataCountResource(client, segments, options);
+    return new ODataCountResource(api, segments, options);
   }
 
   clone() {
-    return new ODataCountResource(this._client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataCountResource(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

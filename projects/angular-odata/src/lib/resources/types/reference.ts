@@ -3,22 +3,22 @@ import { Observable } from 'rxjs';
 import { ODataResource } from '../resource';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { HttpOptions } from './options';
 import { PlainObject } from '../builder';
 import { $REF, $ID, ODATA_ID } from '../../constants';
+import { ODataApi } from '../../api';
 
 export class ODataReferenceResource extends ODataResource<any> {
   //#region Factory
-  static factory<P>(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<P>(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
     segments.segment(PathSegmentNames.reference, $REF);
     options.clear();
-    return new ODataReferenceResource(client, segments, options);
+    return new ODataReferenceResource(api, segments, options);
   }
 
   clone() {
-    return new ODataReferenceResource(this._client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataReferenceResource(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -26,7 +26,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   custom(opts: PlainObject) {
     let options = this.queryOptions.clone();
     options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataReferenceResource(this._client, this.pathSegments.clone(), options);
+    return new ODataReferenceResource(this.api, this.pathSegments.clone(), options);
   }
   //#endregion
 

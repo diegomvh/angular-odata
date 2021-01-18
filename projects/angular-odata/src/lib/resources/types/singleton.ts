@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 
-import { ODataClient } from '../../client';
 import { Expand, Select, PlainObject } from '../builder';
 import { QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
@@ -16,19 +15,20 @@ import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntity } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
+import { ODataApi } from '../../api';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<R>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<R>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.singleton, path)
     if (type !== null)
       segment.setType(type);
     options.keep(QueryOptionNames.format);
-    return new ODataSingletonResource<R>(client, segments, options);
+    return new ODataSingletonResource<R>(api, segments, options);
   }
 
   clone() {
-    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -48,7 +48,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       type = parser instanceof ODataStructuredTypeParser?
         parser.typeFor(path) : null;
     }
-    return ODataNavigationPropertyResource.factory<N>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(path: string) {
@@ -58,7 +58,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       type = parser instanceof ODataStructuredTypeParser?
         parser.typeFor(path) : null;
     }
-    return ODataPropertyResource.factory<P>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   action<P, R>(name: string) {
@@ -69,7 +69,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataActionResource.factory<P, R>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataActionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(name: string) {
@@ -80,31 +80,31 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataFunctionResource.factory<P, R>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   select(opts: Select<T>) {
     let options = this.queryOptions.clone();
     options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   expand(opts: Expand<T>) {
     let options = this.queryOptions.clone();
     options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   format(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.format, opts);
-    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   custom(opts: PlainObject) {
     let options = this.queryOptions.clone();
     options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataSingletonResource<T>(this._client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
   }
   //#endregion
 

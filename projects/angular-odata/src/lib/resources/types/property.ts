@@ -5,25 +5,25 @@ import { ODataValueResource } from './value';
 import { ODataResource } from '../resource';
 import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataClient } from '../../client';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
+import { ODataApi } from '../../api';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<P>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<P>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.property, path)
     if (type)
       segment.setType(type)
     options.clear();
-    return new ODataPropertyResource<P>(client, segments, options);
+    return new ODataPropertyResource<P>(api, segments, options);
   }
 
   clone() {
-    return new ODataPropertyResource<T>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -37,7 +37,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   //#region Inmutable Resource
   value() {
-    return ODataValueResource.factory<T>(this._client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(path: string) {
@@ -47,7 +47,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       type = parser instanceof ODataStructuredTypeParser?
         parser.typeFor(path) : null;
     }
-    return ODataPropertyResource.factory<P>(this._client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 

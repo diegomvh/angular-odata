@@ -6,7 +6,6 @@ import {
   PARAM_SEPARATOR,
   QUERY_SEPARATOR
 } from '../constants';
-import { ODataClient } from '../client';
 import { Http, Urls } from '../utils/index';
 
 import { PlainObject } from './builder';
@@ -26,16 +25,16 @@ import { ODataRequest } from './request';
 
 export abstract class ODataResource<Type> {
   // VARIABLES
-  protected _client: ODataClient;
+  public api: ODataApi;
   protected pathSegments: ODataPathSegments;
   protected queryOptions: ODataQueryOptions;
 
   constructor(
-    client: ODataClient,
+    api: ODataApi,
     segments?: ODataPathSegments,
     options?: ODataQueryOptions
   ) {
-    this._client = client;
+    this.api = api;
     this.pathSegments = segments || new ODataPathSegments();
     this.queryOptions = options || new ODataQueryOptions();
   }
@@ -54,13 +53,6 @@ export abstract class ODataResource<Type> {
   types(): string[] {
     return this.pathSegments.types();
   }
-
-  //#region Api
-  get api(): ODataApi {
-    return this._client
-      .apiFor(this);
-  }
-  ////#endregion
 
   pathAndParams(): [string, PlainObject] {
     let path = this.pathSegments.path();

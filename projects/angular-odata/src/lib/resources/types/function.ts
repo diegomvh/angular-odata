@@ -1,8 +1,6 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataClient } from '../../client';
-
 import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
@@ -14,19 +12,20 @@ import { ODataResource } from '../resource';
 import { ODataEntity, ODataEntities, ODataProperty } from '../responses';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
+import { ODataApi } from '../../api';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<P, R>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.function, path);
     if (type)
       segment.setType(type);
     options.clear();
-    return new ODataFunctionResource<P, R>(client, segments, options);
+    return new ODataFunctionResource<P, R>(api, segments, options);
   }
 
   clone() {
-    return new ODataFunctionResource<P, R>(this._client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataFunctionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -45,7 +44,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     if (!segment)
       throw new Error(`FunctionResource dosn't have segment for function`);
     segment.option(SegmentOptionNames.parameters, params !== null ? this.serialize(params) : null);
-    return new ODataFunctionResource<P, R>(this._client, segments, this.queryOptions.clone());
+    return new ODataFunctionResource<P, R>(this.api, segments, this.queryOptions.clone());
   }
   //#endregion
 

@@ -148,34 +148,26 @@ export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
   private requests: ODataBatchRequest<any>[];
-  private _api: ODataApi;
   batchBoundary: string;
 
-  constructor(client: ODataClient, api?: ODataApi, segments?: ODataPathSegments) {
-    super(client, segments);
-    this._api = api || client.apiFor(this);
+  constructor(api: ODataApi, segments?: ODataPathSegments) {
+    super(api, segments);
     this.batchBoundary = uniqid(BATCH_PREFIX);
     this.requests = [];
   }
 
   clone() {
     //TODO: Clone
-    return new ODataBatchResource(this._client, this._api, this.pathSegments.clone());
+    return new ODataBatchResource(this.api, this.pathSegments.clone());
   }
 
   //#region Factory
-  static factory(client: ODataClient, api?: ODataApi) {
+  static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
     segments.segment(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(client, api, segments);
+    return new ODataBatchResource(api, segments);
   }
   //#endregion
-
-  //#region Api Config
-  get api(): ODataApi {
-    return this._api;
-  }
-  ////#endregion
 
   post(func: (batch: ODataBatchResource) => void, options?: HttpOptions): Observable<ODataResponse<any>> {
     const current = this.api.request;
