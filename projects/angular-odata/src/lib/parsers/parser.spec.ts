@@ -8,9 +8,12 @@ import { ODataApi } from '../api';
 import { ODataStructuredType } from '../schema';
 import { Parser } from '../types';
 import { HttpClientModule } from '@angular/common/http';
+import { CloneVisitor } from '@angular/compiler/src/i18n/i18n_ast';
 
 describe('ODataClient', () => {
   let client: ODataClient;
+  let api: ODataApi;
+  enum Color { Red = 1, Yellow, Orange, Green, Black};
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -18,6 +21,70 @@ describe('ODataClient', () => {
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
+    api = new ODataApi({
+      serviceRootUrl: "http://parser.testing.foo",
+      options: {
+        stringAsEnum: true,
+      },
+      schemas: [{
+        namespace: "ParserTesting",
+        enums: [{name: "Color", members: Color, fields: {}}],
+        entities: [
+          {
+            name: "Entity",
+            fields: {
+              // Null values are represented as the JSON literal null.
+              'null': {type: 'Edm.String', nullable: true},
+              // Values of type Edm.Boolean are represented as the JSON literals true and false
+              'true': {type: 'Edm.Boolean'}, //The binary-valued logic
+              'false': {type: 'Edm.Boolean'},
+              // Values of types Edm.Byte, Edm.SByte, Edm.Int16, Edm.Int32, Edm.Int64, Edm.Single, Edm.Double, and Edm.Decimal are represented as JSON numbers, except for NaN, INF, and –INF which are represented as strings.
+              'byte': {type: 'Edm.Byte'}, //The unsigned 8-bit integer
+              'sbyte': {type: 'Edm.SByte'}, //The signed 8-bit integer
+              'int16': {type: 'Edm.Int16'},
+              'int32': {type: 'Edm.Int32'},
+              'int64': {type: 'Edm.Int64'},
+              'single': {type: 'Edm.Single'},
+              'double': {type: 'Edm.Double'}, //The IEEE 754 binary64 floating-point number with 15 - 17 decimal digits
+              'decimal': {type: 'Edm.Decimal'}, //The numeric values with fixed precision and scale
+              // Values of type Edm.String are represented as JSON strings, using the JSON string escaping rules.
+              'string': {type: 'Edm.String'},
+              // Values of type Edm.Binary, Edm.Date, Edm.DateTimeOffset, Edm.Duration,  Edm.Guid, and Edm.TimeOfDay as well as enumeration values are represented as JSON strings whose content satisfies the rules binaryValue, dateValue, dateTimeOffsetValue, durationValue, guidValue, timeOfDayValue, and enumValue
+              'binary': {type: 'Edm.Binary'},
+              'date': {type: 'Edm.Date'}, //The date without a time-zone offset
+              'dateTimeOffset': {type: 'Edm.DateTimeOffset'},
+              'duration': {type: 'Edm.Duration'},
+              'timeOfDay': {type: 'Edm.TimeOfDay'}, //The clock time 00:00 - 23:59:59.999999999999
+              'guid': {type: 'Edm.Guid'},
+              'enumeration': {type: 'ParserTesting.Color'},
+            }
+          },
+          {
+            name: "Complex",
+            fields: {
+              Number: { type: 'Edm.Int32', nullable: false },
+              String: { type: 'Edm.String' },
+              Color: {type: 'ParserTesting.Color'}
+            }
+          },
+          {
+            name: "Testing",
+            fields: {
+              ID: { type: 'Edm.Int32', key: true, ref: 'ID', nullable: false },
+              Value: { type: 'Edm.String' }
+            }
+          }
+        ],
+        callables: [{
+          name: 'TestingAction',
+          bound: true,
+          composable: false,
+          parameters: { Notes: { type: 'Edm.String' }, Complexes: { type: 'ParserTesting.Complex', collection: true } },
+          return: "ParserTesting.Testing"
+        }]
+      }]
+    });
+    api.configure();
   });
 
   it('should return parser for type', () => {
@@ -81,49 +148,7 @@ describe('ODataClient', () => {
     }, options)).toEqual({FirstName: 'Name', LastName: 'Name', UserName: 'name', Emails: [], Gender: `${NAMESPACE}.PersonGender'Male'`});
   });
 
-  it('should deserialize primitive values', () => {
-    enum Color { Red = 1, Yellow, Orange, Green, Black};
-    const config = new ODataApi({
-      serviceRootUrl: "http://foo",
-      options: {
-        stringAsEnum: true,
-      },
-      schemas: [{
-        namespace: "Primitive",
-        enums: [{name: "Color", members: Color, fields: {}}],
-        entities: [
-          {
-            name: "Entity",
-            fields: {
-              // Null values are represented as the JSON literal null.
-              'null': {type: 'Edm.String', nullable: true},
-              // Values of type Edm.Boolean are represented as the JSON literals true and false
-              'true': {type: 'Edm.Boolean'}, //The binary-valued logic
-              'false': {type: 'Edm.Boolean'},
-              // Values of types Edm.Byte, Edm.SByte, Edm.Int16, Edm.Int32, Edm.Int64, Edm.Single, Edm.Double, and Edm.Decimal are represented as JSON numbers, except for NaN, INF, and –INF which are represented as strings.
-              'byte': {type: 'Edm.Byte'}, //The unsigned 8-bit integer
-              'sbyte': {type: 'Edm.SByte'}, //The signed 8-bit integer
-              'int16': {type: 'Edm.Int16'},
-              'int32': {type: 'Edm.Int32'},
-              'int64': {type: 'Edm.Int64'},
-              'single': {type: 'Edm.Single'},
-              'double': {type: 'Edm.Double'}, //The IEEE 754 binary64 floating-point number with 15 - 17 decimal digits
-              'decimal': {type: 'Edm.Decimal'}, //The numeric values with fixed precision and scale
-              // Values of type Edm.String are represented as JSON strings, using the JSON string escaping rules.
-              'string': {type: 'Edm.String'},
-              // Values of type Edm.Binary, Edm.Date, Edm.DateTimeOffset, Edm.Duration,  Edm.Guid, and Edm.TimeOfDay as well as enumeration values are represented as JSON strings whose content satisfies the rules binaryValue, dateValue, dateTimeOffsetValue, durationValue, guidValue, timeOfDayValue, and enumValue
-              'binary': {type: 'Edm.Binary'},
-              'date': {type: 'Edm.Date'}, //The date without a time-zone offset
-              'dateTimeOffset': {type: 'Edm.DateTimeOffset'},
-              'duration': {type: 'Edm.Duration'},
-              'timeOfDay': {type: 'Edm.TimeOfDay'}, //The clock time 00:00 - 23:59:59.999999999999
-              'guid': {type: 'Edm.Guid'},
-              'enumeration': {type: 'Primitive.Color'},
-            }
-          }]
-      }]
-    });
-    config.configure();
+  it('should deserialize/serialize primitive values', () => {
     const primitives = {
       "null": null,
       "true": true,
@@ -146,8 +171,33 @@ describe('ODataClient', () => {
       "enumeration": "Yellow",
       "point": {"type": "point","coordinates":[142.1,64.1]}
     };
-    const parser = config.findParserForType<any>('Primitive.Entity') as Parser<any>;
-    const result = parser.deserialize(primitives, config.options);
-    expect(parser.serialize(result, config.options)).toEqual(primitives);
+    const parser = api.findParserForType<any>('ParserTesting.Entity') as Parser<any>;
+    const result = parser.deserialize(primitives, api.options);
+    expect(parser.serialize(result, api.options)).toEqual(primitives);
+  });
+
+  it('should serialize callable parameters', () => {
+    const parameters = {
+      Notes: "asdf",
+      Complexes: [
+        {
+          Number: 1,
+          String: "asdf1",
+          Color: Color.Red
+        }
+      ]
+    };
+    const parser = api.findParserForType<any>('ParserTesting.TestingAction') as Parser<any>;
+    const result = parser.serialize(parameters, api.options);
+    expect(result).toEqual({
+      "Notes": "asdf",
+      "Complexes": [
+        {
+          "Number": 1,
+          "String": "asdf1",
+          "Color": "Red"
+        }
+      ]
+    });
   });
 });

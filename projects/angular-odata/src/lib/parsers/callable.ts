@@ -1,11 +1,10 @@
-import { Parser, Options, Parameter, CallableConfig, OptionsHelper, StructuredTypeFieldOptions } from '../types';
+import { Parser, Options, Parameter, CallableConfig, StructuredTypeFieldOptions } from '../types';
 
 const NONE_PARSER = {
-  deserialize(value: any, options: Options) {return value},
   serialize(value: any, options: Options) {return value}
 } as Parser<any>;
 
-export class ODataParameterParser<Type> implements Parser<Type> {
+export class ODataParameterParser<Type> {
   name: string;
   type: string;
   private parser: Parser<Type>;
@@ -19,14 +18,10 @@ export class ODataParameterParser<Type> implements Parser<Type> {
     Object.assign(this, parameter);
   }
 
-  // Deserialize
-  deserialize(value: any, options: StructuredTypeFieldOptions): Type {
-    return this.parser.deserialize(value, options);
-  }
-
-  // Serialize
   serialize(value: Type, options: StructuredTypeFieldOptions): any {
-    return this.parser.serialize(value, options);
+    return Array.isArray(value) ?
+      value.map(v => this.parser.serialize(v, options)) :
+      this.parser.serialize(value, options);
   }
 
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
