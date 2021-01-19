@@ -14,7 +14,7 @@ import { ODataApi } from '../../api';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<P>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<P>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.property, path)
     if (type)
       segment.setType(type)
@@ -30,8 +30,8 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Function Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) : undefined;
   }
   ////#endregion
 
@@ -42,10 +42,10 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   property<P>(path: string) {
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
       type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : null;
+        parser.typeFor(path) : undefined;
     }
     return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }

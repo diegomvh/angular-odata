@@ -35,8 +35,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Entity Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
   }
   ////#endregion
 
@@ -53,26 +54,26 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   navigationProperty<N>(path: string) {
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = this.api.findParserForType<N>(type);
       type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : null;
+        parser.typeFor(path) : undefined;
     }
     return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(path: string) {
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
       type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : null;
+        parser.typeFor(path) : undefined;
     }
     return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   action<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
@@ -83,12 +84,12 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   function<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
-      type = callable.parser.return || null;
+      type = callable.parser.return;
     }
     return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -144,7 +145,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
           throw new Error(`EntityResourse dosn't have segment for key`);
         if (key !== undefined) {
           const type = res.type();
-          if (type !== null) {
+          if (type !== undefined) {
             let parser = api.findParserForType<T>(type);
             if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
               key = parser.resolveKey(key);

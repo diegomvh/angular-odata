@@ -43,8 +43,7 @@ export abstract class ODataResource<Type> {
    * @returns string The type of the resource
    */
   type() {
-    const segment = this.pathSegments.last();
-    return segment !== null ? segment.type : null;
+    return this.pathSegments.last()?.type;
   }
 
   /**
@@ -68,7 +67,7 @@ export abstract class ODataResource<Type> {
   asModel<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityMeta): M {
     let Model = ODataModel;
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       Model = this.api.findModelForType(type) || ODataModel;
     }
     return new Model(entity, {resource: this, meta}) as M;
@@ -77,7 +76,7 @@ export abstract class ODataResource<Type> {
   asCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesMeta): C {
     let Collection = ODataCollection;
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       Collection = this.api.findCollectionForType(type) || ODataCollection;
     }
     return new Collection(entities, {resource: this, meta}) as C;
@@ -100,7 +99,7 @@ export abstract class ODataResource<Type> {
   serialize(value: any): any {
     let api = this.api;
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = api.findParserForType<Type>(type);
       if (parser !== undefined && 'serialize' in parser) {
         return Array.isArray(value) ?

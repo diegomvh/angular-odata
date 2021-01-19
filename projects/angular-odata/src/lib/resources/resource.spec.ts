@@ -39,78 +39,78 @@ describe('ODataResource', () => {
   });
 
   it('should create entitySet resource', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     expect(set.toString()).toEqual('People');
   });
 
   it('should create entity resource', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     expect(entity.toString()).toEqual("People('russellwhyte')");
   });
 
   it('should create collection function', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const fun: ODataFunctionResource<any, any> = set.function<any, any>("NS.MyFunction");
     expect(fun.toString()).toEqual('People/NS.MyFunction');
   });
 
   it('should create entity function', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction");
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
   });
 
   it('should create entity function with all parameters', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: 2})
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1,arg2=2)");
   });
 
   it('should create entity function with some parameters', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: undefined})
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1)");
   });
 
   it('should create entity function with null parameter', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: null})
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1,arg2=null)");
   });
 
   it('should create collection action', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const act: ODataActionResource<any, any> = set.action<any, any>("NS.MyAction");
     expect(act.toString()).toEqual('People/NS.MyAction');
   });
 
   it('should create entity action', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const act: ODataActionResource<any, any> = entity.action<any, any>("NS.MyAction");
     expect(act.toString()).toEqual("People('russellwhyte')/NS.MyAction");
   });
 
   it('should create collection count', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const count: ODataCountResource = set.count();
     expect(count.toString()).toEqual("People/$count");
   });
 
   it('should create entity navigation', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
     expect(friends.toString()).toEqual("People('russellwhyte')/Friends");
   });
 
   it('should create entity single navigation', () => {
-    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', null, segments, options);
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
     friends.segment.key('mirsking');

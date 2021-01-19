@@ -19,7 +19,7 @@ import { ODataApi } from '../../api';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.entitySet, path)
     if (type)
       segment.setType(type);
@@ -35,8 +35,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Entity Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
   }
   ////#endregion
 
@@ -55,7 +56,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
@@ -66,7 +67,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   function<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {

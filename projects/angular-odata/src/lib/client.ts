@@ -139,13 +139,13 @@ export class ODataClient {
   fromJSON<P, R>(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
   fromJSON<E>(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string): ODataEntityResource<E> | ODataEntitySetResource<E> | ODataNavigationPropertyResource<E> | ODataSingletonResource<E>;
   fromJSON(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string) {
-    const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
-    const lastSegment = json.segments[json.segments.length - 1];
     const segments = new ODataPathSegments(json.segments);
     const query = new ODataQueryOptions(json.options);
-    switch (lastSegment.name as PathSegmentNames) {
+    const api = this.apiFor(apiName || segments.last()?.type);
+    switch (segments.last()?.name as PathSegmentNames) {
       case PathSegmentNames.entitySet:
-        if (lastSegment.options && SegmentOptionNames.key in lastSegment.options) {
+        let options = segments.last()?.options;
+        if (options && SegmentOptionNames.key in options) {
           return new ODataEntityResource(api, segments, query);
         } else {
           return new ODataEntitySetResource(api, segments, query);
@@ -171,14 +171,14 @@ export class ODataClient {
 
   singleton<T>(path: string, apiNameOrType?: string) {
     const api = this.apiFor(apiNameOrType);
-    const type = api.findEntitySetByName(path)?.entityType || null;
-    return ODataSingletonResource.factory<T>(api, path, type || null, new ODataPathSegments(), new ODataQueryOptions());
+    const type = api.findEntitySetByName(path)?.entityType;
+    return ODataSingletonResource.factory<T>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   entitySet<T>(path: string, apiNameOrType?: string): ODataEntitySetResource<T> {
     const api = this.apiFor(apiNameOrType);
-    const type = api.findEntitySetByName(path)?.entityType || null;
-    return ODataEntitySetResource.factory<T>(api, path, type || null, new ODataPathSegments(), new ODataQueryOptions());
+    const type = api.findEntitySetByName(path)?.entityType;
+    return ODataEntitySetResource.factory<T>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
@@ -188,7 +188,7 @@ export class ODataClient {
    */
   action<P, R>(path: string, apiNameOrType?: string): ODataActionResource<P, R> {
     const api = this.apiFor(apiNameOrType);
-    let type = null;
+    let type;
     const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path;
@@ -204,7 +204,7 @@ export class ODataClient {
    */
   function<P, R>(path: string, apiNameOrType?: string): ODataFunctionResource<P, R> {
     const api = this.apiFor(apiNameOrType);
-    let type = null;
+    let type;
     const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path;

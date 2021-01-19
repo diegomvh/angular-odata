@@ -115,7 +115,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     //TODO: View the type in meta.context
     const type = this.resource.type();
     const entity = payload ?
-      (type !== null ? this.deserialize(type, meta.data(payload)) : payload) as T:
+      (type !== undefined ? this.deserialize(type, meta.data(payload)) : payload) as T:
       null;
     return { entity, meta };
   }
@@ -126,7 +126,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     //TODO: View the type in meta.context
     const type = this.resource.type();
     const entities = payload ?
-      (type !== null ? this.deserialize(type, meta.data(payload)) : payload) as T[]:
+      (type !== undefined ? this.deserialize(type, meta.data(payload)) : payload) as T[]:
       null;
     return { entities, meta };
   }
@@ -137,7 +137,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     //TODO: View the type in meta.context
     const type = this.resource.type();
     const property = payload ?
-      (type !== null ? this.deserialize(type, meta.data(payload)) : payload) as T:
+      (type !== undefined ? this.deserialize(type, meta.data(payload)) : payload) as T:
       null;
     return { property, meta };
   }
@@ -146,7 +146,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const payload = this.body && this.options.version === "2.0" ? this.body : this.body;
     const type = this.resource.type();
     return payload ?
-      (type !== null ? this.deserialize(type, payload) : payload) as T:
+      (type !== undefined ? this.deserialize(type, payload) : payload) as T:
       null;
   }
 }

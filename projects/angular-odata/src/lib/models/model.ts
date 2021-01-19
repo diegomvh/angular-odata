@@ -204,7 +204,7 @@ export class ODataModel<T> {
     if (!this._resource)
       throw new Error(`Can't config without ODataResource`);
     let schema = (this._resource as ODataEntityResource<T>).schema;
-    if (schema === null)
+    if (schema === undefined)
       throw new Error(`Can't config without schema`);
     return schema;
   }
