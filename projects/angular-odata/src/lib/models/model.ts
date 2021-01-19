@@ -105,7 +105,7 @@ export class ODataModel<T> {
       Object.assign({},
         this._entity,
         Object.entries(this)
-          .filter(([key, ]) => !(key.startsWith("_")))
+          .filter(([key, ]) => !key.startsWith("_"))
           .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {}),
         Object.entries(this._relations).reduce((acc, [k, v]) => Object.assign(acc, {[k]: v.rel}), {})
       )
