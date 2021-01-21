@@ -16,6 +16,10 @@ import {
 import { ODataCollection } from './collection';
 import { ODataStructuredTypeFieldParser } from '../parsers/structured-type';
 
+type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>;
+};
+
 export class ODataModel<T> {
   private __resource: ODataResource<T> | null;
   private __entity: T;
@@ -117,7 +121,21 @@ export class ODataModel<T> {
       {}) as T;
   }
 
-  assign(attrs: Partial<T>) {
+  assign(attrs: DeepPartial<T>) {
+    const changes = [];
+    const merge = (target: any, source: {[attr: string]: any}, path: string[]) => {
+      for (let attr in source) {
+        let value = source[attr];
+        const type = typeof value;
+        if (value !== null && (type === 'object' || type === 'function') && attr in target) {
+          merge(target[attr], value, [...path, attr]);
+        } else if (target[attr] !== value) {
+          changes.push(path.join(".") + `.${attr}`);
+          target[attr] = value;
+        }
+      }
+    };
+    merge(this, attrs, []);
   }
 
   clone() {
