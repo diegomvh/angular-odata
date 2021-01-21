@@ -19,9 +19,9 @@ import { ODataApi } from '../../api';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<R>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.singleton, path)
-    if (type !== null)
+    if (type !== undefined)
       segment.setType(type);
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(api, segments, options);
@@ -35,34 +35,33 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Function Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ? this.api.findStructuredTypeForType<T>(type) : undefined;
   }
   ////#endregion
 
   //#region Inmutable Resource
   navigationProperty<N>(path: string) {
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = this.api.findParserForType<N>(type);
       type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : null;
+        parser.typeFor(path) : undefined;
     }
     return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(path: string) {
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
       type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : null;
+        parser.typeFor(path) : undefined;
     }
     return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   action<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
@@ -73,7 +72,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   function<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {

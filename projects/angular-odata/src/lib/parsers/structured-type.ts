@@ -258,11 +258,11 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
     return schema;
   }
 
-  typeFor(name: string): string | null {
+  typeFor(name: string): string | undefined {
     const field = this.fields.find(f => f.name === name);
     if (field === undefined && this.parent !== undefined)
       return this.parent.typeFor(name);
-    return field !== undefined ? field.type : null;
+    return field !== undefined ? field.type : undefined;
   }
 
   keys() {

@@ -95,7 +95,7 @@ export class ODataPathSegments {
 
   last() {
     return (this.segments.length > 0) ?
-       new SegmentHandler(this.segments[this.segments.length - 1]) : null;
+       new SegmentHandler(this.segments[this.segments.length - 1]) : undefined;
   }
 
   segment(name: string, path?: string) {
@@ -130,7 +130,7 @@ export class SegmentHandler {
   }
 
   get type() {
-    return this.segment.type || null;
+    return this.segment.type;
   }
 
   setType(value: string) {

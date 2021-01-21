@@ -20,7 +20,7 @@ import { ODataApi } from '../../api';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(api: ODataApi, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.navigationProperty, path)
     if (type)
       segment.setType(type);
@@ -36,8 +36,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Function Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) : undefined;
   }
   ////#endregion
 
@@ -52,22 +52,22 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   navigationProperty<N>(path: string) {
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = this.api.findParserForType<N>(type);
       type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : null;
+        parser.typeFor(path) : undefined;
     }
     return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   property<P>(path: string) {
     let type = this.type();
-    if (type !== null) {
+    if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
       type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : null;
+        parser.typeFor(path) : undefined;
     }
-    return ODataPropertyResource.factory<P>(this.api, path, type || null, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {
@@ -158,7 +158,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         const segment = segments.segment(PathSegmentNames.navigationProperty);
         if (key !== undefined) {
           const type = res.type();
-          if (type !== null) {
+          if (type !== undefined) {
             let parser = api.findParserForType<T>(type);
             if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
               key = parser.resolveKey(key);
