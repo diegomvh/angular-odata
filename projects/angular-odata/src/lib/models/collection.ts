@@ -15,15 +15,15 @@ import {
 import { ODataModel } from './model';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
-  protected _resource: ODataResource<T> | null;
-  protected _meta: ODataEntitiesMeta | null;
+  private __resource: ODataResource<T> | null;
+  private __meta: ODataEntitiesMeta | null;
 
-  protected _models: M[];
+  private __models: M[];
   get models() {
-    return [...this._models];
+    return [...this.__models];
   }
 
-  private _state: {
+  private __state: {
     records?: number,
     skip?: number,
     top?: number,
@@ -33,44 +33,44 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     pages?: number
   } = {};
   get state() {
-    return Object.assign({}, this._state);
+    return Object.assign({}, this.__state);
   }
 
   constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {}) {
-    this._resource = null;
-    this._meta = null;
-    this._models = [];
+    this.__resource = null;
+    this.__meta = null;
+    this.__models = [];
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((values || []), options.meta);
   }
 
   attach(resource: ODataResource<T>) {
-    if (this._resource && this._resource.type() !== resource.type())
-      throw new Error(`Can't reattach ${resource.type()} with ${this._resource.type()}`);
-    this._resource = resource;
+    if (this.__resource && this.__resource.type() !== resource.type())
+      throw new Error(`Can't reattach ${resource.type()} with ${this.__resource.type()}`);
+    this.__resource = resource;
     return this;
   }
 
-  target() {
-    return this._resource !== null ? this._resource.clone() as ODataResource<T> : null;
+  get _resource() {
+    return this.__resource !== null ? this.__resource.clone() as ODataResource<T> : null;
   }
 
   protected parse(values: any[]): M[] {
-    let resource = this._resource ? this._resource.clone() : null;
+    let resource = this.__resource ? this.__resource.clone() : null;
     if (resource instanceof ODataEntitySetResource)
       resource = resource.entity();
     return (values as T[]).map(value => {
       if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
         resource.segment.key(value);
-      return (resource ? resource.clone().asModel(value, this._meta !== null ? this._meta.entity(value) : undefined) : value) as M;
+      return (resource ? resource.clone().asModel(value, this.__meta !== null ? this.__meta.entity(value) : undefined) : value) as M;
     });
   }
 
   protected populate(values: any[], annots?: ODataEntitiesMeta): this {
-    this._meta = annots || null;
+    this.__meta = annots || null;
 
-    this._state = (annots instanceof ODataEntitiesMeta) ?
+    this.__state = (annots instanceof ODataEntitiesMeta) ?
     {
       top: annots.top,
       size: annots.skip, skip: annots.skip, skiptoken: annots.skiptoken,
@@ -81,25 +81,25 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       records: values.length
     };
 
-    if (this._state.records !== undefined && this._state.size !== undefined)
-      this._state.pages = Math.ceil(this._state.records / this._state.size);
-    if (this._state.top !== undefined && this._state.size !== undefined)
-      this._state.page = (this._state.top / this._state.size) + 1;
+    if (this.__state.records !== undefined && this.__state.size !== undefined)
+      this.__state.pages = Math.ceil(this.__state.records / this.__state.size);
+    if (this.__state.top !== undefined && this.__state.size !== undefined)
+      this.__state.page = (this.__state.top / this.__state.size) + 1;
 
-    this._models = this.parse(values);
+    this.__models = this.parse(values);
     return this;
   }
 
   toEntities() {
-    return this._models.map(model => model.toEntity());
+    return this.__models.map(model => model.toEntity());
   }
 
   clone() {
     let options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {};
-    if (this._resource)
-      options.resource = this._resource.clone();
-    if (this._meta)
-      options.meta = this._meta.clone();
+    if (this.__resource)
+      options.resource = this.__resource.clone();
+    if (this.__meta)
+      options.meta = this.__meta.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
     return new Ctor(this.models, options);
   }
@@ -107,7 +107,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;
-    let models = this._models;
+    let models = this.__models;
     return {
       next(): IteratorResult<M> {
         return {
@@ -120,15 +120,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Requests
   fetch(options?: HttpOptions & { withCount?: boolean }): Observable<this> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      return this._resource.get(options).pipe(
+    if (this.__resource instanceof ODataEntitySetResource) {
+      return this.__resource.get(options).pipe(
         map(({ entities, meta }) => this.populate(entities || [], meta)));
-    } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      return this._resource.get(
+    } else if (this.__resource instanceof ODataNavigationPropertyResource) {
+      return this.__resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})).pipe(
           map(({ entities, meta }) => this.populate(entities || [], meta)));
-    } else if (this._resource instanceof ODataFunctionResource) {
-      return this._resource.get(
+    } else if (this.__resource instanceof ODataFunctionResource) {
+      return this.__resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})).pipe(
           map(({ entities, meta }) => this.populate(entities || [], meta)));
     }
@@ -136,12 +136,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   next(options?: HttpOptions & { withCount?: boolean }) {
-    if (this._state.skip) {
-      this._query.skip(this._state.skip);
+    if (this.__state.skip) {
+      this._query.skip(this.__state.skip);
       return this.fetch(options);
     }
-    else if (this._state.skiptoken) {
-      this._query.skiptoken(this._state.skiptoken);
+    else if (this.__state.skiptoken) {
+      this._query.skiptoken(this.__state.skiptoken);
       return this.fetch(options);
     }
     return EMPTY;
@@ -149,10 +149,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   all(): Observable<this> {
     let obs$: Observable<any>;
-    if (this._resource instanceof ODataEntitySetResource) {
-      obs$ = this._resource.all();
-    } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      obs$ = this._resource.all();
+    if (this.__resource instanceof ODataEntitySetResource) {
+      obs$ = this.__resource.all();
+    } else if (this.__resource instanceof ODataNavigationPropertyResource) {
+      obs$ = this.__resource.all();
     } else {
       throw new Error("Not Yet!");
     }
@@ -163,11 +163,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   //TODO: add and remove like backbone
   add(model: M): Observable<this> {
     let obs$: Observable<any>;
-    if (this._resource instanceof ODataEntitySetResource) {
+    if (this.__resource instanceof ODataEntitySetResource) {
       obs$ = model.save();
-    } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      let ref = this._resource.reference();
-      obs$ = ref.add(model.target() as ODataEntityResource<T>);
+    } else if (this.__resource instanceof ODataNavigationPropertyResource) {
+      let ref = this.__resource.reference();
+      obs$ = ref.add(model._resource as ODataEntityResource<T>);
     } else {
       throw new Error(`Can't add`);
     }
@@ -176,11 +176,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   remove(model: M) {
     let obs$: Observable<any>;
-    if (this._resource instanceof ODataEntitySetResource) {
+    if (this.__resource instanceof ODataEntitySetResource) {
       obs$ = model.destroy();
-    } else if (this._resource instanceof ODataNavigationPropertyResource) {
-      let ref = this._resource.reference();
-      obs$ = ref.remove(model.target() as ODataEntityResource<T>);
+    } else if (this.__resource instanceof ODataNavigationPropertyResource) {
+      let ref = this.__resource.reference();
+      obs$ = ref.remove(model._resource as ODataEntityResource<T>);
     } else {
       throw new Error(`Can't remove`);
     }
@@ -189,38 +189,38 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Count
   count() {
-    return (this._resource as ODataEntitySetResource<any>).count().get();
+    return (this.__resource as ODataEntitySetResource<any>).count().get();
   }
 
-  get _config() {
-    if (!this._resource)
+  get _schema() {
+    if (!this.__resource)
       throw new Error(`Can't config without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).schema;
+    return (this.__resource as ODataEntitySetResource<T>).schema;
   }
 
   get _segment() {
-    if (!this._resource)
+    if (!this.__resource)
       throw new Error(`Can't call without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).segment;
+    return (this.__resource as ODataEntitySetResource<T>).segment;
   }
 
   get _query() {
-    if (!this._resource)
+    if (!this.__resource)
       throw new Error(`Can't query without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).query;
+    return (this.__resource as ODataEntitySetResource<T>).query;
   }
 
   // Function
   protected _function<P, R>(path: string) {
-    if (!this._resource)
+    if (!this.__resource)
       throw new Error(`Can't navigationProperty without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).function<P, R>(path);
+    return (this.__resource as ODataEntitySetResource<T>).function<P, R>(path);
   }
 
   // Action
   protected _action<P, R>(path: string) {
-    if (!this._resource)
+    if (!this.__resource)
       throw new Error(`Can't navigationProperty without ODataResource`);
-    return (this._resource as ODataEntitySetResource<T>).action<P, R>(path);
+    return (this.__resource as ODataEntitySetResource<T>).action<P, R>(path);
   }
 }
