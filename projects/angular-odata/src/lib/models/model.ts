@@ -40,8 +40,8 @@ export class ODataModel<T> {
       throw new Error(`Can't reattach ${resource.type()} with ${this.__resource.type()}`);
     let first = !this.__resource;
     this.__resource = resource;
-    if (first) {
-      this._schema.fields({include_navigation: true, include_parents: true})
+    if (first && this.__resource instanceof ODataEntityResource) {
+      (this.__resource.schema?.fields({include_navigation: true, include_parents: true}) || [])
         .filter(field => field.isNavigation())
         .forEach(field => {
           Object.defineProperty(this, field.name, {
@@ -64,7 +64,7 @@ export class ODataModel<T> {
   }
 
   protected parse(entity: T) {
-    let fields = this.__resource ? this._schema.fields({include_navigation: true, include_parents: true}) : [];
+    let fields = this.__resource instanceof ODataEntityResource && this.__resource.schema?.fields({include_navigation: true, include_parents: true}) || [];
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
