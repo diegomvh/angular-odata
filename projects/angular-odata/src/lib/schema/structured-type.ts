@@ -19,18 +19,22 @@ export class ODataStructuredType<T> {
     this.parser = new ODataStructuredTypeParser(config, schema.namespace, schema.alias);
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
+
   isTypeOf(type: string) {
     var names = [`${this.schema.namespace}.${this.name}`];
     if (this.schema.alias)
       names.push(`${this.schema.alias}.${this.name}`);
     return names.indexOf(type) !== -1;
   }
+
   get options() {
     return this.schema.options;
   }
+
   findAnnotation(predicate: (annot: Annotation) => boolean) {
     return this.annotations.find(predicate);
   }
+
   configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
     const parserSettings = Object.assign({options: this.options}, settings);
     this.parser.configure(parserSettings);
@@ -73,6 +77,11 @@ export class ODataStructuredType<T> {
     }
     return attrs;
   }
+
+  defaults() {
+    return this.parser.defaults();
+  }
+
   toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
     return this.parser.toJsonSchema(options);
   }

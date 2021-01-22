@@ -298,4 +298,15 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
   findParser(predicate: (p: ODataStructuredTypeParser<any>) => boolean): Parser<any> {
     return this.find(predicate) || NONE_PARSER;
   }
+
+  defaults(): {[name: string]: any} {
+    let value = (this.parent) ? this.parent.defaults() : {};
+    let fields = this.fields.filter(f => f.default !== undefined || f.isComplexType());
+    return Object.assign({}, value, fields.reduce((acc, f) => {
+      let value = f.isComplexType() ? f.structured().defaults() : f.default;
+      if (!Types.isEmpty(value))
+        Object.assign(acc, {[f.name]: value });
+      return acc;
+    }, {}));
+  }
 }

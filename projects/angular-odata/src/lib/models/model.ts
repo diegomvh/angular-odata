@@ -15,6 +15,8 @@ import {
 
 import { ODataCollection } from './collection';
 import { ODataStructuredTypeFieldParser } from '../parsers/structured-type';
+import { ɵpublishDefaultGlobalUtils } from '@angular/core';
+import { Types } from '../utils/types';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
@@ -67,6 +69,36 @@ export class ODataModel<T> {
     return this.__resource !== null ? this.__resource.clone() as ODataResource<T> : null;
   }
 
+  // Validation
+  _errors: any;
+  protected validate() {
+    let errors = {} as any;
+    let fields = this.__resource instanceof ODataEntityResource && this.__resource.schema?.fields({include_navigation: false, include_parents: true}) || [];
+    // Nullables
+    fields.filter(f => (!f.nullable || f.maxLength || f.isComplexType())).forEach(f => {
+      let value = (this as any)[f.name];
+      if (!value) {
+        (errors[f.name] || (errors[f.name] = [])).push(`required`);
+      }
+      else if (f.maxLength && value.length > f.maxLength) {
+        (errors[f.name] || (errors[f.name] = [])).push(`maxlength`);
+      }
+      else if (f.isComplexType() && !value.isValid()) {
+        errors[f.name] = value._errors;
+      }
+    });
+    return !Types.isEmpty(errors) ? errors : undefined;
+  }
+
+  isValid(): boolean {
+    this._errors = this.validate();
+    return this._errors === undefined;
+  }
+
+  protected defaults() {
+    return this.__resource instanceof ODataEntityResource && this.__resource.schema?.defaults() || {};
+  }
+
   protected parse(entity: T) {
     let fields = this.__resource instanceof ODataEntityResource && this.__resource.schema?.fields({include_navigation: true, include_parents: true}) || [];
     let entries = Object.entries(entity)
@@ -101,7 +133,8 @@ export class ODataModel<T> {
     this.__meta = meta || new ODataEntityMeta(data, {options: this.__resource ? this.__resource.api.options : undefined});
     this.__entity = this.__meta.attributes<T>(data);
     this.__relations = {};
-    return Object.assign(this, this.parse(this.__entity));
+    const attrs = this.parse(Object.assign(this.defaults(), this.__entity));
+    return Object.assign(this, attrs);
   }
 
   toEntity(): T {
