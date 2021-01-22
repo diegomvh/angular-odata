@@ -17,6 +17,7 @@ import { ODataCollection } from './collection';
 import { ODataStructuredTypeFieldParser } from '../parsers/structured-type';
 import { ɵpublishDefaultGlobalUtils } from '@angular/core';
 import { Types } from '../utils/types';
+import { Objects } from '../utils';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
@@ -46,8 +47,8 @@ export class ODataModel<T> {
       throw new Error(`Can't reattach ${resource.type()} with ${this.__resource.type()}`);
     let first = !this.__resource;
     this.__resource = resource;
-    if (first && this.__resource instanceof ODataEntityResource) {
-      (this.__resource.schema?.fields({include_navigation: true, include_parents: true}) || [])
+    if (first) {
+      (this._schema?.fields({include_navigation: true, include_parents: true}) || [])
         .filter(field => field.isNavigation())
         .forEach(field => {
           Object.defineProperty(this, field.name, {
@@ -73,7 +74,7 @@ export class ODataModel<T> {
   _errors: any;
   protected validate() {
     let errors = {} as any;
-    let fields = this.__resource instanceof ODataEntityResource && this.__resource.schema?.fields({include_navigation: false, include_parents: true}) || [];
+    let fields = this._schema?.fields({include_navigation: false, include_parents: true}) || [];
     // Nullables
     fields.filter(f => (!f.nullable || f.maxLength || f.isComplexType())).forEach(f => {
       let value = (this as any)[f.name];
@@ -96,11 +97,11 @@ export class ODataModel<T> {
   }
 
   protected defaults() {
-    return this.__resource instanceof ODataEntityResource && this.__resource.schema?.defaults() || {};
+    return this._schema?.defaults() || {};
   }
 
   protected parse(entity: T) {
-    let fields = this.__resource instanceof ODataEntityResource && this.__resource.schema?.fields({include_navigation: true, include_parents: true}) || [];
+    let fields = this._schema?.fields({include_navigation: true, include_parents: true}) || [];
     let entries = Object.entries(entity)
       .map(([key, value]) => [key, value, fields.find(f => f.name === key)]);
     //Attributes
@@ -134,7 +135,7 @@ export class ODataModel<T> {
     this.__entity = this.__meta.attributes<T>(data);
     this.__relations = {};
     const attrs = this.parse(Object.assign(this.defaults(), this.__entity));
-    return Object.assign(this, attrs);
+    return this.assign(attrs);
   }
 
   toEntity(): T {
@@ -155,20 +156,12 @@ export class ODataModel<T> {
   }
 
   assign(attrs: DeepPartial<T>) {
-    const changes = [];
-    const merge = (target: any, source: {[attr: string]: any}, path: string[]) => {
-      for (let attr in source) {
-        let value = source[attr];
-        const type = typeof value;
-        if (value !== null && (type === 'object' || type === 'function') && attr in target) {
-          merge(target[attr], value, [...path, attr]);
-        } else if (target[attr] !== value) {
-          changes.push(path.join(".") + `.${attr}`);
-          target[attr] = value;
-        }
-      }
-    };
-    merge(this, attrs, []);
+    const current = this.toEntity();
+    Objects.merge(this, attrs);
+    const diffs = Objects.difference(current, this.toEntity());
+    //if (!Types.isEmpty(diffs))
+      //this.change$.emit(diffs);
+    return this;
   }
 
   clone() {
@@ -257,10 +250,7 @@ export class ODataModel<T> {
   protected get _schema() {
     if (!this.__resource)
       throw new Error(`Can't schema without ODataResource`);
-    let schema = (this.__resource as ODataEntityResource<T>).schema;
-    if (schema === null)
-      throw new Error(`Can't config without schema`);
-    return schema;
+    return (this.__resource as ODataEntityResource<T>).schema;
   }
 
   protected get _segment() {
