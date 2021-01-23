@@ -90,8 +90,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this;
   }
 
-  toEntities() {
-    return this.__models.map(model => model.toEntity());
+  toJSON() {
+    return this.__models.map(model => model.toJSON());
   }
 
   clone() {

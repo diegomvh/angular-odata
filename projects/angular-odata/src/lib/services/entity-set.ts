@@ -22,7 +22,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   public attach<C extends ODataCollection<T, ODataModel<T>>>(value: C): C;
   public attach(value: any): any {
     if (value instanceof ODataModel) {
-      return value.attach(this.entities().entity(value.toEntity()));
+      return value.attach(this.entities().entity());
     } else if (value instanceof ODataCollection) {
       return value.attach(this.entities());
     }

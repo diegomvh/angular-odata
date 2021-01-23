@@ -1,7 +1,7 @@
 import { Types } from "./types";
 
 export const Objects = {
-  set(obj: { [attr: string]: any }, path: string, value: any) {
+  set(obj: Object, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
@@ -12,14 +12,14 @@ export const Objects = {
     }, obj);
   },
 
-  get(obj: { [attr: string]: any }, path: string, def?: any): any {
+  get(obj: Object, path: string, def?: any): any {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
     // Find value if exist return otherwise return undefined value;
     return (pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj) || def);
   },
 
-  unset(obj: { [attr: string]: any }, path: string) {
+  unset(obj: Object, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
@@ -29,14 +29,14 @@ export const Objects = {
     }, obj);
   },
 
-  has(obj: { [attr: string]: any }, path: string) {
+  has(obj: Object, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
 
     return !!pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj);
   },
 
-  merge(target: { [attr: string]: any }, source: { [attr: string]: any }) {
+  merge(target: Object, source: Object) {
     const merge = (target: any, source: { [attr: string]: any }) => {
       for (let attr in source) {
         let value = source[attr];
@@ -48,6 +48,7 @@ export const Objects = {
       }
     };
     merge(target, source);
+    return target;
   },
 
   equal(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
