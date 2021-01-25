@@ -25,24 +25,25 @@ type DeepPartial<T> = {
 
 export class ODataModel<T> {
   private __entity: T;
-  private __resource: ODataResource<T> | null;
-  private __meta!: ODataEntityMeta;
-  private __relations!: { [name: string]: {
+  private __resource: ODataResource<T> | null = null;
+  private __meta: ODataEntityMeta;
+  private __relations: { [name: string]: {
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
     field: ODataStructuredTypeFieldParser<any>,
     subs: Subscription[]
-  }};
+  }} = {};
   //Events
   change$ = new EventEmitter<{attribute: string, value: any, previous?: any}>();
   destroy$ = new EventEmitter();
   invalid$ = new EventEmitter();
 
   constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
-    this.__resource = null;
-    this.__entity = {} as T;
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
-    this.populate(data || {}, options.meta);
+    this.__meta = options.meta || new ODataEntityMeta(data, {options: options.resource ? options.resource.api.options : undefined});
+    this.__entity = this.parse(
+      Objects.merge(this.defaults(), this.__meta.attributes<T>(data))
+    ) as T;
   }
 
   attach(resource: ODataResource<T>) {
@@ -80,15 +81,15 @@ export class ODataModel<T> {
     let errors = {} as any;
     let fields = this._schema?.fields({include_navigation: false, include_parents: true}) || [];
     // Nullables
-    fields.filter(f => (!f.nullable || f.maxLength || f.isComplexType())).forEach(f => {
-      let value = this.__entity[f.name as keyof T] as any;
-      if (!value) {
+    fields.forEach(f => {
+      let value = (this as any)[f.name] as any;
+      if (f.nullable === false && !value) {
         (errors[f.name] || (errors[f.name] = [])).push(`required`);
       }
-      else if (f.maxLength && (value as string).length > f.maxLength) {
+      if (f.maxLength !== undefined && value && 'length' in value && value.length > f.maxLength) {
         (errors[f.name] || (errors[f.name] = [])).push(`maxlength`);
       }
-      else if (f.isComplexType() && !value.isValid()) {
+      if (f.isComplexType() && !value.isValid()) {
         errors[f.name] = value._errors;
       }
     });
@@ -110,17 +111,13 @@ export class ODataModel<T> {
     return attrs as T;
   }
 
-  private populate(data: Object, meta?: ODataEntityMeta) {
-    this.__relations = {};
-    this.__meta = meta || new ODataEntityMeta(data, {options: this.__resource ? this.__resource.api.options : undefined});
-    this.assign(
-      this.parse(
-        Objects.merge(this.defaults(), this.__meta.attributes<T>(data))
-      ));
+  private populate(data: Object, meta: ODataEntityMeta) {
+    this.__meta = meta;
+    this.assign(this.parse(this.__meta.attributes<T>(data)));
     return this;
   }
 
-  toJSON(): T {
+  toEntity(): T {
     return Object.entries(
       Object.assign({},
         this.__entity,
@@ -128,9 +125,9 @@ export class ODataModel<T> {
       )
     ).reduce((acc, [k, value]) =>
       Object.assign(acc, { [k]: (value instanceof ODataModel) ?
-        value.toJSON() :
+        value.toEntity() :
         (value instanceof ODataCollection) ?
-        value.toJSON() : value }),
+        value.toEntities() : value }),
       {}) as T;
   }
   assign(attrs: DeepPartial<T>) {
@@ -154,7 +151,7 @@ export class ODataModel<T> {
     if (this.__meta)
       options.meta = this.__meta.clone();
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toJSON(), options);
+    return new Ctor(this.toEntity(), options);
   }
 
   fetch(options?: HttpOptions): Observable<this> {
@@ -182,7 +179,7 @@ export class ODataModel<T> {
 
   create(options?: HttpOptions): Observable<this> {
     if (this.__resource instanceof ODataEntityResource) {
-      let attrs = this.toJSON();
+      let attrs = this.toEntity();
       return this.__resource.post(attrs, options).pipe(
         map(({entity, meta}) => this.populate(entity || attrs, meta)));
     }
@@ -195,7 +192,7 @@ export class ODataModel<T> {
       if (this.__resource.segment.key().empty())
         throw new Error(`Can't update entity without key`);
       let resource = this.__resource;
-      let attrs = this.toJSON() as any;
+      let attrs = this.toEntity() as any;
       return Object.values(this.__relations)
         .filter((value) => value.field.navigation && !value.field.collection)
         .reduce((acc, value) => {

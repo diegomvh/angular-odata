@@ -1,6 +1,6 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ODataApi } from '../api';
-import { ACCEPT, IF_MATCH_HEADER } from '../constants';
+import { ACCEPT, IF_MATCH_HEADER, PREFER } from '../constants';
 import { Http } from '../utils';
 import { ODataResource } from './resource';
 
@@ -49,11 +49,11 @@ export class ODataRequest<T> {
     this.path = resourcePath;
 
     // Headers
-    let customHeaders: {[name: string]: string | string[]} = {};
+    const customHeaders: {[name: string]: string | string[]} = {};
     if (typeof init.etag === 'string')
       customHeaders[IF_MATCH_HEADER] = init.etag;
 
-    let accept = [];
+    const accept = [];
     // Metadata ?
     if (this.api.options.metadata !== undefined)
       accept.push(`odata.metadata=${this.api.options.metadata}`);
@@ -61,7 +61,16 @@ export class ODataRequest<T> {
     if (this.api.options.ieee754Compatible !== undefined)
       accept.push(`IEEE754Compatible=${this.api.options.ieee754Compatible}`);
     if (accept.length > 0)
-      customHeaders[ACCEPT] = `application/json;${accept.join(';')}, text/plain, */*`;
+      customHeaders[ACCEPT] = [`application/json;${accept.join(';')}`, "text/plain", "*/*"];
+    const prefer = [];
+    // Return ?
+    if (this.api.options.preferReturn !== undefined && ['POST', 'PUT', 'PATCH'].indexOf(this.method) !== -1)
+      prefer.push(`return=${this.api.options.preferReturn}`);
+    // MaxPageSize
+    if (this.api.options.preferMaxPageSize !== undefined)
+      prefer.push(`odata.maxpagesize=${this.api.options.preferMaxPageSize}`);
+    if (prefer.length > 0)
+      customHeaders[PREFER] = prefer;
     this.headers = Http.mergeHttpHeaders(this.api.options.headers, customHeaders, init.headers || {});
 
     // Params

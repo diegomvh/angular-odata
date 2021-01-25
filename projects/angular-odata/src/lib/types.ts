@@ -125,6 +125,8 @@ export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
+  preferMaxPageSize?: number;
+  preferReturn?: 'representation' | 'minimal';
   fetchPolicy?: FetchPolicy;
 }
 

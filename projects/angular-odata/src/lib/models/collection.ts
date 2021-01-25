@@ -13,11 +13,11 @@ import {
 } from '../resources/index';
 
 import { ODataModel } from './model';
+import { EventEmitter } from '@angular/core';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   private __resource: ODataResource<T> | null;
-  private __meta: ODataEntitiesMeta | null;
-
+  private __meta!: ODataEntitiesMeta;
   private __models: M[];
   get models() {
     return [...this.__models];
@@ -36,10 +36,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return Object.assign({}, this.__state);
   }
 
+  //Events
+  add$ = new EventEmitter();
+  remove$ = new EventEmitter();
+  update$ = new EventEmitter();
+  reset$ = new EventEmitter();
+
   constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {}) {
     this.__resource = null;
-    this.__meta = null;
-    this.__models = [];
+    this.__models = [] as M[];
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.populate((values || []), options.meta);
@@ -51,7 +56,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.__resource = resource;
     return this;
   }
-
   get _resource() {
     return this.__resource !== null ? this.__resource.clone() as ODataResource<T> : null;
   }
@@ -67,18 +71,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     });
   }
 
-  protected populate(values: any[], annots?: ODataEntitiesMeta): this {
-    this.__meta = annots || null;
+  protected populate(values: any[], meta?: ODataEntitiesMeta): this {
+    this.__meta = meta || new ODataEntitiesMeta({}, {options: this.__resource ? this.__resource.api.options : undefined});
 
-    this.__state = (annots instanceof ODataEntitiesMeta) ?
-    {
-      top: annots.top,
-      size: annots.skip, skip: annots.skip, skiptoken: annots.skiptoken,
-      records: annots.count
-    } : {
-      top: values.length,
-      size: values.length, skip: values.length,
-      records: values.length
+    this.__state = {
+      top: this.__meta.top || values.length,
+      size: this.__meta.skip || values.length,
+      skip: this.__meta.skip || values.length,
+      skiptoken: this.__meta.skiptoken,
+      records: this.__meta.count || values.length
     };
 
     if (this.__state.records !== undefined && this.__state.size !== undefined)
@@ -90,8 +91,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this;
   }
 
-  toJSON() {
-    return this.__models.map(model => model.toJSON());
+  toEntities() {
+    return this.__models.map(model => model.toEntity());
   }
 
   clone() {
@@ -136,12 +137,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   next(options?: HttpOptions & { withCount?: boolean }) {
-    if (this.__state.skip) {
-      this._query.skip(this.__state.skip);
+    if (this.state.skip) {
+      this._query.skip(this.state.skip);
       return this.fetch(options);
     }
-    else if (this.__state.skiptoken) {
-      this._query.skiptoken(this.__state.skiptoken);
+    else if (this.state.skiptoken) {
+      this._query.skiptoken(this.state.skiptoken);
       return this.fetch(options);
     }
     return EMPTY;

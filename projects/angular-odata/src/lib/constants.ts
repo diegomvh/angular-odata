@@ -16,6 +16,7 @@ export const CACHE_CONTROL = 'Cache-Control';
 export const HTTP11 = 'HTTP/1.1';
 export const ODATA_VERSION = 'OData-Version';
 export const ACCEPT = 'Accept';
+export const PREFER = 'Prefer';
 export const ODATA_VERSION_HEADERS = [ODATA_VERSION, ODATA_VERSION.toLowerCase(), 'dataserviceversion'];
 
 // HTTP HEADER VALUES
