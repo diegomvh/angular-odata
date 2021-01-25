@@ -22,6 +22,7 @@ import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses/i
 import { ODataApi } from '../api';
 import { Parser } from '../types';
 import { ODataRequest } from './request';
+import { ODataStructuredTypeParser } from '../parsers';
 
 export abstract class ODataResource<Type> {
   // VARIABLES
@@ -51,6 +52,17 @@ export abstract class ODataResource<Type> {
    */
   types(): string[] {
     return this.pathSegments.types();
+  }
+
+  isSubtypeOf(other: ODataResource<any>) {
+    const api = this.api;
+    const self = this.type();
+    const that = other.type();
+    if (self !== undefined && that !== undefined) {
+      const thatParser = api.findParserForType<Type>(that) as ODataStructuredTypeParser<Type>;
+      return thatParser.findParser(c => c.isTypeOf(self)) !== undefined;
+    }
+    return false;
   }
 
   pathAndParams(): [string, PlainObject] {
