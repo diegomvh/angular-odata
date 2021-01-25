@@ -43,7 +43,7 @@ export class ODataModel<T> {
   constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
-    this.__meta = options.meta || new ODataEntityMeta(data, {options: options.resource ? options.resource.api.options : undefined});
+    this.__meta = options.meta || new ODataEntityMeta(data, {options: options.resource?.api.options});
     this.__entity = this.parse(
       Objects.merge(this.defaults(), this.__meta.attributes<T>(data))
     ) as T;
@@ -162,7 +162,7 @@ export class ODataModel<T> {
           resource.segment.entitySet().setType(meta.type);
           this.attach(resource);
         }
-        this.assign(this.parse(this.__meta.attributes<T>(entity)));
+        this.assign(this.parse(this.__meta.attributes<T>(entity || {})));
         this.sync$.emit();
         return this;
       }));

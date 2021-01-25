@@ -74,6 +74,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataCountResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
+  cast<C extends T>(type: string) {
+    let segments = this.pathSegments.clone();
+    segments.segment(PathSegmentNames.type, type).setType(type);
+    return new ODataNavigationPropertyResource<C>(this.api, segments, this.queryOptions.clone());
+  }
+
   select(opts: Select<T>) {
     let options = this.queryOptions.clone();
     options.option<Select<T>>(QueryOptionNames.select, opts);

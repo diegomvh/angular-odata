@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable, EMPTY, NEVER } from 'rxjs';
 
 import {
   ODataResource,
@@ -9,7 +9,8 @@ import {
   ODataFunctionResource,
   ODataEntitiesMeta,
   HttpOptions,
-  HttpEntitiesOptions
+  HttpEntitiesOptions,
+  ODataEntities
 } from '../resources/index';
 
 import { ODataModel } from './model';
@@ -17,29 +18,27 @@ import { EventEmitter } from '@angular/core';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   private __resource: ODataResource<T> | null;
-  private __meta!: ODataEntitiesMeta;
+  private __meta: ODataEntitiesMeta;
   private __models: M[];
   get models() {
     return [...this.__models];
   }
 
-  private __state: {
-    records?: number,
-    skip?: number,
-    top?: number,
-    skiptoken?: string,
-    size?: number,
-    page?: number,
-    pages?: number
-  } = {};
   get state() {
-    return Object.assign({}, this.__state);
+    return {
+      top: this.__meta.top,
+      skip: this.__meta.skip,
+      skiptoken: this.__meta.skiptoken,
+      records: this.__meta.count,
+    };
   }
 
   //Events
   add$ = new EventEmitter();
   remove$ = new EventEmitter();
   update$ = new EventEmitter();
+  request$ = new EventEmitter<Observable<ODataEntities<T>>>();
+  sync$ = new EventEmitter();
   reset$ = new EventEmitter();
 
   constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {}) {
@@ -47,15 +46,17 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.__models = [] as M[];
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
-    this.populate((values || []), options.meta);
+    this.__meta = options.meta || new ODataEntitiesMeta({}, {options: options.resource?.api.options});
+    this.__models = this.parse(values || []);
   }
 
   attach(resource: ODataResource<T>) {
-    if (this.__resource && this.__resource.type() !== resource.type())
-      throw new Error(`Can't reattach ${resource.type()} with ${this.__resource.type()}`);
+    if (this.__resource !== null && this.__resource.type() !== resource.type() && !resource.isSubtypeOf(this.__resource))
+      throw new Error(`Can't reattach ${resource.type()} to ${this.__resource.type()}`);
     this.__resource = resource;
     return this;
   }
+
   get _resource() {
     return this.__resource !== null ? this.__resource.clone() as ODataResource<T> : null;
   }
@@ -65,30 +66,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (resource instanceof ODataEntitySetResource)
       resource = resource.entity();
     return (values as T[]).map(value => {
-      if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)
+      const meta = this.__meta.entity(value);
+      if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource) {
         resource.segment.key(value);
-      return (resource ? resource.clone().asModel(value, this.__meta !== null ? this.__meta.entity(value) : undefined) : value) as M;
+        if (meta.type !== undefined) {
+          resource.segment.entitySet().setType(meta.type);
+        }
+      }
+      return (resource ? resource.clone().asModel(value, meta) : value) as M;
     });
-  }
-
-  protected populate(values: any[], meta?: ODataEntitiesMeta): this {
-    this.__meta = meta || new ODataEntitiesMeta({}, {options: this.__resource ? this.__resource.api.options : undefined});
-
-    this.__state = {
-      top: this.__meta.top || values.length,
-      size: this.__meta.skip || values.length,
-      skip: this.__meta.skip || values.length,
-      skiptoken: this.__meta.skiptoken,
-      records: this.__meta.count || values.length
-    };
-
-    if (this.__state.records !== undefined && this.__state.size !== undefined)
-      this.__state.pages = Math.ceil(this.__state.records / this.__state.size);
-    if (this.__state.top !== undefined && this.__state.size !== undefined)
-      this.__state.page = (this.__state.top / this.__state.size) + 1;
-
-    this.__models = this.parse(values);
-    return this;
   }
 
   toEntities() {
@@ -120,23 +106,33 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Requests
-  fetch(options?: HttpOptions & { withCount?: boolean }): Observable<this> {
-    if (this.__resource instanceof ODataEntitySetResource) {
-      return this.__resource.get(options).pipe(
-        map(({ entities, meta }) => this.populate(entities || [], meta)));
-    } else if (this.__resource instanceof ODataNavigationPropertyResource) {
-      return this.__resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})).pipe(
-          map(({ entities, meta }) => this.populate(entities || [], meta)));
-    } else if (this.__resource instanceof ODataFunctionResource) {
-      return this.__resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})).pipe(
-          map(({ entities, meta }) => this.populate(entities || [], meta)));
-    }
-    throw new Error("Not Yet!");
+  private __request(obs$: Observable<ODataEntities<any>>): Observable<this> {
+    this.request$.emit(obs$);
+    return obs$.pipe(
+      map(({entities, meta}) => {
+        this.__meta = meta;
+        this.__models = this.parse(entities || []);
+        this.sync$.emit();
+        return this;
+      }));
   }
 
-  next(options?: HttpOptions & { withCount?: boolean }) {
+  fetch(options?: HttpOptions): Observable<this> {
+    let obs$: Observable<ODataEntities<any>> = NEVER;
+    if (this.__resource instanceof ODataEntitySetResource) {
+      obs$ = this.__resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ withCount: true }, options || {}));
+    } else if (this.__resource instanceof ODataNavigationPropertyResource) {
+      obs$ = this.__resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount: true }, options || {}));
+    } else if (this.__resource instanceof ODataFunctionResource) {
+      obs$ = this.__resource.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount: true }, options || {}));
+    }
+    return this.__request(obs$);
+  }
+
+  next(options?: HttpOptions) {
     if (this.state.skip) {
       this._query.skip(this.state.skip);
       return this.fetch(options);
@@ -148,17 +144,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return EMPTY;
   }
 
-  all(): Observable<this> {
-    let obs$: Observable<any>;
-    if (this.__resource instanceof ODataEntitySetResource) {
-      obs$ = this.__resource.all();
-    } else if (this.__resource instanceof ODataNavigationPropertyResource) {
-      obs$ = this.__resource.all();
-    } else {
-      throw new Error("Not Yet!");
+  all(options?: HttpOptions): Observable<this> {
+    let obs$: Observable<any> = NEVER;
+    if (this.__resource instanceof ODataEntitySetResource || this.__resource instanceof ODataNavigationPropertyResource) {
+      obs$ = this.__resource.all(options).pipe(map(entities => ({entities, meta: new ODataEntitiesMeta({}, {options: this.__resource?.api.options})})));
     }
-    return obs$.pipe(
-      map(entities => this.populate(entities)));
+    return this.__request(obs$);
   }
 
   //TODO: add and remove like backbone
