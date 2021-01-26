@@ -20,7 +20,7 @@ export class ODataMetadataResource extends ODataResource<any> {
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
-    segments.segment(PathSegmentNames.metadata, $METADATA);
+    segments.add(PathSegmentNames.metadata, $METADATA);
     return new ODataMetadataResource(api, segments);
   }
   //#endregion

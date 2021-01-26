@@ -145,7 +145,7 @@ export class ODataSettings {
     if (values.length === 0)
       throw Error(`No Structured for name ${name} was found`);
     if (values.length > 1)
-      throw Error("Multiple APIs: More than one value was found");
+      throw Error("Multiple Structured: More than one value was found");
     return values[0] as ODataStructuredType<T>;
   }
 
@@ -154,7 +154,7 @@ export class ODataSettings {
     if (values.length === 0)
       throw Error(`No Callable for name ${name} was found`);
     if (values.length > 1)
-      throw Error("Multiple APIs: More than one value was found");
+      throw Error("Multiple Callable: More than one value was found");
     return values[0] as ODataCallable<T>;
   }
 
@@ -163,7 +163,7 @@ export class ODataSettings {
     if (values.length === 0)
       throw Error(`No EntitySet for name ${name} was found`);
     if (values.length > 1)
-      throw Error("Multiple APIs: More than one value was found");
+      throw Error("Multiple EntitySet: More than one value was found");
     return values[0] as ODataEntitySet;
   }
 

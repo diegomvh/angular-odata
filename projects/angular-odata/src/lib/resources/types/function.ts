@@ -17,7 +17,7 @@ import { ODataApi } from '../../api';
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
   static factory<P, R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.function, path);
+    const segment = segments.add(PathSegmentNames.function, path);
     if (type)
       segment.type(type);
     options.clear();
@@ -39,7 +39,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Inmutable Resource
   parameters(params: P | null) {
     let segments = this.pathSegments.clone();
-    let segment = segments.segment(PathSegmentNames.function);
+    let segment = segments.get(PathSegmentNames.function);
     segment.parameters(params !== null ? this.serialize(params) : null);
     return new ODataFunctionResource<P, R>(this.api, segments, this.queryOptions.clone());
   }
@@ -50,10 +50,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     const segments = this.pathSegments;
     return {
       entitySet() {
-        return segments.segment(PathSegmentNames.entitySet);
+        return segments.get(PathSegmentNames.entitySet);
       },
       function() {
-        return segments.segment(PathSegmentNames.function);
+        return segments.get(PathSegmentNames.function);
       }
     }
   }

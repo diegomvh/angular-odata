@@ -16,7 +16,7 @@ import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../buil
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<P>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.property, path)
+    const segment = segments.add(PathSegmentNames.property, path)
     if (type)
       segment.type(type)
     options.clear();
@@ -57,13 +57,13 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     const segments = this.pathSegments;
     return {
       entitySet() {
-        return segments.segment(PathSegmentNames.entitySet);
+        return segments.get(PathSegmentNames.entitySet);
       },
       singleton() {
-        return segments.segment(PathSegmentNames.singleton);
+        return segments.get(PathSegmentNames.singleton);
       },
       property() {
-        return segments.segment(PathSegmentNames.property);
+        return segments.get(PathSegmentNames.property);
       }
     }
   }

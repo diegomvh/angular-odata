@@ -10,7 +10,6 @@ import { Expand, Select, PlainObject } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
-import { Types } from '../../utils/types';
 import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataValueResource } from './value';
 import { ODataEntity } from '../responses';
@@ -96,7 +95,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   cast<C extends T>(type: string) {
     let segments = this.pathSegments.clone();
-    segments.segment(PathSegmentNames.type, type).type(type);
+    segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntityResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
@@ -130,7 +129,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const segments = this.pathSegments;
     return {
       entitySet() {
-        return segments.segment(PathSegmentNames.entitySet);
+        return segments.get(PathSegmentNames.entitySet);
       }
     }
   }

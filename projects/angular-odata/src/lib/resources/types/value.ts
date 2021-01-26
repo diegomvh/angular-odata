@@ -10,7 +10,7 @@ import { ODataApi } from '../../api';
 export class ODataValueResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<V>(api: ODataApi, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.value, $VALUE);
+    const segment = segments.add(PathSegmentNames.value, $VALUE);
     if (type)
       segment.type(type);
     options.clear();

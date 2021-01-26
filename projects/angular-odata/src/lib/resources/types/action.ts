@@ -9,14 +9,13 @@ import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
   static factory<P, R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.action, path)
+    const segment = segments.add(PathSegmentNames.action, path)
     if (type)
       segment.type(type);
     options.clear();
@@ -41,13 +40,13 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     const segments = this.pathSegments;
     return {
       entitySet() {
-        return segments.segment(PathSegmentNames.entitySet);
+        return segments.get(PathSegmentNames.entitySet);
       },
       singleton() {
-        return segments.segment(PathSegmentNames.singleton);
+        return segments.get(PathSegmentNames.singleton);
       },
       action() {
-        return segments.segment(PathSegmentNames.action);
+        return segments.get(PathSegmentNames.action);
       }
     }
   }

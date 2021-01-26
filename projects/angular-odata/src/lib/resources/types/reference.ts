@@ -12,7 +12,7 @@ import { ODataApi } from '../../api';
 export class ODataReferenceResource extends ODataResource<any> {
   //#region Factory
   static factory<P>(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.reference, $REF);
+    segments.add(PathSegmentNames.reference, $REF);
     options.clear();
     return new ODataReferenceResource(api, segments, options);
   }

@@ -6,6 +6,7 @@ import { ODataQueryOptions } from './query-options';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataSettings } from '../settings';
+import { Photo } from '../trippin.spec';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';
@@ -113,8 +114,26 @@ describe('ODataResource', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
-    friends.segment.key('mirsking');
+    friends.segment.navigationProperty().key('mirsking');
     expect(friends.toString()).toEqual("People('russellwhyte')/Friends('mirsking')");
+  });
+
+  it('should create entity multiple navigation', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const mirsking: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends").key('mirsking');
+    expect(mirsking.toString()).toEqual("People('russellwhyte')/Friends('mirsking')");
+    const photo = mirsking.navigationProperty<Photo>("Photo");
+    expect(photo.toString()).toEqual("People('russellwhyte')/Friends('mirsking')/Photo");
+  });
+
+  it('should create entity recursive navigation', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const mirsking: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends").key('mirsking');
+    expect(mirsking.toString()).toEqual("People('russellwhyte')/Friends('mirsking')");
+    const keithpinckney = mirsking.navigationProperty<Person>("Friends").key('keithpinckney');
+    expect(keithpinckney.toString()).toEqual("People('russellwhyte')/Friends('mirsking')/Friends('keithpinckney')");
   });
 
 });

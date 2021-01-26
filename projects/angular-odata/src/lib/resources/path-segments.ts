@@ -25,19 +25,20 @@ export type ODataSegment = {
   name: string;
   path: string;
   type?: string;
-  args?: any;
+  key?: any;
+  parameters?: any;
 }
 
 function pathSegmentsBuilder(segment: ODataSegment): string {
   switch (segment.name) {
     case PathSegmentNames.function:
-      let parameters = segment.args;
+      const parameters = segment.parameters;
       return (parameters ?
         buildQuery({ func: { [segment.path]: parameters }}) :
         buildQuery({ func: segment.path})
       ).slice(1);
     default:
-      let key = segment.args;
+      let key = segment.key;
       if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
         key = guid(key);
       }
@@ -71,8 +72,10 @@ export class ODataPathSegments {
       let json = <any>{ name: segment.name, path: segment.path };
       if (segment.type !== undefined)
         json.type = segment.type;
-      if (segment.args !== undefined)
-        json.args = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.args)));
+      if (segment.key !== undefined)
+        json.key = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.key)));
+      if (segment.parameters !== undefined)
+        json.parameters = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.parameters)));
       return json;
     });
   }
@@ -81,11 +84,9 @@ export class ODataPathSegments {
     return new ODataPathSegments(this.toJSON());
   }
 
-  find(name: string, path?: string) {
-    // Backward search
-    return [...this.segments].reverse().find(s =>
-      s.name === name &&
-      (path === undefined || s.path === path));
+  find(predicate: (segment: ODataSegment) => boolean) {
+    //Backward Find
+    return [...this.segments].reverse().find(predicate);
   }
 
   last() {
@@ -93,24 +94,17 @@ export class ODataPathSegments {
        new SegmentHandler(this.segments[this.segments.length - 1]) : undefined;
   }
 
-  segment(name: string, path?: string) {
-    let segment = this.find(name, path);
-    if (!segment && path !== undefined) {
-      segment = { name, path } as ODataSegment;
-      this.segments.push(segment);
-    }
-    if (segment === undefined)
-      throw new Error(`No segment with name: ${name}`)
+  add(name: string, path: string) {
+    const segment = { name, path } as ODataSegment;
+    this.segments.push(segment);
     return new SegmentHandler(segment);
   }
 
-  has(name: string, path?: string) {
-    return !!this.find(name, path);
-  }
-
-  remove(name: string, path?: string) {
-    let segment = this.find(name, path);
-    this.segments = this.segments.filter(s => s !== segment);
+  get(name: string) {
+    let segment = this.find(s => s.name === name);
+    if (segment === undefined)
+      throw Error(`No Segment for name ${name} was found`);
+    return new SegmentHandler(segment);
   }
 }
 
@@ -135,22 +129,22 @@ export class SegmentHandler {
 
   key<T>(value?: T) {
     if (value !== undefined)
-      this.segment.args = value;
-    return this.segment.args as T;
+      this.segment.key = value;
+    return this.segment.key as T;
   }
 
   hasKey() {
-    return !Types.isEmpty(this.segment.args);
+    return !Types.isEmpty(this.segment.key);
   }
 
   parameters<T>(value?: T) {
     if (value !== undefined)
-      this.segment.args = value;
-    return this.segment.args as T;
+      this.segment.parameters = value;
+    return this.segment.parameters as T;
   }
 
   hasParameters() {
-    return !Types.isEmpty(this.segment.args);
+    return !Types.isEmpty(this.segment.parameters);
   }
 
   // Aliases

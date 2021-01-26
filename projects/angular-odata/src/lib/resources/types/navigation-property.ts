@@ -9,7 +9,6 @@ import { Observable, empty } from 'rxjs';
 import { EntityKey } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
 import { ODataEntities, ODataEntity } from '../responses';
@@ -21,7 +20,7 @@ import { ODataApi } from '../../api';
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.navigationProperty, path)
+    const segment = segments.add(PathSegmentNames.navigationProperty, path)
     if (type)
       segment.type(type);
     options.keep(QueryOptionNames.format);
@@ -42,6 +41,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   ////#endregion
 
   //#region Inmutable Resource
+  key(key: EntityKey<T>) {
+    const navigation = this.clone();
+    navigation.segment.navigationProperty().key(key);
+    return navigation;
+  }
+
   value() {
     return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -76,7 +81,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   cast<C extends T>(type: string) {
     let segments = this.pathSegments.clone();
-    segments.segment(PathSegmentNames.type, type).type(type);
+    segments.add(PathSegmentNames.type, type).type(type);
     return new ODataNavigationPropertyResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
@@ -152,13 +157,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     const segments = this.pathSegments;
     return {
       entitySet() {
-        return segments.segment(PathSegmentNames.entitySet);
+        return segments.get(PathSegmentNames.entitySet);
       },
       singleton() {
-        return segments.segment(PathSegmentNames.singleton);
+        return segments.get(PathSegmentNames.singleton);
       },
       navigationProperty() {
-        return segments.segment(PathSegmentNames.navigationProperty);
+        return segments.get(PathSegmentNames.navigationProperty);
       }
     }
   }

@@ -110,7 +110,7 @@ describe('ODataClient', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const func = set.function<any, any>("NS.MyFunction");
     const json = func.toJSON();
-    expect(json).toEqual({ segments: [{ name: 'entitySet', path: 'People', type: 'TripPin.Person' }, { name: 'function', path: 'NS.MyFunction', type: undefined }], options: {}});
+    expect(json).toEqual({ segments: [{ name: 'entitySet', path: 'People', type: 'TripPin.Person' }, { name: 'function', path: 'NS.MyFunction' }], options: {}});
   });
 
   it('should merge headers', () => {

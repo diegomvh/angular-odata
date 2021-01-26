@@ -20,7 +20,7 @@ import { ODataApi } from '../../api';
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.singleton, path)
+    const segment = segments.add(PathSegmentNames.singleton, path)
     if (type !== undefined)
       segment.type(type);
     options.keep(QueryOptionNames.format);
@@ -112,7 +112,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     const segments = this.pathSegments;
     return {
       singleton() {
-        return segments.segment(PathSegmentNames.singleton);
+        return segments.get(PathSegmentNames.singleton);
       }
     }
   }

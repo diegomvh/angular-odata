@@ -21,7 +21,7 @@ import { Types } from '../../utils';
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.entitySet, path)
+    const segment = segments.add(PathSegmentNames.entitySet, path)
     if (type)
       segment.type(type);
     options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
@@ -52,7 +52,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   cast<C extends T>(type: string) {
     let segments = this.pathSegments.clone();
-    segments.segment(PathSegmentNames.type, type).type(type);
+    segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntitySetResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
@@ -154,7 +154,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     const segments = this.pathSegments;
     return {
       entitySet() {
-        return segments.segment(PathSegmentNames.entitySet);
+        return segments.get(PathSegmentNames.entitySet);
       }
     }
   }
