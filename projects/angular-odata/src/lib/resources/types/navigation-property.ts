@@ -159,7 +159,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         return segment;
       },
       key(key?: EntityKey<T>) {
-        const type = res.type();
         const api = res.api;
         const segment = segments.segment(PathSegmentNames.navigationProperty);
         if (key !== undefined) {

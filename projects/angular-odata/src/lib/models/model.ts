@@ -330,12 +330,10 @@ export class ODataModel<T> {
   }
 
   private __get<P>(field: ODataStructuredTypeFieldParser<P>): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
-    let value = this.__entity[field.name as keyof T] as any;
+    const value = this.__entity[field.name as keyof T] as any;
     if (value !== null && (field.isNavigation() || field.isComplexType())) {
       if (!(field.name in this.__relations)) {
-        let prop = field.isNavigation() ? this._navigationProperty<P>(field.name) : this._property<P>(field.name);
-        if (this.__meta === null)
-          throw new Error("No Metadata")
+        const prop = field.isNavigation() ? this._navigationProperty<P>(field.name) : this._property<P>(field.name);
         const model = field.collection ?
             prop.asCollection((value || []) as T[], new ODataEntitiesMeta(this.__meta.property(field.name) || {}, {options: this.__meta.options})) :
             prop.asModel((value || {}) as T, new ODataEntityMeta(value || {}, {options: this.__meta.options}));
@@ -350,10 +348,10 @@ export class ODataModel<T> {
   private __set<P>(field: ODataStructuredTypeFieldParser<P>, value: P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null) {
     let current: any;
     if (field.isNavigation() || field.isComplexType()) {
-      if (field.collection)
-        throw new Error(`Can't set ${field.name} to collection, use add`);
       const model = value as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
       const type = model?._resource?.type() || typeof value;
+      if (field.collection)
+        throw new Error(`Can't set collection of type ${type} as ${field.name}, use add instead`);
       if (type !== field.type)
         throw new Error(`Can't set ${type} to ${field.type}`);
       const relation = this.__relations[field.name];
