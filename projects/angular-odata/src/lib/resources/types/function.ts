@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 
@@ -19,7 +19,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   static factory<P, R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.function, path);
     if (type)
-      segment.setType(type);
+      segment.type(type);
     options.clear();
     return new ODataFunctionResource<P, R>(api, segments, options);
   }
@@ -42,7 +42,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     let segment = segments.segment(PathSegmentNames.function);
     if (!segment)
       throw new Error(`FunctionResource dosn't have segment for function`);
-    segment.option(SegmentOptionNames.parameters, params !== null ? this.serialize(params) : null);
+    segment.parameters(params !== null ? this.serialize(params) : null);
     return new ODataFunctionResource<P, R>(this.api, segments, this.queryOptions.clone());
   }
   //#endregion
@@ -55,7 +55,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       entitySet(name?: string) {
         const segment = segments.segment(PathSegmentNames.entitySet);
         if (name !== undefined)
-          segment.setPath(name);
+          segment.path(name);
         return segment;
       },
       key<E>(key?: EntityKey<E>) {
@@ -68,16 +68,16 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
             if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
               key = parser.resolveKey(key);
           }
-          segment.option(SegmentOptionNames.key, key);
+          segment.key(key);
         }
-        return segment.option(SegmentOptionNames.key);
+        return segment.key<EntityKey<E>>();
       },
       parameters(params?: P) {
         let segment = segments.segment(PathSegmentNames.function);
         if (params !== undefined) {
-          segment.option(SegmentOptionNames.parameters, res.serialize(params));
+          segment.parameters(res.serialize(params));
         }
-        return segment.option(SegmentOptionNames.parameters);
+        return segment.parameters();
       }
     }
   }

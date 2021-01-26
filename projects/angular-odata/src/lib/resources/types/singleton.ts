@@ -22,7 +22,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   static factory<R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.singleton, path)
     if (type !== undefined)
-      segment.setType(type);
+      segment.type(type);
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(api, segments, options);
   }

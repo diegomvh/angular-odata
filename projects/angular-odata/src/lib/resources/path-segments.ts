@@ -4,7 +4,6 @@ import { PlainObject } from './builder';
 
 import { Types, Dates } from '../utils';
 
-import { OptionHandler } from './query-options';
 import { PATH_SEPARATOR } from '../constants';
 
 export enum PathSegmentNames {
@@ -22,7 +21,7 @@ export enum PathSegmentNames {
   action = 'action'
 }
 
-export enum SegmentOptionNames {
+export enum _SegmentOptionNames {
   key = 'key',
   parameters = 'parameters'
 }
@@ -31,19 +30,19 @@ export type ODataSegment = {
   name: string;
   path: string;
   type?: string;
-  options: PlainObject;
+  args: any;
 }
 
 function pathSegmentsBuilder(segment: ODataSegment): string {
   switch (segment.name) {
     case PathSegmentNames.function:
-      let parameters = segment.options[SegmentOptionNames.parameters];
+      let parameters = segment.args;
       return (parameters ?
         buildQuery({ func: { [segment.path]: parameters }}) :
         buildQuery({ func: segment.path})
       ).slice(1);
     default:
-      let key = segment.options[SegmentOptionNames.key];
+      let key = segment.args;
       if (typeof (key) === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
         key = guid(key);
       }
@@ -55,7 +54,7 @@ export class ODataPathSegments {
   protected segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments = (segments || []).map(({name, path, type, options}) => ({name, path, type, options: options || {}}));
+    this.segments = segments || [];
   }
 
   path(): string {
@@ -75,7 +74,7 @@ export class ODataPathSegments {
   toJSON() {
     return this.segments.map(segment => {
       let json = <any>{ name: segment.name, path: segment.path, type: segment.type };
-      let options = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
+      let options = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.args)));
       if (!Types.isEmpty(options))
         json.options = options;
       return json;
@@ -101,7 +100,7 @@ export class ODataPathSegments {
   segment(name: string, path?: string) {
     let segment = this.find(name, path);
     if (!segment && path !== undefined) {
-      segment = { name, path, options: {} } as ODataSegment;
+      segment = { name, path, args: {} } as ODataSegment;
       this.segments.push(segment);
     }
     if (segment === undefined)
@@ -120,36 +119,42 @@ export class ODataPathSegments {
 }
 
 export class SegmentHandler {
-  options: PlainObject
-  constructor(private segment: ODataSegment) {
-    this.options = this.segment.options;
-  }
+  constructor(private segment: ODataSegment) {}
 
   get name() {
     return this.segment.name;
   }
 
-  get type() {
+  type(value?: string) {
+    if (value !== undefined)
+      this.segment.type = value;
     return this.segment.type;
   }
 
-  setType(value: string) {
-    this.segment.type = value;
-  }
-
-  get path() {
+  path(value?: string) {
+    if (value !== undefined)
+      this.segment.path = value;
     return this.segment.path;
   }
 
-  setPath(value: string) {
-    this.segment.path = value;
+  key<T>(value?: T) {
+    if (value !== undefined)
+      this.segment.args = value;
+    return this.segment.args as T;
   }
 
-  // Option Handler
-  option<T>(type: SegmentOptionNames, opts?: T) {
-    if (opts !== undefined)
-      this.options[type] = opts;
-    return new OptionHandler<T>(this.options, type as any);
+  hasKey() {
+    return Types.isEmpty(this.segment.args);
+  }
+
+  parameters<T>(value?: T) {
+    if (value !== undefined)
+      this.segment.args = value;
+    return this.segment.args as T;
+  }
+
+  hasParameters() {
+    return Types.isEmpty(this.segment.args);
   }
 
   // Aliases

@@ -22,7 +22,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.entitySet, path)
     if (type)
-      segment.setType(type);
+      segment.type(type);
     options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
     return new ODataEntitySetResource<E>(api, segments, options);
   }
@@ -51,7 +51,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   cast<C extends T>(type: string) {
     let segments = this.pathSegments.clone();
-    segments.segment(PathSegmentNames.type, type).setType(type);
+    segments.segment(PathSegmentNames.type, type).type(type);
     return new ODataEntitySetResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
@@ -157,7 +157,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
         if (!segment)
           throw new Error(`EntityResourse dosn't have segment for entitySet, WTF?`);
         if (name !== undefined)
-          segment.setPath(name);
+          segment.path(name);
         return segment;
       }
     }

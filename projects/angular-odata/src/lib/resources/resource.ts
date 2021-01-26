@@ -44,7 +44,7 @@ export abstract class ODataResource<Type> {
    * @returns string The type of the resource
    */
   type() {
-    return this.pathSegments.last()?.type;
+    return this.pathSegments.last()?.type();
   }
 
   /**

@@ -4,7 +4,7 @@ import { QueryOptionNames } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
 import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { Observable, empty } from 'rxjs';
 import { EntityKey } from '../../types';
 import { ODataCountResource } from './count';
@@ -23,7 +23,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.navigationProperty, path)
     if (type)
-      segment.setType(type);
+      segment.type(type);
     options.keep(QueryOptionNames.format);
     return new ODataNavigationPropertyResource<E>(api, segments, options);
   }
@@ -76,7 +76,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   cast<C extends T>(type: string) {
     let segments = this.pathSegments.clone();
-    segments.segment(PathSegmentNames.type, type).setType(type);
+    segments.segment(PathSegmentNames.type, type).type(type);
     return new ODataNavigationPropertyResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
@@ -155,7 +155,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       entitySet(name?: string) {
         let segment = segments.segment(PathSegmentNames.entitySet);
         if (name !== undefined)
-          segment.setPath(name);
+          segment.path(name);
         return segment;
       },
       key(key?: EntityKey<T>) {
@@ -168,9 +168,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
             if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
               key = parser.resolveKey(key);
           }
-          segment.option(SegmentOptionNames.key, key);
+          segment.key(key);
         }
-        return segment.option(SegmentOptionNames.key);
+        return segment.key<EntityKey<T>>();
       }
     }
   }

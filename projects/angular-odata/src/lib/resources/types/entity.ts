@@ -8,7 +8,7 @@ import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
 import { Expand, Select, PlainObject } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { ODataPathSegments, SegmentOptionNames, PathSegmentNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
 import { Types } from '../../utils/types';
 import { HttpOptions, HttpEntityOptions } from './options';
@@ -96,7 +96,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   cast<C extends T>(type: string) {
     let segments = this.pathSegments.clone();
-    segments.segment(PathSegmentNames.type, type).setType(type);
+    segments.segment(PathSegmentNames.type, type).type(type);
     return new ODataEntityResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
@@ -135,7 +135,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
         if (!segment)
           throw new Error(`EntityResourse dosn't have segment for entitySet`);
         if (name !== undefined)
-          segment.setPath(name);
+          segment.path(name);
         return segment;
       },
       key(key?: EntityKey<T>) {
@@ -150,9 +150,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
             if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
               key = parser.resolveKey(key);
           }
-          segment.option(SegmentOptionNames.key, key);
+          segment.key(key);
         }
-        return segment.option<EntityKey<T>>(SegmentOptionNames.key);
+        return segment.key<EntityKey<T>>();
       }
     }
   }
@@ -210,13 +210,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   //#region Custom
   fetch(options?: HttpOptions): Observable<T | null> {
-    if (this.segment.key().empty())
+    if (!this.segment.entitySet().hasKey())
       return throwError("Resource without key");
     return this.get(options).pipe(map(({ entity }) => entity));
   }
 
   model(options?: HttpOptions): Observable<ODataModel<T> | null> {
-    if (this.segment.key().empty())
+    if (!this.segment.entitySet().hasKey())
       return throwError("Resource without key");
     return this.get(options).pipe(map(({ entity, meta }) => entity ? this.asModel(entity, meta) : null));
   }

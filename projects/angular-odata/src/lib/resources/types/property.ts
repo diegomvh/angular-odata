@@ -17,7 +17,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   static factory<P>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.property, path)
     if (type)
-      segment.setType(type)
+      segment.type(type)
     options.clear();
     return new ODataPropertyResource<P>(api, segments, options);
   }

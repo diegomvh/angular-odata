@@ -12,7 +12,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
   static factory<V>(api: ODataApi, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.value, $VALUE);
     if (type)
-      segment.setType(type);
+      segment.type(type);
     options.clear();
     return new ODataValueResource<V>(api, segments, options);
   }

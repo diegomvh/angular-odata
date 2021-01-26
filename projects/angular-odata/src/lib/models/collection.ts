@@ -69,7 +69,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource) {
       resource.segment.key(attrs);
       if (meta.type !== undefined) {
-        resource.segment.entitySet().setType(meta.type);
+        resource.segment.entitySet().type(meta.type);
       }
     }
     return (resource ? resource.clone().asModel(attrs, meta) : attrs) as M;

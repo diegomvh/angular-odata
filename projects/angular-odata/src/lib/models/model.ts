@@ -159,7 +159,7 @@ export class ODataModel<T> {
         this.__meta = meta;
         if (meta.type !== this.__resource?.type && meta.type !== undefined) {
           const resource = this._resource as ODataEntityResource<T>;
-          resource.segment.entitySet().setType(meta.type);
+          resource.segment.entitySet().type(meta.type);
           this.attach(resource);
         }
         this.assign(this.parse(this.__meta.attributes<T>(entity || {})));
@@ -172,7 +172,7 @@ export class ODataModel<T> {
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't fetch entity without key`);
       obs$ = this.__resource.get(options);
     } else if (this.__resource instanceof ODataNavigationPropertyResource) {
@@ -202,7 +202,7 @@ export class ODataModel<T> {
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't update entity without key`);
       let resource = this.__resource;
       let attrs = this.toEntity() as any;
@@ -230,7 +230,7 @@ export class ODataModel<T> {
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't destroy entity without key`);
       let attrs = this.toEntity() as any;
       obs$ = this.__resource.delete(Object.assign({ etag: this.__meta.etag }, options || {})).pipe(
@@ -253,7 +253,7 @@ export class ODataModel<T> {
       throw new Error(`Can't call without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't use without key`);
     }
     return (this.__resource as ODataEntityResource<T>).segment;
@@ -264,7 +264,7 @@ export class ODataModel<T> {
       throw new Error(`Can't query without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't query without key`);
     }
     return (this.__resource as ODataEntityResource<T>).query;
@@ -276,7 +276,7 @@ export class ODataModel<T> {
       throw new Error(`Can't cast without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't cast without key`);
     }
     return (this.__resource as ODataEntityResource<T>).cast<S>(type);
@@ -288,7 +288,7 @@ export class ODataModel<T> {
       throw new Error(`Can't navigationProperty without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't navigationProperty without key`);
     }
     return (this.__resource as ODataEntityResource<T>).function<P, R>(path);
@@ -300,7 +300,7 @@ export class ODataModel<T> {
       throw new Error(`Can't navigationProperty without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't navigationProperty without key`);
     }
     return (this.__resource as ODataEntityResource<T>).action<P, R>(path);
@@ -312,7 +312,7 @@ export class ODataModel<T> {
       throw new Error(`Can't navigationProperty without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't navigationProperty without key`);
     }
     return (this.__resource as ODataEntityResource<T>).navigationProperty<P>(path);
@@ -323,7 +323,7 @@ export class ODataModel<T> {
       throw new Error(`Can't property without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
       this.__resource.segment.key(this);
-      if (this.__resource.segment.key().empty())
+      if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't property without key`);
     }
     return (this.__resource as ODataEntityResource<T>).property<P>(path);

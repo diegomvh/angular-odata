@@ -17,7 +17,6 @@ import {
   ODataFunctionResource,
   ODataActionResource,
   ODataEntityResource,
-  SegmentOptionNames,
   PathSegmentNames,
   ODataPathSegments,
   ODataSegment,
@@ -141,11 +140,10 @@ export class ODataClient {
   fromJSON(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string) {
     const segments = new ODataPathSegments(json.segments);
     const query = new ODataQueryOptions(json.options);
-    const api = this.apiFor(apiName || segments.last()?.type);
+    const api = this.apiFor(apiName || segments.last()?.type());
     switch (segments.last()?.name as PathSegmentNames) {
       case PathSegmentNames.entitySet:
-        let options = segments.last()?.options;
-        if (options && SegmentOptionNames.key in options) {
+        if (segments.last()?.hasKey()) {
           return new ODataEntityResource(api, segments, query);
         } else {
           return new ODataEntitySetResource(api, segments, query);

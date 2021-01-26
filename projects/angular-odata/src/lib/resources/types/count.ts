@@ -10,7 +10,7 @@ import { ODataApi } from '../../api';
 export class ODataCountResource extends ODataResource<any> {
   //#region Factory
   static factory(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.count, $COUNT).setType('Edm.Int32');
+    segments.segment(PathSegmentNames.count, $COUNT).type('Edm.Int32');
     options.keep(QueryOptionNames.filter, QueryOptionNames.search);
     return new ODataCountResource(api, segments, options);
   }

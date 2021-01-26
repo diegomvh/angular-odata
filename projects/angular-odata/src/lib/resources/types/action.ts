@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
@@ -18,7 +18,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   static factory<P, R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
     const segment = segments.segment(PathSegmentNames.action, path)
     if (type)
-      segment.setType(type);
+      segment.type(type);
     options.clear();
     return new ODataActionResource<P, R>(api, segments, options);
   }
@@ -44,7 +44,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       entitySet(name?: string) {
         const segment = segments.segment(PathSegmentNames.entitySet);
         if (name !== undefined)
-          segment.setPath(name);
+          segment.path(name);
         return segment;
       },
       key<E>(key?: EntityKey<E>) {
@@ -57,9 +57,9 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
             if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
               key = parser.resolveKey(key);
           }
-          segment.option(SegmentOptionNames.key, key);
+          segment.key(key);
         }
-        return segment.option<EntityKey<E>>(SegmentOptionNames.key);
+        return segment.key<EntityKey<E>>();
       }
     }
   }
