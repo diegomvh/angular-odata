@@ -41,13 +41,16 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   sync$ = new EventEmitter();
   reset$ = new EventEmitter();
 
-  constructor(values?: any[], options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {}) {
+  constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta, parse?: boolean } = {}) {
+    data = data || {};
     this.__resource = null;
     this.__models = [] as M[];
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
-    this.__meta = options.meta || new ODataEntitiesMeta({}, {options: options.resource?.api.options});
-    this.__models = this.parse(values || []).map(e => this.__model(e));
+    this.__meta = options.meta || new ODataEntitiesMeta(data, {options: options.resource?.api.options});
+    if (!Array.isArray(data))
+      data = this.__meta.data(data) || [];
+    this.__models = this.parse(data);
   }
 
   attach(resource: ODataResource<T>) {
@@ -67,15 +70,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       resource = resource.entity();
     const meta = this.__meta.entity(attrs);
     if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource) {
-      resource.segment.key(attrs);
       if (meta.type !== undefined) {
         resource.segment.entitySet().type(meta.type);
       }
     }
     return (resource ? resource.clone().asModel(attrs, meta) : attrs) as M;
   }
-  protected parse(values: Object[]): T[] {
-    return values as T[];
+  protected parse(entities: T[]): M[] {
+    return entities.map(e => this.__model(e));
   }
 
   toEntities() {
@@ -112,7 +114,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$.pipe(
       map(({entities, meta}) => {
         this.__meta = meta;
-        this.__models = this.parse(entities || []).map(e => this.__model(e));
+        this.__models = this.parse(entities || []);
         this.sync$.emit();
         return this;
       }));

@@ -21,16 +21,11 @@ export enum PathSegmentNames {
   action = 'action'
 }
 
-export enum _SegmentOptionNames {
-  key = 'key',
-  parameters = 'parameters'
-}
-
 export type ODataSegment = {
   name: string;
   path: string;
   type?: string;
-  args: any;
+  args?: any;
 }
 
 function pathSegmentsBuilder(segment: ODataSegment): string {
@@ -73,10 +68,11 @@ export class ODataPathSegments {
 
   toJSON() {
     return this.segments.map(segment => {
-      let json = <any>{ name: segment.name, path: segment.path, type: segment.type };
-      let options = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.args)));
-      if (!Types.isEmpty(options))
-        json.options = options;
+      let json = <any>{ name: segment.name, path: segment.path };
+      if (segment.type !== undefined)
+        json.type = segment.type;
+      if (segment.args !== undefined)
+        json.args = Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.args)));
       return json;
     });
   }
@@ -100,7 +96,7 @@ export class ODataPathSegments {
   segment(name: string, path?: string) {
     let segment = this.find(name, path);
     if (!segment && path !== undefined) {
-      segment = { name, path, args: {} } as ODataSegment;
+      segment = { name, path } as ODataSegment;
       this.segments.push(segment);
     }
     if (segment === undefined)
@@ -144,7 +140,7 @@ export class SegmentHandler {
   }
 
   hasKey() {
-    return Types.isEmpty(this.segment.args);
+    return !Types.isEmpty(this.segment.args);
   }
 
   parameters<T>(value?: T) {
@@ -154,7 +150,7 @@ export class SegmentHandler {
   }
 
   hasParameters() {
-    return Types.isEmpty(this.segment.args);
+    return !Types.isEmpty(this.segment.args);
   }
 
   // Aliases

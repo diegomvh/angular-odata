@@ -40,8 +40,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   parameters(params: P | null) {
     let segments = this.pathSegments.clone();
     let segment = segments.segment(PathSegmentNames.function);
-    if (!segment)
-      throw new Error(`FunctionResource dosn't have segment for function`);
     segment.parameters(params !== null ? this.serialize(params) : null);
     return new ODataFunctionResource<P, R>(this.api, segments, this.queryOptions.clone());
   }
@@ -49,35 +47,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
   //#region Mutable Resource
   get segment() {
-    const res = this;
     const segments = this.pathSegments;
     return {
-      entitySet(name?: string) {
-        const segment = segments.segment(PathSegmentNames.entitySet);
-        if (name !== undefined)
-          segment.path(name);
-        return segment;
+      entitySet() {
+        return segments.segment(PathSegmentNames.entitySet);
       },
-      key<E>(key?: EntityKey<E>) {
-        const api = res.api;
-        const segment = segments.segment(PathSegmentNames.entitySet);
-        if (key !== undefined) {
-          const type = res.type();
-          if (type !== undefined) {
-            let parser = api.findParserForType<E>(type);
-            if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
-              key = parser.resolveKey(key);
-          }
-          segment.key(key);
-        }
-        return segment.key<EntityKey<E>>();
-      },
-      parameters(params?: P) {
-        let segment = segments.segment(PathSegmentNames.function);
-        if (params !== undefined) {
-          segment.parameters(res.serialize(params));
-        }
-        return segment.parameters();
+      function() {
+        return segments.segment(PathSegmentNames.function);
       }
     }
   }

@@ -38,28 +38,16 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
   //#region Mutable Resource
   get segment() {
-    const res = this;
     const segments = this.pathSegments;
     return {
-      entitySet(name?: string) {
-        const segment = segments.segment(PathSegmentNames.entitySet);
-        if (name !== undefined)
-          segment.path(name);
-        return segment;
+      entitySet() {
+        return segments.segment(PathSegmentNames.entitySet);
       },
-      key<E>(key?: EntityKey<E>) {
-        const api = res.api;
-        const segment = segments.segment(PathSegmentNames.entitySet);
-        if (key !== undefined) {
-          const type = res.type();
-          if (type !== undefined) {
-            let parser = api.findParserForType<E>(type);
-            if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
-              key = parser.resolveKey(key);
-          }
-          segment.key(key);
-        }
-        return segment.key<EntityKey<E>>();
+      singleton() {
+        return segments.segment(PathSegmentNames.singleton);
+      },
+      action() {
+        return segments.segment(PathSegmentNames.action);
       }
     }
   }

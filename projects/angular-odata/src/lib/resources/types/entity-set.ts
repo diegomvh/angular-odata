@@ -16,6 +16,7 @@ import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
 import { ODataEntity, ODataEntities } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
+import { Types } from '../../utils';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -45,7 +46,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   entity(key?: EntityKey<T>) {
     const entity = ODataEntityResource.factory<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
     if (key !== undefined)
-      entity.segment.key(key);
+      entity.segment.entitySet().key( Types.isObject(key) ? this.schema?.resolveKey(key) : key );
     return entity;
   }
 
@@ -152,13 +153,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   get segment() {
     const segments = this.pathSegments;
     return {
-      entitySet(name?: string) {
-        let segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`EntityResourse dosn't have segment for entitySet, WTF?`);
-        if (name !== undefined)
-          segment.path(name);
-        return segment;
+      entitySet() {
+        return segments.segment(PathSegmentNames.entitySet);
       }
     }
   }

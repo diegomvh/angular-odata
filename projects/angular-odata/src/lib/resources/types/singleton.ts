@@ -108,6 +108,15 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
+  get segment() {
+    const segments = this.pathSegments;
+    return {
+      singleton() {
+        return segments.segment(PathSegmentNames.singleton);
+      }
+    }
+  }
+
   get query() {
     const options = this.queryOptions;
     return {

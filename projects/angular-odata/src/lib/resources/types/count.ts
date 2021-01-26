@@ -15,6 +15,18 @@ export class ODataCountResource extends ODataResource<any> {
     return new ODataCountResource(api, segments, options);
   }
 
+  get segment() {
+    const segments = this.pathSegments;
+    return {
+      entitySet() {
+        return segments.segment(PathSegmentNames.entitySet);
+      },
+      navigationProperty() {
+        return segments.segment(PathSegmentNames.navigationProperty);
+      }
+    }
+  }
+
   clone() {
     return new ODataCountResource(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }

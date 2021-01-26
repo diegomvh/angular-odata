@@ -44,7 +44,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
     const entity = this.clone();
-    entity.segment.key(key);
+    entity.segment.entitySet().key(key);
     return entity;
   }
 
@@ -127,32 +127,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   //#region Mutable Resource
   get segment() {
-    const res = this;
     const segments = this.pathSegments;
     return {
-      entitySet(name?: string) {
-        let segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`EntityResourse dosn't have segment for entitySet`);
-        if (name !== undefined)
-          segment.path(name);
-        return segment;
-      },
-      key(key?: EntityKey<T>) {
-        const api = res.api;
-        const segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`EntityResourse dosn't have segment for key`);
-        if (key !== undefined) {
-          const type = res.type();
-          if (type !== undefined) {
-            let parser = api.findParserForType<T>(type);
-            if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
-              key = parser.resolveKey(key);
-          }
-          segment.key(key);
-        }
-        return segment.key<EntityKey<T>>();
+      entitySet() {
+        return segments.segment(PathSegmentNames.entitySet);
       }
     }
   }

@@ -72,6 +72,7 @@ export const Objects = {
     }
     return true;
   },
+
   difference(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
     if (!object2 || !Types.isObject(object2)) {
       return object1;

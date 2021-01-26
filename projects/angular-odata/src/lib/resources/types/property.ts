@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ODataValueResource } from './value';
 
 import { ODataResource } from '../resource';
-import { ODataQueryOptions } from '../query-options';
+import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
+import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../builder';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -48,6 +49,62 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
         parser.typeFor(path) : undefined;
     }
     return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+  }
+  //#endregion
+
+  //#region Mutable Resource
+  get segment() {
+    const segments = this.pathSegments;
+    return {
+      entitySet() {
+        return segments.segment(PathSegmentNames.entitySet);
+      },
+      singleton() {
+        return segments.segment(PathSegmentNames.singleton);
+      },
+      property() {
+        return segments.segment(PathSegmentNames.property);
+      }
+    }
+  }
+
+  get query() {
+    const options = this.queryOptions;
+    return {
+      select(opts?: Select<T>) {
+        return options.option<Select<T>>(QueryOptionNames.select, opts);
+      },
+      expand(opts?: Expand<T>) {
+        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
+      },
+      transform(opts?: Transform<T>) {
+        return options.option<Transform<T>>(QueryOptionNames.transform, opts);
+      },
+      search(opts?: string) {
+        return options.option<string>(QueryOptionNames.search, opts);
+      },
+      filter(opts?: Filter) {
+        return options.option<Filter>(QueryOptionNames.filter, opts);
+      },
+      orderBy(opts?: OrderBy<T>) {
+        return options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
+      },
+      format(opts?: string) {
+        return options.option<string>(QueryOptionNames.format, opts);
+      },
+      top(opts?: number) {
+        return options.option<number>(QueryOptionNames.top, opts);
+      },
+      skip(opts?: number) {
+        return options.option<number>(QueryOptionNames.skip, opts);
+      },
+      skiptoken(opts?: string) {
+        return options.option<string>(QueryOptionNames.skiptoken, opts);
+      },
+      custom(opts?: PlainObject) {
+        return options.option<PlainObject>(QueryOptionNames.custom, opts);
+      }
+    }
   }
   //#endregion
 

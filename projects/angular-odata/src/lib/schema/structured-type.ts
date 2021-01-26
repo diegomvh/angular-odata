@@ -78,6 +78,10 @@ export class ODataStructuredType<T> {
     return attrs;
   }
 
+  resolveKey(attrs: any) {
+    return this.parser.resolveKey(attrs);
+  }
+
   defaults() {
     return this.parser.defaults();
   }

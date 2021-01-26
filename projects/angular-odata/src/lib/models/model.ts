@@ -5,7 +5,6 @@ import {
   ODataResource,
   ODataEntityResource,
   ODataPropertyResource,
-  ODataFunctionResource,
   ODataNavigationPropertyResource,
   HttpOptions,
   HttpEntityOptions,
@@ -19,19 +18,20 @@ import { ODataStructuredTypeFieldParser } from '../parsers/structured-type';
 import { Types } from '../utils/types';
 import { Objects } from '../utils';
 import { EventEmitter } from '@angular/core';
+import { ODataStructuredType } from '../schema';
 
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>;
 };
 
 export class ODataModel<T> {
-  private __entity: T;
+  private __entity: T = {} as T;
   private __resource: ODataResource<T> | null = null;
   private __meta: ODataEntityMeta;
   private __relations: { [name: string]: {
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
     field: ODataStructuredTypeFieldParser<any>,
-    subs: Subscription[]
+    subscriptions: Subscription[]
   }} = {};
   //Events
   change$ = new EventEmitter<{attribute: string, value: any, previous?: any}>();
@@ -40,31 +40,46 @@ export class ODataModel<T> {
   destroy$ = new EventEmitter();
   invalid$ = new EventEmitter();
 
-  constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta } = {}) {
+  constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntityMeta, parse?: boolean } = {}) {
+    data = data || {};
     if (options.resource instanceof ODataResource)
       this.attach(options.resource);
     this.__meta = options.meta || new ODataEntityMeta(data, {options: options.resource?.api.options});
-    this.__entity = this.parse(
-      Objects.merge(this.defaults(), this.__meta.attributes<T>(data))
-    ) as T;
+    data = this.__meta.attributes<T>(data);
+    if (options.parse)
+      data = this.parse(data) || {};
+    this.assign(Objects.merge(this.defaults(), data));
   }
 
   attach(resource: ODataResource<T>) {
     if (this.__resource !== null && this.__resource.type() !== resource.type() && !resource.isSubtypeOf(this.__resource))
       throw new Error(`Can't reattach ${resource.type()} to ${this.__resource.type()}`);
+    const bind = this.__resource === null || this.__resource.type() !== resource.type();
     this.__resource = resource;
-    (this._schema?.fields({include_navigation: true, include_parents: true}) || [])
-      .forEach(field => {
-        Object.defineProperty(this, field.name, {
-          configurable: true,
-          get() {
-            return this.__get(field);
-          },
-          set(model: ODataModel<any> | null) {
-            this.__set(field, model);
-          }
+
+    // Bind Properties
+    if (bind) {
+      (this._schema?.fields({include_navigation: true, include_parents: true}) || [])
+        .forEach(field => {
+          Object.defineProperty(this, field.name, {
+            configurable: true,
+            get() {
+              return this.__get(field);
+            },
+            set(model: ODataModel<any> | null) {
+              this.__set(field, model);
+            }
+          });
         });
-      });
+    }
+
+    // Attach relations
+    Object.values(this.__relations).forEach(({field, model}) => {
+      if (model !== null) {
+        const resource = field.isNavigation() ? this._navigationProperty<any>(field.name) : this._property<any>(field.name);
+        model.attach(resource);
+      }
+    });
     return this;
   }
 
@@ -73,7 +88,7 @@ export class ODataModel<T> {
   }
 
   isNew() {
-    return !(this.__resource instanceof ODataEntityResource) || Types.isEmpty(this.__resource.segment.key(this));
+    return !(this.__resource instanceof ODataEntityResource) || Types.isEmpty(this.__resource.segment.entitySet().hasKey());
   }
 
   // Validation
@@ -140,6 +155,7 @@ export class ODataModel<T> {
       }
     };
     assign(this, attrs);
+    return this;
   }
 
   clone() {
@@ -171,7 +187,6 @@ export class ODataModel<T> {
   fetch(options?: HttpOptions): Observable<this> {
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
       if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't fetch entity without key`);
       obs$ = this.__resource.get(options);
@@ -180,9 +195,6 @@ export class ODataModel<T> {
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {}));
     } else if (this.__resource instanceof ODataPropertyResource) {
       obs$ =  this.__resource.get(
-        Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {}));
-    } else if (this.__resource instanceof ODataFunctionResource) {
-      obs$ = this.__resource.get(
         Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {}));
     }
     return this.__request(obs$);
@@ -201,7 +213,7 @@ export class ODataModel<T> {
   update(options?: HttpOptions): Observable<this> {
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
+      //this.__resource.segment.key(this);
       if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't update entity without key`);
       let resource = this.__resource;
@@ -229,7 +241,7 @@ export class ODataModel<T> {
   destroy(options?: HttpOptions): Observable<this> {
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
+      //this.__resource.segment.key(this);
       if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't destroy entity without key`);
       let attrs = this.toEntity() as any;
@@ -242,102 +254,62 @@ export class ODataModel<T> {
     });
   }
 
-  protected get _schema() {
-    if (!this.__resource)
+  protected get _schema(): ODataStructuredType<T> | undefined {
+    if (!this.__resource) {
       throw new Error(`Can't schema without ODataResource`);
-    return (this.__resource as ODataEntityResource<T>).schema;
-  }
-
-  protected get _segment() {
-    if (!this.__resource)
-      throw new Error(`Can't call without ODataResource`);
-    if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't use without key`);
     }
-    return (this.__resource as ODataEntityResource<T>).segment;
-  }
-
-  protected get _query() {
-    if (!this.__resource)
-      throw new Error(`Can't query without ODataResource`);
-    if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't query without key`);
-    }
-    return (this.__resource as ODataEntityResource<T>).query;
+    return (this.__resource as any).schema;
   }
 
   // Function
   protected _cast<S extends T>(type: string) {
-    if (!this.__resource)
-      throw new Error(`Can't cast without ODataResource`);
+    //if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource) {
     if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't cast without key`);
+      return this.__resource.cast<S>(type);
     }
-    return (this.__resource as ODataEntityResource<T>).cast<S>(type);
+    throw new Error(`Can't cast without ODataEntityResource or ODataNavigationPropertyResource`);
   }
 
   // Function
   protected _function<P, R>(path: string) {
-    if (!this.__resource)
-      throw new Error(`Can't navigationProperty without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't navigationProperty without key`);
+      return this.__resource.function<P, R>(path);
     }
-    return (this.__resource as ODataEntityResource<T>).function<P, R>(path);
+    throw new Error(`Can't function without ODataEntityResource`);
   }
 
   // Action
   protected _action<P, R>(path: string) {
-    if (!this.__resource)
-      throw new Error(`Can't navigationProperty without ODataResource`);
     if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't navigationProperty without key`);
+      return this.__resource.action<P, R>(path);
     }
-    return (this.__resource as ODataEntityResource<T>).action<P, R>(path);
+    throw new Error(`Can't action without ODataEntityResource`);
   }
 
   // Navigation
   protected _navigationProperty<P>(path: string) {
-    if (!this.__resource)
-      throw new Error(`Can't navigationProperty without ODataResource`);
-    if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't navigationProperty without key`);
+    if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource) {
+      return this.__resource.navigationProperty<P>(path);
     }
-    return (this.__resource as ODataEntityResource<T>).navigationProperty<P>(path);
+    throw new Error(`Can't navigationProperty without ODataEntityResource or ODataNavigationPropertyResource`);
   }
 
   protected _property<P>(path: string) {
-    if (!this.__resource)
-      throw new Error(`Can't property without ODataResource`);
-    if (this.__resource instanceof ODataEntityResource) {
-      this.__resource.segment.key(this);
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't property without key`);
+    if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource || this.__resource instanceof ODataPropertyResource) {
+      return this.__resource.property<P>(path);
     }
-    return (this.__resource as ODataEntityResource<T>).property<P>(path);
+    throw new Error(`Can't navigationProperty without ODataEntityResource or ODataNavigationPropertyResource or ODataPropertyResource`);
   }
 
   private __get<P>(field: ODataStructuredTypeFieldParser<P>): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
     const value = this.__entity[field.name as keyof T] as any;
     if (value !== null && (field.isNavigation() || field.isComplexType())) {
       if (!(field.name in this.__relations)) {
-        const prop = field.isNavigation() ? this._navigationProperty<P>(field.name) : this._property<P>(field.name);
+        const resource = field.isNavigation() ? this._navigationProperty<P>(field.name) : this._property<P>(field.name);
         const model = field.collection ?
-            prop.asCollection((value || []) as T[], new ODataEntitiesMeta(this.__meta.property(field.name) || {}, {options: this.__meta.options})) :
-            prop.asModel((value || {}) as T, new ODataEntityMeta(value || {}, {options: this.__meta.options}));
-        this.__relations[field.name] = {field, model, subs: this.__subscribe<P>(field, model)};
+            resource.asCollection((value || []) as T[], new ODataEntitiesMeta(this.__meta.property(field.name) || {}, {options: this.__meta.options})) :
+            resource.asModel((value || {}) as T, new ODataEntityMeta(value || {}, {options: this.__meta.options}));
+        this.__relations[field.name] = {field, model, subscriptions: this.__subscribe<P>(field, model)};
       }
       return this.__relations[field.name].model;
     } else {
@@ -356,16 +328,28 @@ export class ODataModel<T> {
         throw new Error(`Can't set ${type} to ${field.type}`);
       const relation = this.__relations[field.name];
       if (relation !== undefined) {
-        relation.subs.forEach(sub => sub.unsubscribe());
+        relation.subscriptions.forEach(sub => sub.unsubscribe());
       }
       current = relation?.model as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
-      this.__relations[field.name] = {model, field, subs: model !== null ? this.__subscribe(field, model) : []};
+      const resource = field.isNavigation() ? this._navigationProperty<P>(field.name) : this._property<P>(field.name);
+      if (model !== null)
+        model.attach(resource);
+      this.__relations[field.name] = {model, field, subscriptions: model !== null ? this.__subscribe(field, model) : []};
     } else {
       current = this.__entity[field.name as keyof T] as any;
       this.__entity[field.name as keyof T] = value as any;
     }
-    if (current !== value)
+    if (!Types.isEqual(current, value)) {
+      if (field.key) {
+        const key = this._schema?.resolveKey(this.toEntity());
+        if (!Types.isEmpty(key) && this.__resource instanceof ODataEntityResource) {
+          const resource = this._resource as ODataEntityResource<T>;
+          resource.segment.entitySet().key(key);
+          this.attach(resource);
+        }
+      }
       this.change$.emit({value, attribute: field.name, previous: current});
+    }
   }
 
   private __subscribe<E>(field: ODataStructuredTypeFieldParser<E>, value: ODataModel<E> | ODataCollection<E, ODataModel<E>>) {

@@ -149,28 +149,16 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   //#region Mutable Resource
   get segment() {
-    const res = this;
     const segments = this.pathSegments;
     return {
-      entitySet(name?: string) {
-        let segment = segments.segment(PathSegmentNames.entitySet);
-        if (name !== undefined)
-          segment.path(name);
-        return segment;
+      entitySet() {
+        return segments.segment(PathSegmentNames.entitySet);
       },
-      key(key?: EntityKey<T>) {
-        const api = res.api;
-        const segment = segments.segment(PathSegmentNames.navigationProperty);
-        if (key !== undefined) {
-          const type = res.type();
-          if (type !== undefined) {
-            let parser = api.findParserForType<T>(type);
-            if (parser instanceof ODataStructuredTypeParser && Types.isObject(key))
-              key = parser.resolveKey(key);
-          }
-          segment.key(key);
-        }
-        return segment.key<EntityKey<T>>();
+      singleton() {
+        return segments.segment(PathSegmentNames.singleton);
+      },
+      navigationProperty() {
+        return segments.segment(PathSegmentNames.navigationProperty);
       }
     }
   }
