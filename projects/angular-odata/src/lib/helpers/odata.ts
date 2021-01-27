@@ -134,18 +134,35 @@ export const ODataHelper = {
     ODATA_MEDIA_READLINK: '@odata.mediaReadLink',
     //odata.mediaEditLink: the link used to edit/update the stream
     ODATA_MEDIA_EDITLINK: '@odata.mediaEditLink',
+    //http://nb-mdp-dev01:57970/$metadata#recursos/$entity
+    //http://nb-mdp-dev01:57970/$metadata#categorias
+    //http://nb-mdp-dev01:57970/$metadata#juzgados
+    //http://nb-mdp-dev01:57970/$metadata#Collection(SIU.Recursos.RecursoEntry)
+    //http://nb-mdp-dev01:57970/$metadata#categorias/$entity
+    //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     context(value: {[name: string]: any}) {
       let ctx: ODataContext = {};
       if (this.ODATA_CONTEXT in value) {
         const str = value[this.ODATA_CONTEXT] as string;
-        const index = str.lastIndexOf("#");
-        ctx.metadata = str.substr(0, index);
+        let index = str.indexOf("$metadata");
+        ctx.serviceRootUrl = str.substr(0, index);
+        index = str.indexOf("#");
+        ctx.metadataUrl = str.substr(0, index);
         const parts = str.substr(index + 1).split("/");
-        ctx.entitySet = parts[0];
-        if (parts[parts.length - 1] === '$entity') {
-          ctx.entity = parts[1];
-        } else if (parts.length > 1) {
-          ctx.property = parts[1];
+        const col = parts[0].match(/Collection\(([\w\.]+)\)/);
+        if (col)
+          ctx.type = col[1];
+        else {
+          const prop = parts[0].match(/([\w\d\-_]+)\(([\w\d\-_]+)\)/);
+          if (prop) {
+            ctx.entitySet = prop[1];
+            ctx.key = prop[2];
+            ctx.property = parts[1];
+          } else {
+            ctx.entitySet = parts[0];
+            if (parts[1] && parts[1] !== '$entity')
+              ctx.type = parts[1];
+          }
         }
       }
       return ctx;
@@ -170,13 +187,12 @@ export const ODataHelper = {
       let ctx: ODataContext = {};
       if (this.ODATA_CONTEXT in value) {
         const str = value[this.ODATA_CONTEXT] as string;
-        const index = str.lastIndexOf("#");
-        ctx.metadata = str.substr(0, index);
+        let index = str.indexOf("$metadata");
+        ctx.serviceRootUrl = str.substr(0, index);
+        index = str.indexOf("#");
+        ctx.metadataUrl = str.substr(0, index);
         const parts = str.substr(index + 1).split("/");
         ctx.entitySet = parts[0];
-        if (parts[parts.length - 1] === '@Element') {
-          ctx.entity = parts[1];
-        }
       }
       return ctx;
     },

@@ -13,7 +13,7 @@ import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
-import { ODataEntity, ODataEntities } from '../responses';
+import { ODataEntity, ODataEntities, ODataEntitiesMeta } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Types } from '../../utils';
@@ -32,6 +32,15 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
+
+  asCollection<C extends ODataCollection<T, ODataModel<T>>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    let Collection = ODataCollection;
+    let type = this.type();
+    if (type !== undefined) {
+      Collection = this.api.findCollectionForType(type) || ODataCollection;
+    }
+    return new Collection(entities, {resource: this, meta}) as C;
+  }
 
   //#region Entity Config
   get schema() {

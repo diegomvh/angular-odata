@@ -11,7 +11,7 @@ import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
-import { ODataEntities, ODataEntity } from '../responses';
+import { ODataEntities, ODataEntitiesMeta, ODataEntity, ODataEntityMeta } from '../responses';
 import { ODataValueResource } from './value';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
@@ -32,11 +32,30 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
   //#endregion
 
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+    let Model = ODataModel;
+    let type = this.type();
+    if (type !== undefined) {
+      Model = this.api.findModelForType(type) || ODataModel;
+    }
+    return new Model(entity, {resource: this, meta}) as M;
+  }
+
+  asCollection<C extends ODataCollection<T, ODataModel<T>>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    let Collection = ODataCollection;
+    let type = this.type();
+    if (type !== undefined) {
+      Collection = this.api.findCollectionForType(type) || ODataCollection;
+    }
+    return new Collection(entities, {resource: this, meta}) as C;
+  }
+
   //#region Function Config
   get schema() {
     let type = this.type();
     return (type !== undefined) ?
-      this.api.findStructuredTypeForType<T>(type) : undefined;
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
   }
   ////#endregion
 

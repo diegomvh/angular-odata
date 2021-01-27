@@ -35,7 +35,7 @@ export class ODataStructuredType<T> {
     return this.annotations.find(predicate);
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     const parserSettings = Object.assign({options: this.options}, settings);
     this.parser.configure(parserSettings);
   }

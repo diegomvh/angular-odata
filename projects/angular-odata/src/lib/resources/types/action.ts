@@ -4,13 +4,13 @@ import { map } from 'rxjs/operators';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
-import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
+import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
 import { ODataResource } from '../resource';
-import { Types } from '../../utils/types';
-import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
+import { ODataEntitySetResource } from './entity-set';
+import { ODataEntityResource } from './entity';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -26,12 +26,45 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return new ODataActionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
+  returnType() {
+    return this.schema?.parser.return;
+  }
 
-  //#region Action Config
+  asModel<M extends ODataModel<R>>(entity: Partial<R>, meta?: ODataEntityMeta): M {
+    let Model = ODataModel;
+    let type = this.returnType();
+    if (type !== undefined) {
+      Model = this.api.findModelForType(type) || ODataModel;
+    }
+    let options: { resource?: ODataEntityResource<R>, meta?: ODataEntityMeta } = { meta };
+    let path = meta?.context.entitySet;
+    if (path !== undefined) {
+      options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions())
+        .entity(entity);
+    }
+    return new Model(entity, options) as M;
+  }
+
+  asCollection<C extends ODataCollection<R, ODataModel<R>>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): C {
+    let Collection = ODataCollection;
+    let type = this.returnType();
+    if (type !== undefined) {
+      Collection = this.api.findCollectionForType(type) || ODataCollection;
+    }
+    let options: { resource?: ODataEntitySetResource<R>, meta?: ODataEntitiesMeta } = { meta };
+    let path = meta?.context.entitySet;
+    if (path !== undefined) {
+      options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions());
+    }
+    return new Collection(entities, options) as C;
+  }
+
+  //#region Action Schema
   get schema() {
     let type = this.type();
     return (type !== undefined) ?
-      this.api.findCallableForType<R>(type) : undefined;
+      this.api.findCallableForType<R>(type) :
+      undefined;
   }
   ////#endregion
 

@@ -6,7 +6,7 @@ import { ODataResource } from '../resource';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
-import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
+import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
@@ -35,6 +35,24 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.api.findStructuredTypeForType<T>(type) : undefined;
   }
   ////#endregion
+
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+    let Model = ODataModel;
+    let type = this.type();
+    if (type !== undefined) {
+      Model = this.api.findModelForType(type) || ODataModel;
+    }
+    return new Model(entity, {resource: this, meta}) as M;
+  }
+
+  asCollection<C extends ODataCollection<T, ODataModel<T>>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    let Collection = ODataCollection;
+    let type = this.type();
+    if (type !== undefined) {
+      Collection = this.api.findCollectionForType(type) || ODataCollection;
+    }
+    return new Collection(entities, {resource: this, meta}) as C;
+  }
 
   //#region Inmutable Resource
   value() {

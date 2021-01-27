@@ -12,7 +12,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
-import { ODataEntity } from '../responses';
+import { ODataEntity, ODataEntityMeta } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
@@ -31,6 +31,15 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
+
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+    let Model = ODataModel;
+    let type = this.type();
+    if (type !== undefined) {
+      Model = this.api.findModelForType(type) || ODataModel;
+    }
+    return new Model(entity, {resource: this, meta}) as M;
+  }
 
   //#region Function Config
   get schema() {

@@ -76,24 +76,6 @@ export abstract class ODataResource<Type> {
     return [path, params];
   }
 
-  asModel<M extends ODataModel<Type>>(entity: Partial<Type>, meta?: ODataEntityMeta): M {
-    let Model = ODataModel;
-    let type = this.type();
-    if (type !== undefined) {
-      Model = this.api.findModelForType(type) || ODataModel;
-    }
-    return new Model(entity, {resource: this, meta}) as M;
-  }
-
-  asCollection<C extends ODataCollection<Type, ODataModel<Type>>>(entities: Partial<Type>[], meta?: ODataEntitiesMeta): C {
-    let Collection = ODataCollection;
-    let type = this.type();
-    if (type !== undefined) {
-      Collection = this.api.findCollectionForType(type) || ODataCollection;
-    }
-    return new Collection(entities, {resource: this, meta}) as C;
-  }
-
   endpointUrl() {
     return `${this.api.serviceRootUrl}${this}`;
   }

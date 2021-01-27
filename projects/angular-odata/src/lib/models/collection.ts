@@ -2,22 +2,23 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Observable, EMPTY, NEVER, of } from 'rxjs';
 
 import {
-  ODataResource,
   ODataEntitySetResource,
   ODataEntityResource,
   ODataNavigationPropertyResource,
-  ODataFunctionResource,
   ODataEntitiesMeta,
   HttpOptions,
   HttpEntitiesOptions,
-  ODataEntities
+  ODataEntities,
+  ODataPropertyResource
 } from '../resources/index';
 
-import { ODataModel } from './model';
+import { ODataModel, ODataModelResource } from './model';
 import { EventEmitter } from '@angular/core';
 
+type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
+
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
-  private __resource: ODataResource<T> | null;
+  private __resource: ODataCollectionResource<T> | null;
   private __meta: ODataEntitiesMeta;
   private __models: M[];
   get models() {
@@ -41,11 +42,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   sync$ = new EventEmitter();
   reset$ = new EventEmitter();
 
-  constructor(data?: any, options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta, parse?: boolean } = {}) {
+  constructor(data?: any, options: { resource?: ODataCollectionResource<T>, meta?: ODataEntitiesMeta, parse?: boolean } = {}) {
     data = data || {};
     this.__resource = null;
     this.__models = [] as M[];
-    if (options.resource instanceof ODataResource)
+    if (options.resource)
       this.attach(options.resource);
     this.__meta = options.meta || new ODataEntitiesMeta(data, {options: options.resource?.api.options});
     if (!Array.isArray(data))
@@ -53,7 +54,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.__models = this.parse(data);
   }
 
-  attach(resource: ODataResource<T>) {
+  attach(resource: ODataCollectionResource<T>) {
     if (this.__resource !== null && this.__resource.type() !== resource.type() && !resource.isSubtypeOf(this.__resource))
       throw new Error(`Can't reattach ${resource.type()} to ${this.__resource.type()}`);
     this.__resource = resource;
@@ -61,21 +62,25 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   get _resource() {
-    return this.__resource !== null ? this.__resource.clone() as ODataResource<T> : null;
+    return this.__resource !== null ? this.__resource.clone() as ODataCollectionResource<T> : null;
   }
 
   private __model(attrs: T): M {
-    let resource = this.__resource ? this.__resource.clone() : null;
-    if (resource instanceof ODataEntitySetResource)
-      resource = resource.entity();
-    const meta = this.__meta.entity(attrs);
-    if (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource) {
+    if (this.__resource) {
+      let resource: ODataModelResource<T>;
+      if (this.__resource instanceof ODataEntitySetResource)
+        resource = this.__resource.entity(attrs);
+      else
+        resource = this.__resource.clone();
+      const meta = this.__meta.entity(attrs);
       if (meta.type !== undefined) {
         resource.segment.entitySet().type(meta.type);
       }
+      return resource.asModel(attrs, meta) as M;
     }
-    return (resource ? resource.clone().asModel(attrs, meta) : attrs) as M;
+    throw new Error(`Can't navigationProperty without ODataEntityResource or ODataNavigationPropertyResource or ODataPropertyResource`);
   }
+
   protected parse(entities: T[]): M[] {
     return entities.map(e => this.__model(e));
   }
@@ -85,7 +90,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   clone() {
-    let options: { resource?: ODataResource<T>, meta?: ODataEntitiesMeta } = {};
+    let options: { resource?: ODataCollectionResource<T>, meta?: ODataEntitiesMeta } = {};
     if (this.__resource)
       options.resource = this.__resource.clone();
     if (this.__meta)
@@ -128,7 +133,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     } else if (this.__resource instanceof ODataNavigationPropertyResource) {
       obs$ = this.__resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount: true }, options || {}));
-    } else if (this.__resource instanceof ODataFunctionResource) {
+    } else if (this.__resource instanceof ODataPropertyResource) {
       obs$ = this.__resource.get(
         Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount: true }, options || {}));
     }

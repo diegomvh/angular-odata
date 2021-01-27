@@ -75,7 +75,7 @@ export class ODataSchema {
   }
   //#endregion
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));

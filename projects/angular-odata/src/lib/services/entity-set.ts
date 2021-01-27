@@ -30,7 +30,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
 
   // Service Config
   get entitySetSchema() {
-    return this.api.findEntitySetByName(this.name) || null;
+    return this.api.findEntitySetByName(this.name);
   }
 
   public create(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {

@@ -12,7 +12,7 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
 import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataValueResource } from './value';
-import { ODataEntity } from '../responses';
+import { ODataEntity, ODataEntityMeta } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
@@ -28,8 +28,16 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   clone() {
     return new ODataEntityResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
-
   //#endregion
+
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+    let Model = ODataModel;
+    let type = this.type();
+    if (type !== undefined) {
+      Model = this.api.findModelForType(type) || ODataModel;
+    }
+    return new Model(entity, {resource: this, meta}) as M;
+  }
 
   //#region Entity Config
   get schema() {
@@ -88,7 +96,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
-      type = callable.parser.return;
+      type = callable.parser.type;
     }
     return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }

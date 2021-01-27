@@ -1,11 +1,6 @@
 import { Types } from '../utils';
-import { Parser, StructuredTypeField, StructuredTypeConfig, Annotation, OptionsHelper } from '../types';
+import { Parser, StructuredTypeField, StructuredTypeConfig, Annotation, OptionsHelper, NONE_PARSER } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
-
-const NONE_PARSER = {
-  deserialize: (value: any, options: OptionsHelper) => value,
-  serialize: (value: any, options: OptionsHelper) => value,
-} as Parser<any>;
 
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
@@ -98,10 +93,10 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
   }
 
   configure(settings: {
-    findParserForType: (type: string) => Parser<any> | undefined,
+    findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
-    this.parser = settings.findParserForType(this.type) || NONE_PARSER;
+    this.parser = settings.findParserForType(this.type);
     if (this.default !== undefined)
       this.default = this.deserialize(this.default, settings.options);
   }
@@ -224,7 +219,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
   }
 
   configure(settings: {
-    findParserForType: (type: string) => Parser<any> | undefined,
+    findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
     if (this.base) {
