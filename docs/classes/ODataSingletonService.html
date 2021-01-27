@@ -64,6 +64,12 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+            </p>
 
 
 
@@ -88,6 +94,15 @@
                                     <span class="modifier">Public</span>
                                 <a href="#entity">entity</a>
                             </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#attach">attach</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Abstract</span>
+                                <a href="#entity">entity</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -105,13 +120,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#api">api</a>
-                                </li>
-                                <li>
-                                    <a href="#entitySetSchema">entitySetSchema</a>
-                                </li>
-                                <li>
-                                    <a href="#structuredSchema">structuredSchema</a>
+                                    <a href="#singletonSchema">singletonSchema</a>
                                 </li>
                             </ul>
                         </td>
@@ -120,78 +129,6 @@
     </table>
 </section>
 
-            <section>
-    <h3 id="constructor">Constructor</h3>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-<code>constructor(client: <a href="../injectables/ODataClient.html">ODataClient</a>, name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, entityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                    </td>
-                </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:5</a></div>
-                            </td>
-                        </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                            <div>
-                                    <b>Parameters :</b>
-                                    <table class="params">
-                                        <thead>
-                                            <tr>
-                                                <td>Name</td>
-                                                    <td>Type</td>
-                                                <td>Optional</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr>
-                                                        <td>client</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="../injectables/ODataClient.html" target="_self" >ODataClient</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>name</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>entityType</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            Yes
-                                                    </td>
-                                                    
-                                                </tr>
-                                        </tbody>
-                                    </table>
-                            </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-</section>
 
 
             <section>
@@ -223,8 +160,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="13"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:13</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="11"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:11</a></div>
                 </td>
             </tr>
 
@@ -303,8 +240,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="8"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:8</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="6"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:6</a></div>
                 </td>
             </tr>
 
@@ -315,6 +252,171 @@
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../classes/ODataSingletonResource.html" target="_self" >ODataSingletonResource&lt;T&gt;</a></code>
 
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="attach"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            attach
+                        </b>
+                        <a href="#attach"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>attach(value: M)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:11</a></code>
+</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>M</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                            <code>M</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>M</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="entity"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            <span class="modifier">Abstract</span>
+                            entity
+                        </b>
+                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>entity(key?: <a href="../undefineds/EntityKey.html">EntityKey<T></a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:9</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>key</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;T&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -334,63 +436,19 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="api"></a>
-                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="singletonSchema"></a>
+                        <span class="name"><b>singletonSchema</b><a href="#singletonSchema"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>api()</code></span>
+                        <span class="accessor"><b>get</b><code>singletonSchema()</code></span>
                     </td>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:18</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="entitySetSchema"></a>
-                        <span class="name"><b>entitySetSchema</b><a href="#entitySetSchema"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>entitySetSchema()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:23</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="structuredSchema"></a>
-                        <span class="name"><b>structuredSchema</b><a href="#structuredSchema"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>structuredSchema()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:28</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:15</a></div>
                                 </td>
                             </tr>
 
@@ -401,37 +459,22 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataClient } from &quot;../client&quot;;
-import { ODataModel } from &#x27;../models/model&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataModel } from &#x27;../models/model&#x27;;
 import { ODataSingletonResource } from &#x27;../resources&#x27;;
+import { ODataEntityService } from &quot;./entity&quot;;
 
-export class ODataSingletonService&lt;T&gt; {
-  constructor(protected client: ODataClient, protected name: string, protected entityType?: string) { }
-
+export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; {
   public entity(): ODataSingletonResource&lt;T&gt; {
-    return this.client.singleton(this.name, this.entityType);
+    return this.client.singleton(this.name, this.apiNameOrEntityType);
   }
 
   // Models
   public attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): M {
     return value.attach(this.entity());
   }
-
   // Service Config
-  get api() {
-    return this.client.apiForType(this.entityType);
-  }
-
-  // Service Config
-  get entitySetSchema() {
+  get singletonSchema() {
     return this.api.findEntitySetByName(this.name);
-  }
-
-  // Entity Config
-  get structuredSchema() {
-    if (this.entityType &#x3D;&#x3D;&#x3D; undefined)
-      return null;
-    return this.api.findStructuredTypeForType&lt;T&gt;(this.entityType) || null;
   }
 }
 

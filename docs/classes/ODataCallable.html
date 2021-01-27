@@ -590,7 +590,8 @@ export class ODataCallable&lt;R&gt; {
   }
 
   configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; | undefined }) {
-    this.parser.configure(settings);
+    const parserSettings &#x3D; Object.assign({options: this.options}, settings);
+    this.parser.configure(parserSettings);
   }
 }
 </code></pre>

@@ -86,8 +86,8 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#client">client</a>
+                                    <span class="modifier">Public</span>
+                                <a href="#api">api</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -179,8 +179,14 @@
                                 <a href="#delete">delete</a>
                             </li>
                             <li>
+                                <a href="#endpointUrl">endpointUrl</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Protected</span>
                                 <a href="#get">get</a>
+                            </li>
+                            <li>
+                                <a href="#isSubtypeOf">isSubtypeOf</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -236,6 +242,9 @@
                                     <a href="#schema">schema</a>
                                 </li>
                                 <li>
+                                    <a href="#segment">segment</a>
+                                </li>
+                                <li>
                                     <a href="#query">query</a>
                                 </li>
                             </ul>
@@ -255,18 +264,18 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="client"></a>
+                        <a name="api"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Protected</span>
-                            client</b>
-                            <a href="#client"><span class="icon ion-ios-link"></span></a>
+                                <span class="modifier">Public</span>
+                            api</b>
+                            <a href="#api"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../injectables/ODataClient.html" target="_self" >ODataClient</a></code>
+                            <i>Type : </i>        <code><a href="../classes/ODataApi.html" target="_self" >ODataApi</a></code>
 
                         </td>
                     </tr>
@@ -278,7 +287,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:28</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:29</a></code>
 </div>
                             </td>
                         </tr>
@@ -313,7 +322,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:29</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:30</a></code>
 </div>
                             </td>
                         </tr>
@@ -348,7 +357,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:30</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:31</a></code>
 </div>
                             </td>
                         </tr>
@@ -385,8 +394,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="58"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:58</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:63</a></div>
                 </td>
             </tr>
 
@@ -503,8 +512,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="98"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:98</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:103</a></div>
                 </td>
             </tr>
 
@@ -573,8 +582,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="150"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:150</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="164"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:164</a></div>
                 </td>
             </tr>
 
@@ -639,8 +648,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="86"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:86</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:91</a></div>
                 </td>
             </tr>
 
@@ -704,7 +713,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>factory(client: <a href="../injectables/ODataClient.html">ODataClient</a>, path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type: string | null, segments: <a href="../classes/ODataPathSegments.html">ODataPathSegments</a>, options: <a href="../interfaces/Options.html">ODataQueryOptions</a>)</code>
+                    <code>factory(api: <a href="../classes/ODataApi.html">ODataApi</a>, path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, type: string | undefined, segments: <a href="../classes/ODataPathSegments.html">ODataPathSegments</a>, options: <a href="../interfaces/Options.html">ODataQueryOptions</a>)</code>
                 </td>
             </tr>
 
@@ -740,9 +749,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>client</td>
+                                    <td>api</td>
                                     <td>
-                                                <code><a href="../injectables/ODataClient.html" target="_self" >ODataClient</a></code>
+                                                <code><a href="../classes/ODataApi.html" target="_self" >ODataApi</a></code>
                                     </td>
 
                                     <td>
@@ -766,7 +775,7 @@
                                 <tr>
                                     <td>type</td>
                                     <td>
-                                            <code>string | null</code>
+                                            <code>string | undefined</code>
                                     </td>
 
                                     <td>
@@ -837,8 +846,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="158"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:158</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="172"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:172</a></div>
                 </td>
             </tr>
 
@@ -907,8 +916,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="92"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:92</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:97</a></div>
                 </td>
             </tr>
 
@@ -977,8 +986,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="69"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:69</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:74</a></div>
                 </td>
             </tr>
 
@@ -1056,8 +1065,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="126"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:126</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="140"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:140</a></div>
                 </td>
             </tr>
 
@@ -1126,8 +1135,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="162"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:162</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="176"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:176</a></div>
                 </td>
             </tr>
 
@@ -1189,15 +1198,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>navigationProperty(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>navigationProperty(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:44</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="43"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:43</a></div>
                 </td>
             </tr>
 
@@ -1225,7 +1234,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>name</td>
+                                    <td>path</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -1274,8 +1283,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="144"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:144</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="158"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:158</a></div>
                 </td>
             </tr>
 
@@ -1355,8 +1364,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="132"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:132</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="146"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:146</a></div>
                 </td>
             </tr>
 
@@ -1430,15 +1439,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>property(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>property(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:53</a></div>
                 </td>
             </tr>
 
@@ -1466,7 +1475,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>name</td>
+                                    <td>path</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -1515,8 +1524,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="138"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:138</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="152"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:152</a></div>
                 </td>
             </tr>
 
@@ -1596,8 +1605,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="80"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:80</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:85</a></div>
                 </td>
             </tr>
 
@@ -1672,7 +1681,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:125</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:132</a></code>
 </div>
                 </td>
             </tr>
@@ -1760,7 +1769,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:84</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:88</a></code>
 </div>
                 </td>
             </tr>
@@ -1856,7 +1865,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:75</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:79</a></code>
 </div>
                 </td>
             </tr>
@@ -1954,7 +1963,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:102</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:109</a></code>
 </div>
                 </td>
             </tr>
@@ -2001,7 +2010,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:226</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:228</a></code>
 </div>
                 </td>
             </tr>
@@ -2053,6 +2062,51 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="endpointUrl"></a>
+                    <span class="name">
+                        <b>
+                            endpointUrl
+                        </b>
+                        <a href="#endpointUrl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>endpointUrl()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:97</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="get"></a>
                     <span class="name">
                         <b>
@@ -2079,7 +2133,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:196</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:198</a></code>
 </div>
                 </td>
             </tr>
@@ -2118,6 +2172,82 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSubtypeOf"></a>
+                    <span class="name">
+                        <b>
+                            isSubtypeOf
+                        </b>
+                        <a href="#isSubtypeOf"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isSubtypeOf(other: <a href="../classes/ODataResource.html">ODataResource<any></a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:57</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>other</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
 
                     </div>
                     <div class="io-description">
@@ -2157,7 +2287,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:218</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:220</a></code>
 </div>
                 </td>
             </tr>
@@ -2250,7 +2380,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:64</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:68</a></code>
 </div>
                 </td>
             </tr>
@@ -2288,7 +2418,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:203</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:205</a></code>
 </div>
                 </td>
             </tr>
@@ -2383,7 +2513,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:210</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:212</a></code>
 </div>
                 </td>
             </tr>
@@ -2478,7 +2608,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:130</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:137</a></code>
 </div>
                 </td>
             </tr>
@@ -2565,7 +2695,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:104</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:111</a></code>
 </div>
                 </td>
             </tr>
@@ -2641,7 +2771,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:118</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:125</a></code>
 </div>
                 </td>
             </tr>
@@ -2686,7 +2816,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:94</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:101</a></code>
 </div>
                 </td>
             </tr>
@@ -2731,7 +2861,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:45</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:46</a></code>
 </div>
                 </td>
             </tr>
@@ -2841,6 +2971,28 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="segment"></a>
+                        <span class="name"><b>segment</b><a href="#segment"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>segment()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:111</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="query"></a>
                         <span class="name"><b>query</b><a href="#query"><span class="icon ion-ios-link"></span></a></span>
                     </td>
@@ -2853,7 +3005,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:106</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="120" class="link-to-prism">projects/angular-odata/src/lib/resources/types/singleton.ts:120</a></div>
                                 </td>
                             </tr>
 
@@ -2866,109 +3018,123 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
 
-import { ODataClient } from &#x27;../../client&#x27;;
 import { Expand, Select, PlainObject } from &#x27;../builder&#x27;;
 import { QueryOptionNames } from &#x27;../query-options&#x27;;
 import { ODataPathSegments, PathSegmentNames } from &#x27;../path-segments&#x27;;
 import { ODataQueryOptions } from &#x27;../query-options&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
 
-import { ODataNavigationPropertyResource } from &#x27;./navigationproperty&#x27;;
+import { ODataNavigationPropertyResource } from &#x27;./navigation-property&#x27;;
 import { ODataPropertyResource } from &#x27;./property&#x27;;
 import { ODataActionResource } from &#x27;./action&#x27;;
 import { ODataFunctionResource } from &#x27;./function&#x27;;
 import { HttpOptions, HttpEntityOptions } from &#x27;./options&#x27;;
-import { ODataEntityParser } from &#x27;../../parsers/entity&#x27;;
+import { ODataStructuredTypeParser } from &#x27;../../parsers/structured-type&#x27;;
 import { ODataEntity } from &#x27;../responses&#x27;;
 import { map } from &#x27;rxjs/operators&#x27;;
 import { ODataModel } from &#x27;../../models&#x27;;
+import { ODataApi } from &#x27;../../api&#x27;;
 
 export class ODataSingletonResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   //#region Factory
-  static factory&lt;R&gt;(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment &#x3D; segments.segment(PathSegmentNames.singleton, path)
-    if (type !&#x3D;&#x3D; null)
-      segment.setType(type);
+  static factory&lt;R&gt;(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment &#x3D; segments.add(PathSegmentNames.singleton, path)
+    if (type !&#x3D;&#x3D; undefined)
+      segment.type(type);
     options.keep(QueryOptionNames.format);
-    return new ODataSingletonResource&lt;R&gt;(client, segments, options);
+    return new ODataSingletonResource&lt;R&gt;(api, segments, options);
   }
 
   clone() {
-    return new ODataSingletonResource&lt;T&gt;(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataSingletonResource&lt;T&gt;(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
   //#region Function Config
   get schema() {
     let type &#x3D; this.type();
-    if (type &#x3D;&#x3D;&#x3D; null) return null;
-    return this.api.findStructuredTypeForType&lt;T&gt;(type) || null;
+    return (type !&#x3D;&#x3D; undefined) ? this.api.findStructuredTypeForType&lt;T&gt;(type) : undefined;
   }
   ////#endregion
 
   //#region Inmutable Resource
-  navigationProperty&lt;N&gt;(name: string) {
-    let parser &#x3D; this.client.parserFor&lt;N&gt;(this);
-    let type &#x3D; parser instanceof ODataEntityParser?
-      parser.typeFor(name) : null;
-    return ODataNavigationPropertyResource.factory&lt;N&gt;(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  navigationProperty&lt;N&gt;(path: string) {
+    let type &#x3D; this.type();
+    if (type !&#x3D;&#x3D; undefined) {
+      let parser &#x3D; this.api.findParserForType&lt;N&gt;(type);
+      type &#x3D; parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : undefined;
+    }
+    return ODataNavigationPropertyResource.factory&lt;N&gt;(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  property&lt;P&gt;(name: string) {
-    let parser &#x3D; this.client.parserFor&lt;P&gt;(this);
-    let type &#x3D; parser instanceof ODataEntityParser?
-      parser.typeFor(name) : null;
-    return ODataPropertyResource.factory&lt;P&gt;(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  property&lt;P&gt;(path: string) {
+    let type &#x3D; this.type();
+    if (type !&#x3D;&#x3D; undefined) {
+      let parser &#x3D; this.api.findParserForType&lt;P&gt;(type);
+      type &#x3D; parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : undefined;
+    }
+    return ODataPropertyResource.factory&lt;P&gt;(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   action&lt;P, R&gt;(name: string) {
-    let type &#x3D; null;
+    let type;
     let path &#x3D; name;
     const callable &#x3D; this.api.findCallableForType(name);
     if (callable !&#x3D;&#x3D; undefined) {
       path &#x3D; callable.path;
       type &#x3D; callable.parser.type;
     }
-    return ODataActionResource.factory&lt;P, R&gt;(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataActionResource.factory&lt;P, R&gt;(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function&lt;P, R&gt;(name: string) {
-    let type &#x3D; null;
+    let type;
     let path &#x3D; name;
     const callable &#x3D; this.api.findCallableForType(name);
     if (callable !&#x3D;&#x3D; undefined) {
       path &#x3D; callable.path;
       type &#x3D; callable.parser.type;
     }
-    return ODataFunctionResource.factory&lt;P, R&gt;(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataFunctionResource.factory&lt;P, R&gt;(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   select(opts: Select&lt;T&gt;) {
     let options &#x3D; this.queryOptions.clone();
     options.option&lt;Select&lt;T&gt;&gt;(QueryOptionNames.select, opts);
-    return new ODataSingletonResource&lt;T&gt;(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource&lt;T&gt;(this.api, this.pathSegments.clone(), options);
   }
 
   expand(opts: Expand&lt;T&gt;) {
     let options &#x3D; this.queryOptions.clone();
     options.option&lt;Expand&lt;T&gt;&gt;(QueryOptionNames.expand, opts);
-    return new ODataSingletonResource&lt;T&gt;(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource&lt;T&gt;(this.api, this.pathSegments.clone(), options);
   }
 
   format(opts: string) {
     let options &#x3D; this.queryOptions.clone();
     options.option&lt;string&gt;(QueryOptionNames.format, opts);
-    return new ODataSingletonResource&lt;T&gt;(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource&lt;T&gt;(this.api, this.pathSegments.clone(), options);
   }
 
   custom(opts: PlainObject) {
     let options &#x3D; this.queryOptions.clone();
     options.option&lt;PlainObject&gt;(QueryOptionNames.custom, opts);
-    return new ODataSingletonResource&lt;T&gt;(this.client, this.pathSegments.clone(), options);
+    return new ODataSingletonResource&lt;T&gt;(this.api, this.pathSegments.clone(), options);
   }
   //#endregion
 
   //#region Mutable Resource
+  get segment() {
+    const segments &#x3D; this.pathSegments;
+    return {
+      singleton() {
+        return segments.get(PathSegmentNames.singleton);
+      }
+    }
+  }
+
   get query() {
     const options &#x3D; this.queryOptions;
     return {

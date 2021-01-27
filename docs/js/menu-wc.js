@@ -224,13 +224,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataEntityContainer.html" data-type="entity-link">ODataEntityContainer</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataEntityFieldParser.html" data-type="entity-link">ODataEntityFieldParser</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/ODataEntityMeta.html" data-type="entity-link">ODataEntityMeta</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/ODataEntityParser.html" data-type="entity-link">ODataEntityParser</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataEntityResource.html" data-type="entity-link">ODataEntityResource</a>
@@ -245,13 +239,16 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataEntitySetResource.html" data-type="entity-link">ODataEntitySetResource</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataEnumFieldParser.html" data-type="entity-link">ODataEnumFieldParser</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/ODataEnumParser.html" data-type="entity-link">ODataEnumParser</a>
+                                <a href="classes/ODataEntitySetService.html" data-type="entity-link">ODataEntitySetService</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataEnumType.html" data-type="entity-link">ODataEnumType</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataEnumTypeFieldParser.html" data-type="entity-link">ODataEnumTypeFieldParser</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataEnumTypeParser.html" data-type="entity-link">ODataEnumTypeParser</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataFunctionResource.html" data-type="entity-link">ODataFunctionResource</a>
@@ -321,6 +318,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/ODataStructuredType.html" data-type="entity-link">ODataStructuredType</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataStructuredTypeFieldParser.html" data-type="entity-link">ODataStructuredTypeFieldParser</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataStructuredTypeParser.html" data-type="entity-link">ODataStructuredTypeParser</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataValueResource.html" data-type="entity-link">ODataValueResource</a>

@@ -79,10 +79,16 @@
                             <a href="#CallableConfig" title="projects/angular-odata/src/lib/types.ts"><b>CallableConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
-                            <a href="#Duration" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Duration</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                            <a href="#Decimal" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Decimal</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DeepPartial" title="projects/angular-odata/src/lib/models/model.ts"><b>DeepPartial</b>&nbsp;&nbsp;&nbsp;(projects/.../model.ts)</a>
                         </li>
                         <li>
                             <a href="#Duration" title="projects/angular-odata/src/lib/parsers/edm.ts"><b>Duration</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Duration" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Duration</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#EntityContainerConfig" title="projects/angular-odata/src/lib/types.ts"><b>EntityContainerConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -139,19 +145,19 @@
                             <a href="#Json" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Json</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaConfig" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaCustom" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaCustom</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaExpand" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaExpand</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaExpand" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaExpand</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaExpandOptions" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaExpandOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaExpandOptions" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaExpandOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaOrder" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaOrder</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaOptions" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaSelect" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaSelect</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaSelect" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaSelect</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
                             <a href="#NestedExpandOptions" title="projects/angular-odata/src/lib/resources/builder.ts"><b>NestedExpandOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -266,6 +272,22 @@
                 <td class="col-md-4">
                     <a name="Binary"></a>
                     <span class="name"><b>Binary</b><a href="#Binary"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Decimal"></a>
+                    <span class="name"><b>Decimal</b><a href="#Decimal"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
@@ -622,7 +644,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias</code>
+                    <code>    <code>string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias | Decimal</code>
 </code>
                 </td>
             </tr>
@@ -778,86 +800,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="JsonSchemaConfig"></a>
-                    <span class="name"><b>JsonSchemaConfig</b><a href="#JsonSchemaConfig"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>        <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaExpandOptions&lt;T&gt;</a></code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaExpand"></a>
-                    <span class="name"><b>JsonSchemaExpand</b><a href="#JsonSchemaExpand"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code></code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaExpandOptions"></a>
-                    <span class="name"><b>JsonSchemaExpandOptions</b><a href="#JsonSchemaExpandOptions"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>literal type</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaOrder"></a>
-                    <span class="name"><b>JsonSchemaOrder</b><a href="#JsonSchemaOrder"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>Array&lt;T&gt;</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaSelect"></a>
-                    <span class="name"><b>JsonSchemaSelect</b><a href="#JsonSchemaSelect"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>Array&lt;T&gt;</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="ODataContext"></a>
                     <span class="name"><b>ODataContext</b><a href="#ODataContext"><span class="icon ion-ios-link"></span></a></span>
                 </td>
@@ -950,6 +892,24 @@
             </tr>
         </tbody>
     </table>
+</section>    <h3>projects/angular-odata/src/lib/models/model.ts</h3>
+    <section>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DeepPartial"></a>
+                    <span class="name"><b>DeepPartial</b><a href="#DeepPartial"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>projects/angular-odata/src/lib/parsers/edm.ts</h3>
     <section>
     <table class="table table-sm table-bordered">
@@ -1029,6 +989,88 @@
             <tr>
                 <td class="col-md-4">
                     <code>    <code></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/parsers/structured-type.ts</h3>
+    <section>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaCustom"></a>
+                    <span class="name"><b>JsonSchemaCustom</b><a href="#JsonSchemaCustom"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaExpand"></a>
+                    <span class="name"><b>JsonSchemaExpand</b><a href="#JsonSchemaExpand"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaExpandOptions"></a>
+                    <span class="name"><b>JsonSchemaExpandOptions</b><a href="#JsonSchemaExpandOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaOptions"></a>
+                    <span class="name"><b>JsonSchemaOptions</b><a href="#JsonSchemaOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaExpandOptions&lt;T&gt;</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaSelect"></a>
+                    <span class="name"><b>JsonSchemaSelect</b><a href="#JsonSchemaSelect"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>Array&lt;T&gt;</code>
 </code>
                 </td>
             </tr>

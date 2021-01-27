@@ -136,6 +136,9 @@
                             <a href="#Dates" title="projects/angular-odata/src/lib/utils/dates.ts"><b>Dates</b>&nbsp;&nbsp;&nbsp;(projects/.../dates.ts)</a>
                         </li>
                         <li>
+                            <a href="#decimal" title="projects/angular-odata/src/lib/resources/builder.ts"><b>decimal</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#DEFAULT_FETCH_POLICY" title="projects/angular-odata/src/lib/constants.ts"><b>DEFAULT_FETCH_POLICY</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
@@ -208,7 +211,10 @@
                             <a href="#NONE_PARSER" title="projects/angular-odata/src/lib/parsers/callable.ts"><b>NONE_PARSER</b>&nbsp;&nbsp;&nbsp;(projects/.../callable.ts)</a>
                         </li>
                         <li>
-                            <a href="#NONE_PARSER" title="projects/angular-odata/src/lib/parsers/entity.ts"><b>NONE_PARSER</b>&nbsp;&nbsp;&nbsp;(projects/.../entity.ts)</a>
+                            <a href="#NONE_PARSER" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>NONE_PARSER</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Objects" title="projects/angular-odata/src/lib/utils/objects.ts"><b>Objects</b>&nbsp;&nbsp;&nbsp;(projects/.../objects.ts)</a>
                         </li>
                         <li>
                             <a href="#ODATA_ALIAS_PREFIX" title="projects/angular-odata/src/lib/constants.ts"><b>ODATA_ALIAS_PREFIX</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
@@ -239,6 +245,9 @@
                         </li>
                         <li>
                             <a href="#PATH_SEPARATOR" title="projects/angular-odata/src/lib/constants.ts"><b>PATH_SEPARATOR</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#PREFER" title="projects/angular-odata/src/lib/constants.ts"><b>PREFER</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
                             <a href="#QUERY_SEPARATOR" title="projects/angular-odata/src/lib/constants.ts"><b>QUERY_SEPARATOR</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
@@ -1219,6 +1228,33 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="PREFER"></a>
+                        <span class="name">
+                            <b>
+                            PREFER</b>
+                            <a href="#PREFER"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;Prefer&#x27;</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="QUERY_SEPARATOR"></a>
                         <span class="name">
                             <b>
@@ -1497,6 +1533,27 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>[&#x27;eq&#x27;, &#x27;ne&#x27;, &#x27;gt&#x27;, &#x27;ge&#x27;, &#x27;lt&#x27;, &#x27;le&#x27;]</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="decimal"></a>
+                        <span class="name">
+                            <b>
+                            decimal</b>
+                            <a href="#decimal"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>(value: string): Decimal &#x3D;&gt; ({ type: &#x27;decimal&#x27;, value })</code>
                         </td>
                     </tr>
 
@@ -2132,12 +2189,12 @@
     id(value: {[name: string]: any}, id?: string) {
       if (id !&#x3D;&#x3D; undefined)
         value[this.ODATA_ID] &#x3D; id;
-      return value[this.ODATA_ID] as string;
+      return (this.ODATA_ID in value) ? value[this.ODATA_ID] as string : undefined;
     },
     etag(value: {[name: string]: any}, etag?: string) {
       if (etag !&#x3D;&#x3D; undefined)
         value[this.ODATA_ETAG] &#x3D; etag;
-      return value[this.ODATA_ETAG] as string;
+      return (this.ODATA_ETAG in value) ? value[this.ODATA_ETAG] as string : undefined;
     },
     mediaEtag(value: {[name: string]: any}) {
       return (this.ODATA_MEDIA_ETAG in value) ?
@@ -2474,7 +2531,7 @@
             </tbody>
         </table>
 </section>
-    <h3>projects/angular-odata/src/lib/parsers/entity.ts</h3>
+    <h3>projects/angular-odata/src/lib/parsers/structured-type.ts</h3>
     <section>
     <h3></h3>        <table class="table table-sm table-bordered">
             <tbody>
@@ -2492,8 +2549,173 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
   deserialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
-  serialize: (value: any, options: OptionsHelper) &#x3D;&gt; value
+  serialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
 } as Parser&lt;any&gt;</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+</section>
+    <h3>projects/angular-odata/src/lib/utils/objects.ts</h3>
+    <section>
+    <h3></h3>        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="Objects"></a>
+                        <span class="name">
+                            <b>
+                            Objects</b>
+                            <a href="#Objects"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{
+  set(obj: Object, path: string, value: any) {
+    // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+
+    pathArray.reduce((acc, key, i) &#x3D;&gt; {
+      if (acc[key] &#x3D;&#x3D;&#x3D; undefined) acc[key] &#x3D; {};
+      if (i &#x3D;&#x3D;&#x3D; pathArray.length - 1) acc[key] &#x3D; value;
+      return acc[key];
+    }, obj);
+  },
+
+  get(obj: Object, path: string, def?: any): any {
+    // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    // Find value if exist return otherwise return undefined value;
+    return (pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj) || def);
+  },
+
+  unset(obj: Object, path: string) {
+    // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+
+    pathArray.reduce((acc, key, i) &#x3D;&gt; {
+      if (i &#x3D;&#x3D;&#x3D; pathArray.length - 1) delete acc[key];
+      return acc[key];
+    }, obj);
+  },
+
+  has(obj: Object, path: string) {
+    // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
+    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+
+    return !!pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj);
+  },
+
+  merge(target: Object, source: Object) {
+    const merge &#x3D; (target: any, source: { [attr: string]: any }) &#x3D;&gt; {
+      for (let attr in source) {
+        let value &#x3D; source[attr];
+        if (value !&#x3D;&#x3D; null &amp;&amp; Types.isObject(value) &amp;&amp; attr in target) {
+          merge(target[attr], value);
+        } else if (target[attr] !&#x3D;&#x3D; value) {
+          target[attr] &#x3D; value;
+        }
+      }
+    };
+    merge(target, source);
+    return target;
+  },
+
+  equal(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
+    const keys1 &#x3D; Object.keys(object1);
+    const keys2 &#x3D; Object.keys(object2);
+
+    if (keys1.length !&#x3D;&#x3D; keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      const val1 &#x3D; object1[key];
+      const val2 &#x3D; object2[key];
+      const areObjects &#x3D; Types.isObject(val1) &amp;&amp; Types.isObject(val2);
+      if (
+        areObjects &amp;&amp; !Objects.equal(val1, val2) ||
+        !areObjects &amp;&amp; val1 !&#x3D;&#x3D; val2
+      ) {
+        return false;
+      }
+    }
+    return true;
+  },
+
+  difference(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
+    if (!object2 || !Types.isObject(object2)) {
+      return object1;
+    }
+    var diffs: { [name: string]: any } &#x3D; {};
+    var key;
+    var arraysMatch &#x3D; function (arr1: any[], arr2: any[]) {
+      if (arr1.length !&#x3D;&#x3D; arr2.length) return false;
+
+      for (var i &#x3D; 0; i &lt; arr1.length; i++) {
+        if (arr1[i] !&#x3D;&#x3D; arr2[i]) return false;
+      }
+
+      return true;
+    };
+
+    var compare &#x3D; function (item1: any, item2: any | undefined, key: string) {
+      if (item2 &#x3D;&#x3D;&#x3D; undefined) {
+        diffs[key] &#x3D; null;
+        return;
+      }
+
+      if (typeof item1 !&#x3D;&#x3D; typeof item2) {
+        diffs[key] &#x3D; item2;
+        return;
+      }
+
+      if (Types.isObject(item1)) {
+        var objDiff &#x3D; Objects.difference(item1, item2);
+        if (Object.keys(objDiff).length &gt; 0) {
+          diffs[key] &#x3D; objDiff;
+        }
+        return;
+      }
+
+      if (Array.isArray(item1)) {
+        if (!arraysMatch(item1, item2)) {
+          diffs[key] &#x3D; item2;
+        }
+        return;
+      }
+
+      if (item1 !&#x3D;&#x3D; item2) {
+        diffs[key] &#x3D; item2;
+      }
+    };
+
+    for (key in object1) {
+      if (object1.hasOwnProperty(key)) {
+        compare(object1[key], object2[key], key);
+      }
+    }
+
+    for (key in object2) {
+      if (object2.hasOwnProperty(key)) {
+        if (!object1[key] &amp;&amp; object1[key] !&#x3D;&#x3D; object2[key]) {
+          diffs[key] &#x3D; object2[key];
+        }
+      }
+    }
+    return diffs;
+  }
+}</code>
                         </td>
                     </tr>
 
@@ -2569,6 +2791,37 @@
       || (Types.isFunction(value.isEmpty) &amp;&amp; value.isEmpty())
       || (Types.isArray(value) &amp;&amp; (value as any[]).every(v &#x3D;&gt; Types.isEmpty(v)))
       || (Types.isObject(value) &amp;&amp; !Object.keys(value).filter(k &#x3D;&gt; value.hasOwnProperty(k)).length);
+  },
+
+  isEqual(value1: any, value2: any) {
+    const type1 &#x3D; typeof value1;
+    const type2 &#x3D; typeof value2;
+    if (type1 !&#x3D;&#x3D; type2) return false;
+    if (value1 instanceof Date) {
+      return value1.getTime() &#x3D;&#x3D;&#x3D; value2.getTime();
+    }
+    if (value1 instanceof ArrayBuffer) {
+      if (value1 &#x3D;&#x3D;&#x3D; value2) {
+        return true;
+      }
+
+      if (value1.byteLength !&#x3D;&#x3D; value2.byteLength) {
+        return false;
+      }
+
+      var view1 &#x3D; new DataView(value1);
+      var view2 &#x3D; new DataView(value2);
+
+      var i &#x3D; value1.byteLength;
+      while (i--) {
+        if (view1.getUint8(i) !&#x3D;&#x3D; view2.getUint8(i)) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+    return value1 &#x3D;&#x3D;&#x3D; value2;
   }
 }</code>
                         </td>

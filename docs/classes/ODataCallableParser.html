@@ -365,8 +365,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:59</a></div>
                 </td>
             </tr>
 
@@ -435,8 +435,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="49"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:49</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="48"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:48</a></div>
                 </td>
             </tr>
 
@@ -517,8 +517,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/callable.ts:53</a></div>
                 </td>
             </tr>
 
@@ -624,7 +624,6 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
   return?: string;
   parser: Parser&lt;any&gt;;
   parameters: ODataParameterParser&lt;any&gt;[];
-
   constructor(config: CallableConfig, namespace: string) {
     this.name &#x3D; config.name;
     this.type &#x3D; &#x60;${namespace}.${config.name}&#x60;;
@@ -646,7 +645,6 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
       .reduce((acc, p) &#x3D;&gt; Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
     );
   }
-
   configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; | undefined }) {
     if (this.return)
       this.parser &#x3D; settings.findParserForType(this.return) || NONE_PARSER;
