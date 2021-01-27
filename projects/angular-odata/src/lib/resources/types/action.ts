@@ -45,7 +45,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return new Model(entity, options) as M;
   }
 
-  asCollection<C extends ODataCollection<R, ODataModel<R>>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): C {
+  asCollection<M extends ODataModel<R>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): ODataCollection<R, M> {
     let Collection = ODataCollection;
     let type = this.returnType();
     if (type !== undefined) {
@@ -56,7 +56,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     if (path !== undefined) {
       options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions());
     }
-    return new Collection(entities, options) as C;
+    return new Collection(entities, options);
   }
 
   //#region Action Schema

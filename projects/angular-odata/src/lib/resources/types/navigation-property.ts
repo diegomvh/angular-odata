@@ -41,13 +41,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return new Model(entity, {resource: this, meta}) as M;
   }
 
-  asCollection<C extends ODataCollection<T, ODataModel<T>>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+  asCollection<M extends ODataModel<T>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): ODataCollection<T, M> {
     let Collection = ODataCollection;
     let type = this.type();
     if (type !== undefined) {
       Collection = this.api.findCollectionForType(type) || ODataCollection;
     }
-    return new Collection(entities, {resource: this, meta}) as C;
+    return new Collection(entities, {resource: this, meta});
   }
 
   //#region Function Config
