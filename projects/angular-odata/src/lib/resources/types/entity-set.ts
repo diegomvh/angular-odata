@@ -33,13 +33,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  asCollection<M extends ODataModel<T>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): ODataCollection<T, M> {
-    let Collection = ODataCollection;
-    let type = this.type();
-    if (type !== undefined) {
-      Collection = this.api.findCollectionForType(type) || ODataCollection;
-    }
-    return new Collection(entities, {resource: this, meta});
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    const Collection = this.schema?.collection || ODataCollection;
+    return new Collection(entities, {resource: this, meta}) as C;
   }
 
   //#region Entity Config

@@ -11,6 +11,7 @@ import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataEntityResource } from './entity';
+import { ODataStructuredType } from '../../schema/structured-type';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -36,27 +37,35 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     if (type !== undefined) {
       Model = this.api.findModelForType(type) || ODataModel;
     }
-    let options: { resource?: ODataEntityResource<R>, meta?: ODataEntityMeta } = { meta };
+    let options: { resource?: ODataEntityResource<R>, schema?: ODataStructuredType<R>, meta?: ODataEntityMeta } = { meta };
     let path = meta?.context.entitySet;
     if (path !== undefined) {
       options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions())
         .entity(entity);
     }
+    type = meta?.context.type || type;
+    if (type !== undefined) {
+      options.schema = this.api.findStructuredTypeForType(type);
+    }
     return new Model(entity, options) as M;
   }
 
-  asCollection<M extends ODataModel<R>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): ODataCollection<R, M> {
+  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): C {
     let Collection = ODataCollection;
     let type = this.returnType();
     if (type !== undefined) {
       Collection = this.api.findCollectionForType(type) || ODataCollection;
     }
-    let options: { resource?: ODataEntitySetResource<R>, meta?: ODataEntitiesMeta } = { meta };
+    let options: { resource?: ODataEntitySetResource<R>, schema?: ODataStructuredType<R>, meta?: ODataEntitiesMeta } = { meta };
     let path = meta?.context.entitySet;
     if (path !== undefined) {
       options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions());
     }
-    return new Collection(entities, options);
+    type = meta?.context.type || type;
+    if (type !== undefined) {
+      options.schema = this.api.findStructuredTypeForType(type);
+    }
+    return new Collection(entities, options) as C;
   }
 
   //#region Action Schema

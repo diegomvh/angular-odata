@@ -31,11 +31,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
-    let Model = ODataModel;
-    let type = this.type();
-    if (type !== undefined) {
-      Model = this.api.findModelForType(type) || ODataModel;
-    }
+    const Model = this.schema?.model || ODataModel;
     return new Model(entity, {resource: this, meta}) as M;
   }
 

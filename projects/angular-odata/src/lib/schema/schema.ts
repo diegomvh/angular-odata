@@ -44,10 +44,6 @@ export class ODataSchema {
     return type.startsWith(this.namespace) || (this.alias && type.startsWith(this.alias));
   }
 
-  get options() {
-    return this.api.options;
-  }
-
   get entitySets() {
     return this.containers
       .reduce(
