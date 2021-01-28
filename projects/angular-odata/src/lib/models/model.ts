@@ -1,5 +1,5 @@
 import { NEVER, Observable, of, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import {
   ODataEntityResource,
@@ -40,7 +40,7 @@ export class ODataModel<T> {
   request$ = new EventEmitter<Observable<ODataEntity<T>>>();
   sync$ = new EventEmitter();
   destroy$ = new EventEmitter();
-  invalid$ = new EventEmitter();
+  invalid$ = new EventEmitter<{[name: string]: string[]}>();
 
   constructor(data?: any, options: { resource?: ODataModelResource<T>, meta?: ODataEntityMeta } = {}) {
     data = data || {};
@@ -249,10 +249,7 @@ export class ODataModel<T> {
       obs$ = this.__resource.delete(Object.assign({ etag: this.__meta.etag }, options || {})).pipe(
         map(({entity, meta}) => ({entity: entity || attrs, meta})));
     }
-    return this.__request(obs$).pipe(self => {
-      this.destroy$.emit();
-      return self;
-    });
+    return this.__request(obs$).pipe(tap(() => this.destroy$.emit()));
   }
 
   protected get _schema(): ODataStructuredType<T> | undefined {
@@ -319,7 +316,7 @@ export class ODataModel<T> {
       const type = model?._resource?.type() || typeof value;
       if (field.collection)
         throw new Error(`Can't set collection of type ${type} as ${field.name}, use add instead`);
-      if (type !== field.type)
+      if (model !== null && type !== field.type)
         throw new Error(`Can't set ${type} to ${field.type}`);
       const relation = this.__relations[field.name];
       if (relation !== undefined) {
