@@ -1,5 +1,5 @@
 import { map, switchMap, tap } from 'rxjs/operators';
-import { Observable, EMPTY, NEVER, of, Subscription } from 'rxjs';
+import { Observable, EMPTY, NEVER, of, Subscription, merge } from 'rxjs';
 
 import {
   ODataEntitySetResource,
@@ -16,6 +16,7 @@ import {
 import { ODataModel, ODataModelResource } from './model';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema/structured-type';
+import { EntityKey } from '../types';
 
 type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 
@@ -23,7 +24,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private __resource: ODataCollectionResource<T> | null;
   private __schema: ODataStructuredType<T> | null = null;
   private __meta: ODataEntitiesMeta;
-  private __models: { model: M, subscriptions: Subscription[] }[] = [];
+  private __models: { model: M, key?: EntityKey<T>, subscriptions: Subscription[] }[] = [];
 
   get models() {
     return this.__models.map(m => m.model);
@@ -42,6 +43,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   add$ = new EventEmitter<M>();
   remove$ = new EventEmitter<M>();
   change$ = new EventEmitter<{model: M, attribute: string, value: any, previous?: any}>();
+  update$ = merge<M, M, {model: M, attribute: string, value: any, previous?: any}>(this.add$, this.remove$, this.change$);
   request$ = new EventEmitter<Observable<ODataEntities<T>>>();
   sync$ = new EventEmitter();
   reset$ = new EventEmitter();
@@ -61,7 +63,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.__meta = options.meta || new ODataEntitiesMeta(data, {options: options.resource?.api.options});
     if (!Array.isArray(data))
       data = this.__meta.data(data) || [];
-    this.assign(this.parse(data));
+    this.assign(data);
   }
 
   bind(schema: ODataStructuredType<T>) {
@@ -137,7 +139,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$.pipe(
       map(({entities, meta}) => {
         this.__meta = meta;
-        this.assign(this.parse(entities || []));
+        this.assign(entities || []);
         this.sync$.emit();
         return this;
       }));
@@ -186,7 +188,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       let ref = this.__resource.reference();
       ref.add(model._resource() as ODataEntityResource<T>).toPromise();
     }
-    this.__models.push({model, subscriptions: this.__subscribe(model)});
+    this.__models.push({model, key: model._key(), subscriptions: this.__subscribe(model)});
     this.add$.emit(model);
   }
 
@@ -217,31 +219,22 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this.__resource as ODataEntitySetResource<any>).count().get();
   }
 
-  assign(models: M[]) {
+  assign(data: any) {
+    const models = this.parse(data) || [];
     this.__models.forEach(e => e.subscriptions.forEach(s => s.unsubscribe()));
     this.__models = models.map(model => {
-      return {model, subscriptions: this.__subscribe(model)};
+      return {model, key: model._key(), subscriptions: this.__subscribe(model)};
     });
     this.reset$.emit();
   }
-
   protected _schema(): ODataStructuredType<T> | undefined {
     return this.__schema ? this.__schema : undefined;
   }
-
-  /*
-  get _segment() {
-    if (!this.__resource)
-      throw new Error(`Can't call without ODataResource`);
-    return (this.__resource as ODataEntitySetResource<T>).segment;
-  }
-
   get _query() {
     if (!this.__resource)
       throw new Error(`Can't query without ODataResource`);
-    return (this.__resource as ODataEntitySetResource<T>).query;
+    return this.__resource.query;
   }
-  */
 
   // Function
   protected _function<P, R>(path: string) {

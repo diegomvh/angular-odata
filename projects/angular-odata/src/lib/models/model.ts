@@ -55,7 +55,6 @@ export class ODataModel<T> {
       this.attach(options.resource);
     this.__meta = options.meta || new ODataEntityMeta(data, {options: options.resource?.api.options});
     data = this.__meta.attributes<T>(data);
-    data = this.parse(data) || {};
     this.assign(Objects.merge(this.defaults(), data));
   }
 
@@ -133,6 +132,10 @@ export class ODataModel<T> {
     return this._errors === null;
   }
 
+  _key() {
+    return this._schema()?.resolveKey(this.toEntity());
+  }
+
   isNew() {
     return !(this.__resource instanceof ODataEntityResource) || Types.isEmpty(this.__resource.segment.entitySet().hasKey());
   }
@@ -159,11 +162,12 @@ export class ODataModel<T> {
       {}) as T;
   }
 
-  assign(attrs: DeepPartial<T>) {
+  assign(data: any) {
+    const attrs = this.parse(data) || {};
     const assign = (target: any, source: {[attr: string]: any}) => {
       for (let attr in source) {
         let value = source[attr];
-        if (value !== null && Types.isObject(value) && attr in target && target[attr] instanceof ODataModel) {
+        if (value !== null && Types.isObject(value) && (target[attr] instanceof ODataModel || target[attr] instanceof ODataCollection)) {
           target[attr].assign(value);
         } else if (target[attr] !== value) {
           target[attr] = value;
@@ -194,7 +198,7 @@ export class ODataModel<T> {
           resource.segment.entitySet().type(meta.type);
           this.attach(resource);
         }
-        this.assign(this.parse(this.__meta.attributes<T>(entity || {})));
+        this.assign(this.__meta.attributes<T>(entity || {}));
         this.sync$.emit();
         return this;
       }));
@@ -229,11 +233,10 @@ export class ODataModel<T> {
   update(options?: HttpOptions): Observable<this> {
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
-      //this.__resource.segment.key(this);
       if (!this.__resource.segment.entitySet().hasKey())
         throw new Error(`Can't update entity without key`);
-      let resource = this.__resource;
-      let attrs = this.toEntity() as any;
+      const resource = this.__resource;
+      const attrs = this.toEntity() as any;
       obs$ = Object.values(this.__relations)
         .filter((value) => value.field.navigation && !value.field.collection)
         .reduce((acc, value) => {
@@ -329,8 +332,6 @@ export class ODataModel<T> {
   private __set<P>(field: ODataStructuredTypeFieldParser<P>, value: P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null) {
     let current: any;
     if (field.isNavigation() || field.isComplexType()) {
-      if (field.isNavigation() && field.collection)
-        throw new Error(`Can't set navigation collection as ${field.name}, use add instead`);
       const model = value as ODataModel<P> | ODataCollection<P, ODataModel<P>> | null;
       const relation = this.__relations[field.name];
       if (relation !== undefined) {
@@ -352,9 +353,9 @@ export class ODataModel<T> {
     }
     if (!Types.isEqual(current, value)) {
       if (field.key) {
-        const key = this._schema()?.resolveKey(this.toEntity());
-        if (!Types.isEmpty(key) && this.__resource instanceof ODataEntityResource) {
-          const resource = this._resource() as ODataEntityResource<T>;
+        const key = this._key();
+        const resource = this._resource();
+        if (key && resource && !(resource instanceof ODataSingletonResource)) {
           resource.segment.entitySet().key(key);
           this.attach(resource);
         }
