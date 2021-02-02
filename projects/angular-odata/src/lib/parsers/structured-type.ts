@@ -1,5 +1,5 @@
 import { Types } from '../utils';
-import { Parser, StructuredTypeField, StructuredTypeConfig, Annotation, OptionsHelper, NONE_PARSER } from '../types';
+import { Parser, StructuredTypeField, StructuredTypeConfig, Annotation, OptionsHelper, NONE_PARSER, EntityKey } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
 
 // JSON SCHEMA
@@ -64,13 +64,13 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
   }
 
   deserialize(value: any, options: OptionsHelper): Type {
-    const parser = this.parser;
-    if (parser instanceof ODataStructuredTypeParser) {
+    if (this.parser instanceof ODataStructuredTypeParser) {
+      const parser = this.parser as ODataStructuredTypeParser<Type>;
       return Array.isArray(value) ?
         value.map(v => this.parse(parser, v, options)) :
         this.parse(parser, value, options);
     }
-    return parser.deserialize(value, Object.assign({field: this}, options));
+    return this.parser.deserialize(value, Object.assign({field: this}, options));
   }
 
   // Serialize
@@ -83,13 +83,13 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
   }
 
   serialize(value: Type, options: OptionsHelper): any {
-    const parser = this.parser;
-    if (parser instanceof ODataStructuredTypeParser) {
+    if (this.parser instanceof ODataStructuredTypeParser) {
+      const parser = this.parser as ODataStructuredTypeParser<Type>;
       return Array.isArray(value) ?
         (value as any[]).map(v => this.toJson(parser, v, options)) :
         this.toJson(parser, value, options);
     }
-    return parser.serialize(value, Object.assign({field: this}, options));
+    return this.parser.serialize(value, Object.assign({field: this}, options));
   }
 
   configure(settings: {
@@ -265,7 +265,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
     return [...keys, ...this.fields.filter(f => f.key)];
   }
 
-  resolveKey(attrs: any) {
+  resolveKey(attrs: any): EntityKey<Type> | undefined {
     let key = this.keys()
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
     const values = Object.values(key);
@@ -276,8 +276,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
       // Compose key, needs all values
       key = null;
     }
-    if (!Types.isEmpty(key))
-      return key;
+    return !Types.isEmpty(key) ? key : undefined;
   }
 
   isComplexType() {

@@ -9,14 +9,14 @@ import {
   HttpOptions,
   HttpEntitiesOptions,
   ODataEntities,
-  ODataPropertyResource,
-  ODataResource
+  ODataPropertyResource
 } from '../resources/index';
 
 import { ODataModel, ODataModelResource } from './model';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema/structured-type';
 import { EntityKey } from '../types';
+import { Types } from '../utils/types';
 
 type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 
@@ -40,13 +40,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   //Events
-  add$ = new EventEmitter<M>();
-  remove$ = new EventEmitter<M>();
-  change$ = new EventEmitter<{model: M, attribute: string, value: any, previous?: any}>();
-  update$ = merge<M, M, {model: M, attribute: string, value: any, previous?: any}>(this.add$, this.remove$, this.change$);
+  add$ = new EventEmitter<M[]>();
+  remove$ = new EventEmitter<M[]>();
+  change$ = new EventEmitter<M[]>();
+  reset$ = new EventEmitter<M[]>();
+  update$ = merge<M[]>(this.add$, this.remove$, this.change$, this.reset$);
   request$ = new EventEmitter<Observable<ODataEntities<T>>>();
   sync$ = new EventEmitter();
-  reset$ = new EventEmitter();
   invalid$ = new EventEmitter<{model: M, errors: {[name: string]: string[]}}>();
 
   constructor(data?: any, options: {
@@ -189,7 +189,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       ref.add(model._resource() as ODataEntityResource<T>).toPromise();
     }
     this.__models.push({model, key: model._key(), subscriptions: this.__subscribe(model)});
-    this.add$.emit(model);
+    this.add$.emit([model]);
   }
 
   remove(model: M) {
@@ -197,12 +197,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       let ref = this.__resource.reference();
       ref.remove(model._resource() as ODataEntityResource<T>).toPromise();
     }
-    const entry = this.__models.find(m => m.model === model);
+    const key = model._key();
+    const entry = this.__models.find(m => m.model === model || (!Types.isEmpty(m.key) && Types.isEqual(m.key, key)));
     if (entry !== undefined) {
       const index = this.__models.indexOf(entry);
       this.__models.splice(index, 1);
       entry.subscriptions.forEach(s => s.unsubscribe());
-      this.remove$.emit(model);
+      this.remove$.emit([model]);
     }
   }
 
@@ -225,7 +226,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.__models = models.map(model => {
       return {model, key: model._key(), subscriptions: this.__subscribe(model)};
     });
-    this.reset$.emit();
+    this.reset$.emit(models);
   }
   protected _schema(): ODataStructuredType<T> | undefined {
     return this.__schema ? this.__schema : undefined;
@@ -253,7 +254,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private __subscribe<E>(model: M) {
     const subscriptions = [];
     subscriptions.push(
-      model.change$.subscribe((event: {attribute: string, value: any, previous?: any}) => this.change$.emit(Object.assign({model}, event)))
+      model.change$.subscribe((event: {attribute: string, value: any, previous?: any}) => this.change$.emit([model]))
     );
     subscriptions.push(
       model.destroy$.subscribe(() => this.remove(model))
