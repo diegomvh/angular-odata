@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ODataClient } from './client';
 import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from './resources';
 import { ODataModule } from './module';
-import { ODataEntityParser } from './parsers';
+import { ODataStructuredTypeParser } from './parsers';
 import { HttpHeaders } from '@angular/common/http';
 import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
 import { ODataStructuredType } from './schema';
@@ -28,14 +28,16 @@ describe('ODataClient', () => {
 
   it('should return undefined parser for resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People');
-    const parser = client.parserFor<Person>(set);
-    expect(parser).toBeNull();
+    const api = client.apiFor(set);
+    const parser = api.findParserForType<Person>("Foo") as ODataStructuredTypeParser<Person>;
+    expect(parser).toBeUndefined();
   });
 
   it('should return person parser for resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
-    const parser = client.parserFor<Person>(set);
-    expect(parser instanceof ODataEntityParser).toBeTruthy();
+    const api = client.apiFor(set);
+    const parser = api.findParserForType<Person>(set.type() as string) as ODataStructuredTypeParser<Person>;
+    expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
 
   it('should throw error parser for type', () => {
@@ -58,7 +60,7 @@ describe('ODataClient', () => {
 
   it('should return person parser for type', () => {
     const parser = client.parserForType<Person>(`${NAMESPACE}.Person`);
-    expect(parser instanceof ODataEntityParser).toBeTruthy();
+    expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
   });
 
   it('should return person entity config', () => {
@@ -68,38 +70,39 @@ describe('ODataClient', () => {
 
   it('should create metadata resource', () => {
     const metadata: ODataMetadataResource = client.metadata();
-    expect(client.endpointUrl(metadata)).toEqual(SERVICE_ROOT + '$metadata');
+    expect(metadata.endpointUrl()).toEqual(SERVICE_ROOT + '$metadata');
   });
 
   it('should create batch resource', () => {
     const batch: ODataBatchResource = client.batch();
-    expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
+    expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
   });
 
   it('should create singleton resource', () => {
     const singleton: ODataSingletonResource<Person> = client.singleton<Person>('Me');
-    expect(client.endpointUrl(singleton)).toEqual(SERVICE_ROOT + 'Me');
+    expect(singleton.endpointUrl()).toEqual(SERVICE_ROOT + 'Me');
   });
 
   it('should create entitySet resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People');
-    expect(client.endpointUrl(set)).toEqual(SERVICE_ROOT + 'People');
+    expect(set.endpointUrl()).toEqual(SERVICE_ROOT + 'People');
   });
 
   it('should create unbound function resource', () => {
     const fun: ODataFunctionResource<any, any> = client.function<any, any>("NS.MyFunction")
-    expect(client.endpointUrl(fun)).toEqual(SERVICE_ROOT + 'NS.MyFunction');
+    expect(fun.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyFunction');
   });
 
   it('should create unbound action resource', () => {
     const act: ODataActionResource<any, any> = client.action<any, any>("NS.MyAction")
-    expect(client.endpointUrl(act)).toEqual(SERVICE_ROOT + 'NS.MyAction');
+    expect(act.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyAction');
   });
 
   it('should return parser for resource', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
-    const parser = client.parserFor<Person>(set) as ODataEntityParser<Person>;
-    expect(parser instanceof ODataEntityParser).toBeTruthy();
+    const api = client.apiFor(set);
+    const parser = api.findParserForType<Person>(set.type() as string) as ODataStructuredTypeParser<Person>;
+    expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
     expect(parser.fields.length).toEqual(9);
   });
 
@@ -107,7 +110,7 @@ describe('ODataClient', () => {
     const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const func = set.function<any, any>("NS.MyFunction");
     const json = func.toJSON();
-    expect(json).toEqual({ segments: [{ name: 'entitySet', path: 'People', type: 'TripPin.Person' }, { name: 'function', path: 'NS.MyFunction', type: undefined }], options: {}});
+    expect(json).toEqual({ segments: [{ name: 'entitySet', path: 'People', type: 'TripPin.Person' }, { name: 'function', path: 'NS.MyFunction' }], options: {}});
   });
 
   it('should merge headers', () => {
@@ -223,7 +226,7 @@ ${JSON.stringify(payload)}
 --batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b--`;
     const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
     client.batch().post((batch) => {
-      expect(client.endpointUrl(batch)).toEqual(SERVICE_ROOT + '$batch');
+      expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
       entity.get().subscribe(({meta}) => {
         expect(meta.context.entitySet).toEqual("People");
         expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');

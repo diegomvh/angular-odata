@@ -1,14 +1,17 @@
 import { ODataSchema } from './schema';
-import { EntitySetConfig } from '../types';
+import { Annotation, EntitySetConfig } from '../types';
 import { ODataAnnotation } from './annotation';
-
 export class ODataEntitySet {
   schema: ODataSchema
   name: string;
+  entityType: string;
+  service: { new(...params: any[]): any };
   annotations: ODataAnnotation[];
   constructor(config: EntitySetConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
+    this.entityType = config.entityType;
+    this.service = config.service;
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
 
@@ -19,7 +22,11 @@ export class ODataEntitySet {
     return names.indexOf(type) !== -1;
   }
 
-  get options() {
-    return this.schema.options;
+  get api() {
+    return this.schema.api;
+  }
+
+  findAnnotation(predicate: (annot: Annotation) => boolean) {
+    return this.annotations.find(predicate);
   }
 }

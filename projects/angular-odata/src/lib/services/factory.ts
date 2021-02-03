@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { ODataClient } from "../client";
-import { ODataEntityService } from './entity';
+import { ODataEntitySetService } from './entity-set';
 import { ODataSingletonService } from './singleton';
 
 @Injectable()
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) { }
 
-  entity<T>(name: string, entityType?: string): ODataEntityService<T> {
-    return new class extends ODataEntityService<T> {
-    }(this.client, name, entityType);
+  entitySet<T>(path: string, apiNameOrEntityType?: string): ODataEntitySetService<T> {
+    return new class extends ODataEntitySetService<T> {
+    }(this.client, path, apiNameOrEntityType);
   }
 
-  singleton<T>(name: string, entityType?: string): ODataSingletonService<T> {
+  singleton<T>(path: string, apiNameOrEntityType?: string): ODataSingletonService<T> {
     return new class extends ODataSingletonService<T> {
-    }(this.client, name, entityType);
+    }(this.client, path, apiNameOrEntityType);
   }
 }

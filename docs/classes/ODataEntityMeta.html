@@ -1151,7 +1151,7 @@ export class ODataPropertyMeta extends ODataMeta {
     return this.odv.property(data, this.context);
   }
 
-  get type(): string {
+  get type() {
     return this.odv.type(this.annotations);
   }
 }
@@ -1169,7 +1169,7 @@ export class ODataEntityMeta extends ODataMeta {
     return this.odv.attributes(data) as T;
   }
 
-  get type(): string {
+  get type() {
     return this.odv.type(this.annotations);
   }
 
@@ -1181,7 +1181,7 @@ export class ODataEntityMeta extends ODataMeta {
     return this.odv.etag(this.annotations)
   }
 
-  get mediaEtag(): string {
+  get mediaEtag() {
     return this.odv.mediaEtag(this.annotations)
   }
 
@@ -1189,23 +1189,23 @@ export class ODataEntityMeta extends ODataMeta {
     return this.odv.metadataEtag(this.annotations)
   }
 
-  get readLink(): string {
+  get readLink() {
     return this.odv.readLink(this.annotations)
   }
 
-  get editLink(): string {
+  get editLink() {
     return this.odv.editLink(this.annotations)
   }
 
-  get mediaReadLink(): string {
+  get mediaReadLink() {
     return this.odv.mediaReadLink(this.annotations)
   }
 
-  get mediaEditLink(): string {
+  get mediaEditLink() {
     return this.odv.mediaEditLink(this.annotations)
   }
 
-  get mediaContentType(): string {
+  get mediaContentType() {
     return this.odv.mediaContentType(this.annotations)
   }
 
@@ -1235,19 +1235,19 @@ export class ODataEntitiesMeta extends ODataMeta {
     return new ODataEntityMeta(data, {options: this.options});
   }
 
-  get readLink(): string {
+  get readLink() {
     return this.odv.readLink(this.annotations);
   }
 
-  get count(): number {
+  get count() {
     return this.odv.count(this.annotations);
   }
 
-  get nextLink(): string {
+  get nextLink() {
     return this.odv.nextLink(this.annotations);
   }
 
-  get deltaLink(): string {
+  get deltaLink() {
     return this.odv.deltaLink(this.annotations);
   }
 

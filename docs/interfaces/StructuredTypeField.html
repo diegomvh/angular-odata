@@ -544,34 +544,19 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpErrorResponse } from &#x27;@angular/common/http&#x27;;
-import { Observable } from &#x27;rxjs&#x27;;
-
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
 export type EntityKey&lt;T&gt; &#x3D; {
   readonly [P in keyof T]?: T[P];
 } | string | number;
-
 export type ODataContext &#x3D; {
-  metadata?: string;
-  singleton?: string;
+  serviceRootUrl?: string;
+  metadataUrl?: string;
   entitySet?: string;
+  key?: string;
+  type?: string;
   property?: string;
-  entity?: string;
+  //entity?: boolean;
 }
-
-// JSON SCHEMA
-type JsonSchemaSelect&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
-type JsonSchemaOrder&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
-type JsonSchemaExpand&lt;T&gt; &#x3D; {[P in keyof T]?: JsonSchemaConfig&lt;T[P]&gt; };
-
-export type JsonSchemaExpandOptions&lt;T&gt; &#x3D; {
-  select?: JsonSchemaSelect&lt;T&gt;;
-  order?: JsonSchemaOrder&lt;T&gt;;
-  expand?: JsonSchemaExpand&lt;T&gt;;
-}
-
-export type JsonSchemaConfig&lt;T&gt; &#x3D; JsonSchemaExpandOptions&lt;T&gt;;
-
 export interface Annotation {
   type: string;
   string?: string;
@@ -614,22 +599,22 @@ export interface ODataVersionHelper {
   property(value: {[name: string]: any}, context: ODataContext): any;
   annotations(value: {[name: string]: any}): {[name: string]: any};
   attributes(value: {[name: string]: any}): {[name: string]: any};
-  id(value: {[name: string]: any}, id?: string): string;
-  etag(value: {[name: string]: any}, etag?: string): string;
+  id(value: {[name: string]: any}, id?: string): string | undefined;
+  etag(value: {[name: string]: any}, etag?: string): string | undefined;
   context(value: {[name: string]: any}): ODataContext;
   functions(value: {[name: string]: any}): {[name: string]: any};
   properties(value: {[name: string]: any}): {[name: string]: any};
-  mediaEtag(value: {[name: string]: any}): string;
-  metadataEtag(value: {[name: string]: any}): string;
-  type(value: {[name: string]: any}): string;
-  nextLink(value: {[name: string]: any}): string;
-  readLink(value: {[name: string]: any}): string;
-  mediaReadLink(value: {[name: string]: any}): string;
-  editLink(value: {[name: string]: any}): string;
-  mediaEditLink(value: {[name: string]: any}): string;
-  mediaContentType(value: {[name: string]: any}): string;
-  deltaLink(value: {[name: string]: any}): string;
-  count(value: {[name: string]: any}): number;
+  mediaEtag(value: {[name: string]: any}): string | undefined;
+  metadataEtag(value: {[name: string]: any}): string | undefined;
+  type(value: {[name: string]: any}): string | undefined;
+  nextLink(value: {[name: string]: any}): string | undefined;
+  readLink(value: {[name: string]: any}): string | undefined;
+  mediaReadLink(value: {[name: string]: any}): string | undefined;
+  editLink(value: {[name: string]: any}): string | undefined;
+  mediaEditLink(value: {[name: string]: any}): string | undefined;
+  mediaContentType(value: {[name: string]: any}): string | undefined;
+  deltaLink(value: {[name: string]: any}): string | undefined;
+  count(value: {[name: string]: any}): number | undefined;
   countParam(): {[name: string]: string};
 }
 
@@ -688,6 +673,8 @@ export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
+  preferMaxPageSize?: number;
+  preferReturn?: &#x27;representation&#x27; | &#x27;minimal&#x27;;
   fetchPolicy?: FetchPolicy;
 }
 
@@ -704,6 +691,11 @@ export interface Parser&lt;T&gt; {
   deserialize(value: any, options: OptionsHelper): T;
   serialize(value: T, options: OptionsHelper): any;
 }
+
+export const NONE_PARSER &#x3D; {
+  deserialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
+  serialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
+} as Parser&lt;any&gt;;
 
 export interface Cache&lt;T&gt; {
   put(key: string, payload: T): void;
@@ -781,6 +773,8 @@ export type CallableConfig &#x3D; {
 }
 export type EntitySetConfig &#x3D; {
   name: string;
+  entityType: string;
+  service: { new(...params: any[]): any };
   annotations?: AnnotationConfig[];
 }
 //#endregion

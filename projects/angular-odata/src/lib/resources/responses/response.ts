@@ -3,7 +3,7 @@ import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
 import { Parser } from '../../types';
 import { Types } from '../../utils/types';
 import { ODataResource } from '../resource';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE, CACHE_CONTROL, MAX_AGE } from '../../constants';
 import { ODataApi } from '../../api';
@@ -94,7 +94,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
 
   private parse(parser: Parser<T>, value: any): any {
     const type = Types.isObject(value) ? this.options.helper.type(value) : undefined;
-    if (type !== undefined && parser instanceof ODataEntityParser) {
+    if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
       parser = parser.findParser(c => c.isTypeOf(type));
     }
     return parser.deserialize(value, this.options);
@@ -113,9 +113,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const payload = this.body && this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
     const meta = new ODataEntityMeta(payload || {}, {options: this.options, headers: this.headers});
     let entity = payload ? meta.data(payload) as T : null;
-    //TODO: View the type in meta.context
     const type = this.resource.type();
-    if (entity !== null && type !== null)
+    if (entity !== null && type !== undefined)
       entity = this.deserialize(type, entity) as T;
     return { entity, meta };
   }
@@ -124,9 +123,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
     const meta = new ODataEntitiesMeta(payload || {}, {options: this.options, headers: this.headers});
     let entities = payload ? meta.data(payload) as T[] : null;
-    //TODO: View the type in meta.context
     const type = this.resource.type();
-    if (entities !== null && type !== null)
+    if (entities !== null && type !== undefined)
       entities = this.deserialize(type, entities) as T[];
     return { entities, meta };
   }
@@ -135,9 +133,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
     const meta = new ODataPropertyMeta(payload || {}, {options: this.options, headers: this.headers});
     let property = payload ? meta.data(payload) as T : null;
-    //TODO: View the type in meta.context
     const type = this.resource.type();
-    if (property !== null && type !== null)
+    if (property !== null && type !== undefined)
       property = this.deserialize(type, property) as T;
     return { property, meta };
   }
@@ -146,7 +143,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const payload = this.body && this.options.version === "2.0" ? this.body : this.body;
     const type = this.resource.type();
     return payload ?
-      (type !== null ? this.deserialize(type, payload) : payload) as T:
+      (type !== undefined ? this.deserialize(type, payload) : payload) as T:
       null;
   }
 }

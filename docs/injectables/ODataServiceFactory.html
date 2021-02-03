@@ -76,7 +76,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#entity">entity</a>
+                                <a href="#entitySet">entitySet</a>
                             </li>
                             <li>
                                 <a href="#singleton">singleton</a>
@@ -151,18 +151,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="entity"></a>
+                    <a name="entitySet"></a>
                     <span class="name">
                         <b>
-                            entity
+                            entitySet
                         </b>
-                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
+                        <a href="#entitySet"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>entity(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, entityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>entitySet(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, apiNameOrEntityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -198,7 +198,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>name</td>
+                                    <td>path</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -210,7 +210,7 @@
 
                                 </tr>
                                 <tr>
-                                    <td>entityType</td>
+                                    <td>apiNameOrEntityType</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -227,7 +227,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService&lt;T&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >ODataEntitySetService&lt;T&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -252,7 +252,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>singleton(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, entityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>singleton(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, apiNameOrEntityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -288,7 +288,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>name</td>
+                                    <td>path</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -300,7 +300,7 @@
 
                                 </tr>
                                 <tr>
-                                    <td>entityType</td>
+                                    <td>apiNameOrEntityType</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -335,21 +335,21 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable } from &#x27;@angular/core&#x27;;
 import { ODataClient } from &quot;../client&quot;;
-import { ODataEntityService } from &#x27;./entity&#x27;;
+import { ODataEntitySetService } from &#x27;./entity-set&#x27;;
 import { ODataSingletonService } from &#x27;./singleton&#x27;;
 
 @Injectable()
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) { }
 
-  entity&lt;T&gt;(name: string, entityType?: string): ODataEntityService&lt;T&gt; {
-    return new class extends ODataEntityService&lt;T&gt; {
-    }(this.client, name, entityType);
+  entitySet&lt;T&gt;(path: string, apiNameOrEntityType?: string): ODataEntitySetService&lt;T&gt; {
+    return new class extends ODataEntitySetService&lt;T&gt; {
+    }(this.client, path, apiNameOrEntityType);
   }
 
-  singleton&lt;T&gt;(name: string, entityType?: string): ODataSingletonService&lt;T&gt; {
+  singleton&lt;T&gt;(path: string, apiNameOrEntityType?: string): ODataSingletonService&lt;T&gt; {
     return new class extends ODataSingletonService&lt;T&gt; {
-    }(this.client, name, entityType);
+    }(this.client, path, apiNameOrEntityType);
   }
 }
 </code></pre>

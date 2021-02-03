@@ -422,8 +422,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="123"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:123</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="122"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:122</a></div>
                 </td>
             </tr>
 
@@ -768,8 +768,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="134"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:134</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="132"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:132</a></div>
                 </td>
             </tr>
 
@@ -846,8 +846,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="145"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:145</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="142"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:142</a></div>
                 </td>
             </tr>
 
@@ -905,7 +905,7 @@ import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from &#x27;./me
 import { Parser } from &#x27;../../types&#x27;;
 import { Types } from &#x27;../../utils/types&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
-import { ODataEntityParser } from &#x27;../../parsers/entity&#x27;;
+import { ODataStructuredTypeParser } from &#x27;../../parsers/structured-type&#x27;;
 import { ODataEntities, ODataEntity, ODataProperty } from &#x27;./types&#x27;;
 import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE, CACHE_CONTROL, MAX_AGE } from &#x27;../../constants&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
@@ -996,7 +996,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
 
   private parse(parser: Parser&lt;T&gt;, value: any): any {
     const type &#x3D; Types.isObject(value) ? this.options.helper.type(value) : undefined;
-    if (type !&#x3D;&#x3D; undefined &amp;&amp; parser instanceof ODataEntityParser) {
+    if (type !&#x3D;&#x3D; undefined &amp;&amp; parser instanceof ODataStructuredTypeParser) {
       parser &#x3D; parser.findParser(c &#x3D;&gt; c.isTypeOf(type));
     }
     return parser.deserialize(value, this.options);
@@ -1014,33 +1014,30 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   entity(): ODataEntity&lt;T&gt; {
     const payload &#x3D; this.body &amp;&amp; this.options.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? (&lt;any&gt;this.body)[&quot;d&quot;] : this.body;
     const meta &#x3D; new ODataEntityMeta(payload || {}, {options: this.options, headers: this.headers});
-    //TODO: View the type in meta.context
+    let entity &#x3D; payload ? meta.data(payload) as T : null;
     const type &#x3D; this.resource.type();
-    const entity &#x3D; payload ?
-      (type !&#x3D;&#x3D; null ? this.deserialize(type, meta.data(payload)) : payload) as T:
-      null;
+    if (entity !&#x3D;&#x3D; null &amp;&amp; type !&#x3D;&#x3D; undefined)
+      entity &#x3D; this.deserialize(type, entity) as T;
     return { entity, meta };
   }
 
   entities(): ODataEntities&lt;T&gt; {
     const payload &#x3D; this.options.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? (&lt;any&gt;this.body)[&quot;d&quot;] : this.body;
     const meta &#x3D; new ODataEntitiesMeta(payload || {}, {options: this.options, headers: this.headers});
-    //TODO: View the type in meta.context
+    let entities &#x3D; payload ? meta.data(payload) as T[] : null;
     const type &#x3D; this.resource.type();
-    const entities &#x3D; payload ?
-      (type !&#x3D;&#x3D; null ? this.deserialize(type, meta.data(payload)) : payload) as T[]:
-      null;
+    if (entities !&#x3D;&#x3D; null &amp;&amp; type !&#x3D;&#x3D; undefined)
+      entities &#x3D; this.deserialize(type, entities) as T[];
     return { entities, meta };
   }
 
   property(): ODataProperty&lt;T&gt; {
     const payload &#x3D; this.options.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? (&lt;any&gt;this.body)[&quot;d&quot;] : this.body;
     const meta &#x3D; new ODataPropertyMeta(payload || {}, {options: this.options, headers: this.headers});
-    //TODO: View the type in meta.context
+    let property &#x3D; payload ? meta.data(payload) as T : null;
     const type &#x3D; this.resource.type();
-    const property &#x3D; payload ?
-      (type !&#x3D;&#x3D; null ? this.deserialize(type, meta.data(payload)) : payload) as T:
-      null;
+    if (property !&#x3D;&#x3D; null &amp;&amp; type !&#x3D;&#x3D; undefined)
+      property &#x3D; this.deserialize(type, property) as T;
     return { property, meta };
   }
 
@@ -1048,7 +1045,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     const payload &#x3D; this.body &amp;&amp; this.options.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? this.body : this.body;
     const type &#x3D; this.resource.type();
     return payload ?
-      (type !&#x3D;&#x3D; null ? this.deserialize(type, payload) : payload) as T:
+      (type !&#x3D;&#x3D; undefined ? this.deserialize(type, payload) : payload) as T:
       null;
   }
 }

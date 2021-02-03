@@ -1,8 +1,9 @@
 
 import { ApiConfig, EnumTypeConfig, StructuredTypeConfig, EntitySetConfig } from './types';
 import { EDM_PARSERS } from './parsers';
-import { ODataEntityService } from './services';
+import { ODataEntitySetService } from './services';
 import { Injectable } from '@angular/core';
+import { ODataClient } from './client';
 
 export const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 export const NAMESPACE = 'TripPin';
@@ -111,13 +112,15 @@ export const PersonConfig = {
 
 //#region Services
 @Injectable()
-export class PeopleService extends ODataEntityService<Person> {
-  static path: string = 'People';
-  static type: string = `${NAMESPACE}.People`;
-  static entity: string = `${NAMESPACE}.Person`;
+export class PeopleService extends ODataEntitySetService<Person> {
+  constructor(protected client: ODataClient) {
+    super(client, 'People', `${NAMESPACE}.Person`);
+  }
 }
-export const PeopleServiceConfig = {
+export const PeopleConfig = {
   name: "People",
+  entityType: `${NAMESPACE}.Person`,
+  service: PeopleService,
 } as EntitySetConfig;
 //#endregion
 
@@ -137,7 +140,7 @@ export const TripPinConfig = {
       TripConfig
     ],
     containers: [{
-      entitySets: [ PeopleServiceConfig ]
+      entitySets: [ PeopleConfig ]
     }]
   }],
   parsers: EDM_PARSERS

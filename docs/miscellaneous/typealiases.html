@@ -79,6 +79,9 @@
                             <a href="#CallableConfig" title="projects/angular-odata/src/lib/types.ts"><b>CallableConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
                         </li>
                         <li>
+                            <a href="#Decimal" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Decimal</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#Duration" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Duration</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -139,22 +142,25 @@
                             <a href="#Json" title="projects/angular-odata/src/lib/resources/builder.ts"><b>Json</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaConfig" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaConfig</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaCustom" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaCustom</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaExpand" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaExpand</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaExpand" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaExpand</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaExpandOptions" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaExpandOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaExpandOptions" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaExpandOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaOrder" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaOrder</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaOptions" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
-                            <a href="#JsonSchemaSelect" title="projects/angular-odata/src/lib/types.ts"><b>JsonSchemaSelect</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                            <a href="#JsonSchemaSelect" title="projects/angular-odata/src/lib/parsers/structured-type.ts"><b>JsonSchemaSelect</b>&nbsp;&nbsp;&nbsp;(projects/.../structured-type.ts)</a>
                         </li>
                         <li>
                             <a href="#NestedExpandOptions" title="projects/angular-odata/src/lib/resources/builder.ts"><b>NestedExpandOptions</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ODataCollectionResource" title="projects/angular-odata/src/lib/models/collection.ts"><b>ODataCollectionResource</b>&nbsp;&nbsp;&nbsp;(projects/.../collection.ts)</a>
                         </li>
                         <li>
                             <a href="#ODataContext" title="projects/angular-odata/src/lib/types.ts"><b>ODataContext</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -167,6 +173,9 @@
                         </li>
                         <li>
                             <a href="#ODataMetadataType" title="projects/angular-odata/src/lib/types.ts"><b>ODataMetadataType</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ODataModelResource" title="projects/angular-odata/src/lib/models/model.ts"><b>ODataModelResource</b>&nbsp;&nbsp;&nbsp;(projects/.../model.ts)</a>
                         </li>
                         <li>
                             <a href="#ODataProperty" title="projects/angular-odata/src/lib/resources/responses/types.ts"><b>ODataProperty</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -266,6 +275,22 @@
                 <td class="col-md-4">
                     <a name="Binary"></a>
                     <span class="name"><b>Binary</b><a href="#Binary"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Decimal"></a>
+                    <span class="name"><b>Decimal</b><a href="#Decimal"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
@@ -622,7 +647,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>    <code>string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias</code>
+                    <code>    <code>string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias | Decimal</code>
 </code>
                 </td>
             </tr>
@@ -769,86 +794,6 @@
             <tr>
                 <td class="col-md-4">
                     <code>    <code>&quot;cache-first&quot; | &quot;cache-and-network&quot; | &quot;network-only&quot; | &quot;no-cache&quot; | &quot;cache-only&quot;</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaConfig"></a>
-                    <span class="name"><b>JsonSchemaConfig</b><a href="#JsonSchemaConfig"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>        <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaExpandOptions&lt;T&gt;</a></code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaExpand"></a>
-                    <span class="name"><b>JsonSchemaExpand</b><a href="#JsonSchemaExpand"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code></code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaExpandOptions"></a>
-                    <span class="name"><b>JsonSchemaExpandOptions</b><a href="#JsonSchemaExpandOptions"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>literal type</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaOrder"></a>
-                    <span class="name"><b>JsonSchemaOrder</b><a href="#JsonSchemaOrder"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>Array&lt;T&gt;</code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="JsonSchemaSelect"></a>
-                    <span class="name"><b>JsonSchemaSelect</b><a href="#JsonSchemaSelect"><span class="icon ion-ios-link"></span></a></span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <code>    <code>Array&lt;T&gt;</code>
 </code>
                 </td>
             </tr>
@@ -1034,6 +979,106 @@
             </tr>
         </tbody>
     </table>
+</section>    <h3>projects/angular-odata/src/lib/parsers/structured-type.ts</h3>
+    <section>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaCustom"></a>
+                    <span class="name"><b>JsonSchemaCustom</b><a href="#JsonSchemaCustom"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaExpand"></a>
+                    <span class="name"><b>JsonSchemaExpand</b><a href="#JsonSchemaExpand"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaExpandOptions"></a>
+                    <span class="name"><b>JsonSchemaExpandOptions</b><a href="#JsonSchemaExpandOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaOptions"></a>
+                    <span class="name"><b>JsonSchemaOptions</b><a href="#JsonSchemaOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>        <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaExpandOptions&lt;T&gt;</a></code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="JsonSchemaSelect"></a>
+                    <span class="name"><b>JsonSchemaSelect</b><a href="#JsonSchemaSelect"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>Array&lt;T&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/models/collection.ts</h3>
+    <section>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ODataCollectionResource"></a>
+                    <span class="name"><b>ODataCollectionResource</b><a href="#ODataCollectionResource"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ODataEntitySetResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt;</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>    <h3>projects/angular-odata/src/lib/resources/responses/types.ts</h3>
     <section>
     <table class="table table-sm table-bordered">
@@ -1079,6 +1124,24 @@
             <tr>
                 <td class="col-md-4">
                     <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/models/model.ts</h3>
+    <section>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ODataModelResource"></a>
+                    <span class="name"><b>ODataModelResource</b><a href="#ODataModelResource"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>ODataEntityResource&lt;T&gt; | ODataSingletonResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt;</code>
 </code>
                 </td>
             </tr>

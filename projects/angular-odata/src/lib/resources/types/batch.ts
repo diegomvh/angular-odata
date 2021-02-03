@@ -9,6 +9,8 @@ import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE
 import { ODataRequest } from '../request';
 import { ODataApi } from '../../api';
 import { ODataResponse } from '../responses';
+import { HttpOptions } from './options';
+import { Http } from '../../utils/http';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;
 
@@ -146,36 +148,28 @@ export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
   private requests: ODataBatchRequest<any>[];
-  private _api: ODataApi;
   batchBoundary: string;
 
-  constructor(client: ODataClient, api?: ODataApi, segments?: ODataPathSegments) {
-    super(client, segments);
-    this._api = api || client.apiFor(this);
+  constructor(api: ODataApi, segments?: ODataPathSegments) {
+    super(api, segments);
     this.batchBoundary = uniqid(BATCH_PREFIX);
     this.requests = [];
   }
 
   clone() {
     //TODO: Clone
-    return new ODataBatchResource(this.client, this._api, this.pathSegments.clone());
+    return new ODataBatchResource(this.api, this.pathSegments.clone());
   }
 
   //#region Factory
-  static factory(client: ODataClient, api?: ODataApi) {
+  static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
-    segments.segment(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(client, api, segments);
+    segments.add(PathSegmentNames.batch, $BATCH);
+    return new ODataBatchResource(api, segments);
   }
   //#endregion
 
-  //#region Api Config
-  get api(): ODataApi {
-    return this._api;
-  }
-  ////#endregion
-
-  post(func: (batch: ODataBatchResource) => void) {
+  post(func: (batch: ODataBatchResource) => void, options?: HttpOptions): Observable<ODataResponse<any>> {
     const current = this.api.request;
     this.api.request = (req: ODataRequest<any>): Observable<any> => {
       if (req.api !== this.api)
@@ -191,15 +185,24 @@ export class ODataBatchResource extends ODataResource<any> {
       this.api.request = current;
     }
 
-    return this.client.post(this, this.body(), {
+    const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
+      [ODATA_VERSION]: VERSION_4_0,
+      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
+      [ACCEPT]: MULTIPART_MIXED
+    });
+    const request = new ODataRequest({
+      method: "POST",
+      body: this.body(),
+      api: this.api,
+      resource: this,
       observe: 'response',
       responseType: 'text',
-      headers: {
-        [ODATA_VERSION]: VERSION_4_0,
-        [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
-        [ACCEPT]: MULTIPART_MIXED
-      }
-    }).pipe(
+      headers: headers,
+      params: options ? options.params : undefined,
+      withCredentials: options ? options.withCredentials : undefined
+    });
+
+    return this.api.request(request).pipe(
       map((resp: ODataResponse<any>) => {
         this.handleResponse(resp);
         return resp;

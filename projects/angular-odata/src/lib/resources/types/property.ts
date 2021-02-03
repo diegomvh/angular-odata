@@ -3,48 +3,118 @@ import { Observable } from 'rxjs';
 import { ODataValueResource } from './value';
 
 import { ODataResource } from '../resource';
-import { ODataQueryOptions } from '../query-options';
+import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataClient } from '../../client';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
-import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
+import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
 import { map } from 'rxjs/operators';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
+import { ODataApi } from '../../api';
+import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../builder';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<P>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.property, path)
+  static factory<P>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.add(PathSegmentNames.property, path)
     if (type)
-      segment.setType(type)
+      segment.type(type)
     options.clear();
-    return new ODataPropertyResource<P>(client, segments, options);
+    return new ODataPropertyResource<P>(api, segments, options);
   }
 
   clone() {
-    return new ODataPropertyResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
   //#region Function Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) : undefined;
   }
   ////#endregion
 
-  //#region Inmutable Resource
-  value() {
-    return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+    const Model = this.schema?.model || ODataModel;
+    return new Model(entity, {resource: this, meta}) as M;
   }
 
-  property<P>(name: string) {
-    let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser?
-      parser.typeFor(name) : null;
-    return ODataPropertyResource.factory<P>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    let Collection = this.schema?.collection || ODataCollection;
+    return new Collection(entities, {resource: this, meta}) as C;
+  }
+
+  //#region Inmutable Resource
+  value() {
+    return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
+  }
+
+  property<P>(path: string) {
+    let type = this.type();
+    if (type !== undefined) {
+      let parser = this.api.findParserForType<P>(type);
+      type = parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : undefined;
+    }
+    return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+  }
+  //#endregion
+
+  //#region Mutable Resource
+  get segment() {
+    const segments = this.pathSegments;
+    return {
+      entitySet() {
+        return segments.get(PathSegmentNames.entitySet);
+      },
+      singleton() {
+        return segments.get(PathSegmentNames.singleton);
+      },
+      property() {
+        return segments.get(PathSegmentNames.property);
+      }
+    }
+  }
+
+  get query() {
+    const options = this.queryOptions;
+    return {
+      select(opts?: Select<T>) {
+        return options.option<Select<T>>(QueryOptionNames.select, opts);
+      },
+      expand(opts?: Expand<T>) {
+        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
+      },
+      transform(opts?: Transform<T>) {
+        return options.option<Transform<T>>(QueryOptionNames.transform, opts);
+      },
+      search(opts?: string) {
+        return options.option<string>(QueryOptionNames.search, opts);
+      },
+      filter(opts?: Filter) {
+        return options.option<Filter>(QueryOptionNames.filter, opts);
+      },
+      orderBy(opts?: OrderBy<T>) {
+        return options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
+      },
+      format(opts?: string) {
+        return options.option<string>(QueryOptionNames.format, opts);
+      },
+      top(opts?: number) {
+        return options.option<number>(QueryOptionNames.top, opts);
+      },
+      skip(opts?: number) {
+        return options.option<number>(QueryOptionNames.skip, opts);
+      },
+      skiptoken(opts?: string) {
+        return options.option<string>(QueryOptionNames.skiptoken, opts);
+      },
+      custom(opts?: PlainObject) {
+        return options.option<PlainObject>(QueryOptionNames.custom, opts);
+      }
+    }
   }
   //#endregion
 

@@ -1,31 +1,16 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
-
 export type ODataContext = {
-  metadata?: string;
-  singleton?: string;
+  serviceRootUrl?: string;
+  metadataUrl?: string;
   entitySet?: string;
+  key?: string;
+  type?: string;
   property?: string;
-  entity?: string;
+  //entity?: boolean;
 }
-
-// JSON SCHEMA
-type JsonSchemaSelect<T> = Array<keyof T>;
-type JsonSchemaOrder<T> = Array<keyof T>;
-type JsonSchemaExpand<T> = {[P in keyof T]?: JsonSchemaConfig<T[P]> };
-
-export type JsonSchemaExpandOptions<T> = {
-  select?: JsonSchemaSelect<T>;
-  order?: JsonSchemaOrder<T>;
-  expand?: JsonSchemaExpand<T>;
-}
-
-export type JsonSchemaConfig<T> = JsonSchemaExpandOptions<T>;
-
 export interface Annotation {
   type: string;
   string?: string;
@@ -68,22 +53,22 @@ export interface ODataVersionHelper {
   property(value: {[name: string]: any}, context: ODataContext): any;
   annotations(value: {[name: string]: any}): {[name: string]: any};
   attributes(value: {[name: string]: any}): {[name: string]: any};
-  id(value: {[name: string]: any}, id?: string): string;
-  etag(value: {[name: string]: any}, etag?: string): string;
+  id(value: {[name: string]: any}, id?: string): string | undefined;
+  etag(value: {[name: string]: any}, etag?: string): string | undefined;
   context(value: {[name: string]: any}): ODataContext;
   functions(value: {[name: string]: any}): {[name: string]: any};
   properties(value: {[name: string]: any}): {[name: string]: any};
-  mediaEtag(value: {[name: string]: any}): string;
-  metadataEtag(value: {[name: string]: any}): string;
-  type(value: {[name: string]: any}): string;
-  nextLink(value: {[name: string]: any}): string;
-  readLink(value: {[name: string]: any}): string;
-  mediaReadLink(value: {[name: string]: any}): string;
-  editLink(value: {[name: string]: any}): string;
-  mediaEditLink(value: {[name: string]: any}): string;
-  mediaContentType(value: {[name: string]: any}): string;
-  deltaLink(value: {[name: string]: any}): string;
-  count(value: {[name: string]: any}): number;
+  mediaEtag(value: {[name: string]: any}): string | undefined;
+  metadataEtag(value: {[name: string]: any}): string | undefined;
+  type(value: {[name: string]: any}): string | undefined;
+  nextLink(value: {[name: string]: any}): string | undefined;
+  readLink(value: {[name: string]: any}): string | undefined;
+  mediaReadLink(value: {[name: string]: any}): string | undefined;
+  editLink(value: {[name: string]: any}): string | undefined;
+  mediaEditLink(value: {[name: string]: any}): string | undefined;
+  mediaContentType(value: {[name: string]: any}): string | undefined;
+  deltaLink(value: {[name: string]: any}): string | undefined;
+  count(value: {[name: string]: any}): number | undefined;
   countParam(): {[name: string]: string};
 }
 
@@ -142,6 +127,8 @@ export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
+  preferMaxPageSize?: number;
+  preferReturn?: 'representation' | 'minimal';
   fetchPolicy?: FetchPolicy;
 }
 
@@ -158,6 +145,11 @@ export interface Parser<T> {
   deserialize(value: any, options: OptionsHelper): T;
   serialize(value: T, options: OptionsHelper): any;
 }
+
+export const NONE_PARSER = {
+  deserialize: (value: any, options: OptionsHelper) => value,
+  serialize: (value: any, options: OptionsHelper) => value,
+} as Parser<any>;
 
 export interface Cache<T> {
   put(key: string, payload: T): void;
@@ -235,6 +227,8 @@ export type CallableConfig = {
 }
 export type EntitySetConfig = {
   name: string;
+  entityType: string;
+  service: { new(...params: any[]): any };
   annotations?: AnnotationConfig[];
 }
 //#endregion

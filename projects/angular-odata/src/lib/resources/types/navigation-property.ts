@@ -4,158 +4,177 @@ import { QueryOptionNames } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
 import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments, PathSegmentNames, SegmentOptionNames } from '../path-segments';
-import { ODataClient } from '../../client';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { Observable, empty } from 'rxjs';
 import { EntityKey } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { Types } from '../../utils/types';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
-import { ODataEntities, ODataEntity } from '../responses';
+import { ODataEntities, ODataEntitiesMeta, ODataEntity, ODataEntityMeta } from '../responses';
 import { ODataValueResource } from './value';
-import { ODataEntityParser } from '../../parsers/entity';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
+import { ODataApi } from '../../api';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.navigationProperty, path)
+  static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.add(PathSegmentNames.navigationProperty, path)
     if (type)
-      segment.setType(type);
+      segment.type(type);
     options.keep(QueryOptionNames.format);
-    return new ODataNavigationPropertyResource<E>(client, segments, options);
+    return new ODataNavigationPropertyResource<E>(api, segments, options);
   }
 
   clone() {
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
+
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+    const Model = this.schema?.model || ODataModel;
+    return new Model(entity, {resource: this, meta}) as M;
+  }
+
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    const Collection = this.schema?.collection || ODataCollection;
+    return new Collection(entities, {resource: this, meta}) as C;
+  }
 
   //#region Function Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
   }
   ////#endregion
 
   //#region Inmutable Resource
+  key(key: EntityKey<T>) {
+    const navigation = this.clone();
+    navigation.segment.navigationProperty().key(key);
+    return navigation;
+  }
+
   value() {
-    return ODataValueResource.factory<T>(this.client, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   reference() {
-    return ODataReferenceResource.factory(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataReferenceResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  navigationProperty<N>(name: string) {
-    let parser = this.client.parserFor<N>(this);
-    let type = parser instanceof ODataEntityParser?
-      parser.typeFor(name) : null;
-    return ODataNavigationPropertyResource.factory<N>(this.client, name, type, this.pathSegments.clone(), this.queryOptions.clone());
+  navigationProperty<N>(path: string) {
+    let type = this.type();
+    if (type !== undefined) {
+      let parser = this.api.findParserForType<N>(type);
+      type = parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : undefined;
+    }
+    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  property<P>(name: string) {
-    let parser = this.client.parserFor<P>(this);
-    let type = parser instanceof ODataEntityParser?
-      parser.typeFor(name) : null;
-    return ODataPropertyResource.factory<P>(this.client, name, type || null, this.pathSegments.clone(), this.queryOptions.clone());
+  property<P>(path: string) {
+    let type = this.type();
+    if (type !== undefined) {
+      let parser = this.api.findParserForType<P>(type);
+      type = parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : undefined;
+    }
+    return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {
-    return ODataCountResource.factory(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataCountResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+  }
+
+  cast<C extends T>(type: string) {
+    let segments = this.pathSegments.clone();
+    segments.add(PathSegmentNames.type, type).type(type);
+    return new ODataNavigationPropertyResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
   select(opts: Select<T>) {
     let options = this.queryOptions.clone();
     options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   expand(opts: Expand<T>) {
     let options = this.queryOptions.clone();
     options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   transform(opts: Transform<T>) {
     let options = this.queryOptions.clone();
     options.option<Transform<T>>(QueryOptionNames.transform, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   search(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.search, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   filter(opts: Filter) {
     let options = this.queryOptions.clone();
     options.option<Filter>(QueryOptionNames.filter, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   orderBy(opts: OrderBy<T>) {
     let options = this.queryOptions.clone();
     options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   format(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.format, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   top(opts: number) {
     let options = this.queryOptions.clone();
     options.option<number>(QueryOptionNames.top, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   skip(opts: number) {
     let options = this.queryOptions.clone();
     options.option<number>(QueryOptionNames.skip, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   skiptoken(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.skiptoken, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   custom(opts: PlainObject) {
     let options = this.queryOptions.clone();
     options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataNavigationPropertyResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
   //#endregion
 
   //#region Mutable Resource
   get segment() {
-    const res = this;
-    const client = this.client;
     const segments = this.pathSegments;
     return {
-      entitySet(name?: string) {
-        let segment = segments.segment(PathSegmentNames.entitySet);
-        if (name !== undefined)
-          segment.setPath(name);
-        return segment;
+      entitySet() {
+        return segments.get(PathSegmentNames.entitySet);
       },
-      key(key?: EntityKey<T>) {
-        let segment = segments.segment(PathSegmentNames.navigationProperty);
-        if (key !== undefined) {
-          let parser = client.parserFor<T>(res);
-          if (parser instanceof ODataEntityParser && Types.isObject(key))
-            key = parser.resolveKey(key);
-          segment.option(SegmentOptionNames.key, key);
-        }
-        return segment.option(SegmentOptionNames.key);
+      singleton() {
+        return segments.get(PathSegmentNames.singleton);
+      },
+      navigationProperty() {
+        return segments.get(PathSegmentNames.navigationProperty);
       }
     }
   }

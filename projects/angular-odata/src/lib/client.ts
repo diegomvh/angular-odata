@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,7 +17,6 @@ import {
   ODataFunctionResource,
   ODataActionResource,
   ODataEntityResource,
-  SegmentOptionNames,
   PathSegmentNames,
   ODataPathSegments,
   ODataSegment,
@@ -28,6 +27,7 @@ import {
 import { ODataSettings } from './settings';
 import { ODataApi } from './api';
 import { ODataRequest } from './resources/index';
+import { ODataEntityService } from './services/entity';
 
 function addBody<T>(
   options: {
@@ -56,13 +56,15 @@ return {
 };
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ODataClient {
 
-  constructor(protected http: HttpClient, protected settings: ODataSettings) {
-    settings.configure({
+  constructor(private http: HttpClient, private settings: ODataSettings, private injector: Injector) {
+    this.settings.configure({
       requester: (req: ODataRequest<any>): Observable<any> =>
-        http.request(req.method, `${req.url}`, {
+        this.http.request(req.method, `${req.url}`, {
           body: req.body,
           headers: req.headers,
           observe: req.observe,
@@ -71,133 +73,142 @@ export class ODataClient {
           responseType: req.responseType,
           withCredentials: req.withCredentials
         })
-    })
-  }
-
-  apiFor(resource: ODataResource<any>): ODataApi {
-    return this.settings.findForTypes(resource.types()) || this.settings.defaultApi();
-  }
-
-  apiByName(name: string): ODataApi {
-    return this.settings.apiByName(name);
-  }
-
-  endpointUrl(resource: ODataResource<any>) {
-    const api = this.apiFor(resource);
-    return `${api.serviceRootUrl}${resource}`;
-  }
-
-  parserFor<T>(resource: ODataResource<any>) {
-    const type = resource.type();
-    if (type === null) return null;
-    return this.parserForType<T>(type);
+    });
   }
 
   // Resolve Building Blocks
-  apiForType(type?: string) {
-    return type ? this.settings.apiForType(type) : this.settings.defaultApi();
+  apiFor(value?: ODataResource<any> | string): ODataApi {
+    let api: ODataApi | undefined = undefined;
+    if (value instanceof ODataResource)
+      api = this.settings.findApiForTypes(value.types());
+    else if (typeof value === 'string')
+      api = this.settings.findApiByName(value) || this.settings.findApiForType(value);
+    return api || this.settings.defaultApi();
   }
 
   parserForType<T>(type: string) {
     return this.settings.parserForType<T>(type);
   }
-
   enumTypeForType<T>(type: string) {
     return this.settings.enumTypeForType<T>(type);
   }
-
+  enumTypeByName<T>(name: string) {
+    return this.settings.enumTypeByName<T>(name);
+  }
   structuredTypeForType<T>(type: string) {
     return this.settings.structuredTypeForType<T>(type);
   }
-
-  callableForType<T>(type: string) {
-    return this.settings.callableFor<T>(type);
+  structuredTypeByName<T>(name: string) {
+    return this.settings.structuredTypeByName<T>(name);
   }
-
+  callableForType<T>(type: string) {
+    return this.settings.callableForType<T>(type);
+  }
+  callableByName<T>(name: string) {
+    return this.settings.callableByName<T>(name);
+  }
   entitySetForType(type: string) {
     return this.settings.entitySetForType(type);
   }
-
+  entitySetByName(name: string) {
+    return this.settings.entitySetByName(name);
+  }
   modelForType(type: string): typeof ODataModel {
-    return this.settings.modelForType(type) || ODataModel;
+    return this.settings.modelForType(type);
   }
-
+  modelByName(name: string): typeof ODataModel {
+    return this.settings.modelByName(name);
+  }
   collectionForType(type: string): typeof ODataCollection {
-    return this.settings.collectionForType(type) || ODataCollection;
+    return this.settings.collectionForType(type);
+  }
+  collectionByName(name: string): typeof ODataCollection {
+    return this.settings.collectionByName(name);
+  }
+  serviceForType(type: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceForType(type));
+  }
+  serviceForEntityType(type: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceForEntityType(type));
+  }
+  serviceByName(name: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceByName(name));
   }
 
-  fromJSON<P, R>(json: { segments: ODataSegment[], options: PlainObject }): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
-  fromJSON<E>(json: { segments: ODataSegment[], options: PlainObject }): ODataEntityResource<E> | ODataEntitySetResource<E> | ODataNavigationPropertyResource<E> | ODataSingletonResource<E>;
-  fromJSON(json: { segments: ODataSegment[], options: PlainObject }) {
-    let lastSegment = json.segments[json.segments.length - 1];
+  fromJSON<P, R>(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
+  fromJSON<E>(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string): ODataEntityResource<E> | ODataEntitySetResource<E> | ODataNavigationPropertyResource<E> | ODataSingletonResource<E>;
+  fromJSON(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string) {
     const segments = new ODataPathSegments(json.segments);
     const query = new ODataQueryOptions(json.options);
-    switch (lastSegment.name as PathSegmentNames) {
+    const api = this.apiFor(apiName || segments.last()?.type());
+    switch (segments.last()?.name as PathSegmentNames) {
       case PathSegmentNames.entitySet:
-        if (lastSegment.options && SegmentOptionNames.key in lastSegment.options) {
-          return new ODataEntityResource(this, segments, query);
+        if (segments.last()?.hasKey()) {
+          return new ODataEntityResource(api, segments, query);
         } else {
-          return new ODataEntitySetResource(this, segments, query);
+          return new ODataEntitySetResource(api, segments, query);
         }
-      case PathSegmentNames.navigationProperty: return new ODataNavigationPropertyResource(this, segments, query);
-      case PathSegmentNames.singleton: return new ODataSingletonResource(this, segments, query);
-      case PathSegmentNames.action: return new ODataActionResource(this, segments, query);
-      case PathSegmentNames.function: return new ODataFunctionResource(this, segments, query);
+      case PathSegmentNames.navigationProperty: return new ODataNavigationPropertyResource(api, segments, query);
+      case PathSegmentNames.singleton: return new ODataSingletonResource(api, segments, query);
+      case PathSegmentNames.action: return new ODataActionResource(api, segments, query);
+      case PathSegmentNames.function: return new ODataFunctionResource(api, segments, query);
     }
     throw new Error("No Resource for json")
   }
 
   // Requests
-  metadata(apiName?: string): ODataMetadataResource {
-    let api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
-    return ODataMetadataResource.factory(this, api);
+  metadata(apiNameOrType?: string): ODataMetadataResource {
+    const api = this.apiFor(apiNameOrType);
+    return ODataMetadataResource.factory(api);
   }
 
-  batch(apiName?: string): ODataBatchResource {
-    const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
-    return ODataBatchResource.factory(this, api);
+  batch(apiNameOrType?: string): ODataBatchResource {
+    const api = this.apiFor(apiNameOrType);
+    return ODataBatchResource.factory(api);
   }
 
-  singleton<T>(name: string, type?: string) {
-    return ODataSingletonResource.factory<T>(this, name, type || null, new ODataPathSegments(), new ODataQueryOptions());
+  singleton<T>(path: string, apiNameOrType?: string) {
+    const api = this.apiFor(apiNameOrType);
+    const type = api.findEntitySetByName(path)?.entityType;
+    return ODataSingletonResource.factory<T>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
-  entitySet<T>(name: string, type?: string): ODataEntitySetResource<T> {
-    return ODataEntitySetResource.factory<T>(this, name, type || null, new ODataPathSegments(), new ODataQueryOptions());
+  entitySet<T>(path: string, apiNameOrType?: string): ODataEntitySetResource<T> {
+    const api = this.apiFor(apiNameOrType);
+    const type = api.findEntitySetByName(path)?.entityType;
+    return ODataEntitySetResource.factory<T>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
    * Unbound Action
-   * @param  {string} name?
+   * @param  {string} path?
    * @returns ODataActionResource
    */
-  action<P, R>(name: string, apiName?: string): ODataActionResource<P, R> {
-    const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
-    let type = null;
-    let path = name;
-    const callable = api.findCallableForType(name);
+  action<P, R>(path: string, apiNameOrType?: string): ODataActionResource<P, R> {
+    const api = this.apiFor(apiNameOrType);
+    let type;
+    const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataActionResource.factory<P, R>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
+    return ODataActionResource.factory<P, R>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   /**
    * Unbound Function
-   * @param  {string} name?
+   * @param  {string} path?
    * @returns ODataFunctionResource
    */
-  function<P, R>(name: string, apiName?: string): ODataFunctionResource<P, R> {
-    const api = apiName !== undefined ? this.settings.apiByName(apiName) : this.settings.defaultApi();
-    let type = null;
-    let path = name;
-    const callable = api.findCallableForType(name);
+  function<P, R>(path: string, apiNameOrType?: string): ODataFunctionResource<P, R> {
+    const api = this.apiFor(apiNameOrType);
+    let type;
+    const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataFunctionResource.factory<P, R>(this, path, type, new ODataPathSegments(), new ODataQueryOptions());
+    return ODataFunctionResource.factory<P, R>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
 
   // Request headers, get, post, put, patch... etc

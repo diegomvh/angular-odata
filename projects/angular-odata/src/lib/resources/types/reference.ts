@@ -3,22 +3,22 @@ import { Observable } from 'rxjs';
 import { ODataResource } from '../resource';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { ODataClient } from '../../client';
 import { ODataEntityResource } from './entity';
 import { HttpOptions } from './options';
 import { PlainObject } from '../builder';
 import { $REF, $ID, ODATA_ID } from '../../constants';
+import { ODataApi } from '../../api';
 
 export class ODataReferenceResource extends ODataResource<any> {
   //#region Factory
-  static factory<P>(client: ODataClient, segments: ODataPathSegments, options: ODataQueryOptions) {
-    segments.segment(PathSegmentNames.reference, $REF);
+  static factory<P>(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
+    segments.add(PathSegmentNames.reference, $REF);
     options.clear();
-    return new ODataReferenceResource(client, segments, options);
+    return new ODataReferenceResource(api, segments, options);
   }
 
   clone() {
-    return new ODataReferenceResource(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataReferenceResource(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
 
@@ -26,7 +26,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   custom(opts: PlainObject) {
     let options = this.queryOptions.clone();
     options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataReferenceResource(this.client, this.pathSegments.clone(), options);
+    return new ODataReferenceResource(this.api, this.pathSegments.clone(), options);
   }
   //#endregion
 
@@ -43,19 +43,16 @@ export class ODataReferenceResource extends ODataResource<any> {
 
   //#region Requests
   post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
-    let related = this.client.endpointUrl(target);
-    return super.post({[ODATA_ID]: related}, options);
+    return super.post({[ODATA_ID]: target.endpointUrl()}, options);
   }
 
   put(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any> {
-    let related = this.client.endpointUrl(target);
-    return super.post({[ODATA_ID]: related}, options);
+    return super.post({[ODATA_ID]: target.endpointUrl()}, options);
   }
 
   delete(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
     if (options && options.target) {
-      let related = this.client.endpointUrl(options.target);
-      options.params = {[$ID]: related};
+      options.params = {[$ID]: options.target.endpointUrl()};
     }
     return super.delete(options);
   }

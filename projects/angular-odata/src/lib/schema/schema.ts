@@ -3,7 +3,7 @@ import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';
 import { ODataEnumType } from './enum-type';
 import { ODataApi } from '../api';
-import { SchemaConfig, Parser, CallableConfig } from '../types';
+import { SchemaConfig, Parser, CallableConfig, Annotation } from '../types';
 import { ODataEntitySet } from './entity-set';
 import { ODataAnnotation } from './annotation';
 
@@ -44,14 +44,13 @@ export class ODataSchema {
     return type.startsWith(this.namespace) || (this.alias && type.startsWith(this.alias));
   }
 
-  get options() {
-    return this.api.options;
-  }
-
   get entitySets() {
     return this.containers
       .reduce(
         (acc, container) => [...acc, ...container.entitySets], [] as ODataEntitySet[]);
+  }
+  findAnnotation(predicate: (annot: Annotation) => boolean) {
+    return this.annotations.find(predicate);
   }
 
   //#region Find for Type
@@ -72,7 +71,7 @@ export class ODataSchema {
   }
   //#endregion
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));

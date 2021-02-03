@@ -115,7 +115,13 @@
                                 <a href="#configure">configure</a>
                             </li>
                             <li>
+                                <a href="#defaults">defaults</a>
+                            </li>
+                            <li>
                                 <a href="#fields">fields</a>
+                            </li>
+                            <li>
+                                <a href="#findAnnotation">findAnnotation</a>
                             </li>
                             <li>
                                 <a href="#findField">findField</a>
@@ -125,6 +131,12 @@
                             </li>
                             <li>
                                 <a href="#pick">pick</a>
+                            </li>
+                            <li>
+                                <a href="#resolveKey">resolveKey</a>
+                            </li>
+                            <li>
+                                <a href="#toJsonSchema">toJsonSchema</a>
                             </li>
                         </ul>
                     </td>
@@ -143,7 +155,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#options">options</a>
+                                    <a href="#api">api</a>
                                 </li>
                             </ul>
                         </td>
@@ -342,7 +354,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEntityParser&lt;T&gt;</a></code>
+                            <i>Type : </i>        <code><a href="../interfaces/Parser.html" target="_self" >ODataStructuredTypeParser&lt;T&gt;</a></code>
 
                         </td>
                     </tr>
@@ -411,8 +423,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="38"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:38</a></div>
                 </td>
             </tr>
 
@@ -463,6 +475,45 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="defaults"></a>
+                    <span class="name">
+                        <b>
+                            defaults
+                        </b>
+                        <a href="#defaults"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>defaults()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:85</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="fields"></a>
                     <span class="name">
                         <b>
@@ -481,8 +532,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="38"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:38</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="43"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:43</a></div>
                 </td>
             </tr>
 
@@ -523,7 +574,77 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEntityFieldParser[]</a></code>
+                        <b>Returns : </b>    <code>ODataStructuredTypeFieldParser[]</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAnnotation"></a>
+                    <span class="name">
+                        <b>
+                            findAnnotation
+                        </b>
+                        <a href="#findAnnotation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findAnnotation(predicate: (annot: <a href="../interfaces/Annotation.html">Annotation</a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="34"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:34</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>predicate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -555,8 +676,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="61"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:61</a></div>
                 </td>
             </tr>
 
@@ -703,8 +824,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="60"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:60</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:65</a></div>
                 </td>
             </tr>
 
@@ -769,6 +890,150 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resolveKey"></a>
+                    <span class="name">
+                        <b>
+                            resolveKey
+                        </b>
+                        <a href="#resolveKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>resolveKey(attrs: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:81</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>attrs</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toJsonSchema"></a>
+                    <span class="name">
+                        <b>
+                            toJsonSchema
+                        </b>
+                        <a href="#toJsonSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>toJsonSchema(options: <a href="../interfaces/Options.html">JsonSchemaExpandOptions<T></a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="89"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:89</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaExpandOptions&lt;T&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
 
@@ -783,14 +1048,14 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="options"></a>
-                        <span class="name"><b>options</b><a href="#options"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="api"></a>
+                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>options()</code></span>
+                        <span class="accessor"><b>get</b><code>api()</code></span>
                     </td>
                 </tr>
                             <tr>
@@ -806,8 +1071,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataEntityFieldParser, ODataEntityParser } from &#x27;../parsers&#x27;;
-import { Parser, StructuredTypeConfig } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { JsonSchemaExpandOptions, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from &#x27;../parsers&#x27;;
+import { Annotation, Parser, StructuredTypeConfig } from &#x27;../types&#x27;;
 import { ODataAnnotation } from &#x27;./annotation&#x27;;
 import { ODataSchema } from &#x27;./schema&#x27;;
 
@@ -816,7 +1081,7 @@ export class ODataStructuredType&lt;T&gt; {
   name: string;
   model?: { new(...params: any[]): any };
   collection?: { new(...params: any[]): any };
-  parser: ODataEntityParser&lt;T&gt;;
+  parser: ODataStructuredTypeParser&lt;T&gt;;
   annotations: ODataAnnotation[];
 
   constructor(config: StructuredTypeConfig&lt;T&gt;, schema: ODataSchema) {
@@ -824,7 +1089,7 @@ export class ODataStructuredType&lt;T&gt; {
     this.name &#x3D; config.name;
     this.model &#x3D; config.model;
     this.collection &#x3D; config.collection;
-    this.parser &#x3D; new ODataEntityParser(config, schema.namespace, schema.alias);
+    this.parser &#x3D; new ODataStructuredTypeParser(config, schema.namespace, schema.alias);
     this.annotations &#x3D; (config.annotations || []).map(annot &#x3D;&gt; new ODataAnnotation(annot));
   }
 
@@ -835,20 +1100,25 @@ export class ODataStructuredType&lt;T&gt; {
     return names.indexOf(type) !&#x3D;&#x3D; -1;
   }
 
-  get options() {
-    return this.schema.options;
+  get api() {
+    return this.schema.api;
   }
 
-  configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; | undefined }) {
-    this.parser.configure(settings);
+  findAnnotation(predicate: (annot: Annotation) &#x3D;&gt; boolean) {
+    return this.annotations.find(predicate);
+  }
+
+  configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
+    const parserSettings &#x3D; Object.assign({options: this.api.options}, settings);
+    this.parser.configure(parserSettings);
   }
 
   fields(opts: {
     include_parents?: boolean,
     include_navigation?: boolean
-  } &#x3D; { include_navigation: false, include_parents: true }): ODataEntityFieldParser&lt;any&gt;[] {
-    let parent &#x3D; this.parser as ODataEntityParser&lt;any&gt; | undefined;
-    let fields &#x3D; &lt;ODataEntityFieldParser&lt;any&gt;[]&gt;[];
+  } &#x3D; { include_navigation: false, include_parents: true }): ODataStructuredTypeFieldParser&lt;any&gt;[] {
+    let parent &#x3D; this.parser as ODataStructuredTypeParser&lt;any&gt; | undefined;
+    let fields &#x3D; &lt;ODataStructuredTypeFieldParser&lt;any&gt;[]&gt;[];
     while (parent !&#x3D;&#x3D; undefined) {
       fields &#x3D; [
         ...parent.fields.filter(field &#x3D;&gt; opts.include_navigation || !field.navigation),
@@ -875,10 +1145,22 @@ export class ODataStructuredType&lt;T&gt; {
       .filter(k &#x3D;&gt; names.indexOf(k) !&#x3D;&#x3D; -1)
       .reduce((acc, k) &#x3D;&gt; Object.assign(acc, { [k]: value[k] }), {});
     if (opts.include_etag) {
-      const etag &#x3D; this.options.helper.etag(value);
-      this.options.helper.etag(attrs, etag);
+      const etag &#x3D; this.api.options.helper.etag(value);
+      this.api.options.helper.etag(attrs, etag);
     }
     return attrs;
+  }
+
+  resolveKey(attrs: any) {
+    return this.parser.resolveKey(attrs);
+  }
+
+  defaults() {
+    return this.parser.defaults();
+  }
+
+  toJsonSchema(options: JsonSchemaExpandOptions&lt;T&gt; &#x3D; {}) {
+    return this.parser.toJsonSchema(options);
   }
 }
 </code></pre>

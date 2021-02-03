@@ -2,7 +2,7 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { ApiConfig, ApiOptions, Parser } from './types';
+import { ApiConfig, ApiOptions, NONE_PARSER, Parser } from './types';
 import { EDM_PARSERS } from './parsers/index';
 import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
@@ -10,6 +10,7 @@ import { ODataRequest, ODataResponse } from './resources/index';
 import { ODataCache, ODataInMemoryCache } from './cache/index';
 import { ODataApiOptions } from './options';
 import { DEFAULT_VERSION } from './constants';
+import { ODataEntityService } from './services/entity';
 
 export class ODataApi {
   requester?: (request: ODataRequest<any>) => Observable<any>;
@@ -96,14 +97,23 @@ export class ODataApi {
   public findEntitySetForType(type: string) {
     return this.findSchemaForType(type)?.findEntitySetForType(type);
   }
-
   //#region Model and Collection for type
   public findModelForType(type: string) {
-    return this.findStructuredTypeForType(type)?.model;
+    return this.findStructuredTypeForType(type)?.model as typeof ODataModel | undefined;
   }
 
   public findCollectionForType(type: string) {
-    return this.findStructuredTypeForType(type)?.collection;
+    return this.findStructuredTypeForType(type)?.collection as typeof ODataCollection | undefined;
+  }
+
+  public findServiceForType(type: string) {
+    return this.findEntitySetForType(type)?.service as typeof ODataEntityService | undefined;
+  }
+  //#endregion
+  //#region find Config for Entity Type
+  public findServiceForEntityType(type: string) {
+    return this.schemas.reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
+      .find(e => e.entityType === type)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
   //#endregion
@@ -131,26 +141,30 @@ export class ODataApi {
 
   //#region Model and Collection for type
   public findModelByName(name: string) {
-    let schema = this.findStructuredTypeByName(name);
-    return schema !== undefined ? schema.model as typeof ODataModel : null;
+    return this.findStructuredTypeByName(name)?.model as typeof ODataModel | undefined;
   }
-
   public findCollectionByName(name: string) {
-    let schema = this.findStructuredTypeByName(name);
-    return schema !== undefined ? schema.collection as typeof ODataCollection : null;
+    return this.findStructuredTypeByName(name)?.collection as typeof ODataCollection | undefined;
+  }
+  public findServiceByName(name: string) {
+    return this.findEntitySetByName(name)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
   //#endregion
 
   public findParserForType<T>(type: string) {
+    // Base Parsers
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
     }
-    // Not edms here
+
+    // Enum, Strucutred and Callable Parsers
     if (!type.startsWith("Edm.")) {
       let value = this.findEnumTypeForType<T>(type) || this.findStructuredTypeForType<T>(type) || this.findCallableForType<T>(type);
       return value?.parser as Parser<T>;
     }
-    return undefined;
+
+    // None Parser
+    return NONE_PARSER;
   }
 }

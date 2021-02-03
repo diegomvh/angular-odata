@@ -3,7 +3,6 @@ import { expand, concatMap, toArray, map } from 'rxjs/operators';
 
 import { Expand, Select, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { QueryOptionNames } from '../query-options';
-import { ODataClient } from '../../client';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 
 import { ODataActionResource } from './action';
@@ -14,136 +13,144 @@ import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
-import { ODataEntity, ODataEntities } from '../responses';
+import { ODataEntity, ODataEntities, ODataEntitiesMeta } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
+import { ODataApi } from '../../api';
+import { Types } from '../../utils';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(client: ODataClient, path: string, type: string | null, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.segment(PathSegmentNames.entitySet, path)
+  static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
+    const segment = segments.add(PathSegmentNames.entitySet, path)
     if (type)
-      segment.setType(type);
+      segment.type(type);
     options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
-    return new ODataEntitySetResource<E>(client, segments, options);
+    return new ODataEntitySetResource<E>(api, segments, options);
   }
 
   clone() {
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
+
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    const Collection = this.schema?.collection || ODataCollection;
+    return new Collection(entities, {resource: this, meta}) as C;
+  }
 
   //#region Entity Config
   get schema() {
     let type = this.type();
-    if (type === null) return null;
-    return this.api.findStructuredTypeForType<T>(type) || null;
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
   }
   ////#endregion
 
   //#region Inmutable Resource
   entity(key?: EntityKey<T>) {
-    const entity = ODataEntityResource.factory<T>(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    const entity = ODataEntityResource.factory<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
     if (key !== undefined)
-      entity.segment.key(key);
+      entity.segment.entitySet().key( Types.isObject(key) ? this.schema?.resolveKey(key) : key );
     return entity;
   }
 
   cast<C extends T>(type: string) {
     let segments = this.pathSegments.clone();
-    segments.segment(PathSegmentNames.type, type).setType(type);
-    return new ODataEntitySetResource<C>(this.client, segments, this.queryOptions.clone());
+    segments.add(PathSegmentNames.type, type).type(type);
+    return new ODataEntitySetResource<C>(this.api, segments, this.queryOptions.clone());
   }
 
   action<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataActionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataActionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   function<P, R>(name: string) {
-    let type = null;
+    let type;
     let path = name;
     const callable = this.api.findCallableForType(name);
     if (callable !== undefined) {
       path = callable.path;
       type = callable.parser.type;
     }
-    return ODataFunctionResource.factory<P, R>(this.client, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   count() {
-    return ODataCountResource.factory(this.client, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataCountResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
   select(opts: Select<T>) {
     let options = this.queryOptions.clone();
     options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   expand(opts: Expand<T>) {
     let options = this.queryOptions.clone();
     options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   transform(opts: Transform<T>) {
     let options = this.queryOptions.clone();
     options.option<Transform<T>>(QueryOptionNames.transform, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   search(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.search, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   filter(opts: Filter) {
     let options = this.queryOptions.clone();
     options.option<Filter>(QueryOptionNames.filter, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   orderBy(opts: OrderBy<T>) {
     let options = this.queryOptions.clone();
     options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   format(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.format, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   top(opts: number) {
     let options = this.queryOptions.clone();
     options.option<number>(QueryOptionNames.top, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   skip(opts: number) {
     let options = this.queryOptions.clone();
     options.option<number>(QueryOptionNames.skip, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   skiptoken(opts: string) {
     let options = this.queryOptions.clone();
     options.option<string>(QueryOptionNames.skiptoken, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
 
   custom(opts: PlainObject) {
     let options = this.queryOptions.clone();
     options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataEntitySetResource<T>(this.client, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
   //#endregion
 
@@ -151,13 +158,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   get segment() {
     const segments = this.pathSegments;
     return {
-      entitySet(name?: string) {
-        let segment = segments.segment(PathSegmentNames.entitySet);
-        if (!segment)
-          throw new Error(`EntityResourse dosn't have segment for entitySet, WTF?`);
-        if (name !== undefined)
-          segment.setPath(name);
-        return segment;
+      entitySet() {
+        return segments.get(PathSegmentNames.entitySet);
       }
     }
   }

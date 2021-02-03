@@ -96,25 +96,22 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                <a href="#add">add</a>
+                            </li>
+                            <li>
                                 <a href="#clone">clone</a>
                             </li>
                             <li>
                                 <a href="#find">find</a>
                             </li>
                             <li>
-                                <a href="#has">has</a>
+                                <a href="#get">get</a>
                             </li>
                             <li>
                                 <a href="#last">last</a>
                             </li>
                             <li>
                                 <a href="#path">path</a>
-                            </li>
-                            <li>
-                                <a href="#remove">remove</a>
-                            </li>
-                            <li>
-                                <a href="#segment">segment</a>
                             </li>
                             <li>
                                 <a href="#toJSON">toJSON</a>
@@ -148,7 +145,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:55</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:50</a></div>
                             </td>
                         </tr>
 
@@ -212,7 +209,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:55</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:50</a></div>
                             </td>
                         </tr>
 
@@ -226,6 +223,88 @@
     <h3 id="methods">
         Methods
     </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="add"></a>
+                    <span class="name">
+                        <b>
+                            add
+                        </b>
+                        <a href="#add"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>add(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:97</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>path</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/SegmentHandler.html" target="_self" >SegmentHandler</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -248,8 +327,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="85"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:85</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:83</a></div>
                 </td>
             </tr>
 
@@ -280,15 +359,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>find(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>find(predicate: (segment: <a href="../undefineds/ODataSegment.html">ODataSegment</a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="89"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:89</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="87"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:87</a></div>
                 </td>
             </tr>
 
@@ -308,25 +387,13 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>name</td>
+                                    <td>predicate</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
                                     </td>
 
                                     <td>
                                         No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>path</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
                                     </td>
 
 
@@ -351,26 +418,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="has"></a>
+                    <a name="get"></a>
                     <span class="name">
                         <b>
-                            has
+                            get
                         </b>
-                        <a href="#has"><span class="icon ion-ios-link"></span></a>
+                        <a href="#get"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>has(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>get(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="112"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:112</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:103</a></div>
                 </td>
             </tr>
 
@@ -401,25 +468,13 @@
 
 
                                 </tr>
-                                <tr>
-                                    <td>path</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
                             </tbody>
                         </table>
                     </div>
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/SegmentHandler.html" target="_self" >SegmentHandler</a></code>
 
                     </div>
                     <div class="io-description">
@@ -451,8 +506,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="96"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:96</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:92</a></div>
                 </td>
             </tr>
 
@@ -490,8 +545,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:56</a></div>
                 </td>
             </tr>
 
@@ -502,170 +557,6 @@
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="remove"></a>
-                    <span class="name">
-                        <b>
-                            remove
-                        </b>
-                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>remove(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="116"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:116</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>path</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="segment"></a>
-                    <span class="name">
-                        <b>
-                            segment
-                        </b>
-                        <a href="#segment"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>segment(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="101"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:101</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>path</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/SegmentHandler.html" target="_self" >SegmentHandler</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
                     </div>
                 </td>
             </tr>
@@ -693,8 +584,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="75"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:75</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:70</a></div>
                 </td>
             </tr>
 
@@ -732,8 +623,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:66</a></div>
                 </td>
             </tr>
 
@@ -771,8 +662,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="67"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:67</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="62"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:62</a></div>
                 </td>
             </tr>
 
@@ -804,7 +695,6 @@ import { PlainObject } from &#x27;./builder&#x27;;
 
 import { Types, Dates } from &#x27;../utils&#x27;;
 
-import { OptionHandler } from &#x27;./query-options&#x27;;
 import { PATH_SEPARATOR } from &#x27;../constants&#x27;;
 
 export enum PathSegmentNames {
@@ -822,28 +712,24 @@ export enum PathSegmentNames {
   action &#x3D; &#x27;action&#x27;
 }
 
-export enum SegmentOptionNames {
-  key &#x3D; &#x27;key&#x27;,
-  parameters &#x3D; &#x27;parameters&#x27;
-}
-
 export type ODataSegment &#x3D; {
   name: string;
   path: string;
   type?: string;
-  options: PlainObject;
+  key?: any;
+  parameters?: any;
 }
 
 function pathSegmentsBuilder(segment: ODataSegment): string {
   switch (segment.name) {
     case PathSegmentNames.function:
-      let parameters &#x3D; segment.options[SegmentOptionNames.parameters];
+      const parameters &#x3D; segment.parameters;
       return (parameters ?
         buildQuery({ func: { [segment.path]: parameters }}) :
         buildQuery({ func: segment.path})
       ).slice(1);
     default:
-      let key &#x3D; segment.options[SegmentOptionNames.key];
+      let key &#x3D; segment.key;
       if (typeof (key) &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(key)) {
         key &#x3D; guid(key);
       }
@@ -855,7 +741,7 @@ export class ODataPathSegments {
   protected segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments &#x3D; (segments || []).map(({name, path, type, options}) &#x3D;&gt; ({name, path, type, options: options || {}}));
+    this.segments &#x3D; segments || [];
   }
 
   path(): string {
@@ -874,10 +760,13 @@ export class ODataPathSegments {
 
   toJSON() {
     return this.segments.map(segment &#x3D;&gt; {
-      let json &#x3D; &lt;any&gt;{ name: segment.name, path: segment.path, type: segment.type };
-      let options &#x3D; Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.options)));
-      if (!Types.isEmpty(options))
-        json.options &#x3D; options;
+      let json &#x3D; &lt;any&gt;{ name: segment.name, path: segment.path };
+      if (segment.type !&#x3D;&#x3D; undefined)
+        json.type &#x3D; segment.type;
+      if (segment.key !&#x3D;&#x3D; undefined)
+        json.key &#x3D; Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.key)));
+      if (segment.parameters !&#x3D;&#x3D; undefined)
+        json.parameters &#x3D; Dates.isoStringToDate(JSON.parse(JSON.stringify(segment.parameters)));
       return json;
     });
   }
@@ -886,70 +775,67 @@ export class ODataPathSegments {
     return new ODataPathSegments(this.toJSON());
   }
 
-  find(name: string, path?: string) {
-    // Backward search
-    return [...this.segments].reverse().find(s &#x3D;&gt;
-      s.name &#x3D;&#x3D;&#x3D; name &amp;&amp;
-      (path &#x3D;&#x3D;&#x3D; undefined || s.path &#x3D;&#x3D;&#x3D; path));
+  find(predicate: (segment: ODataSegment) &#x3D;&gt; boolean) {
+    //Backward Find
+    return [...this.segments].reverse().find(predicate);
   }
 
   last() {
     return (this.segments.length &gt; 0) ?
-       new SegmentHandler(this.segments[this.segments.length - 1]) : null;
+       new SegmentHandler(this.segments[this.segments.length - 1]) : undefined;
   }
 
-  segment(name: string, path?: string) {
-    let segment &#x3D; this.find(name, path);
-    if (!segment &amp;&amp; path !&#x3D;&#x3D; undefined) {
-      segment &#x3D; { name, path, options: {} } as ODataSegment;
-      this.segments.push(segment);
-    }
-    if (segment &#x3D;&#x3D;&#x3D; undefined)
-      throw new Error(&#x60;No segment with name: ${name}&#x60;)
+  add(name: string, path: string) {
+    const segment &#x3D; { name, path } as ODataSegment;
+    this.segments.push(segment);
     return new SegmentHandler(segment);
   }
 
-  has(name: string, path?: string) {
-    return !!this.find(name, path);
-  }
-
-  remove(name: string, path?: string) {
-    let segment &#x3D; this.find(name, path);
-    this.segments &#x3D; this.segments.filter(s &#x3D;&gt; s !&#x3D;&#x3D; segment);
+  get(name: string) {
+    let segment &#x3D; this.find(s &#x3D;&gt; s.name &#x3D;&#x3D;&#x3D; name);
+    if (segment &#x3D;&#x3D;&#x3D; undefined)
+      throw Error(&#x60;No Segment for name ${name} was found&#x60;);
+    return new SegmentHandler(segment);
   }
 }
 
 export class SegmentHandler {
-  options: PlainObject
-  constructor(private segment: ODataSegment) {
-    this.options &#x3D; this.segment.options;
-  }
+  constructor(private segment: ODataSegment) {}
 
   get name() {
     return this.segment.name;
   }
 
-  get type() {
-    return this.segment.type || null;
+  type(value?: string) {
+    if (value !&#x3D;&#x3D; undefined)
+      this.segment.type &#x3D; value;
+    return this.segment.type;
   }
 
-  setType(value: string) {
-    this.segment.type &#x3D; value;
-  }
-
-  get path() {
+  path(value?: string) {
+    if (value !&#x3D;&#x3D; undefined)
+      this.segment.path &#x3D; value;
     return this.segment.path;
   }
 
-  setPath(value: string) {
-    this.segment.path &#x3D; value;
+  key&lt;T&gt;(value?: T) {
+    if (value !&#x3D;&#x3D; undefined)
+      this.segment.key &#x3D; value;
+    return this.segment.key as T;
   }
 
-  // Option Handler
-  option&lt;T&gt;(type: SegmentOptionNames, opts?: T) {
-    if (opts !&#x3D;&#x3D; undefined)
-      this.options[type] &#x3D; opts;
-    return new OptionHandler&lt;T&gt;(this.options, type as any);
+  hasKey() {
+    return !Types.isEmpty(this.segment.key);
+  }
+
+  parameters&lt;T&gt;(value?: T) {
+    if (value !&#x3D;&#x3D; undefined)
+      this.segment.parameters &#x3D; value;
+    return this.segment.parameters as T;
+  }
+
+  hasParameters() {
+    return !Types.isEmpty(this.segment.parameters);
   }
 
   // Aliases
