@@ -250,7 +250,7 @@ export class ODataBatchResource extends ODataResource<any> {
       if (batch.request.method === 'GET' || batch.request.method === 'DELETE') {
         res.push(NEWLINE);
       } else {
-        res.push(JSON.stringify(batch.request.body));
+        res.push(`${NEWLINE}${JSON.stringify(batch.request.body)}`);
       }
     }
 
