@@ -133,11 +133,11 @@ export class ODataModel<T> {
   }
 
   _key() {
-    return this._schema()?.resolveKey(this.toEntity());
+    return this.__schema?.resolveKey(this.toEntity());
   }
 
   isNew() {
-    return !(this.__resource instanceof ODataEntityResource) || Types.isEmpty(this.__resource.segment.entitySet().hasKey());
+    return this._key() === undefined;
   }
 
   protected defaults() {
