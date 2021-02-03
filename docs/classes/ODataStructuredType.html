@@ -155,7 +155,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#options">options</a>
+                                    <a href="#api">api</a>
                                 </li>
                             </ul>
                         </td>
@@ -1048,14 +1048,14 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="options"></a>
-                        <span class="name"><b>options</b><a href="#options"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="api"></a>
+                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>options()</code></span>
+                        <span class="accessor"><b>get</b><code>api()</code></span>
                     </td>
                 </tr>
                             <tr>
@@ -1100,16 +1100,16 @@ export class ODataStructuredType&lt;T&gt; {
     return names.indexOf(type) !&#x3D;&#x3D; -1;
   }
 
-  get options() {
-    return this.schema.options;
+  get api() {
+    return this.schema.api;
   }
 
   findAnnotation(predicate: (annot: Annotation) &#x3D;&gt; boolean) {
     return this.annotations.find(predicate);
   }
 
-  configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; | undefined }) {
-    const parserSettings &#x3D; Object.assign({options: this.options}, settings);
+  configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
+    const parserSettings &#x3D; Object.assign({options: this.api.options}, settings);
     this.parser.configure(parserSettings);
   }
 
@@ -1145,8 +1145,8 @@ export class ODataStructuredType&lt;T&gt; {
       .filter(k &#x3D;&gt; names.indexOf(k) !&#x3D;&#x3D; -1)
       .reduce((acc, k) &#x3D;&gt; Object.assign(acc, { [k]: value[k] }), {});
     if (opts.include_etag) {
-      const etag &#x3D; this.options.helper.etag(value);
-      this.options.helper.etag(attrs, etag);
+      const etag &#x3D; this.api.options.helper.etag(value);
+      this.api.options.helper.etag(attrs, etag);
     }
     return attrs;
   }

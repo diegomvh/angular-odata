@@ -132,6 +132,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
+                                    <span class="modifier">Abstract</span>
                                 <a href="#attach">attach</a>
                             </li>
                             <li>
@@ -1041,6 +1042,7 @@
                     <span class="name">
                         <b>
                             <span class="modifier">Public</span>
+                            <span class="modifier">Abstract</span>
                             attach
                         </b>
                         <a href="#attach"><span class="icon ion-ios-link"></span></a>
@@ -1063,7 +1065,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:11</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:10</a></code>
 </div>
                 </td>
             </tr>
@@ -1267,7 +1269,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
 
   // Service Config
   get entitySetSchema() {
-    return this.api.findEntitySetByName(this.name) || null;
+    return this.api.findEntitySetByName(this.name);
   }
 
   public create(entity: Partial&lt;T&gt;, options?: HttpOptions): Observable&lt;T | null&gt; {

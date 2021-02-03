@@ -2042,7 +2042,7 @@
 import { NEVER, Observable } from &#x27;rxjs&#x27;;
 import { catchError, map } from &#x27;rxjs/operators&#x27;;
 
-import { ApiConfig, ApiOptions, Parser } from &#x27;./types&#x27;;
+import { ApiConfig, ApiOptions, NONE_PARSER, Parser } from &#x27;./types&#x27;;
 import { EDM_PARSERS } from &#x27;./parsers/index&#x27;;
 import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from &#x27;./schema/index&#x27;;
 import { ODataModel, ODataCollection } from &#x27;./models/index&#x27;;
@@ -2193,15 +2193,19 @@ export class ODataApi {
   //#endregion
 
   public findParserForType&lt;T&gt;(type: string) {
+    // Base Parsers
     if (type in this.parsers) {
       return this.parsers[type] as Parser&lt;T&gt;;
     }
-    // Not edms here
+
+    // Enum, Strucutred and Callable Parsers
     if (!type.startsWith(&quot;Edm.&quot;)) {
       let value &#x3D; this.findEnumTypeForType&lt;T&gt;(type) || this.findStructuredTypeForType&lt;T&gt;(type) || this.findCallableForType&lt;T&gt;(type);
       return value?.parser as Parser&lt;T&gt;;
     }
-    return undefined;
+
+    // None Parser
+    return NONE_PARSER;
   }
 }
 </code></pre>

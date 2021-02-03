@@ -118,8 +118,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="149"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:149</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="156"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:156</a></div>
                 </td>
             </tr>
 
@@ -188,8 +188,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="148"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:148</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:155</a></div>
                 </td>
             </tr>
 
@@ -259,11 +259,13 @@ export type EntityKey&lt;T&gt; &#x3D; {
   readonly [P in keyof T]?: T[P];
 } | string | number;
 export type ODataContext &#x3D; {
-  metadata?: string;
-  singleton?: string;
+  serviceRootUrl?: string;
+  metadataUrl?: string;
   entitySet?: string;
+  key?: string;
+  type?: string;
   property?: string;
-  entity?: string;
+  //entity?: boolean;
 }
 export interface Annotation {
   type: string;
@@ -399,6 +401,11 @@ export interface Parser&lt;T&gt; {
   deserialize(value: any, options: OptionsHelper): T;
   serialize(value: T, options: OptionsHelper): any;
 }
+
+export const NONE_PARSER &#x3D; {
+  deserialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
+  serialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
+} as Parser&lt;any&gt;;
 
 export interface Cache&lt;T&gt; {
   put(key: string, payload: T): void;

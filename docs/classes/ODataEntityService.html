@@ -82,6 +82,7 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Public</span>
+                                    <span class="modifier">Abstract</span>
                                 <a href="#attach">attach</a>
                             </li>
                             <li>
@@ -205,6 +206,7 @@
                     <span class="name">
                         <b>
                             <span class="modifier">Public</span>
+                            <span class="modifier">Abstract</span>
                             attach
                         </b>
                         <a href="#attach"><span class="icon ion-ios-link"></span></a>
@@ -221,8 +223,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="11"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:11</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="10"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:10</a></div>
                 </td>
             </tr>
 
@@ -376,7 +378,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:16</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:13</a></div>
                                 </td>
                             </tr>
 
@@ -398,7 +400,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:21</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:18</a></div>
                                 </td>
                             </tr>
 
@@ -418,10 +420,7 @@ export abstract class ODataEntityService&lt;T&gt; {
   constructor(protected client: ODataClient, protected name: string, protected apiNameOrEntityType?: string) { }
 
   public abstract entity(key?: EntityKey&lt;T&gt;): ODataResource&lt;T&gt;;
-  // Models
-  public attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): M {
-    return value.attach(this.entity());
-  }
+  public abstract attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): M;
 
   // Api Config
   get api() {
@@ -430,9 +429,9 @@ export abstract class ODataEntityService&lt;T&gt; {
 
   // Entity Config
   get structuredTypeSchema() {
-    if (this.apiNameOrEntityType &#x3D;&#x3D;&#x3D; undefined)
-      return null;
-    return this.api.findStructuredTypeForType&lt;T&gt;(this.apiNameOrEntityType) || null;
+    return this.apiNameOrEntityType !&#x3D;&#x3D; undefined ?
+      this.api.findStructuredTypeForType&lt;T&gt;(this.apiNameOrEntityType) :
+      undefined;
   }
 }
 </code></pre>

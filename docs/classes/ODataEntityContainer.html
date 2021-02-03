@@ -123,7 +123,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#options">options</a>
+                                    <a href="#api">api</a>
                                 </li>
                             </ul>
                         </td>
@@ -335,8 +335,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="21"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:21</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="22"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:22</a></div>
                 </td>
             </tr>
 
@@ -397,19 +397,19 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="options"></a>
-                        <span class="name"><b>options</b><a href="#options"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="api"></a>
+                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>options()</code></span>
+                        <span class="accessor"><b>get</b><code>api()</code></span>
                     </td>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:17</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:18</a></div>
                                 </td>
                             </tr>
 
@@ -436,8 +436,9 @@ export class ODataEntityContainer {
     this.entitySets &#x3D; (config.entitySets || []).map(config &#x3D;&gt; new ODataEntitySet(config, schema));
     this.annotations &#x3D; (config.annotations || []).map(annot &#x3D;&gt; new ODataAnnotation(annot));
   }
-  get options() {
-    return this.schema.options;
+
+  get api() {
+    return this.schema.api;
   }
 
   findAnnotation(predicate: (annot: Annotation) &#x3D;&gt; boolean) {

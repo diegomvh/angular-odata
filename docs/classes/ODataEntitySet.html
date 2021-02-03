@@ -129,7 +129,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#options">options</a>
+                                    <a href="#api">api</a>
                                 </li>
                             </ul>
                         </td>
@@ -500,14 +500,14 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="options"></a>
-                        <span class="name"><b>options</b><a href="#options"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="api"></a>
+                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>options()</code></span>
+                        <span class="accessor"><b>get</b><code>api()</code></span>
                     </td>
                 </tr>
                             <tr>
@@ -547,8 +547,8 @@ export class ODataEntitySet {
     return names.indexOf(type) !&#x3D;&#x3D; -1;
   }
 
-  get options() {
-    return this.schema.options;
+  get api() {
+    return this.schema.api;
   }
 
   findAnnotation(predicate: (annot: Annotation) &#x3D;&gt; boolean) {

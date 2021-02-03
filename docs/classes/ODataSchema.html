@@ -158,9 +158,6 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#options">options</a>
-                                </li>
-                                <li>
                                     <a href="#entitySets">entitySets</a>
                                 </li>
                             </ul>
@@ -482,8 +479,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="78"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:78</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:74</a></div>
                 </td>
             </tr>
 
@@ -552,8 +549,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="52"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:52</a></div>
                 </td>
             </tr>
 
@@ -624,8 +621,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="69"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:69</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:65</a></div>
                 </td>
             </tr>
 
@@ -696,8 +693,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="73"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:73</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:69</a></div>
                 </td>
             </tr>
 
@@ -768,8 +765,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:57</a></div>
                 </td>
             </tr>
 
@@ -840,8 +837,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="65"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:65</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="61"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:61</a></div>
                 </td>
             </tr>
 
@@ -972,28 +969,6 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="options"></a>
-                        <span class="name"><b>options</b><a href="#options"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>options()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:47</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
                         <a name="entitySets"></a>
                         <span class="name"><b>entitySets</b><a href="#entitySets"><span class="icon ion-ios-link"></span></a></span>
                     </td>
@@ -1006,7 +981,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:51</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:47</a></div>
                                 </td>
                             </tr>
 
@@ -1063,10 +1038,6 @@ export class ODataSchema {
     return type.startsWith(this.namespace) || (this.alias &amp;&amp; type.startsWith(this.alias));
   }
 
-  get options() {
-    return this.api.options;
-  }
-
   get entitySets() {
     return this.containers
       .reduce(
@@ -1094,7 +1065,7 @@ export class ODataSchema {
   }
   //#endregion
 
-  configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; | undefined }) {
+  configure(settings: { findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt; }) {
     // Configure Entities
     this.entities
       .forEach(config &#x3D;&gt; config.configure(settings));
