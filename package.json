@@ -32,7 +32,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "docs": "compodoc -p projects/angular-odata/tsconfig.lib.json -d docs --disableGraph --disableCoverage",
-    "versioning": "npm version 0.21.0 --allow-same-version && cd projects/angular-odata && npm version 0.21.0 --allow-same-version && cd ../..",
+    "versioning": "npm version 0.21.1 --allow-same-version && cd projects/angular-odata && npm version 0.21.1 --allow-same-version && cd ../..",
     "publish": "npm run build && npm publish dist/angular-odata",
     "release": "cp README.md projects/angular-odata/README.md && npm run docs && npm run publish"
   },
