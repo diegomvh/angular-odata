@@ -2,7 +2,7 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { ApiConfig, ApiOptions, Parser } from './types';
+import { ApiConfig, ApiOptions, NONE_PARSER, Parser } from './types';
 import { EDM_PARSERS } from './parsers/index';
 import { ODataSchema, ODataEnumType, ODataCallable, ODataEntitySet, ODataStructuredType } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
@@ -153,14 +153,18 @@ export class ODataApi {
   //#endregion
 
   public findParserForType<T>(type: string) {
+    // Base Parsers
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
     }
-    // Not edms here
+
+    // Enum, Strucutred and Callable Parsers
     if (!type.startsWith("Edm.")) {
       let value = this.findEnumTypeForType<T>(type) || this.findStructuredTypeForType<T>(type) || this.findCallableForType<T>(type);
       return value?.parser as Parser<T>;
     }
-    return undefined;
+
+    // None Parser
+    return NONE_PARSER;
   }
 }

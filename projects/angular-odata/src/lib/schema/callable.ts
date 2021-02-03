@@ -26,12 +26,12 @@ export class ODataCallable<R> {
     return names.indexOf(type) !== -1;
   }
 
-  get options() {
-    return this.schema.options;
+  get api() {
+    return this.schema.api;
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
-    const parserSettings = Object.assign({options: this.options}, settings);
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
+    const parserSettings = Object.assign({options: this.api.options}, settings);
     this.parser.configure(parserSettings);
   }
 }

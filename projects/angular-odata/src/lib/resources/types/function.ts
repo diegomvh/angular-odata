@@ -5,14 +5,14 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 
-import { Types } from '../../utils/types';
-import { EntityKey } from '../../types';
 import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
 import { ODataResource } from '../resource';
-import { ODataEntity, ODataEntities, ODataProperty } from '../responses';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
+import { ODataEntity, ODataEntities, ODataProperty, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
+import { ODataEntitySetResource } from './entity-set';
+import { ODataEntityResource } from './entity';
+import { ODataStructuredType } from '../../schema/structured-type';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -28,11 +28,53 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new ODataFunctionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
+  returnType() {
+    return this.schema?.parser.return;
+  }
+
+  asModel<M extends ODataModel<R>>(entity: Partial<R>, meta?: ODataEntityMeta): M {
+    let Model = ODataModel;
+    let type = this.returnType();
+    if (type !== undefined) {
+      Model = this.api.findModelForType(type) || ODataModel;
+    }
+    let options: { resource?: ODataEntityResource<R>, schema?: ODataStructuredType<R>, meta?: ODataEntityMeta } = { meta };
+    let path = meta?.context.entitySet;
+    if (path !== undefined) {
+      options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions())
+        .entity(entity);
+    }
+    type = meta?.context.type || type;
+    if (type !== undefined) {
+      options.schema = this.api.findStructuredTypeForType(type);
+    }
+    return new Model(entity, options) as M;
+  }
+
+  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): C {
+    let Collection = ODataCollection;
+    let type = this.returnType();
+    if (type !== undefined) {
+      Collection = this.api.findCollectionForType(type) || ODataCollection;
+    }
+    let options: { resource?: ODataEntitySetResource<R>, schema?: ODataStructuredType<R>, meta?: ODataEntitiesMeta } = { meta };
+    let path = meta?.context.entitySet;
+    if (path !== undefined) {
+      options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions());
+    }
+    type = meta?.context.type || type;
+    if (type !== undefined) {
+      options.schema = this.api.findStructuredTypeForType(type);
+    }
+    return new Collection(entities, options) as C;
+  }
 
   //#region Action Config
   get schema() {
     let type = this.type();
-    return (type !== undefined) ? this.api.findCallableForType<R>(type) : undefined;
+    return (type !== undefined) ?
+      this.api.findCallableForType<R>(type) :
+      undefined;
   }
   //#endregion
 

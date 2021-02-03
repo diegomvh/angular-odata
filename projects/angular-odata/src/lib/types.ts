@@ -3,11 +3,13 @@ export type EntityKey<T> = {
   readonly [P in keyof T]?: T[P];
 } | string | number;
 export type ODataContext = {
-  metadata?: string;
-  singleton?: string;
+  serviceRootUrl?: string;
+  metadataUrl?: string;
   entitySet?: string;
+  key?: string;
+  type?: string;
   property?: string;
-  entity?: string;
+  //entity?: boolean;
 }
 export interface Annotation {
   type: string;
@@ -143,6 +145,11 @@ export interface Parser<T> {
   deserialize(value: any, options: OptionsHelper): T;
   serialize(value: T, options: OptionsHelper): any;
 }
+
+export const NONE_PARSER = {
+  deserialize: (value: any, options: OptionsHelper) => value,
+  serialize: (value: any, options: OptionsHelper) => value,
+} as Parser<any>;
 
 export interface Cache<T> {
   put(key: string, payload: T): void;

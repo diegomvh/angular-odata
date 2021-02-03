@@ -104,21 +104,21 @@ describe('ODataClient', () => {
     expect(schema !== null).toBeTruthy();
     const field = (schema as ODataStructuredType<Person>).findField('Gender');
     expect(field !== undefined).toBeTruthy();
-    expect((field as ODataStructuredTypeFieldParser<any>).serialize(PersonGender.Female, (schema as ODataStructuredType<Person>).options)).toEqual('Female');
+    expect((field as ODataStructuredTypeFieldParser<any>).serialize(PersonGender.Female, (schema as ODataStructuredType<Person>).api.options)).toEqual('Female');
   });
 
   it('should deserialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
     const field = schema.findField('Gender') as ODataStructuredTypeFieldParser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
-    expect(field.deserialize('Female', schema.options)).toEqual(PersonGender.Female);
+    expect(field.deserialize('Female', schema.api.options)).toEqual(PersonGender.Female);
   });
 
   it('should serialize flags', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredType<Person>;
     const parser = client.parserForType(`${NAMESPACE}.PersonGender`) as ODataEnumTypeParser<PersonGender>;
     parser.flags = true;
-    const options = schema.options;
+    const options = schema.api.options;
     options.stringAsEnum = true;
     const field = (schema as ODataStructuredType<Person>).findField('Gender') as Parser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
@@ -132,12 +132,12 @@ describe('ODataClient', () => {
     parser.flags = true;
     const field = (schema as ODataStructuredType<Person>).findField('Gender') as Parser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
-    expect(field.deserialize('Male, Female, Unknown', schema.options)).toEqual(3);
+    expect(field.deserialize('Male, Female, Unknown', schema.api.options)).toEqual(3);
   });
 
   it('should serialize entity', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredType<Person>;
-    const options = schema.options;
+    const options = schema.api.options;
     options.stringAsEnum = false;
     expect(schema.parser.serialize(<Person>{
       FirstName: 'Name',

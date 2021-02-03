@@ -14,8 +14,9 @@ export class ODataEntityContainer {
     this.entitySets = (config.entitySets || []).map(config => new ODataEntitySet(config, schema));
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
-  get options() {
-    return this.schema.options;
+
+  get api() {
+    return this.schema.api;
   }
 
   findAnnotation(predicate: (annot: Annotation) => boolean) {

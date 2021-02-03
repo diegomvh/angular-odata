@@ -6,7 +6,7 @@ import { ODataResource } from '../resource';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
-import { ODataProperty, ODataEntities, ODataEntity } from '../responses';
+import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
@@ -35,6 +35,16 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.api.findStructuredTypeForType<T>(type) : undefined;
   }
   ////#endregion
+
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+    const Model = this.schema?.model || ODataModel;
+    return new Model(entity, {resource: this, meta}) as M;
+  }
+
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+    let Collection = this.schema?.collection || ODataCollection;
+    return new Collection(entities, {resource: this, meta}) as C;
+  }
 
   //#region Inmutable Resource
   value() {

@@ -27,16 +27,16 @@ export class ODataStructuredType<T> {
     return names.indexOf(type) !== -1;
   }
 
-  get options() {
-    return this.schema.options;
+  get api() {
+    return this.schema.api;
   }
 
   findAnnotation(predicate: (annot: Annotation) => boolean) {
     return this.annotations.find(predicate);
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
-    const parserSettings = Object.assign({options: this.options}, settings);
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
+    const parserSettings = Object.assign({options: this.api.options}, settings);
     this.parser.configure(parserSettings);
   }
 
@@ -72,8 +72,8 @@ export class ODataStructuredType<T> {
       .filter(k => names.indexOf(k) !== -1)
       .reduce((acc, k) => Object.assign(acc, { [k]: value[k] }), {});
     if (opts.include_etag) {
-      const etag = this.options.helper.etag(value);
-      this.options.helper.etag(attrs, etag);
+      const etag = this.api.options.helper.etag(value);
+      this.api.options.helper.etag(attrs, etag);
     }
     return attrs;
   }

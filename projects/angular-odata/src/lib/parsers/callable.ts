@@ -1,8 +1,4 @@
-import { Parser, Options, Parameter, CallableConfig, StructuredTypeFieldOptions } from '../types';
-
-const NONE_PARSER = {
-  serialize(value: any, options: Options) {return value}
-} as Parser<any>;
+import { Parser, Options, Parameter, CallableConfig, StructuredTypeFieldOptions, NONE_PARSER } from '../types';
 
 export class ODataParameterParser<Type> {
   name: string;
@@ -24,8 +20,8 @@ export class ODataParameterParser<Type> {
       this.parser.serialize(value, options);
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
-    this.parser = settings.findParserForType(this.type) || NONE_PARSER;
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
+    this.parser = settings.findParserForType(this.type);
   }
 }
 
@@ -56,7 +52,7 @@ export class ODataCallableParser<R> implements Parser<R> {
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
     );
   }
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     if (this.return)
       this.parser = settings.findParserForType(this.return) || NONE_PARSER;
     this.parameters.forEach(p => p.configure(settings));

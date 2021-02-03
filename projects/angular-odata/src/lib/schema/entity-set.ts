@@ -22,8 +22,8 @@ export class ODataEntitySet {
     return names.indexOf(type) !== -1;
   }
 
-  get options() {
-    return this.schema.options;
+  get api() {
+    return this.schema.api;
   }
 
   findAnnotation(predicate: (annot: Annotation) => boolean) {

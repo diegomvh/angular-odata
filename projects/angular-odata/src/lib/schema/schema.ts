@@ -44,10 +44,6 @@ export class ODataSchema {
     return type.startsWith(this.namespace) || (this.alias && type.startsWith(this.alias));
   }
 
-  get options() {
-    return this.api.options;
-  }
-
   get entitySets() {
     return this.containers
       .reduce(
@@ -75,7 +71,7 @@ export class ODataSchema {
   }
   //#endregion
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> | undefined }) {
+  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));
