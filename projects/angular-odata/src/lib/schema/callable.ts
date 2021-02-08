@@ -5,7 +5,7 @@ import { ODataCallableParser } from '../parsers';
 export class ODataCallable<R> {
   schema: ODataSchema;
   name: string;
-  path: string;
+  entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
   parser: ODataCallableParser<R>;
@@ -13,10 +13,21 @@ export class ODataCallable<R> {
   constructor(config: CallableConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
-    this.path = config.path || (config.bound ? `${schema.namespace}.${config.name}` : config.name);
+    this.entitySetPath = config.entitySetPath;
     this.bound = config.bound;
     this.composable = config.composable;
     this.parser = new ODataCallableParser(config, schema.namespace);
+  }
+
+  path() {
+    let path: string;
+    if (this.entitySetPath)
+      path = this.entitySetPath;
+    else if (this.bound)
+      path = `${this.schema.namespace}.${this.name}`;
+    else
+      path = this.parser.return ? this.api.findEntitySetForType(this.parser.return.type)?.name || this.name : this.name;
+    return path;
   }
 
   isTypeOf(type: string) {

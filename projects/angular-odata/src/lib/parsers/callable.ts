@@ -29,7 +29,7 @@ export class ODataParameterParser<T> {
 export class ODataCallableParser<R> implements Parser<R> {
   name: string;
   type: string;
-  return?: string;
+  return?: { type: string, callable?: boolean};
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
   constructor(config: CallableConfig, namespace: string) {
@@ -56,7 +56,7 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     if (this.return)
-      this.parser = settings.findParserForType(this.return) || NONE_PARSER;
+      this.parser = settings.findParserForType(this.return.type) || NONE_PARSER;
     this.parameters.forEach(p => p.configure(settings));
   }
 

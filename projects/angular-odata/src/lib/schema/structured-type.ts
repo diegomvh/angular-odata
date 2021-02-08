@@ -59,8 +59,8 @@ export class ODataStructuredType<T> {
     return fields;
   }
 
-  findField<P extends keyof T>(name: P) {
-    return this.fields().find(f => f.name === name);
+  findField(predicate: (field: ODataStructuredTypeFieldParser<any>) => boolean) {
+    return this.fields().find(predicate);
   }
 
   pick(value: {[name:string]: any}, opts: {

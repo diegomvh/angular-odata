@@ -1,17 +1,17 @@
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
-import { ODataResource } from '../resource';
-import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
-import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
+import { ODataCollection, ODataModel } from '../../models';
+import { ODataResource } from '../resource';
+import { ODataStructuredType } from '../../schema/structured-type';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataEntityResource } from './entity';
-import { ODataStructuredType } from '../../schema/structured-type';
+import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../builder';
+import { map } from 'rxjs/operators';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -27,9 +27,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return new ODataActionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
-  returnType() {
-    return this.schema?.parser.return;
-  }
 
   asModel<M extends ODataModel<R>>(entity: Partial<R>, meta?: ODataEntityMeta): M {
     let Model = ODataModel;
@@ -68,15 +65,18 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return new Collection(entities, options) as C;
   }
 
-  //#region Action Schema
+  //#region Action Config
   get schema() {
     let type = this.type();
     return (type !== undefined) ?
       this.api.findCallableForType<R>(type) :
       undefined;
   }
-  ////#endregion
+  //#endregion
 
+  returnType() {
+    return this.schema?.parser.return?.type;
+  }
   //#region Mutable Resource
   get segment() {
     const segments = this.pathSegments;
@@ -92,7 +92,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       }
     }
   }
-
   get query() {
     const options = this.queryOptions;
     return {

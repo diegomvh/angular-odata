@@ -219,11 +219,11 @@ export type Parameter = {
 
 export type CallableConfig = {
   name: string;
-  path?: string;
+  entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
   parameters?: { [name: string]: Parameter };
-  return?: string;
+  return?: {type: string, collection?: boolean};
 }
 export type EntitySetConfig = {
   name: string;

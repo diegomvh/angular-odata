@@ -170,7 +170,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   }
 }
 
-export class ODataStructuredTypeParser<Type> implements Parser<Type> {
+export class ODataStructuredTypeParser<T> implements Parser<T> {
   name: string;
   namespace: string;
   alias?: string;
@@ -179,7 +179,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
   children: ODataStructuredTypeParser<any>[];
   fields: ODataStructuredTypeFieldParser<any>[];
 
-  constructor(config: StructuredTypeConfig<Type>, namespace: string, alias?: string) {
+  constructor(config: StructuredTypeConfig<T>, namespace: string, alias?: string) {
     this.name = config.name;
     this.base = config.base;
     this.namespace = namespace;
@@ -197,7 +197,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: any, options: OptionsHelper): Type {
+  deserialize(value: any, options: OptionsHelper): T {
     if (this.parent)
       value = this.parent.deserialize(value, options);
     return Object.assign({}, value, this.fields
@@ -207,7 +207,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(value: Type, options: OptionsHelper): any {
+  serialize(value: T, options: OptionsHelper): any {
     if (this.parent)
       value = this.parent.serialize(value, options);
     return Object.assign({}, value, this.fields
@@ -229,7 +229,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
   }
 
   // Json Schema
-  toJsonSchema(options: JsonSchemaOptions<Type> = {}) {
+  toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     let schema = {
       $schema: "http://json-schema.org/draft-07/schema#",
       $id: `${this.namespace}.${this.name}`,
@@ -243,7 +243,7 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
         let expand = options.expand && f.name in options.expand ? (options.expand as any)[f.name] : undefined;
         let schema = f.toJsonSchema(expand);
         if (options.custom && f.name in options.custom)
-          schema = (options.custom[f.name as keyof Type] as (schema: any, field: ODataStructuredTypeFieldParser<any>) => any)(schema, f);
+          schema = (options.custom[f.name as keyof T] as (schema: any, field: ODataStructuredTypeFieldParser<any>) => any)(schema, f);
         return { [f.name]: schema };
       })
       .reduce((acc, v) => Object.assign(acc, v), {});

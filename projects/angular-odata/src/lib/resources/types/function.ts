@@ -1,18 +1,18 @@
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 
-import { Select, Expand, Transform, Filter, OrderBy, PlainObject } from '../builder';
-import { ODataResource } from '../resource';
 import { ODataEntity, ODataEntities, ODataProperty, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
-import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
-import { ODataEntitySetResource } from './entity-set';
+import { ODataResource } from '../resource';
+import { ODataCollection, ODataModel } from '../../models';
 import { ODataEntityResource } from './entity';
 import { ODataStructuredType } from '../../schema/structured-type';
+import { ODataEntitySetResource } from './entity-set';
+import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../builder';
+import { map } from 'rxjs/operators';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -28,9 +28,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new ODataFunctionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
   //#endregion
-  returnType() {
-    return this.schema?.parser.return;
-  }
 
   asModel<M extends ODataModel<R>>(entity: Partial<R>, meta?: ODataEntityMeta): M {
     let Model = ODataModel;
@@ -78,6 +75,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
+  returnType() {
+    return this.schema?.parser.return?.type;
+  }
   //#region Inmutable Resource
   parameters(params: P | null) {
     let segments = this.pathSegments.clone();
@@ -94,12 +94,14 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       entitySet() {
         return segments.get(PathSegmentNames.entitySet);
       },
+      singleton() {
+        return segments.get(PathSegmentNames.singleton);
+      },
       function() {
         return segments.get(PathSegmentNames.function);
       }
     }
   }
-
   get query() {
     const options = this.queryOptions;
     return {

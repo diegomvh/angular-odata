@@ -31,6 +31,7 @@ export class ODataEnumType<E> {
   findAnnotation(predicate: (annot: Annotation) => boolean) {
     return this.annotations.find(predicate);
   }
+
   fields(): ODataEnumTypeFieldParser[] {
     return this.parser.fields;
   }
