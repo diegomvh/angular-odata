@@ -1,4 +1,5 @@
-import { Parser, Options, Parameter, CallableConfig, StructuredTypeFieldOptions, NONE_PARSER } from '../types';
+import { CALLABLE_BINDING_PARAMETER } from '../constants';
+import { Parser, Parameter, CallableConfig, StructuredTypeFieldOptions, NONE_PARSER } from '../types';
 
 export class ODataParameterParser<Type> {
   name: string;
@@ -47,14 +48,19 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   // Serialize
   serialize(params: any, options: StructuredTypeFieldOptions): any {
-    return Object.assign({}, this.parameters
+    return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
     );
   }
+
   configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     if (this.return)
       this.parser = settings.findParserForType(this.return) || NONE_PARSER;
     this.parameters.forEach(p => p.configure(settings));
+  }
+
+  binding() {
+    return this.parameters.find(p => p.name === CALLABLE_BINDING_PARAMETER);
   }
 }

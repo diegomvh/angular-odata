@@ -1,5 +1,6 @@
 import { JsonSchemaOptions, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from '../parsers';
-import { Annotation, Parser, StructuredTypeConfig } from '../types';
+import { Annotation, EntityKey, Parser, StructuredTypeConfig } from '../types';
+import { Types } from '../utils/types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 
@@ -78,8 +79,18 @@ export class ODataStructuredType<T> {
     return attrs;
   }
 
-  resolveKey(attrs: any) {
-    return this.parser.resolveKey(attrs);
+  resolveKey(attrs: any): EntityKey<T> | undefined {
+    let key = this.parser.keys()
+      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
+    const values = Object.values(key);
+    if (values.length === 1) {
+      // Single primitive key value
+      key = values[0];
+    } else if (values.some(v => v === undefined)) {
+      // Compose key, needs all values
+      key = null;
+    }
+    return !Types.isEmpty(key) ? key : undefined;
   }
 
   defaults() {

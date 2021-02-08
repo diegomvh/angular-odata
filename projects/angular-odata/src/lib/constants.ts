@@ -41,6 +41,7 @@ export const BATCH_PREFIX = 'batch_';
 export const CHANGESET_PREFIX = 'changeset_';
 export const DEFAULT_FETCH_POLICY = 'network-only';
 export const DEFAULT_TIMEOUT = 60; // Time in seconds
+export const CALLABLE_BINDING_PARAMETER = 'bindingParameter';
 
 // URL PARTS
 export const QUERY_SEPARATOR = '?';

@@ -263,20 +263,6 @@ export class ODataStructuredTypeParser<Type> implements Parser<Type> {
     return [...keys, ...this.fields.filter(f => f.key)];
   }
 
-  resolveKey(attrs: any): EntityKey<Type> | undefined {
-    let key = this.keys()
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
-    const values = Object.values(key);
-    if (values.length === 1) {
-      // Single primitive key value
-      key = values[0];
-    } else if (values.some(v => v === undefined)) {
-      // Compose key, needs all values
-      key = null;
-    }
-    return !Types.isEmpty(key) ? key : undefined;
-  }
-
   isComplexType() {
     return this.keys().length === 0;
   }

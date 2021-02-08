@@ -297,6 +297,7 @@ export class ODataModel<T> {
   }
 
   protected _reference<P, Pm extends ODataModel<P>>(name: string, model: Pm | null): Observable<this> {
+    /*
     let field = this._resource.metaForType().fields().find(f => f.name === name);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
@@ -308,6 +309,8 @@ export class ODataModel<T> {
       return ref.set(model._resource as ODataEntityResource<P>, { etag });
     } else if (model === null)
       return ref.remove({ etag });
+    */
+    return of(this);
   }
 
   private __model<P>(
