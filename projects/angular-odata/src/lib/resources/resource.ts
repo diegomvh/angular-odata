@@ -14,17 +14,13 @@ import {
   ODataQueryOptions
 } from './query-options';
 import { HttpOptions } from './types';
-import {
-  ODataModel,
-  ODataCollection
-} from '../models/index';
-import { ODataResponse, ODataEntityMeta, ODataEntitiesMeta } from './responses/index';
+import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
 import { Parser } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
 
-export abstract class ODataResource<Type> {
+export abstract class ODataResource<T> {
   // VARIABLES
   public api: ODataApi;
   protected pathSegments: ODataPathSegments;
@@ -59,7 +55,7 @@ export abstract class ODataResource<Type> {
     const self = this.type();
     const that = other.type();
     if (self !== undefined && that !== undefined) {
-      const thatParser = api.findParserForType<Type>(that) as ODataStructuredTypeParser<Type>;
+      const thatParser = api.findParserForType<T>(that) as ODataStructuredTypeParser<T>;
       return thatParser.findParser(c => c.isTypeOf(self)) !== undefined;
     }
     return false;
@@ -88,16 +84,16 @@ export abstract class ODataResource<Type> {
     return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
   }
 
-  abstract clone(): ODataResource<Type>;
+  abstract clone(): ODataResource<T>;
 
   serialize(value: any): any {
     let api = this.api;
     let type = this.type();
     if (type !== undefined) {
-      let parser = api.findParserForType<Type>(type);
+      let parser = api.findParserForType<T>(type);
       if (parser !== undefined && 'serialize' in parser) {
         return Array.isArray(value) ?
-          value.map(e => (parser as Parser<Type>).serialize(e, api.options)) :
+          value.map(e => (parser as Parser<T>).serialize(e, api.options)) :
           parser.serialize(value, api.options);
       }
     }
@@ -164,16 +160,16 @@ export abstract class ODataResource<Type> {
     const res$ = this.api.request(request);
     switch (options.responseType) {
       case 'entities':
-        return res$.pipe(map((res: ODataResponse<Type>) => res.entities()));
+        return res$.pipe(map((res: ODataResponse<T>) => res.entities()));
       case 'entity':
-        return res$.pipe(map((res: ODataResponse<Type>) => res.entity()));
+        return res$.pipe(map((res: ODataResponse<T>) => res.entity()));
       case 'property':
-        return res$.pipe(map((res: ODataResponse<Type>) => res.property()));
+        return res$.pipe(map((res: ODataResponse<T>) => res.property()));
       case 'value':
-        return res$.pipe(map((res: ODataResponse<Type>) => res.value() as Type));
+        return res$.pipe(map((res: ODataResponse<T>) => res.value() as T));
       default:
         // Other responseTypes (arraybuffer, blob, json, text) return body
-        return res$.pipe(map((res: ODataResponse<Type>) => res.body));
+        return res$.pipe(map((res: ODataResponse<T>) => res.body));
     }
   }
 

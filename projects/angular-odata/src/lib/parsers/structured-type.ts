@@ -12,10 +12,10 @@ export type JsonSchemaOptions<T> = {
   expand?: JsonSchemaExpand<T>;
 }
 
-export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField, Parser<Type> {
+export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, Parser<T> {
   name: string;
   type: string;
-  private parser: Parser<Type>;
+  private parser: Parser<T>;
   default?: any;
   maxLength?: number;
   key: boolean;
@@ -53,7 +53,7 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
   }
 
   // Deserialize
-  private parse(parser: ODataStructuredTypeParser<Type>, value: any, options: OptionsHelper): any {
+  private parse(parser: ODataStructuredTypeParser<T>, value: any, options: OptionsHelper): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined) {
       return parser.findParser(c => c.isTypeOf(type)).deserialize(value, options);
@@ -61,9 +61,9 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options: OptionsHelper): Type {
+  deserialize(value: any, options: OptionsHelper): T {
     if (this.parser instanceof ODataStructuredTypeParser) {
-      const parser = this.parser as ODataStructuredTypeParser<Type>;
+      const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value) ?
         value.map(v => this.parse(parser, v, options)) :
         this.parse(parser, value, options);
@@ -72,7 +72,7 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
   }
 
   // Serialize
-  private toJson(parser: ODataStructuredTypeParser<Type>, value: any, options: OptionsHelper): any {
+  private toJson(parser: ODataStructuredTypeParser<T>, value: any, options: OptionsHelper): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined) {
       return parser.findParser(c => c.isTypeOf(type)).serialize(value, options);
@@ -80,9 +80,9 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
     return parser.serialize(value, options);
   }
 
-  serialize(value: Type, options: OptionsHelper): any {
+  serialize(value: T, options: OptionsHelper): any {
     if (this.parser instanceof ODataStructuredTypeParser) {
-      const parser = this.parser as ODataStructuredTypeParser<Type>;
+      const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value) ?
         (value as any[]).map(v => this.toJson(parser, v, options)) :
         this.toJson(parser, value, options);
@@ -101,7 +101,7 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
 
   // Json Schema
   // https://json-schema.org/
-  toJsonSchema(options: JsonSchemaOptions<Type> = {}) {
+  toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     let schema: any = (this.parser instanceof ODataStructuredTypeFieldParser ||
       this.parser instanceof ODataStructuredTypeParser ||
       this.parser instanceof ODataEnumTypeParser) ?
@@ -161,12 +161,12 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
   enum() {
     if (!this.isEnumType())
       throw new Error("Field are not EnumType")
-    return this.parser as ODataEnumTypeParser<Type>;
+    return this.parser as ODataEnumTypeParser<T>;
   }
   structured() {
     if (!this.isStructuredType())
       throw new Error("Field are not StrucuturedType")
-    return this.parser as ODataStructuredTypeParser<Type>;
+    return this.parser as ODataStructuredTypeParser<T>;
   }
 }
 

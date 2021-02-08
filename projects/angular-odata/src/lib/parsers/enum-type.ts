@@ -14,13 +14,13 @@ export class ODataEnumTypeFieldParser implements EnumTypeField {
     return this.annotations.find(predicate);
   }
 }
-export class ODataEnumTypeParser<Type> implements Parser<Type> {
+export class ODataEnumTypeParser<T> implements Parser<T> {
   name: string;
   type: string;
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
   fields: ODataEnumTypeFieldParser[];
-  constructor(config: EnumTypeConfig<Type>, namespace: string) {
+  constructor(config: EnumTypeConfig<T>, namespace: string) {
     this.name = config.name;
     this.type = `${namespace}.${config.name}`;
     this.flags = config.flags;
@@ -30,7 +30,7 @@ export class ODataEnumTypeParser<Type> implements Parser<Type> {
   }
 
   // Deserialize
-  deserialize(value: string, options: OptionsHelper): Type {
+  deserialize(value: string, options: OptionsHelper): T {
     // string -> Type
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
@@ -40,7 +40,7 @@ export class ODataEnumTypeParser<Type> implements Parser<Type> {
   }
 
   // Serialize
-  serialize(value: Type, options: OptionsHelper): string {
+  serialize(value: T, options: OptionsHelper): string {
     // Type -> string
     if (this.flags) {
       let names = EnumHelper.toNames(this.members, value);

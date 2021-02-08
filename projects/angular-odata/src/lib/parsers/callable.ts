@@ -1,10 +1,10 @@
 import { CALLABLE_BINDING_PARAMETER } from '../constants';
 import { Parser, Parameter, CallableConfig, StructuredTypeFieldOptions, NONE_PARSER } from '../types';
 
-export class ODataParameterParser<Type> {
+export class ODataParameterParser<T> {
   name: string;
   type: string;
-  private parser: Parser<Type>;
+  private parser: Parser<T>;
   collection?: boolean;
   nullable?: boolean;
 
@@ -15,7 +15,7 @@ export class ODataParameterParser<Type> {
     Object.assign(this, parameter);
   }
 
-  serialize(value: Type, options: StructuredTypeFieldOptions): any {
+  serialize(value: T, options: StructuredTypeFieldOptions): any {
     return Array.isArray(value) ?
       value.map(v => this.parser.serialize(v, options)) :
       this.parser.serialize(value, options);
