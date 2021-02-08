@@ -1,4 +1,4 @@
-import { JsonSchemaExpandOptions, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from '../parsers';
+import { JsonSchemaOptions, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from '../parsers';
 import { Annotation, Parser, StructuredTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
@@ -86,7 +86,7 @@ export class ODataStructuredType<T> {
     return this.parser.defaults();
   }
 
-  toJsonSchema(options: JsonSchemaExpandOptions<T> = {}) {
+  toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     return this.parser.toJsonSchema(options);
   }
 }

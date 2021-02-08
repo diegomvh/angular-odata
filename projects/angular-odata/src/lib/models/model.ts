@@ -296,6 +296,20 @@ export class ODataModel<T> {
     throw new Error(`Can't action without ODataEntityResource`);
   }
 
+  protected _reference<P, Pm extends ODataModel<P>>(name: string, model: Pm | null): Observable<this> {
+    let field = this._resource.metaForType().fields().find(f => f.name === name);
+    if (field.collection)
+      throw new Error(`Can't set ${field.name} to collection, use add`);
+    let ref = this._segments.navigationProperty<P>(name).reference();
+    let etag = (this._annotations as ODataEntityAnnotations).etag;
+    // TODO: change the resource of a model
+    delete this._relationships[field.name];
+    if (model instanceof ODataModel) {
+      return ref.set(model._resource as ODataEntityResource<P>, { etag });
+    } else if (model === null)
+      return ref.remove({ etag });
+  }
+
   private __model<P>(
     field: ODataStructuredTypeFieldParser<P>,
     value: any,
