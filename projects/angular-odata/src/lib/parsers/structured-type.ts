@@ -6,13 +6,11 @@ import { ODataEnumTypeParser } from './enum-type';
 type JsonSchemaSelect<T> = Array<keyof T>;
 type JsonSchemaCustom<T> = {[P in keyof T]?: (schema: any, field: ODataStructuredTypeFieldParser<T[P]>) => any };
 type JsonSchemaExpand<T> = {[P in keyof T]?: JsonSchemaOptions<T[P]> };
-export type JsonSchemaExpandOptions<T> = {
+export type JsonSchemaOptions<T> = {
   select?: JsonSchemaSelect<T>;
   custom?: JsonSchemaCustom<T>;
   expand?: JsonSchemaExpand<T>;
 }
-
-export type JsonSchemaOptions<T> = JsonSchemaExpandOptions<T>;
 
 export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField, Parser<Type> {
   name: string;
@@ -103,7 +101,7 @@ export class ODataStructuredTypeFieldParser<Type> implements StructuredTypeField
 
   // Json Schema
   // https://json-schema.org/
-  toJsonSchema(options: JsonSchemaExpandOptions<Type> = {}) {
+  toJsonSchema(options: JsonSchemaOptions<Type> = {}) {
     let schema: any = (this.parser instanceof ODataStructuredTypeFieldParser ||
       this.parser instanceof ODataStructuredTypeParser ||
       this.parser instanceof ODataEnumTypeParser) ?
