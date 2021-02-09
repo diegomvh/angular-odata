@@ -31,7 +31,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
-    const Model = this.schema?.model || ODataModel;
+    let schema = this.schema;
+    const Model = schema?.model || ODataModel;
+    if (meta?.context.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(meta.context.type);
+    }
     return new Model(entity, {resource: this, meta}) as M;
   }
 
@@ -97,7 +101,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  cast<C extends T>(type: string) {
+  cast<C>(type: string) {
     let segments = this.pathSegments.clone();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntityResource<C>(this.api, segments, this.queryOptions.clone());

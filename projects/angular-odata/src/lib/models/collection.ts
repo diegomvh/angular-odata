@@ -21,8 +21,8 @@ import { Types } from '../utils/types';
 type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
-  private __resource: ODataCollectionResource<T> | null;
-  private __schema: ODataStructuredType<T> | null = null;
+  private __resource?: ODataCollectionResource<T>;
+  private __schema?: ODataStructuredType<T>;
   private __meta: ODataEntitiesMeta;
   private __models: { model: M, key?: EntityKey<T>, subscriptions: Subscription[] }[] = [];
 
@@ -55,7 +55,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     meta?: ODataEntitiesMeta,
   } = {}) {
     data = data || {};
-    this.__resource = null;
     if (options.schema)
       this.bind(options.schema);
     if (options.resource)
@@ -71,7 +70,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   attach(resource: ODataCollectionResource<T>) {
-    if (this.__resource !== null && this.__resource.type() !== resource.type() && !resource.isSubtypeOf(this.__resource))
+    if (this.__resource !== undefined && this.__resource.type() !== resource.type() && !resource.isSubtypeOf(this.__resource))
       throw new Error(`Can't reattach ${resource.type()} to ${this.__resource.type()}`);
     this.__resource = resource;
     const schema = this.__resource.schema;
@@ -81,14 +80,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   _resource() {
-    return this.__resource !== null ? this.__resource.clone() as ODataCollectionResource<T> : null;
+    return this.__resource !== undefined ? this.__resource.clone() as ODataCollectionResource<T> : null;
   }
 
   private __model(attrs: T): M {
     const meta = this.__meta.entity(attrs);
     const schema = this.__schema;
     const Model = schema?.model || ODataModel;
-    let resource: ODataModelResource<T> | null = null;
+    let resource: ODataModelResource<T> | undefined;
     if (this.__resource) {
       if (this.__resource instanceof ODataEntitySetResource)
         resource = this.__resource.entity(attrs);
@@ -97,6 +96,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (meta.type !== undefined) {
         resource.segment.entitySet().type(meta.type);
       }
+      return resource.asModel(attrs, meta);
     }
     return new Model(attrs, {resource, schema, meta}) as M;
   }

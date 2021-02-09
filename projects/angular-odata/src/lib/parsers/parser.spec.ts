@@ -101,14 +101,14 @@ describe('ODataClient', () => {
   it('should serialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
     expect(schema !== null).toBeTruthy();
-    const field = (schema as ODataStructuredType<Person>).findField(f => f.name === 'Gender');
+    const field = (schema as ODataStructuredType<Person>).fields().find(f => f.name === 'Gender');
     expect(field !== undefined).toBeTruthy();
     expect((field as ODataStructuredTypeFieldParser<any>).serialize(PersonGender.Female, (schema as ODataStructuredType<Person>).api.options)).toEqual('Female');
   });
 
   it('should deserialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
-    const field = schema.findField(f => f.name === 'Gender') as ODataStructuredTypeFieldParser<PersonGender>;
+    const field = schema.fields().find(f => f.name === 'Gender') as ODataStructuredTypeFieldParser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
     expect(field.deserialize('Female', schema.api.options)).toEqual(PersonGender.Female);
   });
@@ -119,7 +119,7 @@ describe('ODataClient', () => {
     parser.flags = true;
     const options = schema.api.options;
     options.stringAsEnum = true;
-    const field = (schema as ODataStructuredType<Person>).findField(f => f.name === 'Gender') as Parser<PersonGender>;
+    const field = (schema as ODataStructuredType<Person>).fields().find(f => f.name === 'Gender') as Parser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
     expect(field.serialize(3, options)).toEqual('Male, Female, Unknown');
     expect(field.serialize(PersonGender.Male | PersonGender.Female | PersonGender.Unknown, options)).toEqual('Male, Female, Unknown');
@@ -129,7 +129,7 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredType<Person>;
     const parser = client.parserForType(`${NAMESPACE}.PersonGender`) as ODataEnumTypeParser<PersonGender>;
     parser.flags = true;
-    const field = (schema as ODataStructuredType<Person>).findField(f => f.name === 'Gender') as Parser<PersonGender>;
+    const field = (schema as ODataStructuredType<Person>).fields().find(f => f.name === 'Gender') as Parser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
     expect(field.deserialize('Male, Female, Unknown', schema.api.options)).toEqual(3);
   });

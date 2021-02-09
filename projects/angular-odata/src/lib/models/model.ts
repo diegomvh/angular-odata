@@ -16,6 +16,7 @@ import {
   ODataEntities,
   ODataProperty,
   HttpEntitiesOptions,
+  ODataReferenceResource,
 } from '../resources/index';
 
 import { ODataCollection } from './collection';
@@ -151,12 +152,12 @@ export class ODataModel<T> {
     return attrs as T;
   }
 
-  toEntity(): T {
+  toEntity(opts: { include_navigation?: boolean } = { include_navigation: false }): T {
     return Object.entries(
       Object.assign({},
         this.__entity,
         Object.entries(this.__relations)
-          .filter(([, v]) => !v.field.isNavigation())
+          .filter(([, v]) => opts.include_navigation || !v.field.isNavigation())
           .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v.model }), {})
       )
     ).reduce((acc, [k, value]) =>
@@ -246,19 +247,6 @@ export class ODataModel<T> {
       const attrs = this.toEntity() as any;
       obs$ = this.__resource.post(attrs, options).pipe(
         map(({ entity, meta }) => ({ entity: entity || attrs, meta })));
-      /*
-      obs$ = Object.values(this.__navigation)
-        .reduce((acc, value) => {
-          let ref = (this.__resource as ODataEntityResource<T>).navigationProperty<any>(value.field.name).reference();
-          delete attrs[value.field.name];
-          return acc.pipe(switchMap(({meta}) => value.model != null ?
-            ref.set(value.model._resource() as ODataEntityResource<any>, {etag: meta.etag}) :
-            ref.unset({etag: meta.etag})));
-        }, of({meta: this.__meta as ODataEntityMeta}))
-        .pipe(
-          switchMap(({meta}) => resource.put(attrs, Object.assign({ etag: meta.etag }, options || {}))),
-          map(({entity, meta}) => ({entity: entity || attrs, meta})));
-        */
     }
     return this.__request(obs$);
   }
@@ -283,14 +271,6 @@ export class ODataModel<T> {
     return this.__schema ? this.__schema : undefined;
   }
 
-  // Cast
-  protected _cast<S extends T>(type: string) {
-    //if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource) {
-    if (this.__resource instanceof ODataEntityResource)
-      return this.__resource.cast<S>(type);
-    throw new Error(`Can't cast without ODataEntityResource or ODataNavigationPropertyResource`);
-  }
-
   // Function
   protected _function<P, R>(name: string) {
     if (this.__resource instanceof ODataEntityResource)
@@ -305,48 +285,65 @@ export class ODataModel<T> {
     throw new Error(`Can't action without ODataEntityResource`);
   }
 
-  // Navigation
-  protected _navigationProperty<P>(name: string) {
-    if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource) {
-      return this.__resource.navigationProperty<P>(name);
-    }
-    throw new Error(`Can't navigationProperty without ODataEntityResource or ODataNavigationPropertyResource`);
-  }
-
-  // Property
-  protected _property<P>(name: string) {
-    if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource || this.__resource instanceof ODataPropertyResource) {
-      return this.__resource.property<P>(name);
-    }
-    throw new Error(`Can't navigationProperty without ODataEntityResource or ODataNavigationPropertyResource or ODataPropertyResource`);
+  // As Derived
+  protected _asDerived<S>(type: string): ODataModel<S> {
+    let resource: ODataEntityResource<S> | undefined;
+    if (this.__resource instanceof ODataEntityResource)
+      resource = this.__resource.cast<S>(type);
+    if (resource === undefined)
+      throw new Error(`Can't derived without ODataEntityResource`);
+    return resource.asModel(this.toEntity({include_navigation: true}), this.__meta);
   }
 
   protected _setReference<P>(
     name: string,
     model: ODataModel<P> | null,
     options?: HttpOptions): Observable<this> {
-    const field = this._schema()?.findField(f => f.name === name);
+    const field = (this._schema()?.fields({include_navigation: true, include_parents: true}) || []).find(f => f.name === name);
     if (field === undefined)
       throw new Error(`Can't find field ${name}`);
     if (field.collection)
       throw new Error(`Can't set ${field.name} to collection, use add`);
     // TODO: check and
-    /*
-        if (field.field) {
-          current = this.__entity[field.field as keyof T] as any;
-          value = model?._key() as P || null;
-          (this.__entity as any)[field.field] = value;
-        }
-    */
-    let resource = this._navigationProperty<P>(field.name).reference();
+      /*
+      obs$ = Object.values(this.__navigation)
+        .reduce((acc, value) => {
+          let ref = (this.__resource as ODataEntityResource<T>).navigationProperty<any>(value.field.name).reference();
+          delete attrs[value.field.name];
+          return acc.pipe(switchMap(({meta}) => value.model != null ?
+            ref.set(value.model._resource() as ODataEntityResource<any>, {etag: meta.etag}) :
+            ref.unset({etag: meta.etag})));
+        }, of({meta: this.__meta as ODataEntityMeta}))
+        .pipe(
+          switchMap(({meta}) => resource.put(attrs, Object.assign({ etag: meta.etag }, options || {}))),
+          map(({entity, meta}) => ({entity: entity || attrs, meta})));
+        */
+    let resource: ODataReferenceResource | undefined;
+    if (this.__resource instanceof ODataEntityResource) {
+      resource = this.__resource.navigationProperty<P>(field.name)?.reference();
+    }
+    if (resource === undefined)
+      throw new Error(`Can't reference without ODataEntityResource or ODataNavigationPropertyResource`);
     let etag = this.__meta.etag;
     let opts = Object.assign({ etag }, options || {});
     if (model instanceof ODataModel)
       return resource.set(model._resource() as ODataEntityResource<P>, opts)
-        .pipe(map(() => this));
+        .pipe(map(() => {
+          let attrs: any = {[name]: model};
+          if (field.field !== undefined) {
+            attrs[field.field] = model._key();
+          }
+          return this.assign(attrs);
+        }));
     else if (model === null)
       return resource.unset(opts)
-        .pipe(map(() => this));
+        .pipe(map(() => {
+          let attrs: any = {[name]: model};
+          if (field.field !== undefined) {
+            attrs[field.field] = null;
+          }
+          return this.assign(attrs);
+        }));
     return of(this);
   }
 
@@ -355,15 +352,24 @@ export class ODataModel<T> {
     value: any,
     resource?: ODataPropertyResource<P> | ODataNavigationPropertyResource<P>
   ): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
-    const schema = this.__schema?.api.findStructuredTypeForType(field.type);
-    const Model = schema?.model || ODataModel;
-    const Collection = schema?.collection || ODataCollection;
-    const data = field.collection ? (value || []) as T[] : (value || {}) as T;
-    const meta = field.collection ?  new ODataEntitiesMeta(this.__meta.property(field.name) || {}, {options: this.__meta.options}) :
+    const data = field.collection ?
+      (value || []) as T[] :
+      (value || {}) as T;
+    const meta = field.collection ?
+      new ODataEntitiesMeta(this.__meta.property(field.name) || {}, {options: this.__meta.options}) :
       new ODataEntityMeta(value || {}, {options: this.__meta.options});
-    return field.collection ?
-        new Collection(data, {resource, schema, meta}) :
-        new Model(data, {resource, schema, meta});
+    if (resource !== undefined) {
+      return field.collection ?
+        resource.asCollection(data as T[], meta as ODataEntitiesMeta) :
+        resource.asModel(data as T, meta as ODataEntityMeta);
+    } else {
+      const schema = this.__schema?.api.findStructuredTypeForType(field.type);
+      const Model = schema?.model || ODataModel;
+      const Collection = schema?.collection || ODataCollection;
+      return field.collection ?
+          new Collection(data, {resource, schema, meta}) :
+          new Model(data, {resource, schema, meta});
+    }
   }
 
   private __get<P>(field: ODataStructuredTypeFieldParser<P>): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
@@ -373,7 +379,9 @@ export class ODataModel<T> {
         if (field.isNavigation() && this.isNew())
           throw new Error(`Can't get ${field.name} from unsaved model`);
         if (!(field.name in this.__relations)) {
-          const resource = field.isNavigation() ? this._navigationProperty<P>(field.name) : this._property<P>(field.name);
+          let resource: ODataNavigationPropertyResource<P> | ODataPropertyResource<P> | undefined;
+          if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource)
+            resource = field.isNavigation() ? this.__resource?.navigationProperty<P>(field.name) : this.__resource?.property<P>(field.name);
           const model = this.__model(field, value, resource);
           this.__relations[field.name] = { field, model, subscriptions: this.__subscribe<P>(field, model) };
         }
@@ -404,7 +412,9 @@ export class ODataModel<T> {
       }
       current = relation?.model as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
       if (model !== null) {
-        const resource = field.isNavigation() ? this._navigationProperty<P>(field.name) : this._property<P>(field.name);
+        let resource: ODataNavigationPropertyResource<P> | ODataPropertyResource<P> | undefined;
+        if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource)
+          resource = field.isNavigation() ? this.__resource?.navigationProperty<P>(field.name) : this.__resource?.property<P>(field.name);
         if (!(model instanceof ODataModel) && !(model instanceof ODataCollection)) {
           model = this.__model(field, value, resource);
         } else if (resource !== undefined)

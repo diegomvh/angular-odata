@@ -33,13 +33,21 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
-    const Model = this.schema?.model || ODataModel;
-    return new Model(entity, {resource: this, meta}) as M;
+    let schema = this.schema;
+    const Model = schema?.model || ODataModel;
+    if (meta?.context.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(meta.context.type);
+    }
+    return new Model(entity, {resource: this, schema, meta}) as M;
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
-    const Collection = this.schema?.collection || ODataCollection;
-    return new Collection(entities, {resource: this, meta}) as C;
+    let schema = this.schema;
+    const Collection = schema?.collection || ODataCollection;
+    if (meta?.context.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(meta.context.type);
+    }
+    return new Collection(entities, {resource: this, schema, meta}) as C;
   }
 
   //#region Function Config
@@ -90,7 +98,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataCountResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
-  cast<C extends T>(type: string) {
+  cast<C>(type: string) {
     let segments = this.pathSegments.clone();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataNavigationPropertyResource<C>(this.api, segments, this.queryOptions.clone());

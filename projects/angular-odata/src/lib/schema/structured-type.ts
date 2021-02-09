@@ -59,10 +59,6 @@ export class ODataStructuredType<T> {
     return fields;
   }
 
-  findField(predicate: (field: ODataStructuredTypeFieldParser<any>) => boolean) {
-    return this.fields().find(predicate);
-  }
-
   pick(value: {[name:string]: any}, opts: {
     include_parents?: boolean,
     include_navigation?: boolean,
