@@ -182,7 +182,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return this.get(options).pipe(map(({entity}) => entity));
   }
 
-  model(options?: HttpOptions): Observable<ODataModel<T> | null> {
+  fetchModel(options?: HttpOptions): Observable<ODataModel<T> | null> {
     return this.get(options).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
   //#endregion

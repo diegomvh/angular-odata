@@ -200,7 +200,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return this.get(options).pipe(map(({ entity }) => entity));
   }
 
-  model(options?: HttpOptions): Observable<ODataModel<T> | null> {
+  fetchModel(options?: HttpOptions): Observable<ODataModel<T> | null> {
     if (!this.segment.entitySet().hasKey())
       return throwError("Resource without key");
     return this.get(options).pipe(map(({ entity, meta }) => entity ? this.asModel(entity, meta) : null));

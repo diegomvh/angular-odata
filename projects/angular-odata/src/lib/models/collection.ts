@@ -9,7 +9,9 @@ import {
   HttpOptions,
   HttpEntitiesOptions,
   ODataEntities,
-  ODataPropertyResource
+  ODataPropertyResource,
+  ODataActionResource,
+  ODataFunctionResource
 } from '../resources/index';
 
 import { ODataModel, ODataModelResource } from './model';
@@ -83,7 +85,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this.__resource !== undefined ? this.__resource.clone() as ODataCollectionResource<T> : null;
   }
 
-  private __model(attrs: T): M {
+  private __modelFactory(attrs: T): M {
     const meta = this.__meta.entity(attrs);
     const schema = this.__schema;
     const Model = schema?.model || ODataModel;
@@ -102,7 +104,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   protected parse(entities: T[]): M[] {
-    return entities.map(e => this.__model(e));
+    return entities.map(e => this.__modelFactory(e));
   }
 
   toEntities() {
@@ -145,17 +147,16 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       }));
   }
 
-  fetch(options?: HttpOptions): Observable<this> {
+  fetch(options?: HttpOptions & {withCount?: boolean}): Observable<this> {
     let obs$: Observable<ODataEntities<any>> = NEVER;
     if (this.__resource instanceof ODataEntitySetResource) {
-      obs$ = this.__resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ withCount: true }, options || {}));
+      obs$ = this.__resource.get(options);
     } else if (this.__resource instanceof ODataNavigationPropertyResource) {
       obs$ = this.__resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount: true }, options || {}));
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {}));
     } else if (this.__resource instanceof ODataPropertyResource) {
       obs$ = this.__resource.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount: true }, options || {}));
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {}));
     }
     return this.__request(obs$);
   }
@@ -173,10 +174,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return NEVER;
   }
 
-  all(options?: HttpOptions): Observable<this> {
+  fetchAll(options?: HttpOptions): Observable<this> {
     let obs$: Observable<any> = NEVER;
     if (this.__resource instanceof ODataEntitySetResource || this.__resource instanceof ODataNavigationPropertyResource) {
-      obs$ = this.__resource.all(options)
+      obs$ = this.__resource.fetchAll(options)
         .pipe(map(entities => ({entities, meta: new ODataEntitiesMeta({}, {options: this.__resource?.api.options})})));
     }
     return this.__request(obs$);
@@ -208,7 +209,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   create(attrs?: T) {
-    const model = this.__model((attrs || {}) as T);
+    const model = this.__modelFactory((attrs || {}) as T);
     if (model.isValid())
       model.save().toPromise();
     this.add(model);
@@ -217,7 +218,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   // Count
   count() {
-    return (this.__resource as ODataEntitySetResource<any>).count().get();
+    return (this.__resource as ODataEntitySetResource<any>).count().fetch();
   }
 
   assign(data: any) {
@@ -237,18 +238,48 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return this.__resource.query;
   }
 
-  // Function
-  protected _function<P, R>(path: string) {
-    if (!this.__resource)
-      throw new Error(`Can't navigationProperty without ODataResource`);
-    return (this.__resource as ODataEntitySetResource<T>).function<P, R>(path);
+  private __call<P, R>(
+    params: P | null,
+    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
+    responseType: 'property' | 'model' | 'collection' | 'none',
+    options?: HttpOptions
+    ) {
+      switch(responseType) {
+        case 'property':
+          return resource.execProperty(params, options);
+        case 'model':
+          return resource.execModel(params, options);
+        case 'collection':
+          return resource.execCollection(params, options);
+        default:
+          return resource.exec(params, options);
+      }
+    }
+
+  protected _callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'property' | 'model' | 'collection' | 'none',
+    options?: HttpOptions
+  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    if (this.__resource instanceof ODataEntitySetResource) {
+      const resource = this.__resource.function<P, R>(name);
+      return this.__call(params, resource, responseType, options);
+    }
+    throw new Error(`Can't function without ODataEntitySetResource`);
   }
 
-  // Action
-  protected _action<P, R>(path: string) {
-    if (!this.__resource)
-      throw new Error(`Can't navigationProperty without ODataResource`);
-    return (this.__resource as ODataEntitySetResource<T>).action<P, R>(path);
+  protected _callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'property' | 'model' | 'collection' | 'none',
+    options?: HttpOptions
+  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    if (this.__resource instanceof ODataEntitySetResource) {
+      const resource = this.__resource.action<P, R>(name);
+      return this.__call(params, resource, responseType, options);
+    }
+    throw new Error(`Can't action without ODataEntitySetResource`);
   }
 
   private __subscribe<E>(model: M) {

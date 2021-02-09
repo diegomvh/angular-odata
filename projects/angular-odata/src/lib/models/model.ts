@@ -11,12 +11,9 @@ import {
   ODataEntitiesMeta,
   ODataEntity,
   ODataSingletonResource,
-  ODataFunctionResource,
-  ODataActionResource,
-  ODataEntities,
-  ODataProperty,
-  HttpEntitiesOptions,
   ODataReferenceResource,
+  ODataActionResource,
+  ODataFunctionResource
 } from '../resources/index';
 
 import { ODataCollection } from './collection';
@@ -184,7 +181,6 @@ export class ODataModel<T> {
       }
     };
     assign(this, attrs);
-    return this;
   }
 
   clone() {
@@ -271,17 +267,47 @@ export class ODataModel<T> {
     return this.__schema ? this.__schema : undefined;
   }
 
-  // Function
-  protected _function<P, R>(name: string) {
-    if (this.__resource instanceof ODataEntityResource)
-      return this.__resource.function<P, R>(name);
+  private __call<P, R>(
+    params: P | null,
+    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
+    responseType: 'property' | 'model' | 'collection' | 'none',
+    options?: HttpOptions
+    ) {
+      switch(responseType) {
+        case 'property':
+          return resource.execProperty(params, options);
+        case 'model':
+          return resource.execModel(params, options);
+        case 'collection':
+          return resource.execCollection(params, options);
+        default:
+          return resource.exec(params, options);
+      }
+    }
+
+  protected _callFunction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'property' | 'model' | 'collection' | 'none',
+    options?: HttpOptions
+  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    if (this.__resource instanceof ODataEntityResource) {
+      const resource = this.__resource.function<P, R>(name);
+      return this.__call(params, resource, responseType, options);
+    }
     throw new Error(`Can't function without ODataEntityResource`);
   }
 
-  // Action
-  protected _action<P, R>(name: string) {
-    if (this.__resource instanceof ODataEntityResource)
-      return this.__resource.action<P, R>(name);
+  protected _callAction<P, R>(
+    name: string,
+    params: P | null,
+    responseType: 'property' | 'model' | 'collection' | 'none',
+    options?: HttpOptions
+  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    if (this.__resource instanceof ODataEntityResource) {
+      const resource = this.__resource.action<P, R>(name);
+      return this.__call(params, resource, responseType, options);
+    }
     throw new Error(`Can't action without ODataEntityResource`);
   }
 
@@ -324,49 +350,67 @@ export class ODataModel<T> {
     }
     if (resource === undefined)
       throw new Error(`Can't reference without ODataEntityResource or ODataNavigationPropertyResource`);
-    let etag = this.__meta.etag;
-    let opts = Object.assign({ etag }, options || {});
-    if (model instanceof ODataModel)
-      return resource.set(model._resource() as ODataEntityResource<P>, opts)
-        .pipe(map(() => {
-          let attrs: any = {[name]: model};
-          if (field.field !== undefined) {
-            attrs[field.field] = model._key();
-          }
-          return this.assign(attrs);
-        }));
-    else if (model === null)
-      return resource.unset(opts)
-        .pipe(map(() => {
-          let attrs: any = {[name]: model};
-          if (field.field !== undefined) {
-            attrs[field.field] = null;
-          }
-          return this.assign(attrs);
-        }));
-    return of(this);
+    const etag = this.__meta.etag;
+    const opts = Object.assign({ etag }, options || {});
+    const obs$ = (model instanceof ODataModel) ?
+      resource.set(model._resource() as ODataEntityResource<P>, opts) :
+      resource.unset(opts);
+    this.request$.emit(obs$);
+    return obs$.pipe(
+      map(() => {
+        let attrs: any = {[name]: model};
+        if (field.field !== undefined) {
+          attrs[field.field] = (model instanceof ODataModel) ? model._key() : model;
+        }
+        this.assign(attrs);
+        this.sync$.emit();
+        return this;
+      }));
   }
 
-  private __model<P>(
-    field: ODataStructuredTypeFieldParser<P>,
-    value: any,
-    resource?: ODataPropertyResource<P> | ODataNavigationPropertyResource<P>
-  ): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
-    const data = field.collection ?
+  private __modelCollectionFactory<P>(value: any, opts: {
+    field?: ODataStructuredTypeFieldParser<P>,
+    fieldType?: string,
+    fieldName?: string,
+    collection?: boolean,
+    resource?: ODataPropertyResource<P> | ODataNavigationPropertyResource<P>,
+    meta?: ODataEntityMeta | ODataEntitiesMeta
+  }): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
+    const collection = opts.field?.collection || opts.collection;
+    const resource = opts.resource;
+    let meta = opts.meta;
+
+    // Data
+    const data = collection ?
       (value || []) as T[] :
       (value || {}) as T;
-    const meta = field.collection ?
-      new ODataEntitiesMeta(this.__meta.property(field.name) || {}, {options: this.__meta.options}) :
-      new ODataEntityMeta(value || {}, {options: this.__meta.options});
+
+    // Type
+    const type = opts.field?.type || opts.fieldType;
+    if (type === undefined)
+      throw new Error("Need Type");
+
+    // Meta
+    if (meta === undefined) {
+      const name = opts.field?.name || opts.fieldName;
+      if (name === undefined)
+        throw new Error("Need Name");
+      meta = collection ?
+        new ODataEntitiesMeta(this.__meta.property(name) || {}, {options: this.__meta.options}) :
+        new ODataEntityMeta(value || {}, {options: this.__meta.options});
+    }
+
     if (resource !== undefined) {
-      return field.collection ?
+      // Build by Resource
+      return collection ?
         resource.asCollection(data as T[], meta as ODataEntitiesMeta) :
         resource.asModel(data as T, meta as ODataEntityMeta);
     } else {
-      const schema = this.__schema?.api.findStructuredTypeForType(field.type);
+      // Build by Schema
+      const schema = this.__schema?.api.findStructuredTypeForType(type);
       const Model = schema?.model || ODataModel;
       const Collection = schema?.collection || ODataCollection;
-      return field.collection ?
+      return collection ?
           new Collection(data, {resource, schema, meta}) :
           new Model(data, {resource, schema, meta});
     }
@@ -382,7 +426,7 @@ export class ODataModel<T> {
           let resource: ODataNavigationPropertyResource<P> | ODataPropertyResource<P> | undefined;
           if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource)
             resource = field.isNavigation() ? this.__resource?.navigationProperty<P>(field.name) : this.__resource?.property<P>(field.name);
-          const model = this.__model(field, value, resource);
+          const model = this.__modelCollectionFactory(value, {field, resource});
           this.__relations[field.name] = { field, model, subscriptions: this.__subscribe<P>(field, model) };
         }
         return this.__relations[field.name].model;
@@ -416,7 +460,7 @@ export class ODataModel<T> {
         if (this.__resource instanceof ODataEntityResource || this.__resource instanceof ODataNavigationPropertyResource)
           resource = field.isNavigation() ? this.__resource?.navigationProperty<P>(field.name) : this.__resource?.property<P>(field.name);
         if (!(model instanceof ODataModel) && !(model instanceof ODataCollection)) {
-          model = this.__model(field, value, resource);
+          model = this.__modelCollectionFactory(value, {field, resource});
         } else if (resource !== undefined)
           model.attach(resource);
         const type = model._resource()?.type();

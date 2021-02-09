@@ -142,13 +142,25 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     ).pipe(map(({property}) => property));
   }
 
-  model(options?: HttpOptions): Observable<ODataModel<T> | null> {
+  fetchEntity(options?: HttpOptions): Observable<T | null> {
+    return this.get(
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+    ).pipe(map(({entity, meta}) => entity));
+  }
+
+  fetchModel(options?: HttpOptions): Observable<ODataModel<T> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
     ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
 
-  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>> | null> {
+  fetchEntities(options?: HttpOptions): Observable<T[] | null> {
+    return this.get(
+      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})
+    ).pipe(map(({entities}) => entities));
+  }
+
+  fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})
     ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));

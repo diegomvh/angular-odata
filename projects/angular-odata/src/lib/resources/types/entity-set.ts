@@ -223,7 +223,15 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  all(options?: HttpOptions): Observable<T[]> {
+  fetch(options?: HttpOptions & { withCount?: boolean }): Observable<T[] | null> {
+    return this.get(options).pipe(map(({ entities }) => entities));
+  }
+
+  fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {
+    return this.get(options).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
+  }
+
+  fetchAll(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
       if (opts) {
@@ -241,10 +249,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
         expand(({meta})  => (meta.skip || meta.skiptoken) ? fetch(meta) : empty()),
         concatMap(({entities}) => entities || []),
         toArray());
-  }
-
-  collection(options?: HttpOptions): Observable<ODataCollection<T, ODataModel<T>>> {
-    return this.get(options).pipe(map(({entities, meta}) => this.asCollection(entities || [], meta)));
   }
   //#endregion
 }

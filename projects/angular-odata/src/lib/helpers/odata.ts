@@ -140,6 +140,7 @@ export const ODataHelper = {
     //http://nb-mdp-dev01:57970/$metadata#Collection(SIU.Recursos.RecursoEntry)
     //http://nb-mdp-dev01:57970/$metadata#categorias/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
+    //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
     context(value: {[name: string]: any}) {
       let ctx: ODataContext = {};
       if (this.ODATA_CONTEXT in value) {
@@ -152,7 +153,9 @@ export const ODataHelper = {
         const col = parts[0].match(/Collection\(([\w\.]+)\)/);
         if (col)
           ctx.type = col[1];
-        else {
+        else if (parts[0].indexOf('.') !== -1) {
+          ctx.type = parts[0];
+        } else {
           const prop = parts[0].match(/([\w\d\-_]+)\(([\w\d\-_]+)\)/);
           if (prop) {
             ctx.entitySet = prop[1];

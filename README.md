@@ -77,7 +77,7 @@ export class AppComponent {
 
     // Fetch all airports
     airports
-    .all()
+    .fetchAll()
     .subscribe(aports => console.log("All: ", aports));
 
     // Fetch airports with count
