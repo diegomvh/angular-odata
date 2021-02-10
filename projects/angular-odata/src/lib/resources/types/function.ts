@@ -156,35 +156,35 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Custom
-  exec(params: P | null, options?: HttpOptions): Observable<any> {
+  call(params: P | null, options?: HttpOptions): Observable<any> {
     return this.parameters(params).get(options) as Observable<any>;
   }
 
-  execProperty(params: P | null, options?: HttpOptions): Observable<R | null> {
+  callProperty(params: P | null, options?: HttpOptions): Observable<R | null> {
     const res = this.parameters(params);
     const opts = Object.assign(<HttpPropertyOptions>{responseType: 'property'}, options || {});
     return res.get(opts).pipe(map(({property}) => property));
   }
 
-  execEntity(params: P | null, options?: HttpOptions): Observable<R | null> {
+  callEntity(params: P | null, options?: HttpOptions): Observable<R | null> {
     const res = this.parameters(params);
     const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options || {});
     return res.get(opts).pipe(map(({entity}) => entity));
   }
 
-  execEntities(params: P | null, options?: HttpOptions): Observable<R[] | null> {
+  callEntities(params: P | null, options?: HttpOptions): Observable<R[] | null> {
     const res = this.parameters(params);
     const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options || {});
     return res.get(opts).pipe(map(({entities}) => entities));
   }
 
-  execCollection(params: P | null, options?: HttpOptions): Observable<ODataCollection<R, ODataModel<R>> | null> {
+  callCollection(params: P | null, options?: HttpOptions): Observable<ODataCollection<R, ODataModel<R>> | null> {
     const res = this.parameters(params);
     const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options || {});
     return res.get(opts).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
   }
 
-  execModel(params: P | null, options?: HttpOptions): Observable<ODataModel<R> | null> {
+  callModel(params: P | null, options?: HttpOptions): Observable<ODataModel<R> | null> {
     const res = this.parameters(params);
     const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options || {});
     return res.get(opts).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));

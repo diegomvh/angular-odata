@@ -275,13 +275,13 @@ export class ODataModel<T> {
     ) {
       switch(responseType) {
         case 'property':
-          return resource.execProperty(params, options);
+          return resource.callProperty(params, options);
         case 'model':
-          return resource.execModel(params, options);
+          return resource.callModel(params, options);
         case 'collection':
-          return resource.execCollection(params, options);
+          return resource.callCollection(params, options);
         default:
-          return resource.exec(params, options);
+          return resource.call(params, options);
       }
     }
 
