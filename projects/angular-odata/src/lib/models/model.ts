@@ -103,6 +103,14 @@ export class ODataModel<T> {
     return this.__resource?.clone();
   }
 
+  protected _schema(): ODataStructuredType<T> | undefined {
+    return this.__schema ? this.__schema : undefined;
+  }
+
+  _key() {
+    return this._schema()?.resolveKey(this.toEntity());
+  }
+
   // Validation
   _errors?: { [name: string]: string[] } | null;
   protected validate() {
@@ -131,10 +139,6 @@ export class ODataModel<T> {
     if (error)
       this.invalid$.emit(error);
     return this._errors === null;
-  }
-
-  _key() {
-    return this.__schema?.resolveKey(this.toEntity());
   }
 
   isNew() {
@@ -263,10 +267,6 @@ export class ODataModel<T> {
     return this.__request(obs$).pipe(tap(() => this.destroy$.emit()));
   }
 
-  protected _schema(): ODataStructuredType<T> | undefined {
-    return this.__schema ? this.__schema : undefined;
-  }
-
   private __call<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
@@ -313,14 +313,30 @@ export class ODataModel<T> {
 
   // As Derived
   protected _asDerived<S>(type: string): ODataModel<S> {
-    let resource: ODataEntityResource<S> | undefined;
-    if (this.__resource instanceof ODataEntityResource)
-      resource = this.__resource.cast<S>(type);
-    if (resource === undefined)
-      throw new Error(`Can't derived without ODataEntityResource`);
-    return resource.asModel(this.toEntity({include_navigation: true}), this.__meta);
+    if (this.__resource instanceof ODataEntityResource) {
+      const resource = this.__resource.cast<S>(type);
+      return resource.asModel(this.toEntity({include_navigation: true}), this.__meta);
+    }
+    throw new Error(`Can't derived without ODataEntityResource`);
   }
 
+  protected _getBinding<S>(
+    path: string,
+    responseType: 'model' | 'collection',
+  ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
+    if (this.__resource instanceof ODataEntityResource) {
+      const resource = this.__resource.navigationProperty<S>(path);
+      switch(responseType) {
+        case 'model':
+          return resource.fetchModel();
+        case 'collection':
+          return resource.fetchCollection();
+      }
+    }
+    throw new Error(`Can't binding without ODataEntityResource`);
+  }
+
+  // Set Reference
   protected _setReference<P>(
     name: string,
     model: ODataModel<P> | null,

@@ -101,6 +101,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
 
+  //TODO: Check
   cast<C>(type: string) {
     let segments = this.pathSegments.clone();
     segments.add(PathSegmentNames.type, type).type(type);
