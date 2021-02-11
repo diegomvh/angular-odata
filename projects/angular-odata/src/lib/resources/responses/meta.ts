@@ -25,18 +25,18 @@ export abstract class ODataMeta {
   }
 
   // Context
-  private _context: any;
+  private _context?: ODataContext;
   get context(): ODataContext {
-    if (!this._context) {
-      this._context = this.odv.context(this.annotations) || {};
+    if (this._context === undefined) {
+      this._context = this.odv.context(this.annotations);
     }
     return this._context;
   }
 
-  private _properties: any;
+  private _properties?: { [name: string]: any };
   get properties() {
-    if (!this._properties) {
-      this._properties = this.odv.properties(this.annotations) || {};
+    if (this._properties === undefined) {
+      this._properties = this.odv.properties(this.annotations);
     }
     return this._properties;
   }
@@ -46,13 +46,13 @@ export abstract class ODataMeta {
   }
 
   // Method
-  abstract clone() : ODataMeta;
-  abstract data(data: Object) : Object;
+  abstract clone(): ODataMeta;
+  abstract data(data: Object): Object;
 }
 
 export class ODataPropertyMeta extends ODataMeta {
   clone(): ODataPropertyMeta {
-    return new ODataPropertyMeta(this.annotations, {options: this.options});
+    return new ODataPropertyMeta(this.annotations, { options: this.options });
   }
 
   data(data: Object) {
@@ -60,13 +60,13 @@ export class ODataPropertyMeta extends ODataMeta {
   }
 
   get type() {
-    return this.odv.type(this.annotations);
+    return this.odv.type(this.annotations) || this.context.type;
   }
 }
 
 export class ODataEntityMeta extends ODataMeta {
   clone(): ODataEntityMeta {
-    return new ODataEntityMeta(this.annotations, {options: this.options});
+    return new ODataEntityMeta(this.annotations, { options: this.options });
   }
 
   data(data: Object) {
@@ -78,7 +78,7 @@ export class ODataEntityMeta extends ODataMeta {
   }
 
   get type() {
-    return this.odv.type(this.annotations);
+    return this.odv.type(this.annotations) || this.context.type;
   }
 
   get id() {
@@ -117,10 +117,10 @@ export class ODataEntityMeta extends ODataMeta {
     return this.odv.mediaContentType(this.annotations)
   }
 
-  private _functions: any;
+  private _functions?: { [name: string]: any };
   get functions() {
-    if (!this._functions) {
-      this._functions = this.odv.functions(this.annotations) || {};
+    if (this._functions === undefined) {
+      this._functions = this.odv.functions(this.annotations);
     }
     return this._functions;
   }
@@ -132,15 +132,11 @@ export class ODataEntityMeta extends ODataMeta {
 
 export class ODataEntitiesMeta extends ODataMeta {
   clone(): ODataEntitiesMeta {
-    return new ODataEntitiesMeta(this.annotations, {options: this.options});
+    return new ODataEntitiesMeta(this.annotations, { options: this.options });
   }
 
   data(data: Object) {
     return this.odv.entities(data, this.context);
-  }
-
-  entity(data: Object) {
-    return new ODataEntityMeta(data, {options: this.options});
   }
 
   get readLink() {
@@ -174,9 +170,9 @@ export class ODataEntitiesMeta extends ODataMeta {
     return match !== null ? match[1] : undefined;
   }
 
-  private _functions: any;
+  private _functions?: { [name: string]: any };
   get functions() {
-    if (!this._functions) {
+    if (this._functions === undefined) {
       this._functions = this.odv.functions(this.annotations);
     }
     return this._functions;
