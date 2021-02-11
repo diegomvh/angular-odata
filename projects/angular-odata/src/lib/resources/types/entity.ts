@@ -32,11 +32,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
     let schema = this.schema;
-    const Model = schema?.model || ODataModel;
-    if (meta?.context.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.context.type);
+    if (meta?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(meta.type);
     }
-    return new Model(entity, {resource: this, meta}) as M;
+    const Model = schema?.model || ODataModel;
+    return new Model(entity, { resource: this, meta }) as M;
   }
 
   //#region Entity Config
@@ -63,7 +63,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<N>(type);
-      type = parser instanceof ODataStructuredTypeParser?
+      type = parser instanceof ODataStructuredTypeParser ?
         parser.typeFor(path) : undefined;
     }
     return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
@@ -73,7 +73,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
-      type = parser instanceof ODataStructuredTypeParser?
+      type = parser instanceof ODataStructuredTypeParser ?
         parser.typeFor(path) : undefined;
     }
     return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());

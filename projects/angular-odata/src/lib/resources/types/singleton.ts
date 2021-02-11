@@ -34,10 +34,10 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
     let schema = this.schema;
-    const Model = schema?.model || ODataModel;
-    if (meta?.context.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.context.type);
+    if (meta?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(meta.type);
     }
+    const Model = schema?.model || ODataModel;
     return new Model(entity, {resource: this, meta}) as M;
   }
 

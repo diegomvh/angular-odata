@@ -1,4 +1,4 @@
-import { NEVER, Observable, of, Subscription } from 'rxjs';
+import { NEVER, Observable, of, Subscription, throwError } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 import {
@@ -26,7 +26,8 @@ import { ODataStructuredType } from '../schema';
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 
 export class ODataModel<T> {
-  private __entity: T = {} as T;
+  private __attributes: T = {} as T;
+  private __changes: T = {} as T;
   private __resource?: ODataModelResource<T>;
   private __schema?: ODataStructuredType<T>;
   private __meta: ODataEntityMeta;
@@ -56,7 +57,7 @@ export class ODataModel<T> {
       this.attach(options.resource);
     this.__meta = options.meta || new ODataEntityMeta(data, { options: options.resource?.api.options });
     data = this.__meta.attributes<T>(data);
-    this.assign(Objects.merge(this.defaults(), data));
+    this.assign(Objects.merge(this.defaults(), data), {reset: true});
   }
 
   bind(schema: ODataStructuredType<T>) {
@@ -113,12 +114,12 @@ export class ODataModel<T> {
 
   // Validation
   _errors?: { [name: string]: string[] } | null;
-  protected validate() {
+  protected validate(entity: T) {
     const errors = {} as { [name: string]: string[] };
     const fields = this._schema()?.fields({ include_navigation: false, include_parents: true }) || [];
     // Nullables
     fields.forEach(f => {
-      let value = (this as any)[f.name] as any;
+      let value = entity[f.name as keyof T];
       if (f.nullable === false && value == null) {
         (errors[f.name] || (errors[f.name] = [])).push(`required`);
       }
@@ -134,13 +135,15 @@ export class ODataModel<T> {
     return !Types.isEmpty(errors) ? errors : null;
   }
 
-  isValid(): boolean {
-    let error = this._errors = this.validate();
+  private __validate() {
+    let error = this._errors = this.validate(this.toEntity());
     if (error)
       this.invalid$.emit(error);
     return this._errors === null;
   }
-
+  isValid(): boolean {
+    return this.__validate();
+  }
   isNew() {
     return this._key() === undefined;
   }
@@ -152,39 +155,53 @@ export class ODataModel<T> {
   protected parse(attrs: Object): T {
     return attrs as T;
   }
-
-  toEntity(opts: { include_navigation?: boolean } = { include_navigation: false }): T {
-    return Object.entries(
+  toEntity(opts: { include_navigation?: boolean, changes_only?: boolean } = { include_navigation: false, changes_only: false }): T {
+    let entries = Object.entries(
       Object.assign({},
-        this.__entity,
+        this._attributes({changes_only: opts.changes_only}),
         Object.entries(this.__relations)
           .filter(([, v]) => opts.include_navigation || !v.field.isNavigation())
           .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v.model }), {})
       )
-    ).reduce((acc, [k, value]) =>
-      Object.assign(acc, {
-        [k]: (value instanceof ODataModel) ?
-          value.toEntity() :
-          (value instanceof ODataCollection) ?
-            value.toEntities() : value
-      }),
-      {}) as T;
+    );
+    // Map models and collections
+    entries = entries.map(([k, v]) => [k,
+      (v instanceof ODataModel) ? v.toEntity(opts) :
+      (v instanceof ODataCollection) ? v.toEntities(opts) :
+      v]);
+    // Filter empty
+    if (opts.changes_only)
+      entries = entries.filter(([_, v]) => !Types.isEmpty(v));
+    // Create entity
+    return entries.reduce((acc, [k, v]) =>
+      Object.assign(acc, { [k]: v }), {}) as T;
   }
 
-  assign(data: any) {
+  _attributes(opts: { changes_only?: boolean } = { changes_only: false }): T {
+    return Object.assign({},
+      opts.changes_only ? {} : this.__attributes,
+      this.__changes);
+  }
+  private __resetting: boolean = false;
+  assign(data: any, opts: {reset: boolean} = {reset: false}) {
     const attrs = this.parse(data) || {};
+    this.__resetting = opts.reset;
+    if (this.__resetting) {
+      this.__changes = {} as T;
+    }
     const assign = (target: any, source: { [attr: string]: any }) => {
       for (let attr in source) {
         let current = target[attr];
         let value = source[attr];
         if (value !== null && Types.isObject(value) && (current instanceof ODataModel || current instanceof ODataCollection)) {
-          current.assign(value);
+          current.assign(value, opts);
         } else if (current !== value) {
           target[attr] = value;
         }
       }
     };
     assign(this, attrs);
+    this.__resetting = false;
   }
 
   clone() {
@@ -194,7 +211,7 @@ export class ODataModel<T> {
     if (this.__meta)
       options.meta = this.__meta.clone();
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toEntity(), options);
+    return new Ctor(this.toEntity({include_navigation: true}), options);
   }
 
   private __request(obs$: Observable<ODataEntity<any>>): Observable<this> {
@@ -207,7 +224,7 @@ export class ODataModel<T> {
           resource.segment.entitySet().type(meta.type);
           this.attach(resource);
         }
-        this.assign(this.__meta.attributes<T>(entity || {}));
+        this.assign(this.__meta.attributes<T>(entity || {}), {reset: true});
         this.sync$.emit();
         return this;
       }));
@@ -228,31 +245,23 @@ export class ODataModel<T> {
     }
     return this.__request(obs$);
   }
-
-  create(options?: HttpOptions): Observable<this> {
+  save(options?: HttpOptions & {patch?: boolean}): Observable<this> {
+    const patch = !!options?.patch;
     let obs$: Observable<ODataEntity<any>> = NEVER;
     if (this.__resource instanceof ODataEntityResource) {
-      const attrs = this.toEntity();
-      obs$ = this.__resource.post(attrs, options).pipe(
-        map(({ entity, meta }) => ({ entity: entity || attrs, meta })));
-    }
-    return this.__request(obs$);
-  }
-
-  update(options?: HttpOptions): Observable<this> {
-    let obs$: Observable<ODataEntity<any>> = NEVER;
-    if (this.__resource instanceof ODataEntityResource) {
-      if (!this.__resource.segment.entitySet().hasKey())
-        throw new Error(`Can't update entity without key`);
       const attrs = this.toEntity() as any;
-      obs$ = this.__resource.post(attrs, options).pipe(
-        map(({ entity, meta }) => ({ entity: entity || attrs, meta })));
+      if (this.__validate()) {
+        obs$ = (this.isNew() ?
+          this.__resource.post(attrs, options) :
+          patch ?
+            this.__resource.patch(this.toEntity({changes_only: true}), options) :
+            this.__resource.put(attrs, options)
+        ).pipe(map(({ entity, meta }) => ({ entity: entity || attrs, meta })));
+      } else {
+        obs$ = throwError(this._errors);
+      }
     }
     return this.__request(obs$);
-  }
-
-  save(options?: HttpOptions): Observable<this> {
-    return this.isNew() ? this.create(options) : this.update(options);
   }
 
   destroy(options?: HttpOptions): Observable<this> {
@@ -323,14 +332,15 @@ export class ODataModel<T> {
   protected _getBinding<S>(
     path: string,
     responseType: 'model' | 'collection',
+    options?: HttpOptions
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
     if (this.__resource instanceof ODataEntityResource) {
       const resource = this.__resource.navigationProperty<S>(path);
       switch(responseType) {
         case 'model':
-          return resource.fetchModel();
+          return resource.fetchModel(options);
         case 'collection':
-          return resource.fetchCollection();
+          return resource.fetchCollection(options);
       }
     }
     throw new Error(`Can't binding without ODataEntityResource`);
@@ -378,10 +388,11 @@ export class ODataModel<T> {
         if (field.field !== undefined) {
           attrs[field.field] = (model instanceof ODataModel) ? model._key() : model;
         }
-        this.assign(attrs);
+        this.assign(attrs, {reset: true});
         this.sync$.emit();
         return this;
-      }));
+      }
+    ));
   }
 
   private __modelCollectionFactory<P>(value: any, opts: {
@@ -433,7 +444,8 @@ export class ODataModel<T> {
   }
 
   private __get<P>(field: ODataStructuredTypeFieldParser<P>): P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
-    const value = this.__entity[field.name as keyof T] as any;
+    const attrs = this._attributes();
+    const value = attrs[field.name as keyof T] as any;
     if (value !== null) {
       if (field.isComplexType() || field.isNavigation()) {
         if (field.isNavigation() && this.isNew())
@@ -486,9 +498,15 @@ export class ODataModel<T> {
       this.__relations[field.name] = { model, field, subscriptions: model !== null ? this.__subscribe(field, model) : [] };
       this.change$.emit({ value: model, attribute: field.name, previous: current });
     } else {
-      current = this.__entity[field.name as keyof T] as any;
-      this.__entity[field.name as keyof T] = value as any;
+      const attrs = this._attributes();
+      current = attrs[field.name as keyof T] as any;
       if (!Types.isEqual(current, value)) {
+        if (this.__resetting)
+          this.__attributes[field.name as keyof T] = value as any;
+        else if (Types.isEqual(value, this.__attributes[field.name as keyof T]))
+          delete this.__changes[field.name as keyof T];
+        else
+          this.__changes[field.name as keyof T] = value as any;
         if (field.key) {
           const key = this._key();
           const resource = this._resource();

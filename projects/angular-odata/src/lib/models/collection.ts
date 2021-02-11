@@ -11,7 +11,8 @@ import {
   ODataEntities,
   ODataPropertyResource,
   ODataActionResource,
-  ODataFunctionResource
+  ODataFunctionResource,
+  ODataEntityMeta
 } from '../resources/index';
 
 import { ODataModel, ODataModelResource } from './model';
@@ -49,7 +50,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   update$ = merge<M[]>(this.add$, this.remove$, this.change$, this.reset$);
   request$ = new EventEmitter<Observable<ODataEntities<T>>>();
   sync$ = new EventEmitter();
-  invalid$ = new EventEmitter<{model: M, errors: {[name: string]: string[]}}>();
+  invalid$ = new EventEmitter<{ model: M, errors: { [name: string]: string[] } }>();
 
   constructor(data?: any, options: {
     resource?: ODataCollectionResource<T>,
@@ -61,7 +62,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       this.bind(options.schema);
     if (options.resource)
       this.attach(options.resource);
-    this.__meta = options.meta || new ODataEntitiesMeta(data, {options: options.resource?.api.options});
+    this.__meta = options.meta || new ODataEntitiesMeta(data, { options: options.resource?.api.options });
     if (!Array.isArray(data))
       data = this.__meta.data(data) || [];
     this.assign(data);
@@ -86,7 +87,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   private __modelFactory(attrs: T): M {
-    const meta = this.__meta.entity(attrs);
+    const meta = new ODataEntityMeta(attrs, { options: this.__meta.options });
     const schema = this.__schema;
     const Model = schema?.model || ODataModel;
     let resource: ODataModelResource<T> | undefined;
@@ -95,20 +96,17 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         resource = this.__resource.entity(attrs);
       else
         resource = this.__resource.clone();
-      if (meta.type !== undefined) {
-        resource.segment.entitySet().type(meta.type);
-      }
       return resource.asModel(attrs, meta);
     }
-    return new Model(attrs, {resource, schema, meta}) as M;
+    return new Model(attrs, { resource, schema, meta }) as M;
   }
 
   protected parse(entities: T[]): M[] {
     return entities.map(e => this.__modelFactory(e));
   }
 
-  toEntities() {
-    return this.__models.map(m => m.model.toEntity());
+  toEntities(opts: { include_navigation?: boolean, changes_only?: boolean } = { include_navigation: false, changes_only: false }) {
+    return this.__models.map(m => m.model.toEntity(opts));
   }
 
   clone() {
@@ -139,7 +137,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private __request(obs$: Observable<ODataEntities<any>>): Observable<this> {
     this.request$.emit(obs$);
     return obs$.pipe(
-      map(({entities, meta}) => {
+      map(({ entities, meta }) => {
         this.__meta = meta;
         this.assign(entities || []);
         this.sync$.emit();
@@ -147,7 +145,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       }));
   }
 
-  fetch(options?: HttpOptions & {withCount?: boolean}): Observable<this> {
+  fetch(options?: HttpOptions & { withCount?: boolean }): Observable<this> {
     let obs$: Observable<ODataEntities<any>> = NEVER;
     if (this.__resource instanceof ODataEntitySetResource) {
       obs$ = this.__resource.get(options);
@@ -178,34 +176,37 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     let obs$: Observable<any> = NEVER;
     if (this.__resource instanceof ODataEntitySetResource || this.__resource instanceof ODataNavigationPropertyResource) {
       obs$ = this.__resource.fetchAll(options)
-        .pipe(map(entities => ({entities, meta: new ODataEntitiesMeta({}, {options: this.__resource?.api.options})})));
+        .pipe(map(entities => ({ entities, meta: new ODataEntitiesMeta({}, { options: this.__resource?.api.options }) })));
     }
     return this.__request(obs$);
   }
 
-  //TODO: add and remove like backbone
-  add(model: M) {
-    if (this.__resource instanceof ODataNavigationPropertyResource) {
-      let ref = this.__resource.reference();
-      ref.add(model._resource() as ODataEntityResource<T>).toPromise();
-    }
-    this.__models.push({model, key: model._key(), subscriptions: this.__subscribe(model)});
-    this.add$.emit([model]);
+  add(model: M): Observable<this> {
+    const obs$ = (this.__resource instanceof ODataNavigationPropertyResource) ?
+      this.__resource.reference().add(model._resource() as ODataEntityResource<T>) :
+      EMPTY;
+    return obs$.pipe(map(() => {
+      this.__models.push({ model, key: model._key(), subscriptions: this.__subscribe(model) });
+      this.add$.emit([model]);
+      return this;
+    }));
   }
 
-  remove(model: M) {
-    if (this.__resource instanceof ODataNavigationPropertyResource) {
-      let ref = this.__resource.reference();
-      ref.remove(model._resource() as ODataEntityResource<T>).toPromise();
-    }
+  remove(model: M): Observable<this> {
     const key = model._key();
-    const entry = this.__models.find(m => m.model === model || (!Types.isEmpty(m.key) && Types.isEqual(m.key, key)));
-    if (entry !== undefined) {
-      const index = this.__models.indexOf(entry);
-      this.__models.splice(index, 1);
-      entry.subscriptions.forEach(s => s.unsubscribe());
-      this.remove$.emit([model]);
-    }
+    const obs$ = (key !== undefined && this.__resource instanceof ODataNavigationPropertyResource) ?
+      this.__resource.reference().remove(model._resource() as ODataEntityResource<T>) :
+      EMPTY;
+    return obs$.pipe(map(() => {
+      const entry = this.__models.find(m => m.model === model || (!Types.isEmpty(m.key) && Types.isEqual(m.key, key)));
+      if (entry !== undefined) {
+        const index = this.__models.indexOf(entry);
+        this.__models.splice(index, 1);
+        entry.subscriptions.forEach(s => s.unsubscribe());
+        this.remove$.emit([model]);
+      }
+      return this;
+    }));
   }
 
   create(attrs?: T) {
@@ -221,11 +222,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return (this.__resource as ODataEntitySetResource<any>).count().fetch();
   }
 
-  assign(data: any) {
+  assign(data: any, opts: { reset: boolean } = { reset: false }) {
     const models = this.parse(data) || [];
     this.__models.forEach(e => e.subscriptions.forEach(s => s.unsubscribe()));
     this.__models = models.map(model => {
-      return {model, key: model._key(), subscriptions: this.__subscribe(model)};
+      return { model, key: model._key(), subscriptions: this.__subscribe(model) };
     });
     this.reset$.emit(models);
   }
@@ -243,18 +244,18 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
     options?: HttpOptions
-    ) {
-      switch(responseType) {
-        case 'property':
-          return resource.callProperty(params, options);
-        case 'model':
-          return resource.callModel(params, options);
-        case 'collection':
-          return resource.callCollection(params, options);
-        default:
-          return resource.call(params, options);
-      }
+  ) {
+    switch (responseType) {
+      case 'property':
+        return resource.callProperty(params, options);
+      case 'model':
+        return resource.callModel(params, options);
+      case 'collection':
+        return resource.callCollection(params, options);
+      default:
+        return resource.call(params, options);
     }
+  }
 
   protected _callFunction<P, R>(
     name: string,
@@ -285,13 +286,13 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private __subscribe<E>(model: M) {
     const subscriptions = [];
     subscriptions.push(
-      model.change$.subscribe((event: {attribute: string, value: any, previous?: any}) => this.change$.emit([model]))
+      model.change$.subscribe((event: { attribute: string, value: any, previous?: any }) => this.change$.emit([model]))
     );
     subscriptions.push(
       model.destroy$.subscribe(() => this.remove(model))
     );
     subscriptions.push(
-      model.invalid$.subscribe((errors: {[name: string]: string[]}) => this.invalid$.emit(Object.assign({model}, {errors})))
+      model.invalid$.subscribe((errors: { [name: string]: string[] }) => this.invalid$.emit(Object.assign({ model }, { errors })))
     );
     return subscriptions;
   }

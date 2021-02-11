@@ -29,40 +29,36 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   asModel<M extends ODataModel<R>>(entity: Partial<R>, meta?: ODataEntityMeta): M {
-    let Model = ODataModel;
-    let type = this.returnType();
+    let resource: ODataEntityResource<R> | undefined;
+    // TODO: Structured Only?
+    let schema: ODataStructuredType<R> | undefined;
+    let type = meta?.type || this.returnType();
     if (type !== undefined) {
-      Model = this.api.findModelForType(type) || ODataModel;
+      schema = this.api.findStructuredTypeForType(type);
     }
-    let options: { resource?: ODataEntityResource<R>, schema?: ODataStructuredType<R>, meta?: ODataEntityMeta } = { meta };
+    let Model = schema?.model || ODataModel;
     let path = meta?.context.entitySet;
     if (path !== undefined) {
-      options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions())
+      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions())
         .entity(entity);
     }
-    type = meta?.context.type || type;
-    if (type !== undefined) {
-      options.schema = this.api.findStructuredTypeForType(type);
-    }
-    return new Model(entity, options) as M;
+    return new Model(entity, {resource, schema, meta}) as M;
   }
 
   asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): C {
-    let Collection = ODataCollection;
-    let type = this.returnType();
+    let resource: ODataEntitySetResource<R> | undefined;
+    // TODO: Structured Only?
+    let schema: ODataStructuredType<R> | undefined;
+    let type = meta?.type || this.returnType();
     if (type !== undefined) {
-      Collection = this.api.findCollectionForType(type) || ODataCollection;
+      schema = this.api.findStructuredTypeForType(type);
     }
-    let options: { resource?: ODataEntitySetResource<R>, schema?: ODataStructuredType<R>, meta?: ODataEntitiesMeta } = { meta };
+    let Collection = schema?.collection || ODataCollection;
     let path = meta?.context.entitySet;
     if (path !== undefined) {
-      options.resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions());
+      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions());
     }
-    type = meta?.context.type || type;
-    if (type !== undefined) {
-      options.schema = this.api.findStructuredTypeForType(type);
-    }
-    return new Collection(entities, options) as C;
+    return new Collection(entities, {resource, schema, meta}) as C;
   }
 
   //#region Action Config

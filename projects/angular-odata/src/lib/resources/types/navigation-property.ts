@@ -34,19 +34,19 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
     let schema = this.schema;
-    const Model = schema?.model || ODataModel;
-    if (meta?.context.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.context.type);
+    if (meta?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(meta.type);
     }
+    const Model = schema?.model || ODataModel;
     return new Model(entity, {resource: this, schema, meta}) as M;
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
     let schema = this.schema;
-    const Collection = schema?.collection || ODataCollection;
-    if (meta?.context.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.context.type);
+    if (meta?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(meta.type);
     }
+    const Collection = schema?.collection || ODataCollection;
     return new Collection(entities, {resource: this, schema, meta}) as C;
   }
 

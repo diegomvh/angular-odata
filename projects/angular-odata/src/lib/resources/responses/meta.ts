@@ -138,6 +138,9 @@ export class ODataEntitiesMeta extends ODataMeta {
   data(data: Object) {
     return this.odv.entities(data, this.context);
   }
+  get type() {
+    return this.context.type;
+  }
 
   get readLink() {
     return this.odv.readLink(this.annotations);
