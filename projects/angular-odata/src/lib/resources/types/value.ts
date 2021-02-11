@@ -23,21 +23,21 @@ export class ODataValueResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  fetch(options?: HttpOptions): Observable<T> {
+  fetch(options: HttpOptions = {}): Observable<T> {
     return super.get(
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType: 'value' }, options || {})
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType: 'value' }, options)
     );
   }
 
-  fetchArraybuffer(options?: HttpOptions): Observable<ArrayBuffer> {
+  fetchArraybuffer(options: HttpOptions = {}): Observable<ArrayBuffer> {
     return super.get(
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType: 'arraybuffer' }, options || {})
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType: 'arraybuffer' }, options)
     );
   }
 
-  fetchBlob(options?: HttpOptions): Observable<Blob> {
+  fetchBlob(options: HttpOptions = {}): Observable<Blob> {
     return super.get(
-      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType: 'blob' }, options || {})
+      Object.assign<HttpOptions, HttpOptions>(<HttpOptions>{ responseType: 'blob' }, options)
     );
   }
   //#endregion

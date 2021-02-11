@@ -1,4 +1,4 @@
-import { Observable, empty } from 'rxjs';
+import { Observable, empty, EMPTY } from 'rxjs';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 
 import { Expand, Select, Transform, Filter, OrderBy, PlainObject } from '../builder';
@@ -209,15 +209,15 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  post(attrs: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
+  post(attrs: Partial<T>, options: HttpOptions = {}): Observable<ODataEntity<T>> {
     return super.post(attrs,
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options)
     );
   }
 
-  get(options?: HttpOptions & { withCount?: boolean }): Observable<ODataEntities<T>> {
+  get(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataEntities<T>> {
     return super.get(
-      Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+      Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options)
     );
   }
   //#endregion
@@ -246,7 +246,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand(({meta})  => (meta.skip || meta.skiptoken) ? fetch(meta) : empty()),
+        expand(({meta})  => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
         concatMap(({entities}) => entities || []),
         toArray());
   }

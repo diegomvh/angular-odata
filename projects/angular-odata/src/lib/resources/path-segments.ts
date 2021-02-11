@@ -5,6 +5,7 @@ import { PlainObject } from './builder';
 import { Types, Dates } from '../utils';
 
 import { PATH_SEPARATOR } from '../constants';
+import { EntityKey } from '../types';
 
 export enum PathSegmentNames {
   batch = 'batch',
@@ -127,10 +128,10 @@ export class SegmentHandler {
     return this.segment.path;
   }
 
-  key<T>(value?: T) {
+  key<T>(value?: EntityKey<T>) {
     if (value !== undefined)
       this.segment.key = value;
-    return this.segment.key as T;
+    return this.segment.key as EntityKey<T>;
   }
 
   hasKey() {

@@ -127,8 +127,12 @@ export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
-  preferMaxPageSize?: number;
-  preferReturn?: 'representation' | 'minimal';
+  //Headers
+  //http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793609
+  prefer?: {
+    maxPageSize?: number,
+    return?: 'representation' | 'minimal'
+  };
   fetchPolicy?: FetchPolicy;
 }
 

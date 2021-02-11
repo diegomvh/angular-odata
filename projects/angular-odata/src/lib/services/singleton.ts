@@ -8,8 +8,8 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
   }
 
   // Models
-  public attach<M extends ODataModel<T>>(value: M): M {
-    return value.attach(this.entity());
+  public attach<M extends ODataModel<T>>(value: M) {
+    value.attach(this.entity());
   }
   // Service Config
   get singletonSchema() {

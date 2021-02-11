@@ -7,7 +7,7 @@ export abstract class ODataEntityService<T> {
   constructor(protected client: ODataClient, protected name: string, protected apiNameOrEntityType?: string) { }
 
   public abstract entity(key?: EntityKey<T>): ODataResource<T>;
-  public abstract attach<M extends ODataModel<T>>(value: M): M;
+  public abstract attach<M extends ODataModel<T>>(value: M): void;
 
   // Api Config
   get api() {

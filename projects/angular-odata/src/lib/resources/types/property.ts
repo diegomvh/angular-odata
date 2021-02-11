@@ -136,33 +136,33 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetch(options?: HttpOptions): Observable<T | null> {
+  fetch(options: HttpOptions = {}): Observable<T | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options || {})
+      Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options)
     ).pipe(map(({property}) => property));
   }
 
-  fetchEntity(options?: HttpOptions): Observable<T | null> {
+  fetchEntity(options: HttpOptions = {}): Observable<T | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     ).pipe(map(({entity, meta}) => entity));
   }
 
-  fetchModel(options?: HttpOptions): Observable<ODataModel<T> | null> {
+  fetchModel(options: HttpOptions = {}): Observable<ODataModel<T> | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
 
-  fetchEntities(options?: HttpOptions): Observable<T[] | null> {
+  fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})
+      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options)
     ).pipe(map(({entities}) => entities));
   }
 
-  fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {
+  fetchCollection(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})
+      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options)
     ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
   }
   //#endregion

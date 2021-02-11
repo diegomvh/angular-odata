@@ -18,13 +18,13 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   }
 
   // Models
-  public attach<M extends ODataModel<T>>(value: M): M;
-  public attach<C extends ODataCollection<T, ODataModel<T>>>(value: C): C;
-  public attach(value: any): any {
+  public attach<M extends ODataModel<T>>(value: M): void;
+  public attach<C extends ODataCollection<T, ODataModel<T>>>(value: C): void;
+  public attach(value: any): void {
     if (value instanceof ODataModel) {
-      return value.attach(this.entities().entity());
+      value.attach(this.entities().entity());
     } else if (value instanceof ODataCollection) {
-      return value.attach(this.entities());
+      value.attach(this.entities());
     }
   }
 

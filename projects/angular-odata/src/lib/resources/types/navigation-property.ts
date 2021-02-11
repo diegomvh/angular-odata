@@ -5,7 +5,7 @@ import { QueryOptionNames } from '../query-options';
 import { ODataReferenceResource } from './reference';
 import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { Observable, empty } from 'rxjs';
+import { Observable, empty, EMPTY } from 'rxjs';
 import { EntityKey } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
@@ -236,31 +236,31 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetchEntity(options?: HttpOptions): Observable<T | null> {
+  fetchEntity(options: HttpOptions = {}): Observable<T | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     ).pipe(map(({entity}) => entity));
   }
 
-  fetchEntities(options?: HttpOptions): Observable<T[] | null> {
+  fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options || {})
+      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options)
     ).pipe(map(({entities}) => entities));
   }
 
-  fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {
+  fetchCollection(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.get(
-      Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+      Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options)
     ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
   }
 
-  fetchModel(options?: HttpOptions): Observable<ODataModel<T> | null> {
+  fetchModel(options: HttpOptions = {}): Observable<ODataModel<T> | null> {
     return this.get(
-      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
 
-  fetchAll(options?: HttpOptions): Observable<T[]> {
+  fetchAll(options: HttpOptions = {}): Observable<T[]> {
     let res = this.clone();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
       if (opts) {
@@ -272,12 +272,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
           res.query.top(opts.top);
       }
       return res.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options || {})
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options)
       );
     }
     return fetch()
       .pipe(
-        expand(({meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : empty()),
+        expand(({meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
         concatMap(({entities}) => entities || []),
         toArray());
   }

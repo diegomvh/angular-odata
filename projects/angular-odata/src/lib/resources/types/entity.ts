@@ -163,33 +163,33 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options?: HttpOptions): Observable<ODataEntity<T>> {
+  get(options: HttpOptions = {}): Observable<ODataEntity<T>> {
     return super.get(
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     );
   }
 
-  post(attrs: Partial<T>, options?: HttpOptions): Observable<ODataEntity<T>> {
+  post(attrs: Partial<T>, options: HttpOptions = {}): Observable<ODataEntity<T>> {
     return super.post(attrs,
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     );
   }
 
-  put(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
+  put(attrs: Partial<T>, options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
     return super.put(attrs,
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     );
   }
 
-  patch(attrs: Partial<T>, options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
+  patch(attrs: Partial<T>, options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
     return super.patch(attrs,
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     );
   }
 
-  delete(options?: HttpOptions & { etag?: string }): Observable<any> {
+  delete(options: HttpOptions & { etag?: string } = {}): Observable<any> {
     return super.delete(
-      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {})
+      Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     );
   }
   //#endregion

@@ -11,6 +11,7 @@ export const $INLINECOUNT = '$inlinecount';
 
 // HTTP HEADERS
 export const IF_MATCH_HEADER = 'If-Match';
+export const IF_NONE_MATCH_HEADER = 'If-None-Match';
 export const CONTENT_TYPE = 'Content-Type';
 export const CACHE_CONTROL = 'Cache-Control';
 export const HTTP11 = 'HTTP/1.1';

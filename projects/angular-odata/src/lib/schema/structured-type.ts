@@ -37,7 +37,7 @@ export class ODataStructuredType<T> {
   }
 
   configure(settings: { findParserForType: (type: string) => Parser<any> }) {
-    const parserSettings = Object.assign({options: this.api.options}, settings);
+    const parserSettings = Object.assign({ options: this.api.options }, settings);
     this.parser.configure(parserSettings);
   }
 
@@ -59,7 +59,7 @@ export class ODataStructuredType<T> {
     return fields;
   }
 
-  pick(value: {[name:string]: any}, opts: {
+  pick(value: { [name: string]: any }, opts: {
     include_parents?: boolean,
     include_navigation?: boolean,
     include_etag?: boolean
