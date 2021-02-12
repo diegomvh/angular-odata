@@ -213,7 +213,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   create(attrs: T = {} as T) {
     const model = this._modelFactory(attrs);
-    return (model.isValid() ? model.save() : of(model))
+    return (model.valid() ? model.save() : of(model))
       .pipe(
         switchMap(model => this.add(model)),
         map(() => model)

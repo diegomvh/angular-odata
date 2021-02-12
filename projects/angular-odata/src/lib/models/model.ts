@@ -26,15 +26,14 @@ export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResou
 export function ODataModelField({ name }: { name?: string } = {}) {
   return (target: any, propertyKey: string): void => {
     const options = target.options = (target.options || new ODataModelOptions()) as ODataModelOptions<any>;
-    options.register(propertyKey, { name });
-    console.log(target, options, name, propertyKey);
+    options.register(propertyKey, { fieldName: name || propertyKey });
   }
 }
 export class ODataModelOptions<T> {
   private _attributes: T = {} as T;
   private _changes: T = {} as T;
   private _properties: {
-    [key: string]: { name?: string }
+    [key: string]: { fieldName: string }
   } = {};
   private _relations: {
     [name: string]: {
@@ -50,8 +49,8 @@ export class ODataModelOptions<T> {
   constructor() {
     this._meta = new ODataEntityMeta();
   }
-  register(key: string, { name }: { name?: string } = {}) {
-    this._properties[key] = { name };
+  register(key: string, { fieldName }: { fieldName: string }) {
+    this._properties[key] = { fieldName };
   }
   attach(model: ODataModel<T>, resource: ODataModelResource<T>) {
     if (this._resource !== undefined && this._resource.type() !== resource.type() && !resource.isSubtypeOf(this._resource))
@@ -142,9 +141,12 @@ export class ODataModelOptions<T> {
       changes_only ? {} : this._attributes,
       this._changes);
   }
-  assign(model: ODataModel<T>, data: any, { reset = false, parse = true }: { reset?: boolean, parse?: boolean } = {}) {
-    if (parse)
-      data = model.parse(data) || {};
+
+  assign(model: ODataModel<T>, data: any = {}, { reset = false, parse = true }: { reset?: boolean, parse?: boolean } = {}) {
+    if (parse) {
+      //TODO: Map fields
+      console.log(this);
+    }
 
     this._resetting = reset;
     if (this._resetting) {
@@ -306,78 +308,73 @@ export class ODataModelOptions<T> {
 
 export class ODataModel<T> {
   //Events
-  options!: ODataModelOptions<T>;
+  private _options!: ODataModelOptions<T>;
   change$ = new EventEmitter<{ attribute: string, value: any, previous?: any }>();
   request$ = new EventEmitter<Observable<ODataEntity<T>>>();
   sync$ = new EventEmitter();
   destroy$ = new EventEmitter();
   invalid$ = new EventEmitter<{ [name: string]: string[] }>();
-  constructor(data?: any, { resource, schema, meta }: {
+  constructor(data?: any, { resource, schema, meta, parse = false }: {
     resource?: ODataModelResource<T>,
     schema?: ODataStructuredType<T>,
-    meta?: ODataEntityMeta
+    meta?: ODataEntityMeta,
+    parse?: boolean
   } = {}) {
-    this.options = this.options || new ODataModelOptions<T>();
-    data = data || {};
+    this._options = this._options || new ODataModelOptions<T>();
     this.resource(resource);
     this.schema(schema);
     this.meta(meta);
-    this.assign(Objects.merge(this.defaults(), data), { reset: true });
+    data = Objects.merge(this.defaults(), data || {});
+    this.assign(data, { reset: true, parse });
   }
   resource(resource?: ODataModelResource<T>) {
     if (resource !== undefined)
-      this.options.attach(this, resource);
-    return this.options.resource();
+      this._options.attach(this, resource);
+    return this._options.resource();
   }
   schema(schema?: ODataStructuredType<T>) {
     if (schema !== undefined)
-      this.options.bind(this, schema);
-    return this.options.schema();
+      this._options.bind(this, schema);
+    return this._options.schema();
   }
   meta(meta?: ODataEntityMeta) {
     if (meta !== undefined)
-      this.options.annotate(this, meta);
-    return this.options.meta();
+      this._options.annotate(this, meta);
+    return this._options.meta();
   }
   key() {
-    return this.options.key(this.toEntity());
+    return this._options.key(this.toEntity());
   }
 
   // Validation
-  _errors?: { [name: string]: string[] } | null;
+  _errors?: { [name: string]: string[] };
   protected validate(entity: T) {
-    return this.options.validate(entity);
+    return this._options.validate(entity);
   }
-  private _validate() {
-    let error = this._errors = this.validate(this.toEntity());
-    if (error)
-      this.invalid$.emit(error);
-    return this._errors === null;
-  }
-  isValid(): boolean {
-    return this._validate();
+  valid(): boolean {
+    this._errors = this.validate(this.toEntity());
+    if (this._errors !== undefined)
+      this.invalid$.emit(this._errors);
+    return !!this._errors;
   }
   isNew() {
     return this.key() === undefined;
   }
-  defaults() {
-    return this.options.defaults();
-  }
-  parse(attrs: Object): T {
-    return attrs as T;
+  protected defaults() {
+    return this._options.defaults();
   }
   toEntity({ include_navigation = false, changes_only = false }: { include_navigation?: boolean, changes_only?: boolean } = {}): T {
-    return this.options.toEntity(this, {include_navigation, changes_only});
+    return this._options.toEntity(this, {include_navigation, changes_only});
   }
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): T {
-    return this.options.attributes(this, {changes_only});
+    return this._options.attributes(this, {changes_only});
   }
-  assign(data: any, { reset = false, parse = true }: { reset?: boolean, parse?: boolean } = {}) {
-    this.options.assign(this, data, {reset, parse});
+  assign(data: any = {}, { reset = false, parse = false }: {reset?: boolean, parse?: boolean} = {}) {
+    this._options.assign(this, data, {reset, parse});
   }
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.options.resource(), meta: this.options.meta() });
+    return new Ctor(this.toEntity({ include_navigation: true }), { resource: this._options.resource(), meta: this._options.meta() });
   }
   private _request(resource: ODataModelResource<T>, obs$: Observable<ODataEntity<any>>): Observable<this> {
     this.request$.emit(obs$);
@@ -419,7 +416,7 @@ export class ODataModel<T> {
     if (resource !== undefined) {
       let obs$: Observable<ODataEntity<any>> = NEVER;
       if (resource instanceof ODataEntityResource) {
-        if (!validate || this._validate()) {
+        if (!validate || this.valid()) {
           const attrs = this.toEntity({ changes_only: patch }) as any;
           obs$ = (this.isNew() ?
             resource.post(attrs, options) :
