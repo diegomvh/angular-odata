@@ -87,7 +87,6 @@ export class ODataModelOptions<T> {
   bind(model: ODataModel<T>, schema: ODataStructuredType<T>) {
     if (this._schema !== schema) {
       // Bind Properties
-      var self = this;
       schema.fields({ include_navigation: true, include_parents: true })
         .forEach(field => {
           Object.defineProperty(model, field.name, {
