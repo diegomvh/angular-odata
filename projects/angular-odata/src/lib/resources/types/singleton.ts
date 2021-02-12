@@ -146,7 +146,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpOptions = {}): Observable<ODataEntity<T>> {
+  get(options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
     return super.get(
       Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{responseType: 'entity'}, options)
       );
@@ -178,11 +178,11 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetch(options?: HttpOptions): Observable<T | null> {
+  fetch(options?: HttpOptions & { etag?: string }): Observable<T | null> {
     return this.get(options).pipe(map(({entity}) => entity));
   }
 
-  fetchModel(options?: HttpOptions): Observable<ODataModel<T> | null> {
+  fetchModel(options?: HttpOptions & { etag?: string }): Observable<ODataModel<T> | null> {
     return this.get(options).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
   //#endregion

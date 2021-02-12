@@ -10,13 +10,13 @@ export abstract class ODataMeta {
     return this.options.helper;
   }
 
-  constructor(data: Object, opt: {
+  constructor(data: any = {}, opt: {
     options?: OptionsHelper,
     headers?: HttpHeaders
   } = {}) {
     //TODO: Default options
     this.options = opt.options;
-    this.annotations = (this.options ? this.odv.annotations(data) : data) || {};
+    this.annotations = this.options ? this.odv.annotations(data) : data;
     if (opt.headers) {
       const etag = opt.headers.get("ETag");
       if (etag)

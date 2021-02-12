@@ -51,9 +51,9 @@ export class ODataRequest<T> {
     // Headers
     const customHeaders: {[name: string]: string | string[]} = {};
     if (typeof init.etag === 'string') {
-      if (['PUT', 'PATCH', 'DELETE'].indexOf(this.method) !== -1)
+      if (this.api.options.etag.ifMatch && ['PUT', 'PATCH', 'DELETE'].indexOf(this.method) !== -1)
         customHeaders[IF_MATCH_HEADER] = init.etag;
-      else if (['GET'].indexOf(this.method) !== -1)
+      else if (this.api.options.etag.ifNoneMatch && ['GET'].indexOf(this.method) !== -1)
         customHeaders[IF_NONE_MATCH_HEADER] = init.etag;
     }
 

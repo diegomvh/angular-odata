@@ -129,6 +129,10 @@ export interface ApiOptions extends Options {
   withCredentials?: boolean;
   //Headers
   //http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793609
+  etag?: {
+    ifMatch?: boolean,
+    ifNoneMatch?:boolean
+  };
   prefer?: {
     maxPageSize?: number,
     return?: 'representation' | 'minimal'

@@ -174,6 +174,7 @@ export abstract class ODataResource<T> {
   }
 
   protected get(options: HttpOptions & {
+    etag?: string,
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   } = {}): Observable<any> {

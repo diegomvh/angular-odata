@@ -1,7 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataClient } from '../../client';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
 import { HttpHeaders, HttpErrorResponse, HttpResponse } from '@angular/common/http';

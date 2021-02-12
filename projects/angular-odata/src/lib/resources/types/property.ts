@@ -145,19 +145,19 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetch(options: HttpOptions = {}): Observable<T | null> {
+  fetch(options: HttpOptions & { etag?: string } = {}): Observable<T | null> {
     return this.get(
       Object.assign<HttpOptions, HttpPropertyOptions>(<HttpPropertyOptions>{ responseType: 'property' }, options)
     ).pipe(map(({property}) => property));
   }
 
-  fetchEntity(options: HttpOptions = {}): Observable<T | null> {
+  fetchEntity(options: HttpOptions & { etag?: string } = {}): Observable<T | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
-    ).pipe(map(({entity, meta}) => entity));
+    ).pipe(map(({entity}) => entity));
   }
 
-  fetchModel(options: HttpOptions = {}): Observable<ODataModel<T> | null> {
+  fetchModel(options: HttpOptions & { etag?: string } = {}): Observable<ODataModel<T> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
     ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
