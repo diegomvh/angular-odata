@@ -242,6 +242,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     ).pipe(map(({entity}) => entity));
   }
 
+  fetchModel(options: HttpOptions = {}): Observable<ODataModel<T> | null> {
+    return this.get(
+      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
+    ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
+  }
+
   fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options)
@@ -252,12 +258,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.get(
       Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options)
     ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
-  }
-
-  fetchModel(options: HttpOptions = {}): Observable<ODataModel<T> | null> {
-    return this.get(
-      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
-    ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
   }
 
   fetchAll(options: HttpOptions = {}): Observable<T[]> {

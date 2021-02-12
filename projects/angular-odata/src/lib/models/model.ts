@@ -91,7 +91,7 @@ export class ODataModel<T> {
     // Attach complex
     Object.values(this._relations)
       .forEach(({ field, model }) => {
-        if (model !== null) model.attach(resource.property<any>(field.name));
+        if (model !== null) model.attach(field.isNavigation() ? resource.navigationProperty<any>(field.name) : resource.property<any>(field.name));
       });
 
     // Has key?

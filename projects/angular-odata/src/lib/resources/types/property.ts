@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 
 import { ODataValueResource } from './value';
 
@@ -7,11 +7,12 @@ import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
-import { map } from 'rxjs/operators';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../builder';
+import { ODataNavigationPropertyResource } from './navigation-property';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -58,7 +59,15 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   value() {
     return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
-
+  navigationProperty<N>(path: string) {
+    let type = this.type();
+    if (type !== undefined) {
+      let parser = this.api.findParserForType<N>(type);
+      type = parser instanceof ODataStructuredTypeParser?
+        parser.typeFor(path) : undefined;
+    }
+    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+  }
   property<P>(path: string) {
     let type = this.type();
     if (type !== undefined) {
@@ -164,6 +173,28 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return this.get(
       Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options)
     ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
+  }
+
+  fetchAll(options: HttpOptions = {}): Observable<T[]> {
+    let res = this.clone();
+    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
+      if (opts) {
+        if (opts.skiptoken)
+          res.query.skiptoken(opts.skiptoken);
+        else if (opts.skip)
+          res.query.skip(opts.skip);
+        if (opts.top)
+          res.query.top(opts.top);
+      }
+      return res.get(
+        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options)
+      );
+    }
+    return fetch()
+      .pipe(
+        expand(({meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
+        concatMap(({entities}) => entities || []),
+        toArray());
   }
   //#endregion
 }
