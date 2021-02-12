@@ -13,10 +13,14 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   params: { [param: string]: string | string[] };
   headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
+  etag: {
+    ifMatch: boolean;
+    ifNoneMatch: boolean;
+  } = {ifMatch: true, ifNoneMatch: false};
   prefer?: {
     maxPageSize?: number;
     return?: 'representation' | 'minimal';
-  }
+  };
 
   constructor(config: ApiOptions) {
     this.version = config.version || DEFAULT_VERSION;
@@ -28,6 +32,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.withCredentials = config.withCredentials;
     this.fetchPolicy = config.fetchPolicy || DEFAULT_FETCH_POLICY;
     this.prefer = config.prefer;
+    Object.assign(this.etag, config.etag || {});
   }
 
   get helper() {

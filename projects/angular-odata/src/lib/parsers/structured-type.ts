@@ -287,4 +287,30 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
       return acc;
     }, {}));
   }
+
+  validate(attrs: Partial<T>, {create = false}: {create?: boolean} = {}): { [name: string]: string[] } | undefined {
+    const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as { [name: string]: string[] };
+    // Nullables
+    this.fields.forEach(f => {
+      let value = attrs[f.name as keyof T];
+      if (f.nullable === false && value == null && // Is null?
+        !(f.key && create) // Not (Is Key field and isNew) ?
+      ) {
+        (errors[f.name] || (errors[f.name] = [])).push(`required`);
+      }
+      if (f.maxLength !== undefined && typeof value === 'string' && value.length > f.maxLength) {
+        (errors[f.name] || (errors[f.name] = [])).push(`maxlength`);
+      }
+      if (f.isComplexType() && typeof value === 'object') {
+        let suberrors = f.structured().validate(value as any, {create});
+        Object.entries(suberrors as { [name: string]: string[] }).forEach(([key, value]) => {
+          errors[`${f.name}.${key}`] = value;
+        });
+      }
+      if (f.isEnumType() && typeof value === 'object' && !f.enum().validate(value)) {
+        (errors[f.name] || (errors[f.name] = [])).push(`mismatch`);
+      }
+    });
+    return !Types.isEmpty(errors) ? errors : undefined;
+  }
 }
