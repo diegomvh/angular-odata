@@ -57,36 +57,39 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     schema?: ODataStructuredType<T>,
     meta?: ODataEntitiesMeta,
   } = {}) {
-    if (schema !== undefined)
-      this.bind(schema);
-    if (resource !== undefined)
-      this.attach(resource);
-    this._meta = meta || new ODataEntitiesMeta(data, { options: resource?.api.options });
+    this.resource(resource);
+    this.schema(schema);
+    this._meta = meta || new ODataEntitiesMeta(data, {options: resource?.api.options});
     if (!Array.isArray(data))
-      data = this._meta.data(data) || [];
+      data = this.meta().data(data) || [];
     this.assign(data);
   }
+  resource(resource?: ODataCollectionResource<T>) {
+    if (resource !== undefined) {
+      if (this._resource !== undefined && this._resource.type() !== resource.type() && !resource.isSubtypeOf(this._resource))
+        throw new Error(`Can't reattach ${resource.type()} to ${this._resource.type()}`);
 
-  bind(schema: ODataStructuredType<T>) {
-    this._schema = schema;
-  }
+      const schema = resource.schema;
+      if (schema !== undefined)
+        this.schema(schema);
 
-  attach(resource: ODataCollectionResource<T>) {
-    if (this._resource !== undefined && this._resource.type() !== resource.type() && !resource.isSubtypeOf(this._resource))
-      throw new Error(`Can't reattach ${resource.type()} to ${this._resource.type()}`);
-    this._resource = resource;
-
-    const schema = this._resource.schema;
-    if (schema !== undefined)
-      this.bind(schema);
-  }
-
-  resource() {
+      this._resource = resource;
+    }
     return this._resource?.clone();
+  }
+  schema(schema?: ODataStructuredType<T>) {
+    if (schema !== undefined)
+      this._schema = schema;
+    return this._schema;
+  }
+  meta(meta?: ODataEntitiesMeta) {
+    if (meta !== undefined)
+      this._meta = meta;
+    return this._meta;
   }
   private _modelFactory(attrs: T): M {
     const meta = new ODataEntityMeta(attrs, { options: this._meta.options });
-    const schema = this._schema;
+    const schema = this.schema();
     const Model = schema?.model || ODataModel;
     let resource: ODataModelResource<T> | undefined;
     if (this._resource) {
@@ -102,7 +105,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   protected parse(entities: T[]): M[] {
     return entities.map(e => this._modelFactory(e));
   }
-
   toEntities({ include_navigation = false, changes_only = false }: { include_navigation?: boolean, changes_only?: boolean } = {}) {
     return this._models.map(m => m.model.toEntity({include_navigation, changes_only}));
   }
@@ -235,15 +237,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     });
     this.reset$.emit(models);
   }
-  protected schema(): ODataStructuredType<T> | undefined {
-    return this._schema;
-  }
   get query() {
     if (!this._resource)
       throw new Error(`Can't query without ODataResource`);
     return this._resource.query;
   }
-
   private _call<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,

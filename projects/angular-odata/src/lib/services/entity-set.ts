@@ -22,15 +22,21 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   public attach<C extends ODataCollection<T, ODataModel<T>>>(value: C): void;
   public attach(value: any): void {
     if (value instanceof ODataModel) {
-      value.attach(this.entities().entity());
+      value.resource(this.entities().entity());
     } else if (value instanceof ODataCollection) {
-      value.attach(this.entities());
+      value.resource(this.entities());
     }
   }
 
   // Service Config
   get entitySetSchema() {
     return this.api.findEntitySetByName(this.name);
+  }
+
+  public fetch(entity: EntityKey<T>, options?: HttpOptions & {etag?: string}): Observable<T | null> {
+    return this.entity(entity)
+      .get(options)
+      .pipe(map(({entity}) => entity));
   }
 
   public create(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
@@ -72,7 +78,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
 
   // Shortcuts
   public fetchOrCreate(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
-    return this.entity(entity).fetch(options)
+    return this.fetch(entity, options)
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)
           return this.create(entity, options);
