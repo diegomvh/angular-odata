@@ -302,12 +302,12 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
         (errors[f.name] || (errors[f.name] = [])).push(`maxlength`);
       }
       if (f.isComplexType() && typeof value === 'object') {
-        let suberrors = f.structured().validate(value as any, {create});
-        Object.entries(suberrors as { [name: string]: string[] }).forEach(([key, value]) => {
+        const suberrors = f.structured().validate(value as any, {create}) || {} as { [name: string]: string[] };
+        Object.entries(suberrors).forEach(([key, value]) => {
           errors[`${f.name}.${key}`] = value;
         });
       }
-      if (f.isEnumType() && typeof value === 'object' && !f.enum().validate(value)) {
+      if (f.isEnumType() && typeof value === 'object' && !f.enum().validate(value, {create})) {
         (errors[f.name] || (errors[f.name] = [])).push(`mismatch`);
       }
     });

@@ -87,16 +87,13 @@ export class ODataModelOptions<T> {
   bind(model: ODataModel<T>, schema: ODataStructuredType<T>) {
     if (this._schema !== schema) {
       // Bind Properties
+      var self = this;
       schema.fields({ include_navigation: true, include_parents: true })
         .forEach(field => {
           Object.defineProperty(model, field.name, {
             configurable: true,
-            get() {
-              return this._get(model, field);
-            },
-            set(value: any) {
-              this._set(model, field, value);
-            }
+            get: () => this._get(model, field),
+            set: (value: any) => this._set(model, field, value)
           });
         });
       this._schema = schema;
@@ -228,7 +225,7 @@ export class ODataModelOptions<T> {
           let resource: ODataNavigationPropertyResource<P> | ODataPropertyResource<P> | undefined;
           if (this._resource instanceof ODataEntityResource || this._resource instanceof ODataNavigationPropertyResource)
             resource = field.isNavigation() ? this._resource?.navigationProperty<P>(field.name) : this._resource?.property<P>(field.name);
-          const model = this._modelCollectionFactory<any>(value, { field, resource });
+          const model = this._modelCollectionFactory<any>(self, value, { field, resource });
           this._relations[field.name] = { field, model, subscriptions: this._subscribe<P>(self, field, model) };
         }
         return this._relations[field.name].model;
