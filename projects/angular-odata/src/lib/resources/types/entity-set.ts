@@ -33,13 +33,16 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+    entities: Partial<T>[],
+    {meta, reset = false}: { meta?: ODataEntitiesMeta, reset?: boolean} = {}
+  ): C {
     let schema = this.schema;
     if (meta?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Collection = schema?.collection || ODataCollection;
-    return new Collection(entities, {resource: this, schema, meta}) as C;
+    return new Collection(entities, {resource: this, schema, meta, reset}) as C;
   }
 
   //#region Entity Config
@@ -228,7 +231,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {
-    return this.get(options).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
+    return this.get(options).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, { meta, reset: true}) : null));
   }
 
   fetchAll(options?: HttpOptions): Observable<T[]> {

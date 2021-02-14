@@ -30,7 +30,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  asModel<M extends ODataModel<R>>(entity: Partial<R>, meta?: ODataEntityMeta): M {
+  asModel<M extends ODataModel<R>>(entity: Partial<R>, {meta, reset}: { meta?: ODataEntityMeta, reset?: boolean} = {}): M {
     let resource: ODataEntityResource<R> | undefined;
     // TODO: Structured Only?
     let schema: ODataStructuredType<R> | undefined;
@@ -44,10 +44,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions())
         .entity(entity);
     }
-    return new Model(entity, {resource, schema, meta}) as M;
+    return new Model(entity, {resource, schema, meta, reset}) as M;
   }
 
-  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(entities: Partial<R>[], meta?: ODataEntitiesMeta): C {
+  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
+    entities: Partial<R>[],
+    {meta, reset=false}: {meta?: ODataEntitiesMeta, reset?: boolean} = {}
+  ): C {
     let resource: ODataEntitySetResource<R> | undefined;
     // TODO: Structured Only?
     let schema: ODataStructuredType<R> | undefined;
@@ -60,7 +63,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     if (path !== undefined) {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions());
     }
-    return new Collection(entities, {resource, schema, meta}) as C;
+    return new Collection(entities, {resource, schema, meta, reset}) as C;
   }
 
   //#region Action Config
@@ -177,13 +180,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
     const res = this.parameters(params);
     const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options);
-    return res.get(opts).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
+    return res.get(opts).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, { meta, reset: true }) : null));
   }
 
   callModel(params: P | null, options: HttpOptions = {}): Observable<ODataModel<R> | null> {
     const res = this.parameters(params);
     const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options);
-    return res.get(opts).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
+    return res.get(opts).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
   }
   //#endregion
 }

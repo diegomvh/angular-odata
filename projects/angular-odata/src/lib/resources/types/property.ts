@@ -37,22 +37,25 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
   ////#endregion
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, {meta, reset}: {meta?: ODataEntityMeta, reset?: boolean} = {}): M {
     let schema = this.schema;
     if (meta?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Model = schema?.model || ODataModel;
-    return new Model(entity, {resource: this, meta}) as M;
+    return new Model(entity, {resource: this, schema, meta, reset}) as M;
   }
 
-  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[], meta?: ODataEntitiesMeta): C {
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+    entities: Partial<T>[],
+    {meta, reset}: { meta?: ODataEntitiesMeta, reset?: boolean} = {}
+  ): C {
     let schema = this.schema;
     if (meta?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Collection = schema?.collection || ODataCollection;
-    return new Collection(entities, {resource: this, schema, meta}) as C;
+    return new Collection(entities, {resource: this, schema, meta, reset}) as C;
   }
 
   //#region Inmutable Resource
@@ -160,7 +163,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   fetchModel(options: HttpOptions & { etag?: string } = {}): Observable<ODataModel<T> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
-    ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, meta) : null));
+    ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
   }
 
   fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
@@ -172,7 +175,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   fetchCollection(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.get(
       Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options)
-    ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, meta) : null));
+    ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, { meta, reset: true }) : null));
   }
 
   fetchAll(options: HttpOptions = {}): Observable<T[]> {

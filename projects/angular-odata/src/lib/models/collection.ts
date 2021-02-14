@@ -1,5 +1,5 @@
 import { map, switchMap, tap } from 'rxjs/operators';
-import { Observable, EMPTY, NEVER, of, Subscription, merge } from 'rxjs';
+import { Observable, EMPTY, NEVER, of, Subscription, merge, throwError } from 'rxjs';
 
 import {
   ODataEntitySetResource,
@@ -52,17 +52,18 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   sync$ = new EventEmitter();
   invalid$ = new EventEmitter<{ model: M, errors: { [name: string]: string[] } }>();
 
-  constructor(data: any = {}, {resource, schema, meta}: {
+  constructor(data: any = {}, {resource, schema, meta, reset = false}: {
     resource?: ODataCollectionResource<T>,
     schema?: ODataStructuredType<T>,
     meta?: ODataEntitiesMeta,
+    reset?: boolean
   } = {}) {
     this.resource(resource);
     this.schema(schema);
     this._meta = meta || new ODataEntitiesMeta(data, {options: resource?.api.options});
     if (!Array.isArray(data))
       data = this.meta().data(data) || [];
-    this.assign(data);
+    this.assign(data, {reset});
   }
   resource(resource?: ODataCollectionResource<T>) {
     if (resource !== undefined) {
@@ -87,24 +88,20 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       this._meta = meta;
     return this._meta;
   }
-  private _modelFactory(attrs: T): M {
+  private _modelFactory(attrs: T, {reset = false}: {reset?: boolean} = {}): M {
+    console.log("model factory");
     const meta = new ODataEntityMeta(attrs, { options: this._meta.options });
+    if (this._resource) {
+      return ((this._resource instanceof ODataEntitySetResource) ?
+          this._resource.entity(attrs) :
+          this._resource.clone())
+            .asModel(attrs, { meta, reset });
+    }
     const schema = this.schema();
     const Model = schema?.model || ODataModel;
-    let resource: ODataModelResource<T> | undefined;
-    if (this._resource) {
-      if (this._resource instanceof ODataEntitySetResource)
-        resource = this._resource.entity(attrs);
-      else
-        resource = this._resource.clone();
-      return resource.asModel(attrs, meta);
-    }
-    return new Model(attrs, { resource, schema, meta }) as M;
+    return new Model(attrs, { schema, meta, parse: reset }) as M;
   }
 
-  protected parse(entities: T[]): M[] {
-    return entities.map(e => this._modelFactory(e));
-  }
   toEntities({ include_navigation = false, changes_only = false }: { include_navigation?: boolean, changes_only?: boolean } = {}) {
     return this._models.map(m => m.model.toEntity({include_navigation, changes_only}));
   }
@@ -135,12 +132,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Requests
-  private _request(obs$: Observable<ODataEntities<any>>): Observable<this> {
+  private _request(resource: ODataCollectionResource<T>, obs$: Observable<ODataEntities<any>>): Observable<this> {
     this.request$.emit(obs$);
     return obs$.pipe(
       map(({ entities, meta }) => {
         this._meta = meta;
-        this.assign(entities || []);
+        this.assign(entities || [], {reset: true});
         this.sync$.emit();
         return this;
       }));
@@ -168,8 +165,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         obs$ = resource.get(
           Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount }, options ));
       }
+      return this._request(resource, obs$);
     }
-    return this._request(obs$);
+    return throwError("Resource Error");
   }
   fetchAll(options?: HttpOptions): Observable<this> {
     let obs$: Observable<any> = NEVER;
@@ -179,8 +177,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         obs$ = resource.fetchAll(options)
           .pipe(map(entities => ({ entities, meta: new ODataEntitiesMeta({}, { options: resource?.api.options }) })));
       }
+      return this._request(resource, obs$);
     }
-    return this._request(obs$);
+    return throwError("Resource Error");
   }
 
   add(model: M): Observable<this> {
@@ -229,8 +228,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$;
   }
 
-  assign(data: any, {reset = false}: { reset?: boolean } = {}) {
-    const models = this.parse(data) || [];
+  assign(data: any[] = [], {reset = false}: { reset?: boolean } = {}) {
+    const models = data.map(e => this._modelFactory(e, {reset}));
     this._models.forEach(e => e.subscriptions.forEach(s => s.unsubscribe()));
     this._models = models.map(model => {
       return { model, key: model.key(), subscriptions: this._subscribe(model) };

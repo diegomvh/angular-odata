@@ -30,13 +30,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T>, meta?: ODataEntityMeta): M {
+  asModel<M extends ODataModel<T>>(entity: Partial<T>, {meta, reset}: {meta?: ODataEntityMeta, reset?: boolean} = {}): M {
     let schema = this.schema;
     if (meta?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Model = schema?.model || ODataModel;
-    return new Model(entity, { resource: this, meta }) as M;
+    return new Model(entity, { resource: this, schema, meta, reset }) as M;
   }
 
   //#region Entity Config
@@ -204,7 +204,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   fetchModel(options?: HttpOptions & { etag?: string }): Observable<ODataModel<T> | null> {
     if (!this.segment.entitySet().hasKey())
       return throwError("Resource without key");
-    return this.get(options).pipe(map(({ entity, meta }) => entity ? this.asModel(entity, meta) : null));
+    return this.get(options).pipe(map(({ entity, meta }) => entity ? this.asModel(entity, { meta, reset: true }) : null));
   }
   //#endregion
 }
