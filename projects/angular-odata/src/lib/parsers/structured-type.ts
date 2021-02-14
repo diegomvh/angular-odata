@@ -168,6 +168,25 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
       throw new Error("Field are not StrucuturedType")
     return this.parser as ODataStructuredTypeParser<T>;
   }
+  validate(value: T, {create = false}: {create?: boolean} = {}): { [name: string]: string[] } | string[] | undefined {
+    if (this.isComplexType() && typeof value === 'object') {
+      return this.structured().validate(value as any, {create}) || {} as { [name: string]: string[] };
+    }
+    else if (this.isEnumType() && typeof value === 'object') {
+      return this.enum().validate(value, {create});
+    } else {
+      const errors = [];
+      if (this.nullable === false && value == null && // Is null?
+        !(this.key && create) // Not (Is Key field and isNew) ?
+      ) {
+        errors.push(`required`);
+      }
+      if (this.maxLength !== undefined && typeof value === 'string' && value.length > this.maxLength) {
+        errors.push(`maxlength`);
+      }
+      return !Types.isEmpty(errors) ? errors : undefined;
+    }
+  }
 }
 
 export class ODataStructuredTypeParser<T> implements Parser<T> {
@@ -290,27 +309,17 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
 
   validate(attrs: Partial<T>, {create = false}: {create?: boolean} = {}): { [name: string]: string[] } | undefined {
     const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as { [name: string]: string[] };
-    // Nullables
-    this.fields.forEach(f => {
-      let value = attrs[f.name as keyof T];
-      if (f.nullable === false && value == null && // Is null?
-        !(f.key && create) // Not (Is Key field and isNew) ?
-      ) {
-        (errors[f.name] || (errors[f.name] = [])).push(`required`);
-      }
-      if (f.maxLength !== undefined && typeof value === 'string' && value.length > f.maxLength) {
-        (errors[f.name] || (errors[f.name] = [])).push(`maxlength`);
-      }
-      if (f.isComplexType() && typeof value === 'object') {
-        const suberrors = f.structured().validate(value as any, {create}) || {} as { [name: string]: string[] };
-        Object.entries(suberrors).forEach(([key, value]) => {
-          errors[`${f.name}.${key}`] = value;
+    for (var field of this.fields) {
+      const value = attrs[field.name as keyof T];
+      const errs = field.validate(value, {create});
+      if (Array.isArray(errs)) {
+        errors[field.name] = errs;
+      } else if (errs !== undefined) {
+        Object.entries(errs).forEach(([key, value]) => {
+          errors[`${field.name}.${key}`] = value;
         });
       }
-      if (f.isEnumType() && typeof value === 'object' && !f.enum().validate(value, {create})) {
-        (errors[f.name] || (errors[f.name] = [])).push(`mismatch`);
-      }
-    });
+    }
     return !Types.isEmpty(errors) ? errors : undefined;
   }
 }
