@@ -169,10 +169,10 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     return this.parser as ODataStructuredTypeParser<T>;
   }
   validate(value: T, {create = false}: {create?: boolean} = {}): { [name: string]: string[] } | string[] | undefined {
-    if (this.isComplexType() && typeof value === 'object') {
+    if (this.isComplexType()  && typeof value === 'object' && value !== null) {
       return this.structured().validate(value as any, {create}) || {} as { [name: string]: string[] };
     }
-    else if (this.isEnumType() && typeof value === 'object') {
+    else if (this.isEnumType() && value !== null) {
       return this.enum().validate(value, {create});
     } else {
       const errors = [];

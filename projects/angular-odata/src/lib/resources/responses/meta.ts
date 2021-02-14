@@ -1,20 +1,18 @@
 import { HttpHeaders } from '@angular/common/http';
+import { DEFAULT_VERSION } from '../../constants';
+import { ODataHelper } from '../../helpers';
 import { ODataContext, OptionsHelper } from '../../types';
 
 export abstract class ODataMeta {
   annotations: Object;
   options?: OptionsHelper;
   protected get odv() {
-    if (!this.options)
-      throw Error("No helper");
-    return this.options.helper;
+    return this.options?.helper || ODataHelper[DEFAULT_VERSION];
   }
-
   constructor(data: any = {}, opt: {
     options?: OptionsHelper,
     headers?: HttpHeaders
   } = {}) {
-    //TODO: Default options
     this.options = opt.options;
     this.annotations = this.options ? this.odv.annotations(data) : data;
     if (opt.headers) {
@@ -180,7 +178,6 @@ export class ODataEntitiesMeta extends ODataMeta {
     }
     return this._functions;
   }
-
   function(name: string) {
     return this.functions[name];
   }

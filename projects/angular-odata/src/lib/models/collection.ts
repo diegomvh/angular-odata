@@ -88,12 +88,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       this._meta = meta;
     return this._meta;
   }
-  private _modelFactory(attrs: T, {reset = false}: {reset?: boolean} = {}): M {
-    console.log("model factory");
-    const meta = new ODataEntityMeta(attrs, { options: this._meta.options });
+  private _modelFactory(data: T, {reset = false}: {reset?: boolean} = {}): M {
+    const meta = new ODataEntityMeta(data, { options: this._meta.options });
+    const attrs = meta.attributes<T>(data);
     if (this._resource) {
       return ((this._resource instanceof ODataEntitySetResource) ?
-          this._resource.entity(attrs) :
+          this._resource.entity(data) :
           this._resource.clone())
             .asModel(attrs, { meta, reset });
     }
