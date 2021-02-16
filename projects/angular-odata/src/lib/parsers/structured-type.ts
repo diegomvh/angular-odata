@@ -51,8 +51,30 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   resolve(value: any) {
     return (this.ref || this.name).split('/').reduce((acc, name) => acc[name], value);
   }
+  validate(value: T, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}): { [name: string]: string[] } | string[] | undefined {
+    if (this.isComplexType()  && typeof value === 'object' && value !== null) {
+      return this.structured().validate(value as any, {create, patch}) || {} as { [name: string]: string[] };
+    }
+    else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
+      return this.enum().validate(value, {create, patch});
+    } else {
+      const errors = [];
+      const computed = this.findAnnotation(a => a.type === "Org.OData.Core.V1.Computed");
+      if (
+        !this.nullable &&
+        (value === null || (value === undefined && !patch)) && // Is null or undefined without patch flag?
+        !(computed?.bool && create) // Not (Is Computed field and create) ?
+      ) {
+        errors.push(`required`);
+      }
+      if (this.maxLength !== undefined && typeof value === 'string' && value.length > this.maxLength) {
+        errors.push(`maxlength`);
+      }
+      return !Types.isEmpty(errors) ? errors : undefined;
+    }
+  }
 
-  // Deserialize
+  //#region Deserialize
   private parse(parser: ODataStructuredTypeParser<T>, value: any, options: OptionsHelper): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined) {
@@ -70,8 +92,9 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     }
     return this.parser.deserialize(value, Object.assign({field: this}, options));
   }
+  //#endregion
 
-  // Serialize
+  //#region Serialize
   private toJson(parser: ODataStructuredTypeParser<T>, value: any, options: OptionsHelper): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined) {
@@ -89,6 +112,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     }
     return this.parser.serialize(value, Object.assign({field: this}, options));
   }
+  //#endregion
 
   configure(settings: {
     findParserForType: (type: string) => Parser<any>,
@@ -99,7 +123,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
       this.default = this.deserialize(this.default, settings.options);
   }
 
-  // Json Schema
+  //#region Json Schema
   // https://json-schema.org/
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     let schema: any = (this.parser instanceof ODataStructuredTypeFieldParser ||
@@ -141,6 +165,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
       };
     return schema;
   }
+  //#endregion
 
   isNavigation() {
     return this.navigation;
@@ -148,13 +173,6 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   isEnumType() {
     return this.parser instanceof ODataEnumTypeParser;
   }
-  isStructuredType() {
-    return this.parser instanceof ODataStructuredTypeParser;
-  }
-  isComplexType() {
-    return this.parser instanceof ODataStructuredTypeParser && this.parser.isComplexType();
-  }
-
   isEdmType() {
     return this.type.startsWith("Edm.");
   }
@@ -163,29 +181,16 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
       throw new Error("Field are not EnumType")
     return this.parser as ODataEnumTypeParser<T>;
   }
+  isStructuredType() {
+    return this.parser instanceof ODataStructuredTypeParser;
+  }
+  isComplexType() {
+    return this.parser instanceof ODataStructuredTypeParser && this.parser.isComplexType();
+  }
   structured() {
     if (!this.isStructuredType())
       throw new Error("Field are not StrucuturedType")
     return this.parser as ODataStructuredTypeParser<T>;
-  }
-  validate(value: T, {create = false}: {create?: boolean} = {}): { [name: string]: string[] } | string[] | undefined {
-    if (this.isComplexType()  && typeof value === 'object' && value !== null) {
-      return this.structured().validate(value as any, {create}) || {} as { [name: string]: string[] };
-    }
-    else if (this.isEnumType() && value !== null) {
-      return this.enum().validate(value, {create});
-    } else {
-      const errors = [];
-      if (this.nullable === false && value == null && // Is null?
-        !(this.key && create) // Not (Is Key field and isNew) ?
-      ) {
-        errors.push(`required`);
-      }
-      if (this.maxLength !== undefined && typeof value === 'string' && value.length > this.maxLength) {
-        errors.push(`maxlength`);
-      }
-      return !Types.isEmpty(errors) ? errors : undefined;
-    }
   }
 }
 
@@ -307,11 +312,11 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     }, {}));
   }
 
-  validate(attrs: Partial<T>, {create = false}: {create?: boolean} = {}): { [name: string]: string[] } | undefined {
+  validate(attrs: Partial<T>, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}): { [name: string]: string[] } | undefined {
     const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as { [name: string]: string[] };
     for (var field of this.fields) {
       const value = attrs[field.name as keyof T];
-      const errs = field.validate(value, {create});
+      const errs = field.validate(value, {create, patch});
       if (Array.isArray(errs)) {
         errors[field.name] = errs;
       } else if (errs !== undefined) {
