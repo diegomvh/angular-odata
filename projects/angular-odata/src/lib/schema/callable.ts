@@ -16,7 +16,7 @@ export class ODataCallable<R> {
     this.entitySetPath = config.entitySetPath;
     this.bound = config.bound;
     this.composable = config.composable;
-    this.parser = new ODataCallableParser(config, schema.namespace);
+    this.parser = new ODataCallableParser(config, schema.namespace, schema.alias);
   }
 
   path() {
@@ -29,14 +29,12 @@ export class ODataCallable<R> {
       path = this.parser.return ? this.api.findEntitySetForType(this.parser.return.type)?.name || this.name : this.name;
     return path;
   }
-
-  isTypeOf(type: string) {
-    var names = [`${this.schema.namespace}.${this.name}`];
-    if (this.schema.alias)
-      names.push(`${this.schema.alias}.${this.name}`);
-    return names.indexOf(type) !== -1;
+  type({alias = false}: {alias?: boolean} = {}) {
+    return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
-
+  isTypeOf(type: string) {
+    return this.parser.isTypeOf(type);
+  }
   get api() {
     return this.schema.api;
   }

@@ -20,27 +20,22 @@ export class ODataStructuredType<T> {
     this.parser = new ODataStructuredTypeParser(config, schema.namespace, schema.alias);
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
-
-  isTypeOf(type: string) {
-    var names = [`${this.schema.namespace}.${this.name}`];
-    if (this.schema.alias)
-      names.push(`${this.schema.alias}.${this.name}`);
-    return names.indexOf(type) !== -1;
-  }
-
-  get api() {
-    return this.schema.api;
-  }
-
-  findAnnotation(predicate: (annot: Annotation) => boolean) {
-    return this.annotations.find(predicate);
-  }
-
   configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     const parserSettings = Object.assign({ options: this.api.options }, settings);
     this.parser.configure(parserSettings);
   }
-
+  type({alias = false}: {alias?: boolean} = {}) {
+    return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
+  }
+  isTypeOf(type: string) {
+    return this.parser.isTypeOf(type);
+  }
+  get api() {
+    return this.schema.api;
+  }
+  findAnnotation(predicate: (annot: Annotation) => boolean) {
+    return this.annotations.find(predicate);
+  }
   fields(opts: {
     include_parents?: boolean,
     include_navigation?: boolean
@@ -58,7 +53,6 @@ export class ODataStructuredType<T> {
     }
     return fields;
   }
-
   pick(value: { [name: string]: any }, opts: {
     include_parents?: boolean,
     include_navigation?: boolean,
@@ -74,7 +68,6 @@ export class ODataStructuredType<T> {
     }
     return attrs;
   }
-
   resolveKey(attrs: any): EntityKey<T> | undefined {
     let key = this.parser.keys()
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
@@ -88,7 +81,6 @@ export class ODataStructuredType<T> {
     }
     return !Types.isEmpty(key) ? key : undefined;
   }
-
   defaults() {
     return this.parser.defaults();
   }
@@ -96,7 +88,6 @@ export class ODataStructuredType<T> {
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     return this.parser.toJsonSchema(options);
   }
-
   validate(attrs: Partial<T>, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}) {
     return this.parser.validate(attrs, {create, patch});
   }

@@ -28,17 +28,25 @@ export class ODataParameterParser<T> {
 
 export class ODataCallableParser<R> implements Parser<R> {
   name: string;
-  type: string;
+  namespace: string;
+  alias?: string;
   return?: { type: string, callable?: boolean};
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
-  constructor(config: CallableConfig, namespace: string) {
+  constructor(config: CallableConfig, namespace: string, alias?: string) {
     this.name = config.name;
-    this.type = `${namespace}.${config.name}`;
+    this.namespace = namespace;
+    this.alias = alias;
     this.return = config.return;
     this.parser = NONE_PARSER;
     this.parameters = Object.entries(config.parameters || [])
       .map(([name, p]) => new ODataParameterParser(name, p as Parameter));
+  }
+  isTypeOf(type: string) {
+    var names = [`${this.namespace}.${this.name}`];
+    if (this.alias)
+      names.push(`${this.alias}.${this.name}`);
+    return names.indexOf(type) !== -1;
   }
 
   // Deserialize

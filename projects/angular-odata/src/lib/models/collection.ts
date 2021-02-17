@@ -184,9 +184,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   add(model: M): Observable<this> {
     const obs$ = (this._resource instanceof ODataNavigationPropertyResource) ?
-      this._resource.reference().add(model.resource() as ODataEntityResource<T>) :
-      EMPTY;
-    return obs$.pipe(map(() => {
+      this._resource.reference().add(model.resource() as ODataEntityResource<T>).pipe(map(() => model)) :
+      of(model);
+    return obs$.pipe(map((model) => {
+      if (this._resource instanceof ODataEntitySetResource) {
+        model.resource(this._resource.entity(model.toEntity()));
+      } else if (this._resource instanceof ODataNavigationPropertyResource) {
+        model.resource(this._resource.key(model.toEntity()));
+      }
       this._models.push({ model, key: model.key(), subscriptions: this._subscribe(model) });
       this.add$.emit([model]);
       return this;
@@ -196,9 +201,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   remove(model: M): Observable<this> {
     const key = model.key();
     const obs$ = (key !== undefined && this._resource instanceof ODataNavigationPropertyResource) ?
-      this._resource.reference().remove(model.resource() as ODataEntityResource<T>) :
-      EMPTY;
-    return obs$.pipe(map(() => {
+      this._resource.reference().remove(model.resource() as ODataEntityResource<T>).pipe(map(() => model)) :
+      of(model);
+    return obs$.pipe(map((model) => {
       const entry = this._models.find(m => m.model === model || (!Types.isEmpty(m.key) && Types.isEqual(m.key, key)));
       if (entry !== undefined) {
         const index = this._models.indexOf(entry);
@@ -213,10 +218,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   create(attrs: T = {} as T) {
     const model = this._modelFactory(attrs);
     return (model.valid() ? model.save() : of(model))
-      .pipe(
-        switchMap(model => this.add(model)),
-        map(() => model)
-      );
+      .pipe(tap(model => this.add(model)));
   }
 
   // Count
@@ -229,12 +231,26 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   assign(data: any[] = [], {reset = false}: { reset?: boolean } = {}) {
-    const models = data.map(e => this._modelFactory(e, {reset}));
-    this._models.forEach(e => e.subscriptions.forEach(s => s.unsubscribe()));
-    this._models = models.map(model => {
-      return { model, key: model.key(), subscriptions: this._subscribe(model) };
-    });
-    this.reset$.emit(models);
+    if (reset) {
+      this._models.forEach(e => e.subscriptions.forEach(s => s.unsubscribe()));
+      const models = data.map(e => this._modelFactory(e, {reset}));
+      this._models = models.map(model => {
+        return { model, key: model.key(), subscriptions: this._subscribe(model) };
+      });
+      this.reset$.emit(models);
+    } else {
+      data.forEach(attrs => {
+        const key = this.schema()?.resolveKey(attrs);
+        const entry = this._models.find(e => (!Types.isEmpty(e.key) && Types.isEqual(e.key, key)));
+        if (entry !== undefined) {
+          entry.model.assign(attrs, {reset});
+        } else {
+          const model = this._modelFactory(attrs, {reset});
+          this._models.push({ model, key: model.key(), subscriptions: this._subscribe(model) });
+          this.add$.emit([model]);
+        }
+      });
+    }
   }
   get query() {
     if (!this._resource)

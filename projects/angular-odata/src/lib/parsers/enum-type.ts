@@ -16,17 +16,25 @@ export class ODataEnumTypeFieldParser implements EnumTypeField {
 }
 export class ODataEnumTypeParser<T> implements Parser<T> {
   name: string;
-  type: string;
+  namespace: string;
+  alias?: string;
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
   fields: ODataEnumTypeFieldParser[];
-  constructor(config: EnumTypeConfig<T>, namespace: string) {
+  constructor(config: EnumTypeConfig<T>, namespace: string, alias?: string) {
     this.name = config.name;
-    this.type = `${namespace}.${config.name}`;
+    this.namespace = namespace;
+    this.alias = alias;
     this.flags = config.flags;
     this.members = config.members;
     this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataEnumTypeFieldParser(name, f as EnumTypeField));
+  }
+  isTypeOf(type: string) {
+    var names = [`${this.namespace}.${this.name}`];
+    if (this.alias)
+      names.push(`${this.alias}.${this.name}`);
+    return names.indexOf(type) !== -1;
   }
 
   // Deserialize
@@ -45,12 +53,12 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     if (this.flags) {
       let names = EnumHelper.toNames(this.members, value);
       if (!options.stringAsEnum)
-        names = names.map(name => `${this.type}'${name}'`)
+        names = names.map(name => `${this.namespace}.${this.name}'${name}'`)
       return names.join(", ");
     } else {
       let name = EnumHelper.toName(this.members, (<any>value) as number);
       if (!options.stringAsEnum)
-        name = `${this.type}'${name}'`;
+        name = `${this.namespace}.${this.name}'${name}'`;
       return name;
     }
   }

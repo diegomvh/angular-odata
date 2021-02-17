@@ -13,17 +13,15 @@ export class ODataEnumType<E> {
     this.schema = schema;
     this.name = config.name;
     this.members = config.members;
-    this.parser = new ODataEnumTypeParser<E>(config, schema.namespace);
+    this.parser = new ODataEnumTypeParser<E>(config, schema.namespace, schema.alias);
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
-
-  isTypeOf(type: string) {
-    var names = [`${this.schema.namespace}.${this.name}`];
-    if (this.schema.alias)
-      names.push(`${this.schema.alias}.${this.name}`);
-    return names.indexOf(type) !== -1;
+  type({alias = false}: {alias?: boolean} = {}) {
+    return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
-
+  isTypeOf(type: string) {
+    return this.parser.isTypeOf(type);
+  }
   get api() {
     return this.schema.api;
   }

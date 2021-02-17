@@ -190,7 +190,7 @@ export class ODataClient {
     const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path();
-      type = callable.parser.type;
+      type = callable.type();
     }
     return ODataActionResource.factory<P, R>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
@@ -206,7 +206,7 @@ export class ODataClient {
     const callable = api.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path();
-      type = callable.parser.type;
+      type = callable.type();
     }
     return ODataFunctionResource.factory<P, R>(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
