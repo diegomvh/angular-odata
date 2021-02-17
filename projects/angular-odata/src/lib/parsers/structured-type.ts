@@ -54,7 +54,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   validate(
     value: any,
     {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
-  ): {[key: string]: any[]} | {[key: string]: any[]}[] | string[] | undefined {
+  ): {[key: string]: any} | {[key: string]: any}[] | string[] | undefined {
     if (this.collection && Array.isArray(value)) {
       const errors = value.map(v => this.validate(v, {create, patch})) as {[key: string]: any[]}[];
       return !Types.isEmpty(errors) ? errors : undefined;
@@ -324,17 +324,13 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   validate(
     attrs: any,
     {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
-  ): {[key: string]: any[]} | undefined {
-    const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as {[key: string]: any[]};
+  ): {[key: string]: any} | undefined {
+    const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as {[key: string]: any };
     for (var field of this.fields) {
       const value = attrs[field.name as keyof T];
       const errs = field.validate(value, {create, patch});
-      if (Array.isArray(errs)) {
+      if (errs !== undefined) {
         errors[field.name] = errs;
-      } else if (errs !== undefined) {
-        Object.entries(errs).forEach(([key, value]) => {
-          errors[`${field.name}.${key}`] = value;
-        });
       }
     }
     return !Types.isEmpty(errors) ? errors : undefined;

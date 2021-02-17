@@ -220,16 +220,18 @@ describe('ODataClient', () => {
     const options = schema.api.options;
     options.stringAsEnum = false;
     expect(
-      schema.parser.validate(<Person>{
+      schema.parser.validate({
         FirstName: 'FirstName',
         LastName: 'LastName',
-        UserName: 'UserName',
         Emails: ["some@email.com", "other@email.com"],
-        Friends: [{FirstName: 'FirstName'} as Person],
+        Friends: [{FirstName: 'FirstName'} as Person, {FirstName: 'FirstName', LastName: 'LastName'}],
         Trips: [],
         Gender: PersonGender.Male,
       }, {create: true})
-    ).toEqual({});
+    ).toEqual({
+      UserName: [ 'required' ],
+      Friends: [ { UserName: [ 'required' ], LastName: [ 'required' ] }, { UserName: [ 'required' ] }]
+    });
   });
 
   it('should validate valid entity on create', () => {
@@ -259,8 +261,7 @@ describe('ODataClient', () => {
     const options = schema.api.options;
     options.stringAsEnum = false;
     expect(
-      schema.parser.validate(
-        <Person>{
+      schema.parser.validate({
           FirstName: 'FirstName',
           LastName: 'LastName',
         },
@@ -276,11 +277,10 @@ describe('ODataClient', () => {
     const options = schema.api.options;
     options.stringAsEnum = false;
     expect(
-      schema.parser.validate(<Person>{
+      schema.parser.validate({
         FirstName: 'FirstName',
         LastName: 'LastName',
         UserName: 'UserName',
-        Emails: [],
         Gender: PersonGender.Male,
       })
     ).toEqual({ Concurrency: ['required'] });
