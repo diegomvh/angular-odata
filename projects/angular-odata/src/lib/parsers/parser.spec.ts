@@ -4,6 +4,8 @@ import {
   Person,
   NAMESPACE,
   PersonGender,
+  Trip,
+  Photo,
 } from '../trippin.spec';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
@@ -209,6 +211,25 @@ describe('ODataClient', () => {
       Gender: ['mismatch'],
       Concurrency: ['required'],
     });
+  });
+
+  it('should validate entity with collection', () => {
+    const schema = client.structuredTypeForType<Person>(
+      `${NAMESPACE}.Person`
+    ) as ODataStructuredType<Person>;
+    const options = schema.api.options;
+    options.stringAsEnum = false;
+    expect(
+      schema.parser.validate(<Person>{
+        FirstName: 'FirstName',
+        LastName: 'LastName',
+        UserName: 'UserName',
+        Emails: ["some@email.com", "other@email.com"],
+        Friends: [{FirstName: 'FirstName'} as Person],
+        Trips: [],
+        Gender: PersonGender.Male,
+      }, {create: true})
+    ).toEqual({});
   });
 
   it('should validate valid entity on create', () => {

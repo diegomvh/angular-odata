@@ -51,13 +51,22 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   resolve(value: any) {
     return (this.ref || this.name).split('/').reduce((acc, name) => acc[name], value);
   }
-  validate(value: T, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}): { [name: string]: string[] } | string[] | undefined {
-    if (this.isComplexType()  && typeof value === 'object' && value !== null) {
-      return this.structured().validate(value as any, {create, patch}) || {} as { [name: string]: string[] };
+  validate(
+    value: any,
+    {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
+  ): {[key: string]: any[]} | {[key: string]: any[]}[] | string[] | undefined {
+    if (this.collection && Array.isArray(value)) {
+      const errors = value.map(v => this.validate(v, {create, patch})) as {[key: string]: any[]}[];
+      return !Types.isEmpty(errors) ? errors : undefined;
+    } else if (this.isNavigation() && value !== undefined) {
+      return this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
+    } else if (this.isComplexType() && typeof value === 'object' && value !== null) {
+      return this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
     }
     else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
       return this.enum().validate(value, {create, patch});
-    } else {
+    }
+    else {
       const errors = [];
       const computed = this.findAnnotation(a => a.type === "Org.OData.Core.V1.Computed");
       if (
@@ -312,8 +321,11 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     }, {}));
   }
 
-  validate(attrs: Partial<T>, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}): { [name: string]: string[] } | undefined {
-    const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as { [name: string]: string[] };
+  validate(
+    attrs: any,
+    {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
+  ): {[key: string]: any[]} | undefined {
+    const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as {[key: string]: any[]};
     for (var field of this.fields) {
       const value = attrs[field.name as keyof T];
       const errs = field.validate(value, {create, patch});
