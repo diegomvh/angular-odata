@@ -55,20 +55,20 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     value: any,
     {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
   ): {[key: string]: any} | {[key: string]: any}[] | string[] | undefined {
+    let errors;
     if (this.collection && Array.isArray(value)) {
-      const errors = value.map(v => this.validate(v, {create, patch})) as {[key: string]: any[]}[];
-      return !Types.isEmpty(errors) ? errors : undefined;
+      errors = value.map(v => this.validate(v, {create, patch})) as {[key: string]: any[]}[];
     } else if (this.isNavigation() && value !== undefined) {
-      return this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
+      errors = this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
     } else if (this.isComplexType() && typeof value === 'object' && value !== null) {
-      return this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
+      errors = this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
     }
     else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
-      return this.enum().validate(value, {create, patch});
+      errors = this.enum().validate(value, {create, patch});
     }
     else {
-      const errors = [];
       const computed = this.findAnnotation(a => a.type === "Org.OData.Core.V1.Computed");
+      errors = [];
       if (
         !this.nullable &&
         (value === null || (value === undefined && !patch)) && // Is null or undefined without patch flag?
@@ -79,8 +79,8 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
       if (this.maxLength !== undefined && typeof value === 'string' && value.length > this.maxLength) {
         errors.push(`maxlength`);
       }
-      return !Types.isEmpty(errors) ? errors : undefined;
     }
+    return !Types.isEmpty(errors) ? errors : undefined;
   }
 
   //#region Deserialize
