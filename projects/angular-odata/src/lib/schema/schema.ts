@@ -49,21 +49,22 @@ export class ODataSchema {
       .reduce(
         (acc, container) => [...acc, ...container.entitySets], [] as ODataEntitySet[]);
   }
+
   findAnnotation(predicate: (annot: Annotation) => boolean) {
     return this.annotations.find(predicate);
   }
 
   //#region Find for Type
-  public findEnumTypeForType(type: string) {
-    return this.enums.find(e => e.isTypeOf(type));
+  public findEnumTypeForType<T>(type: string) {
+    return this.enums.find(e => e.isTypeOf(type)) as ODataEnumType<T> | undefined;
   }
 
-  public findStructuredTypeForType(type: string) {
-    return this.entities.find(e => e.isTypeOf(type));
+  public findStructuredTypeForType<T>(type: string) {
+    return this.entities.find(e => e.isTypeOf(type)) as ODataStructuredType<T> | undefined;
   }
 
-  public findCallableForType(type: string) {
-    return this.callables.find(e => e.isTypeOf(type));
+  public findCallableForType<T>(type: string) {
+    return this.callables.find(e => e.isTypeOf(type)) as ODataCallable<T> | undefined;
   }
 
   public findEntitySetForType(type: string) {

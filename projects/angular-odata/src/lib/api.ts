@@ -83,15 +83,15 @@ export class ODataApi {
   }
 
   public findEnumTypeForType<T>(type: string) {
-    return this.findSchemaForType(type)?.findEnumTypeForType(type);
+    return this.findSchemaForType(type)?.findEnumTypeForType<T>(type);
   }
 
   public findStructuredTypeForType<T>(type: string) {
-    return this.findSchemaForType(type)?.findStructuredTypeForType(type);
+    return this.findSchemaForType(type)?.findStructuredTypeForType<T>(type);
   }
 
   public findCallableForType<T>(type: string) {
-    return this.findSchemaForType(type)?.findCallableForType(type);
+    return this.findSchemaForType(type)?.findCallableForType<T>(type);
   }
 
   public findEntitySetForType(type: string) {
@@ -99,23 +99,25 @@ export class ODataApi {
   }
   //#region Model and Collection for type
   public findModelForType(type: string) {
-    return this.findStructuredTypeForType(type)?.model as typeof ODataModel | undefined;
+    return this.findStructuredTypeForType<any>(type)?.model as typeof ODataModel | undefined;
   }
 
   public findCollectionForType(type: string) {
-    return this.findStructuredTypeForType(type)?.collection as typeof ODataCollection | undefined;
+    return this.findStructuredTypeForType<any>(type)?.collection as typeof ODataCollection | undefined;
   }
 
   public findServiceForType(type: string) {
     return this.findEntitySetForType(type)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
+
   //#region find Config for Entity Type
   public findServiceForEntityType(type: string) {
     return this.schemas.reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
       .find(e => e.entityType === type)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
+
   //#endregion
 
   //#region Find Config for Name
@@ -141,10 +143,10 @@ export class ODataApi {
 
   //#region Model and Collection for type
   public findModelByName(name: string) {
-    return this.findStructuredTypeByName(name)?.model as typeof ODataModel | undefined;
+    return this.findStructuredTypeByName<any>(name)?.model as typeof ODataModel | undefined;
   }
   public findCollectionByName(name: string) {
-    return this.findStructuredTypeByName(name)?.collection as typeof ODataCollection | undefined;
+    return this.findStructuredTypeByName<any>(name)?.collection as typeof ODataCollection | undefined;
   }
   public findServiceByName(name: string) {
     return this.findEntitySetByName(name)?.service as typeof ODataEntityService | undefined;
