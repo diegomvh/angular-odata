@@ -102,8 +102,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return new Model(attrs, { schema, meta, parse: reset }) as M;
   }
 
-  toEntities({ include_navigation = false, changes_only = false }: { include_navigation?: boolean, changes_only?: boolean } = {}) {
-    return this._models.map(m => m.model.toEntity({include_navigation, changes_only}));
+  toEntities({ include_navigation = false, changes_only = false, field_mapping = false}: { include_navigation?: boolean, changes_only?: boolean, field_mapping?: boolean } = {}) {
+    return this._models.map(m => m.model.toEntity({include_navigation, changes_only, field_mapping}));
   }
 
   clone() {
