@@ -34,7 +34,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
-    entities: Partial<T>[],
+    entities: Partial<T>[] | {[name: string]: any}[],
     {meta, reset = false}: { meta?: ODataEntitiesMeta, reset?: boolean} = {}
   ): C {
     let schema = this.schema;

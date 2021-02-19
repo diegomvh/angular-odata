@@ -30,7 +30,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  asModel<M extends ODataModel<R>>(entity: Partial<R>, {meta, reset}: { meta?: ODataEntityMeta, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<R>>(entity: Partial<R> | {[name: string]: any}, {meta, reset}: { meta?: ODataEntityMeta, reset?: boolean} = {}): M {
     let resource: ODataEntityResource<R> | undefined;
     // TODO: Structured Only?
     let schema: ODataStructuredType<R> | undefined;
@@ -42,13 +42,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     let path = meta?.context.entitySet;
     if (path !== undefined) {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), new ODataQueryOptions())
-        .entity(entity);
+        .entity(entity as Partial<R>);
     }
     return new Model(entity, {resource, schema, meta, reset}) as M;
   }
 
   asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
-    entities: Partial<R>[],
+    entities: Partial<R>[] | {[name: string]: any}[],
     {meta, reset=false}: {meta?: ODataEntitiesMeta, reset?: boolean} = {}
   ): C {
     let resource: ODataEntitySetResource<R> | undefined;

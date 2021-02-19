@@ -32,7 +32,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T>, {meta, reset}: { meta?: ODataEntityMeta, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {meta, reset}: { meta?: ODataEntityMeta, reset?: boolean} = {}): M {
     let schema = this.schema;
     if (meta?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(meta.type);

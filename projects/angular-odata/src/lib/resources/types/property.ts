@@ -37,7 +37,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
   ////#endregion
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T>, {meta, reset}: {meta?: ODataEntityMeta, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {meta, reset}: {meta?: ODataEntityMeta, reset?: boolean} = {}): M {
     let schema = this.schema;
     if (meta?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(meta.type);
@@ -47,7 +47,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
-    entities: Partial<T>[],
+    entities: Partial<T>[] | {[name: string]: any}[],
     {meta, reset}: { meta?: ODataEntitiesMeta, reset?: boolean} = {}
   ): C {
     let schema = this.schema;

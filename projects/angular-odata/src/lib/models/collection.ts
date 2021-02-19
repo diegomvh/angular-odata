@@ -188,9 +188,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       of(model);
     return obs$.pipe(map((model) => {
       if (this._resource instanceof ODataEntitySetResource) {
-        model.resource(this._resource.entity(model.toEntity()));
+        model.resource(this._resource.entity(model.toEntity({field_mapping: true}) as T));
       } else if (this._resource instanceof ODataNavigationPropertyResource) {
-        model.resource(this._resource.key(model.toEntity()));
+        model.resource(this._resource.key(model.toEntity({field_mapping: true}) as T));
       }
       this._models.push({ model, key: model.key(), subscriptions: this._subscribe(model) });
       this.add$.emit([model]);
