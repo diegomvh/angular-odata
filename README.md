@@ -75,20 +75,22 @@ export class AppComponent {
 
     let airports = airportsService.entities();
 
-    // Fetch all airports
-    airports
-    .fetchAll()
-    .subscribe(aports => console.log("All: ", aports));
-
     // Fetch airports with count
     airports
     .get({withCount: true})
     .subscribe(({entities, meta}) => console.log("Airports: ", entities, "Annotations: ", meta));
 
+    // Fetch all airports
+    airports
+    .fetchAll()
+    .subscribe(aports => console.log("All: ", aports));
+
     // Fetch airport with key
     airports
-    .entity("CYYZ").get()
-    .pipe(switchMap(() => airports.entity("CYYZ").get({fetchPolicy: 'cache-first'}))) // From Cache!
+    .entity("CYYZ")
+    .get()
+    .pipe(
+      switchMap(() => airports.entity("CYYZ").get({fetchPolicy: 'cache-first'}))) // From Cache!
     .subscribe(({entity, meta}) => console.log("Airport: ", entity, "Annotations: ", meta));
 
     // Filter airports (inmutable resource)
