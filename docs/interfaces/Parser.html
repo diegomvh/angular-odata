@@ -118,8 +118,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="145"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:145</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="153"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:153</a></div>
                 </td>
             </tr>
 
@@ -200,8 +200,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="146"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:146</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="154"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:154</a></div>
                 </td>
             </tr>
 
@@ -395,8 +395,16 @@ export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
-  preferMaxPageSize?: number;
-  preferReturn?: &#x27;representation&#x27; | &#x27;minimal&#x27;;
+  //Headers
+  //http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793609
+  etag?: {
+    ifMatch?: boolean,
+    ifNoneMatch?:boolean
+  };
+  prefer?: {
+    maxPageSize?: number,
+    return?: &#x27;representation&#x27; | &#x27;minimal&#x27;
+  };
   fetchPolicy?: FetchPolicy;
 }
 
@@ -487,11 +495,11 @@ export type Parameter &#x3D; {
 
 export type CallableConfig &#x3D; {
   name: string;
-  path?: string;
+  entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
   parameters?: { [name: string]: Parameter };
-  return?: string;
+  return?: {type: string, collection?: boolean};
 }
 export type EntitySetConfig &#x3D; {
   name: string;

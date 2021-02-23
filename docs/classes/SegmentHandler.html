@@ -138,7 +138,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:111</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="112" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:112</a></div>
                             </td>
                         </tr>
 
@@ -204,8 +204,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="151"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:151</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="152"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:152</a></div>
                 </td>
             </tr>
 
@@ -286,8 +286,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="136"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:136</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:137</a></div>
                 </td>
             </tr>
 
@@ -325,8 +325,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="146"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:146</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="147"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:147</a></div>
                 </td>
             </tr>
 
@@ -357,15 +357,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>key(value?: T)</code>
+<code>key(value?: <a href="../undefineds/EntityKey.html">EntityKey<T></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="130"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:130</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="131"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:131</a></div>
                 </td>
             </tr>
 
@@ -395,7 +395,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                            <code>T</code>
+                                                <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -410,7 +410,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>T</code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -442,8 +442,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="140"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:140</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="141"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:141</a></div>
                 </td>
             </tr>
 
@@ -520,8 +520,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="124"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:124</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:125</a></div>
                 </td>
             </tr>
 
@@ -590,8 +590,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="118"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:118</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="119"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:119</a></div>
                 </td>
             </tr>
 
@@ -664,7 +664,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="114" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:114</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:115</a></div>
                                 </td>
                             </tr>
 
@@ -682,6 +682,7 @@ import { PlainObject } from &#x27;./builder&#x27;;
 import { Types, Dates } from &#x27;../utils&#x27;;
 
 import { PATH_SEPARATOR } from &#x27;../constants&#x27;;
+import { EntityKey } from &#x27;../types&#x27;;
 
 export enum PathSegmentNames {
   batch &#x3D; &#x27;batch&#x27;,
@@ -804,10 +805,10 @@ export class SegmentHandler {
     return this.segment.path;
   }
 
-  key&lt;T&gt;(value?: T) {
+  key&lt;T&gt;(value?: EntityKey&lt;T&gt;) {
     if (value !&#x3D;&#x3D; undefined)
       this.segment.key &#x3D; value;
-    return this.segment.key as T;
+    return this.segment.key as EntityKey&lt;T&gt;;
   }
 
   hasKey() {

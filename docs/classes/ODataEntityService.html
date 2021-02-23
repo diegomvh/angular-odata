@@ -269,7 +269,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>M</code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                     <div class="io-description">
@@ -420,7 +420,7 @@ export abstract class ODataEntityService&lt;T&gt; {
   constructor(protected client: ODataClient, protected name: string, protected apiNameOrEntityType?: string) { }
 
   public abstract entity(key?: EntityKey&lt;T&gt;): ODataResource&lt;T&gt;;
-  public abstract attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): M;
+  public abstract attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): void;
 
   // Api Config
   get api() {

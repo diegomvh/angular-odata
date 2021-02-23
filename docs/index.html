@@ -88,20 +88,22 @@ export class AppComponent {
 
     let airports = airportsService.entities();
 
-    // Fetch all airports
-    airports
-    .fetchAll()
-    .subscribe(aports =&gt; console.log(&quot;All: &quot;, aports));
-
     // Fetch airports with count
     airports
     .get({withCount: true})
     .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, meta));
 
+    // Fetch all airports
+    airports
+    .fetchAll()
+    .subscribe(aports =&gt; console.log(&quot;All: &quot;, aports));
+
     // Fetch airport with key
     airports
-    .entity(&quot;CYYZ&quot;).get()
-    .pipe(switchMap(() =&gt; airports.entity(&quot;CYYZ&quot;).get({fetchPolicy: &#39;cache-first&#39;}))) // From Cache!
+    .entity(&quot;CYYZ&quot;)
+    .get()
+    .pipe(
+      switchMap(() =&gt; airports.entity(&quot;CYYZ&quot;).get({fetchPolicy: &#39;cache-first&#39;}))) // From Cache!
     .subscribe(({entity, meta}) =&gt; console.log(&quot;Airport: &quot;, entity, &quot;Annotations: &quot;, meta));
 
     // Filter airports (inmutable resource)
@@ -186,7 +188,7 @@ export class AppModule {}</code></pre></div><h2 id="odata-version">OData Version
 
 
 
-
+                   
 
 
 

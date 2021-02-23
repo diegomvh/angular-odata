@@ -14784,8 +14784,8 @@ export class ODataClient {
     let type;
     const callable &#x3D; api.findCallableForType(path);
     if (callable !&#x3D;&#x3D; undefined) {
-      path &#x3D; callable.path;
-      type &#x3D; callable.parser.type;
+      path &#x3D; callable.path();
+      type &#x3D; callable.type();
     }
     return ODataActionResource.factory&lt;P, R&gt;(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }
@@ -14800,8 +14800,8 @@ export class ODataClient {
     let type;
     const callable &#x3D; api.findCallableForType(path);
     if (callable !&#x3D;&#x3D; undefined) {
-      path &#x3D; callable.path;
-      type &#x3D; callable.parser.type;
+      path &#x3D; callable.path();
+      type &#x3D; callable.type();
     }
     return ODataFunctionResource.factory&lt;P, R&gt;(api, path, type, new ODataPathSegments(), new ODataQueryOptions());
   }

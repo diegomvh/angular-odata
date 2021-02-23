@@ -207,7 +207,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>M</code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                     <div class="io-description">
@@ -335,7 +335,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>M</code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                     <div class="io-description">
@@ -471,8 +471,8 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   }
 
   // Models
-  public attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): M {
-    return value.attach(this.entity());
+  public attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M) {
+    value.resource(this.entity());
   }
   // Service Config
   get singletonSchema() {

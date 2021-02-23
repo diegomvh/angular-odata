@@ -87,6 +87,9 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                <a href="#etag">etag</a>
+                            </li>
+                            <li>
                                 <a href="#fetchPolicy">fetchPolicy</a>
                             </li>
                             <li>
@@ -105,11 +108,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#preferMaxPageSize">preferMaxPageSize</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#preferReturn">preferReturn</a>
+                                <a href="#prefer">prefer</a>
                             </li>
                             <li>
                                     <span class="modifier">Optional</span>
@@ -164,7 +163,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/options.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/options.ts:23</a></div>
                             </td>
                         </tr>
 
@@ -207,6 +206,38 @@
         <h3 id="inputs">
             Properties
         </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="etag"></a>
+                        <span class="name">
+                            <b>
+                            etag</b>
+                            <a href="#etag"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>literal type</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{ifMatch: true, ifNoneMatch: false}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/options.ts:16</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
         <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
@@ -348,52 +379,24 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="preferMaxPageSize"></a>
+                        <a name="prefer"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Optional</span>
-                            preferMaxPageSize</b>
-                            <a href="#preferMaxPageSize"><span class="icon ion-ios-link"></span></a>
+                            prefer</b>
+                            <a href="#prefer"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                            <i>Type : </i>    <code>literal type</code>
 
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/options.ts:17</a></div>
-                            </td>
-                        </tr>
-
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="preferReturn"></a>
-                        <span class="name">
-                            <b>
-                                <span class="modifier">Optional</span>
-                            preferReturn</b>
-                            <a href="#preferReturn"><span class="icon ion-ios-link"></span></a>
-                        </span>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <i>Type : </i>    <code>&quot;representation&quot; | &quot;minimal&quot;</code>
-
-                        </td>
-                    </tr>
-                        <tr>
-                            <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/options.ts:16</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/options.ts:20</a></div>
                             </td>
                         </tr>
 
@@ -539,7 +542,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/options.ts:32</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/options.ts:38</a></div>
                                 </td>
                             </tr>
 
@@ -565,8 +568,14 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   params: { [param: string]: string | string[] };
   headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
-  preferReturn?: &#x27;representation&#x27; | &#x27;minimal&#x27;;
-  preferMaxPageSize?: number;
+  etag: {
+    ifMatch: boolean;
+    ifNoneMatch: boolean;
+  } &#x3D; {ifMatch: true, ifNoneMatch: false};
+  prefer?: {
+    maxPageSize?: number;
+    return?: &#x27;representation&#x27; | &#x27;minimal&#x27;;
+  };
 
   constructor(config: ApiOptions) {
     this.version &#x3D; config.version || DEFAULT_VERSION;
@@ -577,8 +586,8 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.headers &#x3D; config.headers || {};
     this.withCredentials &#x3D; config.withCredentials;
     this.fetchPolicy &#x3D; config.fetchPolicy || DEFAULT_FETCH_POLICY;
-    this.preferReturn &#x3D; config.preferReturn;
-    this.preferMaxPageSize &#x3D; config.preferMaxPageSize;
+    this.prefer &#x3D; config.prefer;
+    Object.assign(this.etag, config.etag || {});
   }
 
   get helper() {
