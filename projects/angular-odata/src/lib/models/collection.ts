@@ -1,5 +1,5 @@
-import { map, switchMap, tap } from 'rxjs/operators';
-import { Observable, EMPTY, NEVER, of, Subscription, merge, throwError } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { Observable, NEVER, of, Subscription, merge, throwError } from 'rxjs';
 
 import {
   ODataEntitySetResource,
@@ -17,14 +17,13 @@ import {
   Select
 } from '../resources/index';
 
-import { ODataModel } from './model';
+import { ODataCallableHttpOptions, ODataModel } from './model';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema/structured-type';
 import { EntityKey } from '../types';
 import { Types } from '../utils/types';
 
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
-export type ODataCollectionCallableOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   private _resource?: ODataCollectionResource<T>;
@@ -151,7 +150,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   // Requests
-  private _request(resource: ODataCollectionResource<T>, obs$: Observable<ODataEntities<any>>): Observable<this> {
+  private _request(obs$: Observable<ODataEntities<any>>): Observable<this> {
     this.request$.emit(obs$);
     return obs$.pipe(
       map(({ entities, meta }) => {
@@ -184,7 +183,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         obs$ = resource.get(
           Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{ responseType: 'entities', withCount }, options ));
       }
-      return this._request(resource, obs$);
+      return this._request(obs$);
     }
     return throwError("Resource Error");
   }
@@ -196,7 +195,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         obs$ = resource.fetchAll(options)
           .pipe(map(entities => ({ entities, meta: new ODataEntitiesMeta({}, { options: resource?.api.options }) })));
       }
-      return this._request(resource, obs$);
+      return this._request(obs$);
     }
     return throwError("Resource Error");
   }
@@ -280,7 +279,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCollectionCallableOptions<R> = {}
+    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
   ) {
     if (expand !== undefined)
       resource.query.expand(expand);
@@ -302,7 +301,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCollectionCallableOptions<R> = {}
+    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     if (this._resource instanceof ODataEntitySetResource) {
       const resource = this._resource.function<P, R>(name);
@@ -315,7 +314,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCollectionCallableOptions<R> = {}
+    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     if (this._resource instanceof ODataEntitySetResource) {
       const resource = this._resource.action<P, R>(name);
@@ -324,10 +323,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     throw new Error(`Can't action without ODataEntitySetResource`);
   }
 
-  private _subscribe<E>(model: M) {
+  private _subscribe(model: M) {
     const subscriptions = [];
     subscriptions.push(
-      model.change$.subscribe((event: { attribute: string, value: any, previous?: any }) => this.change$.emit([model]))
+      model.change$.subscribe(() => this.change$.emit([model]))
     );
     subscriptions.push(
       model.destroy$.subscribe(() => this.remove(model))

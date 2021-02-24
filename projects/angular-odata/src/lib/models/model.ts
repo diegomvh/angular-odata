@@ -25,7 +25,7 @@ import { ODataStructuredType } from '../schema';
 import { ODataStructuredTypeFieldParser } from '../parsers';
 
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
-export type ODataModelCallableOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
+export type ODataCallableHttpOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
 
 export function ODataModelField({ name }: { name?: string } = {}) {
   return (target: any, propertyKey: string): void => {
@@ -536,7 +536,7 @@ export class ODataModel<T> {
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataModelCallableOptions<R> = {}
+    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
   ) {
     if (expand !== undefined)
       resource.query.expand(expand);
@@ -558,7 +558,7 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataModelCallableOptions<R> = {}
+    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
     if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
@@ -571,7 +571,7 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataModelCallableOptions<R> = {}
+    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
     const key = this.key();
