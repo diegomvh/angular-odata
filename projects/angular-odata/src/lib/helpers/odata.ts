@@ -1,7 +1,49 @@
-import { ODataContext, ODataVersionHelper } from '../types';
 import { VERSION_3_0, VERSION_2_0, VERSION_4_0, $COUNT, $INLINECOUNT } from '../constants';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
+
+export type ODataContext = {
+  serviceRootUrl?: string;
+  metadataUrl?: string;
+  entitySet?: string;
+  key?: string;
+  type?: string;
+  property?: string;
+  //entity?: boolean;
+}
+
+export interface ODataVersionHelper {
+  VALUE: string;
+  ODATA_ANNOTATION_PREFIX: string;
+  ODATA_FUNCTION_PREFIX: string;
+  ODATA_ID: string;
+  ODATA_COUNT: string;
+  ODATA_ETAG: string;
+  ODATA_CONTEXT: string;
+  ODATA_MEDIA_ETAG: string;
+  entity(value: {[name: string]: any}, context: ODataContext): any;
+  entities(value: {[name: string]: any}, context: ODataContext): any;
+  property(value: {[name: string]: any}, context: ODataContext): any;
+  annotations(value: {[name: string]: any}): {[name: string]: any};
+  attributes(value: {[name: string]: any}): {[name: string]: any};
+  id(value: {[name: string]: any}, id?: string): string | undefined;
+  etag(value: {[name: string]: any}, etag?: string): string | undefined;
+  context(value: {[name: string]: any}): ODataContext;
+  functions(value: {[name: string]: any}): {[name: string]: any};
+  properties(value: {[name: string]: any}): {[name: string]: any};
+  mediaEtag(value: {[name: string]: any}): string | undefined;
+  metadataEtag(value: {[name: string]: any}): string | undefined;
+  type(value: {[name: string]: any}): string | undefined;
+  nextLink(value: {[name: string]: any}): string | undefined;
+  readLink(value: {[name: string]: any}): string | undefined;
+  mediaReadLink(value: {[name: string]: any}): string | undefined;
+  editLink(value: {[name: string]: any}): string | undefined;
+  mediaEditLink(value: {[name: string]: any}): string | undefined;
+  mediaContentType(value: {[name: string]: any}): string | undefined;
+  deltaLink(value: {[name: string]: any}): string | undefined;
+  count(value: {[name: string]: any}): number | undefined;
+  countParam(): {[name: string]: string};
+}
 
 const ODataVersionBaseHelper = <any>{
   entity(data: { [name: string]: any }, context: ODataContext) { return data; },
@@ -139,6 +181,7 @@ export const ODataHelper = {
     //http://nb-mdp-dev01:57970/$metadata#juzgados
     //http://nb-mdp-dev01:57970/$metadata#Collection(SIU.Recursos.RecursoEntry)
     //http://nb-mdp-dev01:57970/$metadata#categorias/$entity
+    //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
     context(value: { [name: string]: any }) {
@@ -151,12 +194,12 @@ export const ODataHelper = {
         ctx.metadataUrl = str.substr(0, index);
         const parts = str.substr(index + 1).split("/");
         const col = COLLECTION.exec(parts[0]);
-        if (col)
+        if (col) {
           ctx.type = col[1];
-        else if (parts[0].indexOf('.') !== -1) {
+        } else if (parts[0].indexOf('.') !== -1) {
           ctx.type = parts[0];
         } else {
-          const prop = parts[0].match(/([\w\d\-_]+)\(([\w\d\-_]+)\)/);
+          const prop = parts[0].match(/([\w\d\-_]+)\(([\(\)\w\d\-_]+)\)/);
           if (prop) {
             ctx.entitySet = prop[1];
             ctx.key = prop[2];

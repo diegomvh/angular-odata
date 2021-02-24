@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { DEFAULT_VERSION } from '../../constants';
-import { ODataHelper } from '../../helpers';
-import { ODataContext, OptionsHelper } from '../../types';
+import { ODataContext, ODataHelper } from '../../helpers';
+import { OptionsHelper } from '../../types';
 
 export abstract class ODataMeta {
   annotations: Object;
