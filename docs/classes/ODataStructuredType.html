@@ -496,8 +496,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="84"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:84</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:86</a></div>
                 </td>
             </tr>
 
@@ -837,8 +837,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:72</a></div>
                 </td>
             </tr>
 
@@ -907,8 +907,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="88"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:88</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="90"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:90</a></div>
                 </td>
             </tr>
 
@@ -1054,8 +1054,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="91"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:91</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:93</a></div>
                 </td>
             </tr>
 
@@ -1226,6 +1226,7 @@ export class ODataStructuredType&lt;T&gt; {
     }
     return attrs;
   }
+
   resolveKey(attrs: any): EntityKey&lt;T&gt; | undefined {
     let key &#x3D; this.parser.keys()
       .reduce((acc, f) &#x3D;&gt; Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
@@ -1239,6 +1240,7 @@ export class ODataStructuredType&lt;T&gt; {
     }
     return !Types.isEmpty(key) ? key : undefined;
   }
+
   defaults() {
     return this.parser.defaults();
   }

@@ -133,7 +133,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:41</a></div>
                             </td>
                         </tr>
 
@@ -195,7 +195,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:36</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:40</a></div>
                             </td>
                         </tr>
 
@@ -222,7 +222,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:35</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:39</a></div>
                             </td>
                         </tr>
 
@@ -250,7 +250,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:37</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:41</a></div>
                             </td>
                         </tr>
 
@@ -286,8 +286,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:55</a></div>
                 </td>
             </tr>
 
@@ -356,8 +356,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="59"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:59</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:63</a></div>
                 </td>
             </tr>
 
@@ -434,8 +434,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="42"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:42</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="46"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:46</a></div>
                 </td>
             </tr>
 
@@ -515,7 +515,9 @@ import {
   ODataEntity,
   ODataSingletonResource,
   ODataActionResource,
-  ODataFunctionResource
+  ODataFunctionResource,
+  Expand,
+  Select
 } from &#x27;../resources/index&#x27;;
 
 import { ODataCollection } from &#x27;./collection&#x27;;
@@ -524,7 +526,9 @@ import { Objects } from &#x27;../utils&#x27;;
 import { EventEmitter } from &#x27;@angular/core&#x27;;
 import { ODataStructuredType } from &#x27;../schema&#x27;;
 import { ODataStructuredTypeFieldParser } from &#x27;../parsers&#x27;;
+
 export type ODataModelResource&lt;T&gt; &#x3D; ODataEntityResource&lt;T&gt; | ODataSingletonResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt;;
+export type ODataCallableHttpOptions&lt;T&gt; &#x3D; HttpOptions &amp; { expand?: Expand&lt;T&gt;, select?: Select&lt;T&gt;, options?: HttpOptions };
 
 export function ODataModelField({ name }: { name?: string } &#x3D; {}) {
   return (target: any, propertyKey: string): void &#x3D;&gt; {
@@ -567,21 +571,23 @@ class ODataModelProperty&lt;F&gt; {
     reset?: boolean
   }): ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; {
 
+    if (this.parser &#x3D;&#x3D;&#x3D; undefined) {
+      throw new Error(&quot;No Parser&quot;);
+    }
     // Data
-    const data &#x3D; this.parser?.collection ?
+    const data &#x3D; this.parser.collection ?
       (value || []) as F[] :
       (value || {}) as F;
 
     const meta &#x3D; this.metaFactory(baseMeta);
-    const resource &#x3D; this.resourceFactory&lt;T, F&gt;(baseResource) as ODataNavigationPropertyResource&lt;F&gt; | ODataPropertyResource&lt;F&gt;;
+    let resource &#x3D; this.resourceFactory&lt;T, F&gt;(baseResource) as ODataNavigationPropertyResource&lt;F&gt; | ODataPropertyResource&lt;F&gt;;
 
-    return (
-      this.parser !&#x3D;&#x3D; undefined &amp;&amp;
-      this.parser.collection) ?
+    return this.parser.collection ?
         resource.asCollection(data as F[], { meta: meta as ODataEntitiesMeta, reset }) :
         resource.asModel(data as F, { meta: meta as ODataEntityMeta, reset });
   }
 }
+
 type ODataModelRelation &#x3D; {
   model: ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt; | null,
   property: ODataModelProperty&lt;any&gt;,
@@ -988,7 +994,7 @@ export class ODataModel&lt;T&gt; {
   }
 
   save(
-    { patch &#x3D; false, validate &#x3D; true, ...options }: HttpOptions &amp; { patch?: boolean, validate?: boolean } &#x3D; {}
+    { patch &#x3D; false, validate &#x3D; true, ...options }: HttpOptions &amp; { patch?: boolean, validate?: boolean, options?: HttpOptions } &#x3D; {}
   ): Observable&lt;this&gt; {
     let resource &#x3D; this.resource();
     if (resource !&#x3D;&#x3D; undefined) {
@@ -1033,8 +1039,12 @@ export class ODataModel&lt;T&gt; {
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    options?: HttpOptions
+    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
   ) {
+    if (expand !&#x3D;&#x3D; undefined)
+      resource.query.expand(expand);
+    if (select !&#x3D;&#x3D; undefined)
+      resource.query.select(select);
     switch (responseType) {
       case &#x27;property&#x27;:
         return resource.callProperty(params, options);
@@ -1051,11 +1061,11 @@ export class ODataModel&lt;T&gt; {
     name: string,
     params: P | null,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    options?: HttpOptions
+    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
   ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
     let resource &#x3D; this.resource();
     if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.function&lt;P, R&gt;(name), responseType, options);
+      return this._call(params, resource.function&lt;P, R&gt;(name), responseType, {expand, select, ...options});
     }
     return throwError(&quot;Can&#x27;t call function without ODataEntityResource with key&quot;);
   }
@@ -1064,12 +1074,12 @@ export class ODataModel&lt;T&gt; {
     name: string,
     params: P | null,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    options?: HttpOptions
+    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
   ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
     let resource &#x3D; this.resource();
     const key &#x3D; this.key();
     if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.action&lt;P, R&gt;(name), responseType, options);
+      return this._call(params, resource.action&lt;P, R&gt;(name), responseType, {expand, select, ...options});
     }
     return throwError(&quot;Can&#x27;t call action without ODataEntityResource with key&quot;);
   }
