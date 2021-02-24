@@ -139,24 +139,6 @@ describe('ODataQueryOptions', () => {
     expect(queryOptions.toString()).toEqual('$format=json');
   });
 
-  it('test customOption', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
-    queryOptions.option(QueryOptionNames.custom, undefined);
-    expect(queryOptions.toString()).toEqual('');
-    //
-    queryOptions.option(QueryOptionNames.custom, {key: undefined});
-    expect(queryOptions.toString()).toEqual('');
-    //
-    queryOptions.option(QueryOptionNames.custom, {key: null});
-    expect(queryOptions.toString()).toEqual('');
-    //
-    queryOptions.option(QueryOptionNames.custom, {key: 'value'});
-    expect(queryOptions.toString()).toEqual('key=' + encodeURIComponent('value'));
-    //
-    queryOptions.option(QueryOptionNames.custom, {key: 'value', key2: 'value2'});
-    expect(queryOptions.toString()).toEqual('key=' + encodeURIComponent('value') + '&key2=' + encodeURIComponent('value2'));
-  });
-
   it('test toString', () => {
     const queryOptions: ODataQueryOptions = new ODataQueryOptions();
     queryOptions.option(QueryOptionNames.select, ['value']);
