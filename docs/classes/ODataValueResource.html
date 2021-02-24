@@ -110,12 +110,6 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#arraybuffer">arraybuffer</a>
-                            </li>
-                            <li>
-                                <a href="#blob">blob</a>
-                            </li>
-                            <li>
                                 <a href="#clone">clone</a>
                             </li>
                             <li>
@@ -123,7 +117,13 @@
                                 <a href="#factory">factory</a>
                             </li>
                             <li>
-                                <a href="#get">get</a>
+                                <a href="#fetch">fetch</a>
+                            </li>
+                            <li>
+                                <a href="#fetchArraybuffer">fetchArraybuffer</a>
+                            </li>
+                            <li>
+                                <a href="#fetchBlob">fetchBlob</a>
                             </li>
                             <li>
                                 <a href="#alias">alias</a>
@@ -225,7 +225,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:29</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:25</a></code>
 </div>
                             </td>
                         </tr>
@@ -260,7 +260,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:30</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:26</a></code>
 </div>
                             </td>
                         </tr>
@@ -295,7 +295,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:31</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:27</a></code>
 </div>
                             </td>
                         </tr>
@@ -310,146 +310,6 @@
     <h3 id="methods">
         Methods
     </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="arraybuffer"></a>
-                    <span class="name">
-                        <b>
-                            arraybuffer
-                        </b>
-                        <a href="#arraybuffer"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>arraybuffer(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="26"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/value.ts:26</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="blob"></a>
-                    <span class="name">
-                        <b>
-                            blob
-                        </b>
-                        <a href="#blob"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>blob(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/value.ts:32</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -609,18 +469,166 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="get"></a>
+                    <a name="fetch"></a>
                     <span class="name">
                         <b>
-                            get
+                            fetch
                         </b>
-                        <a href="#get"><span class="icon ion-ios-link"></span></a>
+                        <a href="#fetch"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+<code>fetch(options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="26"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/value.ts:26</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchArraybuffer"></a>
+                    <span class="name">
+                        <b>
+                            fetchArraybuffer
+                        </b>
+                        <a href="#fetchArraybuffer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fetchArraybuffer(options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="32"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/value.ts:32</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;ArrayBuffer&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fetchBlob"></a>
+                    <span class="name">
+                        <b>
+                            fetchBlob
+                        </b>
+                        <a href="#fetchBlob"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fetchBlob(options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
@@ -644,6 +652,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -654,9 +663,12 @@
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -665,7 +677,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;Blob&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -703,7 +715,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:114</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:110</a></code>
 </div>
                 </td>
             </tr>
@@ -793,7 +805,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:91</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:87</a></code>
 </div>
                 </td>
             </tr>
@@ -803,7 +815,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;Type&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;T&gt;</a></code>
 
                     </div>
                 </td>
@@ -840,7 +852,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:210</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:207</a></code>
 </div>
                 </td>
             </tr>
@@ -916,7 +928,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:79</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:75</a></code>
 </div>
                 </td>
             </tr>
@@ -963,7 +975,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:180</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:176</a></code>
 </div>
                 </td>
             </tr>
@@ -1039,7 +1051,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:57</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:53</a></code>
 </div>
                 </td>
             </tr>
@@ -1117,7 +1129,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:202</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:199</a></code>
 </div>
                 </td>
             </tr>
@@ -1210,7 +1222,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:68</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:64</a></code>
 </div>
                 </td>
             </tr>
@@ -1248,7 +1260,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:187</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:184</a></code>
 </div>
                 </td>
             </tr>
@@ -1343,7 +1355,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:194</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:191</a></code>
 </div>
                 </td>
             </tr>
@@ -1438,7 +1450,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:119</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:115</a></code>
 </div>
                 </td>
             </tr>
@@ -1525,7 +1537,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:93</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:89</a></code>
 </div>
                 </td>
             </tr>
@@ -1601,7 +1613,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:107</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:103</a></code>
 </div>
                 </td>
             </tr>
@@ -1646,7 +1658,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:83</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:79</a></code>
 </div>
                 </td>
             </tr>
@@ -1691,7 +1703,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:46</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:42</a></code>
 </div>
                 </td>
             </tr>
@@ -1742,7 +1754,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:53</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:49</a></code>
 </div>
                 </td>
             </tr>
@@ -1800,21 +1812,21 @@ export class ODataValueResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   //#endregion
 
   //#region Requests
-  arraybuffer(options?: HttpOptions): Observable&lt;ArrayBuffer&gt; {
+  fetch(options: HttpOptions &#x3D; {}): Observable&lt;T&gt; {
     return super.get(
-      Object.assign&lt;HttpOptions, HttpOptions&gt;(&lt;HttpOptions&gt;{ responseType: &#x27;arraybuffer&#x27; }, options || {})
+      Object.assign&lt;HttpOptions, HttpOptions&gt;(&lt;HttpOptions&gt;{ responseType: &#x27;value&#x27; }, options)
     );
   }
 
-  blob(options?: HttpOptions): Observable&lt;Blob&gt; {
+  fetchArraybuffer(options: HttpOptions &#x3D; {}): Observable&lt;ArrayBuffer&gt; {
     return super.get(
-      Object.assign&lt;HttpOptions, HttpOptions&gt;(&lt;HttpOptions&gt;{ responseType: &#x27;blob&#x27; }, options || {})
+      Object.assign&lt;HttpOptions, HttpOptions&gt;(&lt;HttpOptions&gt;{ responseType: &#x27;arraybuffer&#x27; }, options)
     );
   }
 
-  get(options?: HttpOptions): Observable&lt;T&gt; {
+  fetchBlob(options: HttpOptions &#x3D; {}): Observable&lt;Blob&gt; {
     return super.get(
-      Object.assign&lt;HttpOptions, HttpOptions&gt;(&lt;HttpOptions&gt;{ responseType: &#x27;value&#x27; }, options || {})
+      Object.assign&lt;HttpOptions, HttpOptions&gt;(&lt;HttpOptions&gt;{ responseType: &#x27;blob&#x27; }, options)
     );
   }
   //#endregion

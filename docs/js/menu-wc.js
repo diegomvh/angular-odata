@@ -272,6 +272,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataModel.html" data-type="entity-link">ODataModel</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataModelOptions.html" data-type="entity-link">ODataModelOptions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataModelProperty.html" data-type="entity-link">ODataModelProperty</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataNavigationPropertyResource.html" data-type="entity-link">ODataNavigationPropertyResource</a>
                             </li>
                             <li class="link">

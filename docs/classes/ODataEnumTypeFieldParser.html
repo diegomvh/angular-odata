@@ -371,23 +371,31 @@ export class ODataEnumTypeFieldParser implements EnumTypeField {
     return this.annotations.find(predicate);
   }
 }
-export class ODataEnumTypeParser&lt;Type&gt; implements Parser&lt;Type&gt; {
+export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
   name: string;
-  type: string;
+  namespace: string;
+  alias?: string;
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
   fields: ODataEnumTypeFieldParser[];
-  constructor(config: EnumTypeConfig&lt;Type&gt;, namespace: string) {
+  constructor(config: EnumTypeConfig&lt;T&gt;, namespace: string, alias?: string) {
     this.name &#x3D; config.name;
-    this.type &#x3D; &#x60;${namespace}.${config.name}&#x60;;
+    this.namespace &#x3D; namespace;
+    this.alias &#x3D; alias;
     this.flags &#x3D; config.flags;
     this.members &#x3D; config.members;
     this.fields &#x3D; Object.entries(config.fields)
       .map(([name, f]) &#x3D;&gt; new ODataEnumTypeFieldParser(name, f as EnumTypeField));
   }
+  isTypeOf(type: string) {
+    var names &#x3D; [&#x60;${this.namespace}.${this.name}&#x60;];
+    if (this.alias)
+      names.push(&#x60;${this.alias}.${this.name}&#x60;);
+    return names.indexOf(type) !&#x3D;&#x3D; -1;
+  }
 
   // Deserialize
-  deserialize(value: string, options: OptionsHelper): Type {
+  deserialize(value: string, options: OptionsHelper): T {
     // string -&gt; Type
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) &#x3D;&gt; acc | v, 0) as any;
@@ -397,17 +405,17 @@ export class ODataEnumTypeParser&lt;Type&gt; implements Parser&lt;Type&gt; {
   }
 
   // Serialize
-  serialize(value: Type, options: OptionsHelper): string {
+  serialize(value: T, options: OptionsHelper): string {
     // Type -&gt; string
     if (this.flags) {
       let names &#x3D; EnumHelper.toNames(this.members, value);
       if (!options.stringAsEnum)
-        names &#x3D; names.map(name &#x3D;&gt; &#x60;${this.type}&#x27;${name}&#x27;&#x60;)
+        names &#x3D; names.map(name &#x3D;&gt; &#x60;${this.namespace}.${this.name}&#x27;${name}&#x27;&#x60;)
       return names.join(&quot;, &quot;);
     } else {
       let name &#x3D; EnumHelper.toName(this.members, (&lt;any&gt;value) as number);
       if (!options.stringAsEnum)
-        name &#x3D; &#x60;${this.type}&#x27;${name}&#x27;&#x60;;
+        name &#x3D; &#x60;${this.namespace}.${this.name}&#x27;${name}&#x27;&#x60;;
       return name;
     }
   }
@@ -420,6 +428,9 @@ export class ODataEnumTypeParser&lt;Type&gt; implements Parser&lt;Type&gt; {
     };
     property.enum &#x3D; this.fields.map(f &#x3D;&gt; f.name);
     return property;
+  }
+  validate(member: string | number, {create &#x3D; false, patch &#x3D; false}: {create?: boolean, patch?: boolean} &#x3D; {}): string[] | undefined {
+    return (!(member in this.members)) ? [&#x27;mismatch&#x27;] : undefined;
   }
 }
 </code></pre>

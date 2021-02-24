@@ -702,8 +702,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="132"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:132</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:134</a></div>
                 </td>
             </tr>
 
@@ -862,8 +862,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="146"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:146</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="148"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:148</a></div>
                 </td>
             </tr>
 
@@ -1006,8 +1006,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="137"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:137</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="139"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:139</a></div>
                 </td>
             </tr>
 
@@ -1150,8 +1150,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="122"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:122</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="124"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:124</a></div>
                 </td>
             </tr>
 
@@ -1310,8 +1310,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="143"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:143</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="145"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:145</a></div>
                 </td>
             </tr>
 
@@ -1454,8 +1454,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="155"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:155</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="157"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:157</a></div>
                 </td>
             </tr>
 
@@ -1606,8 +1606,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="149"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:149</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="151"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:151</a></div>
                 </td>
             </tr>
 
@@ -1678,8 +1678,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="114"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:114</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:115</a></div>
                 </td>
             </tr>
 
@@ -1822,8 +1822,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="127"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:127</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="129"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:129</a></div>
                 </td>
             </tr>
 
@@ -2123,15 +2123,15 @@ export class ODataApi {
   }
 
   public findEnumTypeForType&lt;T&gt;(type: string) {
-    return this.findSchemaForType(type)?.findEnumTypeForType(type);
+    return this.findSchemaForType(type)?.findEnumTypeForType&lt;T&gt;(type);
   }
 
   public findStructuredTypeForType&lt;T&gt;(type: string) {
-    return this.findSchemaForType(type)?.findStructuredTypeForType(type);
+    return this.findSchemaForType(type)?.findStructuredTypeForType&lt;T&gt;(type);
   }
 
   public findCallableForType&lt;T&gt;(type: string) {
-    return this.findSchemaForType(type)?.findCallableForType(type);
+    return this.findSchemaForType(type)?.findCallableForType&lt;T&gt;(type);
   }
 
   public findEntitySetForType(type: string) {
@@ -2139,23 +2139,25 @@ export class ODataApi {
   }
   //#region Model and Collection for type
   public findModelForType(type: string) {
-    return this.findStructuredTypeForType(type)?.model as typeof ODataModel | undefined;
+    return this.findStructuredTypeForType&lt;any&gt;(type)?.model as typeof ODataModel | undefined;
   }
 
   public findCollectionForType(type: string) {
-    return this.findStructuredTypeForType(type)?.collection as typeof ODataCollection | undefined;
+    return this.findStructuredTypeForType&lt;any&gt;(type)?.collection as typeof ODataCollection | undefined;
   }
 
   public findServiceForType(type: string) {
     return this.findEntitySetForType(type)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
+
   //#region find Config for Entity Type
   public findServiceForEntityType(type: string) {
     return this.schemas.reduce((acc, schema) &#x3D;&gt; [...acc, ...schema.entitySets], &lt;ODataEntitySet[]&gt;[])
       .find(e &#x3D;&gt; e.entityType &#x3D;&#x3D;&#x3D; type)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
+
   //#endregion
 
   //#region Find Config for Name
@@ -2181,10 +2183,10 @@ export class ODataApi {
 
   //#region Model and Collection for type
   public findModelByName(name: string) {
-    return this.findStructuredTypeByName(name)?.model as typeof ODataModel | undefined;
+    return this.findStructuredTypeByName&lt;any&gt;(name)?.model as typeof ODataModel | undefined;
   }
   public findCollectionByName(name: string) {
-    return this.findStructuredTypeByName(name)?.collection as typeof ODataCollection | undefined;
+    return this.findStructuredTypeByName&lt;any&gt;(name)?.collection as typeof ODataCollection | undefined;
   }
   public findServiceByName(name: string) {
     return this.findEntitySetByName(name)?.service as typeof ODataEntityService | undefined;

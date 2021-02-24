@@ -584,7 +584,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:80</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:84</a></div>
                                 </td>
                             </tr>
 
@@ -606,7 +606,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:88</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:92</a></div>
                                 </td>
                             </tr>
 
@@ -628,7 +628,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="92" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:92</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="96" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:96</a></div>
                                 </td>
                             </tr>
 
@@ -641,7 +641,7 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpHeaders, HttpParams } from &#x27;@angular/common/http&#x27;;
 import { ODataApi } from &#x27;../api&#x27;;
-import { ACCEPT, IF_MATCH_HEADER, PREFER } from &#x27;../constants&#x27;;
+import { ACCEPT, IF_MATCH_HEADER, IF_NONE_MATCH_HEADER, PREFER } from &#x27;../constants&#x27;;
 import { Http } from &#x27;../utils&#x27;;
 import { ODataResource } from &#x27;./resource&#x27;;
 
@@ -691,8 +691,12 @@ export class ODataRequest&lt;T&gt; {
 
     // Headers
     const customHeaders: {[name: string]: string | string[]} &#x3D; {};
-    if (typeof init.etag &#x3D;&#x3D;&#x3D; &#x27;string&#x27;)
-      customHeaders[IF_MATCH_HEADER] &#x3D; init.etag;
+    if (typeof init.etag &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+      if (this.api.options.etag.ifMatch &amp;&amp; [&#x27;PUT&#x27;, &#x27;PATCH&#x27;, &#x27;DELETE&#x27;].indexOf(this.method) !&#x3D;&#x3D; -1)
+        customHeaders[IF_MATCH_HEADER] &#x3D; init.etag;
+      else if (this.api.options.etag.ifNoneMatch &amp;&amp; [&#x27;GET&#x27;].indexOf(this.method) !&#x3D;&#x3D; -1)
+        customHeaders[IF_NONE_MATCH_HEADER] &#x3D; init.etag;
+    }
 
     const accept &#x3D; [];
     // Metadata ?
@@ -705,11 +709,11 @@ export class ODataRequest&lt;T&gt; {
       customHeaders[ACCEPT] &#x3D; [&#x60;application/json;${accept.join(&#x27;;&#x27;)}&#x60;, &quot;text/plain&quot;, &quot;*/*&quot;];
     const prefer &#x3D; [];
     // Return ?
-    if (this.api.options.preferReturn !&#x3D;&#x3D; undefined &amp;&amp; [&#x27;POST&#x27;, &#x27;PUT&#x27;, &#x27;PATCH&#x27;].indexOf(this.method) !&#x3D;&#x3D; -1)
-      prefer.push(&#x60;return&#x3D;${this.api.options.preferReturn}&#x60;);
+    if (this.api.options.prefer?.return !&#x3D;&#x3D; undefined &amp;&amp; [&#x27;POST&#x27;, &#x27;PUT&#x27;, &#x27;PATCH&#x27;].indexOf(this.method) !&#x3D;&#x3D; -1)
+      prefer.push(&#x60;return&#x3D;${this.api.options.prefer?.return}&#x60;);
     // MaxPageSize
-    if (this.api.options.preferMaxPageSize !&#x3D;&#x3D; undefined)
-      prefer.push(&#x60;odata.maxpagesize&#x3D;${this.api.options.preferMaxPageSize}&#x60;);
+    if (this.api.options.prefer?.maxPageSize !&#x3D;&#x3D; undefined)
+      prefer.push(&#x60;odata.maxpagesize&#x3D;${this.api.options.prefer?.maxPageSize}&#x60;);
     if (prefer.length &gt; 0)
       customHeaders[PREFER] &#x3D; prefer;
     this.headers &#x3D; Http.mergeHttpHeaders(this.api.options.headers, customHeaders, init.headers || {});

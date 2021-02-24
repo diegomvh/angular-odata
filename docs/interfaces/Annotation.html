@@ -445,8 +445,16 @@ export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
-  preferMaxPageSize?: number;
-  preferReturn?: &#x27;representation&#x27; | &#x27;minimal&#x27;;
+  //Headers
+  //http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793609
+  etag?: {
+    ifMatch?: boolean,
+    ifNoneMatch?:boolean
+  };
+  prefer?: {
+    maxPageSize?: number,
+    return?: &#x27;representation&#x27; | &#x27;minimal&#x27;
+  };
   fetchPolicy?: FetchPolicy;
 }
 
@@ -537,11 +545,11 @@ export type Parameter &#x3D; {
 
 export type CallableConfig &#x3D; {
   name: string;
-  path?: string;
+  entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
   parameters?: { [name: string]: Parameter };
-  return?: string;
+  return?: {type: string, collection?: boolean};
 }
 export type EntitySetConfig &#x3D; {
   name: string;
