@@ -68,6 +68,7 @@ export class ODataStructuredType<T> {
     }
     return attrs;
   }
+
   resolveKey(attrs: any): EntityKey<T> | undefined {
     let key = this.parser.keys()
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
@@ -81,6 +82,7 @@ export class ODataStructuredType<T> {
     }
     return !Types.isEmpty(key) ? key : undefined;
   }
+
   defaults() {
     return this.parser.defaults();
   }

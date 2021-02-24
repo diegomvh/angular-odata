@@ -23,6 +23,7 @@ import { Objects } from '../utils';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
 import { ODataStructuredTypeFieldParser } from '../parsers';
+import { EntityKey } from '../types';
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 
 export function ODataModelField({ name }: { name?: string } = {}) {
@@ -66,21 +67,23 @@ class ODataModelProperty<F> {
     reset?: boolean
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
 
+    if (this.parser === undefined) {
+      throw new Error("No Parser");
+    }
     // Data
-    const data = this.parser?.collection ?
+    const data = this.parser.collection ?
       (value || []) as F[] :
       (value || {}) as F;
 
     const meta = this.metaFactory(baseMeta);
-    const resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
+    let resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
 
-    return (
-      this.parser !== undefined &&
-      this.parser.collection) ?
+    return this.parser.collection ?
         resource.asCollection(data as F[], { meta: meta as ODataEntitiesMeta, reset }) :
         resource.asModel(data as F, { meta: meta as ODataEntityMeta, reset });
   }
 }
+
 type ODataModelRelation = {
   model: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
   property: ODataModelProperty<any>,

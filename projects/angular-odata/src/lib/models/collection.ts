@@ -75,12 +75,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (schema !== undefined)
         this.schema(schema);
 
-      if (resource instanceof ODataEntitySetResource) {
-        this._models.forEach(({model}) => {
+      this._models.forEach(({model}) => {
+        if (resource instanceof ODataEntitySetResource) {
           const er = resource.entity(model.toEntity({field_mapping: true}) as T);
           model.resource(er);
-        });
-      }
+        } else if (resource instanceof ODataNavigationPropertyResource) {
+          const er = resource.key(schema?.resolveKey(model.toEntity({field_mapping: true})) as EntityKey<T>);
+          model.resource(er);
+        }
+      });
 
       this._resource = resource;
     }
@@ -102,13 +105,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   private _modelFactory(data: T, {reset = false}: {reset?: boolean} = {}): M {
     const meta = new ODataEntityMeta(data, { options: this._meta.options });
     const attrs = meta.attributes<T>(data);
-    if (this._resource) {
-      return ((this._resource instanceof ODataEntitySetResource) ?
-          this._resource.entity(data) :
-          this._resource.clone())
-            .asModel(attrs, { meta, reset });
-    }
     const schema = this.schema();
+    const resource = this.resource();
+    if (resource instanceof ODataEntitySetResource) {
+      return resource.entity(data).asModel(attrs, { meta, reset });
+    } else if (resource instanceof ODataNavigationPropertyResource) {
+      return resource.key(schema?.resolveKey(data) as EntityKey<T>).asModel(attrs, { meta, reset });
+    } else if (resource !== undefined) {
+      return resource.asModel(attrs, { meta, reset });
+    }
     const Model = schema?.model || ODataModel;
     return new Model(attrs, { schema, meta, parse: reset }) as M;
   }
