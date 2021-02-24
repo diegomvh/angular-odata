@@ -12,7 +12,9 @@ import {
   ODataEntity,
   ODataSingletonResource,
   ODataActionResource,
-  ODataFunctionResource
+  ODataFunctionResource,
+  Expand,
+  Select
 } from '../resources/index';
 
 import { ODataCollection } from './collection';
@@ -485,7 +487,7 @@ export class ODataModel<T> {
   }
 
   save(
-    { patch = false, validate = true, ...options }: HttpOptions & { patch?: boolean, validate?: boolean } = {}
+    { patch = false, validate = true, ...options }: HttpOptions & { patch?: boolean, validate?: boolean, options?: HttpOptions } = {}
   ): Observable<this> {
     let resource = this.resource();
     if (resource !== undefined) {
@@ -530,8 +532,12 @@ export class ODataModel<T> {
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpOptions
+    { expand, select, ...options }: HttpOptions & { expand?: Expand<R>, select?: Select<R>, options?: HttpOptions } = {}
   ) {
+    if (expand !== undefined)
+      resource.query.expand(expand);
+    if (select !== undefined)
+      resource.query.select(select);
     switch (responseType) {
       case 'property':
         return resource.callProperty(params, options);
@@ -548,11 +554,11 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpOptions
+    { expand, select, ...options }: HttpOptions & { expand?: Expand<R>, select?: Select<R>, options?: HttpOptions } = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
     if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.function<P, R>(name), responseType, options);
+      return this._call(params, resource.function<P, R>(name), responseType, {expand, select, ...options});
     }
     return throwError("Can't call function without ODataEntityResource with key");
   }
@@ -561,12 +567,12 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpOptions
+    { expand, select, ...options }: HttpOptions & { expand?: Expand<R>, select?: Select<R>, options?: HttpOptions } = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
     const key = this.key();
     if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.action<P, R>(name), responseType, options);
+      return this._call(params, resource.action<P, R>(name), responseType, {expand, select, ...options});
     }
     return throwError("Can't call action without ODataEntityResource with key");
   }
