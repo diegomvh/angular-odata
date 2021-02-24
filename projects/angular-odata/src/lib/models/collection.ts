@@ -12,16 +12,19 @@ import {
   ODataPropertyResource,
   ODataActionResource,
   ODataFunctionResource,
-  ODataEntityMeta
+  ODataEntityMeta,
+  Expand,
+  Select
 } from '../resources/index';
 
-import { ODataModel, ODataModelResource } from './model';
+import { ODataModel } from './model';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema/structured-type';
 import { EntityKey } from '../types';
 import { Types } from '../utils/types';
 
-type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
+export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
+export type ODataCollectionCallableOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   private _resource?: ODataCollectionResource<T>;
@@ -277,8 +280,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpOptions
+    { expand, select, ...options }: ODataCollectionCallableOptions<R> = {}
   ) {
+    if (expand !== undefined)
+      resource.query.expand(expand);
+    if (select !== undefined)
+      resource.query.select(select);
     switch (responseType) {
       case 'property':
         return resource.callProperty(params, options);
@@ -295,11 +302,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpOptions
+    { expand, select, ...options }: ODataCollectionCallableOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     if (this._resource instanceof ODataEntitySetResource) {
       const resource = this._resource.function<P, R>(name);
-      return this._call(params, resource, responseType, options);
+      return this._call(params, resource, responseType, {expand, select, ...options});
     }
     throw new Error(`Can't function without ODataEntitySetResource`);
   }
@@ -308,11 +315,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpOptions
+    { expand, select, ...options }: ODataCollectionCallableOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     if (this._resource instanceof ODataEntitySetResource) {
       const resource = this._resource.action<P, R>(name);
-      return this._call(params, resource, responseType, options);
+      return this._call(params, resource, responseType, {expand, select, ...options});
     }
     throw new Error(`Can't action without ODataEntitySetResource`);
   }
