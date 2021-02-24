@@ -9,7 +9,7 @@ import { ODataApi } from '../../api';
 import { map } from 'rxjs/operators';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
-import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../builder';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataEntityResource } from './entity';
 import { ODataStructuredType } from '../../schema';
@@ -127,11 +127,8 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       },
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
-      },
-      custom(opts?: PlainObject) {
-        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
-    }
+    };
   }
   //#endregion
 

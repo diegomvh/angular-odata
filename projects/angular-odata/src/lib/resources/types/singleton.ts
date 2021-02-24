@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { Expand, Select, PlainObject } from '../builder';
+import { Expand, Select } from '../builder';
 import { QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
@@ -108,12 +108,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     options.option<string>(QueryOptionNames.format, opts);
     return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
   }
-
-  custom(opts: PlainObject) {
-    let options = this.queryOptions.clone();
-    options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
-  }
   //#endregion
 
   //#region Mutable Resource
@@ -137,9 +131,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       },
       format(opts?: string) {
         return options.option<string>(QueryOptionNames.format, opts);
-      },
-      custom(opts?: PlainObject) {
-        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
     }
   }

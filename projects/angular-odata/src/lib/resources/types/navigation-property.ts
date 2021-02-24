@@ -1,5 +1,5 @@
 import { ODataResource } from '../resource';
-import { Expand, Select, Transform, Filter, OrderBy, PlainObject } from '../builder';
+import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
 import { QueryOptionNames } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
@@ -166,12 +166,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     options.option<string>(QueryOptionNames.skiptoken, opts);
     return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
   }
-
-  custom(opts: PlainObject) {
-    let options = this.queryOptions.clone();
-    options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
-  }
   //#endregion
 
   //#region Mutable Resource
@@ -222,9 +216,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       },
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
-      },
-      custom(opts?: PlainObject) {
-        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
     }
   }

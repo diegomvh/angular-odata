@@ -1,7 +1,7 @@
 import { Observable, empty, EMPTY } from 'rxjs';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 
-import { Expand, Select, Transform, Filter, OrderBy, PlainObject } from '../builder';
+import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
 import { QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 
@@ -153,12 +153,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     options.option<string>(QueryOptionNames.skiptoken, opts);
     return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
   }
-
-  custom(opts: PlainObject) {
-    let options = this.queryOptions.clone();
-    options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
-  }
   //#endregion
 
   //#region Mutable Resource
@@ -203,9 +197,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       },
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
-      },
-      custom(opts?: PlainObject) {
-        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
     }
   }

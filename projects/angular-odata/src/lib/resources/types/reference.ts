@@ -5,7 +5,6 @@ import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataEntityResource } from './entity';
 import { HttpOptions } from './options';
-import { PlainObject } from '../builder';
 import { $REF, $ID, ODATA_ID } from '../../constants';
 import { ODataApi } from '../../api';
 
@@ -19,25 +18,6 @@ export class ODataReferenceResource extends ODataResource<any> {
 
   clone() {
     return new ODataReferenceResource(this.api, this.pathSegments.clone(), this.queryOptions.clone());
-  }
-  //#endregion
-
-  //#region Inmutable Resource
-  custom(opts: PlainObject) {
-    let options = this.queryOptions.clone();
-    options.option<PlainObject>(QueryOptionNames.custom, opts);
-    return new ODataReferenceResource(this.api, this.pathSegments.clone(), options);
-  }
-  //#endregion
-
-  //#region Mutable Resource
-  get query() {
-    const options = this.queryOptions;
-    return {
-      custom(opts?: PlainObject) {
-        return options.option<PlainObject>(QueryOptionNames.custom, opts);
-      }
-    }
   }
   //#endregion
 

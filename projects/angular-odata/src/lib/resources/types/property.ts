@@ -11,7 +11,7 @@ import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
-import { Expand, Filter, OrderBy, PlainObject, Select, Transform } from '../builder';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataNavigationPropertyResource } from './navigation-property';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -130,9 +130,6 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       },
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
-      },
-      custom(opts?: PlainObject) {
-        return options.option<PlainObject>(QueryOptionNames.custom, opts);
       }
     }
   }

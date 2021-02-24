@@ -5,6 +5,7 @@ import { Dates, Types, Urls, Objects } from '../utils';
 export enum QueryOptionNames {
   // System options
   select = 'select',
+  expand = 'expand',
   filter = 'filter',
   search = 'search',
   transform = 'transform',
@@ -12,10 +13,7 @@ export enum QueryOptionNames {
   top = 'top',
   skip = 'skip',
   skiptoken = 'skiptoken',
-  expand = 'expand',
-  format = 'format',
-  // Custom options
-  custom = 'custom'
+  format = 'format'
 }
 
 export class ODataQueryOptions {
@@ -43,14 +41,6 @@ export class ODataQueryOptions {
 
     let query = buildQuery(options);
     let params = (query) ? Urls.parseQueryString(query.substr(1)) : {};
-
-    // Custom
-    let custom = this.options[QueryOptionNames.custom] || {};
-    if (Types.isArray(custom)) {
-      //TODO: split test for item type
-      custom = custom.reduce((acc: {[name: string]: any}, item: {[name: string]: any}) => Object.assign(acc, item), {});
-    }
-    Object.assign(params, custom);
 
     return params;
   }

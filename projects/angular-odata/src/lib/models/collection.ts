@@ -65,6 +65,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       data = this.meta().data(data) || [];
     this.assign(data, {reset});
   }
+
   resource(resource?: ODataCollectionResource<T>) {
     if (resource !== undefined) {
       if (this._resource !== undefined && this._resource.type() !== resource.type() && !resource.isSubtypeOf(this._resource))
@@ -74,20 +75,30 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (schema !== undefined)
         this.schema(schema);
 
+      if (resource instanceof ODataEntitySetResource) {
+        this._models.forEach(({model}) => {
+          const er = resource.entity(model.toEntity({field_mapping: true}) as T);
+          model.resource(er);
+        });
+      }
+
       this._resource = resource;
     }
     return this._resource?.clone();
   }
+
   schema(schema?: ODataStructuredType<T>) {
     if (schema !== undefined)
       this._schema = schema;
     return this._schema;
   }
+
   meta(meta?: ODataEntitiesMeta) {
     if (meta !== undefined)
       this._meta = meta;
     return this._meta;
   }
+
   private _modelFactory(data: T, {reset = false}: {reset?: boolean} = {}): M {
     const meta = new ODataEntityMeta(data, { options: this._meta.options });
     const attrs = meta.attributes<T>(data);
