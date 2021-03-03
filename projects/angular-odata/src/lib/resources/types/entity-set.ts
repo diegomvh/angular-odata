@@ -24,7 +24,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     const segment = segments.add(PathSegmentNames.entitySet, path)
     if (type)
       segment.type(type);
-    options.keep(QueryOptionNames.filter, QueryOptionNames.orderBy, QueryOptionNames.skip, QueryOptionNames.transform, QueryOptionNames.top, QueryOptionNames.search, QueryOptionNames.format);
     return new ODataEntitySetResource<E>(api, segments, options);
   }
 
