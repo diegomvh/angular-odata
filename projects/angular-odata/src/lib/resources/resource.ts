@@ -25,7 +25,6 @@ export abstract class ODataResource<T> {
   public api: ODataApi;
   protected pathSegments: ODataPathSegments;
   protected queryOptions: ODataQueryOptions;
-
   constructor(
     api: ODataApi,
     segments?: ODataPathSegments,
@@ -107,10 +106,12 @@ export abstract class ODataResource<T> {
     };
   }
 
-  alias(name: string, value?: any) {
+  createAlias(name: string, value?: any) {
     return this.queryOptions.alias(name, value);
   }
-
+  clearQuery() {
+    this.queryOptions.clear();
+  }
   // Base Requests
   protected request(
     method: string,
