@@ -8,15 +8,17 @@ import { ODataModel } from "./model";
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCallableHttpOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
+
 export type ODataModelEvent<T> = {
-  topic: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'destroy'
+  name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'destroy'
   model?: ODataModel<T>
   collection?: ODataCollection<T, ODataModel<T>>
-  path?: string  // Property.Property[1].Property[3].Property
+  path?: string  // Property.Collection[1].Collection[3].Property
   value?: any
   previous?: any
   options?: any
 }
+
 export function ODataModelField({ name }: { name?: string } = {}) {
   return (target: any, propertyKey: string): void => {
     const properties = target._properties = (target._properties || []) as ModelProperty<any>[];
@@ -348,7 +350,7 @@ export class ODataModelOptions<T> {
           throw new Error(`Can't set ${type} to ${field.type}`);
       }
       this._relations[name] = { model: newModel, property, subscription: newModel && this._subscribe(model, property, newModel) };
-      model.event$.emit({ topic: 'change', path: property.name, model, value: newModel, previous: currentModel});
+      model.events$.emit({ name: 'change', path: property.name, model, value: newModel, previous: currentModel});
     } else {
       const attrs = this.attributes(model);
       const currentValue = attrs[name];
@@ -359,19 +361,19 @@ export class ODataModelOptions<T> {
           delete this._changes[name];
         else
           this._changes[name] = value;
-        model.event$.emit({ topic: 'change', path: property.name, model, value, previous: currentValue});
+        model.events$.emit({ name: 'change', path: property.name, model, value, previous: currentValue});
       }
     }
   }
   private _subscribe<F>(self: ODataModel<T>, property: ODataModelProperty<F>, value: ODataModel<F> | ODataCollection<F, ODataModel<F>>) {
-    return value.event$.subscribe((event: ODataModelEvent<any>) => {
+    return value.events$.subscribe((event: ODataModelEvent<any>) => {
       const newEvent: ODataModelEvent<any> = {...event};
       if (value instanceof ODataModel) {
         newEvent.path = `${property.name}.${event.path}`;
       } else if (value instanceof ODataCollection) {
         newEvent.path = event.path ? `${property.name}${event.path}` : property.name;
       }
-      self.event$.emit(newEvent);
+      self.events$.emit(newEvent);
     });
   }
 }

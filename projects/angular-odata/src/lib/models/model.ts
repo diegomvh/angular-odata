@@ -22,7 +22,7 @@ export class ODataModel<T> {
   //Events
   private _properties!: ModelProperty<any>[];
   private _options: ODataModelOptions<T>;
-  event$ = new EventEmitter<ODataModelEvent<T>>();
+  events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(data?: any, { resource, schema, meta, reset = false }: {
     resource?: ODataModelResource<T>,
     schema?: ODataStructuredType<T>,
@@ -68,7 +68,7 @@ export class ODataModel<T> {
   valid({ create = false, patch = false }: { create?: boolean, patch?: boolean } = {}): boolean {
     this.errors = this.validate({create, patch});
     if (this.errors !== undefined)
-      this.event$.emit({topic: 'invalid', model: this, value: this.errors, options: {create, patch}});
+      this.events$.emit({name: 'invalid', model: this, value: this.errors, options: {create, patch}});
     return this.errors === undefined;
   }
   protected defaults() {
@@ -88,13 +88,13 @@ export class ODataModel<T> {
     return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.resource(), meta: this.meta() });
   }
   private _request(resource: ODataModelResource<T>, obs$: Observable<ODataEntity<any>>): Observable<this> {
-    this.event$.emit({topic: 'request', model: this, value: obs$ });
+    this.events$.emit({name: 'request', model: this, value: obs$ });
     return obs$.pipe(
       map(({ entity, meta }) => {
         this.resource(resource);
         this.meta(meta);
         this.assign(meta.attributes<T>(entity || {}), { reset: true });
-        this.event$.emit({topic: 'sync', model: this });
+        this.events$.emit({name: 'sync', model: this });
         return this;
       }));
   }
@@ -153,7 +153,7 @@ export class ODataModel<T> {
         obs$ = resource.delete(Object.assign({ etag: this.meta().etag }, options || {})).pipe(
           map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
       }
-      return this._request(resource, obs$).pipe(tap(() => this.event$.emit({topic: 'destroy', model: this})));
+      return this._request(resource, obs$).pipe(tap(() => this.events$.emit({name: 'destroy', model: this})));
     }
     return throwError("Resource Error");
   }
@@ -255,7 +255,7 @@ export class ODataModel<T> {
       const obs$ = (model instanceof ODataModel) ?
         ref.set(model.resource() as ODataEntityResource<P>, opts) :
         ref.unset(opts);
-      this.event$.emit({topic: 'request', model: this, value: obs$ });
+      this.events$.emit({name: 'request', model: this, value: obs$ });
       return obs$.pipe(
         map(() => {
           let attrs: any = { [name]: model };
@@ -263,7 +263,7 @@ export class ODataModel<T> {
             attrs[prop.field] = (model instanceof ODataModel) ? model.key() : model;
           }
           this.assign(attrs, { reset: true });
-          this.event$.emit({topic: 'sync', model: this});
+          this.events$.emit({name: 'sync', model: this});
           return this;
         }
         ));

@@ -51,7 +51,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   //Events
-  event$ = new EventEmitter<ODataModelEvent<T>>();
+  events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(
     data: any = {},
     {
@@ -165,12 +165,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   // Requests
   private _request(obs$: Observable<ODataEntities<any>>): Observable<this> {
-    this.event$.emit({ topic: 'request', collection: this, value: obs$ });
+    this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map(({ entities, meta }) => {
         this._meta = meta;
         this.assign(entities || [], { reset: true });
-        this.event$.emit({ topic: 'sync', collection: this });
+        this.events$.emit({ name: 'sync', collection: this });
         return this;
       })
     );
@@ -263,8 +263,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
           key: model.key(),
           subscription: this._subscribe(model),
         });
-        model.event$.emit({ topic: 'add', model, collection: this });
-        this.event$.emit({ topic: 'update', collection: this });
+        model.events$.emit({ name: 'add', model, collection: this });
+        this.events$.emit({ name: 'update', collection: this });
         return col;
       })
     );
@@ -290,11 +290,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
         map(col => {
             const entry = this._models[index];
             // Emit Event
-            model.event$.emit({ topic: 'remove', model, collection: this });
+            model.events$.emit({ name: 'remove', model, collection: this });
             // Now remove
             this._models.splice(index, 1);
             entry.subscription.unsubscribe();
-            this.event$.emit({ topic: 'update', collection: this });
+            this.events$.emit({ name: 'update', collection: this });
             return col;
         })
       );
@@ -334,7 +334,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           subscription: this._subscribe(model),
         };
       });
-      this.event$.emit({ topic: 'reset', collection: this });
+      this.events$.emit({ name: 'reset', collection: this });
     } else {
       data.forEach((attrs) => {
         const key = this.schema()?.resolveKey(attrs);
@@ -351,11 +351,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
             key: model.key(),
             subscription: this._subscribe(model),
           });
-          model.event$.emit({ topic: 'add', model, collection: this});
+          model.events$.emit({ name: 'add', model, collection: this});
         }
       });
     }
-    this.event$.emit({ topic: 'update', collection: this });
+    this.events$.emit({ name: 'update', collection: this });
   }
   get query() {
     if (!this._resource) throw new Error(`Can't query without ODataResource`);
@@ -419,15 +419,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const bind = (model: M) => (event: ODataModelEvent<T>) => {
       var newEvent = {...event};
       newEvent.path = event.path ? `[${this.indexOf(model)}].${event.path}` : `[${this.indexOf(model)}]`;
-      if (event.topic === 'destroy' && event.model === model)
+      if (event.name === 'destroy' && event.model === model)
         this.remove(model).toPromise();
-      if (event.topic === 'change' && event.model === model) {
+      if (event.name === 'change' && event.model === model) {
         let entry = this._models.find(m => m.model == model);
         if (entry !== undefined) entry.key === model.key();
       }
-      this.event$.emit(newEvent);
+      this.events$.emit(newEvent);
     };
-    return value.event$.subscribe(bind(value));
+    return value.events$.subscribe(bind(value));
   }
 
   //#region Collection functions
