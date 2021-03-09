@@ -30,6 +30,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataEnumTypeFieldParser(name, f as EnumTypeField));
   }
+
   isTypeOf(type: string) {
     var names = [`${this.namespace}.${this.name}`];
     if (this.alias)
@@ -73,6 +74,11 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     return property;
   }
   validate(member: string | number, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}): string[] | undefined {
-    return (!(member in this.members)) ? ['mismatch'] : undefined;
+    if (this.flags) {
+      let members = EnumHelper.toValues(this.members, member);
+      return members.some(member => !(member in this.members)) ? ['mismatch'] : undefined;
+    } else {
+      return (!(member in this.members)) ? ['mismatch'] : undefined;
+    }
   }
 }
