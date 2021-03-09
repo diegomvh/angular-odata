@@ -257,7 +257,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
             this._resource.key(model.toEntity({ field_mapping: true }) as T)
           );
         }
-        const index = this._models.length;
         this._models.push({
           model,
           key: model.key(),
@@ -321,6 +320,42 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return obs$;
   }
 
+  set(path: string | string[], value: any) {
+    const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
+    if (pathArray.length === 0) return undefined;
+    if (pathArray.length > 1) {
+      const model = this.models[Number(pathArray[0])];
+      return model.set(pathArray.slice(1), value);
+    }
+    if (pathArray.length === 1 && value instanceof ODataModel) {
+      const index = Number(pathArray[0]);
+      const entry = this._models[index];
+      if (entry !== undefined) {
+        var model = entry.model;
+        model.events$.emit({ name: 'remove', model, collection: this });
+        entry.subscription.unsubscribe();
+      }
+      this._models[index] = {
+        key: value.key() as EntityKey<T>, 
+        model: value as M, 
+        subscription: this._subscribe(value as M)
+      };
+      value.events$.emit({ name: 'add', model: value, collection: this });
+      this.events$.emit({name: 'update', collection: this});
+      return value;
+    }
+  }
+
+  get(path: string | string[]): any {
+    const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
+    if (pathArray.length === 0) return undefined;
+    const value = this.models[Number(pathArray[0])];
+    if (pathArray.length > 1 && value instanceof ODataModel) {
+      return value.get(pathArray.slice(1));
+    }
+    return value;
+  }
+
   assign(data: any[] = [], { reset = false }: { reset?: boolean } = {}) {
     if (reset) {
       this._models.forEach((e) =>
@@ -345,7 +380,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
           entry.model.assign(attrs, { reset });
         } else {
           const model = this._modelFactory(attrs, { reset });
-          const index = this._models.length;
           this._models.push({
             model,
             key: model.key(),
@@ -415,19 +449,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     throw new Error(`Can't action without ODataEntitySetResource`);
   }
 
-  private _subscribe(value: M) {
-    const bind = (model: M) => (event: ODataModelEvent<T>) => {
+  private _subscribe(model: M) {
+    return model.events$.subscribe((event: ODataModelEvent<T>) => {
       var newEvent = {...event};
       newEvent.path = event.path ? `[${this.indexOf(model)}].${event.path}` : `[${this.indexOf(model)}]`;
       if (event.name === 'destroy' && event.model === model)
         this.remove(model).toPromise();
       if (event.name === 'change' && event.model === model) {
-        let entry = this._models.find(m => m.model == model);
-        if (entry !== undefined) entry.key === model.key();
+        let entry = this._models.find(m => m.model === model);
+        if (entry !== undefined) entry.key = model.key();
       }
       this.events$.emit(newEvent);
-    };
-    return value.events$.subscribe(bind(value));
+    });
   }
 
   //#region Collection functions

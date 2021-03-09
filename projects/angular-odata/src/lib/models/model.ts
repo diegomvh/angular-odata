@@ -13,7 +13,7 @@ import {
   ODataFunctionResource} from '../resources/index';
 
 import { ODataCollection } from './collection';
-import { Objects } from '../utils';
+import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
 import { ModelProperty, ODataCallableHttpOptions, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
@@ -79,6 +79,26 @@ export class ODataModel<T> {
   }
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
     return this._options.attributes(this, { changes_only });
+  }
+  set(path: string | string[], value: any) {
+    const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
+    if (pathArray.length === 0) return undefined;
+    if (pathArray.length > 1) {
+      const model = (<any>this)[pathArray[0]];
+      return model.set(pathArray.slice(1), value);
+    }
+    if (pathArray.length === 1) {
+      return ((<any>this)[pathArray[0]] = value);
+    }
+  }
+  get(path: string | string[]): any {
+    const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
+    if (pathArray.length === 0) return undefined;
+    const value = (<any>this)[pathArray[0]];
+    if (pathArray.length > 1 && (value instanceof ODataModel || value instanceof ODataCollection)) {
+      return value.get(pathArray.slice(1));
+    }
+    return value;
   }
   assign(data: any = {}, { reset = false }: { reset?: boolean } = {}) {
     this._options.assign(this, data, { reset });
