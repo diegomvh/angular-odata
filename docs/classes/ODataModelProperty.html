@@ -60,7 +60,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/models/model.ts</code>
+            <code>projects/angular-odata/src/lib/models/options.ts</code>
         </p>
 
 
@@ -133,7 +133,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -195,7 +195,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:40</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:32</a></div>
                             </td>
                         </tr>
 
@@ -222,7 +222,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:39</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:31</a></div>
                             </td>
                         </tr>
 
@@ -250,7 +250,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:41</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -286,8 +286,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="55"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:55</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="47"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:47</a></div>
                 </td>
             </tr>
 
@@ -356,8 +356,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="63"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:63</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:55</a></div>
                 </td>
             </tr>
 
@@ -434,8 +434,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="46"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:46</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="38"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:38</a></div>
                 </td>
             </tr>
 
@@ -501,34 +501,26 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NEVER, Observable, Subscription, throwError } from &#x27;rxjs&#x27;;
-import { map, tap } from &#x27;rxjs/operators&#x27;;
-
-import {
-  ODataEntityResource,
-  ODataPropertyResource,
-  ODataNavigationPropertyResource,
-  HttpOptions,
-  HttpEntityOptions,
-  ODataEntityMeta,
-  ODataEntitiesMeta,
-  ODataEntity,
-  ODataSingletonResource,
-  ODataActionResource,
-  ODataFunctionResource,
-  Expand,
-  Select
-} from &#x27;../resources/index&#x27;;
-
-import { ODataCollection } from &#x27;./collection&#x27;;
-import { Types } from &#x27;../utils/types&#x27;;
-import { Objects } from &#x27;../utils&#x27;;
-import { EventEmitter } from &#x27;@angular/core&#x27;;
-import { ODataStructuredType } from &#x27;../schema&#x27;;
-import { ODataStructuredTypeFieldParser } from &#x27;../parsers&#x27;;
-
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Subscription } from &quot;rxjs&quot;;
+import { ODataStructuredTypeFieldParser } from &quot;../parsers&quot;;
+import { Expand, HttpOptions, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, Select } from &quot;../resources&quot;;
+import { ODataStructuredType } from &quot;../schema&quot;;
+import { Types } from &quot;../utils&quot;;
+import { ODataCollection } from &quot;./collection&quot;;
+import { ODataModel } from &quot;./model&quot;;
 export type ODataModelResource&lt;T&gt; &#x3D; ODataEntityResource&lt;T&gt; | ODataSingletonResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt;;
+export type ODataCollectionResource&lt;T&gt; &#x3D; ODataEntitySetResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt;;
 export type ODataCallableHttpOptions&lt;T&gt; &#x3D; HttpOptions &amp; { expand?: Expand&lt;T&gt;, select?: Select&lt;T&gt;, options?: HttpOptions };
+
+export type ODataModelEvent&lt;T&gt; &#x3D; {
+  name: &#x27;change&#x27; | &#x27;add&#x27; | &#x27;remove&#x27; | &#x27;reset&#x27; | &#x27;update&#x27; | &#x27;invalid&#x27; | &#x27;request&#x27; | &#x27;sync&#x27; | &#x27;destroy&#x27;
+  model?: ODataModel&lt;T&gt;
+  collection?: ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;
+  path?: string  // Property.Collection[1].Collection[3].Property
+  value?: any
+  previous?: any
+  options?: any
+}
 
 export function ODataModelField({ name }: { name?: string } &#x3D; {}) {
   return (target: any, propertyKey: string): void &#x3D;&gt; {
@@ -537,8 +529,8 @@ export function ODataModelField({ name }: { name?: string } &#x3D; {}) {
   }
 }
 
-type ModelProperty&lt;F&gt; &#x3D; { name: string, field: string };
-class ODataModelProperty&lt;F&gt; {
+export type ModelProperty&lt;F&gt; &#x3D; { name: string, field: string };
+export class ODataModelProperty&lt;F&gt; {
   name: string;
   field: string;
   parser?: ODataStructuredTypeFieldParser&lt;F&gt;;
@@ -591,7 +583,7 @@ class ODataModelProperty&lt;F&gt; {
 type ODataModelRelation &#x3D; {
   model: ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt; | null,
   property: ODataModelProperty&lt;any&gt;,
-  subscriptions: Subscription[]
+  subscription: Subscription | null
 };
 export class ODataModelOptions&lt;T&gt; {
   private _attributes: {[name: string]: any} &#x3D; {};
@@ -736,6 +728,8 @@ export class ODataModelOptions&lt;T&gt; {
   assign(model: ODataModel&lt;T&gt;, data: {[name: string]: any} &#x3D; {}, { reset &#x3D; false }: { reset?: boolean } &#x3D; {}) {
     this._resetting &#x3D; reset;
     if (this._resetting) {
+      // Apply current changes and start new tracking
+      Object.assign(this._attributes, this._changes);
       this._changes &#x3D; {} as T;
     }
     for (let key in data) {
@@ -815,7 +809,7 @@ export class ODataModelOptions&lt;T&gt; {
     if (field.isComplexType() || field.isNavigation()) {
       if (this._resetting &amp;&amp; !(name in this._relations)) {
         const newModel &#x3D; this._modelCollectionFactory&lt;F&gt;({property});
-        this._relations[name] &#x3D; { property, model: newModel, subscriptions: this._subscribe&lt;F&gt;(model, property, newModel) };
+        this._relations[name] &#x3D; { property, model: newModel, subscription: this._subscribe&lt;F&gt;(model, property, newModel) };
       }
       return (name in this._relations) ? this._relations[name].model : undefined;
     }
@@ -841,8 +835,8 @@ export class ODataModelOptions&lt;T&gt; {
           throw new Error(&#x60;Can&#x27;t set ${name}&#x60;);
       }
       const relation &#x3D; this._relations[name];
-      if (relation !&#x3D;&#x3D; undefined) {
-        relation.subscriptions.forEach(sub &#x3D;&gt; sub.unsubscribe());
+      if (relation !&#x3D;&#x3D; undefined &amp;&amp; relation.subscription !&#x3D;&#x3D; null) {
+        relation.subscription.unsubscribe();
       }
       const currentModel &#x3D; relation?.model as ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt; | null;
       if (newModel !&#x3D;&#x3D; null &amp;&amp; this._resource !&#x3D;&#x3D; undefined) {
@@ -858,8 +852,8 @@ export class ODataModelOptions&lt;T&gt; {
         if (type !&#x3D;&#x3D; field.type)
           throw new Error(&#x60;Can&#x27;t set ${type} to ${field.type}&#x60;);
       }
-      this._relations[name] &#x3D; { model: newModel, property, subscriptions: newModel !&#x3D;&#x3D; null ? this._subscribe(model, property, newModel) : [] };
-      model.change$.emit({ value: newModel, attribute: name, previous: currentModel });
+      this._relations[name] &#x3D; { model: newModel, property, subscription: newModel &amp;&amp; this._subscribe(model, property, newModel) };
+      model.events$.emit({ name: &#x27;change&#x27;, path: property.name, model, value: newModel, previous: currentModel});
     } else {
       const attrs &#x3D; this.attributes(model);
       const currentValue &#x3D; attrs[name];
@@ -870,281 +864,20 @@ export class ODataModelOptions&lt;T&gt; {
           delete this._changes[name];
         else
           this._changes[name] &#x3D; value;
-        model.change$.emit({ value, attribute: name, previous: currentValue });
+        model.events$.emit({ name: &#x27;change&#x27;, path: property.name, model, value, previous: currentValue});
       }
     }
   }
   private _subscribe&lt;F&gt;(self: ODataModel&lt;T&gt;, property: ODataModelProperty&lt;F&gt;, value: ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;) {
-    const subs &#x3D; [];
-    if (value instanceof ODataModel) {
-      //Changes
-      subs.push(value.change$.subscribe((event: any) &#x3D;&gt; self.change$.emit({
-        value: event.value,
-        previous: event.previous,
-        attribute: &#x60;${property.name}.${event.attribute}&#x60;
-      })
-      ));
-    }
-    return subs;
-  }
-}
-
-export class ODataModel&lt;T&gt; {
-  //Events
-  private _properties!: ModelProperty&lt;any&gt;[];
-  private _options: ODataModelOptions&lt;T&gt;;
-  change$ &#x3D; new EventEmitter&lt;{ attribute: string, value: any, previous?: any }&gt;();
-  request$ &#x3D; new EventEmitter&lt;Observable&lt;ODataEntity&lt;T&gt;&gt;&gt;();
-  sync$ &#x3D; new EventEmitter();
-  destroy$ &#x3D; new EventEmitter();
-  invalid$ &#x3D; new EventEmitter&lt;{ [name: string]: string[] }&gt;();
-  constructor(data?: any, { resource, schema, meta, reset &#x3D; false }: {
-    resource?: ODataModelResource&lt;T&gt;,
-    schema?: ODataStructuredType&lt;T&gt;,
-    meta?: ODataEntityMeta,
-    reset?: boolean
-  } &#x3D; {}) {
-    this._options &#x3D; new ODataModelOptions(this._properties);
-    this.resource(resource);
-    this.schema(schema);
-    this.meta(meta);
-    data &#x3D; Objects.merge(this.defaults(), data || {});
-    this.assign(data, { reset });
-  }
-
-  resource(resource?: ODataModelResource&lt;T&gt;) {
-    if (resource !&#x3D;&#x3D; undefined)
-      this._options.attach(this, resource);
-    return this._options.resource(this);
-  }
-
-  schema(schema?: ODataStructuredType&lt;T&gt;) {
-    if (schema !&#x3D;&#x3D; undefined)
-      this._options.bind(this, schema);
-    return this._options.schema(this);
-  }
-
-  meta(meta?: ODataEntityMeta) {
-    if (meta !&#x3D;&#x3D; undefined)
-      this._options.annotate(this, meta);
-    return this._options.meta(this);
-  }
-
-  key() {
-    return this._options.key(this);
-  }
-
-  // Validation
-  errors?: { [key: string]: any };
-  protected validate({ create &#x3D; false, patch &#x3D; false }: { create?: boolean, patch?: boolean } &#x3D; {}) {
-    return this._options.validate(this, {create, patch});
-  }
-
-  valid({ create &#x3D; false, patch &#x3D; false }: { create?: boolean, patch?: boolean } &#x3D; {}): boolean {
-    this.errors &#x3D; this.validate({create, patch});
-    if (this.errors !&#x3D;&#x3D; undefined)
-      this.invalid$.emit(this.errors);
-    return this.errors &#x3D;&#x3D;&#x3D; undefined;
-  }
-  protected defaults() {
-    return this._options.defaults(this);
-  }
-  toEntity({ include_navigation &#x3D; false, changes_only &#x3D; false, field_mapping &#x3D; false}: { include_navigation?: boolean, changes_only?: boolean, field_mapping?: boolean } &#x3D; {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { include_navigation, changes_only, field_mapping });
-  }
-  attributes({ changes_only &#x3D; false }: { changes_only?: boolean } &#x3D; {}): {[name: string]: any} {
-    return this._options.attributes(this, { changes_only });
-  }
-  assign(data: any &#x3D; {}, { reset &#x3D; false }: { reset?: boolean } &#x3D; {}) {
-    this._options.assign(this, data, { reset });
-  }
-  clone() {
-    let Ctor &#x3D; &lt;typeof ODataModel&gt;this.constructor;
-    return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.resource(), meta: this.meta() });
-  }
-  private _request(resource: ODataModelResource&lt;T&gt;, obs$: Observable&lt;ODataEntity&lt;any&gt;&gt;): Observable&lt;this&gt; {
-    this.request$.emit(obs$);
-    return obs$.pipe(
-      map(({ entity, meta }) &#x3D;&gt; {
-        this.resource(resource);
-        this.meta(meta);
-        this.assign(meta.attributes&lt;T&gt;(entity || {}), { reset: true });
-        this.sync$.emit();
-        return this;
-      }));
-  }
-  fetch(options?: HttpOptions): Observable&lt;this&gt; {
-    let resource &#x3D; this.resource();
-    if (resource !&#x3D;&#x3D; undefined) {
-      let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt; &#x3D; NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!resource.segment.entitySet().hasKey())
-          return throwError(&quot;Can&#x27;t fetch model without key&quot;);
-        obs$ &#x3D; resource.get(options);
-      } else if (resource instanceof ODataNavigationPropertyResource) {
-        obs$ &#x3D; resource.get(
-          Object.assign&lt;HttpEntityOptions, HttpOptions&gt;(&lt;HttpEntityOptions&gt;{ responseType: &#x27;entity&#x27; }, options || {}));
-      } else if (resource instanceof ODataPropertyResource) {
-        obs$ &#x3D; resource.get(
-          Object.assign&lt;HttpEntityOptions, HttpOptions&gt;(&lt;HttpEntityOptions&gt;{ responseType: &#x27;entity&#x27; }, options || {}));
+    return value.events$.subscribe((event: ODataModelEvent&lt;any&gt;) &#x3D;&gt; {
+      const newEvent: ODataModelEvent&lt;any&gt; &#x3D; {...event};
+      if (value instanceof ODataModel) {
+        newEvent.path &#x3D; &#x60;${property.name}.${event.path}&#x60;;
+      } else if (value instanceof ODataCollection) {
+        newEvent.path &#x3D; event.path ? &#x60;${property.name}${event.path}&#x60; : property.name;
       }
-      return this._request(resource, obs$);
-    }
-    return throwError(&quot;Resource is undefined&quot;);
-  }
-
-  save(
-    { patch &#x3D; false, validate &#x3D; true, ...options }: HttpOptions &amp; { patch?: boolean, validate?: boolean, options?: HttpOptions } &#x3D; {}
-  ): Observable&lt;this&gt; {
-    let resource &#x3D; this.resource();
-    if (resource !&#x3D;&#x3D; undefined) {
-      let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt; &#x3D; NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!validate || this.valid({create: !resource.segment.entitySet().hasKey(), patch})) {
-          const _entity &#x3D; this.toEntity({ changes_only: patch, field_mapping: true }) as T;
-          obs$ &#x3D; (!resource.segment.entitySet().hasKey() ?
-            resource.post(_entity, options) :
-            patch ?
-              resource.patch(_entity, options) :
-              resource.put(_entity, options)
-          ).pipe(map(({ entity, meta }) &#x3D;&gt; ({ entity: entity || _entity, meta })));
-        } else {
-          obs$ &#x3D; throwError(this.errors);
-        }
-      }
-      return this._request(resource, obs$);
-    }
-    return throwError(&quot;Resource Error&quot;);
-  }
-
-  destroy(options?: HttpOptions): Observable&lt;this&gt; {
-    let resource &#x3D; this.resource();
-    if (resource !&#x3D;&#x3D; undefined) {
-      let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt; &#x3D; NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!resource.segment.entitySet().hasKey())
-          return throwError(&quot;Can&#x27;t destroy model without key&quot;);
-        const _entity &#x3D; this.toEntity({field_mapping: true}) as T;
-        obs$ &#x3D; resource.delete(Object.assign({ etag: this.meta().etag }, options || {})).pipe(
-          map(({ entity, meta }) &#x3D;&gt; ({ entity: entity || _entity, meta })));
-      }
-      return this._request(resource, obs$).pipe(tap(() &#x3D;&gt; this.destroy$.emit()));
-    }
-    return throwError(&quot;Resource Error&quot;);
-  }
-  get query() {
-    return this._options.query;
-  }
-  private _call&lt;P, R&gt;(
-    params: P | null,
-    resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
-    responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
-  ) {
-    if (expand !&#x3D;&#x3D; undefined)
-      resource.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      resource.query.select(select);
-    switch (responseType) {
-      case &#x27;property&#x27;:
-        return resource.callProperty(params, options);
-      case &#x27;model&#x27;:
-        return resource.callModel(params, options);
-      case &#x27;collection&#x27;:
-        return resource.callCollection(params, options);
-      default:
-        return resource.call(params, options);
-    }
-  }
-
-  protected callFunction&lt;P, R&gt;(
-    name: string,
-    params: P | null,
-    responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
-  ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
-    let resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.function&lt;P, R&gt;(name), responseType, {expand, select, ...options});
-    }
-    return throwError(&quot;Can&#x27;t call function without ODataEntityResource with key&quot;);
-  }
-
-  protected callAction&lt;P, R&gt;(
-    name: string,
-    params: P | null,
-    responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
-  ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
-    let resource &#x3D; this.resource();
-    const key &#x3D; this.key();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.action&lt;P, R&gt;(name), responseType, {expand, select, ...options});
-    }
-    return throwError(&quot;Can&#x27;t call action without ODataEntityResource with key&quot;);
-  }
-
-  // As Derived
-  protected asDerived&lt;S&gt;(type: string): ODataModel&lt;S&gt; {
-    const resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource) {
-      return resource.cast&lt;S&gt;(type).asModel(this.toEntity({ include_navigation: true }), {meta: this.meta()});
-    }
-    throw new Error(&#x60;Can&#x27;t cast to derived model without ODataEntityResource&#x60;);
-  }
-
-  protected getBinding&lt;S&gt;(
-    path: string,
-    responseType: &#x27;model&#x27; | &#x27;collection&#x27;,
-    options?: HttpOptions
-  ): Observable&lt;ODataModel&lt;S&gt; | ODataCollection&lt;S, ODataModel&lt;S&gt;&gt; | null&gt; {
-    let resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      const nav &#x3D; resource.navigationProperty&lt;S&gt;(path);
-      switch (responseType) {
-        case &#x27;model&#x27;:
-          return nav.fetchModel(options);
-        case &#x27;collection&#x27;:
-          return nav.fetchCollection(options);
-      }
-    }
-    return throwError(&quot;Can&#x27;t binding without ODataEntityResource with key&quot;);
-  }
-
-  // Set Reference
-  protected setReference&lt;P&gt;(
-    name: string,
-    model: ODataModel&lt;P&gt; | null,
-    options?: HttpOptions
-  ): Observable&lt;this&gt; {
-    const prop &#x3D; this._options.findProperty(p &#x3D;&gt; p.name &#x3D;&#x3D;&#x3D; name);
-    if (prop &#x3D;&#x3D;&#x3D; undefined)
-      throw new Error(&#x60;Can&#x27;t find property ${name}&#x60;);
-    if (prop.parser?.collection)
-      throw new Error(&#x60;Can&#x27;t set ${prop.name} to collection, use add&#x60;);
-
-    const resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      let ref &#x3D; resource.navigationProperty(prop.field).reference();
-      const etag &#x3D; this.meta().etag;
-      const opts &#x3D; Object.assign({ etag }, options || {});
-      const obs$ &#x3D; (model instanceof ODataModel) ?
-        ref.set(model.resource() as ODataEntityResource&lt;P&gt;, opts) :
-        ref.unset(opts);
-      this.request$.emit(obs$);
-      return obs$.pipe(
-        map(() &#x3D;&gt; {
-          let attrs: any &#x3D; { [name]: model };
-          if (prop.field !&#x3D;&#x3D; undefined) {
-            attrs[prop.field] &#x3D; (model instanceof ODataModel) ? model.key() : model;
-          }
-          this.assign(attrs, { reset: true });
-          this.sync$.emit();
-          return this;
-        }
-        ));
-      }
-    return throwError(&quot;Can&#x27;t binding without ODataEntityResource with key&quot;);
+      self.events$.emit(newEvent);
+    });
   }
 }
 </code></pre>

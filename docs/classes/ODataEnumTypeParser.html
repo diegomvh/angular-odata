@@ -415,8 +415,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="41"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:41</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="42"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:42</a></div>
                 </td>
             </tr>
 
@@ -497,8 +497,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:33</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="34"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:34</a></div>
                 </td>
             </tr>
 
@@ -567,8 +567,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="52"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:52</a></div>
                 </td>
             </tr>
 
@@ -649,8 +649,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="67"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:67</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:68</a></div>
                 </td>
             </tr>
 
@@ -688,8 +688,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="75"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:75</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:76</a></div>
                 </td>
             </tr>
 
@@ -795,6 +795,7 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     this.fields &#x3D; Object.entries(config.fields)
       .map(([name, f]) &#x3D;&gt; new ODataEnumTypeFieldParser(name, f as EnumTypeField));
   }
+
   isTypeOf(type: string) {
     var names &#x3D; [&#x60;${this.namespace}.${this.name}&#x60;];
     if (this.alias)
@@ -838,7 +839,12 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     return property;
   }
   validate(member: string | number, {create &#x3D; false, patch &#x3D; false}: {create?: boolean, patch?: boolean} &#x3D; {}): string[] | undefined {
-    return (!(member in this.members)) ? [&#x27;mismatch&#x27;] : undefined;
+    if (this.flags) {
+      let members &#x3D; EnumHelper.toValues(this.members, member);
+      return members.some(member &#x3D;&gt; !(member in this.members)) ? [&#x27;mismatch&#x27;] : undefined;
+    } else {
+      return (!(member in this.members)) ? [&#x27;mismatch&#x27;] : undefined;
+    }
   }
 }
 </code></pre>

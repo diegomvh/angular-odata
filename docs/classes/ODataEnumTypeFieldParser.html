@@ -387,6 +387,7 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     this.fields &#x3D; Object.entries(config.fields)
       .map(([name, f]) &#x3D;&gt; new ODataEnumTypeFieldParser(name, f as EnumTypeField));
   }
+
   isTypeOf(type: string) {
     var names &#x3D; [&#x60;${this.namespace}.${this.name}&#x60;];
     if (this.alias)
@@ -430,7 +431,12 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     return property;
   }
   validate(member: string | number, {create &#x3D; false, patch &#x3D; false}: {create?: boolean, patch?: boolean} &#x3D; {}): string[] | undefined {
-    return (!(member in this.members)) ? [&#x27;mismatch&#x27;] : undefined;
+    if (this.flags) {
+      let members &#x3D; EnumHelper.toValues(this.members, member);
+      return members.some(member &#x3D;&gt; !(member in this.members)) ? [&#x27;mismatch&#x27;] : undefined;
+    } else {
+      return (!(member in this.members)) ? [&#x27;mismatch&#x27;] : undefined;
+    }
   }
 }
 </code></pre>
