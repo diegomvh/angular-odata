@@ -322,14 +322,8 @@ export class ODataModelOptions<T> {
 
     if (field.isComplexType() || field.isNavigation()) {
       let newModel = value as ODataModel<F> | ODataCollection<F, ODataModel<F>> | null;
-      if (field.isNavigation()) {
-        if (model.key() === undefined)
-          throw new Error(`Can't set ${name} from unsaved model`);
-        if (field.collection)
-          throw new Error(`Can't set ${name} to navigation collection, use add instead`);
-        newModel = value as ODataModel<F> | null;
-        if (newModel?.key() === undefined)
-          throw new Error(`Can't set ${name}`);
+      if (field.isNavigation() && model.key() === undefined) {
+        throw new Error(`Can't set ${name} from unsaved model`);
       }
       const relation = this._relations[name];
       if (relation !== undefined && relation.subscription !== null) {
