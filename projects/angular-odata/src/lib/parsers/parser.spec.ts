@@ -68,7 +68,9 @@ describe('ODataClient', () => {
                 // Values of type Edm.Binary, Edm.Date, Edm.DateTimeOffset, Edm.Duration,  Edm.Guid, and Edm.TimeOfDay as well as enumeration values are represented as JSON strings whose content satisfies the rules binaryValue, dateValue, dateTimeOffsetValue, durationValue, guidValue, timeOfDayValue, and enumValue
                 binary: { type: 'Edm.Binary' },
                 date: { type: 'Edm.Date' }, //The date without a time-zone offset
+                dates: { type: 'Edm.Date', collection: true }, //The date without a time-zone offset
                 dateTimeOffset: { type: 'Edm.DateTimeOffset' },
+                dateTimeOffsets: { type: 'Edm.DateTimeOffset', collection: true },
                 duration: { type: 'Edm.Duration' },
                 timeOfDay: { type: 'Edm.TimeOfDay' }, //The clock time 00:00 - 23:59:59.999999999999
                 guid: { type: 'Edm.Guid' },
@@ -345,8 +347,10 @@ describe('ODataClient', () => {
       string: 'Say "Hello",\nthen go',
       binary: 'T0RhdGE=',
       date: '2012-12-03',
+      dates: [ '2012-12-03' ],
       timeOfDay: '07:59:59.999',
       dateTimeOffset: '2012-12-03T07:16:23.000Z',
+      dateTimeOffsets: [ '2012-12-03T07:16:23.000Z' ],
       duration: 'P12DT23H59M59.999999999999S',
       guid: '01234567-89ab-cdef-0123-456789abcdef',
       enumeration: 'Yellow',
