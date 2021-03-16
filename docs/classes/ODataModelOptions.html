@@ -821,8 +821,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="368"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:368</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="362"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:362</a></div>
                 </td>
             </tr>
 
@@ -2308,14 +2308,8 @@ export class ODataModelOptions&lt;T&gt; {
 
     if (field.isComplexType() || field.isNavigation()) {
       let newModel &#x3D; value as ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; | null;
-      if (field.isNavigation()) {
-        if (model.key() &#x3D;&#x3D;&#x3D; undefined)
-          throw new Error(&#x60;Can&#x27;t set ${name} from unsaved model&#x60;);
-        if (field.collection)
-          throw new Error(&#x60;Can&#x27;t set ${name} to navigation collection, use add instead&#x60;);
-        newModel &#x3D; value as ODataModel&lt;F&gt; | null;
-        if (newModel?.key() &#x3D;&#x3D;&#x3D; undefined)
-          throw new Error(&#x60;Can&#x27;t set ${name}&#x60;);
+      if (field.isNavigation() &amp;&amp; model.key() &#x3D;&#x3D;&#x3D; undefined) {
+        throw new Error(&#x60;Can&#x27;t set ${name} from unsaved model&#x60;);
       }
       const relation &#x3D; this._relations[name];
       if (relation !&#x3D;&#x3D; undefined &amp;&amp; relation.subscription !&#x3D;&#x3D; null) {

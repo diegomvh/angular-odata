@@ -1883,140 +1883,161 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
-  &#x27;Edm.Date&#x27;: &lt;Parser&lt;Date&gt;&gt;{
-    deserialize(value: string, options: StructuredTypeFieldOptions): Date {
-      return new Date(&#x60;${value}T00:00:00.000Z&#x60;);
+  &#x27;Edm.Date&#x27;: &lt;Parser&lt;Date | Date[]&gt;&gt;{
+    deserialize(value: string | string[], options: StructuredTypeFieldOptions): Date | Date[] {
+      const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(&#x60;${v}T00:00:00.000Z&#x60;);
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: Date, options: StructuredTypeFieldOptions): string {
-      return value.toISOString().substring(0, 10);
+    serialize(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+      const _serialize &#x3D; (v: Date) &#x3D;&gt; v.toISOString().substring(0, 10);
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   },
-  &#x27;Edm.TimeOfDay&#x27;: &lt;Parser&lt;Date&gt;&gt;{
-    deserialize(value: string, options: StructuredTypeFieldOptions): Date {
-      return new Date(&#x60;1970-01-01T${value}Z&#x60;);
+  &#x27;Edm.TimeOfDay&#x27;: &lt;Parser&lt;Date | Date[]&gt;&gt;{
+    deserialize(value: string | string[], options: StructuredTypeFieldOptions): Date | Date [] {
+      const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(&#x60;1970-01-01T${v}Z&#x60;);
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: Date, options: StructuredTypeFieldOptions): string {
-      return value.toISOString().substring(11, 23);
+    serialize(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+      const _serialize &#x3D; (v: Date) &#x3D;&gt; v.toISOString().substring(11, 23);
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   },
   &#x27;Edm.DateTimeOffset&#x27;: &lt;Parser&lt;Date&gt;&gt;{
-    deserialize(value: string, options: StructuredTypeFieldOptions): Date {
-      return new Date(value);
+    deserialize(value: string | string[], options: StructuredTypeFieldOptions): Date | Date [] {
+      const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(v);
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: Date, options: StructuredTypeFieldOptions): string {
-      return value.toISOString();
+    serialize(value: Date, options: StructuredTypeFieldOptions): string | string[] {
+      const _serialize &#x3D; (v: Date) &#x3D;&gt; v.toISOString();
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   },
   &#x27;Edm.Duration&#x27;: &lt;Parser&lt;Duration&gt;&gt;{
-    deserialize(value: string, options: StructuredTypeFieldOptions): Duration {
+    deserialize(value: string, options: StructuredTypeFieldOptions): Duration | Duration[] {
       const matches &#x3D; /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(value);
-      if (!matches || value.length &lt; 3) {
-        throw new TypeError(&#x60;duration invalid: &quot;${value}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;)
+      const _deserialize &#x3D; (v: string) &#x3D;&gt; {
+        if (!matches || value.length &lt; 3) {
+          throw new TypeError(&#x60;duration invalid: &quot;${value}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;)
+        }
+        let duration: Duration &#x3D; {};
+        duration.sign &#x3D; (matches[1] &#x3D;&#x3D;&#x3D; &#x27;-&#x27;) ? -1 : 1;
+        return [&#x27;years&#x27;, &#x27;months&#x27;, &#x27;days&#x27;, &#x27;hours&#x27;, &#x27;minutes&#x27;, &#x27;seconds&#x27;].reduce((acc: any, name, index) &#x3D;&gt; {
+          const v &#x3D; parseFloat(matches[index + 3]);
+          if (!Number.isNaN(v))
+            acc[name] &#x3D; v;
+          return acc;
+        }, duration) as Duration;
       }
-      let duration: Duration &#x3D; {};
-      duration.sign &#x3D; (matches[1] &#x3D;&#x3D;&#x3D; &#x27;-&#x27;) ? -1 : 1;
-      return [&#x27;years&#x27;, &#x27;months&#x27;, &#x27;days&#x27;, &#x27;hours&#x27;, &#x27;minutes&#x27;, &#x27;seconds&#x27;].reduce((acc: any, name, index) &#x3D;&gt; {
-        const v &#x3D; parseFloat(matches[index + 3]);
-        if (!Number.isNaN(v))
-          acc[name] &#x3D; v;
-        return acc;
-      }, duration) as Duration;
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(d: Duration, options: StructuredTypeFieldOptions): string {
-      return [
-        (d.sign &#x3D;&#x3D;&#x3D; -1) ? &#x27;-&#x27; : &#x27;&#x27;,
+    serialize(value: Duration | Duration[], options: StructuredTypeFieldOptions): string | string[] {
+      const _serialize &#x3D; (v: Duration) &#x3D;&gt; [
+        (v.sign &#x3D;&#x3D;&#x3D; -1) ? &#x27;-&#x27; : &#x27;&#x27;,
         &#x27;P&#x27;,
-        d.years ? d.years + &#x27;Y&#x27; : &#x27;&#x27;,
-        d.months ? d.months + &#x27;M&#x27; : &#x27;&#x27;,
-        d.days ? d.days + &#x27;D&#x27; : &#x27;&#x27;,
+        v.years ? v.years + &#x27;Y&#x27; : &#x27;&#x27;,
+        v.months ? v.months + &#x27;M&#x27; : &#x27;&#x27;,
+        v.days ? v.days + &#x27;D&#x27; : &#x27;&#x27;,
         &#x27;T&#x27;,
-        d.hours ? d.hours + &#x27;H&#x27; : &#x27;&#x27;,
-        d.minutes ? d.minutes + &#x27;M&#x27; : &#x27;&#x27;,
-        d.seconds ? d.seconds + &#x27;S&#x27; : &#x27;&#x27;,
+        v.hours ? v.hours + &#x27;H&#x27; : &#x27;&#x27;,
+        v.minutes ? v.minutes + &#x27;M&#x27; : &#x27;&#x27;,
+        v.seconds ? v.seconds + &#x27;S&#x27; : &#x27;&#x27;,
       ].join(&quot;&quot;);
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   },
   &#x27;Edm.Decimal&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(value: any, options: StructuredTypeFieldOptions): number {
-      if (options.ieee754Compatible) {
-        return parseFloat(value);
+    deserialize(value: string | number | (string | number)[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+      const _deserialize &#x3D; (v: string | number) &#x3D;&gt; {
+        if (typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; options.ieee754Compatible) {
+          return parseFloat(v);
+        }
+        return v;
       }
-      return value;
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: number, options: StructuredTypeFieldOptions): any {
-      if (options.ieee754Compatible) {
-        return parseFloat(value.toPrecision(options.field.precision)).toFixed(options.field.scale);
+    serialize(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+      const _serialize &#x3D; (v: number) &#x3D;&gt; {
+        if (options.ieee754Compatible) {
+          return parseFloat(v.toPrecision(options.field.precision)).toFixed(options.field.scale);
+        }
+        return v;
       }
-      return value;
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   },
   &#x27;Edm.Double&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(value: any, options: StructuredTypeFieldOptions): number {
-      if (value &#x3D;&#x3D;&#x3D; &#x27;INF&#x27;) return Infinity;
-      return value;
+    deserialize(value: string | number | (string | number)[], options: StructuredTypeFieldOptions): number | number[] {
+      const _deserialize &#x3D; (v: string | number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27;)? Infinity : v as number;
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: number, options: StructuredTypeFieldOptions): any {
-      if (value &#x3D;&#x3D;&#x3D; Infinity) return &#x27;INF&#x27;;
-      return value;
+    serialize(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+      const _serialize &#x3D; (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity)? &#x27;INF&#x27; : v;
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   },
   &#x27;Edm.Single&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(value: any, options: StructuredTypeFieldOptions): number {
-      if (value &#x3D;&#x3D;&#x3D; &#x27;INF&#x27;) return Infinity;
-      return value;
+    deserialize(value: string | number | (string | number)[], options: StructuredTypeFieldOptions): number | number[] {
+      const _deserialize &#x3D; (v: string | number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27;)? Infinity : v as number;
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: number, options: StructuredTypeFieldOptions): any {
-      if (value &#x3D;&#x3D;&#x3D; Infinity) return &#x27;INF&#x27;;
-      return value;
+    serialize(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+      const _serialize &#x3D; (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity)? &#x27;INF&#x27; : v;
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   },
   &#x27;Edm.Binary&#x27;: &lt;Parser&lt;ArrayBuffer&gt;&gt;{
-    deserialize(base64: string, options: StructuredTypeFieldOptions): ArrayBuffer {
-      var bufferLength &#x3D; base64.length * 0.75,
-        len &#x3D; base64.length, i, p &#x3D; 0,
-        encoded1, encoded2, encoded3, encoded4;
+    deserialize(value: string | string[], options: StructuredTypeFieldOptions): ArrayBuffer | ArrayBuffer[] {
+      const _deserialize &#x3D; (v: string) &#x3D;&gt; {
+        var bufferLength &#x3D; v.length * 0.75,
+          len &#x3D; v.length, i, p &#x3D; 0,
+          encoded1, encoded2, encoded3, encoded4;
 
-      if (base64[base64.length - 1] &#x3D;&#x3D;&#x3D; &quot;&#x3D;&quot;) {
-        bufferLength--;
-        if (base64[base64.length - 2] &#x3D;&#x3D;&#x3D; &quot;&#x3D;&quot;) {
+        if (v[v.length - 1] &#x3D;&#x3D;&#x3D; &quot;&#x3D;&quot;) {
           bufferLength--;
+          if (v[v.length - 2] &#x3D;&#x3D;&#x3D; &quot;&#x3D;&quot;) {
+            bufferLength--;
+          }
         }
+
+        var arraybuffer &#x3D; new ArrayBuffer(bufferLength),
+          bytes &#x3D; new Uint8Array(arraybuffer);
+
+        for (i &#x3D; 0; i &lt; len; i +&#x3D; 4) {
+          encoded1 &#x3D; lookup[v.charCodeAt(i)];
+          encoded2 &#x3D; lookup[v.charCodeAt(i + 1)];
+          encoded3 &#x3D; lookup[v.charCodeAt(i + 2)];
+          encoded4 &#x3D; lookup[v.charCodeAt(i + 3)];
+
+          bytes[p++] &#x3D; (encoded1 &lt;&lt; 2) | (encoded2 &gt;&gt; 4);
+          bytes[p++] &#x3D; ((encoded2 &amp; 15) &lt;&lt; 4) | (encoded3 &gt;&gt; 2);
+          bytes[p++] &#x3D; ((encoded3 &amp; 3) &lt;&lt; 6) | (encoded4 &amp; 63);
+        }
+
+        return arraybuffer;
       }
-
-      var arraybuffer &#x3D; new ArrayBuffer(bufferLength),
-        bytes &#x3D; new Uint8Array(arraybuffer);
-
-      for (i &#x3D; 0; i &lt; len; i +&#x3D; 4) {
-        encoded1 &#x3D; lookup[base64.charCodeAt(i)];
-        encoded2 &#x3D; lookup[base64.charCodeAt(i + 1)];
-        encoded3 &#x3D; lookup[base64.charCodeAt(i + 2)];
-        encoded4 &#x3D; lookup[base64.charCodeAt(i + 3)];
-
-        bytes[p++] &#x3D; (encoded1 &lt;&lt; 2) | (encoded2 &gt;&gt; 4);
-        bytes[p++] &#x3D; ((encoded2 &amp; 15) &lt;&lt; 4) | (encoded3 &gt;&gt; 2);
-        bytes[p++] &#x3D; ((encoded3 &amp; 3) &lt;&lt; 6) | (encoded4 &amp; 63);
-      }
-
-      return arraybuffer;
+      return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(arrayBuffer: ArrayBuffer, options: StructuredTypeFieldOptions): string {
-      var bytes &#x3D; new Uint8Array(arrayBuffer),
-        i, len &#x3D; bytes.length, base64 &#x3D; &quot;&quot;;
+    serialize(value: ArrayBuffer | ArrayBuffer[], options: StructuredTypeFieldOptions): string | string[] {
+      const _serialize &#x3D; (v: ArrayBuffer) &#x3D;&gt; {
+        var bytes &#x3D; new Uint8Array(v),
+          i, len &#x3D; bytes.length, base64 &#x3D; &quot;&quot;;
 
-      for (i &#x3D; 0; i &lt; len; i +&#x3D; 3) {
-        base64 +&#x3D; chars[bytes[i] &gt;&gt; 2];
-        base64 +&#x3D; chars[((bytes[i] &amp; 3) &lt;&lt; 4) | (bytes[i + 1] &gt;&gt; 4)];
-        base64 +&#x3D; chars[((bytes[i + 1] &amp; 15) &lt;&lt; 2) | (bytes[i + 2] &gt;&gt; 6)];
-        base64 +&#x3D; chars[bytes[i + 2] &amp; 63];
+        for (i &#x3D; 0; i &lt; len; i +&#x3D; 3) {
+          base64 +&#x3D; chars[bytes[i] &gt;&gt; 2];
+          base64 +&#x3D; chars[((bytes[i] &amp; 3) &lt;&lt; 4) | (bytes[i + 1] &gt;&gt; 4)];
+          base64 +&#x3D; chars[((bytes[i + 1] &amp; 15) &lt;&lt; 2) | (bytes[i + 2] &gt;&gt; 6)];
+          base64 +&#x3D; chars[bytes[i + 2] &amp; 63];
+        }
+
+        if ((len % 3) &#x3D;&#x3D;&#x3D; 2) {
+          base64 &#x3D; base64.substring(0, base64.length - 1) + &quot;&#x3D;&quot;;
+        } else if (len % 3 &#x3D;&#x3D;&#x3D; 1) {
+          base64 &#x3D; base64.substring(0, base64.length - 2) + &quot;&#x3D;&#x3D;&quot;;
+        }
+        return base64;
       }
-
-      if ((len % 3) &#x3D;&#x3D;&#x3D; 2) {
-        base64 &#x3D; base64.substring(0, base64.length - 1) + &quot;&#x3D;&quot;;
-      } else if (len % 3 &#x3D;&#x3D;&#x3D; 1) {
-        base64 &#x3D; base64.substring(0, base64.length - 2) + &quot;&#x3D;&#x3D;&quot;;
-      }
-
-      return base64;
+      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     }
   }
 }</code>
