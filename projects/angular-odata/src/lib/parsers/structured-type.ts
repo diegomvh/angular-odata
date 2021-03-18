@@ -263,15 +263,19 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
 
   // Json Schema
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
-    let schema = {
-      $schema: "http://json-schema.org/draft-07/schema#",
-      $id: `${this.namespace}.${this.name}`,
-      title: this.name,
-      type: "object"
-    } as any;
+    let schema: any = this.parent ?
+      this.parent.toJsonSchema(options) :
+      {
+        $schema: "http://json-schema.org/draft-07/schema#",
+        $id: `${this.namespace}.${this.name}`,
+        title: this.name,
+        type: "object",
+        properties: {},
+        required: []
+      };
     const fields = this.fields
       .filter(f => (!f.navigation || (options.expand && f.name in options.expand)) && (!options.select || (<string[]>options.select).indexOf(f.name) !== -1));
-    schema.properties = fields
+    schema.properties = Object.assign({}, schema.properties, fields
       .map(f => {
         let expand = options.expand && f.name in options.expand ? (options.expand as any)[f.name] : undefined;
         let schema = f.toJsonSchema(expand);
@@ -279,8 +283,8 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
           schema = (options.custom[f.name as keyof T] as (schema: any, field: ODataStructuredTypeFieldParser<any>) => any)(schema, f);
         return { [f.name]: schema };
       })
-      .reduce((acc, v) => Object.assign(acc, v), {});
-    schema.required = fields.filter(f => !f.nullable).map(f => f.name);
+      .reduce((acc, v) => Object.assign(acc, v), {}));
+    schema.required = [...schema.required, ...fields.filter(f => !f.nullable).map(f => f.name)];
     return schema;
   }
 
