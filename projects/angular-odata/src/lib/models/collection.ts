@@ -21,6 +21,7 @@ import { EntityKey } from '../types';
 import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
+  EntitySelect,
   ODataCallableHttpOptions,
   ODataCollectionResource,
   ODataModelEvent,
@@ -144,13 +145,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
     include_navigation = false,
     changes_only = false,
     field_mapping = false,
+    select
   }: {
     include_navigation?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
+    select?: EntitySelect<T>
   } = {}) {
     return this._models.map((m) =>
-      m.model.toEntity({ include_navigation, changes_only, field_mapping })
+      m.model.toEntity({ include_navigation, changes_only, field_mapping, select })
     );
   }
 
@@ -336,8 +339,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
         entry.subscription.unsubscribe();
       }
       this._models[index] = {
-        key: value.key() as EntityKey<T>, 
-        model: value as M, 
+        key: value.key() as EntityKey<T>,
+        model: value as M,
         subscription: this._subscribe(value as M)
       };
       value.events$.emit({ name: 'add', model: value, collection: this });

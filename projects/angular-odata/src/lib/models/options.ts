@@ -8,7 +8,7 @@ import { ODataModel } from "./model";
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCallableHttpOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
-
+export type EntitySelect<T> = (keyof T | { [P in keyof T]?: EntitySelect<T[P]>})[] | { [P in keyof T]?: EntitySelect<T[P]>};
 export type ODataModelEvent<T> = {
   name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'destroy'
   model?: ODataModel<T>
@@ -191,35 +191,70 @@ export class ODataModelOptions<T> {
   toEntity(model: ODataModel<T>, {
     include_navigation = false,
     changes_only = false,
-    field_mapping = false
-  }: { include_navigation?: boolean, changes_only?: boolean, field_mapping?: boolean } = {}): T | {[name: string]: any} {
+    field_mapping = false,
+    select
+  }: {
+    include_navigation?: boolean,
+    changes_only?: boolean,
+    field_mapping?: boolean,
+    select?: EntitySelect<T>
+  } = {}): T | {[name: string]: any} {
+    // Merge select in one object
+    let selects: any = {};
+    if (Array.isArray(select)) {
+      selects = select.reduce((acc, se: any) =>
+        Object.assign(acc, typeof se === 'object' ? se : {}), {});
+    } else if (typeof select === 'object') {
+      selects = Object.keys(select);
+    }
+    // Get select keys
+    let keys: Array<keyof T> | undefined;
+    if (Array.isArray(select)) {
+      keys = select.reduce((acc: Array<keyof T>, se: any) =>
+        [...acc, ...(typeof se === 'object' ? Object.keys(se) : [se])], []) as Array<keyof T>;
+    } else if (typeof select === 'object') {
+      keys = Object.keys(select) as Array<keyof T>;
+    }
+
     let entries = Object.entries(
       Object.assign({},
-        this.attributes(model, { changes_only: changes_only }),
+        this.attributes(model, { changes_only: changes_only, select: keys }),
         Object.entries(this._relations)
+          .filter(([k, ]) => keys === undefined || keys.indexOf(k as keyof T) !== -1)
           .filter(([, v]) => include_navigation || !v.property.parser?.isNavigation())
           .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v.model }), {})
       )
     );
     // Map models and collections
-    entries = entries.map(([k, v]) => [k,
-      (v instanceof ODataModel) ? v.toEntity({ changes_only, include_navigation, field_mapping }) :
-        (v instanceof ODataCollection) ? v.toEntities({ changes_only, include_navigation, field_mapping }) :
-          v]);
+    entries = entries.map(([k, v]) => [k, (
+      (v instanceof ODataModel) ? v.toEntity({ changes_only, include_navigation, field_mapping, select: selects[k] }) :
+        (v instanceof ODataCollection) ? v.toEntities({ changes_only, include_navigation, field_mapping, select: selects[k] }) :
+          v)]
+    );
     // Filter empty
     if (changes_only)
-      entries = entries.filter(([, v]) => !Types.isEmpty(v));
+      entries = entries.filter(([k, v]) => !Types.isEmpty(v));
     // Create entity
-    return entries.reduce((acc, [key, value]) => {
-      const name = field_mapping ? this.findProperty(p => p.name === key)?.field || key : key;
-      return Object.assign(acc, { [name]: value });
+    return entries.reduce((acc, [k, v]) => {
+      const name = field_mapping ? this.findProperty(p => p.name === k)?.field || k : k;
+      return Object.assign(acc, { [name]: v });
     }, {}) as T
   }
 
-  attributes(model: ODataModel<T>, { changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
-    return Object.assign({},
-      changes_only ? {} : this._attributes,
-      this._changes);
+  attributes(model: ODataModel<T>, {
+    changes_only = false,
+    select
+  }: {
+    changes_only?: boolean
+    select?: Array<keyof T>
+  } = {}): {[name: string]: any} {
+    var entries = Object.entries(
+      Object.assign({},
+        changes_only ? {} : this._attributes,
+        this._changes));
+    if (select !== undefined)
+        entries = entries.filter(([k,]) => select.indexOf(k as keyof T) !== -1);
+    return entries.reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
   }
 
   assign(model: ODataModel<T>, data: {[name: string]: any} = {}, { reset = false }: { reset?: boolean } = {}) {

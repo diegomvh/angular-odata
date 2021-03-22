@@ -16,7 +16,7 @@ import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
-import { ModelProperty, ODataCallableHttpOptions, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
+import { EntitySelect, ModelProperty, ODataCallableHttpOptions, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
 
 export class ODataModel<T> {
   //Events
@@ -74,8 +74,18 @@ export class ODataModel<T> {
   protected defaults() {
     return this._options.defaults(this);
   }
-  toEntity({ include_navigation = false, changes_only = false, field_mapping = false}: { include_navigation?: boolean, changes_only?: boolean, field_mapping?: boolean } = {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { include_navigation, changes_only, field_mapping });
+  toEntity({
+    include_navigation = false,
+    changes_only = false,
+    field_mapping = false,
+    select
+  }: {
+    include_navigation?: boolean,
+    changes_only?: boolean,
+    field_mapping?: boolean,
+    select?: EntitySelect<T>
+  } = {}): T | {[name: string]: any} {
+    return this._options.toEntity(this, { include_navigation, changes_only, field_mapping, select });
   }
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
     return this._options.attributes(this, { changes_only });

@@ -11,7 +11,6 @@ export type JsonSchemaOptions<T> = {
   custom?: JsonSchemaCustom<T>;
   expand?: JsonSchemaExpand<T>;
 }
-
 export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, Parser<T> {
   name: string;
   type: string;
