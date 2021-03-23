@@ -13,6 +13,12 @@ import {
   ODataActionResource,
   ODataFunctionResource,
   ODataEntityMeta,
+  Select,
+  Expand,
+  OptionHandler,
+  Transform,
+  Filter,
+  OrderBy,
 } from '../resources/index';
 
 import { EventEmitter } from '@angular/core';
@@ -38,11 +44,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     subscription: Subscription;
   }[] = [];
 
-  get models() {
+  models() {
     return this._models.map((m) => m.model);
   }
 
-  get state() {
+  state() {
     return {
       top: this._meta.top,
       skip: this._meta.skip,
@@ -86,6 +92,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           `Can't reattach ${resource.type()} to ${this._resource.type()}`
         );
 
+      const current = this._resource;
       const schema = resource.schema;
       if (schema !== undefined) this.schema(schema);
 
@@ -106,6 +113,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
 
       this._resource = resource;
+      this.events$.emit({ name: 'attach', collection: this, previous: current, value: resource });
     }
     return this._resource?.clone();
   }
@@ -145,15 +153,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
     include_navigation = false,
     changes_only = false,
     field_mapping = false,
-    select
+    select,
   }: {
     include_navigation?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
-    select?: EntitySelect<T>
+    select?: EntitySelect<T>;
   } = {}) {
     return this._models.map((m) =>
-      m.model.toEntity({ include_navigation, changes_only, field_mapping, select })
+      m.model.toEntity({
+        include_navigation,
+        changes_only,
+        field_mapping,
+        select,
+      })
     );
   }
 
@@ -179,9 +192,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  fetch(
-    { skip, top, skiptoken, withCount = true, ...options }: HttpOptions & { skip?: number; top?: number; skiptoken?: string; withCount?: boolean; } = {}
-  ): Observable<this> {
+  fetch({
+    skip,
+    top,
+    skiptoken,
+    withCount = true,
+    ...options
+  }: HttpOptions & {
+    skip?: number;
+    top?: number;
+    skiptoken?: string;
+    withCount?: boolean;
+  } = {}): Observable<this> {
     let obs$: Observable<ODataEntities<any>> = NEVER;
     const resource = this.resource();
     if (resource !== undefined) {
@@ -222,17 +244,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
         resource instanceof ODataEntitySetResource ||
         resource instanceof ODataNavigationPropertyResource
       ) {
-        obs$ = resource
-          .fetchAll(options)
-          .pipe(
-            map((entities) => ({
-              entities,
-              meta: new ODataEntitiesMeta(
-                {},
-                { options: resource?.api.options }
-              ),
-            }))
-          );
+        obs$ = resource.fetchAll(options).pipe(
+          map((entities) => ({
+            entities,
+            meta: new ODataEntitiesMeta({}, { options: resource?.api.options }),
+          }))
+        );
       }
       return this._request(obs$);
     }
@@ -250,7 +267,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         .pipe(map(() => this));
     }
     return obs$.pipe(
-      map(col => {
+      map((col) => {
         if (this._resource instanceof ODataEntitySetResource) {
           model.resource(
             this._resource.entity(model.toEntity({ field_mapping: true }) as T)
@@ -289,15 +306,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const index = this.indexOf(model);
     if (index !== -1) {
       obs$ = obs$.pipe(
-        map(col => {
-            const entry = this._models[index];
-            // Emit Event
-            model.events$.emit({ name: 'remove', model, collection: this });
-            // Now remove
-            this._models.splice(index, 1);
-            entry.subscription.unsubscribe();
-            this.events$.emit({ name: 'update', collection: this });
-            return col;
+        map((col) => {
+          const entry = this._models[index];
+          // Emit Event
+          model.events$.emit({ name: 'remove', model, collection: this });
+          // Now remove
+          this._models.splice(index, 1);
+          entry.subscription.unsubscribe();
+          this.events$.emit({ name: 'update', collection: this });
+          return col;
         })
       );
     }
@@ -324,10 +341,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   set(path: string | string[], value: any) {
-    const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
+    const pathArray = (Types.isArray(path)
+      ? path
+      : (path as string).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length === 0) return undefined;
     if (pathArray.length > 1) {
-      const model = this.models[Number(pathArray[0])];
+      const model = this._models[Number(pathArray[0])].model;
       return model.set(pathArray.slice(1), value);
     }
     if (pathArray.length === 1 && value instanceof ODataModel) {
@@ -341,18 +360,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._models[index] = {
         key: value.key() as EntityKey<T>,
         model: value as M,
-        subscription: this._subscribe(value as M)
+        subscription: this._subscribe(value as M),
       };
       value.events$.emit({ name: 'add', model: value, collection: this });
-      this.events$.emit({name: 'update', collection: this});
+      this.events$.emit({ name: 'update', collection: this });
       return value;
     }
   }
 
   get(path: string | string[]): any {
-    const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
+    const pathArray = (Types.isArray(path)
+      ? path
+      : (path as string).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length === 0) return undefined;
-    const value = this.models[Number(pathArray[0])];
+    const value = this._models[Number(pathArray[0])].model;
     if (pathArray.length > 1 && value instanceof ODataModel) {
       return value.get(pathArray.slice(1));
     }
@@ -361,9 +382,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   assign(data: any[] = [], { reset = false }: { reset?: boolean } = {}) {
     if (reset) {
-      this._models.forEach((e) =>
-        e.subscription.unsubscribe()
-      );
+      this._models.forEach((e) => e.subscription.unsubscribe());
       const models = data.map((e) => this._modelFactory(e, { reset }));
       this._models = models.map((model, index) => {
         return {
@@ -388,15 +407,31 @@ export class ODataCollection<T, M extends ODataModel<T>>
             key: model.key(),
             subscription: this._subscribe(model),
           });
-          model.events$.emit({ name: 'add', model, collection: this});
+          model.events$.emit({ name: 'add', model, collection: this });
         }
       });
     }
     this.events$.emit({ name: 'update', collection: this });
   }
-  get query() {
-    if (!this._resource) throw new Error(`Can't query without ODataResource`);
-    return this._resource.query;
+  query(
+    func: (q: {
+      select(opts?: Select<T>): OptionHandler<Select<T>>;
+      expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
+      transform(opts?: Transform<T>): OptionHandler<Transform<T>>;
+      search(opts?: string): OptionHandler<string>;
+      filter(opts?: Filter): OptionHandler<Filter>;
+      orderBy(opts?: OrderBy<T>): OptionHandler<OrderBy<T>>;
+      format(opts?: string): OptionHandler<string>;
+      top(opts?: number): OptionHandler<number>;
+      skip(opts?: number): OptionHandler<number>;
+      skiptoken(opts?: string): OptionHandler<string>;
+    }) => void
+  ) {
+    const resource = this.resource();
+    if (resource === undefined)
+      throw new Error(`Can't query without ODataResource`);
+    func(resource.query);
+    this.resource(resource);
   }
   private _call<P, R>(
     params: P | null,
@@ -454,12 +489,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _subscribe(model: M) {
     return model.events$.subscribe((event: ODataModelEvent<T>) => {
-      var newEvent = {...event};
-      newEvent.path = event.path ? `[${this.indexOf(model)}].${event.path}` : `[${this.indexOf(model)}]`;
+      var newEvent = { ...event };
+      newEvent.path = event.path
+        ? `[${this.indexOf(model)}].${event.path}`
+        : `[${this.indexOf(model)}]`;
       if (event.name === 'destroy' && event.model === model)
         this.remove(model).toPromise();
       if (event.name === 'change' && event.model === model) {
-        let entry = this._models.find(m => m.model === model);
+        let entry = this._models.find((m) => m.model === model);
         if (entry !== undefined) entry.key = model.key();
       }
       this.events$.emit(newEvent);
@@ -484,12 +521,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
   // IndexOf
   public indexOf(model: M) {
     const key = model.key();
-    const entry = this._models.find(e => {
+    const entry = this._models.find((e) => {
       let byModel = e.model === model;
       let byKey = !Types.isEmpty(e.key) && Types.isEqual(e.key, key);
       return byModel || byKey;
     });
-    return (entry !== undefined) ? this._models.indexOf(entry) : -1;
+    return entry !== undefined ? this._models.indexOf(entry) : -1;
   }
   //#endregion
 }

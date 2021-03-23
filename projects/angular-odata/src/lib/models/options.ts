@@ -1,6 +1,6 @@
 import { Subscription } from "rxjs";
 import { ODataStructuredTypeFieldParser } from "../parsers";
-import { Expand, HttpOptions, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, Select } from "../resources";
+import { Expand, Filter, HttpOptions, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, OrderBy, Select, Transform } from "../resources";
 import { ODataStructuredType } from "../schema";
 import { Types } from "../utils";
 import { ODataCollection } from "./collection";
@@ -10,7 +10,7 @@ export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNaviga
 export type ODataCallableHttpOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
 export type EntitySelect<T> = (keyof T | { [P in keyof T]?: EntitySelect<T[P]>})[] | { [P in keyof T]?: EntitySelect<T[P]>};
 export type ODataModelEvent<T> = {
-  name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'destroy'
+  name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'attach' | 'destroy'
   model?: ODataModel<T>
   collection?: ODataCollection<T, ODataModel<T>>
   path?: string  // Property.Collection[1].Collection[3].Property
@@ -101,6 +101,7 @@ export class ODataModelOptions<T> {
     if (this._resource !== undefined && resource.type() !== this._resource.type() && !resource.isSubtypeOf(this._resource))
       throw new Error(`Can't reattach ${resource.type()} to ${this._resource.type()}`);
 
+    const current = this._resource;
     const schema = resource.schema;
     if (schema !== undefined)
       this.bind(model, schema);
@@ -116,6 +117,7 @@ export class ODataModelOptions<T> {
         model.resource(property.resourceFactory<T, any>(resource));
     }
     this._resource = resource;
+    model.events$.emit({ name: 'attach', model, previous: current, value: resource });
   }
 
   resource(model: ODataModel<T>) {
@@ -168,10 +170,13 @@ export class ODataModelOptions<T> {
     return this._meta?.clone();
   }
 
-  get query() {
-    if (this._resource === undefined)
-      throw new Error(`Can't query without ODataResource`);
-    return this._resource.query;
+  query(model: ODataModel<T>, resource: ODataModelResource<T>, func: (q:
+    { select(opts?: Select<T>): OptionHandler<Select<T>>;
+      expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
+      format(opts?: string): OptionHandler<string>;
+    }) => void) {
+    func(resource.query);
+    model.resource(resource);
   }
 
   key(model: ODataModel<T>, {field_mapping = false}: {field_mapping?: boolean} = {}) {

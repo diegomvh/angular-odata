@@ -10,7 +10,10 @@ import {
   ODataEntityMeta,
   ODataEntity,
   ODataActionResource,
-  ODataFunctionResource} from '../resources/index';
+  ODataFunctionResource,
+  Select,
+  Expand,
+  OptionHandler} from '../resources/index';
 
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
@@ -187,8 +190,15 @@ export class ODataModel<T> {
     }
     return throwError("Resource Error");
   }
-  get query() {
-    return this._options.query;
+  query(func: (q:
+    { select(opts?: Select<T>): OptionHandler<Select<T>>;
+      expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
+      format(opts?: string): OptionHandler<string>;
+    }) => void) {
+    const resource = this.resource();
+    if (resource === undefined)
+      throw new Error(`Can't query without ODataResource`);
+    return this._options.query(this, resource, func);
   }
   private _call<P, R>(
     params: P | null,
