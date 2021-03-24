@@ -13,13 +13,14 @@ import {
   ODataFunctionResource,
   Select,
   Expand,
-  OptionHandler} from '../resources/index';
+  OptionHandler,
+  HttpCallableOptions} from '../resources/index';
 
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
-import { EntitySelect, ModelProperty, ODataCallableHttpOptions, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
+import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
 
 export class ODataModel<T> {
   //Events
@@ -204,12 +205,8 @@ export class ODataModel<T> {
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
+    options?: HttpCallableOptions<R>
   ) {
-    if (expand !== undefined)
-      resource.query.expand(expand);
-    if (select !== undefined)
-      resource.query.select(select);
     switch (responseType) {
       case 'property':
         return resource.callProperty(params, options);
@@ -226,11 +223,11 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
+    options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
     if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.function<P, R>(name), responseType, {expand, select, ...options});
+      return this._call(params, resource.function<P, R>(name), responseType, options);
     }
     return throwError("Can't call function without ODataEntityResource with key");
   }
@@ -239,11 +236,11 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
+    options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
     if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.action<P, R>(name), responseType, {expand, select, ...options});
+      return this._call(params, resource.action<P, R>(name), responseType, options);
     }
     return throwError("Can't call action without ODataEntityResource with key");
   }

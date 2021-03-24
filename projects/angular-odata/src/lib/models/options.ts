@@ -1,13 +1,12 @@
 import { Subscription } from "rxjs";
 import { ODataStructuredTypeFieldParser } from "../parsers";
-import { Expand, Filter, HttpOptions, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, OrderBy, Select, Transform } from "../resources";
+import { Expand, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
 import { ODataStructuredType } from "../schema";
 import { Types } from "../utils";
 import { ODataCollection } from "./collection";
 import { ODataModel } from "./model";
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
-export type ODataCallableHttpOptions<T> = HttpOptions & { expand?: Expand<T>, select?: Select<T>, options?: HttpOptions };
 export type EntitySelect<T> = (keyof T | { [P in keyof T]?: EntitySelect<T[P]>})[] | { [P in keyof T]?: EntitySelect<T[P]>};
 export type ODataModelEvent<T> = {
   name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'attach' | 'destroy'

@@ -19,6 +19,7 @@ import {
   Transform,
   Filter,
   OrderBy,
+  HttpCallableOptions,
 } from '../resources/index';
 
 import { EventEmitter } from '@angular/core';
@@ -28,7 +29,6 @@ import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
   EntitySelect,
-  ODataCallableHttpOptions,
   ODataCollectionResource,
   ODataModelEvent,
 } from './options';
@@ -437,10 +437,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
+    options?: HttpCallableOptions<R>
   ) {
-    if (expand !== undefined) resource.query.expand(expand);
-    if (select !== undefined) resource.query.select(select);
     switch (responseType) {
       case 'property':
         return resource.callProperty(params, options);
@@ -457,15 +455,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
+    options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     if (this._resource instanceof ODataEntitySetResource) {
       const resource = this._resource.function<P, R>(name);
-      return this._call(params, resource, responseType, {
-        expand,
-        select,
-        ...options,
-      });
+      return this._call(params, resource, responseType, options);
     }
     throw new Error(`Can't function without ODataEntitySetResource`);
   }
@@ -474,15 +468,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: ODataCallableHttpOptions<R> = {}
+    options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     if (this._resource instanceof ODataEntitySetResource) {
       const resource = this._resource.action<P, R>(name);
-      return this._call(params, resource, responseType, {
-        expand,
-        select,
-        ...options,
-      });
+      return this._call(params, resource, responseType, options);
     }
     throw new Error(`Can't action without ODataEntitySetResource`);
   }
