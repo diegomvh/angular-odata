@@ -159,6 +159,9 @@
                                 <a href="#meta">meta</a>
                             </li>
                             <li>
+                                <a href="#query">query</a>
+                            </li>
+                            <li>
                                 <a href="#resource">resource</a>
                             </li>
                             <li>
@@ -192,20 +195,6 @@
 
 
 
-                    <tr>
-                        <td class="col-md-4">
-                            <h6><b>Accessors</b></h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <ul class="index-list">
-                                <li>
-                                    <a href="#query">query</a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
         </tbody>
     </table>
 </section>
@@ -221,7 +210,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:25</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:29</a></div>
                             </td>
                         </tr>
 
@@ -296,7 +285,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:24</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:28</a></div>
                             </td>
                         </tr>
 
@@ -324,7 +313,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:23</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:27</a></div>
                             </td>
                         </tr>
 
@@ -352,7 +341,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:63</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:67</a></div>
                             </td>
                         </tr>
 
@@ -378,7 +367,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:25</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:29</a></div>
                             </td>
                         </tr>
 
@@ -409,15 +398,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>_call(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "model" | "collection" | "none", undefined: <a href="../interfaces/Options.html">ODataCallableHttpOptions<R></a>)</code>
+                    <code>_call(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "model" | "collection" | "none", options?: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="183"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:183</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="204"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:204</a></div>
                 </td>
             </tr>
 
@@ -442,7 +431,6 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -456,8 +444,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
@@ -470,8 +456,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
@@ -484,22 +468,18 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
+                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >ODataCallableHttpOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
 
                                 </tr>
                             </tbody>
@@ -542,8 +522,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="110"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:110</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="124"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:124</a></div>
                 </td>
             </tr>
 
@@ -626,8 +606,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="232"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:232</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="249"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:249</a></div>
                 </td>
             </tr>
 
@@ -704,8 +684,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="103"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:103</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="117"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:117</a></div>
                 </td>
             </tr>
 
@@ -792,8 +772,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="80"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:80</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="94"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:94</a></div>
                 </td>
             </tr>
 
@@ -860,15 +840,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", undefined: <a href="../interfaces/Options.html">ODataCallableHttpOptions<R></a>)</code>
+                    <code>callAction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", options?: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="218"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:218</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="235"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:235</a></div>
                 </td>
             </tr>
 
@@ -893,7 +873,6 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -907,8 +886,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
@@ -921,8 +898,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
@@ -935,22 +910,18 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
+                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >ODataCallableHttpOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
 
                                 </tr>
                             </tbody>
@@ -986,15 +957,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", undefined: <a href="../interfaces/Options.html">ODataCallableHttpOptions<R></a>)</code>
+                    <code>callFunction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", options?: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="205"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:205</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="222"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:222</a></div>
                 </td>
             </tr>
 
@@ -1019,7 +990,6 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1033,8 +1003,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1047,8 +1015,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1061,22 +1027,18 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
+                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >ODataCallableHttpOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
 
                                 </tr>
                             </tbody>
@@ -1117,8 +1079,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="106"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:106</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="120"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:120</a></div>
                 </td>
             </tr>
 
@@ -1158,8 +1120,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:74</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:78</a></div>
                 </td>
             </tr>
 
@@ -1197,8 +1159,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="165"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:165</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="179"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:179</a></div>
                 </td>
             </tr>
 
@@ -1267,8 +1229,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="121"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:121</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="135"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:135</a></div>
                 </td>
             </tr>
 
@@ -1337,8 +1299,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="94"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:94</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:108</a></div>
                 </td>
             </tr>
 
@@ -1409,8 +1371,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="240"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:240</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="257"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:257</a></div>
                 </td>
             </tr>
 
@@ -1511,8 +1473,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="58"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:58</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="62"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:62</a></div>
                 </td>
             </tr>
 
@@ -1550,8 +1512,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:52</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:56</a></div>
                 </td>
             </tr>
 
@@ -1602,6 +1564,76 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="query"></a>
+                    <span class="name">
+                        <b>
+                            query
+                        </b>
+                        <a href="#query"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>query(func: (q: literal type) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="194"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:194</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>func</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="resource"></a>
                     <span class="name">
                         <b>
@@ -1620,8 +1652,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="40"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:40</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="44"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:44</a></div>
                 </td>
             </tr>
 
@@ -1690,8 +1722,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="141"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:141</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:155</a></div>
                 </td>
             </tr>
 
@@ -1759,8 +1791,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="46"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:46</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:50</a></div>
                 </td>
             </tr>
 
@@ -1829,8 +1861,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:97</a></div>
                 </td>
             </tr>
 
@@ -1913,8 +1945,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="259"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:259</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="276"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:276</a></div>
                 </td>
             </tr>
 
@@ -2015,8 +2047,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="77"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:77</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:81</a></div>
                 </td>
             </tr>
 
@@ -2088,8 +2120,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="68"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:68</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:72</a></div>
                 </td>
             </tr>
 
@@ -2163,8 +2195,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="64"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:64</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:68</a></div>
                 </td>
             </tr>
 
@@ -2220,33 +2252,6 @@
 
 
 
-            <section>
-    <h3 id="accessors">
-        Accessors
-    </h3>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="query"></a>
-                        <span class="name"><b>query</b><a href="#query"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>query()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="180" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:180</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-</section>
     </div>
 
 
@@ -2263,13 +2268,17 @@ import {
   ODataEntityMeta,
   ODataEntity,
   ODataActionResource,
-  ODataFunctionResource} from &#x27;../resources/index&#x27;;
+  ODataFunctionResource,
+  Select,
+  Expand,
+  OptionHandler,
+  HttpCallableOptions} from &#x27;../resources/index&#x27;;
 
 import { ODataCollection } from &#x27;./collection&#x27;;
 import { Objects, Types } from &#x27;../utils&#x27;;
 import { EventEmitter } from &#x27;@angular/core&#x27;;
 import { ODataStructuredType } from &#x27;../schema&#x27;;
-import { ModelProperty, ODataCallableHttpOptions, ODataModelEvent, ODataModelOptions, ODataModelResource } from &#x27;./options&#x27;;
+import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataModelResource } from &#x27;./options&#x27;;
 
 export class ODataModel&lt;T&gt; {
   //Events
@@ -2327,8 +2336,18 @@ export class ODataModel&lt;T&gt; {
   protected defaults() {
     return this._options.defaults(this);
   }
-  toEntity({ include_navigation &#x3D; false, changes_only &#x3D; false, field_mapping &#x3D; false}: { include_navigation?: boolean, changes_only?: boolean, field_mapping?: boolean } &#x3D; {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { include_navigation, changes_only, field_mapping });
+  toEntity({
+    include_navigation &#x3D; false,
+    changes_only &#x3D; false,
+    field_mapping &#x3D; false,
+    select
+  }: {
+    include_navigation?: boolean,
+    changes_only?: boolean,
+    field_mapping?: boolean,
+    select?: EntitySelect&lt;T&gt;
+  } &#x3D; {}): T | {[name: string]: any} {
+    return this._options.toEntity(this, { include_navigation, changes_only, field_mapping, select });
   }
   attributes({ changes_only &#x3D; false }: { changes_only?: boolean } &#x3D; {}): {[name: string]: any} {
     return this._options.attributes(this, { changes_only });
@@ -2430,19 +2449,22 @@ export class ODataModel&lt;T&gt; {
     }
     return throwError(&quot;Resource Error&quot;);
   }
-  get query() {
-    return this._options.query;
+  query(func: (q:
+    { select(opts?: Select&lt;T&gt;): OptionHandler&lt;Select&lt;T&gt;&gt;;
+      expand(opts?: Expand&lt;T&gt;): OptionHandler&lt;Expand&lt;T&gt;&gt;;
+      format(opts?: string): OptionHandler&lt;string&gt;;
+    }) &#x3D;&gt; void) {
+    const resource &#x3D; this.resource();
+    if (resource &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x60;Can&#x27;t query without ODataResource&#x60;);
+    return this._options.query(this, resource, func);
   }
   private _call&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
+    options?: HttpCallableOptions&lt;R&gt;
   ) {
-    if (expand !&#x3D;&#x3D; undefined)
-      resource.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      resource.query.select(select);
     switch (responseType) {
       case &#x27;property&#x27;:
         return resource.callProperty(params, options);
@@ -2459,11 +2481,11 @@ export class ODataModel&lt;T&gt; {
     name: string,
     params: P | null,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
+    options?: HttpCallableOptions&lt;R&gt;
   ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
     let resource &#x3D; this.resource();
     if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.function&lt;P, R&gt;(name), responseType, {expand, select, ...options});
+      return this._call(params, resource.function&lt;P, R&gt;(name), responseType, options);
     }
     return throwError(&quot;Can&#x27;t call function without ODataEntityResource with key&quot;);
   }
@@ -2472,11 +2494,11 @@ export class ODataModel&lt;T&gt; {
     name: string,
     params: P | null,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: ODataCallableHttpOptions&lt;R&gt; &#x3D; {}
+    options?: HttpCallableOptions&lt;R&gt;
   ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
     let resource &#x3D; this.resource();
     if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.action&lt;P, R&gt;(name), responseType, {expand, select, ...options});
+      return this._call(params, resource.action&lt;P, R&gt;(name), responseType, options);
     }
     return throwError(&quot;Can&#x27;t call action without ODataEntityResource with key&quot;);
   }
