@@ -140,63 +140,33 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Custom
-  call(params: P | null, { expand, select, ...options }: HttpCallableOptions<R> = {}): Observable<any> {
-    const res = this.clone();
-    if (expand !== undefined)
-      res.query.expand(expand);
-    if (select !== undefined)
-      res.query.select(select);
-    return res.post(params, options) as Observable<any>;
+  call(params: P | null, options?: HttpOptions): Observable<any> {
+    return this.clone().post(params, options) as Observable<any>;
   }
 
-  callProperty(params: P | null, { expand, select, ...options }: HttpCallableOptions<R> = {}): Observable<R | null> {
-    const res = this.clone();
-    if (expand !== undefined)
-      res.query.expand(expand);
-    if (select !== undefined)
-      res.query.select(select);
+  callProperty(params: P | null, options: HttpOptions = {}): Observable<R | null> {
     const opts = Object.assign(<HttpPropertyOptions>{responseType: 'property'}, options);
-    return res.post(params, opts).pipe(map(({property}) => property));
+    return this.clone().post(params, opts).pipe(map(({property}) => property));
   }
 
-  callEntity(params: P | null, { expand, select, ...options }: HttpCallableOptions<R> = {}): Observable<R | null> {
-    const res = this.clone();
-    if (expand !== undefined)
-      res.query.expand(expand);
-    if (select !== undefined)
-      res.query.select(select);
+  callEntity(params: P | null, options: HttpOptions = {}): Observable<R | null> {
     const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options);
-    return res.post(params, opts).pipe(map(({entity}) => entity));
+    return this.clone().post(params, opts).pipe(map(({entity}) => entity));
   }
 
-  callEntities(params: P | null, { expand, select, ...options }: HttpCallableOptions<R> = {}): Observable<R[] | null> {
-    const res = this.clone();
-    if (expand !== undefined)
-      res.query.expand(expand);
-    if (select !== undefined)
-      res.query.select(select);
+  callEntities(params: P | null, options: HttpOptions = {}): Observable<R[] | null> {
     const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options);
-    return res.post(params, opts).pipe(map(({entities}) => entities));
+    return this.clone().post(params, opts).pipe(map(({entities}) => entities));
   }
 
-  callCollection(params: P | null, { expand, select, ...options }: HttpCallableOptions<R> = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
-    const res = this.clone();
-    if (expand !== undefined)
-      res.query.expand(expand);
-    if (select !== undefined)
-      res.query.select(select);
+  callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
     const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options);
-    return res.post(params, opts).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, {meta, reset: true}) : null));
+    return this.clone().post(params, opts).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, {meta, reset: true}) : null));
   }
 
-  callModel(params: P | null, { expand, select, ...options }: HttpCallableOptions<R> = {}): Observable<ODataModel<R> | null> {
-    const res = this.clone();
-    if (expand !== undefined)
-      res.query.expand(expand);
-    if (select !== undefined)
-      res.query.select(select);
+  callModel(params: P | null, options: HttpOptions = {}): Observable<ODataModel<R> | null> {
     const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options);
-    return res.post(params, opts).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.clone().post(params, opts).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
   }
   //#endregion
 }

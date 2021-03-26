@@ -437,8 +437,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpCallableOptions<R>
+    { expand, select, ...options }: HttpCallableOptions<R> = {}
   ) {
+    if (expand !== undefined) resource.query.expand(expand);
+    if (select !== undefined) resource.query.select(select);
     switch (responseType) {
       case 'property':
         return resource.callProperty(params, options);
