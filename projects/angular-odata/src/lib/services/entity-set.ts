@@ -76,11 +76,12 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return res.delete(Object.assign({etag}, options || {}));
   }
 
+  /*
   protected call<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'none',
-    { expand, select, ...options }: HttpCallableOptions<R>): Observable<null>;
+    { expand, select, ...options }: HttpCallableOptions<R>): Observable<any>;
   protected call<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
@@ -96,12 +97,13 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'entities',
     { expand, select, ...options }: HttpCallableOptions<R>): Observable<R[] | null>;
+  */
   protected call<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'entity' | 'entities' | 'none',
     { expand, select, ...options }: HttpCallableOptions<R> = {}
-  ): Observable<R | R[] | null> {
+  ): Observable<any> {
     if (expand !== undefined) resource.query.expand(expand);
     if (select !== undefined) resource.query.select(select);
     switch (responseType) {

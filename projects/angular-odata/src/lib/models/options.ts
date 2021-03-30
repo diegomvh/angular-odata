@@ -286,6 +286,7 @@ export class ODataModelOptions<T> {
           (model as any)[name] = value;
       }
     }
+    model.events$.emit({ name: 'update', model });
     this._resetting = false;
   }
   private _modelCollectionFactory<P>(

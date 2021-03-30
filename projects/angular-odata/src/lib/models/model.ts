@@ -24,7 +24,7 @@ import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataM
 
 export class ODataModel<T> {
   //Events
-  private _properties!: ModelProperty<any>[];
+  private _properties?: ModelProperty<any>[];
   private _options: ODataModelOptions<T>;
   events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(data?: any, { resource, schema, meta, reset = false }: {
@@ -33,7 +33,7 @@ export class ODataModel<T> {
     meta?: ODataEntityMeta,
     reset?: boolean
   } = {}) {
-    this._options = new ODataModelOptions(this._properties);
+    this._options = new ODataModelOptions(this._properties || []);
     this.resource(resource);
     this.schema(schema);
     this.meta(meta);
