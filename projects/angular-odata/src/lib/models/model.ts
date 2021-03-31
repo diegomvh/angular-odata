@@ -27,7 +27,7 @@ export class ODataModel<T> {
   private _properties?: ModelProperty<any>[];
   private _options: ODataModelOptions<T>;
   events$ = new EventEmitter<ODataModelEvent<T>>();
-  constructor(data?: any, { resource, schema, meta, reset = false }: {
+  constructor(entity?: Partial<T> | {[name: string]: any}, { resource, schema, meta, reset = false }: {
     resource?: ODataModelResource<T>,
     schema?: ODataStructuredType<T>,
     meta?: ODataEntityMeta,
@@ -37,8 +37,8 @@ export class ODataModel<T> {
     this.resource(resource);
     this.schema(schema);
     this.meta(meta);
-    data = Objects.merge(this.defaults(), data || {});
-    this.assign(data, { reset });
+    entity = Objects.merge(this.defaults(), entity || {});
+    this.assign(entity, { reset });
   }
 
   resource(resource?: ODataModelResource<T>) {
@@ -114,8 +114,8 @@ export class ODataModel<T> {
     }
     return value;
   }
-  assign(data: any = {}, { reset = false }: { reset?: boolean } = {}) {
-    this._options.assign(this, data, { reset });
+  assign(entity: Partial<T> | {[name: string]: any}, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
+    this._options.assign(this, entity, { reset, silent });
   }
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
@@ -153,14 +153,14 @@ export class ODataModel<T> {
   }
 
   save(
-    { patch = false, validate = true, ...options }: HttpOptions & { patch?: boolean, validate?: boolean, options?: HttpOptions } = {}
+    { patch = false, include_navigation = false, validate = true, ...options }: HttpOptions & { patch?: boolean, include_navigation?: boolean, validate?: boolean, options?: HttpOptions } = {}
   ): Observable<this> {
     let resource = this.resource();
     if (resource !== undefined) {
       let obs$: Observable<ODataEntity<any>> = NEVER;
       if (resource instanceof ODataEntityResource) {
         if (!validate || this.valid({create: !resource.segment.entitySet().hasKey(), patch})) {
-          const _entity = this.toEntity({ changes_only: patch, field_mapping: true }) as T;
+          const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_navigation }) as T;
           obs$ = (!resource.segment.entitySet().hasKey() ?
             resource.post(_entity, options) :
             patch ?

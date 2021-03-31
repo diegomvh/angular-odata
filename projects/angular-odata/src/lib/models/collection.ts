@@ -37,7 +37,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M> {
   private _resource?: ODataCollectionResource<T>;
   private _schema?: ODataStructuredType<T>;
-  private _meta: ODataEntitiesMeta;
+  private _meta!: ODataEntitiesMeta;
   private _models: {
     model: M;
     key?: EntityKey<T>;
@@ -60,7 +60,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   //Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(
-    data: any = {},
+    entities?: Partial<T>[] | {[name: string]: any}[],
     {
       resource,
       schema,
@@ -75,10 +75,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ) {
     this.resource(resource);
     this.schema(schema);
-    this._meta =
-      meta || new ODataEntitiesMeta(data, { options: resource?.api.options });
-    if (!Array.isArray(data)) data = this.meta().data(data) || [];
-    this.assign(data, { reset });
+    this.meta(meta || new ODataEntitiesMeta({}, { options: resource?.api.options }));
+    entities = entities || [];
+    this.assign(entities, { reset });
   }
 
   resource(resource?: ODataCollectionResource<T>) {
@@ -129,18 +128,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   private _modelFactory(
-    data: T,
+    entity: Partial<T> | {[name: string]: any},
     { reset = false }: { reset?: boolean } = {}
   ): M {
-    const meta = new ODataEntityMeta(data, { options: this._meta.options });
-    const attrs = meta.attributes<T>(data);
+    const meta = new ODataEntityMeta(entity, { options: this._meta.options });
+    const attrs = meta.attributes<T>(entity);
     const schema = this.schema();
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
-      return resource.entity(data).asModel(attrs, { meta, reset });
+      return resource.entity(entity as EntityKey<T>).asModel(attrs, { meta, reset });
     } else if (resource instanceof ODataNavigationPropertyResource) {
       return resource
-        .key(schema?.resolveKey(data) as EntityKey<T>)
+        .key(schema?.resolveKey(entity) as EntityKey<T>)
         .asModel(attrs, { meta, reset });
     } else if (resource !== undefined) {
       return resource.asModel(attrs, { meta, reset });
@@ -176,7 +175,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (this._resource) resource = this._resource.clone();
     if (this._meta) meta = this._meta.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
-    return new Ctor(this.models, { resource, meta });
+    return new Ctor(this.toEntities({include_navigation: true}), { resource, meta });
   }
 
   // Requests
@@ -258,23 +257,24 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   add(model: M): Observable<this> {
     let obs$: Observable<this> = of(this);
-    if (this._resource instanceof ODataNavigationPropertyResource) {
+    let resource = this.resource();
+    if (resource instanceof ODataNavigationPropertyResource && resource.segment.entitySet().hasKey()) {
       var target = model.resource() as ODataEntityResource<T>;
       target.clearQuery();
-      obs$ = this._resource
+      obs$ = resource
         .reference()
         .add(target)
         .pipe(map(() => this));
     }
     return obs$.pipe(
       map((col) => {
-        if (this._resource instanceof ODataEntitySetResource) {
+        if (resource instanceof ODataEntitySetResource) {
           model.resource(
-            this._resource.entity(model.toEntity({ field_mapping: true }) as T)
+            resource.entity(model.toEntity({ field_mapping: true }) as T)
           );
-        } else if (this._resource instanceof ODataNavigationPropertyResource) {
+        } else if (resource instanceof ODataNavigationPropertyResource) {
           model.resource(
-            this._resource.key(model.toEntity({ field_mapping: true }) as T)
+            resource.key(model.toEntity({ field_mapping: true }) as T)
           );
         }
         this._models.push({
@@ -292,13 +292,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
   remove(model: M): Observable<this> {
     const key = model.key();
     let obs$: Observable<this> = of(this);
+    let resource = this.resource();
     if (
       key !== undefined &&
-      this._resource instanceof ODataNavigationPropertyResource
+      resource instanceof ODataNavigationPropertyResource &&
+      resource.segment.entitySet().hasKey()
     ) {
       var target = model.resource() as ODataEntityResource<T>;
       target.clearQuery();
-      obs$ = this._resource
+      obs$ = resource
         .reference()
         .remove(target)
         .pipe(map(() => this));
@@ -380,10 +382,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return value;
   }
 
-  assign(data: any[] = [], { reset = false }: { reset?: boolean } = {}) {
+  assign(entities: Array<Partial<T> | {[name: string]: any}>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
     if (reset) {
       this._models.forEach((e) => e.subscription.unsubscribe());
-      const models = data.map((e) => this._modelFactory(e, { reset }));
+      const models = entities.map(entity => this._modelFactory(entity as Partial<T> | {[name: string]: any}, { reset }));
       this._models = models.map((model, index) => {
         return {
           model,
@@ -393,13 +395,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
       this.events$.emit({ name: 'reset', collection: this });
     } else {
-      data.forEach((attrs) => {
+      entities.forEach((attrs) => {
         const key = this.schema()?.resolveKey(attrs);
         const entry = this._models.find(
           (e) => !Types.isEmpty(e.key) && Types.isEqual(e.key, key)
         );
         if (entry !== undefined) {
-          entry.model.assign(attrs, { reset });
+          entry.model.assign(attrs, { reset, silent });
         } else {
           const model = this._modelFactory(attrs, { reset });
           this._models.push({

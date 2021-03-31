@@ -53,7 +53,7 @@ export class ODataModelProperty<F> {
 
   modelCollectionFactory<T, F>(
     { value, baseResource, baseMeta, reset}: {
-    value?: any,
+    value?: F | F[] | {[name: string]: any} | {[name: string]: any}[],
     baseResource: ODataModelResource<T>,
     baseMeta: ODataEntityMeta,
     reset?: boolean
@@ -64,15 +64,15 @@ export class ODataModelProperty<F> {
     }
     // Data
     const data = this.parser.collection ?
-      (value || []) as F[] :
-      (value || {}) as F;
+      (value || []) as (F | {[name: string]: any})[] :
+      (value || {}) as F | {[name: string]: any};
 
     const meta = this.metaFactory(baseMeta);
     let resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
 
     return this.parser.collection ?
-        resource.asCollection(data as F[], { meta: meta as ODataEntitiesMeta, reset }) :
-        resource.asModel(data as F, { meta: meta as ODataEntityMeta, reset });
+        resource.asCollection(data as (F | {[name: string]: any})[], { meta: meta as ODataEntitiesMeta, reset }) :
+        resource.asModel(data as F | {[name: string]: any}, { meta: meta as ODataEntityMeta, reset });
   }
 }
 
@@ -136,6 +136,7 @@ export class ODataModelOptions<T> {
     if (this._schema === undefined || schema.type() !== this._schema.type()) {
       // Bind Properties
       const fields = schema.fields({ include_navigation: true, include_parents: true });
+      const values: any = {};
       for (var field of fields) {
         let prop = this.findProperty(p => p.field === field.name);
         if (prop === undefined) {
@@ -143,6 +144,11 @@ export class ODataModelOptions<T> {
           this._properties.push(prop);
         }
         prop.parser = field;
+        let value = (<any>model)[prop.name];
+        if (value !== undefined) {
+          delete (<any>model)[prop.name];
+          values[prop.name] = value;
+        }
         Object.defineProperty(model, prop.name, {
           configurable: true,
           get: () => this._get(model, prop as ODataModelProperty<any>),
@@ -150,6 +156,8 @@ export class ODataModelOptions<T> {
         });
       }
       this._schema = schema;
+      if (!Types.isEmpty(values))
+        model.assign(values, {silent: true});
     }
   }
 
@@ -261,22 +269,22 @@ export class ODataModelOptions<T> {
     return entries.reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
   }
 
-  assign(model: ODataModel<T>, data: {[name: string]: any} = {}, { reset = false }: { reset?: boolean } = {}) {
+  assign(model: ODataModel<T>, entity: Partial<T> | {[name: string]: any}, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
     this._resetting = reset;
     if (this._resetting) {
       // Apply current changes and start new tracking
       Object.assign(this._attributes, this._changes);
       this._changes = {} as T;
     }
-    for (let key in data) {
-      const value = data[key];
+    for (let key in entity) {
+      const value = (<any>entity)[key];
       const name = this._resetting ? this.findProperty(p => p.field === key)?.name || key : key;
       if (value !== null && Types.isObject(value)) {
         const current = (model as any)[name];
         if (
           (!(value instanceof ODataModel) && current instanceof ODataModel) ||
           (!(value instanceof ODataCollection) && current instanceof ODataCollection)) {
-          current.assign(value, {reset});
+          current.assign(value, {reset, silent});
         } else {
           (model as any)[name] = value;
         }
@@ -291,7 +299,7 @@ export class ODataModelOptions<T> {
   }
   private _modelCollectionFactory<P>(
     { value, property, fieldType, fieldName, collection, resource, meta, reset}: {
-    value?: any,
+    value?: P | P[] | {[name: string]: any} | {[name: string]: any}[],
     property?: ODataModelProperty<P>,
     fieldType?: string,
     fieldName?: string,
@@ -310,8 +318,8 @@ export class ODataModelOptions<T> {
 
     // Data
     const data = collection ?
-      (value || []) as T[] :
-      (value || {}) as T;
+      (value || []) as (P | {[name: string]: any})[] :
+      (value || {}) as P | {[name: string]: any};
 
     // Meta
     if (meta === undefined) {
@@ -334,8 +342,8 @@ export class ODataModelOptions<T> {
     } else {
       // Build by magic
       return collection ?
-        new ODataCollection(data, { resource, meta: meta as ODataEntitiesMeta, reset }) :
-        new ODataModel(data, { resource, meta: meta as ODataEntityMeta, reset });
+        new ODataCollection(data as (P | {[name: string]: any})[], { resource, meta: meta as ODataEntitiesMeta, reset }) :
+        new ODataModel(data as P | {[name: string]: any}, { resource, meta: meta as ODataEntityMeta, reset });
     }
   }
   private _get<F>(model: ODataModel<T>, property: ODataModelProperty<F>): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
@@ -362,22 +370,22 @@ export class ODataModelOptions<T> {
 
     if (field.isComplexType() || field.isNavigation()) {
       let newModel = value as ODataModel<F> | ODataCollection<F, ODataModel<F>> | null;
-      if (field.isNavigation() && model.key() === undefined) {
-        throw new Error(`Can't set ${name} from unsaved model`);
-      }
       const relation = this._relations[name];
       if (relation !== undefined && relation.subscription !== null) {
         relation.subscription.unsubscribe();
       }
       const currentModel = relation?.model as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
       if (newModel !== null && this._resource !== undefined) {
-        if (!(newModel instanceof ODataModel)) {
-          newModel = this._modelCollectionFactory({ value, property });
+        if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
+          newModel = this._modelCollectionFactory({ value: value as F, property });
         } else {
           const resource = property.resourceFactory<T, F>(this._resource);
           const meta = property.metaFactory(this._meta);
           newModel.resource(resource);
-          newModel.meta(meta as ODataEntityMeta);
+          if (newModel instanceof ODataModel)
+            newModel.meta(meta as ODataEntityMeta);
+          else if (newModel instanceof ODataCollection)
+            newModel.meta(meta as ODataEntitiesMeta);
         }
         const type = newModel.resource()?.type();
         if (type !== field.type)
