@@ -49,6 +49,13 @@ export abstract class ODataResource<T> {
     return this.pathSegments.types();
   }
 
+  /**
+   * @returns boolean The resourse has key ?
+   */
+  hasKey() {
+    const lastSegment  = this.pathSegments.last();
+    return lastSegment !== undefined && lastSegment.hasKey();
+  }
   isSubtypeOf(other: ODataResource<any>) {
     const api = this.api;
     const self = this.type();
@@ -59,7 +66,6 @@ export abstract class ODataResource<T> {
     }
     return false;
   }
-
   pathAndParams(): [string, PlainObject] {
     let path = this.pathSegments.path();
     let params = this.queryOptions.params();

@@ -68,7 +68,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     navigation.segment.navigationProperty().key(key);
     return navigation;
   }
-
   value() {
     return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -275,6 +274,5 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         concatMap(({entities}) => entities || []),
         toArray());
   }
-
   //#endregion
 }
