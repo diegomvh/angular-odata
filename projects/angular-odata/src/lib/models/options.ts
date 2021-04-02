@@ -51,28 +51,38 @@ export class ODataModelProperty<F> {
         undefined;
   }
 
+  schemaFactory<T, F>(schema: ODataStructuredType<T>): ODataStructuredType<F> | undefined {
+    return (this.parser !== undefined) ?
+      schema.api.findStructuredTypeForType(this.parser.type) : undefined;
+  }
+
   modelCollectionFactory<T, F>(
-    { value, baseResource, baseMeta, reset}: {
+    { value, baseResource, baseSchema, baseMeta}: {
     value?: F | F[] | {[name: string]: any} | {[name: string]: any}[],
     baseResource: ODataModelResource<T>,
-    baseMeta: ODataEntityMeta,
-    reset?: boolean
+    baseSchema: ODataStructuredType<T>,
+    baseMeta: ODataEntityMeta
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
 
     if (this.parser === undefined) {
       throw new Error("No Parser");
     }
-    // Data
-    const data = this.parser.collection ?
-      (value || []) as (F | {[name: string]: any})[] :
-      (value || {}) as F | {[name: string]: any};
-
     const meta = this.metaFactory(baseMeta);
-    let resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
-
-    return this.parser.collection ?
-        resource.asCollection(data as (F | {[name: string]: any})[], { meta: meta as ODataEntitiesMeta, reset }) :
-        resource.asModel(data as F | {[name: string]: any}, { meta: meta as ODataEntityMeta, reset });
+    if (baseResource.hasKey()) {
+      // Build for Resource
+      const resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
+      return this.parser.collection ?
+          resource.asCollection((value || []) as (F | {[name: string]: any})[], { meta: meta as ODataEntitiesMeta }) :
+          resource.asModel((value || {}) as F | {[name: string]: any}, { meta: meta as ODataEntityMeta });
+    } else {
+      // Build for Schema
+      const schema = this.schemaFactory<T, F>(baseSchema);
+      const Model = schema?.model || ODataModel;
+      const Collection = schema?.collection || ODataCollection;
+      return this.parser.collection ?
+        new Collection((value || []) as (F | {[name: string]: any})[], { schema, meta }) :
+        new Model((value || {}) as F | {[name: string]: any}, { schema, meta });
+    }
   }
 }
 
@@ -120,7 +130,7 @@ export class ODataModelOptions<T> {
   }
 
   resource(model: ODataModel<T>) {
-    let resource = this._resource?.clone();
+    let resource = this._resource?.clone() as ODataModelResource<T> | undefined;
     const key = this.key(model, {field_mapping: true});
     if (key !== undefined && (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)) {
       resource = resource.key(key);
@@ -297,63 +307,44 @@ export class ODataModelOptions<T> {
     model.events$.emit({ name: 'update', model });
     this._resetting = false;
   }
-  private _modelCollectionFactory<P>(
-    { value, property, fieldType, fieldName, collection, resource, meta, reset}: {
-    value?: P | P[] | {[name: string]: any} | {[name: string]: any}[],
-    property?: ODataModelProperty<P>,
-    fieldType?: string,
-    fieldName?: string,
-    collection?: boolean,
-    resource?: ODataPropertyResource<P> | ODataNavigationPropertyResource<P>,
-    meta?: ODataEntityMeta | ODataEntitiesMeta,
-    reset?: boolean
-  } = {}): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
 
-    if (property !== undefined && this._resource !== undefined) {
-      return property.modelCollectionFactory<T, P>({
-        value, reset,
-        baseResource: this._resource,
-        baseMeta: this._meta});
+  private _modelCollectionFactory<P>(model: ODataModel<T>, property: ODataModelProperty<P>,
+    value?: P | P[] | {[name: string]: any} | {[name: string]: any}[]
+  ): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
+
+    const baseResource = this.resource(model);
+    const baseMeta = this.meta(model);
+    const baseSchema = this.schema(model);
+    if (baseResource !== undefined && baseSchema !== undefined) {
+      // Build for Resource
+      return property.modelCollectionFactory<T, P>({value, baseResource, baseSchema, baseMeta});
     }
 
-    // Data
-    const data = collection ?
-      (value || []) as (P | {[name: string]: any})[] :
-      (value || {}) as P | {[name: string]: any};
-
-    // Meta
-    if (meta === undefined) {
-      if (fieldName === undefined)
-        throw new Error("Need Name");
-      const annots = this._meta.property(fieldName) || {};
-      meta = collection ?
-        new ODataEntitiesMeta(annots, { options: this._meta.options }) :
-        new ODataEntityMeta(annots, { options: this._meta.options });
-    }
-
-    if (fieldType !== undefined) {
-      // Build by Schema
-      const schema = this._schema?.api.findStructuredTypeForType(fieldType);
+    const meta = property.metaFactory(baseMeta);
+    if (baseSchema !== undefined) {
+      // Build for Schema
+      // Meta
+      const schema = property.schemaFactory<T, P>(baseSchema);
       const Model = schema?.model || ODataModel;
       const Collection = schema?.collection || ODataCollection;
-      return collection ?
-        new Collection(data, { resource, schema, meta, reset }) :
-        new Model(data, { resource, schema, meta, reset });
-    } else {
-      // Build by magic
-      return collection ?
-        new ODataCollection(data as (P | {[name: string]: any})[], { resource, meta: meta as ODataEntitiesMeta, reset }) :
-        new ODataModel(data as P | {[name: string]: any}, { resource, meta: meta as ODataEntityMeta, reset });
+      return property.parser?.collection ?
+        new Collection((value || []) as (P | {[name: string]: any})[], { schema, meta }) :
+        new Model((value || {}) as P | {[name: string]: any}, { schema, meta });
     }
+    // Build by Magic
+    return property.parser?.collection ?
+      new ODataCollection((value || []) as (P | {[name: string]: any})[], { meta: meta as ODataEntitiesMeta }) as ODataCollection<P, ODataModel<P>>:
+      new ODataModel((value || {}) as P | {[name: string]: any}, { meta: meta as ODataEntityMeta }) as ODataModel<P>;
   }
+
   private _get<F>(model: ODataModel<T>, property: ODataModelProperty<F>): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     const name = property.name;
     const field = property.parser;
     if (field === undefined)
       throw new Error("No Field");
     if (field.isComplexType() || field.isNavigation()) {
-      if (this._resetting && !(name in this._relations)) {
-        const newModel = this._modelCollectionFactory<F>({property});
+      if (this._resetting && this._resource !== undefined && !(name in this._relations)) {
+        const newModel = this._modelCollectionFactory<F>(model, property);
         this._relations[name] = { property, model: newModel, subscription: this._subscribe<F>(model, property, newModel) };
       }
       return (name in this._relations) ? this._relations[name].model : undefined;
@@ -375,10 +366,10 @@ export class ODataModelOptions<T> {
         relation.subscription.unsubscribe();
       }
       const currentModel = relation?.model as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
-      if (newModel !== null && this._resource !== undefined) {
+      if (newModel !== null) {
         if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
-          newModel = this._modelCollectionFactory({ value: value as F, property });
-        } else {
+          newModel = this._modelCollectionFactory(model, property, value as F);
+        } else if (this._resource !== undefined) {
           const resource = property.resourceFactory<T, F>(this._resource);
           const meta = property.metaFactory(this._meta);
           newModel.resource(resource);
@@ -388,7 +379,7 @@ export class ODataModelOptions<T> {
             newModel.meta(meta as ODataEntitiesMeta);
         }
         const type = newModel.resource()?.type();
-        if (type !== field.type)
+        if (type !== undefined && type !== field.type)
           throw new Error(`Can't set ${type} to ${field.type}`);
       }
       this._relations[name] = { model: newModel, property, subscription: newModel && this._subscribe(model, property, newModel) };

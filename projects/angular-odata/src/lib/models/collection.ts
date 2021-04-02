@@ -256,9 +256,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   add(model: M): Observable<this> {
+    const key = model.key();
     let obs$: Observable<this> = of(this);
     let resource = this.resource();
-    if (resource instanceof ODataNavigationPropertyResource && resource.segment.entitySet().hasKey()) {
+    if (
+      key !== undefined &&
+      resource !== undefined &&
+      resource instanceof ODataNavigationPropertyResource
+    ) {
       var target = model.resource() as ODataEntityResource<T>;
       target.clearQuery();
       obs$ = resource
@@ -295,8 +300,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let resource = this.resource();
     if (
       key !== undefined &&
-      resource instanceof ODataNavigationPropertyResource &&
-      resource.segment.entitySet().hasKey()
+      resource !== undefined &&
+      resource instanceof ODataNavigationPropertyResource
     ) {
       var target = model.resource() as ODataEntityResource<T>;
       target.clearQuery();
