@@ -133,7 +133,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ): M {
     const meta = new ODataEntityMeta(entity, { options: this._meta.options });
     const attrs = meta.attributes<T>(entity);
-    const schema = this.schema();
+    let schema = this.schema();
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
       return resource.entity(entity as EntityKey<T>).asModel(attrs, { meta, reset });
@@ -142,7 +142,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
         .key(schema?.resolveKey(entity) as EntityKey<T>)
         .asModel(attrs, { meta, reset });
     } else if (resource !== undefined) {
+      resource.api
       return resource.asModel(attrs, { meta, reset });
+    }
+    if (meta?.type !== undefined) {
+      schema = schema?.schema.api.findStructuredTypeForType(meta.type);
     }
     const Model = schema?.model || ODataModel;
     return new Model(attrs, { schema, meta, parse: reset }) as M;
