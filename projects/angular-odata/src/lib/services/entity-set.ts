@@ -1,4 +1,4 @@
-import { ODataEntitySetResource, ODataEntityResource, HttpOptions, ODataFunctionResource, ODataActionResource, HttpCallableOptions } from '../resources';
+import { ODataEntitySetResource, ODataEntityResource, HttpOptions } from '../resources';
 import { EntityKey } from '../types';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
@@ -74,48 +74,6 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     if (!res.segment.entitySet().hasKey())
       return throwError("Resource without key");
     return res.delete(Object.assign({etag}, options || {}));
-  }
-
-  /*
-  protected call<P, R>(
-    params: P | null,
-    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
-    responseType: 'none',
-    { expand, select, ...options }: HttpCallableOptions<R>): Observable<any>;
-  protected call<P, R>(
-    params: P | null,
-    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
-    responseType: 'property',
-    { expand, select, ...options }: HttpCallableOptions<R>): Observable<R | null>;
-  protected call<P, R>(
-    params: P | null,
-    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
-    responseType: 'entity',
-    { expand, select, ...options }: HttpCallableOptions<R>): Observable<R | null>;
-  protected call<P, R>(
-    params: P | null,
-    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
-    responseType: 'entities',
-    { expand, select, ...options }: HttpCallableOptions<R>): Observable<R[] | null>;
-  */
-  protected call<P, R>(
-    params: P | null,
-    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
-    responseType: 'property' | 'entity' | 'entities' | 'none',
-    { expand, select, ...options }: HttpCallableOptions<R> = {}
-  ): Observable<any> {
-    if (expand !== undefined) resource.query.expand(expand);
-    if (select !== undefined) resource.query.select(select);
-    switch (responseType) {
-      case 'property':
-        return resource.callProperty(params, options);
-      case 'entity':
-        return resource.callEntity(params, options);
-      case 'entities':
-        return resource.callEntities(params, options);
-      default:
-        return resource.call(params, options);
-    }
   }
 
   // Shortcuts

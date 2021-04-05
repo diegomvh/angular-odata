@@ -7,7 +7,7 @@ import { ODataCollection } from "./collection";
 import { ODataModel } from "./model";
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
-export type EntitySelect<T> = (keyof T | { [P in keyof T]?: EntitySelect<T[P]>})[] | { [P in keyof T]?: EntitySelect<T[P]>};
+export type EntitySelect<T> = Array<keyof T | { [P in keyof T]?: EntitySelect<T[P]>}> | { [P in keyof T]?: EntitySelect<T[P]>};
 export type ODataModelEvent<T> = {
   name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'attach' | 'destroy'
   model?: ODataModel<T>
