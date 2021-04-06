@@ -42,7 +42,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>ODataEntityService</li>
+  <li>ODataBaseService</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -60,16 +60,10 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/services/entity.ts</code>
+            <code>projects/angular-odata/src/lib/services/base.ts</code>
         </p>
 
 
-            <p class="comment">
-                <h3>Extends</h3>
-            </p>
-            <p class="comment">
-                        <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-            </p>
 
 
 
@@ -86,16 +80,6 @@
                 <tr>
                     <td class="col-md-4">
                         <ul class="index-list">
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Abstract</span>
-                                <a href="#attach">attach</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Abstract</span>
-                                <a href="#entity">entity</a>
-                            </li>
                             <li>
                                     <span class="modifier">Protected</span>
                                 <a href="#call">call</a>
@@ -117,7 +101,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#structuredTypeSchema">structuredTypeSchema</a>
+                                    <a href="#api">api</a>
                                 </li>
                             </ul>
                         </td>
@@ -126,6 +110,78 @@
     </table>
 </section>
 
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(client: <a href="../injectables/ODataClient.html">ODataClient</a>, name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, apiNameOrEntityType?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/services/base.ts:5</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>client</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ODataClient.html" target="_self" >ODataClient</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>name</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>apiNameOrEntityType</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
 
 
             <section>
@@ -133,160 +189,6 @@
     <h3 id="methods">
         Methods
     </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="attach"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            <span class="modifier">Abstract</span>
-                            attach
-                        </b>
-                        <a href="#attach"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(value: M)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="9"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:9</a></div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>M</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>value</td>
-                                    <td>
-                                            <code>M</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="entity"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            <span class="modifier">Abstract</span>
-                            entity
-                        </b>
-                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entity(key?: <a href="../undefineds/EntityKey.html">EntityKey<T></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="8"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:8</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>key</td>
-                                    <td>
-                                                <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;T&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -311,14 +213,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:14</a></code>
-</div>
+                    <div class="io-line">Defined in <a href="" data-line="14"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/base.ts:14</a></div>
                 </td>
             </tr>
 
@@ -433,19 +329,19 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="structuredTypeSchema"></a>
-                        <span class="name"><b>structuredTypeSchema</b><a href="#structuredTypeSchema"><span class="icon ion-ios-link"></span></a></span>
+                        <a name="api"></a>
+                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>structuredTypeSchema()</code></span>
+                        <span class="accessor"><b>get</b><code>api()</code></span>
                     </td>
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:12</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/services/base.ts:9</a></div>
                                 </td>
                             </tr>
 
@@ -456,21 +352,37 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataResource } from &#x27;../resources&#x27;;
-import { EntityKey } from &#x27;../types&#x27;;
-import { ODataModel } from &#x27;../models/model&#x27;;
-import { ODataBaseService } from &#x27;./base&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpCallableOptions, ODataActionResource, ODataFunctionResource, ODataResource } from &#x27;../resources&#x27;;
+import { ODataClient } from &quot;../client&quot;;
+import { Observable } from &#x27;rxjs&#x27;;
 
-export abstract class ODataEntityService&lt;T&gt; extends ODataBaseService {
+export abstract class ODataBaseService {
+  constructor(protected client: ODataClient, protected name: string, protected apiNameOrEntityType?: string) { }
 
-  public abstract entity(key?: EntityKey&lt;T&gt;): ODataResource&lt;T&gt;;
-  public abstract attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): void;
+  // Api Config
+  get api() {
+    return this.client.apiFor(this.apiNameOrEntityType);
+  }
 
-  // Entity Config
-  get structuredTypeSchema() {
-    return this.apiNameOrEntityType !&#x3D;&#x3D; undefined ?
-      this.api.findStructuredTypeForType&lt;T&gt;(this.apiNameOrEntityType) :
-      undefined;
+  // Callable Call
+  protected call&lt;P, R&gt;(
+    params: P | null,
+    resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
+    responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27;,
+    { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}
+  ): Observable&lt;any&gt; {
+    if (expand !&#x3D;&#x3D; undefined) resource.query.expand(expand);
+    if (select !&#x3D;&#x3D; undefined) resource.query.select(select);
+    switch (responseType) {
+      case &#x27;property&#x27;:
+        return resource.callProperty(params, options);
+      case &#x27;entity&#x27;:
+        return resource.callEntity(params, options);
+      case &#x27;entities&#x27;:
+        return resource.callEntities(params, options);
+      default:
+        return resource.call(params, options);
+    }
   }
 }
 </code></pre>
@@ -501,7 +413,7 @@ export abstract class ODataEntityService&lt;T&gt; extends ODataBaseService {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ODataEntityService.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataBaseService.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

@@ -177,6 +177,9 @@
                                 <a href="#get">get</a>
                             </li>
                             <li>
+                                <a href="#hasKey">hasKey</a>
+                            </li>
+                            <li>
                                 <a href="#isSubtypeOf">isSubtypeOf</a>
                             </li>
                             <li>
@@ -569,7 +572,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>call(params: P | null, undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+<code>call(params: P | null, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
@@ -593,7 +596,6 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -607,22 +609,18 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
+                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
 
                                 </tr>
                             </tbody>
@@ -656,181 +654,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>callCollection(params: P | null, undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="182"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/action.ts:182</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataCollection.html" target="_self" >Observable&lt;ODataCollection | null&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callEntities"></a>
-                    <span class="name">
-                        <b>
-                            callEntities
-                        </b>
-                        <a href="#callEntities"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>callEntities(params: P | null, undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="172"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/action.ts:172</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;[] | null&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callEntity"></a>
-                    <span class="name">
-                        <b>
-                            callEntity
-                        </b>
-                        <a href="#callEntity"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>callEntity(params: P | null, undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+<code>callCollection(params: P | null, options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
@@ -873,8 +697,9 @@
 
                                 </tr>
                                 <tr>
+                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
                                     </td>
 
                                     <td>
@@ -892,7 +717,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;R | null&gt;</code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataCollection.html" target="_self" >Observable&lt;ODataCollection | null&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -906,26 +731,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="callModel"></a>
+                    <a name="callEntities"></a>
                     <span class="name">
                         <b>
-                            callModel
+                            callEntities
                         </b>
-                        <a href="#callModel"><span class="icon ion-ios-link"></span></a>
+                        <a href="#callEntities"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>callModel(params: P | null, undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+<code>callEntities(params: P | null, options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="192"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/action.ts:192</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="157"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/action.ts:157</a></div>
                 </td>
             </tr>
 
@@ -960,8 +785,9 @@
 
                                 </tr>
                                 <tr>
+                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
                                     </td>
 
                                     <td>
@@ -979,7 +805,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataModel.html" target="_self" >Observable&lt;ODataModel | null&gt;</a></code>
+                        <b>Returns : </b>    <code>Observable&lt;[] | null&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -993,18 +819,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="callProperty"></a>
+                    <a name="callEntity"></a>
                     <span class="name">
                         <b>
-                            callProperty
+                            callEntity
                         </b>
-                        <a href="#callProperty"><span class="icon ion-ios-link"></span></a>
+                        <a href="#callEntity"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>callProperty(params: P | null, undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+<code>callEntity(params: P | null, options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
                 </td>
             </tr>
 
@@ -1047,8 +873,185 @@
 
                                 </tr>
                                 <tr>
+                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;R | null&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callModel"></a>
+                    <span class="name">
+                        <b>
+                            callModel
+                        </b>
+                        <a href="#callModel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>callModel(params: P | null, options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="167"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/action.ts:167</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>params</td>
+                                    <td>
+                                            <code>P | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataModel.html" target="_self" >Observable&lt;ODataModel | null&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callProperty"></a>
+                    <span class="name">
+                        <b>
+                            callProperty
+                        </b>
+                        <a href="#callProperty"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>callProperty(params: P | null, options: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="147"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/action.ts:147</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>params</td>
+                                    <td>
+                                            <code>P | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
                                     </td>
 
                                     <td>
@@ -1638,7 +1641,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:112</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:118</a></code>
 </div>
                 </td>
             </tr>
@@ -1685,7 +1688,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:86</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:92</a></code>
 </div>
                 </td>
             </tr>
@@ -1730,7 +1733,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:109</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:115</a></code>
 </div>
                 </td>
             </tr>
@@ -1820,7 +1823,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:208</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:214</a></code>
 </div>
                 </td>
             </tr>
@@ -1896,7 +1899,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:74</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:80</a></code>
 </div>
                 </td>
             </tr>
@@ -1943,7 +1946,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:177</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:183</a></code>
 </div>
                 </td>
             </tr>
@@ -1995,6 +1998,57 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="hasKey"></a>
+                    <span class="name">
+                        <b>
+                            hasKey
+                        </b>
+                        <a href="#hasKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hasKey()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:55</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>boolean The resourse has key ?</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="isSubtypeOf"></a>
                     <span class="name">
                         <b>
@@ -2019,7 +2073,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:52</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:59</a></code>
 </div>
                 </td>
             </tr>
@@ -2097,7 +2151,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:200</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:206</a></code>
 </div>
                 </td>
             </tr>
@@ -2190,7 +2244,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:63</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:69</a></code>
 </div>
                 </td>
             </tr>
@@ -2228,7 +2282,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:185</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:191</a></code>
 </div>
                 </td>
             </tr>
@@ -2323,7 +2377,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:192</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:198</a></code>
 </div>
                 </td>
             </tr>
@@ -2418,7 +2472,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:116</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:122</a></code>
 </div>
                 </td>
             </tr>
@@ -2505,7 +2559,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:88</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:94</a></code>
 </div>
                 </td>
             </tr>
@@ -2581,7 +2635,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:102</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:108</a></code>
 </div>
                 </td>
             </tr>
@@ -2626,7 +2680,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:78</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:84</a></code>
 </div>
                 </td>
             </tr>
@@ -2968,63 +3022,33 @@ export class ODataActionResource&lt;P, R&gt; extends ODataResource&lt;R&gt; {
   //#endregion
 
   //#region Custom
-  call(params: P | null, { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}): Observable&lt;any&gt; {
-    const res &#x3D; this.clone();
-    if (expand !&#x3D;&#x3D; undefined)
-      res.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      res.query.select(select);
-    return res.post(params, options) as Observable&lt;any&gt;;
+  call(params: P | null, options?: HttpOptions): Observable&lt;any&gt; {
+    return this.clone().post(params, options) as Observable&lt;any&gt;;
   }
 
-  callProperty(params: P | null, { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}): Observable&lt;R | null&gt; {
-    const res &#x3D; this.clone();
-    if (expand !&#x3D;&#x3D; undefined)
-      res.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      res.query.select(select);
+  callProperty(params: P | null, options: HttpOptions &#x3D; {}): Observable&lt;R | null&gt; {
     const opts &#x3D; Object.assign(&lt;HttpPropertyOptions&gt;{responseType: &#x27;property&#x27;}, options);
-    return res.post(params, opts).pipe(map(({property}) &#x3D;&gt; property));
+    return this.clone().post(params, opts).pipe(map(({property}) &#x3D;&gt; property));
   }
 
-  callEntity(params: P | null, { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}): Observable&lt;R | null&gt; {
-    const res &#x3D; this.clone();
-    if (expand !&#x3D;&#x3D; undefined)
-      res.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      res.query.select(select);
+  callEntity(params: P | null, options: HttpOptions &#x3D; {}): Observable&lt;R | null&gt; {
     const opts &#x3D; Object.assign(&lt;HttpEntityOptions&gt;{responseType: &#x27;entity&#x27;}, options);
-    return res.post(params, opts).pipe(map(({entity}) &#x3D;&gt; entity));
+    return this.clone().post(params, opts).pipe(map(({entity}) &#x3D;&gt; entity));
   }
 
-  callEntities(params: P | null, { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}): Observable&lt;R[] | null&gt; {
-    const res &#x3D; this.clone();
-    if (expand !&#x3D;&#x3D; undefined)
-      res.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      res.query.select(select);
+  callEntities(params: P | null, options: HttpOptions &#x3D; {}): Observable&lt;R[] | null&gt; {
     const opts &#x3D; Object.assign(&lt;HttpEntitiesOptions&gt;{responseType: &#x27;entities&#x27;}, options);
-    return res.post(params, opts).pipe(map(({entities}) &#x3D;&gt; entities));
+    return this.clone().post(params, opts).pipe(map(({entities}) &#x3D;&gt; entities));
   }
 
-  callCollection(params: P | null, { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}): Observable&lt;ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
-    const res &#x3D; this.clone();
-    if (expand !&#x3D;&#x3D; undefined)
-      res.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      res.query.select(select);
+  callCollection(params: P | null, options: HttpOptions &#x3D; {}): Observable&lt;ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
     const opts &#x3D; Object.assign(&lt;HttpEntitiesOptions&gt;{responseType: &#x27;entities&#x27;}, options);
-    return res.post(params, opts).pipe(map(({entities, meta}) &#x3D;&gt; entities ? this.asCollection(entities, {meta, reset: true}) : null));
+    return this.clone().post(params, opts).pipe(map(({entities, meta}) &#x3D;&gt; entities ? this.asCollection(entities, {meta, reset: true}) : null));
   }
 
-  callModel(params: P | null, { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}): Observable&lt;ODataModel&lt;R&gt; | null&gt; {
-    const res &#x3D; this.clone();
-    if (expand !&#x3D;&#x3D; undefined)
-      res.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined)
-      res.query.select(select);
+  callModel(params: P | null, options: HttpOptions &#x3D; {}): Observable&lt;ODataModel&lt;R&gt; | null&gt; {
     const opts &#x3D; Object.assign(&lt;HttpEntityOptions&gt;{responseType: &#x27;entity&#x27;}, options);
-    return res.post(params, opts).pipe(map(({entity, meta}) &#x3D;&gt; entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.clone().post(params, opts).pipe(map(({entity, meta}) &#x3D;&gt; entity ? this.asModel(entity, {meta, reset: true}) : null));
   }
   //#endregion
 }

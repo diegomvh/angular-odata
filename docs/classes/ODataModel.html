@@ -85,6 +85,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
+                                    <span class="modifier">Optional</span>
                                 <a href="#_properties">_properties</a>
                             </li>
                             <li>
@@ -205,7 +206,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(data?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, undefined: literal type)</code>
+<code>constructor(entity?: Partial<T> | literal type, undefined: literal type)</code>
                     </td>
                 </tr>
                         <tr>
@@ -228,10 +229,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>data</td>
+                                                        <td>entity</td>
                                                   
                                                         <td>
-                                                                        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                                    <code>Partial&lt;T&gt; | literal type</code>
                                                         </td>
                                                   
                                                     <td>
@@ -300,6 +301,7 @@
                         <span class="name">
                             <b>
                                 <span class="modifier">Private</span>
+                                <span class="modifier">Optional</span>
                             _properties</b>
                             <a href="#_properties"><span class="icon ion-ios-link"></span></a>
                         </span>
@@ -398,7 +400,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>_call(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "model" | "collection" | "none", options?: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+                    <code>_call(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "model" | "collection" | "none", undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
                 </td>
             </tr>
 
@@ -431,6 +433,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -444,6 +447,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -456,6 +461,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -468,18 +475,22 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
-                                    <td>options</td>
                                     <td>
                                                 <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -606,8 +617,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="249"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:249</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="251"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:251</a></div>
                 </td>
             </tr>
 
@@ -677,7 +688,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>assign(data: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, undefined: literal type)</code>
+<code>assign(entity: Partial<T> | literal type, undefined: literal type)</code>
                 </td>
             </tr>
 
@@ -706,9 +717,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>data</td>
+                                    <td>entity</td>
                                     <td>
-                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            <code>Partial&lt;T&gt; | literal type</code>
                                     </td>
 
                                     <td>
@@ -716,7 +727,6 @@
                                     </td>
 
                                     <td>
-                                        <code>{}</code>
                                     </td>
 
                                 </tr>
@@ -847,8 +857,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="235"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:235</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="237"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:237</a></div>
                 </td>
             </tr>
 
@@ -964,8 +974,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="222"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:222</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="224"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:224</a></div>
                 </td>
             </tr>
 
@@ -1371,8 +1381,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="257"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:257</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="259"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:259</a></div>
                 </td>
             </tr>
 
@@ -1945,8 +1955,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="276"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:276</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="278"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:278</a></div>
                 </td>
             </tr>
 
@@ -2282,21 +2292,21 @@ import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataM
 
 export class ODataModel&lt;T&gt; {
   //Events
-  private _properties!: ModelProperty&lt;any&gt;[];
+  private _properties?: ModelProperty&lt;any&gt;[];
   private _options: ODataModelOptions&lt;T&gt;;
   events$ &#x3D; new EventEmitter&lt;ODataModelEvent&lt;T&gt;&gt;();
-  constructor(data?: any, { resource, schema, meta, reset &#x3D; false }: {
+  constructor(entity?: Partial&lt;T&gt; | {[name: string]: any}, { resource, schema, meta, reset &#x3D; false }: {
     resource?: ODataModelResource&lt;T&gt;,
     schema?: ODataStructuredType&lt;T&gt;,
     meta?: ODataEntityMeta,
     reset?: boolean
   } &#x3D; {}) {
-    this._options &#x3D; new ODataModelOptions(this._properties);
+    this._options &#x3D; new ODataModelOptions(this._properties || []);
     this.resource(resource);
     this.schema(schema);
     this.meta(meta);
-    data &#x3D; Objects.merge(this.defaults(), data || {});
-    this.assign(data, { reset });
+    entity &#x3D; Objects.merge(this.defaults(), entity || {});
+    this.assign(entity, { reset });
   }
 
   resource(resource?: ODataModelResource&lt;T&gt;) {
@@ -2372,8 +2382,8 @@ export class ODataModel&lt;T&gt; {
     }
     return value;
   }
-  assign(data: any &#x3D; {}, { reset &#x3D; false }: { reset?: boolean } &#x3D; {}) {
-    this._options.assign(this, data, { reset });
+  assign(entity: Partial&lt;T&gt; | {[name: string]: any}, { reset &#x3D; false, silent &#x3D; false }: { reset?: boolean, silent?: boolean } &#x3D; {}) {
+    this._options.assign(this, entity, { reset, silent });
   }
   clone() {
     let Ctor &#x3D; &lt;typeof ODataModel&gt;this.constructor;
@@ -2411,14 +2421,14 @@ export class ODataModel&lt;T&gt; {
   }
 
   save(
-    { patch &#x3D; false, validate &#x3D; true, ...options }: HttpOptions &amp; { patch?: boolean, validate?: boolean, options?: HttpOptions } &#x3D; {}
+    { patch &#x3D; false, include_navigation &#x3D; false, validate &#x3D; true, ...options }: HttpOptions &amp; { patch?: boolean, include_navigation?: boolean, validate?: boolean, options?: HttpOptions } &#x3D; {}
   ): Observable&lt;this&gt; {
     let resource &#x3D; this.resource();
     if (resource !&#x3D;&#x3D; undefined) {
       let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt; &#x3D; NEVER;
       if (resource instanceof ODataEntityResource) {
         if (!validate || this.valid({create: !resource.segment.entitySet().hasKey(), patch})) {
-          const _entity &#x3D; this.toEntity({ changes_only: patch, field_mapping: true }) as T;
+          const _entity &#x3D; this.toEntity({ changes_only: patch, field_mapping: true, include_navigation }) as T;
           obs$ &#x3D; (!resource.segment.entitySet().hasKey() ?
             resource.post(_entity, options) :
             patch ?
@@ -2463,8 +2473,10 @@ export class ODataModel&lt;T&gt; {
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    options?: HttpCallableOptions&lt;R&gt;
+    { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}
   ) {
+    if (expand !&#x3D;&#x3D; undefined) resource.query.expand(expand);
+    if (select !&#x3D;&#x3D; undefined) resource.query.select(select);
     switch (responseType) {
       case &#x27;property&#x27;:
         return resource.callProperty(params, options);

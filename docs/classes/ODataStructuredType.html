@@ -1165,8 +1165,8 @@ import { ODataSchema } from &#x27;./schema&#x27;;
 export class ODataStructuredType&lt;T&gt; {
   schema: ODataSchema;
   name: string;
-  model?: { new(...params: any[]): any };
-  collection?: { new(...params: any[]): any };
+  model?: { new(entity?: Partial&lt;T&gt; | {[name: string]: any}, ...params: any[]): any };
+  collection?: { new(entities?: Partial&lt;T&gt;[] | {[name: string]: any}[], ...params: any[]): any };
   parser: ODataStructuredTypeParser&lt;T&gt;;
   annotations: ODataAnnotation[];
 
