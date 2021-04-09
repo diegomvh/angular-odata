@@ -100,7 +100,7 @@ export class ODataModelOptions<T> {
   private _schema?: ODataStructuredType<T>;
   private _meta: ODataEntityMeta;
   private _resetting: boolean = false;
-
+  private _silent: boolean = false;
   constructor(props: ModelProperty<any>[]) {
     this._meta = new ODataEntityMeta();
     this._properties = props.map(prop => new ODataModelProperty(prop));
@@ -110,23 +110,25 @@ export class ODataModelOptions<T> {
     if (this._resource !== undefined && resource.type() !== this._resource.type() && !resource.isSubtypeOf(this._resource))
       throw new Error(`Can't reattach ${resource.type()} to ${this._resource.type()}`);
 
-    const current = this._resource;
-    const schema = resource.schema;
-    if (schema !== undefined)
-      this.bind(model, schema);
+    if (this._resource === undefined || !this._resource.isParentOf(resource)) {
+      const current = this._resource;
+      const schema = resource.schema;
+      if (schema !== undefined)
+        this.bind(model, schema);
 
-    // Attach relations
-    for (var relation of Object.values(this._relations)) {
-      const { property, model } = relation;
-      const field = property.parser;
-      if (field === undefined) {
-        throw new Error("No Field");
+      // Attach relations
+      for (var relation of Object.values(this._relations)) {
+        const { property, model } = relation;
+        const field = property.parser;
+        if (field === undefined) {
+          throw new Error("No Field");
+        }
+        if (model !== null)
+          model.resource(property.resourceFactory<T, any>(resource));
       }
-      if (model !== null)
-        model.resource(property.resourceFactory<T, any>(resource));
+      this._resource = resource;
+      model.events$.emit({ name: 'attach', model, previous: current, value: resource });
     }
-    this._resource = resource;
-    model.events$.emit({ name: 'attach', model, previous: current, value: resource });
   }
 
   resource(model: ODataModel<T>) {
@@ -281,6 +283,7 @@ export class ODataModelOptions<T> {
 
   assign(model: ODataModel<T>, entity: Partial<T> | {[name: string]: any}, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
     this._resetting = reset;
+    this._silent = silent;
     if (this._resetting) {
       // Apply current changes and start new tracking
       Object.assign(this._attributes, this._changes);
@@ -304,8 +307,10 @@ export class ODataModelOptions<T> {
           (model as any)[name] = value;
       }
     }
-    model.events$.emit({ name: 'update', model });
+    if (!this._silent)
+      model.events$.emit({ name: 'update', model });
     this._resetting = false;
+    this._silent = false;
   }
 
   private _modelCollectionFactory<P>(model: ODataModel<T>, property: ODataModelProperty<P>,
@@ -383,7 +388,8 @@ export class ODataModelOptions<T> {
           throw new Error(`Can't set ${type} to ${field.type}`);
       }
       this._relations[name] = { model: newModel, property, subscription: newModel && this._subscribe(model, property, newModel) };
-      model.events$.emit({ name: 'change', path: property.name, model, value: newModel, previous: currentModel});
+      if (!this._silent)
+        model.events$.emit({ name: 'change', path: property.name, model, value: newModel, previous: currentModel});
     } else {
       const attrs = this.attributes(model);
       const currentValue = attrs[name];
@@ -394,19 +400,20 @@ export class ODataModelOptions<T> {
           delete this._changes[name];
         else
           this._changes[name] = value;
-        model.events$.emit({ name: 'change', path: property.name, model, value, previous: currentValue});
+        if (!this._silent)
+          model.events$.emit({ name: 'change', path: property.name, model, value, previous: currentValue});
       }
     }
   }
   private _subscribe<F>(self: ODataModel<T>, property: ODataModelProperty<F>, value: ODataModel<F> | ODataCollection<F, ODataModel<F>>) {
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
-      const newEvent: ODataModelEvent<any> = {...event};
-      if (value instanceof ODataModel) {
-        newEvent.path = `${property.name}.${event.path}`;
-      } else if (value instanceof ODataCollection) {
-        newEvent.path = event.path ? `${property.name}${event.path}` : property.name;
+      let path = property.name;
+      if (value instanceof ODataModel && event.path)
+        path = `${path}.${event.path}`;
+      else if (value instanceof ODataCollection && event.path) {
+        path = `${path}${event.path}`;
       }
-      self.events$.emit(newEvent);
+      self.events$.emit({...event, path});
     });
   }
 }

@@ -136,4 +136,45 @@ describe('ODataResource', () => {
     expect(keithpinckney.toString()).toEqual("People('russellwhyte')/Friends('mirsking')/Friends('keithpinckney')");
   });
 
+  it('should detect parent resources', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const mirsking: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends").key('mirsking');
+    const keithpinckney = mirsking.navigationProperty<Person>("Friends").key('keithpinckney');
+    expect(entity.isParentOf(mirsking)).toBeTrue();
+    expect(mirsking.isParentOf(keithpinckney)).toBeTrue();
+    expect(set.isParentOf(entity)).toBeTrue();
+    expect(set.isParentOf(mirsking)).toBeTrue();
+    expect(set.isParentOf(keithpinckney)).toBeTrue();
+  });
+
+  it('should detect child resources', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const mirsking: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends").key('mirsking');
+    const keithpinckney = mirsking.navigationProperty<Person>("Friends").key('keithpinckney');
+    expect(mirsking.isChildOf(entity)).toBeTrue();
+    expect(keithpinckney.isChildOf(mirsking)).toBeTrue();
+    expect(keithpinckney.isChildOf(entity)).toBeTrue();
+    expect(keithpinckney.isChildOf(set)).toBeTrue();
+  });
+
+  it('should detect same resources', () => {
+    const set1: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
+    const entity1 = set1.entity('russellwhyte');
+    const set2: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
+    const entity2 = set2.entity('russellwhyte').expand({Friends: {}});
+    expect(entity1.isSameAs(entity2)).toBeTrue();
+    expect(entity1.isEqualTo(entity2)).toBeFalse();
+  });
+
+  it('should detect equals resources', () => {
+    const set1: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
+    const entity1 = set1.entity('russellwhyte').expand({Friends: {}});
+    const set2: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
+    const entity2 = set2.entity('russellwhyte').expand({Friends: {}});
+    expect(entity1.isSameAs(entity2)).toBeTrue();
+    expect(entity1.isEqualTo(entity2)).toBeTrue();
+  });
+
 });

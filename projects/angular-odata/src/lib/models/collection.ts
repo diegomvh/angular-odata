@@ -402,7 +402,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
           subscription: this._subscribe(model),
         };
       });
-      this.events$.emit({ name: 'reset', collection: this });
+      if (!silent)
+        this.events$.emit({ name: 'reset', collection: this });
     } else {
       entities.forEach((attrs) => {
         const key = this.schema()?.resolveKey(attrs);
@@ -418,11 +419,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
             key: model.key(),
             subscription: this._subscribe(model),
           });
-          model.events$.emit({ name: 'add', model, collection: this });
+          if (!silent)
+            model.events$.emit({ name: 'add', model, collection: this });
         }
       });
     }
-    this.events$.emit({ name: 'update', collection: this });
+    if (!silent)
+      this.events$.emit({ name: 'update', collection: this });
   }
   query(
     func: (q: {
@@ -492,17 +495,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _subscribe(model: M) {
     return model.events$.subscribe((event: ODataModelEvent<T>) => {
-      var newEvent = { ...event };
-      newEvent.path = event.path
-        ? `[${this.indexOf(model)}].${event.path}`
-        : `[${this.indexOf(model)}]`;
+      const index = this.indexOf(model);
+      let path = `[${index}]`;
+      if (event.path)
+        path = `${path}.${event.path}`;
       if (event.name === 'destroy' && event.model === model)
         this.remove(model).toPromise();
       if (event.name === 'change' && event.model === model) {
         let entry = this._models.find((m) => m.model === model);
         if (entry !== undefined) entry.key = model.key();
       }
-      this.events$.emit(newEvent);
+      this.events$.emit({...event, path});
     });
   }
 
