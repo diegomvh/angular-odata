@@ -26,6 +26,10 @@ export function ODataModelField({ name }: { name?: string } = {}) {
 }
 
 export type ModelProperty<F> = { name: string, field: string };
+
+const isChildOf = (r1: ODataEntityResource<any> | ODataEntitySetResource<any>, r2?: ODataEntityResource<any> | ODataEntitySetResource<any>) => {
+  return r2 !== undefined && r1.isChildOf(r2);
+}
 export class ODataModelProperty<F> {
   name: string;
   field: string;
@@ -105,33 +109,33 @@ export class ODataModelOptions<T> {
     this._meta = new ODataEntityMeta();
     this._properties = props.map(prop => new ODataModelProperty(prop));
   }
-
   attach(model: ODataModel<T>, resource: ODataModelResource<T>) {
     if (this._resource !== undefined && resource.type() !== this._resource.type() && !resource.isSubtypeOf(this._resource))
       throw new Error(`Can't reattach ${resource.type()} to ${this._resource.type()}`);
 
-    if (this._resource === undefined || !this._resource.isParentOf(resource)) {
-      const current = this._resource;
-      const schema = resource.schema;
-      if (schema !== undefined)
-        this.bind(model, schema);
+    const current = this._resource;
+    const schema = resource.schema;
+    if (schema !== undefined)
+      this.bind(model, schema);
 
-      // Attach relations
-      for (var relation of Object.values(this._relations)) {
-        const { property, model } = relation;
-        const field = property.parser;
-        if (field === undefined) {
-          throw new Error("No Field");
-        }
-        if (model !== null)
+    // Attach relations
+    for (var relation of Object.values(this._relations)) {
+      const { property, model } = relation;
+      const field = property.parser;
+      if (field === undefined) {
+        throw new Error("No Field");
+      }
+      if (model !== null) {
+        const mr = model.resource();
+        if (mr === undefined || !mr.isParentOf(resource))
           model.resource(property.resourceFactory<T, any>(resource));
       }
-      this._resource = resource;
-      model.events$.emit({ name: 'attach', model, previous: current, value: resource });
     }
+    this._resource = resource;
+    model.events$.emit({ name: 'attach', model, previous: current, value: resource });
   }
 
-  resource(model: ODataModel<T>) {
+  resource(model: ODataModel<T>): ODataModelResource<T> | undefined {
     let resource = this._resource?.clone() as ODataModelResource<T> | undefined;
     const key = this.key(model, {field_mapping: true});
     if (key !== undefined && (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)) {
@@ -245,16 +249,26 @@ export class ODataModelOptions<T> {
         this.attributes(model, { changes_only: changes_only, select: keys }),
         Object.entries(this._relations)
           .filter(([k, ]) => keys === undefined || keys.indexOf(k as keyof T) !== -1)
-          .filter(([, v]) => include_navigation || !v.property.parser?.isNavigation())
+          .filter(([, v]) => {
+            if (include_navigation && v.property.parser?.isNavigation()) {
+              const r1 = v.model?.resource();
+              const r2 = model.resource();
+              return r1 === undefined || r2 === undefined || !r1.isParentOf(r2);
+            }
+            return false;
+          })
           .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v.model }), {})
       )
     );
     // Map models and collections
-    entries = entries.map(([k, v]) => [k, (
-      (v instanceof ODataModel) ? v.toEntity({ changes_only, include_navigation, field_mapping, select: selects[k] }) :
-        (v instanceof ODataCollection) ? v.toEntities({ changes_only, include_navigation, field_mapping, select: selects[k] }) :
-          v)]
-    );
+    entries = entries.map(([k, v]) => {
+      if (v instanceof ODataModel) {
+        v = v.toEntity({ changes_only, include_navigation, field_mapping, select: selects[k] });
+      } else if (v instanceof ODataCollection) {
+        v = v.toEntities({ changes_only, include_navigation, field_mapping, select: selects[k] });
+      }
+      return [k, v];
+    });
     // Filter empty
     if (changes_only)
       entries = entries.filter(([k, v]) => !Types.isEmpty(v));
@@ -374,7 +388,9 @@ export class ODataModelOptions<T> {
       if (newModel !== null) {
         if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
           newModel = this._modelCollectionFactory(model, property, value as F);
-        } else if (this._resource !== undefined) {
+        }
+        const resource = newModel.resource();
+        if (this._resource !== undefined && (resource === undefined || !resource.isParentOf(this._resource))) {
           const resource = property.resourceFactory<T, F>(this._resource);
           const meta = property.metaFactory(this._meta);
           newModel.resource(resource);
@@ -383,9 +399,8 @@ export class ODataModelOptions<T> {
           else if (newModel instanceof ODataCollection)
             newModel.meta(meta as ODataEntitiesMeta);
         }
-        const type = newModel.resource()?.type();
-        if (type !== undefined && type !== field.type)
-          throw new Error(`Can't set ${type} to ${field.type}`);
+        if (resource !== undefined && resource.type() !== field.type)
+          throw new Error(`Can't set ${resource.type()} to ${field.type}`);
       }
       this._relations[name] = { model: newModel, property, subscription: newModel && this._subscribe(model, property, newModel) };
       if (!this._silent)
@@ -405,8 +420,14 @@ export class ODataModelOptions<T> {
       }
     }
   }
+
   private _subscribe<F>(self: ODataModel<T>, property: ODataModelProperty<F>, value: ODataModel<F> | ODataCollection<F, ODataModel<F>>) {
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
+      const mr = self.resource();
+      const vr = value.resource();
+      if (mr !== undefined && vr !== undefined && vr.isParentOf(mr)) return
+      if (event.model !== undefined && event.model === self) return
+
       let path = property.name;
       if (value instanceof ODataModel && event.path)
         path = `${path}.${event.path}`;

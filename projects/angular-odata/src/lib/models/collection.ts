@@ -96,18 +96,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
       if (schema !== undefined) this.schema(schema);
 
       this._models.forEach(({ model }) => {
+        const mr = model.resource();
         if (resource instanceof ODataEntitySetResource) {
           const er = resource.entity(
             model.toEntity({ field_mapping: true }) as T
           );
-          model.resource(er);
+          if (mr === undefined || !mr.isParentOf(er))
+            model.resource(er);
         } else if (resource instanceof ODataNavigationPropertyResource) {
           const er = resource.key(
             schema?.resolveKey(
               model.toEntity({ field_mapping: true })
             ) as EntityKey<T>
           );
-          model.resource(er);
+          if (mr === undefined || !mr.isParentOf(er))
+            model.resource(er);
         }
       });
 
@@ -495,6 +498,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _subscribe(model: M) {
     return model.events$.subscribe((event: ODataModelEvent<T>) => {
+      const cr = this.resource();
+      const mr = model.resource();
+      if (mr !== undefined && cr !== undefined && mr.isParentOf(cr)) return
+      if (event.name !== 'add' && event.name !== 'remove' && event.collection === this) return
+
       const index = this.indexOf(model);
       let path = `[${index}]`;
       if (event.path)

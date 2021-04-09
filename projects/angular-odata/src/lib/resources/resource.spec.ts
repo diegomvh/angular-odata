@@ -159,13 +159,20 @@ describe('ODataResource', () => {
     expect(keithpinckney.isChildOf(set)).toBeTrue();
   });
 
-  it('should detect same resources', () => {
+  it('should detect equals by path resources', () => {
     const set1: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
     const entity1 = set1.entity('russellwhyte');
     const set2: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
     const entity2 = set2.entity('russellwhyte').expand({Friends: {}});
-    expect(entity1.isSameAs(entity2)).toBeTrue();
-    expect(entity1.isEqualTo(entity2)).toBeFalse();
+    expect(entity1.isEqualTo(entity2, 'path')).toBeTrue();
+  });
+
+  it('should detect equals by params resources', () => {
+    const set1: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
+    const entity1 = set1.entity('russell').expand({Friends: {}});
+    const set2: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
+    const entity2 = set2.entity('russellwhyte').expand({Friends: {}});
+    expect(entity1.isEqualTo(entity2, 'params')).toBeTrue();
   });
 
   it('should detect equals resources', () => {
@@ -173,7 +180,6 @@ describe('ODataResource', () => {
     const entity1 = set1.entity('russellwhyte').expand({Friends: {}});
     const set2: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, new ODataPathSegments(), new ODataQueryOptions());
     const entity2 = set2.entity('russellwhyte').expand({Friends: {}});
-    expect(entity1.isSameAs(entity2)).toBeTrue();
     expect(entity1.isEqualTo(entity2)).toBeTrue();
   });
 

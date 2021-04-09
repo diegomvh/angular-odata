@@ -77,17 +77,15 @@ export abstract class ODataResource<T> {
     const [otherPath, ] = other.pathAndParams();
     return otherPath !== selfPath && selfPath.startsWith(otherPath);
   }
-  isSameAs(other: ODataResource<any>) {
-    const [selfPath, ] = this.pathAndParams();
-    const [otherPath, ] = other.pathAndParams();
-    return otherPath === selfPath;
-  }
 
-  isEqualTo(other: ODataResource<any>) {
+  isEqualTo(other: ODataResource<any>, test?: 'path' | 'params') {
     const [selfPath, selfParams] = this.pathAndParams();
     const [otherPath, otherParams] = other.pathAndParams();
-    return otherPath === selfPath && Types.isEqual(selfParams, otherParams);
+    return (test === 'path') ? otherPath === selfPath :
+      (test === 'params') ? Types.isEqual(selfParams, otherParams) :
+      (otherPath === selfPath && Types.isEqual(selfParams, otherParams));
   }
+
   pathAndParams(): [string, PlainObject] {
     let path = this.pathSegments.path();
     let params = this.queryOptions.params();
