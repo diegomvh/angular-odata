@@ -224,16 +224,16 @@ export class ODataModelOptions<T> {
     // Merge select in one object
     let selects: any = {};
     if (Array.isArray(select)) {
-      selects = select.reduce((acc, se: any) =>
-        Object.assign(acc, typeof se === 'object' ? se : {}), {});
+      selects = (select as any).reduce((acc: any, se: any) =>
+        Object.assign(acc, typeof se === 'object' ? se: {}), {});
     } else if (typeof select === 'object') {
       selects = Object.keys(select);
     }
     // Get select keys
     let keys: Array<keyof T> | undefined;
     if (Array.isArray(select)) {
-      keys = select.reduce((acc: Array<keyof T>, se: any) =>
-        [...acc, ...(typeof se === 'object' ? Object.keys(se) : [se])], []) as Array<keyof T>;
+      keys = (select as any).reduce((acc: any, se: any) =>
+        [...acc, ...(typeof se === 'object' ? Object.keys(se) : [se])], []);
     } else if (typeof select === 'object') {
       keys = Object.keys(select) as Array<keyof T>;
     }
