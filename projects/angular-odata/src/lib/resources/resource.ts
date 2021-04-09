@@ -6,7 +6,7 @@ import {
   PARAM_SEPARATOR,
   QUERY_SEPARATOR
 } from '../constants';
-import { Http, Urls } from '../utils/index';
+import { Http, Types, Urls } from '../utils/index';
 
 import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
@@ -58,13 +58,35 @@ export abstract class ODataResource<T> {
   }
   isSubtypeOf(other: ODataResource<any>) {
     const api = this.api;
-    const self = this.type();
-    const that = other.type();
-    if (self !== undefined && that !== undefined) {
-      const thatParser = api.findParserForType<T>(that) as ODataStructuredTypeParser<T>;
-      return thatParser.findParser(c => c.isTypeOf(self)) !== undefined;
+    const selfType = this.type();
+    const otherType = other.type();
+    if (selfType !== undefined && otherType !== undefined) {
+      const otherParser = api.findParserForType<T>(otherType) as ODataStructuredTypeParser<T>;
+      return otherParser.findParser(c => c.isTypeOf(selfType)) !== undefined;
     }
     return false;
+  }
+  isParentOf(other: ODataResource<any>) {
+    const [selfPath, ] = this.pathAndParams();
+    const [otherPath, ] = other.pathAndParams();
+    return otherPath !== selfPath && otherPath.startsWith(selfPath);
+  }
+
+  isChildOf(other: ODataResource<any>) {
+    const [selfPath, ] = this.pathAndParams();
+    const [otherPath, ] = other.pathAndParams();
+    return otherPath !== selfPath && selfPath.startsWith(otherPath);
+  }
+  isSameAs(other: ODataResource<any>) {
+    const [selfPath, ] = this.pathAndParams();
+    const [otherPath, ] = other.pathAndParams();
+    return otherPath === selfPath;
+  }
+
+  isEqualTo(other: ODataResource<any>) {
+    const [selfPath, selfParams] = this.pathAndParams();
+    const [otherPath, otherParams] = other.pathAndParams();
+    return otherPath === selfPath && Types.isEqual(selfParams, otherParams);
   }
   pathAndParams(): [string, PlainObject] {
     let path = this.pathSegments.path();
