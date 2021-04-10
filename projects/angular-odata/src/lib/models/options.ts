@@ -255,7 +255,7 @@ export class ODataModelOptions<T> {
               const r2 = model.resource();
               return r1 === undefined || r2 === undefined || !r1.isParentOf(r2);
             }
-            return false;
+            return !v.property.parser?.isNavigation();
           })
           .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v.model }), {})
       )
@@ -422,19 +422,19 @@ export class ODataModelOptions<T> {
   }
 
   private _subscribe<F>(self: ODataModel<T>, property: ODataModelProperty<F>, value: ODataModel<F> | ODataCollection<F, ODataModel<F>>) {
+    const mr = self.resource();
+    const vr = value.resource();
+    const bubbling = mr === undefined || vr === undefined || !vr.isParentOf(mr);
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
-      const mr = self.resource();
-      const vr = value.resource();
-      if (mr !== undefined && vr !== undefined && vr.isParentOf(mr)) return
-      if (event.model !== undefined && event.model === self) return
-
-      let path = property.name;
-      if (value instanceof ODataModel && event.path)
-        path = `${path}.${event.path}`;
-      else if (value instanceof ODataCollection && event.path) {
-        path = `${path}${event.path}`;
+      if (bubbling) {
+        let path = property.name;
+        if (value instanceof ODataModel && event.path)
+          path = `${path}.${event.path}`;
+        else if (value instanceof ODataCollection && event.path) {
+          path = `${path}${event.path}`;
+        }
+        self.events$.emit({...event, path});
       }
-      self.events$.emit({...event, path});
     });
   }
 }

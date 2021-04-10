@@ -497,23 +497,23 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   private _subscribe(model: M) {
+    const cr = this.resource();
+    const mr = model.resource();
+    const bubbling = mr === undefined || cr === undefined || !mr.isParentOf(cr);
     return model.events$.subscribe((event: ODataModelEvent<T>) => {
-      const cr = this.resource();
-      const mr = model.resource();
-      if (mr !== undefined && cr !== undefined && mr.isParentOf(cr)) return
-      if (event.name !== 'add' && event.name !== 'remove' && event.collection === this) return
-
-      const index = this.indexOf(model);
-      let path = `[${index}]`;
-      if (event.path)
-        path = `${path}.${event.path}`;
-      if (event.name === 'destroy' && event.model === model)
-        this.remove(model).toPromise();
-      if (event.name === 'change' && event.model === model) {
-        let entry = this._models.find((m) => m.model === model);
-        if (entry !== undefined) entry.key = model.key();
+      if (bubbling) {
+        const index = this.indexOf(model);
+        let path = `[${index}]`;
+        if (event.path)
+          path = `${path}.${event.path}`;
+        if (event.name === 'destroy' && event.model === model)
+          this.remove(model).toPromise();
+        if (event.name === 'change' && event.model === model) {
+          let entry = this._models.find((m) => m.model === model);
+          if (entry !== undefined) entry.key = model.key();
+        }
+        this.events$.emit({...event, path});
       }
-      this.events$.emit({...event, path});
     });
   }
 
