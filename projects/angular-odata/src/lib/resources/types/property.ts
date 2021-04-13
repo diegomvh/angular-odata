@@ -80,6 +80,65 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     }
     return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
   }
+  select(opts: Select<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Select<T>>(QueryOptionNames.select, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  expand(opts: Expand<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Expand<T>>(QueryOptionNames.expand, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  transform(opts: Transform<T>) {
+    let options = this.queryOptions.clone();
+    options.option<Transform<T>>(QueryOptionNames.transform, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  search(opts: string) {
+    let options = this.queryOptions.clone();
+    options.option<string>(QueryOptionNames.search, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  filter(opts: Filter) {
+    let options = this.queryOptions.clone();
+    options.option<Filter>(QueryOptionNames.filter, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  orderBy(opts: OrderBy<T>) {
+    let options = this.queryOptions.clone();
+    options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  format(opts: string) {
+    let options = this.queryOptions.clone();
+    options.option<string>(QueryOptionNames.format, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  top(opts: number) {
+    let options = this.queryOptions.clone();
+    options.option<number>(QueryOptionNames.top, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  skip(opts: number) {
+    let options = this.queryOptions.clone();
+    options.option<number>(QueryOptionNames.skip, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
+
+  skiptoken(opts: string) {
+    let options = this.queryOptions.clone();
+    options.option<string>(QueryOptionNames.skiptoken, opts);
+    return new ODataPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+  }
   //#endregion
 
   //#region Mutable Resource

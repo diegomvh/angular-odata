@@ -17,7 +17,6 @@ import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
-
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {

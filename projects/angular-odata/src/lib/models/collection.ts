@@ -60,7 +60,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   //Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(
-    entities?: Partial<T>[] | {[name: string]: any}[],
+    entities: Partial<T>[] | {[name: string]: any}[] = [],
     {
       resource,
       schema,
@@ -73,10 +73,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset?: boolean;
     } = {}
   ) {
+    entities = entities || [];
+
     this.resource(resource);
     this.schema(schema);
-    this.meta(meta || new ODataEntitiesMeta({}, { options: resource?.api.options }));
-    entities = entities || [];
+    this.meta(meta || new ODataEntitiesMeta({ count: entities.length, options: resource?.api.options }));
     this.assign(entities, { reset });
   }
 
@@ -97,20 +98,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
       this._models.forEach(({ model }) => {
         const mr = model.resource();
-        if (resource instanceof ODataEntitySetResource) {
-          const er = resource.entity(
-            model.toEntity({ field_mapping: true }) as T
-          );
-          if (mr === undefined || !mr.isParentOf(er))
+        if (mr === undefined || !mr.isParentOf(resource)) {
+          if (resource instanceof ODataEntitySetResource) {
+            const er = resource.entity(
+              model.toEntity({ field_mapping: true }) as T
+            );
             model.resource(er);
-        } else if (resource instanceof ODataNavigationPropertyResource) {
-          const er = resource.key(
-            schema?.resolveKey(
-              model.toEntity({ field_mapping: true })
-            ) as EntityKey<T>
-          );
-          if (mr === undefined || !mr.isParentOf(er))
+          } else if (resource instanceof ODataNavigationPropertyResource) {
+            const er = resource.key(
+              schema?.resolveKey(
+                model.toEntity({ field_mapping: true })
+              ) as EntityKey<T>
+            );
             model.resource(er);
+          }
         }
       });
 
@@ -134,7 +135,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entity: Partial<T> | {[name: string]: any},
     { reset = false }: { reset?: boolean } = {}
   ): M {
-    const meta = new ODataEntityMeta(entity, { options: this._meta.options });
+    const meta = new ODataEntityMeta({data: entity, options: this._meta.options });
     const attrs = meta.attributes<T>(entity);
     let schema = this.schema();
     const resource = this.resource();
@@ -253,7 +254,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         obs$ = resource.fetchAll(options).pipe(
           map((entities) => ({
             entities,
-            meta: new ODataEntitiesMeta({}, { options: resource?.api.options }),
+            meta: new ODataEntitiesMeta({ count: entities.length, options: resource?.api.options }),
           }))
         );
       }

@@ -27,17 +27,18 @@ export class ODataModel<T> {
   private _properties?: ModelProperty<any>[];
   private _options: ODataModelOptions<T>;
   events$ = new EventEmitter<ODataModelEvent<T>>();
-  constructor(entity?: Partial<T> | {[name: string]: any}, { resource, schema, meta, reset = false }: {
+  constructor(entity: Partial<T> | {[name: string]: any} = {}, { resource, schema, meta, reset = false }: {
     resource?: ODataModelResource<T>,
     schema?: ODataStructuredType<T>,
     meta?: ODataEntityMeta,
     reset?: boolean
   } = {}) {
     this._options = new ODataModelOptions(this._properties || []);
+    entity = Objects.merge(this.defaults(), entity);
+
     this.resource(resource);
     this.schema(schema);
     this.meta(meta);
-    entity = Objects.merge(this.defaults(), entity || {});
     this.assign(entity, { reset });
   }
 

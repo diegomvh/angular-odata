@@ -26,8 +26,12 @@ export interface ODataVersionHelper {
   property(value: {[name: string]: any}, context: ODataContext): any;
   annotations(value: {[name: string]: any}): {[name: string]: any};
   attributes(value: {[name: string]: any}): {[name: string]: any};
+  //Get or Set Id
   id(value: {[name: string]: any}, id?: string): string | undefined;
+  //Get or Set Etag
   etag(value: {[name: string]: any}, etag?: string): string | undefined;
+  //Get or Set Count
+  count(value: {[name: string]: any}, count?: number): number | undefined;
   context(value: {[name: string]: any}): ODataContext;
   functions(value: {[name: string]: any}): {[name: string]: any};
   properties(value: {[name: string]: any}): {[name: string]: any};
@@ -41,7 +45,6 @@ export interface ODataVersionHelper {
   mediaEditLink(value: {[name: string]: any}): string | undefined;
   mediaContentType(value: {[name: string]: any}): string | undefined;
   deltaLink(value: {[name: string]: any}): string | undefined;
-  count(value: {[name: string]: any}): number | undefined;
   countParam(): {[name: string]: string};
 }
 
@@ -94,7 +97,9 @@ const ODataVersionBaseHelper = <any>{
     }
     return undefined;
   },
-  count(value: { [name: string]: any }) {
+  count(value: { [name: string]: any }, count?: number) {
+    if (count !== undefined)
+      value[this.ODATA_COUNT] = count;
     return (this.ODATA_COUNT in value) ?
       Number(value[this.ODATA_COUNT]) :
       undefined;

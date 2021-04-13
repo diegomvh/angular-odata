@@ -50,8 +50,8 @@ export class ODataModelProperty<F> {
   metaFactory(meta: ODataEntityMeta): ODataEntityMeta | ODataEntitiesMeta | undefined {
     return (this.parser !== undefined) ?
       this.parser.collection ?
-        new ODataEntitiesMeta(meta.property(this.parser.name) || {}, { options: meta.options }) :
-        new ODataEntityMeta(meta.property(this.parser.name) || {}, { options: meta.options }) :
+        new ODataEntitiesMeta({ data: meta.property(this.parser.name) || {}, options: meta.options }) :
+        new ODataEntityMeta({ data: meta.property(this.parser.name) || {}, options: meta.options }) :
         undefined;
   }
 

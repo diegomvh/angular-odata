@@ -4,19 +4,17 @@ import { ODataContext, ODataHelper } from '../../helpers';
 import { OptionsHelper } from '../../types';
 
 export abstract class ODataMeta {
-  annotations: Object;
+  annotations: {[annot: string]: any};
   options?: OptionsHelper;
   protected get odv() {
     return this.options?.helper || ODataHelper[DEFAULT_VERSION];
   }
-  constructor(data: any = {}, opt: {
-    options?: OptionsHelper,
-    headers?: HttpHeaders
-  } = {}) {
-    this.options = opt.options;
+  constructor({ data = {}, options, headers }: {
+    data?: {[name: string]: any}, options?: OptionsHelper, headers?: HttpHeaders } = {}) {
+    this.options = options;
     this.annotations = this.options ? this.odv.annotations(data) : data;
-    if (opt.headers) {
-      const etag = opt.headers.get("ETag");
+    if (headers) {
+      const etag = headers.get("ETag");
       if (etag)
         this.odv.etag(this.annotations, etag);
     }
@@ -30,7 +28,6 @@ export abstract class ODataMeta {
     }
     return this._context;
   }
-
   private _properties?: { [name: string]: any };
   get properties() {
     if (this._properties === undefined) {
@@ -50,7 +47,7 @@ export abstract class ODataMeta {
 
 export class ODataPropertyMeta extends ODataMeta {
   clone(): ODataPropertyMeta {
-    return new ODataPropertyMeta(this.annotations, { options: this.options });
+    return new ODataPropertyMeta({ data: Object.assign({}, this.annotations), options: this.options });
   }
 
   data(data: Object) {
@@ -64,7 +61,7 @@ export class ODataPropertyMeta extends ODataMeta {
 
 export class ODataEntityMeta extends ODataMeta {
   clone(): ODataEntityMeta {
-    return new ODataEntityMeta(this.annotations, { options: this.options });
+    return new ODataEntityMeta({ data: Object.assign({}, this.annotations), options: this.options });
   }
 
   data(data: Object) {
@@ -129,8 +126,14 @@ export class ODataEntityMeta extends ODataMeta {
 }
 
 export class ODataEntitiesMeta extends ODataMeta {
+  constructor({ count, ...opts }: {
+    count?: number, data?: {[name: string]: any}, options?: OptionsHelper, headers?: HttpHeaders } = {}) {
+    super(opts);
+    if (count)
+      this.odv.count(this.annotations, count);
+  }
   clone(): ODataEntitiesMeta {
-    return new ODataEntitiesMeta(this.annotations, { options: this.options });
+    return new ODataEntitiesMeta({ data: Object.assign({}, this.annotations), options: this.options });
   }
 
   data(data: Object) {
