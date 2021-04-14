@@ -48,14 +48,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._models.map((m) => m.model);
   }
 
-  state() {
-    return {
-      top: this._meta.top,
-      skip: this._meta.skip,
-      skiptoken: this._meta.skiptoken,
-      records: this._meta.count,
-    };
-  }
+  get length(): number {return this._models.length;}
 
   //Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
@@ -77,7 +70,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     this.resource(resource);
     this.schema(schema);
-    this.meta(meta || new ODataEntitiesMeta({ count: entities.length, options: resource?.api.options }));
+    this.meta(meta || new ODataEntitiesMeta({ options: resource?.api.options }));
     this.assign(entities, { reset });
   }
 
@@ -254,7 +247,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         obs$ = resource.fetchAll(options).pipe(
           map((entities) => ({
             entities,
-            meta: new ODataEntitiesMeta({ count: entities.length, options: resource?.api.options }),
+            meta: new ODataEntitiesMeta({ options: resource?.api.options }),
           }))
         );
       }

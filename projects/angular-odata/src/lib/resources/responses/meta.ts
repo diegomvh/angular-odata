@@ -126,12 +126,6 @@ export class ODataEntityMeta extends ODataMeta {
 }
 
 export class ODataEntitiesMeta extends ODataMeta {
-  constructor({ count, ...opts }: {
-    count?: number, data?: {[name: string]: any}, options?: OptionsHelper, headers?: HttpHeaders } = {}) {
-    super(opts);
-    if (count)
-      this.odv.count(this.annotations, count);
-  }
   clone(): ODataEntitiesMeta {
     return new ODataEntitiesMeta({ data: Object.assign({}, this.annotations), options: this.options });
   }

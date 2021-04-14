@@ -30,8 +30,7 @@ export interface ODataVersionHelper {
   id(value: {[name: string]: any}, id?: string): string | undefined;
   //Get or Set Etag
   etag(value: {[name: string]: any}, etag?: string): string | undefined;
-  //Get or Set Count
-  count(value: {[name: string]: any}, count?: number): number | undefined;
+  count(value: {[name: string]: any}): number | undefined;
   context(value: {[name: string]: any}): ODataContext;
   functions(value: {[name: string]: any}): {[name: string]: any};
   properties(value: {[name: string]: any}): {[name: string]: any};
@@ -97,9 +96,7 @@ const ODataVersionBaseHelper = <any>{
     }
     return undefined;
   },
-  count(value: { [name: string]: any }, count?: number) {
-    if (count !== undefined)
-      value[this.ODATA_COUNT] = count;
+  count(value: { [name: string]: any }) {
     return (this.ODATA_COUNT in value) ?
       Number(value[this.ODATA_COUNT]) :
       undefined;
