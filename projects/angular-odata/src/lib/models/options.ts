@@ -389,8 +389,7 @@ export class ODataModelOptions<T> {
         if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
           newModel = this._modelCollectionFactory(model, property, value as F);
         }
-        const resource = newModel.resource();
-        if (this._resource !== undefined && (resource === undefined || !resource.isParentOf(this._resource))) {
+        if (newModel.resource() === undefined && this._resource !== undefined) {
           const resource = property.resourceFactory<T, F>(this._resource);
           const meta = property.metaFactory(this._meta);
           newModel.resource(resource);
@@ -399,6 +398,7 @@ export class ODataModelOptions<T> {
           else if (newModel instanceof ODataCollection)
             newModel.meta(meta as ODataEntitiesMeta);
         }
+        const resource = newModel.resource();
         if (resource !== undefined && resource.type() !== field.type)
           throw new Error(`Can't set ${resource.type()} to ${field.type}`);
       }
