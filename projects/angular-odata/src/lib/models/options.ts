@@ -24,7 +24,6 @@ export function ODataModelField({ name }: { name?: string } = {}) {
     properties.push({ name: propertyKey, field: name || propertyKey });
   }
 }
-
 export type ModelProperty<F> = { name: string, field: string };
 
 const isChildOf = (r1: ODataEntityResource<any> | ODataEntitySetResource<any>, r2?: ODataEntityResource<any> | ODataEntitySetResource<any>) => {
@@ -63,7 +62,7 @@ export class ODataModelProperty<F> {
   modelCollectionFactory<T, F>(
     { value, baseResource, baseSchema, baseMeta}: {
     value?: F | F[] | {[name: string]: any} | {[name: string]: any}[],
-    baseResource: ODataModelResource<T>,
+    baseResource?: ODataModelResource<T>,
     baseSchema: ODataStructuredType<T>,
     baseMeta: ODataEntityMeta
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
@@ -72,7 +71,7 @@ export class ODataModelProperty<F> {
       throw new Error("No Parser");
     }
     const meta = this.metaFactory(baseMeta);
-    if (baseResource.hasKey()) {
+    if (baseResource !== undefined && baseResource.hasKey()) {
       // Build for Resource
       const resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
       return this.parser.collection ?
@@ -334,22 +333,12 @@ export class ODataModelOptions<T> {
     const baseResource = this.resource(model);
     const baseMeta = this.meta(model);
     const baseSchema = this.schema(model);
-    if (baseResource !== undefined && baseSchema !== undefined) {
-      // Build for Resource
+    if (baseSchema !== undefined) {
+      // Build for Resource or Schema
       return property.modelCollectionFactory<T, P>({value, baseResource, baseSchema, baseMeta});
     }
 
     const meta = property.metaFactory(baseMeta);
-    if (baseSchema !== undefined) {
-      // Build for Schema
-      // Meta
-      const schema = property.schemaFactory<T, P>(baseSchema);
-      const Model = schema?.model || ODataModel;
-      const Collection = schema?.collection || ODataCollection;
-      return property.parser?.collection ?
-        new Collection((value || []) as (P | {[name: string]: any})[], { schema, meta }) :
-        new Model((value || {}) as P | {[name: string]: any}, { schema, meta });
-    }
     // Build by Magic
     return property.parser?.collection ?
       new ODataCollection((value || []) as (P | {[name: string]: any})[], { meta: meta as ODataEntitiesMeta }) as ODataCollection<P, ODataModel<P>>:
@@ -388,11 +377,18 @@ export class ODataModelOptions<T> {
       if (newModel !== null) {
         if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
           newModel = this._modelCollectionFactory(model, property, value as F);
-        }
-        if (newModel.resource() === undefined && this._resource !== undefined) {
+        } else if (newModel.resource() === undefined && this._resource !== undefined && this._resource.hasKey()) {
           const resource = property.resourceFactory<T, F>(this._resource);
           const meta = property.metaFactory(this._meta);
           newModel.resource(resource);
+          if (newModel instanceof ODataModel)
+            newModel.meta(meta as ODataEntityMeta);
+          else if (newModel instanceof ODataCollection)
+            newModel.meta(meta as ODataEntitiesMeta);
+        } else if (newModel.schema() === undefined && this._schema !== undefined) {
+          const schema = property.schemaFactory<T, F>(this._schema);
+          newModel.schema(schema);
+          const meta = property.metaFactory(this._meta);
           if (newModel instanceof ODataModel)
             newModel.meta(meta as ODataEntityMeta);
           else if (newModel instanceof ODataCollection)

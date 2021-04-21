@@ -255,7 +255,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     return throwError('Resource Error');
   }
-
   add(model: M): Observable<this> {
     const key = model.key();
     let obs$: Observable<this> = of(this);
@@ -294,7 +293,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
       })
     );
   }
-
   remove(model: M): Observable<this> {
     const key = model.key();
     let obs$: Observable<this> = of(this);
@@ -389,38 +387,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   assign(entities: Array<Partial<T> | {[name: string]: any}>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
-    if (reset) {
-      this._models.forEach((e) => e.subscription.unsubscribe());
-      const models = entities.map(entity => this._modelFactory(entity as Partial<T> | {[name: string]: any}, { reset }));
-      this._models = models.map((model, index) => {
-        return {
-          model,
-          key: model.key(),
-          subscription: this._subscribe(model),
-        };
-      });
-      if (!silent)
-        this.events$.emit({ name: 'reset', collection: this });
-    } else {
-      entities.forEach((attrs) => {
-        const key = this.schema()?.resolveKey(attrs);
-        const entry = this._models.find(
-          (e) => !Types.isEmpty(e.key) && Types.isEqual(e.key, key)
-        );
-        if (entry !== undefined) {
-          entry.model.assign(attrs, { reset, silent });
-        } else {
-          const model = this._modelFactory(attrs, { reset });
-          this._models.push({
-            model,
-            key: model.key(),
-            subscription: this._subscribe(model),
-          });
-          if (!silent)
-            model.events$.emit({ name: 'add', model, collection: this });
-        }
-      });
-    }
+    this._models.forEach((e) => e.subscription.unsubscribe());
+    const models = entities.map(entity => this._modelFactory(entity as Partial<T> | {[name: string]: any}, { reset }));
+    this._models = models.map(model => {
+      return {
+        model,
+        key: model.key(),
+        subscription: this._subscribe(model),
+      };
+    });
     if (!silent)
       this.events$.emit({ name: 'update', collection: this });
   }
@@ -515,12 +490,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
   // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;
-    let models = this._models;
+    let models = this._models.map(e => e.model);
     return {
       next(): IteratorResult<M> {
         return {
           done: pointer === models.length,
-          value: models[pointer++].model,
+          value: models[pointer++],
         };
       },
     };
