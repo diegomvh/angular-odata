@@ -186,14 +186,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   //#region Custom
   fetch(options?: HttpOptions & { etag?: string }): Observable<T | null> {
-    if (!this.segment.entitySet().hasKey())
-      return throwError("Resource without key");
+    if (!this.hasKey())
+      return throwError("Entity resource without key");
     return this.get(options).pipe(map(({ entity }) => entity));
   }
 
   fetchModel(options?: HttpOptions & { etag?: string }): Observable<ODataModel<T> | null> {
-    if (!this.segment.entitySet().hasKey())
-      return throwError("Resource without key");
+    if (!this.hasKey())
+      return throwError("Entity resource without key");
     return this.get(options).pipe(map(({ entity, meta }) => entity ? this.asModel(entity, { meta, reset: true }) : null));
   }
   //#endregion

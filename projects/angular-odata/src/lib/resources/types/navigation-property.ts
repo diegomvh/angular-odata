@@ -68,6 +68,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     navigation.segment.navigationProperty().key(key);
     return navigation;
   }
+  entity(key: EntityKey<T>) {
+    const navigation = this.clone();
+    navigation.segment.navigationProperty().key(key);
+    return navigation;
+  }
   value() {
     return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
@@ -75,7 +80,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   reference() {
     return ODataReferenceResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
   }
-
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {

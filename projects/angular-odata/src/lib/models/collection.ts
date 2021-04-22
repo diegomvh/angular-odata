@@ -92,19 +92,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._models.forEach(({ model }) => {
         const mr = model.resource();
         if (mr === undefined || !mr.isParentOf(resource)) {
-          if (resource instanceof ODataEntitySetResource) {
-            const er = resource.entity(
-              model.toEntity({ field_mapping: true }) as T
-            );
-            model.resource(er);
-          } else if (resource instanceof ODataNavigationPropertyResource) {
-            const er = resource.key(
-              schema?.resolveKey(
-                model.toEntity({ field_mapping: true })
-              ) as EntityKey<T>
-            );
-            model.resource(er);
-          }
+          const er = resource.entity( model.toEntity({ field_mapping: true }) as T);
+          model.resource(er);
         }
       });
 
@@ -273,13 +262,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     return obs$.pipe(
       map((col) => {
-        if (resource instanceof ODataEntitySetResource) {
+        if (model.resource() === undefined && resource !== undefined) {
           model.resource(
             resource.entity(model.toEntity({ field_mapping: true }) as T)
-          );
-        } else if (resource instanceof ODataNavigationPropertyResource) {
-          model.resource(
-            resource.key(model.toEntity({ field_mapping: true }) as T)
           );
         }
         this._models.push({

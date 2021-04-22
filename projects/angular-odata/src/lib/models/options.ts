@@ -118,8 +118,7 @@ export class ODataModelOptions<T> {
       this.bind(model, schema);
 
     // Attach relations
-    for (var relation of Object.values(this._relations)) {
-      const { property, model } = relation;
+    Object.values(this._relations).forEach(({ property, model }) => {
       const field = property.parser;
       if (field === undefined) {
         throw new Error("No Field");
@@ -129,7 +128,8 @@ export class ODataModelOptions<T> {
         if (mr === undefined || !mr.isParentOf(resource))
           model.resource(property.resourceFactory<T, any>(resource));
       }
-    }
+    });
+
     this._resource = resource;
     model.events$.emit({ name: 'attach', model, previous: current, value: resource });
   }

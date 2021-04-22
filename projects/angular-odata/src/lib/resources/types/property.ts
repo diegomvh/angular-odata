@@ -13,6 +13,7 @@ import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataNavigationPropertyResource } from './navigation-property';
+import { EntityKey } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -59,6 +60,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   //#region Inmutable Resource
+  entity(key: EntityKey<T>) {
+    const property = this.clone();
+    property.segment.property().key(key);
+    return property;
+  }
   value() {
     return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }
