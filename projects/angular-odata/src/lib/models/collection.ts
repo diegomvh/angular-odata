@@ -22,11 +22,11 @@ import {
   HttpCallableOptions,
 } from '../resources/index';
 
-import { EventEmitter } from '@angular/core';
+import { ApplicationRef, EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema/structured-type';
 import { EntityKey } from '../types';
 import { Types } from '../utils/types';
-import { ODataModel } from './model';
+import { CID, ODataModel } from './model';
 import {
   EntitySelect,
   ODataCollectionResource,
@@ -38,17 +38,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
   private _resource?: ODataCollectionResource<T>;
   private _schema?: ODataStructuredType<T>;
   private _meta!: ODataEntitiesMeta;
-  private _models: {
+  private _entries: {
     model: M;
     key?: EntityKey<T>;
     subscription: Subscription;
   }[] = [];
 
   models() {
-    return this._models.map((m) => m.model);
+    return this._entries.map((m) => m.model);
   }
 
-  get length(): number {return this._models.length;}
+  get length(): number {return this._entries.length;}
 
   //Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
@@ -89,7 +89,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       const schema = resource.schema;
       if (schema !== undefined) this.schema(schema);
 
-      this._models.forEach(({ model }) => {
+      this._entries.forEach(({ model }) => {
         const mr = model.resource();
         if (mr === undefined || !mr.isParentOf(resource)) {
           const er = resource.entity( model.toEntity({ field_mapping: true }) as T);
@@ -151,8 +151,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     field_mapping?: boolean;
     select?: EntitySelect<T>;
   } = {}) {
-    return this._models.map((m) =>
-      m.model.toEntity({
+    return this._entries.map(({model}) =>
+      model.toEntity({
         client_id,
         include_navigation,
         changes_only,
@@ -270,7 +270,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             resource.entity(model.toEntity({ field_mapping: true }) as T)
           );
         }
-        this._models.push({
+        this._entries.push({
           model,
           key: model.key(),
           subscription: this._subscribe(model),
@@ -301,11 +301,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (index !== -1) {
       obs$ = obs$.pipe(
         map((col) => {
-          const entry = this._models[index];
+          const entry = this._entries[index];
           // Emit Event
           model.events$.emit({ name: 'remove', model, collection: this });
           // Now remove
-          this._models.splice(index, 1);
+          this._entries.splice(index, 1);
           entry.subscription.unsubscribe();
           this.events$.emit({ name: 'update', collection: this });
           return col;
@@ -340,18 +340,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
       : (path as string).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length === 0) return undefined;
     if (pathArray.length > 1) {
-      const model = this._models[Number(pathArray[0])].model;
+      const model = this._entries[Number(pathArray[0])].model;
       return model.set(pathArray.slice(1), value);
     }
     if (pathArray.length === 1 && value instanceof ODataModel) {
       const index = Number(pathArray[0]);
-      const entry = this._models[index];
+      const entry = this._entries[index];
       if (entry !== undefined) {
         var model = entry.model;
         model.events$.emit({ name: 'remove', model, collection: this });
         entry.subscription.unsubscribe();
       }
-      this._models[index] = {
+      this._entries[index] = {
         key: value.key() as EntityKey<T>,
         model: value as M,
         subscription: this._subscribe(value as M),
@@ -367,7 +367,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       ? path
       : (`${path}`).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length === 0) return undefined;
-    const value = this._models[Number(pathArray[0])].model;
+    const value = this._entries[Number(pathArray[0])].model;
     if (pathArray.length > 1 && value instanceof ODataModel) {
       return value.get(pathArray.slice(1));
     }
@@ -375,19 +375,54 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   assign(entities: Array<Partial<T> | {[name: string]: any}>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
-    //TODO: toAdd, toRemove, toMerge
-    this._models.forEach((e) => e.subscription.unsubscribe());
-    const models = entities.map(entity => this._modelFactory(entity as Partial<T> | {[name: string]: any}, { reset }));
-    this._models = models.map(model => {
-      return {
-        model,
-        key: model.key(),
-        subscription: this._subscribe(model),
-      };
-    });
-    if (!silent)
+    if (reset) {
+      this._entries.forEach((e) => e.subscription.unsubscribe());
+      const models = entities.map(entity => this._modelFactory(entity as Partial<T> | {[name: string]: any}, { reset }));
+      this._entries = models.map(model => {
+        return {
+          model,
+          key: model.key(),
+          subscription: this._subscribe(model),
+        };
+      });
+      if (!silent)
+        this.events$.emit({ name: 'reset', collection: this });
+    } else {
+      let modelMap: string[] = [];
+      entities.forEach((attrs) => {
+        const key = this.schema()?.resolveKey(attrs);
+        const cid = (<any>attrs)[CID];
+        const entry = this._findEntry({cid, key});
+        if (entry !== undefined) {
+          // Assign
+          entry.model.assign(attrs, {reset, silent});
+          modelMap.push(entry.model[CID]);
+        } else {
+          // Add
+          const model = this._modelFactory(attrs, {reset});
+          this._entries.push({
+            model,
+            key: model.key(),
+            subscription: this._subscribe(model)
+          });
+          modelMap.push(model[CID]);
+          if (!silent)
+            model.events$.emit({name: 'add', model, collection: this});
+        }
+      });
+      this._entries.filter(e => modelMap.indexOf(e.model[CID]) === -1).forEach(entry => {
+        const model = entry.model;
+        const index = this._entries.indexOf(entry);
+        // Emit Event
+        model.events$.emit({ name: 'remove', model, collection: this });
+        // Now remove
+        this._entries.splice(index, 1);
+        entry.subscription.unsubscribe();
+      });
       this.events$.emit({ name: 'update', collection: this });
+    }
   }
+
   query(
     func: (q: {
       select(opts?: Select<T>): OptionHandler<Select<T>>;
@@ -467,7 +502,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         if (event.name === 'destroy' && event.model === model)
           this.remove(model).toPromise();
         if (event.name === 'change' && event.model === model) {
-          let entry = this._models.find((m) => m.model === model);
+          let entry = this._entries.find((m) => m.model === model);
           if (entry !== undefined) entry.key = model.key();
         }
         this.events$.emit({...event, path});
@@ -475,11 +510,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
   }
 
+  private _findEntry({model, cid, key}: {model?: M, cid?: string, key?: EntityKey<T>} = {}) {
+    return this._entries.find((e) => {
+      const byKey = !Types.isEmpty(e.key) && Types.isEqual(e.key, key);
+      const byCid = e.model[CID] === cid;
+      const byModel = e.model === model;
+      return byModel || byCid || byKey;
+    });
+  }
+
   //#region Collection functions
   // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;
-    let models = this._models.map(e => e.model);
+    let models = this.models();
     return {
       next(): IteratorResult<M> {
         return {
@@ -492,13 +536,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   // IndexOf
   public indexOf(model: M) {
-    const key = model.key();
-    const entry = this._models.find((e) => {
-      let byModel = e.model === model;
-      let byKey = !Types.isEmpty(e.key) && Types.isEqual(e.key, key);
-      return byModel || byKey;
-    });
-    return entry !== undefined ? this._models.indexOf(entry) : -1;
+    const entry = this._findEntry({model, cid: model[CID], key: model.key()});
+    return entry !== undefined ? this._entries.indexOf(entry) : -1;
   }
   //#endregion
 }

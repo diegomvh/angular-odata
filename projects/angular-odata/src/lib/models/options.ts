@@ -330,7 +330,7 @@ export class ODataModelOptions<T> {
       }
     }
     if (!this._silent)
-      model.events$.emit({ name: 'update', model });
+      model.events$.emit({ name: this._resetting ? 'reset' : 'update', model });
     this._resetting = false;
     this._silent = false;
   }
