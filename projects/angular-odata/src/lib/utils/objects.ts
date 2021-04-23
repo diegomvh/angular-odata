@@ -134,5 +134,6 @@ export const Objects = {
       }
     }
     return diffs;
-  }
+  },
+  uniqueId: (counter => (str = '') => `${str}${++counter}`)(0)
 }

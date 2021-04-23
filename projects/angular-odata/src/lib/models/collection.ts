@@ -139,11 +139,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   toEntities({
+    client_id = false,
     include_navigation = false,
     changes_only = false,
     field_mapping = false,
     select,
   }: {
+    client_id?: boolean;
     include_navigation?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
@@ -151,6 +153,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   } = {}) {
     return this._models.map((m) =>
       m.model.toEntity({
+        client_id,
         include_navigation,
         changes_only,
         field_mapping,
@@ -372,6 +375,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   assign(entities: Array<Partial<T> | {[name: string]: any}>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
+    //TODO: toAdd, toRemove, toMerge
     this._models.forEach((e) => e.subscription.unsubscribe());
     const models = entities.map(entity => this._modelFactory(entity as Partial<T> | {[name: string]: any}, { reset }));
     this._models = models.map(model => {

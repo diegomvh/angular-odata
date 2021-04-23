@@ -16,6 +16,7 @@ import { ODataEntity, ODataEntityMeta } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
+import { EntityKey } from '../../types';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
@@ -49,6 +50,16 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   ////#endregion
 
   //#region Inmutable Resource
+  key(key: EntityKey<T>) {
+    const singleton = this.clone();
+    singleton.segment.singleton().key(key);
+    return singleton;
+  }
+  entity(key: EntityKey<T>) {
+    const singleton = this.clone();
+    singleton.segment.singleton().key(key);
+    return singleton;
+  }
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {

@@ -30,11 +30,11 @@ export class ODataReferenceResource extends ODataResource<any> {
     return super.post({[ODATA_ID]: target.endpointUrl()}, options);
   }
 
-  delete(options?: HttpOptions & { etag?: string, target?: ODataEntityResource<any> }): Observable<any> {
-    if (options && options.target) {
-      options.params = {[$ID]: options.target.endpointUrl()};
+  delete({etag, target, ...options}: { etag?: string, target?: ODataEntityResource<any>} & HttpOptions = {}): Observable<any> {
+    if (target) {
+      options.params = {[$ID]: target.endpointUrl()};
     }
-    return super.delete(options);
+    return super.delete({etag, ...options});
   }
   //#endregion
 
@@ -44,7 +44,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   }
 
   remove(target?: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
-    return this.delete(Object.assign({target}, options));
+    return this.delete({target, ...options});
   }
   //#region
 

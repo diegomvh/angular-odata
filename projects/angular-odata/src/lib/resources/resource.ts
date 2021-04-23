@@ -48,9 +48,8 @@ export abstract class ODataResource<T> {
   types(): string[] {
     return this.pathSegments.types();
   }
-
   /**
-   * @returns boolean The resourse has key ?
+   * @returns boolean The resource has key ?
    */
   hasKey() {
     const lastSegment  = this.pathSegments.last();

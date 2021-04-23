@@ -60,6 +60,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   //#region Inmutable Resource
+  key(key: EntityKey<T>) {
+    const property = this.clone();
+    property.segment.property().key(key);
+    return property;
+  }
   entity(key: EntityKey<T>) {
     const property = this.clone();
     property.segment.property().key(key);

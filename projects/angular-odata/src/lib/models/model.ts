@@ -22,8 +22,10 @@ import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
 import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
 
+export const CID = Symbol("_cid");
 export class ODataModel<T> {
   //Events
+  public [CID]: string = Objects.uniqueId("c");
   private _properties?: ModelProperty<any>[];
   private _options: ODataModelOptions<T>;
   events$ = new EventEmitter<ODataModelEvent<T>>();
@@ -80,17 +82,19 @@ export class ODataModel<T> {
     return this._options.defaults(this);
   }
   toEntity({
+    client_id = false,
     include_navigation = false,
     changes_only = false,
     field_mapping = false,
     select
   }: {
+    client_id?: boolean,
     include_navigation?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean,
     select?: EntitySelect<T>
   } = {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { include_navigation, changes_only, field_mapping, select });
+    return this._options.toEntity(this, { client_id, include_navigation, changes_only, field_mapping, select });
   }
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
     return this._options.attributes(this, { changes_only });
@@ -138,7 +142,7 @@ export class ODataModel<T> {
     if (resource !== undefined) {
       let obs$: Observable<ODataEntity<any>> = NEVER;
       if (resource instanceof ODataEntityResource) {
-        if (!resource.segment.entitySet().hasKey())
+        if (!resource.hasKey())
           return throwError("Can't fetch model without key");
         obs$ = resource.get(options);
       } else if (resource instanceof ODataNavigationPropertyResource) {
@@ -160,9 +164,9 @@ export class ODataModel<T> {
     if (resource !== undefined) {
       let obs$: Observable<ODataEntity<any>> = NEVER;
       if (resource instanceof ODataEntityResource) {
-        if (!validate || this.valid({create: !resource.segment.entitySet().hasKey(), patch})) {
+        if (!validate || this.valid({create: !resource.hasKey(), patch})) {
           const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_navigation }) as T;
-          obs$ = (!resource.segment.entitySet().hasKey() ?
+          obs$ = (!resource.hasKey() ?
             resource.post(_entity, options) :
             patch ?
               resource.patch(_entity, options) :
@@ -182,7 +186,7 @@ export class ODataModel<T> {
     if (resource !== undefined) {
       let obs$: Observable<ODataEntity<any>> = NEVER;
       if (resource instanceof ODataEntityResource) {
-        if (!resource.segment.entitySet().hasKey())
+        if (!resource.hasKey())
           return throwError("Can't destroy model without key");
         const _entity = this.toEntity({field_mapping: true}) as T;
         obs$ = resource.delete(Object.assign({ etag: this.meta().etag }, options || {})).pipe(
@@ -229,7 +233,7 @@ export class ODataModel<T> {
     options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
-    if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
+    if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.function<P, R>(name), responseType, options);
     }
     return throwError("Can't call function without ODataEntityResource with key");
@@ -242,7 +246,7 @@ export class ODataModel<T> {
     options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     let resource = this.resource();
-    if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
+    if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.action<P, R>(name), responseType, options);
     }
     return throwError("Can't call action without ODataEntityResource with key");
@@ -263,7 +267,7 @@ export class ODataModel<T> {
     options?: HttpOptions
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
     let resource = this.resource();
-    if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
+    if (resource instanceof ODataEntityResource && resource.hasKey()) {
       const nav = resource.navigationProperty<S>(path);
       switch (responseType) {
         case 'model':
@@ -288,7 +292,7 @@ export class ODataModel<T> {
       throw new Error(`Can't set ${prop.name} to collection, use add`);
 
     const resource = this.resource();
-    if (resource instanceof ODataEntityResource && resource.segment.entitySet().hasKey()) {
+    if (resource instanceof ODataEntityResource && resource.hasKey()) {
       let ref = resource.navigationProperty(prop.field).reference();
       const etag = this.meta().etag;
       const opts = Object.assign({ etag }, options || {});

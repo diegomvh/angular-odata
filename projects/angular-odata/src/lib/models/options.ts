@@ -2,9 +2,9 @@ import { Subscription } from "rxjs";
 import { ODataStructuredTypeFieldParser } from "../parsers";
 import { Expand, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
 import { ODataStructuredType } from "../schema";
-import { Types } from "../utils";
+import { Objects, Types } from "../utils";
 import { ODataCollection } from "./collection";
-import { ODataModel } from "./model";
+import { CID, ODataModel } from "./model";
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type EntitySelect<T> = Array<keyof T | { [P in keyof T]?: EntitySelect<T[P]>}> | { [P in keyof T]?: EntitySelect<T[P]>};
@@ -17,7 +17,6 @@ export type ODataModelEvent<T> = {
   previous?: any
   options?: any
 }
-
 export function ODataModelField({ name }: { name?: string } = {}) {
   return (target: any, propertyKey: string): void => {
     const properties = target._properties = (target._properties || []) as ModelProperty<any>[];
@@ -117,6 +116,10 @@ export class ODataModelOptions<T> {
     if (schema !== undefined)
       this.bind(model, schema);
 
+    const key = this.key(model, {field_mapping: true});
+    if (key !== undefined)
+      resource = resource.key(key);
+
     // Attach relations
     Object.values(this._relations).forEach(({ property, model }) => {
       const field = property.parser;
@@ -136,9 +139,10 @@ export class ODataModelOptions<T> {
 
   resource(model: ODataModel<T>): ODataModelResource<T> | undefined {
     let resource = this._resource?.clone() as ODataModelResource<T> | undefined;
-    const key = this.key(model, {field_mapping: true});
-    if (key !== undefined && (resource instanceof ODataEntityResource || resource instanceof ODataNavigationPropertyResource)) {
-      resource = resource.key(key);
+    if (resource !== undefined) {
+      const key = this.key(model, {field_mapping: true});
+      if (key !== undefined)
+        resource = resource.key(key);
     }
     return resource;
   }
@@ -216,11 +220,13 @@ export class ODataModelOptions<T> {
   }
 
   toEntity(model: ODataModel<T>, {
+    client_id = false,
     include_navigation = false,
     changes_only = false,
     field_mapping = false,
     select
   }: {
+    client_id?: boolean,
     include_navigation?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean,
@@ -245,7 +251,7 @@ export class ODataModelOptions<T> {
 
     let entries = Object.entries(
       Object.assign({},
-        this.attributes(model, { changes_only: changes_only, select: keys }),
+        this.attributes(model, { client_id, changes_only: changes_only, select: keys }),
         Object.entries(this._relations)
           .filter(([k, ]) => keys === undefined || keys.indexOf(k as keyof T) !== -1)
           .filter(([, v]) => {
@@ -262,15 +268,16 @@ export class ODataModelOptions<T> {
     // Map models and collections
     entries = entries.map(([k, v]) => {
       if (v instanceof ODataModel) {
-        v = v.toEntity({ changes_only, include_navigation, field_mapping, select: selects[k] });
+        v = v.toEntity({ client_id, changes_only, include_navigation, field_mapping, select: selects[k] });
       } else if (v instanceof ODataCollection) {
-        v = v.toEntities({ changes_only, include_navigation, field_mapping, select: selects[k] });
+        v = v.toEntities({ client_id, changes_only, include_navigation, field_mapping, select: selects[k] });
       }
       return [k, v];
     });
-    // Filter empty
+    // Filter empty objects
     if (changes_only)
-      entries = entries.filter(([k, v]) => !Types.isEmpty(v));
+      entries = entries.filter(([k, v]) => Array.isArray(v) || !Types.isEmpty(v));
+
     // Create entity
     return entries.reduce((acc, [k, v]) => {
       const name = field_mapping ? this.findProperty(p => p.name === k)?.field || k : k;
@@ -279,9 +286,11 @@ export class ODataModelOptions<T> {
   }
 
   attributes(model: ODataModel<T>, {
+    client_id = false,
     changes_only = false,
     select
   }: {
+    client_id?: boolean,
     changes_only?: boolean
     select?: Array<keyof T>
   } = {}): {[name: string]: any} {
@@ -291,7 +300,7 @@ export class ODataModelOptions<T> {
         this._changes));
     if (select !== undefined)
         entries = entries.filter(([k,]) => select.indexOf(k as keyof T) !== -1);
-    return entries.reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
+    return entries.reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), client_id ? { [CID]: model[CID] } : {});
   }
 
   assign(model: ODataModel<T>, entity: Partial<T> | {[name: string]: any}, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {

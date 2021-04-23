@@ -49,7 +49,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     const odata = this.api.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
-    if (!res.segment.entitySet().hasKey())
+    if (!res.hasKey())
       return throwError("Resource without key");
     return this.entity(entity as EntityKey<T>)
       .put(entity, Object.assign({etag}, options || {}))
@@ -60,7 +60,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     const odata = this.api.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
-    if (!res.segment.entitySet().hasKey())
+    if (!res.hasKey())
       return throwError("Resource without key");
     return res.patch(attrs, Object.assign({etag}, options || {}))
       .pipe(map(({entity: newentity, meta}) => newentity ? newentity :
@@ -71,7 +71,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     const odata = this.api.options.helper;
     const etag = odata.etag(entity);
     const res = this.entity(entity);
-    if (!res.segment.entitySet().hasKey())
+    if (!res.hasKey())
       return throwError("Resource without key");
     return res.delete(Object.assign({etag}, options || {}));
   }
@@ -88,7 +88,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   }
 
   public save(entity: Partial<T>, options?: HttpOptions) {
-    return this.entity(entity).segment.entitySet().hasKey() ?
+    return this.entity(entity).hasKey() ?
       this.update(entity, options) :
       this.create(entity, options);
   }
