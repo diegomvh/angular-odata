@@ -1,12 +1,10 @@
-import { NEVER, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import {
   ODataEntityResource,
-  ODataPropertyResource,
   ODataNavigationPropertyResource,
   HttpOptions,
-  HttpEntityOptions,
   ODataEntityMeta,
   ODataEntity,
   ODataActionResource,
@@ -22,7 +20,7 @@ import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
 import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
 
-export const CID = Symbol("_cid");
+export const CID = "_cid";
 export class ODataModel<T> {
   //Events
   public [CID]: string = Objects.uniqueId("c");
@@ -126,11 +124,10 @@ export class ODataModel<T> {
     let Ctor = <typeof ODataModel>this.constructor;
     return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.resource(), meta: this.meta() });
   }
-  private _request(resource: ODataModelResource<T>, obs$: Observable<ODataEntity<any>>): Observable<this> {
-    this.events$.emit({name: 'request', model: this, value: obs$ });
+  private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
+    this.events$.emit({ name: 'request', model: this, value: obs$ });
     return obs$.pipe(
       map(({ entity, meta }) => {
-        this.resource(resource);
         this.meta(meta);
         this.assign(meta.attributes<T>(entity || {}), { reset: true });
         this.events$.emit({name: 'sync', model: this });
@@ -139,62 +136,59 @@ export class ODataModel<T> {
   }
   fetch(options?: HttpOptions): Observable<this> {
     let resource = this.resource();
-    if (resource !== undefined) {
-      let obs$: Observable<ODataEntity<any>> = NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!resource.hasKey())
-          return throwError("Can't fetch model without key");
-        obs$ = resource.get(options);
-      } else if (resource instanceof ODataNavigationPropertyResource) {
-        obs$ = resource.get(
-          Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {}));
-      } else if (resource instanceof ODataPropertyResource) {
-        obs$ = resource.get(
-          Object.assign<HttpEntityOptions, HttpOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options || {}));
-      }
-      return this._request(resource, obs$);
+    if (resource === undefined)
+      return throwError("fetch: Resource is undefined");
+
+    let obs$: Observable<ODataEntity<any>>;
+    if (resource instanceof ODataEntityResource) {
+      if (!resource.hasKey())
+        return throwError("fetch: Can't fetch model without key");
+      obs$ = resource.get(options);
+    } else if (resource instanceof ODataNavigationPropertyResource) {
+      obs$ = resource.get({responseType: 'entity', ...options});
+    } else {
+      obs$ = resource.get({responseType: 'entity', ...options});
     }
-    return throwError("Resource is undefined");
+    return this._request(obs$);
   }
 
   save(
     { patch = false, include_navigation = false, validate = true, ...options }: HttpOptions & { patch?: boolean, include_navigation?: boolean, validate?: boolean, options?: HttpOptions } = {}
   ): Observable<this> {
     let resource = this.resource();
-    if (resource !== undefined) {
-      let obs$: Observable<ODataEntity<any>> = NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!validate || this.valid({create: !resource.hasKey(), patch})) {
-          const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_navigation }) as T;
-          obs$ = (!resource.hasKey() ?
-            resource.post(_entity, options) :
-            patch ?
-              resource.patch(_entity, options) :
-              resource.put(_entity, options)
-          ).pipe(map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
-        } else {
-          obs$ = throwError(this.errors);
-        }
-      }
-      return this._request(resource, obs$);
+    if (resource === undefined)
+      return throwError("save: Resource is undefined");
+    if (!(resource instanceof ODataEntityResource))
+      return throwError("save: Resource type ODataEntityResource needed");
+
+    let obs$: Observable<ODataEntity<any>>;
+    if (!validate || this.valid({create: !resource.hasKey(), patch})) {
+      const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_navigation }) as T;
+      obs$ = (!resource.hasKey() ?
+        resource.post(_entity, options) :
+        patch ?
+          resource.patch(_entity, options) :
+          resource.put(_entity, options)
+      ).pipe(map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
+    } else {
+      obs$ = throwError(this.errors);
     }
-    return throwError("Resource Error");
+    return this._request(obs$);
   }
 
   destroy(options?: HttpOptions): Observable<this> {
     let resource = this.resource();
-    if (resource !== undefined) {
-      let obs$: Observable<ODataEntity<any>> = NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!resource.hasKey())
-          return throwError("Can't destroy model without key");
-        const _entity = this.toEntity({field_mapping: true}) as T;
-        obs$ = resource.delete(Object.assign({ etag: this.meta().etag }, options || {})).pipe(
-          map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
-      }
-      return this._request(resource, obs$).pipe(tap(() => this.events$.emit({name: 'destroy', model: this})));
-    }
-    return throwError("Resource Error");
+    if (resource === undefined)
+      return throwError("destroy: Resource is undefined");
+    if (!(resource instanceof ODataEntityResource))
+      return throwError("destroy: Resource type ODataEntityResource needed");
+    if (!resource.hasKey())
+      return throwError("destroy: Can't destroy model without key");
+
+    const _entity = this.toEntity({field_mapping: true}) as T;
+    const obs$ = resource.delete(Object.assign({ etag: this.meta().etag }, options || {})).pipe(
+      map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
+    return this._request(obs$).pipe(tap(() => this.events$.emit({name: 'destroy', model: this})));
   }
   query(func: (q:
     { select(opts?: Select<T>): OptionHandler<Select<T>>;

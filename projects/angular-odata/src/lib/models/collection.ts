@@ -1,5 +1,5 @@
 import { map, tap } from 'rxjs/operators';
-import { Observable, NEVER, of, Subscription, merge, throwError } from 'rxjs';
+import { Observable, NEVER, of, Subscription, merge, throwError, EMPTY } from 'rxjs';
 
 import {
   ODataEntitySetResource,
@@ -170,82 +170,51 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let Ctor = <typeof ODataCollection>this.constructor;
     return new Ctor(this.toEntities({include_navigation: true}), { resource, meta });
   }
+  fetch({
+    withCount = true,
+    ...options
+  }: HttpOptions & {
+    withCount?: boolean;
+  } = {}): Observable<this> {
+    const resource = this.resource();
+    if (resource === undefined)
+      return throwError("fetch: Resource is undefined");
 
-  // Requests
-  private _request(obs$: Observable<ODataEntities<any>>): Observable<this> {
+    let obs$: Observable<ODataEntities<any>>;
+    if (resource instanceof ODataEntitySetResource) {
+      obs$ = resource.get({withCount, ...options});
+    } else if (resource instanceof ODataNavigationPropertyResource) {
+      obs$ = resource.get({responseType: 'entities', withCount, ...options});
+    } else {
+      obs$ = resource.get({responseType: 'entities', withCount, ...options});
+    }
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map(({ entities, meta }) => {
-        this._meta = meta;
+        this.meta(meta);
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
       })
     );
   }
-
-  fetch({
-    skip,
-    top,
-    skiptoken,
-    withCount = true,
-    ...options
-  }: HttpOptions & {
-    skip?: number;
-    top?: number;
-    skiptoken?: string;
-    withCount?: boolean;
-  } = {}): Observable<this> {
-    let obs$: Observable<ODataEntities<any>> = NEVER;
-    const resource = this.resource();
-    if (resource !== undefined) {
-      if (skip !== undefined) resource.query.skip(skip);
-      if (top !== undefined) resource.query.top(top);
-      if (skiptoken !== undefined) resource.query.skiptoken(skiptoken);
-      if (resource instanceof ODataEntitySetResource) {
-        obs$ = resource.get(
-          Object.assign<HttpEntitiesOptions, HttpOptions>(
-            <HttpEntitiesOptions>{ withCount },
-            options
-          )
-        );
-      } else if (resource instanceof ODataNavigationPropertyResource) {
-        obs$ = resource.get(
-          Object.assign<HttpEntitiesOptions, HttpOptions>(
-            <HttpEntitiesOptions>{ responseType: 'entities', withCount },
-            options
-          )
-        );
-      } else if (resource instanceof ODataPropertyResource) {
-        obs$ = resource.get(
-          Object.assign<HttpEntitiesOptions, HttpOptions>(
-            <HttpEntitiesOptions>{ responseType: 'entities', withCount },
-            options
-          )
-        );
-      }
-      return this._request(obs$);
-    }
-    return throwError('Resource Error');
-  }
   fetchAll(options?: HttpOptions): Observable<this> {
-    let obs$: Observable<any> = NEVER;
     const resource = this.resource();
-    if (resource !== undefined) {
-      if (
-        resource instanceof ODataEntitySetResource ||
-        resource instanceof ODataNavigationPropertyResource
-      ) {
-        obs$ = resource.fetchAll(options).pipe(
-          map((entities) => ({
-            entities,
-            meta: new ODataEntitiesMeta({ options: resource?.api.options }),
-          }))
-        );
-      }
-      return this._request(obs$);
-    }
-    return throwError('Resource Error');
+    if (resource === undefined)
+      return throwError("fetchAll: Resource is undefined");
+
+    if (resource instanceof ODataPropertyResource)
+      return throwError("fetchAll: Resource is ODataPropertyResource");
+
+    const obs$ = resource.fetchAll(options);
+    this.events$.emit({ name: 'request', collection: this, value: obs$ });
+    return obs$.pipe(
+      map((entities) => {
+        this.meta(new ODataEntitiesMeta({ options: resource?.api.options }));
+        this.assign(entities || [], { reset: true });
+        this.events$.emit({ name: 'sync', collection: this });
+        return this;
+      }));
   }
   add(model: M): Observable<this> {
     const key = model.key();
@@ -323,7 +292,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   // Count
-  count() {
+  _count() {
     let obs$: Observable<number> = NEVER;
     const resource = this.resource();
     if (
