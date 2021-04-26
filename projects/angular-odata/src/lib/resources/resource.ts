@@ -55,6 +55,7 @@ export abstract class ODataResource<T> {
     const lastSegment  = this.pathSegments.last();
     return lastSegment !== undefined && lastSegment.hasKey();
   }
+
   isSubtypeOf(other: ODataResource<any>) {
     const api = this.api;
     const selfType = this.type();
@@ -65,6 +66,7 @@ export abstract class ODataResource<T> {
     }
     return false;
   }
+
   isParentOf(other: ODataResource<any>) {
     const [selfPath, ] = this.pathAndParams();
     const [otherPath, ] = other.pathAndParams();
