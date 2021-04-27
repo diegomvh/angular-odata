@@ -13,8 +13,8 @@ export interface ODataCacheEntry<T> {
 export abstract class ODataCache<T> implements Cache<T> {
   timeout: number;
   entries: Map<string, ODataCacheEntry<T>>;
-  constructor(init?: {timeout?: number}) {
-    this.timeout = init?.timeout || DEFAULT_TIMEOUT;
+  constructor({timeout = DEFAULT_TIMEOUT}: {timeout?: number}) {
+    this.timeout = timeout;
     this.entries = new Map<string, ODataCacheEntry<T>>();
   }
   abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;

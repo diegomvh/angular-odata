@@ -157,28 +157,23 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   callProperty(params: P | null, options: HttpOptions = {}): Observable<R | null> {
-    const opts = Object.assign(<HttpPropertyOptions>{responseType: 'property'}, options);
-    return this.parameters(params).get(opts).pipe(map(({property}) => property));
+    return this.parameters(params).get({responseType: 'property', ...options}).pipe(map(({property}) => property));
   }
 
   callEntity(params: P | null, options: HttpOptions = {}): Observable<R | null> {
-    const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options);
-    return this.parameters(params).get(opts).pipe(map(({entity}) => entity));
-  }
-
-  callEntities(params: P | null, options: HttpOptions = {}): Observable<R[] | null> {
-    const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options);
-    return this.parameters(params).get(opts).pipe(map(({entities}) => entities));
-  }
-
-  callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
-    const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options);
-    return this.parameters(params).get(opts).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, { meta, reset: true }) : null));
+    return this.parameters(params).get({responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
   }
 
   callModel(params: P | null, options: HttpOptions = {}): Observable<ODataModel<R> | null> {
-    const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options);
-    return this.parameters(params).get(opts).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.parameters(params).get({responseType: 'entity', ...options}).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+  }
+
+  callEntities(params: P | null, options: HttpOptions = {}): Observable<R[] | null> {
+    return this.parameters(params).get({responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
+  }
+
+  callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
+    return this.parameters(params).get({responseType: 'entities', ...options}).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, { meta, reset: true }) : null));
   }
   //#endregion
 }

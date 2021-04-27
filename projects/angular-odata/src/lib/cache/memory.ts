@@ -1,8 +1,8 @@
 import { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache } from './cache';
 export class ODataInMemoryCache extends ODataCache<ODataResponse<any>> {
-  constructor(init?: {timeout?: number}) {
-    super(init);
+  constructor({timeout}: {timeout?: number} = {}) {
+    super({timeout});
   }
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {

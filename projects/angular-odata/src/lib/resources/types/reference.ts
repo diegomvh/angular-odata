@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 import { ODataResource } from '../resource';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataQueryOptions, QueryOptionNames } from '../query-options';
+import { ODataQueryOptions } from '../query-options';
 import { ODataEntityResource } from './entity';
 import { HttpOptions } from './options';
 import { $REF, $ID, ODATA_ID } from '../../constants';

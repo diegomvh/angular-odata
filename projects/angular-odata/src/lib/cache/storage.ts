@@ -10,10 +10,8 @@ interface StoragePayload {
 }
 
 export class ODataInStorageCache extends ODataCache<StoragePayload> {
-  constructor(init: {timeout?: number, name: string, storage?: Storage}) {
-    super(init);
-    const name = init.name;
-    const storage = init.storage || sessionStorage;
+  constructor({name, storage = sessionStorage, timeout}: {timeout?: number, name: string, storage?: Storage}) {
+    super({timeout});
     this.entries = new Map<string, ODataCacheEntry<StoragePayload>>(JSON.parse(storage.getItem(name) || "[]"));
     window.addEventListener("beforeunload", ((backend, key, responses) => function() {
       backend.setItem(key, JSON.stringify(Array.from(responses.entries())))

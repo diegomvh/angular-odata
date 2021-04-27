@@ -136,6 +136,7 @@ export abstract class ODataResource<T> {
   createAlias(name: string, value?: any) {
     return this.queryOptions.alias(name, value);
   }
+
   clearQuery() {
     this.queryOptions.clear();
   }

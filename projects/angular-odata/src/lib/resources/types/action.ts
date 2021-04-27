@@ -145,28 +145,23 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   }
 
   callProperty(params: P | null, options: HttpOptions = {}): Observable<R | null> {
-    const opts = Object.assign(<HttpPropertyOptions>{responseType: 'property'}, options);
-    return this.clone().post(params, opts).pipe(map(({property}) => property));
+    return this.clone().post(params, {responseType: 'property', ...options}).pipe(map(({property}) => property));
   }
 
   callEntity(params: P | null, options: HttpOptions = {}): Observable<R | null> {
-    const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options);
-    return this.clone().post(params, opts).pipe(map(({entity}) => entity));
-  }
-
-  callEntities(params: P | null, options: HttpOptions = {}): Observable<R[] | null> {
-    const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options);
-    return this.clone().post(params, opts).pipe(map(({entities}) => entities));
-  }
-
-  callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
-    const opts = Object.assign(<HttpEntitiesOptions>{responseType: 'entities'}, options);
-    return this.clone().post(params, opts).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, {meta, reset: true}) : null));
+    return this.clone().post(params, {responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
   }
 
   callModel(params: P | null, options: HttpOptions = {}): Observable<ODataModel<R> | null> {
-    const opts = Object.assign(<HttpEntityOptions>{responseType: 'entity'}, options);
-    return this.clone().post(params, opts).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.clone().post(params, {responseType: 'entity', ...options}).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+  }
+
+  callEntities(params: P | null, options: HttpOptions = {}): Observable<R[] | null> {
+    return this.clone().post(params, {responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
+  }
+
+  callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
+    return this.clone().post(params, {responseType: 'entities', ...options}).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, {meta, reset: true}) : null));
   }
   //#endregion
 }

@@ -27,8 +27,7 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   //#region Requests
   fetch(options?: HttpOptions): Observable<ODataMetadata> {
-    let opts = Object.assign<any, HttpOptions>({ responseType: 'text' }, options || {});
-    return super.get(opts).pipe(map((body: any) => new ODataMetadata(body)));
+    return super.get({responseType: 'text', ...options}).pipe(map((body: any) => new ODataMetadata(body)));
   }
   //#endregion
 }

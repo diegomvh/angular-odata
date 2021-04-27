@@ -234,27 +234,19 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   //#region Custom
   fetchEntity(options: HttpOptions & { etag?: string } = {}): Observable<T | null> {
-    return this.get(
-      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
-    ).pipe(map(({entity}) => entity));
+    return this.get({ responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
   }
 
   fetchModel(options: HttpOptions & { etag?: string } = {}): Observable<ODataModel<T> | null> {
-    return this.get(
-      Object.assign<HttpOptions, HttpEntityOptions>(<HttpEntityOptions>{ responseType: 'entity' }, options)
-    ).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.get({ responseType: 'entity', ...options}).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
   }
 
   fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
-    return this.get(
-      Object.assign<HttpOptions, HttpEntitiesOptions>(<HttpEntitiesOptions>{ responseType: 'entities' }, options)
-    ).pipe(map(({entities}) => entities));
+    return this.get({ responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
   }
 
   fetchCollection(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataCollection<T, ODataModel<T>> | null> {
-    return this.get(
-      Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options)
-    ).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, {meta, reset: true}) : null));
+    return this.get({responseType: 'entities', ...options}).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, {meta, reset: true}) : null));
   }
 
   fetchAll(options: HttpOptions = {}): Observable<T[]> {
@@ -268,9 +260,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         if (opts.top)
           res.query.top(opts.top);
       }
-      return res.get(
-        Object.assign<HttpEntitiesOptions, HttpOptions>(<HttpEntitiesOptions>{responseType: 'entities'}, options)
-      );
+      return res.get({responseType: 'entities', ...options});
     }
     return fetch()
       .pipe(
