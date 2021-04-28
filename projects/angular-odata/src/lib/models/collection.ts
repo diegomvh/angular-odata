@@ -40,7 +40,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   private _meta!: ODataEntitiesMeta;
   private _entries: {
     model: M;
-    key?: EntityKey<T>;
+    key?: EntityKey<T> | {[name: string]: any};
     subscription: Subscription;
   }[] = [];
 
@@ -479,7 +479,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
   }
 
-  private _findEntry({model, cid, key}: {model?: M, cid?: string, key?: EntityKey<T>} = {}) {
+  private _findEntry({model, cid, key}: {model?: M, cid?: string, key?: EntityKey<T> | {[name: string]: any}} = {}) {
     return this._entries.find((e) => {
       const byKey = !Types.isEmpty(e.key) && Types.isEqual(e.key, key);
       const byCid = e.model[CID] === cid;

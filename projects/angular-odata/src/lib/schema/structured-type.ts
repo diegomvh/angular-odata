@@ -1,4 +1,4 @@
-import { JsonSchemaOptions, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from '../parsers';
+import { JsonSchemaOptions, ODataEntityTypeKey, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from '../parsers';
 import { Annotation, EntityKey, Parser, StructuredTypeConfig } from '../types';
 import { Types } from '../utils/types';
 import { ODataAnnotation } from './annotation';
@@ -36,6 +36,7 @@ export class ODataStructuredType<T> {
   findAnnotation(predicate: (annot: Annotation) => boolean) {
     return this.annotations.find(predicate);
   }
+
   fields(opts: {
     include_parents?: boolean,
     include_navigation?: boolean
@@ -53,6 +54,7 @@ export class ODataStructuredType<T> {
     }
     return fields;
   }
+
   pick(value: { [name: string]: any }, opts: {
     include_parents?: boolean,
     include_navigation?: boolean,
@@ -67,6 +69,23 @@ export class ODataStructuredType<T> {
       this.api.options.helper.etag(attrs, etag);
     }
     return attrs;
+  }
+
+  keys(opts: {
+    include_parents?: boolean
+  } = { include_parents: true }): ODataEntityTypeKey[] {
+    let parent = this.parser as ODataStructuredTypeParser<any> | undefined;
+    let keys = <ODataEntityTypeKey[]>[];
+    while (parent !== undefined) {
+      keys = [
+        ...parent.keys || [],
+        ...keys
+      ];
+      if (!opts.include_parents)
+        break;
+      parent = parent.parent;
+    }
+    return keys;
   }
 
   resolveKey(attrs: any): EntityKey<T> | undefined {

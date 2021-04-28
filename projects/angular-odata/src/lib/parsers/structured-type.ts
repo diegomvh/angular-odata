@@ -12,7 +12,7 @@ export type JsonSchemaOptions<T> = {
   expand?: JsonSchemaExpand<T>;
 }
 
-class ODataEntityTypeKey {
+export class ODataEntityTypeKey {
   name: string;
   ref: string;
   alias?: string;
@@ -220,7 +220,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   base?: string;
   parent?: ODataStructuredTypeParser<any>;
   children: ODataStructuredTypeParser<any>[];
-  key?: ODataEntityTypeKey[];
+  keys?: ODataEntityTypeKey[];
   fields: ODataStructuredTypeFieldParser<any>[];
 
   constructor(config: StructuredTypeConfig<T>, namespace: string, alias?: string) {
@@ -229,21 +229,21 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     this.namespace = namespace;
     this.alias = alias;
     this.children = [];
-    if (Array.isArray(config.key))
-      this.key = config.key.map(key => new ODataEntityTypeKey(key));
+    if (Array.isArray(config.keys))
+      this.keys = config.keys.map(key => new ODataEntityTypeKey(key));
     this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataStructuredTypeFieldParser(name, f as StructuredTypeField));
   }
 
   resolveKey(attrs: any): EntityKey<T> {
     let key = this.parent ? this.parent.resolveKey(attrs) : {};
-    return (this.key || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
+    return (this.keys || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
   }
 
   isComplexType(): boolean {
     return this.parent ?
-      this.parent.isComplexType() || this.key === undefined :
-      this.key === undefined;
+      this.parent.isComplexType() || this.keys === undefined :
+      this.keys === undefined;
   }
 
   isTypeOf(type: string) {

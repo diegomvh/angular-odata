@@ -18,14 +18,14 @@ import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
-import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataModelResource } from './options';
+import { EntitySelect, ODataModelEvent, ODataModelOptions, ODataModelProperty, ODataModelResource } from './options';
+import { EntityKey } from '../types';
 
 export const CID = "_cid";
 export class ODataModel<T> {
   //Events
   public [CID]: string = Objects.uniqueId("c");
-  private _properties?: ModelProperty<any>[];
-  private _options: ODataModelOptions<T>;
+  public _options: ODataModelOptions<T>;
   events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(entity: Partial<T> | {[name: string]: any} = {}, { resource, schema, meta, reset = false }: {
     resource?: ODataModelResource<T>,
@@ -33,7 +33,7 @@ export class ODataModel<T> {
     meta?: ODataEntityMeta,
     reset?: boolean
   } = {}) {
-    this._options = new ODataModelOptions(this._properties || []);
+    this._options = new ODataModelOptions((<any>this)._properties || []);
     entity = Objects.merge(this.defaults(), entity);
 
     this.resource(resource);
@@ -60,8 +60,34 @@ export class ODataModel<T> {
     return this._options.meta(this);
   }
 
-  key() {
-    return this._options.key(this);
+  key({field_mapping = false}: {field_mapping?: boolean} = {}): EntityKey<T> | {[name: string]: any} | undefined {
+    let schema = this.schema();
+    if (schema === undefined) return undefined;
+    const keys = schema.keys({ include_parents: true });
+    const key: any = {};
+    for (var k of keys) {
+      let model = this as any;
+      let prop: ODataModelProperty<any> | undefined;
+      for (let n of k.ref.split('/')) {
+        prop = model._options.findProperty((p: any) => p.field === n);
+        if (prop !== undefined && model[prop.name] instanceof ODataModel)
+          model = model[prop.name];
+      }
+      if (prop === undefined) return undefined;
+      let name = field_mapping ? prop.field : prop.name;
+      if (k.alias !== undefined)
+        name = k.alias;
+      key[name] = model[prop.name];
+    }
+    const values = Object.values<any>(key);
+    if (values.length === 1) {
+      // Single primitive key value
+      return values[0] as EntityKey<T>;
+    } else if (values.some(v => v === undefined)) {
+      // Compose key, needs all values
+      return undefined;
+    }
+    return !Types.isEmpty(key) ? key : undefined;
   }
 
   // Validation

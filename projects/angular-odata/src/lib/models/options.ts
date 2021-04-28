@@ -2,6 +2,7 @@ import { Subscription } from "rxjs";
 import { ODataStructuredTypeFieldParser } from "../parsers";
 import { Expand, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
 import { ODataStructuredType } from "../schema";
+import { EntityKey } from "../types";
 import { Objects, Types } from "../utils";
 import { ODataCollection } from "./collection";
 import { CID, ODataModel } from "./model";
@@ -116,7 +117,7 @@ export class ODataModelOptions<T> {
     if (schema !== undefined)
       this.bind(model, schema);
 
-    const key = this.key(model, {field_mapping: true});
+    const key = model.key({field_mapping: true}) as EntityKey<T>;
     if (key !== undefined)
       resource = resource.key(key);
 
@@ -140,7 +141,7 @@ export class ODataModelOptions<T> {
   resource(model: ODataModel<T>): ODataModelResource<T> | undefined {
     let resource = this._resource?.clone() as ODataModelResource<T> | undefined;
     if (resource !== undefined) {
-      const key = this.key(model, {field_mapping: true});
+      const key = model.key({field_mapping: true}) as EntityKey<T>;
       if (key !== undefined)
         resource = resource.key(key);
     }
@@ -203,11 +204,6 @@ export class ODataModelOptions<T> {
     }) => void) {
     func(resource.query);
     model.resource(resource);
-  }
-
-  key(model: ODataModel<T>, {field_mapping = false}: {field_mapping?: boolean} = {}) {
-    //TODO: field_mapping
-    return this.schema(model)?.resolveKey(model.toEntity({field_mapping}));
   }
 
   validate(model: ODataModel<T>, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
