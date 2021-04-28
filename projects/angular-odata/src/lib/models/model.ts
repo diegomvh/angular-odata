@@ -79,15 +79,7 @@ export class ODataModel<T> {
         name = k.alias;
       key[name] = model[prop.name];
     }
-    const values = Object.values<any>(key);
-    if (values.length === 1) {
-      // Single primitive key value
-      return values[0] as EntityKey<T>;
-    } else if (values.some(v => v === undefined)) {
-      // Compose key, needs all values
-      return undefined;
-    }
-    return !Types.isEmpty(key) ? key : undefined;
+    return Objects.resolveKey(key);
   }
 
   // Validation
