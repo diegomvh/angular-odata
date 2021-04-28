@@ -70,15 +70,14 @@ export class ODataStructuredType<T> {
   }
 
   resolveKey(attrs: any): EntityKey<T> | undefined {
-    let key = this.parser.keys()
-      .reduce((acc, f) => Object.assign(acc, { [f.name]: f.resolve(attrs) }), {}) as any;
+    let key = this.parser.resolveKey(attrs);
     const values = Object.values(key);
     if (values.length === 1) {
       // Single primitive key value
       key = values[0];
     } else if (values.some(v => v === undefined)) {
       // Compose key, needs all values
-      key = null;
+      return undefined;
     }
     return !Types.isEmpty(key) ? key : undefined;
   }

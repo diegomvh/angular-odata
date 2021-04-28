@@ -175,6 +175,7 @@ export type StructuredTypeConfig<T> = {
   model?: { new(...params: any[]): any };
   collection?: { new(...params: any[]): any };
   annotations?: AnnotationConfig[];
+  key?: {ref: string, alias?: string}[],
   fields: { [P in keyof T]?: StructuredTypeField };
 }
 

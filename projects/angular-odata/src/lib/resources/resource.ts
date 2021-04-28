@@ -214,7 +214,7 @@ export abstract class ODataResource<T> {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.request('POST', Object.assign(options, { attrs }));
+    return this.request('POST', { attrs, ...options});
   }
 
   protected put(attrs: any, options: HttpOptions & {
@@ -222,7 +222,7 @@ export abstract class ODataResource<T> {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.request('PUT', Object.assign(options, { attrs }));
+    return this.request('PUT', { attrs, ...options });
   }
 
   protected patch(attrs: any, options: HttpOptions & {
@@ -230,7 +230,7 @@ export abstract class ODataResource<T> {
     responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
     withCount?: boolean
   } = {}): Observable<any> {
-    return this.request('PATCH', Object.assign(options, { attrs }));
+    return this.request('PATCH', { attrs, ...options });
   }
 
   protected delete(options: HttpOptions & {

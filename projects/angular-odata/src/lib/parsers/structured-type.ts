@@ -11,13 +11,28 @@ export type JsonSchemaOptions<T> = {
   custom?: JsonSchemaCustom<T>;
   expand?: JsonSchemaExpand<T>;
 }
+
+class ODataEntityTypeKey {
+  name: string;
+  ref: string;
+  alias?: string;
+  constructor({ref, alias}: {ref: string, alias?: string}) {
+    this.ref = ref;
+    this.alias = alias;
+    this.name = alias || ref;
+  }
+
+  resolve(value: any) {
+    return this.ref.split('/').reduce((acc, name) => acc[name], value);
+  }
+}
+
 export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, Parser<T> {
   name: string;
   type: string;
   private parser: Parser<T>;
   default?: any;
   maxLength?: number;
-  key: boolean;
   collection: boolean;
   nullable: boolean;
   navigation: boolean;
@@ -34,7 +49,6 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     this.annotations = field.annotations || [];
     this.default = field.default;
     this.maxLength = field.maxLength;
-    this.key = field.key !== undefined ? field.key : false;
     this.collection = field.collection !== undefined ? field.collection : false;
     this.nullable = field.nullable !== undefined ? field.nullable : true;
     this.navigation = field.navigation !== undefined ? field.navigation : false;
@@ -47,9 +61,6 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     return this.annotations.find(predicate);
   }
 
-  resolve(value: any) {
-    return (this.ref || this.name).split('/').reduce((acc, name) => acc[name], value);
-  }
   validate(
     value: any,
     {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
@@ -209,6 +220,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   base?: string;
   parent?: ODataStructuredTypeParser<any>;
   children: ODataStructuredTypeParser<any>[];
+  key?: ODataEntityTypeKey[];
   fields: ODataStructuredTypeFieldParser<any>[];
 
   constructor(config: StructuredTypeConfig<T>, namespace: string, alias?: string) {
@@ -217,8 +229,21 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     this.namespace = namespace;
     this.alias = alias;
     this.children = [];
+    if (Array.isArray(config.key))
+      this.key = config.key.map(key => new ODataEntityTypeKey(key));
     this.fields = Object.entries(config.fields)
       .map(([name, f]) => new ODataStructuredTypeFieldParser(name, f as StructuredTypeField));
+  }
+
+  resolveKey(attrs: any): EntityKey<T> {
+    let key = this.parent ? this.parent.resolveKey(attrs) : {};
+    return (this.key || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
+  }
+
+  isComplexType(): boolean {
+    return this.parent ?
+      this.parent.isComplexType() || this.key === undefined :
+      this.key === undefined;
   }
 
   isTypeOf(type: string) {
@@ -292,15 +317,6 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     if (field === undefined && this.parent !== undefined)
       return this.parent.typeFor(name);
     return field !== undefined ? field.type : undefined;
-  }
-
-  keys() {
-    const keys: ODataStructuredTypeFieldParser<any>[] = (this.parent) ? this.parent.keys() : [];
-    return [...keys, ...this.fields.filter(f => f.key)];
-  }
-
-  isComplexType() {
-    return this.keys().length === 0;
   }
 
   find(predicate: (p: ODataStructuredTypeParser<any>) => boolean): ODataStructuredTypeParser<any> | undefined {
