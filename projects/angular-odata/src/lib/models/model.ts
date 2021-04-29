@@ -95,12 +95,10 @@ export class ODataModel<T> {
     return this.errors === undefined;
   }
 
-  changed(): boolean {
-    return !Types.isEmpty(this._options.changes(this));
-  }
   protected defaults() {
     return this._options.defaults(this);
   }
+
   toEntity({
     client_id = false,
     include_navigation = false,
@@ -114,9 +112,11 @@ export class ODataModel<T> {
   } = {}): T | {[name: string]: any} {
     return this._options.toEntity(this, { client_id, include_navigation, changes_only, field_mapping});
   }
+
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
     return this._options.attributes(this, { changes_only });
   }
+
   set(path: string | string[], value: any) {
     const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length === 0) return undefined;
@@ -128,6 +128,7 @@ export class ODataModel<T> {
       return ((<any>this)[pathArray[0]] = value);
     }
   }
+
   get(path: string | string[]): any {
     const pathArray = (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length === 0) return undefined;
@@ -137,6 +138,7 @@ export class ODataModel<T> {
     }
     return value;
   }
+
   assign(entity: Partial<T> | {[name: string]: any}, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
     this._options.assign(this, entity, { reset, silent });
   }
@@ -154,6 +156,7 @@ export class ODataModel<T> {
         return this;
       }));
   }
+
   fetch(options?: HttpOptions): Observable<this> {
     let resource = this.resource();
     if (resource === undefined)
@@ -210,6 +213,7 @@ export class ODataModel<T> {
       map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
     return this._request(obs$).pipe(tap(() => this.events$.emit({name: 'destroy', model: this})));
   }
+
   query(func: (q:
     { select(opts?: Select<T>): OptionHandler<Select<T>>;
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
@@ -220,6 +224,11 @@ export class ODataModel<T> {
       throw new Error(`Can't query without ODataResource`);
     return this._options.query(this, resource, func);
   }
+
+  hasChanged() {
+    return this._options.hasChanged();
+  }
+
   private _call<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
