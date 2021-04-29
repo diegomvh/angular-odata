@@ -48,7 +48,7 @@ export class ODataRequest<T> {
     const [resourcePath, resourceParams] = init.resource.pathAndParams();
     this.path = resourcePath;
 
-    // Headers
+    //#region Headers
     const customHeaders: {[name: string]: string | string[]} = {};
     if (typeof init.etag === 'string') {
       if (this.api.options.etag.ifMatch && ['PUT', 'PATCH', 'DELETE'].indexOf(this.method) !== -1)
@@ -66,6 +66,7 @@ export class ODataRequest<T> {
       accept.push(`IEEE754Compatible=${this.api.options.ieee754Compatible}`);
     if (accept.length > 0)
       customHeaders[ACCEPT] = [`application/json;${accept.join(';')}`, "text/plain", "*/*"];
+
     const prefer = [];
     // Return ?
     if (this.api.options.prefer?.return !== undefined && ['POST', 'PUT', 'PATCH'].indexOf(this.method) !== -1)
@@ -76,9 +77,19 @@ export class ODataRequest<T> {
     if (prefer.length > 0)
       customHeaders[PREFER] = prefer;
     this.headers = Http.mergeHttpHeaders(this.api.options.headers, customHeaders, init.headers || {});
+    //#endregion
 
-    // Params
-    this.params = Http.mergeHttpParams(this.api.options.params, resourceParams, init.params || {});
+    //#region Params
+    const customParams: {[name: string]: string | string[]} = {};
+    if (['POST', 'PUT', 'PATCH'].indexOf(this.method) !== -1 && '$select' in resourceParams) {
+      customParams['$select'] = resourceParams['$select'];
+    }
+    if (['GET'].indexOf(this.method) !== -1) {
+      Object.assign(customParams, resourceParams);
+    }
+
+    this.params = Http.mergeHttpParams(this.api.options.params, customParams, init.params || {});
+    //#endregion
   }
 
   get pathWithParams() {

@@ -94,6 +94,10 @@ export class ODataModel<T> {
       this.events$.emit({name: 'invalid', model: this, value: this.errors, options: {create, patch}});
     return this.errors === undefined;
   }
+
+  changed(): boolean {
+    return !Types.isEmpty(this._options.changes(this));
+  }
   protected defaults() {
     return this._options.defaults(this);
   }

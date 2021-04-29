@@ -148,14 +148,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     changes_only?: boolean;
     field_mapping?: boolean;
   } = {}) {
-    return this._entries.map(({model}) =>
-      model.toEntity({
-        client_id,
-        include_navigation,
-        changes_only,
-        field_mapping
-      })
-    );
+    //TODO: Remove or Add are changes
+    var models = this.models();
+    if (!changes_only || (changes_only && models.some(m => m.changed()))) {
+      return models.map(model =>
+        model.toEntity({
+          client_id,
+          include_navigation,
+          field_mapping
+        })
+      );
+    }
+    return [];
   }
 
   clone() {

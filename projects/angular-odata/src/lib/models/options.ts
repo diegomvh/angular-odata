@@ -210,6 +210,9 @@ export class ODataModelOptions<T> {
     return this.schema(model)?.validate(model.toEntity({field_mapping: true}) as T, { create, patch });
   }
 
+  changes(model: ODataModel<T>) {
+    return this._changes;
+  }
   defaults(model: ODataModel<T>) {
     return this.schema(model)?.defaults() || {};
   }
@@ -224,7 +227,7 @@ export class ODataModelOptions<T> {
     include_navigation?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean
-  } = {}): T | {[name: string]: any} {
+  } = {}): T | {[name: string]: any} | undefined {
     let entries = Object.entries(
       Object.assign({},
         this.attributes(model, { client_id, changes_only: changes_only }),
@@ -251,13 +254,16 @@ export class ODataModelOptions<T> {
     });
     // Filter empty objects
     if (changes_only)
-      entries = entries.filter(([k, v]) => Array.isArray(v) || !Types.isEmpty(v));
+      entries = entries.filter(([k, v]) => v !== undefined);
 
     // Create entity
-    return entries.reduce((acc, [k, v]) => {
+    let entity = entries.reduce((acc, [k, v]) => {
       const name = field_mapping ? this.findProperty(p => p.name === k)?.field || k : k;
       return Object.assign(acc, { [name]: v });
     }, {}) as T
+
+    //TODO: client_id are change ?
+    return (changes_only && Types.isEmpty(entity)) ? undefined : entity;
   }
 
   attributes(model: ODataModel<T>, {
