@@ -3,12 +3,11 @@ import { ODataStructuredTypeFieldParser } from "../parsers";
 import { Expand, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
 import { ODataStructuredType } from "../schema";
 import { EntityKey } from "../types";
-import { Objects, Types } from "../utils";
+import { Types } from "../utils";
 import { ODataCollection } from "./collection";
 import { CID, ODataModel } from "./model";
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
-export type EntitySelect<T> = Array<keyof T | { [P in keyof T]?: EntitySelect<T[P]>}> | { [P in keyof T]?: EntitySelect<T[P]>};
 export type ODataModelEvent<T> = {
   name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'attach' | 'destroy'
   model?: ODataModel<T>
@@ -219,37 +218,17 @@ export class ODataModelOptions<T> {
     client_id = false,
     include_navigation = false,
     changes_only = false,
-    field_mapping = false,
-    select
+    field_mapping = false
   }: {
     client_id?: boolean,
     include_navigation?: boolean,
     changes_only?: boolean,
-    field_mapping?: boolean,
-    select?: EntitySelect<T>
+    field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    // Merge select in one object
-    let selects: any = {};
-    if (Array.isArray(select)) {
-      selects = (select as any).reduce((acc: any, se: any) =>
-        Object.assign(acc, typeof se === 'object' ? se: {}), {});
-    } else if (typeof select === 'object') {
-      selects = Object.keys(select);
-    }
-    // Get select keys
-    let keys: Array<keyof T> | undefined;
-    if (Array.isArray(select)) {
-      keys = (select as any).reduce((acc: any, se: any) =>
-        [...acc, ...(typeof se === 'object' ? Object.keys(se) : [se])], []);
-    } else if (typeof select === 'object') {
-      keys = Object.keys(select) as Array<keyof T>;
-    }
-
     let entries = Object.entries(
       Object.assign({},
-        this.attributes(model, { client_id, changes_only: changes_only, select: keys }),
+        this.attributes(model, { client_id, changes_only: changes_only }),
         Object.entries(this._relations)
-          .filter(([k, ]) => keys === undefined || keys.indexOf(k as keyof T) !== -1)
           .filter(([, v]) => {
             if (include_navigation && v.property.parser?.isNavigation()) {
               const r1 = v.model?.resource();
@@ -264,9 +243,9 @@ export class ODataModelOptions<T> {
     // Map models and collections
     entries = entries.map(([k, v]) => {
       if (v instanceof ODataModel) {
-        v = v.toEntity({ client_id, changes_only, include_navigation, field_mapping, select: selects[k] });
+        v = v.toEntity({ client_id, changes_only, include_navigation, field_mapping });
       } else if (v instanceof ODataCollection) {
-        v = v.toEntities({ client_id, changes_only, include_navigation, field_mapping, select: selects[k] });
+        v = v.toEntities({ client_id, changes_only, include_navigation, field_mapping });
       }
       return [k, v];
     });
@@ -283,19 +262,15 @@ export class ODataModelOptions<T> {
 
   attributes(model: ODataModel<T>, {
     client_id = false,
-    changes_only = false,
-    select
+    changes_only = false
   }: {
     client_id?: boolean,
     changes_only?: boolean
-    select?: Array<keyof T>
   } = {}): {[name: string]: any} {
     var entries = Object.entries(
       Object.assign({},
         changes_only ? {} : this._attributes,
         this._changes));
-    if (select !== undefined)
-        entries = entries.filter(([k,]) => select.indexOf(k as keyof T) !== -1);
     return entries.reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), client_id ? { [CID]: model[CID] } : {});
   }
 

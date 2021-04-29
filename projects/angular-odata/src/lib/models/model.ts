@@ -18,7 +18,7 @@ import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
 import { ODataStructuredType } from '../schema';
-import { EntitySelect, ODataModelEvent, ODataModelOptions, ODataModelProperty, ODataModelResource } from './options';
+import { ODataModelEvent, ODataModelOptions, ODataModelProperty, ODataModelResource } from './options';
 import { EntityKey } from '../types';
 
 export const CID = "_cid";
@@ -101,16 +101,14 @@ export class ODataModel<T> {
     client_id = false,
     include_navigation = false,
     changes_only = false,
-    field_mapping = false,
-    select
+    field_mapping = false
   }: {
     client_id?: boolean,
     include_navigation?: boolean,
     changes_only?: boolean,
-    field_mapping?: boolean,
-    select?: EntitySelect<T>
+    field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { client_id, include_navigation, changes_only, field_mapping, select });
+    return this._options.toEntity(this, { client_id, include_navigation, changes_only, field_mapping});
   }
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
     return this._options.attributes(this, { changes_only });

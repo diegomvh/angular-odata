@@ -28,7 +28,6 @@ import { EntityKey } from '../types';
 import { Types } from '../utils/types';
 import { CID, ODataModel } from './model';
 import {
-  EntitySelect,
   ODataCollectionResource,
   ODataModelEvent,
 } from './options';
@@ -142,22 +141,19 @@ export class ODataCollection<T, M extends ODataModel<T>>
     client_id = false,
     include_navigation = false,
     changes_only = false,
-    field_mapping = false,
-    select,
+    field_mapping = false
   }: {
     client_id?: boolean;
     include_navigation?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
-    select?: EntitySelect<T>;
   } = {}) {
     return this._entries.map(({model}) =>
       model.toEntity({
         client_id,
         include_navigation,
         changes_only,
-        field_mapping,
-        select,
+        field_mapping
       })
     );
   }
@@ -225,11 +221,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource !== undefined &&
       resource instanceof ODataNavigationPropertyResource
     ) {
-      var target = model.resource() as ODataEntityResource<T>;
-      target.clearQuery();
       obs$ = resource
         .reference()
-        .add(target)
+        .add(model.resource() as ODataEntityResource<T>)
         .pipe(map(() => this));
     }
     return obs$.pipe(
@@ -259,11 +253,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource !== undefined &&
       resource instanceof ODataNavigationPropertyResource
     ) {
-      var target = model.resource() as ODataEntityResource<T>;
-      target.clearQuery();
       obs$ = resource
         .reference()
-        .remove(target)
+        .remove(model.resource() as ODataEntityResource<T>)
         .pipe(map(() => this));
     }
     const index = this.indexOf(model);
