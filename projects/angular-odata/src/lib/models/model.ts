@@ -60,7 +60,7 @@ export class ODataModel<T> {
     return this._options.meta(this);
   }
 
-  key({field_mapping = false}: {field_mapping?: boolean} = {}): EntityKey<T> | {[name: string]: any} | undefined {
+  key({field_mapping = false, resolve = true}: {field_mapping?: boolean, resolve?: boolean} = {}): EntityKey<T> | {[name: string]: any} | undefined {
     let schema = this.schema();
     if (schema === undefined) return undefined;
     const keys = schema.keys({ include_parents: true });
@@ -79,7 +79,7 @@ export class ODataModel<T> {
         name = k.alias;
       key[name] = model[prop.name];
     }
-    return Objects.resolveKey(key);
+    return resolve ? Objects.resolveKey(key) : key;
   }
 
   // Validation
@@ -102,15 +102,17 @@ export class ODataModel<T> {
   toEntity({
     client_id = false,
     include_navigation = false,
+    include_key = false,
     changes_only = false,
     field_mapping = false
   }: {
     client_id?: boolean,
     include_navigation?: boolean,
+    include_key?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { client_id, include_navigation, changes_only, field_mapping});
+    return this._options.toEntity(this, { client_id, include_navigation, include_key, changes_only, field_mapping});
   }
 
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {

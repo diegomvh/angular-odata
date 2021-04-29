@@ -141,21 +141,27 @@ export class ODataCollection<T, M extends ODataModel<T>>
   toEntities({
     client_id = false,
     include_navigation = false,
+    include_key = false,
     changes_only = false,
     field_mapping = false
   }: {
     client_id?: boolean;
     include_navigation?: boolean;
+    include_key?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
   } = {}): (T | { [name: string]: any; })[] {
     return this._entries.filter(e => e.state !== ODataModelState.Removed)
-    .map(entry => entry.model.toEntity({
-      client_id,
-      include_navigation,
-      changes_only: entry.state !== ODataModelState.Added && changes_only,
-      field_mapping
-    }));
+    .map(entry => {
+      var changesOnly = changes_only && entry.state !== ODataModelState.Added;
+      return entry.model.toEntity({
+        client_id,
+        include_navigation,
+        field_mapping,
+        include_key,
+        changes_only: changesOnly
+      });
+    });
   }
 
   hasChanged() {

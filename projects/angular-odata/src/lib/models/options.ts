@@ -256,11 +256,13 @@ export class ODataModelOptions<T> {
 
   toEntity(model: ODataModel<T>, {
     client_id = false,
+    include_key = false,
     include_navigation = false,
     changes_only = false,
     field_mapping = false
   }: {
     client_id?: boolean,
+    include_key?: boolean,
     include_navigation?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean
@@ -278,10 +280,12 @@ export class ODataModelOptions<T> {
         return !v.property.parser?.isNavigation();
       })
       .map(([k, v]) => {
+        let changesOnly = changes_only && v.state !== ODataModelState.Changed && !!v.property.parser?.isNavigation();
+        let includeKey = include_key && !!v.property.parser?.isNavigation();
         if (v.model instanceof ODataModel) {
-          return [k, v.model.toEntity({ client_id, changes_only, include_navigation, field_mapping })];
+          return [k, v.model.toEntity({ client_id, include_navigation, field_mapping, changes_only: changesOnly, include_key: includeKey })];
         } else if (v.model instanceof ODataCollection) {
-          return [k, v.model.toEntities({ client_id, changes_only, include_navigation, field_mapping })];
+          return [k, v.model.toEntities({ client_id, include_navigation, field_mapping, changes_only: changesOnly, include_key: includeKey })];
         }
         return [k, v.model];
       })
@@ -296,6 +300,10 @@ export class ODataModelOptions<T> {
     // Add client_id
     if (client_id)
       entity[CID] = model[CID];
+
+    // Add key
+    if (include_key)
+      entity = Object.assign(entity, model.key({field_mapping, resolve: false}));
 
     return entity;
   }
