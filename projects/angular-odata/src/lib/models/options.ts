@@ -27,17 +27,14 @@ export enum ODataModelState {
   Unchanged,
 }
 
-export function ODataModelField({ name }: { name?: string } = {}) {
+export function ODataModelField({ name, default }: { name?: string, default?: any } = {}) {
   return (target: any, propertyKey: string): void => {
     const properties = target._properties = (target._properties || []) as ModelProperty<any>[];
-    properties.push({ name: propertyKey, field: name || propertyKey });
+    properties.push({ name: propertyKey, field: name || propertyKey, default });
   }
 }
-export type ModelProperty<F> = { name: string, field: string };
+export type ModelProperty<F> = { name: string, field: string, default?: any };
 
-const isChildOf = (r1: ODataEntityResource<any> | ODataEntitySetResource<any>, r2?: ODataEntityResource<any> | ODataEntitySetResource<any>) => {
-  return r2 !== undefined && r1.isChildOf(r2);
-}
 export class ODataModelProperty<F> {
   name: string;
   field: string;
