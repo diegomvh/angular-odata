@@ -8,7 +8,6 @@ import {
 } from '../constants';
 import { Http, Types, Urls } from '../utils/index';
 
-import { PlainObject } from './builder';
 import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions
@@ -87,7 +86,7 @@ export abstract class ODataResource<T> {
       (otherPath === selfPath && Types.isEqual(selfParams, otherParams));
   }
 
-  pathAndParams(): [string, PlainObject] {
+  pathAndParams(): [string, {[name: string]: any}] {
     let path = this.pathSegments.path();
     let params = this.queryOptions.params();
     if (path.indexOf(QUERY_SEPARATOR) !== -1) {
@@ -98,8 +97,13 @@ export abstract class ODataResource<T> {
     return [path, params];
   }
 
-  endpointUrl() {
-    return `${this.api.serviceRootUrl}${this}`;
+  endpointUrl(params: boolean = true) {
+    if (params) {
+      return `${this.api.serviceRootUrl}${this}`;
+    } else {
+      let [path, ] = this.pathAndParams();
+      return `${this.api.serviceRootUrl}${path}`;
+    }
   }
 
   toString(): string {

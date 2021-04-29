@@ -23,16 +23,16 @@ export class ODataReferenceResource extends ODataResource<any> {
 
   //#region Requests
   post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
-    return super.post({[ODATA_ID]: target.endpointUrl()}, options);
+    return super.post({[ODATA_ID]: target.endpointUrl(false)}, options);
   }
 
   put(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any> {
-    return super.post({[ODATA_ID]: target.endpointUrl()}, options);
+    return super.post({[ODATA_ID]: target.endpointUrl(false)}, options);
   }
 
   delete({etag, target, ...options}: { etag?: string, target?: ODataEntityResource<any>} & HttpOptions = {}): Observable<any> {
     if (target) {
-      options.params = {[$ID]: target.endpointUrl()};
+      options.params = {[$ID]: target.endpointUrl(false)};
     }
     return super.delete({etag, ...options});
   }
