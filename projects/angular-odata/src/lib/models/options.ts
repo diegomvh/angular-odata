@@ -27,22 +27,42 @@ export enum ODataModelState {
   Unchanged,
 }
 
-export function ODataModelField({ name, default }: { name?: string, default?: any } = {}) {
+export function ODataModelField(options: ModelFieldOptions = {}) {
   return (target: any, propertyKey: string): void => {
-    const properties = target._properties = (target._properties || []) as ModelProperty<any>[];
-    properties.push({ name: propertyKey, field: name || propertyKey, default });
+    const properties = target._properties = (target._properties || []) as ModelPropertyOptions[];
+    properties.push(Object.assign(options, { name: propertyKey, field: options.name || propertyKey}));
   }
 }
-export type ModelProperty<F> = { name: string, field: string, default?: any };
+
+export type ModelFieldOptions = {
+  name?: string,
+  default?: any,
+  nullable?: boolean,
+  maxLength?: number,
+  minLength?: number,
+};
+export type ModelPropertyOptions = ModelFieldOptions & { name: string, field: string };
 
 export class ODataModelProperty<F> {
   name: string;
   field: string;
+  options: {
+    default?: any,
+    nullable?: boolean,
+    maxLength?: number,
+    minLength?: number,
+  };
   parser?: ODataStructuredTypeFieldParser<F>;
-  constructor({name, field}: {name: string, field: string}) {
+  constructor({name, field, ...options}: ModelPropertyOptions) {
     this.name = name;
     this.field = field;
+    this.options = options;
   }
+
+  get default() {
+    return this.options.default || this.parser?.default;
+  }
+
   resourceFactory<T, F>(resource: ODataModelResource<T>): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> | undefined {
     return (
       this.parser !== undefined &&
@@ -113,7 +133,7 @@ export class ODataModelOptions<T> {
   private _meta: ODataEntityMeta;
   private _resetting: boolean = false;
   private _silent: boolean = false;
-  constructor(props: ModelProperty<any>[]) {
+  constructor(props: ModelPropertyOptions[]) {
     this._meta = new ODataEntityMeta();
     this._properties = props.map(prop => new ODataModelProperty(prop));
   }
@@ -226,7 +246,12 @@ export class ODataModelOptions<T> {
   }
 
   defaults(model: ODataModel<T>) {
-    return this.schema(model)?.defaults() || {};
+    return this._properties.reduce((acc, prop) => {
+      var value = prop.default;
+      return (value !== undefined) ?
+        Object.assign(acc, {[prop.name]: value}) :
+        acc;
+    }, {});
   }
 
   toEntity(model: ODataModel<T>, {
@@ -282,7 +307,7 @@ export class ODataModelOptions<T> {
     changes_only?: boolean,
     field_mapping?: boolean
   } = {}): {[name: string]: any} {
-    return Object.entries(changes_only ? this._changes : this._attributes)
+    return Object.entries(changes_only ? this._changes : Object.assign({}, this._attributes, this._changes))
       .reduce((acc, [k, v]) => {
         const name = field_mapping ? this.findProperty(p => p.name === k)?.field || k : k;
         return Object.assign(acc, {[name]: v});

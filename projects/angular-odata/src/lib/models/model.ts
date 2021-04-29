@@ -34,12 +34,12 @@ export class ODataModel<T> {
     reset?: boolean
   } = {}) {
     this._options = new ODataModelOptions((<any>this)._properties || []);
-    entity = Objects.merge(this.defaults(), entity);
 
     this.resource(resource);
     this.schema(schema);
     this.meta(meta);
-    this.assign(entity, { reset });
+
+    this.assign(Objects.merge(this.defaults(), entity), { reset });
   }
 
   resource(resource?: ODataModelResource<T>) {
