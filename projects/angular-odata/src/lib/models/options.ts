@@ -29,7 +29,9 @@ export enum ODataModelState {
 
 export function ODataModelField(options: ModelFieldOptions = {}) {
   return (target: any, propertyKey: string): void => {
-    const properties = target._properties = (target._properties || []) as ModelPropertyOptions[];
+    const properties = target._properties = (target.hasOwnProperty("_properties")) ? target._properties :
+      (target.__proto__.hasOwnProperty("_properties")) ? [...target.__proto__._properties] :
+      [];
     properties.push(Object.assign(options, { name: propertyKey, field: options.name || propertyKey}));
   }
 }
@@ -69,8 +71,10 @@ export class ODataModelProperty<F> {
   }
 
   validate(value: any, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
-    if (value instanceof ODataModel) {
+    if (this.parser?.isNavigation() && value instanceof ODataModel) {
       return !value.valid({create, patch}) ? value.errors : undefined;
+    } else if (value instanceof ODataCollection) {
+      return value.models().some(m => m.valid({create, patch})) ? value.models().map(m => m.errors) : undefined;
     } else {
       let errors = this.parser?.validate(value, {create, patch}) || [];
       if (
