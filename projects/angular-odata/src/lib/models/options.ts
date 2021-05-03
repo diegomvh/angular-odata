@@ -63,6 +63,14 @@ export class ODataModelProperty<F> {
     return this.options.default || this.parser?.default;
   }
 
+  validate(value: any, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
+    if (value instanceof ODataModel) {
+      return !value.valid({create, patch}) ? value.errors : undefined;
+    } else {
+      return this.parser?.validate(value, {create, patch});
+    }
+  }
+
   resourceFactory<T, F>(resource: ODataModelResource<T>): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> | undefined {
     return (
       this.parser !== undefined &&
@@ -137,6 +145,7 @@ export class ODataModelOptions<T> {
     this._meta = new ODataEntityMeta();
     this._properties = props.map(prop => new ODataModelProperty(prop));
   }
+
   attach(model: ODataModel<T>, resource: ODataModelResource<T>) {
     if (this._resource !== undefined && resource.type() !== this._resource.type() && !resource.isSubtypeOf(this._resource))
       throw new Error(`Can't reattach ${resource.type()} to ${this._resource.type()}`);
@@ -235,9 +244,15 @@ export class ODataModelOptions<T> {
     model.resource(resource);
   }
 
-  validate(model: ODataModel<T>, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
-    //TODO: field_mapping
-    return this.schema(model)?.validate(model.toEntity({field_mapping: true}) as T, { create, patch });
+  validate(model: ODataModel<T>, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}): {[name: string]: string[]} | undefined {
+    let errors = this._properties.reduce((acc, prop) => {
+      let value = (model as any)[prop.name];
+      let valid = prop.validate(value, {create, patch});
+      return (valid !== undefined) ?
+        Object.assign(acc, {[prop.name]: valid}) :
+        acc;
+    }, {});
+    return !Types.isEmpty(errors) ? errors : undefined;
   }
 
   hasChanged(): boolean {
