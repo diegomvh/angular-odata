@@ -40,6 +40,8 @@ export type ModelFieldOptions = {
   nullable?: boolean,
   maxLength?: number,
   minLength?: number,
+  min?: number,
+  max?: number,
 };
 export type ModelPropertyOptions = ModelFieldOptions & { name: string, field: string };
 
@@ -51,6 +53,9 @@ export class ODataModelProperty<F> {
     nullable?: boolean,
     maxLength?: number,
     minLength?: number,
+    min?: number,
+    max?: number,
+    pattern?: RegExp,
   };
   parser?: ODataStructuredTypeFieldParser<F>;
   constructor({name, field, ...options}: ModelPropertyOptions) {
@@ -67,7 +72,29 @@ export class ODataModelProperty<F> {
     if (value instanceof ODataModel) {
       return !value.valid({create, patch}) ? value.errors : undefined;
     } else {
-      return this.parser?.validate(value, {create, patch});
+      let errors = this.parser?.validate(value, {create, patch}) || [];
+      if (
+        !this.options.nullable &&
+        (value === null || (value === undefined && !patch)) // Is null or undefined without patch flag?
+      ) {
+        errors.push(`required`);
+      }
+      if (this.options.maxLength !== undefined && typeof value === 'string' && value.length > this.options.maxLength) {
+        errors.push(`maxlength`);
+      }
+      if (this.options.minLength !== undefined && typeof value === 'string' && value.length < this.options.minLength) {
+        errors.push(`minlength`);
+      }
+      if (this.options.min !== undefined && typeof value === 'number' && value < this.options.min) {
+        errors.push(`min`);
+      }
+      if (this.options.max !== undefined && typeof value === 'number' && value > this.options.max) {
+        errors.push(`max`);
+      }
+      if (this.options.pattern !== undefined && typeof value === 'string' && !this.options.pattern.test(value)) {
+        errors.push(`pattern`);
+      }
+      return !Types.isEmpty(errors) ? errors : undefined;
     }
   }
 
@@ -247,9 +274,9 @@ export class ODataModelOptions<T> {
   validate(model: ODataModel<T>, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}): {[name: string]: string[]} | undefined {
     let errors = this._properties.reduce((acc, prop) => {
       let value = (model as any)[prop.name];
-      let valid = prop.validate(value, {create, patch});
-      return (valid !== undefined) ?
-        Object.assign(acc, {[prop.name]: valid}) :
+      let errs = prop.validate(value, {create, patch});
+      return (errs !== undefined) ?
+        Object.assign(acc, {[prop.name]: errs}) :
         acc;
     }, {});
     return !Types.isEmpty(errors) ? errors : undefined;
