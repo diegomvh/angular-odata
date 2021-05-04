@@ -207,11 +207,11 @@ describe('ODataClient', () => {
         Gender: 4,
       })
     ).toEqual({
-      UserName: ['required'],
-      FirstName: ['required'],
-      LastName: ['required'],
+      UserName: ['nullable'],
+      FirstName: ['nullable'],
+      LastName: ['nullable'],
       Gender: ['mismatch'],
-      Concurrency: ['required'],
+      Concurrency: ['nullable'],
     });
   });
 
@@ -231,8 +231,8 @@ describe('ODataClient', () => {
         Gender: PersonGender.Male,
       }, {create: true})
     ).toEqual({
-      UserName: [ 'required' ],
-      Friends: [ { UserName: [ 'required' ], LastName: [ 'required' ] }, { UserName: [ 'required' ] }]
+      UserName: [ 'nullable' ],
+      Friends: [ { UserName: [ 'nullable' ], LastName: [ 'nullable' ] }, { UserName: [ 'nullable' ] }]
     });
   });
 
@@ -269,7 +269,7 @@ describe('ODataClient', () => {
         },
         { create: true }
       )
-    ).toEqual({ UserName: [ 'required' ] });
+    ).toEqual({ UserName: [ 'nullable' ] });
   });
 
   it('should validate entity on update', () => {
@@ -285,7 +285,7 @@ describe('ODataClient', () => {
         UserName: 'UserName',
         Gender: PersonGender.Male,
       })
-    ).toEqual({ Concurrency: ['required'] });
+    ).toEqual({ Concurrency: ['nullable'] });
   });
 
   it('should validate entity on patch', () => {
