@@ -83,7 +83,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
         (value === null || (value === undefined && !patch)) && // Is null or undefined without patch flag?
         !(computed?.bool && create) // Not (Is Computed field and create) ?
       ) {
-        errors.push(`nullable`);
+        errors.push(`required`);
       }
       if (this.maxLength !== undefined && typeof value === 'string' && value.length > this.maxLength) {
         errors.push(`maxlength`);
