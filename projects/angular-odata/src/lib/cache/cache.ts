@@ -7,6 +7,7 @@ import { ODataRequest, ODataResponse } from '../resources';
 export interface ODataCacheEntry<T> {
   payload: T;
   lastRead: number;
+  pattern?: string;
   timeout?: number;
 }
 
@@ -17,25 +18,23 @@ export abstract class ODataCache<T> implements Cache<T> {
     this.timeout = timeout;
     this.entries = new Map<string, ODataCacheEntry<T>>();
   }
+
   abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
   abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
 
-  buildEntry(payload: T, timeout?: number) {
+  buildEntry(payload: T, {timeout, pattern}: {timeout?: number, pattern?: string}): ODataCacheEntry<T> {
     return {
       payload,
       lastRead: Date.now(),
-      timeout: timeout
+      pattern,
+      timeout
     };
   }
 
-  put(key: string, payload: T, timeout?: number) {
-    const entry = {
-      payload,
-      lastRead: Date.now(),
-      timeout: timeout
-    } as ODataCacheEntry<T>;
+  put(key: string, payload: T, {timeout, pattern}: {timeout?: number, pattern?: string}) {
+    const entry = this.buildEntry(payload, {timeout, pattern});
     this.entries.set(key, entry);
-    this.remove();
+    this.forget();
   }
 
   get(key: string) {
@@ -43,24 +42,43 @@ export abstract class ODataCache<T> implements Cache<T> {
     return entry !== undefined && !this.isExpired(entry) ? entry.payload : undefined;
   }
 
-  private remove() {
-    // remove expired cache entries
+  forget({name}: {name?: string} = {}) {
+    // Remove expired cache entries
     this.entries.forEach((entry, key) => {
-      if (this.isExpired(entry)) {
+      if (
+        this.isExpired(entry) || // Expired
+        (name && this.isMatch(entry, name)) // Match
+      )
         this.entries.delete(key);
-      }
     });
+  }
+
+  flux() {
+    // Eemove all cache entries
+    this.entries = new Map<string, ODataCacheEntry<T>>();
   }
 
   isExpired(entry: ODataCacheEntry<any>) {
     return entry.lastRead < (Date.now() - ((entry.timeout || this.timeout) * 1000));
   }
 
-  isCacheable(req: ODataRequest<any>) {
-    return req.observe === 'response' && req.method === 'GET';
+  isMatch(entry: ODataCacheEntry<any>, value: string) {
+    return entry.pattern !== undefined && value.match(entry.pattern);
   }
 
-  handleRequest(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
+  isCacheable(req: ODataRequest<any>) {
+    return req.observe === 'response';
+  }
+
+  isFetch(req: ODataRequest<any>) {
+    return ['GET'].indexOf(req.method) !== -1;
+  }
+
+  isMutate(req: ODataRequest<any>) {
+    return ['PUT', 'PATCH', 'POST', 'DELETE'].indexOf(req.method) !== -1;
+  }
+
+  private handleFetch(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
     const policy = req.fetchPolicy;
     const cached = this.getResponse(req);
     if (policy === 'no-cache') {
@@ -82,5 +100,16 @@ export abstract class ODataCache<T> implements Cache<T> {
     return (cached !== undefined && policy !== 'network-only') ?
       (policy === 'cache-and-network' ? res$.pipe(startWith(cached)) : of(cached)) :
       res$;
+  }
+
+  private handleMutate(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
+    this.forget({name: req.path});
+    return res$;
+  }
+
+  handleRequest(req: ODataRequest<any>, res$: Observable<ODataResponse<any>>): Observable<ODataResponse<any>> {
+    return  this.isFetch(req) ?  this.handleFetch(req, res$) :
+            this.isMutate(req) ? this.handleMutate(req, res$) :
+            res$;
   }
 }

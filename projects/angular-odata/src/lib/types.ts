@@ -119,7 +119,7 @@ export const NONE_PARSER = {
 } as Parser<any>;
 
 export interface Cache<T> {
-  put(key: string, payload: T): void;
+  put(key: string, payload: T, ...opts: any[]): void;
   get(key: string): T | undefined;
 }
 

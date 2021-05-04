@@ -6,7 +6,7 @@ export class ODataInMemoryCache extends ODataCache<ODataResponse<any>> {
   }
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    this.put(req.pathWithParams, res, res.options.maxAge);
+    this.put(req.pathWithParams, res, {timeout: res.options.maxAge, pattern: `^${req.path}`});
   }
 
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {

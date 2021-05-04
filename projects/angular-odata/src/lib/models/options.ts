@@ -39,7 +39,7 @@ export function ODataModelField(options: ModelFieldOptions = {}) {
 export type ModelFieldOptions = {
   name?: string,
   default?: any,
-  nullable?: boolean,
+  required?: boolean,
   maxLength?: number,
   minLength?: number,
   min?: number,
@@ -52,7 +52,7 @@ export class ODataModelProperty<F> {
   field: string;
   options: {
     default?: any,
-    nullable?: boolean,
+    required?: boolean,
     maxLength?: number,
     minLength?: number,
     min?: number,
@@ -86,7 +86,7 @@ export class ODataModelProperty<F> {
     } else {
       let errors = this.parser?.validate(value, {create, patch}) || [];
       if (
-        !this.options.nullable &&
+        this.options.required &&
         (value === null || (value === undefined && !patch)) // Is null or undefined without patch flag?
       ) {
         errors.push(`required`);

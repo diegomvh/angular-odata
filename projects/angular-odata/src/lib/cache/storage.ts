@@ -19,7 +19,7 @@ export class ODataInStorageCache extends ODataCache<StoragePayload> {
   }
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    this.put(req.pathWithParams, res.toJSON(), res.options.maxAge);
+    this.put(req.pathWithParams, res.toJSON(), {timeout: res.options.maxAge, pattern: `^${req.path}`});
   }
 
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
