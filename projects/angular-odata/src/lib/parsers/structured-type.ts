@@ -1,4 +1,4 @@
-import { Types } from '../utils';
+import { Objects, Types } from '../utils';
 import { Parser, StructuredTypeField, StructuredTypeConfig, Annotation, OptionsHelper, NONE_PARSER, EntityKey } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
 
@@ -68,15 +68,14 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     let errors;
     if (this.collection && Array.isArray(value)) {
       errors = value.map(v => this.validate(v, {create, patch})) as {[key: string]: any[]}[];
-    } else if (this.isNavigation() && value !== undefined) {
+    } else if ((this.isStructuredType() && typeof value === 'object' && value !== null) ||
+      (this.navigation && value !== undefined)) {
       errors = this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
-    } else if (this.isComplexType() && typeof value === 'object' && value !== null) {
-      errors = this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
-    }
-    else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
+    } else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
       errors = this.enum().validate(value, {create, patch});
     }
     else {
+      // IsEdmType
       const computed = this.findAnnotation(a => a.type === "Org.OData.Core.V1.Computed");
       errors = [];
       if (
@@ -186,26 +185,24 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   }
   //#endregion
 
-  isNavigation() {
-    return this.navigation;
-  }
-  isEnumType() {
-    return this.parser instanceof ODataEnumTypeParser;
-  }
   isEdmType() {
     return this.type.startsWith("Edm.");
   }
+
+  isEnumType() {
+    return this.parser instanceof ODataEnumTypeParser;
+  }
+
   enum() {
     if (!this.isEnumType())
       throw new Error("Field are not EnumType")
     return this.parser as ODataEnumTypeParser<T>;
   }
+
   isStructuredType() {
     return this.parser instanceof ODataStructuredTypeParser;
   }
-  isComplexType() {
-    return this.parser instanceof ODataStructuredTypeParser && this.parser.isComplexType();
-  }
+
   structured() {
     if (!this.isStructuredType())
       throw new Error("Field are not StrucuturedType")
@@ -235,22 +232,28 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
       .map(([name, f]) => new ODataStructuredTypeFieldParser(name, f as StructuredTypeField));
   }
 
-  resolveKey(attrs: any): EntityKey<T> {
-    let key = this.parent ? this.parent.resolveKey(attrs) : {};
-    return (this.keys || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
-  }
-
-  isComplexType(): boolean {
-    return this.parent ?
-      this.parent.isComplexType() || this.keys === undefined :
-      this.keys === undefined;
-  }
-
   isTypeOf(type: string) {
     var names = [`${this.namespace}.${this.name}`];
     if (this.alias)
       names.push(`${this.alias}.${this.name}`);
     return names.indexOf(type) !== -1;
+  }
+
+  typeFor(name: string): string | undefined {
+    const field = this.fields.find(f => f.name === name);
+    if (field === undefined && this.parent !== undefined)
+      return this.parent.typeFor(name);
+    return field !== undefined ? field.type : undefined;
+  }
+
+  find(predicate: (p: ODataStructuredTypeParser<any>) => boolean): ODataStructuredTypeParser<any> | undefined {
+    if (predicate(this))
+      return this;
+    return this.children.find(c => c.find(predicate));
+  }
+
+  findParser(predicate: (p: ODataStructuredTypeParser<any>) => boolean): Parser<any> {
+    return this.find(predicate) || NONE_PARSER;
   }
 
   // Deserialize
@@ -285,6 +288,23 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     this.fields.forEach(f => f.configure(settings));
   }
 
+  resolveKey(attrs: any): EntityKey<T> | undefined {
+    let key = this.parent ? this.parent.resolveKey(attrs) : {};
+    key = (this.keys || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
+    return Objects.resolveKey(key) as EntityKey<T> | undefined;
+  }
+
+  defaults(): {[name: string]: any} {
+    let value = (this.parent) ? this.parent.defaults() : {};
+    let fields = this.fields.filter(f => f.default !== undefined || f.isStructuredType());
+    return Object.assign({}, value, fields.reduce((acc, f) => {
+      let value = f.isStructuredType() ? f.structured().defaults() : f.default;
+      if (!Types.isEmpty(value))
+        Object.assign(acc, {[f.name]: value });
+      return acc;
+    }, {}));
+  }
+
   // Json Schema
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     let schema: any = this.parent ?
@@ -312,39 +332,11 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     return schema;
   }
 
-  typeFor(name: string): string | undefined {
-    const field = this.fields.find(f => f.name === name);
-    if (field === undefined && this.parent !== undefined)
-      return this.parent.typeFor(name);
-    return field !== undefined ? field.type : undefined;
-  }
-
-  find(predicate: (p: ODataStructuredTypeParser<any>) => boolean): ODataStructuredTypeParser<any> | undefined {
-    if (predicate(this))
-      return this;
-    return this.children.find(c => c.find(predicate));
-  }
-
-  findParser(predicate: (p: ODataStructuredTypeParser<any>) => boolean): Parser<any> {
-    return this.find(predicate) || NONE_PARSER;
-  }
-
-  defaults(): {[name: string]: any} {
-    let value = (this.parent) ? this.parent.defaults() : {};
-    let fields = this.fields.filter(f => f.default !== undefined || f.isComplexType());
-    return Object.assign({}, value, fields.reduce((acc, f) => {
-      let value = f.isComplexType() ? f.structured().defaults() : f.default;
-      if (!Types.isEmpty(value))
-        Object.assign(acc, {[f.name]: value });
-      return acc;
-    }, {}));
-  }
-
   validate(
     attrs: any,
     {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
   ): {[key: string]: any} | undefined {
-    const errors = (this.parent && this.parent.validate(attrs, {create}) || {}) as {[key: string]: any };
+    const errors = (this.parent && this.parent.validate(attrs, {create, patch}) || {}) as {[key: string]: any };
     for (var field of this.fields) {
       const value = attrs[field.name as keyof T];
       const errs = field.validate(value, {create, patch});

@@ -222,6 +222,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   fetchAll(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
+    // Clean
+    res.query.skip().clear();
+    res.query.top().clear();
+    res.query.skiptoken().clear();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
       if (opts) {
         if (opts.skiptoken)

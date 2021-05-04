@@ -1,6 +1,5 @@
 import { JsonSchemaOptions, ODataEntityTypeKey, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from '../parsers';
 import { Annotation, EntityKey, Parser, StructuredTypeConfig } from '../types';
-import { Types } from '../utils/types';
 import { Objects } from '../utils/objects';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
@@ -21,19 +20,24 @@ export class ODataStructuredType<T> {
     this.parser = new ODataStructuredTypeParser(config, schema.namespace, schema.alias);
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
+
   configure(settings: { findParserForType: (type: string) => Parser<any> }) {
     const parserSettings = Object.assign({ options: this.api.options }, settings);
     this.parser.configure(parserSettings);
   }
+
   type({alias = false}: {alias?: boolean} = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
+
   isTypeOf(type: string) {
     return this.parser.isTypeOf(type);
   }
+
   get api() {
     return this.schema.api;
   }
+
   findAnnotation(predicate: (annot: Annotation) => boolean) {
     return this.annotations.find(predicate);
   }
@@ -56,22 +60,6 @@ export class ODataStructuredType<T> {
     return fields;
   }
 
-  pick(value: { [name: string]: any }, opts: {
-    include_parents?: boolean,
-    include_navigation?: boolean,
-    include_etag?: boolean
-  } = { include_navigation: false, include_parents: true, include_etag: true }): Partial<T> {
-    const names = this.fields(opts).map(f => f.name);
-    let attrs = Object.keys(value)
-      .filter(k => names.indexOf(k) !== -1)
-      .reduce((acc, k) => Object.assign(acc, { [k]: value[k] }), {});
-    if (opts.include_etag) {
-      const etag = this.api.options.helper.etag(value);
-      this.api.options.helper.etag(attrs, etag);
-    }
-    return attrs;
-  }
-
   keys(opts: {
     include_parents?: boolean
   } = { include_parents: true }): ODataEntityTypeKey[] {
@@ -89,9 +77,32 @@ export class ODataStructuredType<T> {
     return keys;
   }
 
-  resolveKey(attrs: any): EntityKey<T> | undefined {
-    let key = this.parser.resolveKey(attrs);
-    return Objects.resolveKey(key) as EntityKey<T> | undefined;
+  pick(value: { [name: string]: any }, opts: {
+    include_parents?: boolean,
+    include_navigation?: boolean,
+    include_etag?: boolean
+  } = { include_navigation: false, include_parents: true, include_etag: true }): Partial<T> {
+    const names = this.fields(opts).map(f => f.name);
+    let attrs = Object.keys(value)
+      .filter(k => names.indexOf(k) !== -1)
+      .reduce((acc, k) => Object.assign(acc, { [k]: value[k] }), {});
+    if (opts.include_etag) {
+      const etag = this.api.options.helper.etag(value);
+      this.api.options.helper.etag(attrs, etag);
+    }
+    return attrs;
+  }
+
+  deserialize(value: any): T {
+    return this.parser.deserialize(value, this.api.options);
+  }
+
+  serialize(value: T): any {
+    return this.parser.serialize(value, this.api.options);
+  }
+
+  resolveKey(attrs: any) {
+    return this.parser.resolveKey(attrs);
   }
 
   defaults() {
@@ -101,6 +112,7 @@ export class ODataStructuredType<T> {
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     return this.parser.toJsonSchema(options);
   }
+
   validate(attrs: Partial<T>, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}) {
     return this.parser.validate(attrs, {create, patch});
   }

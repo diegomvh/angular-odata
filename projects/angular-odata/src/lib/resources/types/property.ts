@@ -65,7 +65,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     property.segment.property().key(key);
     return property;
   }
-  entity(key: EntityKey<T>) {
+  entity(key?: EntityKey<T>) {
     const property = this.clone();
     property.segment.property().key(key);
     return property;
@@ -237,6 +237,10 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   fetchAll(options: HttpOptions = {}): Observable<T[]> {
     let res = this.clone();
+    // Clean
+    res.query.skip().clear();
+    res.query.top().clear();
+    res.query.skiptoken().clear();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
       if (opts) {
         if (opts.skiptoken)

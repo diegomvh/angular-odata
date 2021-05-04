@@ -85,20 +85,23 @@ export class ODataCollection<T, M extends ODataModel<T>>
           `Can't reattach ${resource.type()} to ${this._resource.type()}`
         );
 
-      const current = this._resource;
       const schema = resource.schema;
-      if (schema !== undefined) this.schema(schema);
+      if (schema !== undefined)
+        this.schema(schema);
 
       this._entries.forEach(({ model }) => {
         const mr = model.resource();
-        if (mr === undefined || !mr.isParentOf(resource)) {
-          const er = resource.entity( model.toEntity({ field_mapping: true }) as T);
+        const er = resource.entity(model.key() as EntityKey<T> | undefined);
+        if (mr === undefined || !mr.isEqualTo(er)) {
           model.resource(er);
         }
       });
 
-      this._resource = resource;
-      this.events$.emit({ name: 'attach', collection: this, previous: current, value: resource });
+      const current = this._resource;
+      if (current === undefined || !current.isEqualTo(resource)) {
+        this._resource = resource;
+        this.events$.emit({ name: 'attach', collection: this, previous: current, value: resource });
+      }
     }
     return this._resource?.clone();
   }
@@ -222,6 +225,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         return this;
       }));
   }
+
   add(model: M, {silent = false}: {silent?: boolean} = {}): Observable<this> {
     const key = model.key();
     let obs$: Observable<this> = of(this);
