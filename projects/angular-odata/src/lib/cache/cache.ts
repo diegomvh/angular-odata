@@ -53,8 +53,8 @@ export abstract class ODataCache<T> implements Cache<T> {
     });
   }
 
-  flux() {
-    // Eemove all cache entries
+  flush() {
+    // Remove all cache entries
     this.entries = new Map<string, ODataCacheEntry<T>>();
   }
 
