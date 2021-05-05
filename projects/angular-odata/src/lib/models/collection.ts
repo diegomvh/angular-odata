@@ -226,7 +226,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       }));
   }
 
-  add(model: M, {silent = false, server = true, wait = true}: {silent?: boolean, server?: boolean, wait?: boolean} = {}): Observable<this> {
+  add(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
     let resource = this.resource();
     let entry = this._findEntry({model, key, cid: model[CID]});
@@ -266,13 +266,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       return this;
     };
 
-    if (wait)
-      return server$.pipe(map(add));
-    server$.toPromise();
-    return of(add());
+    return server$.pipe(map(add));
   }
 
-  remove(model: M, {silent = false, server = true, wait = true}: {silent?: boolean, server?: boolean, wait?: boolean} = {}): Observable<this> {
+  remove(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
     let resource = this.resource();
     let entry = this._findEntry({model, key, cid: model[CID]});
@@ -301,16 +298,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
       return this;
     };
 
-    if (wait)
-      return server$.pipe(map(remove));
-    server$.toPromise();
-    return of(remove());
+    return server$.pipe(map(remove));
   }
 
-  create(attrs: T = {} as T) {
+  create(attrs: T = {} as T, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}) {
     const model = this._modelFactory(attrs);
-    return (model.valid() ? model.save() : of(model)).pipe(
-      tap((model) => this.add(model))
+    return ((model.valid() && server) ? model.save() : of(model)).pipe(
+      tap((model) => this.add(model, {silent, server}))
     );
   }
 
