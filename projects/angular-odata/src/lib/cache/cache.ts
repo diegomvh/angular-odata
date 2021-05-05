@@ -4,6 +4,7 @@ import { DEFAULT_TIMEOUT } from '../constants';
 import { Cache } from '../types';
 import { ODataRequest, ODataResponse } from '../resources';
 
+//TODO: User cache? Tags cache?
 export interface ODataCacheEntry<T> {
   payload: T;
   lastRead: number;

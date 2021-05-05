@@ -64,13 +64,13 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   validate(
     value: any,
     {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
-  ): {[key: string]: any} | {[key: string]: any}[] | string[] | undefined {
+  ): {[name: string]: any} | {[name: string]: any}[] | string[] | undefined {
     let errors;
     if (this.collection && Array.isArray(value)) {
-      errors = value.map(v => this.validate(v, {create, patch})) as {[key: string]: any[]}[];
+      errors = value.map(v => this.validate(v, {create, patch})) as {[name: string]: any[]}[];
     } else if ((this.isStructuredType() && typeof value === 'object' && value !== null) ||
       (this.navigation && value !== undefined)) {
-      errors = this.structured().validate(value, {create, patch}) || {} as {[key: string]: any[]};
+      errors = this.structured().validate(value, {create, patch}) || {} as {[name: string]: any[]};
     } else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
       errors = this.enum().validate(value, {create, patch});
     }
@@ -335,8 +335,8 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   validate(
     attrs: any,
     {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
-  ): {[key: string]: any} | undefined {
-    const errors = (this.parent && this.parent.validate(attrs, {create, patch}) || {}) as {[key: string]: any };
+  ): {[name: string]: any} | undefined {
+    const errors = (this.parent && this.parent.validate(attrs, {create, patch}) || {}) as {[name: string]: any };
     for (var field of this.fields) {
       const value = attrs[field.name as keyof T];
       const errs = field.validate(value, {create, patch});

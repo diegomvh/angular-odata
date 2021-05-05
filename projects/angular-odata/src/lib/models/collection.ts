@@ -226,77 +226,85 @@ export class ODataCollection<T, M extends ODataModel<T>>
       }));
   }
 
-  add(model: M, {silent = false}: {silent?: boolean} = {}): Observable<this> {
+  add(model: M, {silent = false, server = true, wait = true}: {silent?: boolean, server?: boolean, wait?: boolean} = {}): Observable<this> {
     const key = model.key();
-    let obs$: Observable<this> = of(this);
     let resource = this.resource();
     let entry = this._findEntry({model, key, cid: model[CID]});
     if (entry !== undefined && entry.state !== ODataModelState.Removed) return of(this);
-    if (
+
+    const server$ = (
+      server &&
       key !== undefined &&
       resource !== undefined &&
       resource instanceof ODataNavigationPropertyResource
-    ) {
-      obs$ = resource
-        .reference()
-        .add(model.resource() as ODataEntityResource<T>)
-        .pipe(map(() => this));
-    }
-    return obs$.pipe(
-      map((col) => {
-        if (model.resource() === undefined && resource !== undefined) {
-          model.resource(
-            resource.entity(model.toEntity({ field_mapping: true }) as T)
-          );
-        }
-        if (entry !== undefined && entry.state === ODataModelState.Removed) {
-          const index = this._entries.indexOf(entry);
-          this._entries.splice(index, 1);
-        }
-        this._entries.push({
-          state: ODataModelState.Added,
-          model,
-          key: model.key(),
-          subscription: this._subscribe(model),
-        });
+    ) ? resource
+          .reference()
+          .add(model.resource() as ODataEntityResource<T>)
+          .pipe(map(() => this)) : of(this);
 
-        if (!silent) {
-          model.events$.emit({ name: 'add', model, collection: this });
-          this.events$.emit({ name: 'update', collection: this });
-        }
-        return col;
-      })
-    );
+    const add = () => {
+      if (model.resource() === undefined && resource !== undefined) {
+        model.resource(
+          resource.entity(model.toEntity({ field_mapping: true }) as T)
+        );
+      }
+      if (entry !== undefined && entry.state === ODataModelState.Removed) {
+        const index = this._entries.indexOf(entry);
+        this._entries.splice(index, 1);
+      }
+      this._entries.push({
+        state: ODataModelState.Added,
+        model,
+        key: model.key(),
+        subscription: this._subscribe(model),
+      });
+
+      if (!silent) {
+        model.events$.emit({ name: 'add', model, collection: this });
+        this.events$.emit({ name: 'update', collection: this });
+      }
+      return this;
+    };
+
+    if (wait)
+      return server$.pipe(map(add));
+    server$.toPromise();
+    return of(add());
   }
-  remove(model: M, {silent = false}: {silent?: boolean} = {}): Observable<this> {
+
+  remove(model: M, {silent = false, server = true, wait = true}: {silent?: boolean, server?: boolean, wait?: boolean} = {}): Observable<this> {
     const key = model.key();
-    let obs$: Observable<this> = of(this);
     let resource = this.resource();
     let entry = this._findEntry({model, key, cid: model[CID]});
     if (entry === undefined || entry.state === ODataModelState.Removed) return of(this);
-    if (
+
+    const server$ = (
+      server &&
       key !== undefined &&
       resource !== undefined &&
       resource instanceof ODataNavigationPropertyResource
-    ) {
-      obs$ = resource
-        .reference()
-        .remove(model.resource() as ODataEntityResource<T>)
-        .pipe(map(() => this));
-    }
-    return obs$.pipe(
-      map((col) => {
-        // Emit Event
-        if (!silent)
-          model.events$.emit({ name: 'remove', model, collection: this });
-        // Now remove
-        (entry as any).state = ODataModelState.Removed;
-        (entry as any).subscription.unsubscribe();
-        if (!silent)
-          this.events$.emit({ name: 'update', collection: this });
-        return col;
-      })
-    );
+    ) ? resource
+          .reference()
+          .remove(model.resource() as ODataEntityResource<T>)
+          .pipe(map(() => this)) :
+        of(this);
+
+    const remove = () => {
+      // Emit Event
+      if (!silent)
+        model.events$.emit({ name: 'remove', model, collection: this });
+      // Now remove
+      (entry as any).state = ODataModelState.Removed;
+      (entry as any).subscription.unsubscribe();
+      if (!silent)
+        this.events$.emit({ name: 'update', collection: this });
+      return this;
+    };
+
+    if (wait)
+      return server$.pipe(map(remove));
+    server$.toPromise();
+    return of(remove());
   }
 
   create(attrs: T = {} as T) {
@@ -463,7 +471,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         if (event.path)
           path = `${path}.${event.path}`;
         if (event.name === 'destroy' && event.model === model)
-          this.remove(model).toPromise();
+          this.remove(model, {server: false}).toPromise();
         if (event.name === 'change' && event.model === model) {
           let entry = this._findEntry({model});
           if (entry !== undefined) entry.key = model.key();
