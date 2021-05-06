@@ -97,7 +97,7 @@ export const Types = {
 
     // Compare based on type
     if (type === 'date') return areDatesEqual();
-    if (type === 'arraybufer') return areArraysBufferEqual();
+    if (type === 'arraybuffer') return areArraysBufferEqual();
     if (type === 'array') return areArraysEqual();
     if (type === 'object') return areObjectsEqual();
     if (type === 'function') return areFunctionsEqual();
