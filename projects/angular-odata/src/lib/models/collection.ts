@@ -27,6 +27,7 @@ import { EntityKey } from '../types';
 import { Types } from '../utils/types';
 import { CID, ODataModel } from './model';
 import {
+  BUBBLING,
   ODataCollectionResource,
   ODataModelEvent,
   ODataModelState
@@ -459,7 +460,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const mr = model.resource();
     const bubbling = mr === undefined || cr === undefined || !mr.isParentOf(cr);
     return model.events$.subscribe((event: ODataModelEvent<T>) => {
-      if (bubbling) {
+      if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
         const index = this.models().indexOf(model);
         let path = `[${index}]`;
         if (event.path)

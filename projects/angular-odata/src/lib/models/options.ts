@@ -11,7 +11,7 @@ export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResou
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 
 export type ODataModelEvent<T> = {
-  name: 'change' | 'add' | 'remove' | 'reset' | 'update' | 'invalid' | 'request' | 'sync' | 'attach' | 'destroy'
+  name: 'change' | 'reset' | 'update' | 'destroy' | 'add' | 'remove' | 'invalid' | 'request' | 'sync' | 'attach'
   model?: ODataModel<T>
   collection?: ODataCollection<T, ODataModel<T>>
   path?: string  // Property.Collection[1].Collection[3].Property
@@ -19,6 +19,8 @@ export type ODataModelEvent<T> = {
   previous?: any
   options?: any
 }
+
+export const BUBBLING = ['change', 'reset', 'update', 'destroy', 'add', 'remove'];
 
 export enum ODataModelState {
   Added,
@@ -518,7 +520,7 @@ export class ODataModelOptions<T> {
     const vr = value.resource();
     const bubbling = mr === undefined || vr === undefined || !vr.isParentOf(mr);
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
-      if (bubbling) {
+      if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
         let path = property.name;
         if (value instanceof ODataModel && event.path)
           path = `${path}.${event.path}`;
