@@ -468,18 +468,20 @@ export class ODataModelOptions<T> {
       }
       const currentModel = relation?.model as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
       if (newModel !== null) {
+        const selfResource = self.resource();
+        const selfSchema = self.schema();
         if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
           newModel = this._modelCollectionFactory(self, property, value as F);
-        } else if (newModel.resource() === undefined && this._resource !== undefined && this._resource.hasKey()) {
-          const resource = property.resourceFactory<T, F>(this._resource);
+        } else if (newModel.resource() === undefined && selfResource !== undefined && selfResource.hasKey()) {
+          const resource = property.resourceFactory<T, F>(selfResource);
           const meta = property.metaFactory(this._meta);
           newModel.resource(resource);
           if (newModel instanceof ODataModel)
             newModel.meta(meta as ODataEntityMeta);
           else if (newModel instanceof ODataCollection)
             newModel.meta(meta as ODataEntitiesMeta);
-        } else if (newModel.schema() === undefined && this._schema !== undefined) {
-          const schema = property.schemaFactory<T, F>(this._schema);
+        } else if (newModel.schema() === undefined && selfSchema !== undefined) {
+          const schema = property.schemaFactory<T, F>(selfSchema);
           newModel.schema(schema);
           const meta = property.metaFactory(this._meta);
           if (newModel instanceof ODataModel)
@@ -487,9 +489,9 @@ export class ODataModelOptions<T> {
           else if (newModel instanceof ODataCollection)
             newModel.meta(meta as ODataEntitiesMeta);
         }
-        const resource = newModel.resource();
-        if (resource !== undefined && resource.type() !== field.type)
-          throw new Error(`Can't set ${resource.type()} to ${field.type}`);
+        const newModelResource = newModel.resource();
+        if (newModelResource !== undefined && newModelResource.type() !== field.type)
+          throw new Error(`Can't set ${newModelResource.type()} to ${field.type}`);
       }
       this._relations[name] = {
         state: this._resetting ? ODataModelState.Unchanged : ODataModelState.Changed,
