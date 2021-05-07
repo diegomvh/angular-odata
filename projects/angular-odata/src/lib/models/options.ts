@@ -470,11 +470,12 @@ export class ODataModelOptions<T> {
       if (newModel !== null) {
         const selfResource = self.resource();
         const selfSchema = self.schema();
+        const selfMeta = self.meta();
         if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
           newModel = this._modelCollectionFactory(self, property, value as F);
         } else if (newModel.resource() === undefined && selfResource !== undefined && selfResource.hasKey()) {
           const resource = property.resourceFactory<T, F>(selfResource);
-          const meta = property.metaFactory(this._meta);
+          const meta = property.metaFactory(selfMeta);
           newModel.resource(resource);
           if (newModel instanceof ODataModel)
             newModel.meta(meta as ODataEntityMeta);
@@ -483,7 +484,7 @@ export class ODataModelOptions<T> {
         } else if (newModel.schema() === undefined && selfSchema !== undefined) {
           const schema = property.schemaFactory<T, F>(selfSchema);
           newModel.schema(schema);
-          const meta = property.metaFactory(this._meta);
+          const meta = property.metaFactory(selfMeta);
           if (newModel instanceof ODataModel)
             newModel.meta(meta as ODataEntityMeta);
           else if (newModel instanceof ODataCollection)
