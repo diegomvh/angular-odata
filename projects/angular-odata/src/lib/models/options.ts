@@ -84,7 +84,7 @@ export class ODataModelProperty<F> {
     if (this.navigation && value instanceof ODataModel) {
       return !value.valid({create, patch}) ? value.errors : undefined;
     } else if (value instanceof ODataCollection) {
-      return value.models().some(m => m.valid({create, patch})) ? value.models().map(m => m.errors) : undefined;
+      return value.models().some(m => !m.valid({create, patch})) ? value.models().map(m => m.errors) : undefined;
     } else {
       let errors = this.parser?.validate(value, {create, patch}) || [];
       if (
