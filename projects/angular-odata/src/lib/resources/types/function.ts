@@ -63,7 +63,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     if (path !== undefined) {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone());
     }
-    return new Collection(entities, {resource, schema, meta, reset}) as C;
+    return new Collection(entities, {resource, meta, reset}) as C;
   }
 
   //#region Action Config

@@ -248,7 +248,12 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   find(predicate: (p: ODataStructuredTypeParser<any>) => boolean): ODataStructuredTypeParser<any> | undefined {
     if (predicate(this))
       return this;
-    return this.children.find(c => c.find(predicate));
+    let match: ODataStructuredTypeParser<any> | undefined;
+    for (let ch of this.children) {
+      match = ch.find(predicate);
+      if (match !== undefined) break;
+    }
+    return match;
   }
 
   findParser(predicate: (p: ODataStructuredTypeParser<any>) => boolean): Parser<any> {

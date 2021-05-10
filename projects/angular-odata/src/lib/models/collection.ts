@@ -22,7 +22,6 @@ import {
 } from '../resources/index';
 
 import { EventEmitter } from '@angular/core';
-import { ODataStructuredType } from '../schema/structured-type';
 import { EntityKey } from '../types';
 import { Types } from '../utils/types';
 import { CID, ODataModel } from './model';
@@ -37,7 +36,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M> {
   static _model: typeof ODataModel | null = null;
   private _resource?: ODataCollectionResource<T>;
-  private _schema?: ODataStructuredType<T>;
   private _meta!: ODataEntitiesMeta;
   private _entries: {
     state: ODataModelState,
@@ -58,12 +56,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entities: Partial<T>[] | {[name: string]: any}[] = [],
     {
       resource,
-      schema,
       meta,
       reset = false,
     }: {
       resource?: ODataCollectionResource<T>;
-      schema?: ODataStructuredType<T>;
       meta?: ODataEntitiesMeta;
       reset?: boolean;
     } = {}
@@ -71,7 +67,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entities = entities || [];
 
     this.resource(resource);
-    this.schema(schema);
     this.meta(meta || new ODataEntitiesMeta({ options: resource?.api.options }));
     this.assign(entities, { reset });
   }
@@ -86,10 +81,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
         throw new Error(
           `Can't reattach ${resource.type()} to ${this._resource.type()}`
         );
-
-      const schema = resource.schema;
-      if (schema !== undefined)
-        this.schema(schema);
 
       this._entries.forEach(({ model }) => {
         const mr = model.resource();
@@ -108,11 +99,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._resource?.clone();
   }
 
-  schema(schema?: ODataStructuredType<T>) {
-    if (schema !== undefined) this._schema = schema;
-    return this._schema;
-  }
-
   meta(meta?: ODataEntitiesMeta) {
     if (meta !== undefined) this._meta = meta;
     return this._meta;
@@ -124,25 +110,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ): M {
     const meta = new ODataEntityMeta({data: entity, options: this._meta.options });
     const attrs = meta.attributes<T>(entity);
-    let schema = this.schema();
-    const resource = this.resource();
-    if (resource instanceof ODataEntitySetResource) {
-      return resource
-        .entity(entity as EntityKey<T>)
-        .asModel(attrs, { meta, reset });
-    } else if (resource instanceof ODataNavigationPropertyResource) {
-      return resource
-        .key(schema?.resolveKey(entity) as EntityKey<T>)
-        .asModel(attrs, { meta, reset });
-    } else if (resource !== undefined) {
-      resource.api
-      return resource.asModel(attrs, { meta, reset });
+    let resource = this.resource()?.entity();
+
+    const Klass = this.constructor as typeof ODataCollection;
+    let Model = Klass._model || ODataModel;
+
+    if (meta?.type !== undefined && Model._options !== null && meta?.type !== Model._options.type()) {
+      let schema = Model._options.find(o => o.isTypeOf(meta.type as string))?.schema();
+      Model = schema !== undefined ? schema.model || ODataModel : ODataModel;
     }
-    if (meta?.type !== undefined) {
-      schema = schema?.schema.api.findStructuredTypeForType(meta.type);
-    }
-    const Model = schema?.model || ODataModel;
-    return new Model(attrs, { meta, reset }) as M;
+
+    return new Model(attrs, { resource, meta, reset }) as M;
   }
 
   toEntities({
@@ -211,6 +189,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       })
     );
   }
+
   fetchAll(options?: HttpOptions): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)
@@ -368,16 +347,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
       if (!silent)
         this.events$.emit({ name: 'reset', collection: this });
     } else {
+      const Klass = (this.constructor as typeof ODataCollection);
+      const Model = Klass._model;
+
       let modelMap: string[] = [];
       objects.forEach(obj => {
-        let entry: any;
-        if (obj instanceof ODataModel) {
-          entry = this._findEntry({model: obj as M});
-        } else {
-          const key = this.schema()?.resolveKey(obj);
-          const cid = (<any>obj)[CID];
-          entry = this._findEntry({cid, key});
-        }
+        const key = (Model !== null && Model._options)? Model._options.resolveKey(obj) : undefined;
+        const cid = (CID in obj) ? (<any>obj)[CID] : undefined;
+        // Try find entry
+        const entry = (obj instanceof ODataModel) ?
+          this._findEntry({model: obj as M}) : // By Model
+          this._findEntry({cid, key}); // By Cid or Key
+
         let model: M;
         if (entry !== undefined) {
           // Assign
@@ -485,13 +466,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
   }
 
-  private _findEntry({model, cid, key}: {model?: M, cid?: string, key?: EntityKey<T> | {[name: string]: any}} = {}) {
-    cid = model !== undefined ? model[CID] || cid : cid;
-    key = model !== undefined ? model.key() || key : key;
-    return this._entries.find((e) => {
-      const byKey = !Types.isEmpty(e.key) && Types.isEqual(e.key, key);
-      const byCid = e.model[CID] === cid;
-      const byModel = e.model === model;
+  private _findEntry({model, cid, key}: {model?: ODataModel<T>, cid?: string, key?: EntityKey<T> | {[name: string]: any}} = {}) {
+    return this._entries.find((entry) => {
+      const byModel = model !== undefined && entry.model.equals(model);
+      const byCid = cid !== undefined && entry.model[CID] === cid;
+      const byKey = key !== undefined && entry.key !== undefined && Types.isEqual(entry.key, key);
       return byModel || byCid || byKey;
     });
   }

@@ -16,6 +16,7 @@ import { ODataValueResource } from './value';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
+import { Types } from '../../utils/types';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -50,7 +51,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Collection = schema?.collection || ODataCollection;
-    return new Collection(entities, {resource: this, schema, meta, reset}) as C;
+    return new Collection(entities, {resource: this, meta, reset}) as C;
   }
 
   //#region Function Config
@@ -65,14 +66,16 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
     const navigation = this.clone();
-    navigation.segment.navigationProperty().key(key);
+    navigation.segment.navigationProperty().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
     return navigation;
   }
+
   entity(key?: EntityKey<T>) {
     const navigation = this.clone();
-    navigation.segment.navigationProperty().key(key);
+    navigation.segment.navigationProperty().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
     return navigation;
   }
+
   value() {
     return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
   }

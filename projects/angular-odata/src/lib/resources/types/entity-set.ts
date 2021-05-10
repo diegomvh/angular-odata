@@ -41,7 +41,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Collection = schema?.collection || ODataCollection;
-    return new Collection(entities, {resource: this, schema, meta, reset}) as C;
+    return new Collection(entities, {resource: this, meta, reset}) as C;
   }
 
   //#region Entity Config

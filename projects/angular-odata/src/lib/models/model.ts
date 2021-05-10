@@ -26,7 +26,7 @@ export class ODataModel<T> {
   static _properties: ModelFieldOptions[] = [];
   static _options: ODataModelOptions<any> | null = null;
   // Events
-  [CID]: string = Objects.uniqueId("c");
+  [CID]: string;
   _attributes: {[name: string]: any} = {};
   _changes: {[name: string]: any} = {};
   _relations: { [name: string]: ODataModelRelation } = {};
@@ -41,6 +41,8 @@ export class ODataModel<T> {
     reset?: boolean
   } = {}) {
 
+    this[CID] = (<any>entity)[CID] || Objects.uniqueId("c");
+
     const Klass = this.constructor as typeof ODataModel;
     if (Klass._options !== null) Klass._options.bind(this);
 
@@ -48,6 +50,12 @@ export class ODataModel<T> {
     this.meta(meta || new ODataEntityMeta());
 
     this.assign(Objects.merge(this.defaults(), entity), { reset });
+  }
+
+  equals(other: ODataModel<T>) {
+    const thisKey = this.key();
+    const otherKey = other.key();
+    return this === other || this[CID] === other[CID] || (thisKey !== undefined && otherKey !== undefined && Types.isEqual(thisKey, otherKey));
   }
 
   resource(resource?: ODataModelResource<T>) {
@@ -61,15 +69,12 @@ export class ODataModel<T> {
   schema() {
     const Klass = this.constructor as typeof ODataModel;
     if (Klass._options === null) throw new Error(`Can't get schema from model without metadata`);
-    return Klass._options.schema(this);
+    return Klass._options.schema();
   }
 
   meta(meta?: ODataEntityMeta) {
-    const Klass = this.constructor as typeof ODataModel;
-    if (Klass._options === null) throw new Error(`Can't get meta from model without metadata`);
-    if (meta !== undefined)
-      Klass._options.annotate(this, meta);
-    return Klass._options.meta(this);
+    if (meta !== undefined) this._meta = meta;
+    return this._meta;
   }
 
   key({field_mapping = false, resolve = true}: {field_mapping?: boolean, resolve?: boolean} = {}): EntityKey<T> | {[name: string]: any} | undefined {
