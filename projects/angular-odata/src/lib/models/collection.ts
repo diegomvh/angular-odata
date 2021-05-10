@@ -126,7 +126,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let schema = this.schema();
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
-      return resource.entity(entity as EntityKey<T>).asModel(attrs, { meta, reset });
+      return resource
+        .entity(entity as EntityKey<T>)
+        .asModel(attrs, { meta, reset });
     } else if (resource instanceof ODataNavigationPropertyResource) {
       return resource
         .key(schema?.resolveKey(entity) as EntityKey<T>)
@@ -352,10 +354,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return value;
   }
 
-  assign(entities: Array<Partial<T> | {[name: string]: any}>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
+  assign(objects: Array<Partial<T> | {[name: string]: any} | M>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
     if (reset) {
       this._entries.forEach((e) => e.subscription.unsubscribe());
-      const models = entities.map(entity => this._modelFactory(entity as Partial<T> | {[name: string]: any}, { reset }));
+      const models = objects.map(obj => !(obj instanceof ODataModel) ? this._modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M);
       this._entries = models.map(model => ({
         state: ODataModelState.Unchanged,
         model,
@@ -366,20 +368,26 @@ export class ODataCollection<T, M extends ODataModel<T>>
         this.events$.emit({ name: 'reset', collection: this });
     } else {
       let modelMap: string[] = [];
-      entities.forEach((attrs) => {
-        const key = this.schema()?.resolveKey(attrs);
-        const cid = (<any>attrs)[CID];
-        const entry = this._findEntry({cid, key});
+      objects.forEach(obj => {
+        let entry: any;
+        if (obj instanceof ODataModel) {
+          entry = this._findEntry({model: obj as M});
+        } else {
+          const key = this.schema()?.resolveKey(obj);
+          const cid = (<any>obj)[CID];
+          entry = this._findEntry({cid, key});
+        }
+        let model: M;
         if (entry !== undefined) {
           // Assign
-          entry.model.assign(attrs, {reset, silent});
-          modelMap.push(entry.model[CID]);
+          model = entry.model;
+          if (model !== obj) model.assign(obj, {reset, silent});
         } else {
           // Add
-          const model = this._modelFactory(attrs, {reset});
+          model = !(obj instanceof ODataModel) ? this._modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M;
           this.add(model, {silent}).toPromise();
-          modelMap.push(model[CID]);
         }
+        modelMap.push(model[CID]);
       });
       this._entries.filter(e => modelMap.indexOf(e.model[CID]) === -1).forEach(entry => {
         this.remove(entry.model, {silent}).toPromise();
@@ -477,6 +485,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   private _findEntry({model, cid, key}: {model?: M, cid?: string, key?: EntityKey<T> | {[name: string]: any}} = {}) {
+    cid = model !== undefined ? model[CID] || cid : cid;
+    key = model !== undefined ? model.key() || key : key;
     return this._entries.find((e) => {
       const byKey = !Types.isEmpty(e.key) && Types.isEqual(e.key, key);
       const byCid = e.model[CID] === cid;
