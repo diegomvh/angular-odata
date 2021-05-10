@@ -44,7 +44,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Model = schema?.model || ODataModel;
-    return new Model(entity, {resource: this, schema, meta, reset}) as M;
+    return new Model(entity, {resource: this, meta, reset}) as M;
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(

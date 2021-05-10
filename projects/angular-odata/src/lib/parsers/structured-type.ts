@@ -213,10 +213,10 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
 export class ODataStructuredTypeParser<T> implements Parser<T> {
   name: string;
   namespace: string;
+  children: ODataStructuredTypeParser<any>[] = [];
   alias?: string;
   base?: string;
   parent?: ODataStructuredTypeParser<any>;
-  children: ODataStructuredTypeParser<any>[];
   keys?: ODataEntityTypeKey[];
   fields: ODataStructuredTypeFieldParser<any>[];
 
@@ -225,7 +225,6 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     this.base = config.base;
     this.namespace = namespace;
     this.alias = alias;
-    this.children = [];
     if (Array.isArray(config.keys))
       this.keys = config.keys.map(key => new ODataEntityTypeKey(key));
     this.fields = Object.entries(config.fields)
@@ -288,7 +287,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     this.fields.forEach(f => f.configure(settings));
   }
 
-  resolveKey(attrs: any): EntityKey<T> | undefined {
+  resolveKey(attrs: T | {[name: string]: any}): EntityKey<T> | undefined {
     let key = this.parent ? this.parent.resolveKey(attrs) : {};
     key = (this.keys || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
     return Objects.resolveKey(key) as EntityKey<T> | undefined;

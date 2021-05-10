@@ -35,7 +35,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       schema = this.api.findStructuredTypeForType(meta.type);
     }
     const Model = schema?.model || ODataModel;
-    return new Model(entity, { resource: this, schema, meta, reset }) as M;
+    return new Model(entity, { resource: this, meta, reset }) as M;
   }
 
   //#region Entity Config

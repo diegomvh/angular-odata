@@ -6,6 +6,7 @@ import { ODataApi } from '../api';
 import { SchemaConfig, Parser, CallableConfig, Annotation } from '../types';
 import { ODataEntitySet } from './entity-set';
 import { ODataAnnotation } from './annotation';
+import { ODataModelOptions } from '../models/options';
 
 export class ODataSchema {
   api: ODataApi;
@@ -72,7 +73,10 @@ export class ODataSchema {
   }
   //#endregion
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
+  configure(settings: {
+    findParserForType: (type: string) => Parser<any>,
+    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined
+  }) {
     // Configure Entities
     this.entities
       .forEach(config => config.configure(settings));

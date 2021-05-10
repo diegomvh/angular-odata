@@ -57,7 +57,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   entity(key?: EntityKey<T>) {
     const entity = ODataEntityResource.factory<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
     if (key !== undefined)
-      entity.segment.entitySet().key( Types.isObject(key) ? this.schema?.resolveKey(key) : key );
+      entity.segment.entitySet().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
     return entity;
   }
 

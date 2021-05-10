@@ -55,7 +55,10 @@ export class ODataApi {
   configure(settings: { requester?: (request: ODataRequest<any>) => Observable<any> } = {}) {
     this.requester = settings.requester;
     this.schemas.forEach(schema => {
-      schema.configure({ findParserForType: (type: string) => this.findParserForType(type) });
+      schema.configure({
+        findParserForType: (type: string) => this.findParserForType(type),
+        findOptionsForType: (type: string) => this.findOptionsForType(type)
+      });
     });
   }
 
@@ -168,5 +171,11 @@ export class ODataApi {
 
     // None Parser
     return NONE_PARSER;
+  }
+
+  public findOptionsForType<T>(type: string) {
+    // Strucutred Options
+    let st = this.findStructuredTypeForType(type);
+    return (st !== undefined && st.model !== undefined && st.model?._options !== null) ? st.model._options : undefined;
   }
 }

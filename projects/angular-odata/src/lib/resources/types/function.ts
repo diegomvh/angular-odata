@@ -44,7 +44,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone())
         .entity(entity as Partial<R>);
     }
-    return new Model(entity, {resource, schema, meta, reset}) as M;
+    return new Model(entity, {resource, meta, reset}) as M;
   }
 
   asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(

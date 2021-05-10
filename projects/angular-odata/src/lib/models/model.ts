@@ -17,75 +17,71 @@ import {
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
-import { ODataStructuredType } from '../schema';
-import { ODataModelEvent, ODataModelOptions, ODataModelProperty, ODataModelResource } from './options';
+import { ModelFieldOptions, ODataModelEvent, ODataModelOptions, ODataModelRelation, ODataModelResource } from './options';
 import { EntityKey } from '../types';
 
 export const CID = "_cid";
 export class ODataModel<T> {
-  //Events
-  public [CID]: string = Objects.uniqueId("c");
-  public _options: ODataModelOptions<T>;
+  // Properties
+  static _properties: ModelFieldOptions[] = [];
+  static _options: ODataModelOptions<any> | null = null;
+  // Events
+  [CID]: string = Objects.uniqueId("c");
+  _attributes: {[name: string]: any} = {};
+  _changes: {[name: string]: any} = {};
+  _relations: { [name: string]: ODataModelRelation } = {};
+  _resource?: ODataModelResource<T>;
+  _meta!: ODataEntityMeta;
+  _resetting: boolean = false;
+  _silent: boolean = false;
   events$ = new EventEmitter<ODataModelEvent<T>>();
-  constructor(entity: Partial<T> | {[name: string]: any} = {}, { resource, schema, meta, reset = false }: {
+  constructor(entity: Partial<T> | {[name: string]: any} = {}, { resource, meta, reset = false }: {
     resource?: ODataModelResource<T>,
-    schema?: ODataStructuredType<T>,
     meta?: ODataEntityMeta,
     reset?: boolean
   } = {}) {
-    this._options = new ODataModelOptions((<any>this)._properties || []);
+
+    const Klass = this.constructor as typeof ODataModel;
+    if (Klass._options !== null) Klass._options.bind(this);
 
     this.resource(resource);
-    this.schema(schema);
-    this.meta(meta);
+    this.meta(meta || new ODataEntityMeta());
 
     this.assign(Objects.merge(this.defaults(), entity), { reset });
   }
 
   resource(resource?: ODataModelResource<T>) {
+    const Klass = this.constructor as typeof ODataModel;
+    if (Klass._options === null) throw new Error(`Can't get resource from model without metadata`);
     if (resource !== undefined)
-      this._options.attach(this, resource);
-    return this._options.resource(this);
+      Klass._options.attach(this, resource);
+    return Klass._options.resource(this);
   }
 
-  schema(schema?: ODataStructuredType<T>) {
-    if (schema !== undefined)
-      this._options.bind(this, schema);
-    return this._options.schema(this);
+  schema() {
+    const Klass = this.constructor as typeof ODataModel;
+    if (Klass._options === null) throw new Error(`Can't get schema from model without metadata`);
+    return Klass._options.schema(this);
   }
 
   meta(meta?: ODataEntityMeta) {
+    const Klass = this.constructor as typeof ODataModel;
+    if (Klass._options === null) throw new Error(`Can't get meta from model without metadata`);
     if (meta !== undefined)
-      this._options.annotate(this, meta);
-    return this._options.meta(this);
+      Klass._options.annotate(this, meta);
+    return Klass._options.meta(this);
   }
 
   key({field_mapping = false, resolve = true}: {field_mapping?: boolean, resolve?: boolean} = {}): EntityKey<T> | {[name: string]: any} | undefined {
-    let schema = this.schema();
-    if (schema === undefined) return undefined;
-    const keys = schema.keys({ include_parents: true });
-    const key: any = {};
-    for (var k of keys) {
-      let model = this as any;
-      let prop: ODataModelProperty<any> | undefined;
-      for (let n of k.ref.split('/')) {
-        prop = model._options.findProperty((p: any) => p.field === n);
-        if (prop !== undefined && model[prop.name] instanceof ODataModel)
-          model = model[prop.name];
-      }
-      if (prop === undefined) return undefined;
-      let name = field_mapping ? prop.field : prop.name;
-      if (k.alias !== undefined)
-        name = k.alias;
-      key[name] = model[prop.name];
-    }
-    return resolve ? Objects.resolveKey(key) : key;
+    const Klass = this.constructor as typeof ODataModel;
+    return (Klass._options !== null) ? Klass._options.resolveKey(this, {field_mapping, resolve}) : undefined;
   }
 
   // Validation
   errors?: { [key: string]: any };
   protected validate({ create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
-    return this._options.validate(this, {create, patch});
+    const Klass = this.constructor as typeof ODataModel;
+    return (Klass._options !== null) ? Klass._options.validate(this, {create, patch}) : undefined;
   }
 
   valid({ create = false, patch = false }: { create?: boolean, patch?: boolean } = {}): boolean {
@@ -96,7 +92,8 @@ export class ODataModel<T> {
   }
 
   protected defaults() {
-    return this._options.defaults(this);
+    const Klass = this.constructor as typeof ODataModel;
+    return (Klass._options !== null) ? Klass._options.defaults(this) : {};
   }
 
   toEntity({
@@ -112,11 +109,15 @@ export class ODataModel<T> {
     changes_only?: boolean,
     field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { client_id, include_navigation, include_key, changes_only, field_mapping});
+    const Klass = this.constructor as typeof ODataModel;
+    return (Klass._options !== null) ?
+      Klass._options.toEntity(this, { client_id, include_navigation, include_key, changes_only, field_mapping}) :
+      {};
   }
 
   attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
-    return this._options.attributes(this, { changes_only });
+    const Klass = this.constructor as typeof ODataModel;
+    return (Klass._options !== null) ? Klass._options.attributes(this, { changes_only }) : {};
   }
 
   set(path: string | string[], value: any) {
@@ -142,7 +143,9 @@ export class ODataModel<T> {
   }
 
   assign(entity: Partial<T> | {[name: string]: any}, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
-    this._options.assign(this, entity, { reset, silent });
+    const Klass = this.constructor as typeof ODataModel;
+    if (Klass._options !== null)
+      Klass._options.assign(this, entity, { reset, silent });
   }
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
@@ -221,14 +224,16 @@ export class ODataModel<T> {
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
       format(opts?: string): OptionHandler<string>;
     }) => void) {
+    const Klass = this.constructor as typeof ODataModel;
     const resource = this.resource();
-    if (resource === undefined)
+    if (Klass._options === null || resource === undefined)
       throw new Error(`Can't query without ODataResource`);
-    return this._options.query(this, resource, func);
+    return Klass._options.query(this, resource, func);
   }
 
   hasChanged() {
-    return this._options.hasChanged();
+    const Klass = this.constructor as typeof ODataModel;
+    return (Klass._options !== null) ? Klass._options.hasChanged(this) : false;
   }
 
   private _call<P, R>(
@@ -310,7 +315,8 @@ export class ODataModel<T> {
     model: ODataModel<P> | null,
     options?: HttpOptions
   ): Observable<this> {
-    const prop = this._options.findProperty(p => p.name === name);
+    const Klass = this.constructor as typeof ODataModel;
+    const prop = (Klass._options !== null)? Klass._options.properties().find(p => p.name === name) : undefined;
     if (prop === undefined)
       throw new Error(`Can't find property ${name}`);
     if (prop.parser?.collection)

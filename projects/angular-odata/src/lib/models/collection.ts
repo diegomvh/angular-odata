@@ -35,6 +35,7 @@ import {
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M> {
+  static _model: typeof ODataModel | null = null;
   private _resource?: ODataCollectionResource<T>;
   private _schema?: ODataStructuredType<T>;
   private _meta!: ODataEntitiesMeta;
@@ -139,7 +140,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       schema = schema?.schema.api.findStructuredTypeForType(meta.type);
     }
     const Model = schema?.model || ODataModel;
-    return new Model(attrs, { schema, meta, parse: reset }) as M;
+    return new Model(attrs, { meta, reset }) as M;
   }
 
   toEntities({
