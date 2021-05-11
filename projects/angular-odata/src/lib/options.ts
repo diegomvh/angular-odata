@@ -2,6 +2,7 @@ import { DEFAULT_FETCH_POLICY, DEFAULT_VERSION } from './constants';
 import { ODataHelper } from './helpers';
 import { ApiOptions, FetchPolicy, ODataMetadataType, ODataVersion, OptionsHelper } from './types';
 
+//https://docs.microsoft.com/en-us/odata/webapi/include-annotations
 export class ODataApiOptions implements ApiOptions, OptionsHelper {
   version: ODataVersion;
   metadata?: ODataMetadataType;
@@ -20,6 +21,8 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   prefer?: {
     maxPageSize?: number;
     return?: 'representation' | 'minimal';
+    includeAnnotations?: string;
+    continueOnError?: boolean;
   };
 
   constructor(config: ApiOptions) {

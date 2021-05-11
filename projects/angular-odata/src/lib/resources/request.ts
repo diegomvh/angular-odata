@@ -68,12 +68,17 @@ export class ODataRequest<T> {
       customHeaders[ACCEPT] = [`application/json;${accept.join(';')}`, "text/plain", "*/*"];
 
     const prefer = [];
-    // Return ?
+    // Return
     if (this.api.options.prefer?.return !== undefined && ['POST', 'PUT', 'PATCH'].indexOf(this.method) !== -1)
       prefer.push(`return=${this.api.options.prefer?.return}`);
     // MaxPageSize
-    if (this.api.options.prefer?.maxPageSize !== undefined)
+    if (this.api.options.prefer?.maxPageSize !== undefined && ['GET'].indexOf(this.method) !== -1)
       prefer.push(`odata.maxpagesize=${this.api.options.prefer?.maxPageSize}`);
+    // Annotations
+    if (this.api.options.prefer?.includeAnnotations !== undefined && ['GET'].indexOf(this.method) !== -1)
+      prefer.push(`odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`);
+    if (this.api.options.prefer?.continueOnError === true && ['POST'].indexOf(this.method) !== -1)
+      prefer.push(`odata.continue-on-error`);
     if (prefer.length > 0)
       customHeaders[PREFER] = prefer;
     this.headers = Http.mergeHttpHeaders(this.api.options.headers, customHeaders, init.headers || {});
