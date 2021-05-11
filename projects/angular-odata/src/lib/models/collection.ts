@@ -5,13 +5,13 @@ import {
   ODataEntitySetResource,
   ODataEntityResource,
   ODataNavigationPropertyResource,
-  ODataEntitiesMeta,
+  ODataEntitiesAnnotations,
   HttpOptions,
   ODataEntities,
   ODataPropertyResource,
   ODataActionResource,
   ODataFunctionResource,
-  ODataEntityMeta,
+  ODataEntityAnnotations,
   Select,
   Expand,
   OptionHandler,
@@ -36,7 +36,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M> {
   static model: typeof ODataModel | null = null;
   private _resource?: ODataCollectionResource<T>;
-  private _meta!: ODataEntitiesMeta;
+  private _meta!: ODataEntitiesAnnotations;
   private _entries: {
     state: ODataModelState,
     model: M;
@@ -56,18 +56,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entities: Partial<T>[] | {[name: string]: any}[] = [],
     {
       resource,
-      meta,
+      annots,
       reset = false,
     }: {
       resource?: ODataCollectionResource<T>;
-      meta?: ODataEntitiesMeta;
+      annots?: ODataEntitiesAnnotations;
       reset?: boolean;
     } = {}
   ) {
     entities = entities || [];
 
     this.resource(resource);
-    this.meta(meta || new ODataEntitiesMeta({ options: resource?.api.options }));
+    this.meta(annots || new ODataEntitiesAnnotations({ options: resource?.api.options }));
     this.assign(entities, { reset });
   }
 
@@ -99,8 +99,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._resource?.clone();
   }
 
-  meta(meta?: ODataEntitiesMeta) {
-    if (meta !== undefined) this._meta = meta;
+  meta(annots?: ODataEntitiesAnnotations) {
+    if (annots !== undefined) this._meta = annots;
     return this._meta;
   }
 
@@ -108,18 +108,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     data: Partial<T> | {[name: string]: any},
     { reset = false }: { reset?: boolean } = {}
   ): M {
-    const meta = new ODataEntityMeta({data, options: this._meta.options });
+    const annots = new ODataEntityAnnotations({data, options: this._meta.options });
     let resource = this.resource()?.entity();
 
     const Klass = this.constructor as typeof ODataCollection;
     let Model = Klass.model || ODataModel;
 
-    if (meta?.type !== undefined && Model.options !== null && meta?.type !== Model.options.type()) {
-      let schema = Model.options.find(o => o.isTypeOf(meta.type as string))?.schema();
+    if (annots?.type !== undefined && Model.options !== null && annots?.type !== Model.options.type()) {
+      let schema = Model.options.find(o => o.isTypeOf(annots.type as string))?.schema();
       Model = schema !== undefined ? schema.model || ODataModel : ODataModel;
     }
 
-    return new Model(data, { resource, meta, reset }) as M;
+    return new Model(data, { resource, annots, reset }) as M;
   }
 
   toEntities({
@@ -154,11 +154,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   clone() {
     let resource: ODataCollectionResource<T> | undefined;
-    let meta: ODataEntitiesMeta | undefined;
+    let annots: ODataEntitiesAnnotations | undefined;
     if (this._resource) resource = this._resource.clone();
-    if (this._meta) meta = this._meta.clone();
+    if (this._meta) annots = this._meta.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
-    return new Ctor(this.toEntities({include_navigation: true}), { resource, meta });
+    return new Ctor(this.toEntities({include_navigation: true}), { resource, annots });
   }
   fetch({
     withCount = true,
@@ -180,8 +180,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
-      map(({ entities, meta }) => {
-        this.meta(meta);
+      map(({ entities, annots }) => {
+        this.meta(annots);
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
@@ -201,7 +201,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map((entities) => {
-        this.meta(new ODataEntitiesMeta({ options: resource?.api.options }));
+        this.meta(new ODataEntitiesAnnotations({ options: resource?.api.options }));
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;

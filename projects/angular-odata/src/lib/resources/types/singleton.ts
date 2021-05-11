@@ -12,7 +12,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { HttpOptions, HttpEntityOptions } from './options';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
-import { ODataEntity, ODataEntityMeta } from '../responses';
+import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
@@ -33,13 +33,13 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {meta, reset}: { meta?: ODataEntityMeta, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
     let schema = this.schema;
-    if (meta?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.type);
+    if (annots?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(annots.type);
     }
     const Model = schema?.model || ODataModel;
-    return new Model(entity, {resource: this, meta, reset}) as M;
+    return new Model(entity, {resource: this, annots, reset}) as M;
   }
 
   //#region Function Config
@@ -175,7 +175,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   fetchModel(options?: HttpOptions & { etag?: string }): Observable<ODataModel<T> | null> {
-    return this.get(options).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.get(options).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
   }
   //#endregion
 }

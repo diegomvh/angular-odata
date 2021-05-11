@@ -5,7 +5,7 @@ import {
   ODataEntityResource,
   ODataNavigationPropertyResource,
   HttpOptions,
-  ODataEntityMeta,
+  ODataEntityAnnotations,
   ODataEntity,
   ODataActionResource,
   ODataFunctionResource,
@@ -31,13 +31,13 @@ export class ODataModel<T> {
   _changes: {[name: string]: any} = {};
   _relations: { [name: string]: ODataModelRelation } = {};
   _resource?: ODataModelResource<T>;
-  _meta!: ODataEntityMeta;
+  _meta!: ODataEntityAnnotations;
   _resetting: boolean = false;
   _silent: boolean = false;
   events$ = new EventEmitter<ODataModelEvent<T>>();
-  constructor(data: Partial<T> | {[name: string]: any} = {}, { resource, meta, reset = false }: {
+  constructor(data: Partial<T> | {[name: string]: any} = {}, { resource, annots, reset = false }: {
     resource?: ODataModelResource<T>,
-    meta?: ODataEntityMeta,
+    annots?: ODataEntityAnnotations,
     reset?: boolean
   } = {}) {
 
@@ -47,7 +47,7 @@ export class ODataModel<T> {
     if (Klass.options !== null) Klass.options.bind(this);
 
     this.resource(resource);
-    this.meta(meta || new ODataEntityMeta());
+    this.meta(annots || new ODataEntityAnnotations());
 
     let attrs = this.meta().attributes<T>(data);
     let defaults = this.defaults();
@@ -75,8 +75,8 @@ export class ODataModel<T> {
     return Klass.options.schema();
   }
 
-  meta(meta?: ODataEntityMeta) {
-    if (meta !== undefined) this._meta = meta;
+  meta(annots?: ODataEntityAnnotations) {
+    if (annots !== undefined) this._meta = annots;
     return this._meta;
   }
 
@@ -157,14 +157,14 @@ export class ODataModel<T> {
   }
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.resource(), meta: this.meta() });
+    return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.resource(), annots: this.meta() });
   }
   private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
     this.events$.emit({ name: 'request', model: this, value: obs$ });
     return obs$.pipe(
-      map(({ entity, meta }) => {
-        this.meta(meta);
-        this.assign(meta.attributes<T>(entity || {}), { reset: true });
+      map(({ entity, annots }) => {
+        this.meta(annots);
+        this.assign(annots.attributes<T>(entity || {}), { reset: true });
         this.events$.emit({name: 'sync', model: this });
         return this;
       }));
@@ -205,7 +205,7 @@ export class ODataModel<T> {
         patch ?
           resource.patch(_entity, options) :
           resource.put(_entity, options)
-      ).pipe(map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
+      ).pipe(map(({ entity, annots }) => ({ entity: entity || _entity, annots })));
     } else {
       obs$ = throwError(this.errors);
     }
@@ -223,7 +223,7 @@ export class ODataModel<T> {
 
     const _entity = this.toEntity({field_mapping: true}) as T;
     const obs$ = resource.delete(Object.assign({ etag: this.meta().etag }, options || {})).pipe(
-      map(({ entity, meta }) => ({ entity: entity || _entity, meta })));
+      map(({ entity, annots }) => ({ entity: entity || _entity, annots })));
     return this._request(obs$).pipe(tap(() => this.events$.emit({name: 'destroy', model: this})));
   }
 
@@ -294,7 +294,7 @@ export class ODataModel<T> {
   protected asDerived<S>(type: string): ODataModel<S> {
     const resource = this.resource();
     if (resource instanceof ODataEntityResource) {
-      return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true }), {meta: this.meta()});
+      return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true }), {annots: this.meta()});
     }
     throw new Error(`Can't cast to derived model without ODataEntityResource`);
   }

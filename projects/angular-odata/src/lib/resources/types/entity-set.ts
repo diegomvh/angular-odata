@@ -13,7 +13,7 @@ import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
 import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
-import { ODataEntity, ODataEntities, ODataEntitiesMeta } from '../responses';
+import { ODataEntity, ODataEntities, ODataEntitiesAnnotations } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Types } from '../../utils';
@@ -34,14 +34,14 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities: Partial<T>[] | {[name: string]: any}[],
-    {meta, reset = false}: { meta?: ODataEntitiesMeta, reset?: boolean} = {}
+    {annots, reset = false}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}
   ): C {
     let schema = this.schema;
-    if (meta?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.type);
+    if (annots?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(annots.type);
     }
     const Collection = schema?.collection || ODataCollection;
-    return new Collection(entities, {resource: this, meta, reset}) as C;
+    return new Collection(entities, {resource: this, annots, reset}) as C;
   }
 
   //#region Entity Config
@@ -217,7 +217,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {
-    return this.get(options).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, { meta, reset: true}) : null));
+    return this.get(options).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, { annots, reset: true}) : null));
   }
 
   fetchAll(options?: HttpOptions): Observable<T[]> {
@@ -239,7 +239,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand(({meta})  => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
+        expand(({annots: meta})  => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
         concatMap(({entities}) => entities || []),
         toArray());
   }

@@ -6,7 +6,7 @@ import { ODataResource } from '../resource';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
-import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
+import { ODataProperty, ODataEntities, ODataEntity, ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
@@ -39,25 +39,25 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
   ////#endregion
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {meta, reset}: {meta?: ODataEntityMeta, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
     let schema = this.schema;
-    if (meta?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.type);
+    if (annots?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(annots.type);
     }
     const Model = schema?.model || ODataModel;
-    return new Model(entity, {resource: this, meta, reset}) as M;
+    return new Model(entity, {resource: this, annots, reset}) as M;
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities: Partial<T>[] | {[name: string]: any}[],
-    {meta, reset}: { meta?: ODataEntitiesMeta, reset?: boolean} = {}
+    {annots, reset}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}
   ): C {
     let schema = this.schema;
-    if (meta?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(meta.type);
+    if (annots?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType(annots.type);
     }
     const Collection = schema?.collection || ODataCollection;
-    return new Collection(entities, {resource: this, meta, reset}) as C;
+    return new Collection(entities, {resource: this, annots, reset}) as C;
   }
 
   //#region Inmutable Resource
@@ -227,7 +227,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchModel(options: HttpOptions & { etag?: string } = {}): Observable<ODataModel<T> | null> {
-    return this.get({ responseType: 'entity', ...options}).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.get({ responseType: 'entity', ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
   }
 
   fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
@@ -235,7 +235,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchCollection(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataCollection<T, ODataModel<T>> | null> {
-    return this.get({ responseType: 'entities', ...options}).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, { meta, reset: true }) : null));
+    return this.get({ responseType: 'entities', ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, { annots, reset: true }) : null));
   }
 
   fetchAll(options: HttpOptions = {}): Observable<T[]> {
@@ -257,7 +257,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     }
     return fetch()
       .pipe(
-        expand(({meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
+        expand(({annots: meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
         concatMap(({entities}) => entities || []),
         toArray());
   }

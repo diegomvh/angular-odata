@@ -63,7 +63,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     if (!res.hasKey())
       return throwError("Resource without key");
     return res.patch(attrs, Object.assign({etag}, options || {}))
-      .pipe(map(({entity: newentity, meta}) => newentity ? newentity :
+      .pipe(map(({entity: newentity, annots: meta}) => newentity ? newentity :
         Object.assign(entity, attrs, meta.annotations) as T));
   }
 

@@ -165,7 +165,7 @@ describe('ODataClient', () => {
     };
     client.entitySet<Person>('People', `${NAMESPACE}.Person`)
     .top(2)
-    .get().subscribe(({entities, meta}) => {
+    .get().subscribe(({entities, annots: meta}) => {
       expect(entities !== null).toBeTrue();
       expect((entities as any[]).length).toBe(2);
       expect(meta.context.entitySet).toEqual("People");
@@ -192,7 +192,7 @@ describe('ODataClient', () => {
     });
     const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
 
-    entity.get().subscribe(({entity, meta}) => {
+    entity.get().subscribe(({entity, annots: meta}) => {
       expect(meta.context.entitySet).toEqual("People");
       expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
       expect(entity).toEqual(data);
@@ -227,7 +227,7 @@ ${JSON.stringify(payload)}
     const entity: ODataEntityResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`).entity('russellwhyte');
     client.batch().post((batch) => {
       expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
-      entity.get().subscribe(({meta}) => {
+      entity.get().subscribe(({annots: meta}) => {
         expect(meta.context.entitySet).toEqual("People");
         expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
       });

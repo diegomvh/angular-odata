@@ -3,7 +3,7 @@ import { DEFAULT_VERSION } from '../../constants';
 import { ODataContext, ODataHelper } from '../../helpers';
 import { OptionsHelper } from '../../types';
 
-export abstract class ODataMeta {
+export abstract class ODataAnnotations {
   annotations: {[annot: string]: any};
   options?: OptionsHelper;
   protected get odv() {
@@ -41,13 +41,13 @@ export abstract class ODataMeta {
   }
 
   // Method
-  abstract clone(): ODataMeta;
+  abstract clone(): ODataAnnotations;
   abstract data(data: Object): Object;
 }
 
-export class ODataPropertyMeta extends ODataMeta {
-  clone(): ODataPropertyMeta {
-    return new ODataPropertyMeta({ data: Object.assign({}, this.annotations), options: this.options });
+export class ODataPropertyAnnotations extends ODataAnnotations {
+  clone(): ODataPropertyAnnotations {
+    return new ODataPropertyAnnotations({ data: Object.assign({}, this.annotations), options: this.options });
   }
 
   data(data: Object) {
@@ -59,9 +59,9 @@ export class ODataPropertyMeta extends ODataMeta {
   }
 }
 
-export class ODataEntityMeta extends ODataMeta {
-  clone(): ODataEntityMeta {
-    return new ODataEntityMeta({ data: Object.assign({}, this.annotations), options: this.options });
+export class ODataEntityAnnotations extends ODataAnnotations {
+  clone(): ODataEntityAnnotations {
+    return new ODataEntityAnnotations({ data: Object.assign({}, this.annotations), options: this.options });
   }
 
   data(data: Object) {
@@ -125,9 +125,9 @@ export class ODataEntityMeta extends ODataMeta {
   }
 }
 
-export class ODataEntitiesMeta extends ODataMeta {
-  clone(): ODataEntitiesMeta {
-    return new ODataEntitiesMeta({ data: Object.assign({}, this.annotations), options: this.options });
+export class ODataEntitiesAnnotations extends ODataAnnotations {
+  clone(): ODataEntitiesAnnotations {
+    return new ODataEntitiesAnnotations({ data: Object.assign({}, this.annotations), options: this.options });
   }
 
   data(data: Object) {

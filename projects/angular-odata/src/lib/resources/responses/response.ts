@@ -1,5 +1,5 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from './meta';
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from './annotations';
 import { Parser } from '../../types';
 import { Types } from '../../utils/types';
 import { ODataResource } from '../resource';
@@ -111,32 +111,32 @@ export class ODataResponse<T> extends HttpResponse<T> {
 
   entity(): ODataEntity<T> {
     const payload = this.body && this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const meta = new ODataEntityMeta({data: payload || {}, options: this.options, headers: this.headers});
+    const meta = new ODataEntityAnnotations({data: payload || {}, options: this.options, headers: this.headers});
     let entity = payload ? meta.data(payload) as T : null;
     const type = this.resource.type();
     if (entity !== null && type !== undefined)
       entity = this.deserialize(type, entity) as T;
-    return { entity, meta };
+    return { entity, annots: meta };
   }
 
   entities(): ODataEntities<T> {
     const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const meta = new ODataEntitiesMeta({data: payload || {}, options: this.options, headers: this.headers});
+    const meta = new ODataEntitiesAnnotations({data: payload || {}, options: this.options, headers: this.headers});
     let entities = payload ? meta.data(payload) as T[] : null;
     const type = this.resource.type();
     if (entities !== null && type !== undefined)
       entities = this.deserialize(type, entities) as T[];
-    return { entities, meta };
+    return { entities, annots: meta };
   }
 
   property(): ODataProperty<T> {
     const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const meta = new ODataPropertyMeta({data: payload || {}, options: this.options, headers: this.headers});
+    const meta = new ODataPropertyAnnotations({data: payload || {}, options: this.options, headers: this.headers});
     let property = payload ? meta.data(payload) as T : null;
     const type = this.resource.type();
     if (property !== null && type !== undefined)
       property = this.deserialize(type, property) as T;
-    return { property, meta };
+    return { property, annots: meta };
   }
 
   value(): T | null {

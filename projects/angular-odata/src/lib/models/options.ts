@@ -1,6 +1,6 @@
 import { Subscription } from "rxjs";
 import { ODataStructuredTypeFieldParser } from "../parsers";
-import { Expand, ODataEntitiesMeta, ODataEntityMeta, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
+import { Expand, ODataEntitiesAnnotations, ODataEntityAnnotations, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
 import { ODataStructuredType } from "../schema";
 import { EntityKey, OptionsHelper, StructuredTypeConfig } from "../types";
 import { Objects, Types } from "../utils";
@@ -145,10 +145,10 @@ export class ODataModelField<F> {
       undefined;
   }
 
-  metaFactory(meta: ODataEntityMeta): ODataEntityMeta | ODataEntitiesMeta | undefined {
+  metaFactory(meta: ODataEntityAnnotations): ODataEntityAnnotations | ODataEntitiesAnnotations | undefined {
     return this.parser.collection ?
-        new ODataEntitiesMeta({ data: meta.property(this.parser.name) || {}, options: meta.options }) :
-        new ODataEntityMeta({ data: meta.property(this.parser.name) || {}, options: meta.options });
+        new ODataEntitiesAnnotations({ data: meta.property(this.parser.name) || {}, options: meta.options }) :
+        new ODataEntityAnnotations({ data: meta.property(this.parser.name) || {}, options: meta.options });
   }
 
   schemaFactory<T, F>(schema: ODataStructuredType<T>): ODataStructuredType<F> | undefined {
@@ -161,24 +161,24 @@ export class ODataModelField<F> {
     reset?: boolean,
     baseResource?: ODataModelResource<T>,
     baseSchema: ODataStructuredType<T>,
-    baseMeta: ODataEntityMeta
+    baseMeta: ODataEntityAnnotations
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
 
-    const meta = this.metaFactory(baseMeta);
+    const annots = this.metaFactory(baseMeta);
     if (baseResource !== undefined && baseResource.hasKey()) {
       // Build for Resource
       const resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
       return this.parser.collection ?
-          resource.asCollection((value || []) as (F | {[name: string]: any})[], { reset, meta: meta as ODataEntitiesMeta }) :
-          resource.asModel((value || {}) as F | {[name: string]: any}, { reset, meta: meta as ODataEntityMeta });
+          resource.asCollection((value || []) as (F | {[name: string]: any})[], { reset, annots: annots as ODataEntitiesAnnotations }) :
+          resource.asModel((value || {}) as F | {[name: string]: any}, { reset, annots: annots as ODataEntityAnnotations });
     } else {
       // Build for Schema
       const schema = this.schemaFactory<T, F>(baseSchema);
       const Model = schema?.model || ODataModel;
       const Collection = schema?.collection || ODataCollection;
       return this.parser.collection ?
-        new Collection((value || []) as (F | {[name: string]: any})[], { meta: meta as ODataEntitiesMeta, reset }) as ODataCollection<F, ODataModel<F>> :
-        new Model((value || {}) as F | {[name: string]: any}, { meta: meta as ODataEntityMeta, reset }) as ODataModel<F>;
+        new Collection((value || []) as (F | {[name: string]: any})[], { annots: annots as ODataEntitiesAnnotations, reset }) as ODataCollection<F, ODataModel<F>> :
+        new Model((value || {}) as F | {[name: string]: any}, { annots: annots as ODataEntityAnnotations, reset }) as ODataModel<F>;
     }
   }
 }
@@ -492,11 +492,11 @@ export class ODataModelOptions<T> {
       return property.modelCollectionFactory<T, P>({value, reset, baseResource, baseSchema, baseMeta});
     }
 
-    const meta = property.metaFactory(baseMeta);
+    const annots = property.metaFactory(baseMeta);
     // Build by Magic
     return property.collection ?
-      new ODataCollection((value || []) as (P | {[name: string]: any})[], { reset, meta: meta as ODataEntitiesMeta }) as ODataCollection<P, ODataModel<P>>:
-      new ODataModel((value || {}) as P | {[name: string]: any}, { reset, meta: meta as ODataEntityMeta }) as ODataModel<P>;
+      new ODataCollection((value || []) as (P | {[name: string]: any})[], { reset, annots: annots as ODataEntitiesAnnotations }) as ODataCollection<P, ODataModel<P>>:
+      new ODataModel((value || {}) as P | {[name: string]: any}, { reset, annots: annots as ODataEntityAnnotations }) as ODataModel<P>;
   }
 
   private _get<F>(self: ODataModel<T>, property: ODataModelField<F>): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
@@ -541,9 +541,9 @@ export class ODataModelOptions<T> {
           const meta = property.metaFactory(selfMeta);
           newModel.resource(resource);
           if (newModel instanceof ODataModel)
-            newModel.meta(meta as ODataEntityMeta);
+            newModel.meta(meta as ODataEntityAnnotations);
           else if (newModel instanceof ODataCollection)
-            newModel.meta(meta as ODataEntitiesMeta);
+            newModel.meta(meta as ODataEntitiesAnnotations);
         }
 
         const newModelResource = newModel.resource();

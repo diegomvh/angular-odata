@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions, HttpCallableOptions } from './options';
-import { ODataProperty, ODataEntities, ODataEntity, ODataEntityMeta, ODataEntitiesMeta } from '../responses';
+import { ODataProperty, ODataEntities, ODataEntity, ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { ODataApi } from '../../api';
 import { map } from 'rxjs/operators';
 import { ODataCollection, ODataModel } from '../../models';
@@ -28,40 +28,40 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  asModel<M extends ODataModel<R>>(entity: Partial<R> | {[name: string]: any}, {meta, reset}: { meta?: ODataEntityMeta, reset?:boolean} = {}): M {
+  asModel<M extends ODataModel<R>>(entity: Partial<R> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?:boolean} = {}): M {
     let resource: ODataEntityResource<R> | undefined;
     // TODO: Structured Only?
     let schema: ODataStructuredType<R> | undefined;
-    let type = meta?.type || this.returnType();
+    let type = annots?.type || this.returnType();
     if (type !== undefined) {
       schema = this.api.findStructuredTypeForType(type);
     }
     let Model = schema?.model || ODataModel;
-    let path = meta?.context.entitySet;
+    let path = annots?.context.entitySet;
     if (path !== undefined) {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone())
         .entity(entity as Partial<R>);
     }
-    return new Model(entity, {resource, meta, reset}) as M;
+    return new Model(entity, {resource, annots, reset}) as M;
   }
 
   asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
     entities: Partial<R>[] | {[name: string]: any}[],
-    {meta, reset}: { meta?: ODataEntitiesMeta, reset?: boolean} = {}
+    {annots, reset}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}
   ): C {
     let resource: ODataEntitySetResource<R> | undefined;
     // TODO: Structured Only?
     let schema: ODataStructuredType<R> | undefined;
-    let type = meta?.type || this.returnType();
+    let type = annots?.type || this.returnType();
     if (type !== undefined) {
       schema = this.api.findStructuredTypeForType(type);
     }
     let Collection = schema?.collection || ODataCollection;
-    let path = meta?.context.entitySet;
+    let path = annots?.context.entitySet;
     if (path !== undefined) {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone());
     }
-    return new Collection(entities, {resource, meta, reset}) as C;
+    return new Collection(entities, {resource, annots, reset}) as C;
   }
 
   //#region Action Config
@@ -153,7 +153,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   }
 
   callModel(params: P | null, options: HttpOptions = {}): Observable<ODataModel<R> | null> {
-    return this.clone().post(params, {responseType: 'entity', ...options}).pipe(map(({entity, meta}) => entity ? this.asModel(entity, {meta, reset: true}) : null));
+    return this.clone().post(params, {responseType: 'entity', ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
   }
 
   callEntities(params: P | null, options: HttpOptions = {}): Observable<R[] | null> {
@@ -161,7 +161,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   }
 
   callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
-    return this.clone().post(params, {responseType: 'entities', ...options}).pipe(map(({entities, meta}) => entities ? this.asCollection(entities, {meta, reset: true}) : null));
+    return this.clone().post(params, {responseType: 'entities', ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, {annots, reset: true}) : null));
   }
   //#endregion
 }
