@@ -29,13 +29,16 @@ export enum ODataModelState {
   Unchanged,
 }
 
-export function ODataModelField(options: ModelFieldOptions = {}) {
-  return (target: any, propertyKey: string): void => {
-    const Klass = target.constructor as typeof ODataModel;
-    const properties = Klass._properties = ((Klass.hasOwnProperty("_properties")) ? Klass._properties : []);
-    properties.push(Object.assign(options, { name: propertyKey, field: options.name || propertyKey}));
-  }
-}
+export type ModelOptions = {
+  name?: string,
+  field?: string,
+  default?: any,
+  required?: boolean,
+  maxLength?: number,
+  minLength?: number,
+  min?: number,
+  max?: number,
+};
 
 export type ModelFieldOptions = {
   name?: string,
@@ -47,9 +50,24 @@ export type ModelFieldOptions = {
   min?: number,
   max?: number,
 };
-export type ModelPropertyOptions<F> = ModelFieldOptions & { name: string, field: string, parser: ODataStructuredTypeFieldParser<F> };
 
-export class ODataModelProperty<F> {
+export function Model(options: ModelOptions = {}) {
+  return <T extends { new (...args: any[]): {}}>(constructor: T) => {
+    return constructor;
+  }
+}
+
+export function ModelField(options: ModelFieldOptions = {}) {
+  return (target: any, propertyKey: string): void => {
+    const Klass = target.constructor as typeof ODataModel;
+    const fields = Klass.fields = ((Klass.hasOwnProperty("fields")) ? Klass.fields : []);
+    fields.push(Object.assign(options, { name: propertyKey, field: options.name || propertyKey}));
+  }
+}
+
+export type ODataModelFieldOptions<F> = ModelFieldOptions & { name: string, field: string, parser: ODataStructuredTypeFieldParser<F> };
+
+export class ODataModelField<F> {
   name: string;
   field: string;
   parser: ODataStructuredTypeFieldParser<F>;
@@ -63,7 +81,7 @@ export class ODataModelProperty<F> {
     max?: number,
     pattern?: RegExp,
   };
-  constructor({name, field, parser, ...options}: ModelPropertyOptions<F>) {
+  constructor({name, field, parser, ...options}: ODataModelFieldOptions<F>) {
     this.name = name;
     this.field = field;
     this.opts = options;
@@ -168,20 +186,36 @@ export class ODataModelProperty<F> {
 export type ODataModelRelation = {
   state: ODataModelState,
   model: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null,
-  property: ODataModelProperty<any>,
+  property: ODataModelField<any>,
   subscription: Subscription | null
 };
 
 export class ODataModelOptions<T> {
-  private _properties: ODataModelProperty<any>[] = [];
+  private name: string;
+  private base?: string;
+  private open?: boolean;
+  private _fields: ODataModelField<any>[] = [];
   private _schema: ODataStructuredType<T>;
-  private _base?: string;
-  private _parent?: ODataModelOptions<any>;
-  private _children: ODataModelOptions<any>[] = [];
+  private parent?: ODataModelOptions<any>;
+  private children: ODataModelOptions<any>[] = [];
 
-  constructor(config: StructuredTypeConfig<T>, schema: ODataStructuredType<T>) {
-    this._base = config.base;
+  constructor(config: StructuredTypeConfig<T>, fields: ModelFieldOptions[], schema: ODataStructuredType<T>) {
+    this.name = config.name;
+    this.base = config.base;
+    this.open = config.open;
     this._schema = schema;
+    const schemaFields = this._schema.fields({include_navigation: true});
+    this._fields = fields.map(prop => {
+      const { name, field, ...opts} = prop;
+      if (field === undefined || name === undefined) throw new Error("Model Properties need name and field")
+      const parser = schemaFields.find(f => f.name === field);
+      if (parser === undefined) throw new Error(`No parser for ${field} with name = ${name}`);
+      return new ODataModelField<T>({name, field, parser, ...opts});
+    });
+  }
+
+  get api() {
+    return this._schema.api;
   }
 
   type() {
@@ -192,45 +226,41 @@ export class ODataModelOptions<T> {
     return this._schema.isTypeOf(type);
   }
 
+  bla() {
+    let entitySet = this.api.findEntitySetForEntityType(this.type())
+    return entitySet;
+  }
+
   find(predicate: (p: ODataModelOptions<any>) => boolean): ODataModelOptions<any> | undefined {
     if (predicate(this))
       return this;
     let match: ODataModelOptions<any> | undefined;
-    for (let ch of this._children) {
+    for (let ch of this.children) {
       match = ch.find(predicate);
       if (match !== undefined) break;
     }
     return match;
   }
 
-  configure({properties, findOptionsForType, options}: {
-    properties: ModelFieldOptions[],
+  configure({findOptionsForType, options}: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined,
     options: OptionsHelper
   }) {
-    if (this._base) {
-      const parent = findOptionsForType(this._base) as ODataModelOptions<any>;
-      parent._children.push(this);
-      this._parent = parent;
+    if (this.base) {
+      const parent = findOptionsForType(this.base) as ODataModelOptions<any>;
+      parent.children.push(this);
+      this.parent = parent;
     }
-    const fields = this._schema.fields({include_navigation: true});
-    this._properties = properties.map(prop => {
-      const { name, field, ...opts} = prop;
-      if (field === undefined || name === undefined) throw new Error("Model Properties need name and field")
-      const parser = fields.find(f => f.name === field);
-      if (parser === undefined) throw new Error(`No parser for ${field} with name = ${name}`);
-      return new ODataModelProperty<T>({name, field, parser, ...opts});
-    });
-    this._properties.forEach(p => p.configure({findOptionsForType, options}));
+    this._fields.forEach(p => p.configure({findOptionsForType, options}));
   }
 
-  properties({include_navigation = false, include_parents = true}: {
+  fields({include_navigation = false, include_parents = true}: {
     include_parents?: boolean,
     include_navigation?: boolean
-  } = {}): ODataModelProperty<any>[] {
+  } = {}): ODataModelField<any>[] {
     return [
-      ...((include_parents && this._parent !== undefined) ? this._parent.properties({include_navigation, include_parents}) : []),
-      ...this._properties.filter(prop => include_navigation || !prop.navigation)
+      ...((include_parents && this.parent !== undefined) ? this.parent.fields({include_navigation, include_parents}) : []),
+      ...this._fields.filter(prop => include_navigation || !prop.navigation)
     ];
   }
 
@@ -271,7 +301,7 @@ export class ODataModelOptions<T> {
 
   bind(self: ODataModel<T>) {
     const values: any = {};
-    for (let prop of this.properties({include_navigation: true, include_parents: true})) {
+    for (let prop of this.fields({include_navigation: true, include_parents: true})) {
       let value = (<any>self)[prop.name];
       if (value !== undefined) {
         delete (<any>self)[prop.name];
@@ -279,8 +309,8 @@ export class ODataModelOptions<T> {
       }
       Object.defineProperty(self, prop.name, {
         configurable: true,
-        get: () => this._get(self, prop as ODataModelProperty<any>),
-        set: (value: any) => this._set(self, prop as ODataModelProperty<any>, value)
+        get: () => this._get(self, prop as ODataModelField<any>),
+        set: (value: any) => this._set(self, prop as ODataModelField<any>, value)
       });
     }
     if (!Types.isEmpty(values))
@@ -306,10 +336,10 @@ export class ODataModelOptions<T> {
     for (var k of keys) {
       let model = value as any;
       let options = this as ODataModelOptions<any>;
-      let prop: ODataModelProperty<any> | undefined;
+      let prop: ODataModelField<any> | undefined;
       for (let name of k.ref.split('/')) {
         if (options === null) break;
-        prop = options.properties({include_parents: true}).find((p: any) => p.field === name);
+        prop = options.fields({include_parents: true}).find((p: any) => p.field === name);
         if (prop !== undefined && prop.options !== undefined) {
           model = model[prop.name];
           options = prop.options as ODataModelOptions<any>;
@@ -325,7 +355,7 @@ export class ODataModelOptions<T> {
   }
 
   validate(self: ODataModel<T>, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}): {[name: string]: string[]} | undefined {
-    let errors = this.properties({include_parents: true, include_navigation: true}).reduce((acc, prop) => {
+    let errors = this.fields({include_parents: true, include_navigation: true}).reduce((acc, prop) => {
       let value = (self as any)[prop.name];
       let errs = prop.validate(value, {create, patch});
       return (errs !== undefined) ?
@@ -341,7 +371,7 @@ export class ODataModelOptions<T> {
   }
 
   defaults(self: ODataModel<T>) {
-    return this.properties({include_navigation: true, include_parents: true}).reduce((acc, prop) => {
+    return this.fields({include_navigation: true, include_parents: true}).reduce((acc, prop) => {
       let value = prop.default;
       return (value !== undefined) ?
         Object.assign(acc, {[prop.name]: value}) :
@@ -385,7 +415,7 @@ export class ODataModelOptions<T> {
         return [k, model];
       })
       .reduce((acc, [k, v]) => {
-        const name = field_mapping ? this.properties().find(p => p.name === k)?.field || k : k;
+        const name = field_mapping ? this.fields().find(p => p.name === k)?.field || k : k;
         return Object.assign(acc, { [name]: v });
       }, {});
 
@@ -412,7 +442,7 @@ export class ODataModelOptions<T> {
   } = {}): {[name: string]: any} {
     return Object.entries(changes_only ? self._changes : Object.assign({}, self._attributes, self._changes))
       .reduce((acc, [k, v]) => {
-        const name = field_mapping ? this.properties().find(p => p.name === k)?.field || k : k;
+        const name = field_mapping ? this.fields().find(p => p.name === k)?.field || k : k;
         return Object.assign(acc, {[name]: v});
       }, {});
   }
@@ -427,7 +457,7 @@ export class ODataModelOptions<T> {
     }
     for (let key in entity) {
       const value = (<any>entity)[key];
-      const name = self._resetting ? this.properties().find(p => p.field === key)?.name || key : key;
+      const name = self._resetting ? this.fields().find(p => p.field === key)?.name || key : key;
       if (value !== null && Types.isObject(value)) {
         const current = (self as any)[name];
         if (
@@ -449,7 +479,7 @@ export class ODataModelOptions<T> {
     self._silent = false;
   }
 
-  private _modelCollectionFactory<P>(self: ODataModel<T>, property: ODataModelProperty<P>,
+  private _modelCollectionFactory<P>(self: ODataModel<T>, property: ODataModelField<P>,
     value?: P | P[] | {[name: string]: any} | {[name: string]: any}[]
   ): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
 
@@ -469,7 +499,7 @@ export class ODataModelOptions<T> {
       new ODataModel((value || {}) as P | {[name: string]: any}, { reset, meta: meta as ODataEntityMeta }) as ODataModel<P>;
   }
 
-  private _get<F>(self: ODataModel<T>, property: ODataModelProperty<F>): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
+  private _get<F>(self: ODataModel<T>, property: ODataModelField<F>): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     const name = property.name;
     const parser = property.parser;
 
@@ -489,7 +519,7 @@ export class ODataModelOptions<T> {
     return attrs[name];
   }
 
-  private _set<F>(self: ODataModel<T>, property: ODataModelProperty<F>, value: F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null) {
+  private _set<F>(self: ODataModel<T>, property: ODataModelField<F>, value: F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null) {
     const name = property.name;
     const parser = property.parser;
 
@@ -544,7 +574,7 @@ export class ODataModelOptions<T> {
     }
   }
 
-  private _subscribe<F>(self: ODataModel<T>, property: ODataModelProperty<F>, value: ODataModel<F> | ODataCollection<F, ODataModel<F>>) {
+  private _subscribe<F>(self: ODataModel<T>, property: ODataModelField<F>, value: ODataModel<F> | ODataCollection<F, ODataModel<F>>) {
     const mr = self.resource();
     const vr = value.resource();
     const bubbling = mr === undefined || vr === undefined || !vr.isParentOf(mr);

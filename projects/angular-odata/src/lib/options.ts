@@ -2,7 +2,6 @@ import { DEFAULT_FETCH_POLICY, DEFAULT_VERSION } from './constants';
 import { ODataHelper } from './helpers';
 import { ApiOptions, FetchPolicy, ODataMetadataType, ODataVersion, OptionsHelper } from './types';
 
-//https://docs.microsoft.com/en-us/odata/webapi/include-annotations
 export class ODataApiOptions implements ApiOptions, OptionsHelper {
   version: ODataVersion;
   metadata?: ODataMetadataType;
@@ -15,14 +14,20 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
   etag: {
+    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398229
     ifMatch: boolean;
+    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398230
     ifNoneMatch: boolean;
   } = {ifMatch: true, ifNoneMatch: false};
   prefer?: {
+    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398238
     maxPageSize?: number;
+    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398240
     return?: 'representation' | 'minimal';
-    includeAnnotations?: string;
+    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398236
     continueOnError?: boolean;
+    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398237
+    includeAnnotations?: string;
   };
 
   constructor(config: ApiOptions) {

@@ -132,13 +132,13 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   }
   //#endregion
 
-  configure(settings: {
+  configure({findParserForType, options}: {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
-    this.parser = settings.findParserForType(this.type);
+    this.parser = findParserForType(this.type);
     if (this.default !== undefined)
-      this.default = this.deserialize(this.default, settings.options);
+      this.default = this.deserialize(this.default, options);
   }
 
   //#region Json Schema
@@ -280,16 +280,16 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     );
   }
 
-  configure(settings: {
+  configure({findParserForType, options}: {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
     if (this.base) {
-      const parent = settings.findParserForType(this.base) as ODataStructuredTypeParser<any>;
+      const parent = findParserForType(this.base) as ODataStructuredTypeParser<any>;
       parent.children.push(this);
       this.parent = parent;
     }
-    this.fields.forEach(f => f.configure(settings));
+    this.fields.forEach(f => f.configure({findParserForType, options}));
   }
 
   resolveKey(attrs: T | {[name: string]: any}): EntityKey<T> | undefined {

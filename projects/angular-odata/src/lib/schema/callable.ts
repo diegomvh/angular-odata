@@ -1,4 +1,4 @@
-import { Parser, CallableConfig } from '../types';
+import { Parser, CallableConfig, OptionsHelper } from '../types';
 import { ODataSchema } from './schema';
 import { ODataCallableParser } from '../parsers';
 
@@ -39,8 +39,9 @@ export class ODataCallable<R> {
     return this.schema.api;
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any> }) {
-    const parserSettings = Object.assign({options: this.api.options}, settings);
-    this.parser.configure(parserSettings);
+  configure({findParserForType}: {
+    findParserForType: (type: string) => Parser<any>
+  }) {
+    this.parser.configure({options: this.api.options, findParserForType});
   }
 }

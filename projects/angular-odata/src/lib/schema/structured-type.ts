@@ -24,25 +24,26 @@ export class ODataStructuredType<T> {
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
     if (config.model !== undefined) {
       this.model = config.model as typeof ODataModel;
-      this.model._options = new ODataModelOptions<T>(config, this);
+      const fields = (this.model.hasOwnProperty("fields") ? this.model.fields : []);
+      this.model.options = new ODataModelOptions<T>(config, fields, this);
       if (config.collection !== undefined) {
         this.collection = config.collection as typeof ODataCollection;
-        this.collection._model = this.model;
+        this.collection.model = this.model;
       }
     }
   }
 
-  configure(settings: { findParserForType: (type: string) => Parser<any>, findOptionsForType: (type: string) => ODataModelOptions<any> | undefined }) {
+  configure({findParserForType, findOptionsForType}: {
+    findParserForType: (type: string) => Parser<any>,
+    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined }) {
     if (this.base) {
       const parent = this.api.findStructuredTypeForType(this.base) as ODataStructuredType<any>;
       parent.children.push(this);
       this.parent = parent;
     }
-    const parserSettings = { options: this.api.options, ...settings };
-    this.parser.configure(parserSettings);
-    if (this.model !== undefined && this.model._options !== null) {
-      const optionsSettings = { properties: this.model._properties || [], options: this.api.options, ...settings };
-      this.model._options.configure(optionsSettings);
+    this.parser.configure({options: this.api.options, findParserForType});
+    if (this.model !== undefined && this.model.options !== null) {
+      this.model.options.configure({options: this.api.options, findOptionsForType});
     }
   }
 

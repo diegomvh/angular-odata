@@ -34,7 +34,7 @@ import {
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M> {
-  static _model: typeof ODataModel | null = null;
+  static model: typeof ODataModel | null = null;
   private _resource?: ODataCollectionResource<T>;
   private _meta!: ODataEntitiesMeta;
   private _entries: {
@@ -105,22 +105,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   private _modelFactory(
-    entity: Partial<T> | {[name: string]: any},
+    data: Partial<T> | {[name: string]: any},
     { reset = false }: { reset?: boolean } = {}
   ): M {
-    const meta = new ODataEntityMeta({data: entity, options: this._meta.options });
-    const attrs = meta.attributes<T>(entity);
+    const meta = new ODataEntityMeta({data, options: this._meta.options });
     let resource = this.resource()?.entity();
 
     const Klass = this.constructor as typeof ODataCollection;
-    let Model = Klass._model || ODataModel;
+    let Model = Klass.model || ODataModel;
 
-    if (meta?.type !== undefined && Model._options !== null && meta?.type !== Model._options.type()) {
-      let schema = Model._options.find(o => o.isTypeOf(meta.type as string))?.schema();
+    if (meta?.type !== undefined && Model.options !== null && meta?.type !== Model.options.type()) {
+      let schema = Model.options.find(o => o.isTypeOf(meta.type as string))?.schema();
       Model = schema !== undefined ? schema.model || ODataModel : ODataModel;
     }
 
-    return new Model(attrs, { resource, meta, reset }) as M;
+    return new Model(data, { resource, meta, reset }) as M;
   }
 
   toEntities({
@@ -348,11 +347,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
         this.events$.emit({ name: 'reset', collection: this });
     } else {
       const Klass = (this.constructor as typeof ODataCollection);
-      const Model = Klass._model;
+      const Model = Klass.model;
 
       let modelMap: string[] = [];
       objects.forEach(obj => {
-        const key = (Model !== null && Model._options)? Model._options.resolveKey(obj) : undefined;
+        const key = (Model !== null && Model.options)? Model.options.resolveKey(obj) : undefined;
         const cid = (CID in obj) ? (<any>obj)[CID] : undefined;
         // Try find entry
         const entry = (obj instanceof ODataModel) ?

@@ -114,10 +114,14 @@ export class ODataApi {
   }
   //#endregion
 
-  //#region find Config for Entity Type
-  public findServiceForEntityType(type: string) {
+  //#region find Schema for Entity Type
+  public findEntitySetForEntityType(entityType: string) {
     return this.schemas.reduce((acc, schema) => [...acc, ...schema.entitySets], <ODataEntitySet[]>[])
-      .find(e => e.entityType === type)?.service as typeof ODataEntityService | undefined;
+      .find(e => e.entityType === entityType);
+  }
+
+  public findServiceForEntityType(entityType: string) {
+    return this.findEntitySetForEntityType(entityType)?.service as typeof ODataEntityService | undefined;
   }
   //#endregion
 
@@ -176,6 +180,6 @@ export class ODataApi {
   public findOptionsForType<T>(type: string) {
     // Strucutred Options
     let st = this.findStructuredTypeForType(type);
-    return (st !== undefined && st.model !== undefined && st.model?._options !== null) ? st.model._options : undefined;
+    return (st !== undefined && st.model !== undefined && st.model?.options !== null) ? st.model.options : undefined;
   }
 }

@@ -73,15 +73,15 @@ export class ODataSchema {
   }
   //#endregion
 
-  configure(settings: {
+  configure({findOptionsForType, findParserForType}: {
     findParserForType: (type: string) => Parser<any>,
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined
   }) {
     // Configure Entities
     this.entities
-      .forEach(config => config.configure(settings));
+      .forEach(config => config.configure({findParserForType, findOptionsForType}));
     // Configure callables
     this.callables
-      .forEach(callable => callable.configure(settings));
+      .forEach(callable => callable.configure({findParserForType}));
   }
 }
