@@ -17,7 +17,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   }
 
   clone() {
-    return new ODataReferenceResource(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataReferenceResource(this.api, this.cloneSegments(), this.cloneQuery());
   }
   //#endregion
 

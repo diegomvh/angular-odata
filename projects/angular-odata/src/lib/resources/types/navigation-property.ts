@@ -29,7 +29,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
   //#endregion
 
@@ -77,11 +77,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   value() {
-    return ODataValueResource.factory<T>(this.api, this.type(), this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataValueResource.factory<T>(this.api, this.type(), this.cloneSegments(), this.cloneQuery());
   }
 
   reference() {
-    return ODataReferenceResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataReferenceResource.factory(this.api, this.cloneSegments(), this.cloneQuery());
   }
   navigationProperty<N>(path: string) {
     let type = this.type();
@@ -90,7 +90,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       type = parser instanceof ODataStructuredTypeParser?
         parser.typeFor(path) : undefined;
     }
-    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   property<P>(path: string) {
@@ -100,77 +100,77 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       type = parser instanceof ODataStructuredTypeParser?
         parser.typeFor(path) : undefined;
     }
-    return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataPropertyResource.factory<P>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   count() {
-    return ODataCountResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataCountResource.factory(this.api, this.cloneSegments(), this.cloneQuery());
   }
 
   cast<C>(type: string) {
-    let segments = this.pathSegments.clone();
+    let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataNavigationPropertyResource<C>(this.api, segments, this.queryOptions.clone());
+    return new ODataNavigationPropertyResource<C>(this.api, segments, this.cloneQuery());
   }
 
   select(opts: Select<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   expand(opts: Expand<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   transform(opts: Transform<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Transform<T>>(QueryOptionNames.transform, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   search(opts: string) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<string>(QueryOptionNames.search, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   filter(opts: Filter) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Filter>(QueryOptionNames.filter, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   orderBy(opts: OrderBy<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   format(opts: string) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<string>(QueryOptionNames.format, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   top(opts: number) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<number>(QueryOptionNames.top, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   skip(opts: number) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<number>(QueryOptionNames.skip, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
 
   skiptoken(opts: string) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<string>(QueryOptionNames.skiptoken, opts);
-    return new ODataNavigationPropertyResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), options);
   }
   //#endregion
 

@@ -1,12 +1,13 @@
 import { Subscription } from "rxjs";
 import { ODataStructuredTypeFieldParser } from "../parsers";
-import { Expand, ODataEntitiesAnnotations, ODataEntityAnnotations, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
+import { Expand, ODataEntitiesAnnotations, ODataEntityAnnotations, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPathSegments, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
 import { ODataStructuredType } from "../schema";
 import { EntityKey, OptionsHelper, StructuredTypeConfig } from "../types";
 import { Objects, Types } from "../utils";
 import { ODataCollection } from "./collection";
-import { CID, ODataModel } from "./model";
+import { ODataModel } from "./model";
 
+export const CID = "_cid";
 export type ODataModelResource<T> = ODataEntityResource<T> | ODataSingletonResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 export type ODataCollectionResource<T> = ODataEntitySetResource<T> | ODataNavigationPropertyResource<T> | ODataPropertyResource<T>;
 
@@ -30,14 +31,8 @@ export enum ODataModelState {
 }
 
 export type ModelOptions = {
-  name?: string,
-  field?: string,
-  default?: any,
-  required?: boolean,
-  maxLength?: number,
-  minLength?: number,
-  min?: number,
-  max?: number,
+  cid?: string,
+  fields: ModelFieldOptions[];
 };
 
 export type ModelFieldOptions = {
@@ -51,8 +46,12 @@ export type ModelFieldOptions = {
   max?: number,
 };
 
-export function Model(options: ModelOptions = {}) {
+export function Model({cid = CID}: {cid?: string} = {}) {
   return <T extends { new (...args: any[]): {}}>(constructor: T) => {
+    const Klass = (<any>constructor) as typeof ODataModel;
+    if (!Klass.hasOwnProperty("options"))
+      Klass.options = {fields: []} as ModelOptions;
+    Klass.options.cid = cid;
     return constructor;
   }
 }
@@ -60,8 +59,9 @@ export function Model(options: ModelOptions = {}) {
 export function ModelField(options: ModelFieldOptions = {}) {
   return (target: any, propertyKey: string): void => {
     const Klass = target.constructor as typeof ODataModel;
-    const fields = Klass.fields = ((Klass.hasOwnProperty("fields")) ? Klass.fields : []);
-    fields.push(Object.assign(options, { name: propertyKey, field: options.name || propertyKey}));
+    if (!Klass.hasOwnProperty("options"))
+      Klass.options = {fields: []} as ModelOptions;
+    Klass.options.fields.push(Object.assign(options, { name: propertyKey, field: options.name || propertyKey}));
   }
 }
 
@@ -71,8 +71,8 @@ export class ODataModelField<F> {
   name: string;
   field: string;
   parser: ODataStructuredTypeFieldParser<F>;
-  options?: ODataModelOptions<any>;
-  opts: {
+  meta?: ODataModelOptions<any>;
+  options: {
     default?: any,
     required?: boolean,
     maxLength?: number,
@@ -84,12 +84,12 @@ export class ODataModelField<F> {
   constructor({name, field, parser, ...options}: ODataModelFieldOptions<F>) {
     this.name = name;
     this.field = field;
-    this.opts = options;
+    this.options = options;
     this.parser = parser;
   }
 
   get default() {
-    return this.opts.default || this.parser.default;
+    return this.options.default || this.parser.default;
   }
 
   get navigation() {
@@ -104,7 +104,7 @@ export class ODataModelField<F> {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined,
     options: OptionsHelper
   }) {
-    this.options = settings.findOptionsForType(this.parser.type);
+    this.meta = settings.findOptionsForType(this.parser.type);
   }
 
   validate(value: any, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
@@ -115,24 +115,24 @@ export class ODataModelField<F> {
     } else {
       let errors = this.parser?.validate(value, {create, patch}) || [];
       if (
-        this.opts.required &&
+        this.options.required &&
         (value === null || (value === undefined && !patch)) // Is null or undefined without patch flag?
       ) {
         errors.push(`required`);
       }
-      if (this.opts.maxLength !== undefined && typeof value === 'string' && value.length > this.opts.maxLength) {
+      if (this.options.maxLength !== undefined && typeof value === 'string' && value.length > this.options.maxLength) {
         errors.push(`maxlength`);
       }
-      if (this.opts.minLength !== undefined && typeof value === 'string' && value.length < this.opts.minLength) {
+      if (this.options.minLength !== undefined && typeof value === 'string' && value.length < this.options.minLength) {
         errors.push(`minlength`);
       }
-      if (this.opts.min !== undefined && typeof value === 'number' && value < this.opts.min) {
+      if (this.options.min !== undefined && typeof value === 'number' && value < this.options.min) {
         errors.push(`min`);
       }
-      if (this.opts.max !== undefined && typeof value === 'number' && value > this.opts.max) {
+      if (this.options.max !== undefined && typeof value === 'number' && value > this.options.max) {
         errors.push(`max`);
       }
-      if (this.opts.pattern !== undefined && typeof value === 'string' && !this.opts.pattern.test(value)) {
+      if (this.options.pattern !== undefined && typeof value === 'string' && !this.options.pattern.test(value)) {
         errors.push(`pattern`);
       }
       return !Types.isEmpty(errors) ? errors : undefined;
@@ -145,10 +145,10 @@ export class ODataModelField<F> {
       undefined;
   }
 
-  metaFactory(meta: ODataEntityAnnotations): ODataEntityAnnotations | ODataEntitiesAnnotations | undefined {
+  annotationsFactory(annots: ODataEntityAnnotations): ODataEntityAnnotations | ODataEntitiesAnnotations | undefined {
     return this.parser.collection ?
-        new ODataEntitiesAnnotations({ data: meta.property(this.parser.name) || {}, options: meta.options }) :
-        new ODataEntityAnnotations({ data: meta.property(this.parser.name) || {}, options: meta.options });
+        new ODataEntitiesAnnotations({ data: annots.property(this.parser.name) || {}, options: annots.options }) :
+        new ODataEntityAnnotations({ data: annots.property(this.parser.name) || {}, options: annots.options });
   }
 
   schemaFactory<T, F>(schema: ODataStructuredType<T>): ODataStructuredType<F> | undefined {
@@ -156,15 +156,15 @@ export class ODataModelField<F> {
   }
 
   modelCollectionFactory<T, F>(
-    { value, reset, baseResource, baseSchema, baseMeta}: {
+    { value, reset, baseResource, baseSchema, baseAnnots}: {
     value?: F | F[] | {[name: string]: any} | {[name: string]: any}[],
     reset?: boolean,
     baseResource?: ODataModelResource<T>,
     baseSchema: ODataStructuredType<T>,
-    baseMeta: ODataEntityAnnotations
+    baseAnnots: ODataEntityAnnotations
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
 
-    const annots = this.metaFactory(baseMeta);
+    const annots = this.annotationsFactory(baseAnnots);
     if (baseResource !== undefined && baseResource.hasKey()) {
       // Build for Resource
       const resource = this.resourceFactory<T, F>(baseResource) as ODataNavigationPropertyResource<F> | ODataPropertyResource<F>;
@@ -191,21 +191,23 @@ export type ODataModelRelation = {
 };
 
 export class ODataModelOptions<T> {
-  private name: string;
-  private base?: string;
-  private open?: boolean;
-  private _fields: ODataModelField<any>[] = [];
-  private _schema: ODataStructuredType<T>;
-  private parent?: ODataModelOptions<any>;
-  private children: ODataModelOptions<any>[] = [];
+  name: string;
+  cid: string;
+  base?: string;
+  open?: boolean;
+  private _fields: ODataModelField<any>[];
+  schema: ODataStructuredType<T>;
+  parent?: ODataModelOptions<any>;
+  children: ODataModelOptions<any>[] = [];
 
-  constructor(config: StructuredTypeConfig<T>, fields: ModelFieldOptions[], schema: ODataStructuredType<T>) {
-    this.name = config.name;
-    this.base = config.base;
-    this.open = config.open;
-    this._schema = schema;
-    const schemaFields = this._schema.fields({include_navigation: true});
-    this._fields = fields.map(prop => {
+  constructor(options: ModelOptions, schema: ODataStructuredType<T>) {
+    this.name = schema.name;
+    this.base = schema.base;
+    this.open = schema.open;
+    this.schema = schema;
+    this.cid = options.cid || CID;
+    const schemaFields = this.schema.fields({include_navigation: true});
+    this._fields = options.fields.map(prop => {
       const { name, field, ...opts} = prop;
       if (field === undefined || name === undefined) throw new Error("Model Properties need name and field")
       const parser = schemaFields.find(f => f.name === field);
@@ -215,20 +217,26 @@ export class ODataModelOptions<T> {
   }
 
   get api() {
-    return this._schema.api;
+    return this.schema.api;
   }
 
   type() {
-    return this._schema.type();
+    return this.schema.type();
   }
 
   isTypeOf(type: string) {
-    return this._schema.isTypeOf(type);
+    return this.schema.isTypeOf(type);
   }
 
-  bla() {
-    let entitySet = this.api.findEntitySetForEntityType(this.type())
-    return entitySet;
+  resourceFactory(resource?: ODataCollectionResource<T> | ODataModelResource<T>, {reset = false}: {reset?: boolean} = {}) {
+    if (resource !== undefined) {
+      if (reset && !(resource instanceof ODataEntityResource)) return resource.entity();
+      const type = this.type();
+      let entitySet = this.api.findEntitySetForEntityType(type);
+      if (entitySet !== undefined)
+        return ODataEntitySetResource.factory<T>(this.api, entitySet.name, type, new ODataPathSegments(), resource.cloneQuery()).entity();
+    }
+    return undefined;
   }
 
   find(predicate: (p: ODataModelOptions<any>) => boolean): ODataModelOptions<any> | undefined {
@@ -289,8 +297,9 @@ export class ODataModelOptions<T> {
     }
   }
 
-  resource(self: ODataModel<T>): ODataModelResource<T> | undefined {
+  resource(self: ODataModel<T>, {entity = false}: {entity?: boolean} = {}): ODataModelResource<T> | undefined {
     let resource = self._resource?.clone() as ODataModelResource<T> | undefined;
+    if (entity) resource = this.resourceFactory(resource, {reset: false});
     if (resource !== undefined) {
       const key = self.key({field_mapping: true}) as EntityKey<T>;
       if (key !== undefined)
@@ -317,10 +326,6 @@ export class ODataModelOptions<T> {
       self.assign(values, {silent: true});
   }
 
-  schema(): ODataStructuredType<T> {
-    return this._schema;
-  }
-
   query(self: ODataModel<T>, resource: ODataModelResource<T>, func: (q:
     { select(opts?: Select<T>): OptionHandler<Select<T>>;
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
@@ -331,7 +336,7 @@ export class ODataModelOptions<T> {
   }
 
   resolveKey(value: ODataModel<T> | T | {[name: string]: any}, {field_mapping = false, resolve = true}: {field_mapping?: boolean, resolve?: boolean} = {}): EntityKey<T> | {[name: string]: any} | undefined {
-    const keys = this._schema.keys({ include_parents: true });
+    const keys = this.schema.keys({ include_parents: true });
     const key: any = {};
     for (var k of keys) {
       let model = value as any;
@@ -340,9 +345,9 @@ export class ODataModelOptions<T> {
       for (let name of k.ref.split('/')) {
         if (options === null) break;
         prop = options.fields({include_parents: true}).find((p: any) => p.field === name);
-        if (prop !== undefined && prop.options !== undefined) {
+        if (prop !== undefined && prop.meta !== undefined) {
           model = model[prop.name];
-          options = prop.options as ODataModelOptions<any>;
+          options = prop.meta as ODataModelOptions<any>;
         }
       }
       if (prop === undefined) return undefined;
@@ -424,7 +429,7 @@ export class ODataModelOptions<T> {
 
     // Add client_id
     if (client_id)
-      entity[CID] = self[CID];
+      entity[this.cid] = (<any>self)[this.cid];
 
     // Add key
     if (include_key)
@@ -479,33 +484,16 @@ export class ODataModelOptions<T> {
     self._silent = false;
   }
 
-  private _modelCollectionFactory<P>(self: ODataModel<T>, property: ODataModelField<P>,
-    value?: P | P[] | {[name: string]: any} | {[name: string]: any}[]
-  ): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
-
-    const baseResource = self.resource();
-    const baseMeta = self.meta();
-    const baseSchema = self.schema();
-    const reset = self._resetting;
-    if (baseSchema !== undefined) {
-      // Build for Resource or Schema
-      return property.modelCollectionFactory<T, P>({value, reset, baseResource, baseSchema, baseMeta});
-    }
-
-    const annots = property.metaFactory(baseMeta);
-    // Build by Magic
-    return property.collection ?
-      new ODataCollection((value || []) as (P | {[name: string]: any})[], { reset, annots: annots as ODataEntitiesAnnotations }) as ODataCollection<P, ODataModel<P>>:
-      new ODataModel((value || {}) as P | {[name: string]: any}, { reset, annots: annots as ODataEntityAnnotations }) as ODataModel<P>;
-  }
-
   private _get<F>(self: ODataModel<T>, property: ODataModelField<F>): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     const name = property.name;
     const parser = property.parser;
 
     if (parser.isStructuredType()) {
-      if (self._resetting && self._resource !== undefined && !(name in self._relations)) {
-        const newModel = this._modelCollectionFactory<F>(self, property);
+      if (self._resetting && !(name in self._relations)) {
+        const selfResource = self.resource();
+        const selfSchema = self.schema();
+        const selfAnnots = self.annots();
+        const newModel = property.modelCollectionFactory<T, F>({reset: self._resetting, baseResource: selfResource, baseSchema: selfSchema, baseAnnots: selfAnnots});
         self._relations[name] = {
           state: ODataModelState.Unchanged,
           property,
@@ -533,17 +521,17 @@ export class ODataModelOptions<T> {
       if (newModel !== null) {
         const selfResource = self.resource();
         const selfSchema = self.schema();
-        const selfMeta = self.meta();
+        const selfAnnots = self.annots();
         if (!(newModel instanceof ODataModel || newModel instanceof ODataCollection)) {
-          newModel = this._modelCollectionFactory(self, property, value as F);
+          newModel = property.modelCollectionFactory<T, F>({value: value as F, reset: self._resetting, baseResource: selfResource, baseSchema: selfSchema, baseAnnots: selfAnnots});
         } else if (newModel.resource() === undefined && selfResource !== undefined && selfResource.hasKey()) {
           const resource = property.resourceFactory<T, F>(selfResource);
-          const meta = property.metaFactory(selfMeta);
+          const annots = property.annotationsFactory(selfAnnots);
           newModel.resource(resource);
           if (newModel instanceof ODataModel)
-            newModel.meta(meta as ODataEntityAnnotations);
+            newModel.annots(annots as ODataEntityAnnotations);
           else if (newModel instanceof ODataCollection)
-            newModel.meta(meta as ODataEntitiesAnnotations);
+            newModel.annots(annots as ODataEntitiesAnnotations);
         }
 
         const newModelResource = newModel.resource();

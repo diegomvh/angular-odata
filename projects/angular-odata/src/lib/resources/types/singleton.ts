@@ -17,6 +17,7 @@ import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
 import { EntityKey } from '../../types';
+import { Types } from '../../utils/types';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
@@ -29,7 +30,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
   //#endregion
 
@@ -52,12 +53,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
     const singleton = this.clone();
-    singleton.segment.singleton().key(key);
+    singleton.segment.singleton().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
     return singleton;
   }
-  entity(key: EntityKey<T>) {
+  entity(key?: EntityKey<T>) {
     const singleton = this.clone();
-    singleton.segment.singleton().key(key);
+    singleton.segment.singleton().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
     return singleton;
   }
   navigationProperty<N>(path: string) {
@@ -67,7 +68,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       type = parser instanceof ODataStructuredTypeParser?
         parser.typeFor(path) : undefined;
     }
-    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   property<P>(path: string) {
@@ -77,7 +78,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       type = parser instanceof ODataStructuredTypeParser?
         parser.typeFor(path) : undefined;
     }
-    return ODataPropertyResource.factory<P>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataPropertyResource.factory<P>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   action<P, R>(name: string) {
@@ -88,7 +89,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataActionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataActionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   function<P, R>(name: string) {
@@ -99,25 +100,25 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   select(opts: Select<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), options);
   }
 
   expand(opts: Expand<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), options);
   }
 
   format(opts: string) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<string>(QueryOptionNames.format, opts);
-    return new ODataSingletonResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), options);
   }
   //#endregion
 

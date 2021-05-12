@@ -27,11 +27,11 @@ export abstract class ODataResource<T> {
   constructor(
     api: ODataApi,
     segments?: ODataPathSegments,
-    options?: ODataQueryOptions
+    query?: ODataQueryOptions
   ) {
     this.api = api;
     this.pathSegments = segments || new ODataPathSegments();
-    this.queryOptions = options || new ODataQueryOptions();
+    this.queryOptions = query || new ODataQueryOptions();
   }
 
   /**
@@ -47,6 +47,7 @@ export abstract class ODataResource<T> {
   types(): string[] {
     return this.pathSegments.types();
   }
+
   /**
    * @returns boolean The resource has key ?
    */
@@ -144,6 +145,15 @@ export abstract class ODataResource<T> {
   clearQuery() {
     this.queryOptions.clear();
   }
+
+  cloneSegments() {
+    return this.pathSegments.clone();
+  }
+
+  cloneQuery() {
+    return this.queryOptions.clone();
+  }
+
   // Base Requests
   protected request(
     method: string,

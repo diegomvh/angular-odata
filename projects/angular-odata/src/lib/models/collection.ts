@@ -24,7 +24,7 @@ import {
 import { EventEmitter } from '@angular/core';
 import { EntityKey } from '../types';
 import { Types } from '../utils/types';
-import { CID, ODataModel } from './model';
+import { ODataModel } from './model';
 import {
   BUBBLING,
   ODataCollectionResource,
@@ -32,17 +32,17 @@ import {
   ODataModelState
 } from './options';
 
-export class ODataCollection<T, M extends ODataModel<T>>
-  implements Iterable<M> {
+export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
   static model: typeof ODataModel | null = null;
-  private _resource?: ODataCollectionResource<T>;
-  private _meta!: ODataEntitiesAnnotations;
-  private _entries: {
+  _resource?: ODataCollectionResource<T>;
+  _annotations!: ODataEntitiesAnnotations;
+  _entries: {
     state: ODataModelState,
     model: M;
     key?: EntityKey<T> | {[name: string]: any};
     subscription: Subscription;
   }[] = [];
+  _model: typeof ODataModel;
 
   models() {
     return this._entries.filter(e => e.state !== ODataModelState.Removed).map((e) => e.model);
@@ -57,17 +57,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       resource,
       annots,
+      model,
       reset = false,
     }: {
       resource?: ODataCollectionResource<T>;
       annots?: ODataEntitiesAnnotations;
+      model?: typeof ODataModel;
       reset?: boolean;
     } = {}
   ) {
-    entities = entities || [];
+
+    const Klass = this.constructor as typeof ODataCollection;
+    if (model === undefined && Klass.model !== null) model = Klass.model;
+    if (model === undefined) throw new Error("Collection need model");
+    this._model = model;
 
     this.resource(resource);
-    this.meta(annots || new ODataEntitiesAnnotations({ options: resource?.api.options }));
+    this.annots(annots || new ODataEntitiesAnnotations({ options: resource?.api.options }));
+    entities = entities || [];
+
     this.assign(entities, { reset });
   }
 
@@ -99,25 +107,26 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._resource?.clone();
   }
 
-  meta(annots?: ODataEntitiesAnnotations) {
-    if (annots !== undefined) this._meta = annots;
-    return this._meta;
+  annots(annots?: ODataEntitiesAnnotations) {
+    if (annots !== undefined) this._annotations = annots;
+    return this._annotations;
   }
 
-  private _modelFactory(
+  private modelFactory(
     data: Partial<T> | {[name: string]: any},
     { reset = false }: { reset?: boolean } = {}
   ): M {
-    const annots = new ODataEntityAnnotations({data, options: this._meta.options });
-    let resource = this.resource()?.entity();
+    const annots = new ODataEntityAnnotations({data, options: this._annotations.options });
+    let Model = this._model;
 
-    const Klass = this.constructor as typeof ODataCollection;
-    let Model = Klass.model || ODataModel;
-
-    if (annots?.type !== undefined && Model.options !== null && annots?.type !== Model.options.type()) {
-      let schema = Model.options.find(o => o.isTypeOf(annots.type as string))?.schema();
-      Model = schema !== undefined ? schema.model || ODataModel : ODataModel;
+    if (annots?.type !== undefined && Model.meta !== null) {
+      let schema = Model.meta.find(o => o.isTypeOf(annots.type as string))?.schema;
+      if (schema !== undefined && schema.model !== undefined)
+        // Change to child model
+        Model = schema.model;
     }
+
+    const resource = Model.meta.resourceFactory(this.resource(), {reset});
 
     return new Model(data, { resource, annots, reset }) as M;
   }
@@ -156,7 +165,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let resource: ODataCollectionResource<T> | undefined;
     let annots: ODataEntitiesAnnotations | undefined;
     if (this._resource) resource = this._resource.clone();
-    if (this._meta) annots = this._meta.clone();
+    if (this._annotations) annots = this._annotations.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
     return new Ctor(this.toEntities({include_navigation: true}), { resource, annots });
   }
@@ -181,7 +190,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map(({ entities, annots }) => {
-        this.meta(annots);
+        this.annots(annots);
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
@@ -201,7 +210,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map((entities) => {
-        this.meta(new ODataEntitiesAnnotations({ options: resource?.api.options }));
+        this.annots(new ODataEntitiesAnnotations({ options: resource?.api.options }));
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
@@ -211,7 +220,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   add(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
     let resource = this.resource();
-    let entry = this._findEntry({model, key, cid: model[CID]});
+    let entry = this._findEntry({model, key, cid: (<any>model)[this._model.meta.cid]});
     if (entry !== undefined && entry.state !== ODataModelState.Removed) return of(this);
 
     const server$ = (
@@ -221,7 +230,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource instanceof ODataNavigationPropertyResource
     ) ? resource
           .reference()
-          .add(model.resource() as ODataEntityResource<T>)
+          .add(model._meta.resource(model, {entity: true}) as ODataEntityResource<T>)
           .pipe(map(() => this)) : of(this);
 
     const add = () => {
@@ -254,7 +263,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   remove(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
     let resource = this.resource();
-    let entry = this._findEntry({model, key, cid: model[CID]});
+    let entry = this._findEntry({model, key, cid: (<any>model)[this._model.meta.cid]});
     if (entry === undefined || entry.state === ODataModelState.Removed) return of(this);
 
     const server$ = (
@@ -264,7 +273,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       resource instanceof ODataNavigationPropertyResource
     ) ? resource
           .reference()
-          .remove(model.resource() as ODataEntityResource<T>)
+          .remove(model._meta.resource(model, {entity: true}) as ODataEntityResource<T>)
           .pipe(map(() => this)) :
         of(this);
 
@@ -284,7 +293,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   create(attrs: T = {} as T, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}) {
-    const model = this._modelFactory(attrs);
+    const model = this.modelFactory(attrs);
     return ((model.valid() && server) ? model.save() : of(model)).pipe(
       tap((model) => this.add(model, {silent, server}))
     );
@@ -336,7 +345,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   assign(objects: Array<Partial<T> | {[name: string]: any} | M>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
     if (reset) {
       this._entries.forEach((e) => e.subscription.unsubscribe());
-      const models = objects.map(obj => !(obj instanceof ODataModel) ? this._modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M);
+      const models = objects.map(obj => !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M);
       this._entries = models.map(model => ({
         state: ODataModelState.Unchanged,
         model,
@@ -346,13 +355,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
       if (!silent)
         this.events$.emit({ name: 'reset', collection: this });
     } else {
-      const Klass = (this.constructor as typeof ODataCollection);
-      const Model = Klass.model;
+      const Model = this._model;
 
       let modelMap: string[] = [];
       objects.forEach(obj => {
-        const key = (Model !== null && Model.options)? Model.options.resolveKey(obj) : undefined;
-        const cid = (CID in obj) ? (<any>obj)[CID] : undefined;
+        const key = (Model !== null && Model.meta)? Model.meta.resolveKey(obj) : undefined;
+        const cid = (this._model.meta.cid in obj) ? (<any>obj)[this._model.meta.cid] : undefined;
         // Try find entry
         const entry = (obj instanceof ODataModel) ?
           this._findEntry({model: obj as M}) : // By Model
@@ -365,12 +373,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
           if (model !== obj) model.assign(obj, {reset, silent});
         } else {
           // Add
-          model = !(obj instanceof ODataModel) ? this._modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M;
+          model = !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M;
           this.add(model, {silent}).toPromise();
         }
-        modelMap.push(model[CID]);
+        modelMap.push((<any>model)[this._model.meta.cid]);
       });
-      this._entries.filter(e => modelMap.indexOf(e.model[CID]) === -1).forEach(entry => {
+      this._entries.filter(e => modelMap.indexOf((<any>e.model)[this._model.meta.cid]) === -1).forEach(entry => {
         this.remove(entry.model, {silent}).toPromise();
       });
       if (!silent)
@@ -468,7 +476,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   private _findEntry({model, cid, key}: {model?: ODataModel<T>, cid?: string, key?: EntityKey<T> | {[name: string]: any}} = {}) {
     return this._entries.find((entry) => {
       const byModel = model !== undefined && entry.model.equals(model);
-      const byCid = cid !== undefined && entry.model[CID] === cid;
+      const byCid = cid !== undefined && (<any>entry.model)[this._model.meta.cid] === cid;
       const byKey = key !== undefined && entry.key !== undefined && Types.isEqual(entry.key, key);
       return byModel || byCid || byKey;
     });

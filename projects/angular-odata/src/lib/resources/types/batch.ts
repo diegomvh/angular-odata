@@ -157,7 +157,7 @@ export class ODataBatchResource extends ODataResource<any> {
 
   clone() {
     //TODO: Clone
-    return new ODataBatchResource(this.api, this.pathSegments.clone());
+    return new ODataBatchResource(this.api, this.cloneSegments());
   }
 
   //#region Factory

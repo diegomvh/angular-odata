@@ -213,6 +213,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
 export class ODataStructuredTypeParser<T> implements Parser<T> {
   name: string;
   namespace: string;
+  open: boolean;
   children: ODataStructuredTypeParser<any>[] = [];
   alias?: string;
   base?: string;
@@ -223,6 +224,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   constructor(config: StructuredTypeConfig<T>, namespace: string, alias?: string) {
     this.name = config.name;
     this.base = config.base;
+    this.open = config.open || false;
     this.namespace = namespace;
     this.alias = alias;
     if (Array.isArray(config.keys))

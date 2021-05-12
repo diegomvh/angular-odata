@@ -9,10 +9,10 @@ import { ODataApi } from '../../api';
 
 export class ODataCountResource extends ODataResource<any> {
   //#region Factory
-  static factory(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory(api: ODataApi, segments: ODataPathSegments, query: ODataQueryOptions) {
     segments.add(PathSegmentNames.count, $COUNT).type('Edm.Int32');
-    options.keep(QueryOptionNames.filter, QueryOptionNames.search);
-    return new ODataCountResource(api, segments, options);
+    query.keep(QueryOptionNames.filter, QueryOptionNames.search);
+    return new ODataCountResource(api, segments, query);
   }
 
   get segment() {
@@ -28,7 +28,7 @@ export class ODataCountResource extends ODataResource<any> {
   }
 
   clone() {
-    return new ODataCountResource(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataCountResource(this.api, this.cloneSegments(), this.cloneQuery());
   }
   //#endregion
 

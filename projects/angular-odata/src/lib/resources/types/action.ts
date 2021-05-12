@@ -15,16 +15,16 @@ import { ODataResource } from '../resource';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<P, R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, query: ODataQueryOptions) {
     const segment = segments.add(PathSegmentNames.action, path)
     if (type)
       segment.type(type);
-    options.clear();
-    return new ODataActionResource<P, R>(api, segments, options);
+    query.clear();
+    return new ODataActionResource<P, R>(api, segments, query);
   }
 
   clone() {
-    return new ODataActionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), this.cloneQuery());
   }
   //#endregion
 
@@ -39,7 +39,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     let Model = schema?.model || ODataModel;
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone())
+      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery())
         .entity(entity as Partial<R>);
     }
     return new Model(entity, {resource, annots, reset}) as M;
@@ -59,7 +59,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     let Collection = schema?.collection || ODataCollection;
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone());
+      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery());
     }
     return new Collection(entities, {resource, annots, reset}) as C;
   }

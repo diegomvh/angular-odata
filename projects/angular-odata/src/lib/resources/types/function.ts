@@ -26,7 +26,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   clone() {
-    return new ODataFunctionResource<P, R>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), this.cloneQuery());
   }
   //#endregion
 
@@ -41,7 +41,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     let Model = schema?.model || ODataModel;
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone())
+      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery())
         .entity(entity as Partial<R>);
     }
     return new Model(entity, {resource, annots, reset}) as M;
@@ -61,7 +61,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     let Collection = schema?.collection || ODataCollection;
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.queryOptions.clone());
+      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery());
     }
     return new Collection(entities, {resource, annots, reset}) as C;
   }
@@ -135,10 +135,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
   //#region Inmutable Resource
   parameters(params: P | null) {
-    let segments = this.pathSegments.clone();
+    let segments = this.cloneSegments();
     let segment = segments.get(PathSegmentNames.function);
     segment.parameters(params !== null ? this.serialize(params) : null);
-    return new ODataFunctionResource<P, R>(this.api, segments, this.queryOptions.clone());
+    return new ODataFunctionResource<P, R>(this.api, segments, this.cloneQuery());
   }
   //#endregion
 

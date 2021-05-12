@@ -180,6 +180,6 @@ export class ODataApi {
   public findOptionsForType<T>(type: string) {
     // Strucutred Options
     let st = this.findStructuredTypeForType(type);
-    return (st !== undefined && st.model !== undefined && st.model?.options !== null) ? st.model.options : undefined;
+    return (st !== undefined && st.model !== undefined && st.model?.meta !== null) ? st.model.meta : undefined;
   }
 }

@@ -20,15 +20,15 @@ import { Types } from '../../utils';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, query: ODataQueryOptions) {
     const segment = segments.add(PathSegmentNames.entitySet, path)
     if (type)
       segment.type(type);
-    return new ODataEntitySetResource<E>(api, segments, options);
+    return new ODataEntitySetResource<E>(api, segments, query);
   }
 
   clone() {
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
   //#endregion
 
@@ -55,16 +55,16 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   //#region Inmutable Resource
   entity(key?: EntityKey<T>) {
-    const entity = ODataEntityResource.factory<T>(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    const entity = ODataEntityResource.factory<T>(this.api, this.cloneSegments(), this.cloneQuery());
     if (key !== undefined)
       entity.segment.entitySet().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
     return entity;
   }
 
   cast<C>(type: string) {
-    let segments = this.pathSegments.clone();
+    let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataEntitySetResource<C>(this.api, segments, this.queryOptions.clone());
+    return new ODataEntitySetResource<C>(this.api, segments, this.cloneQuery());
   }
 
   action<P, R>(name: string) {
@@ -75,7 +75,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataActionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataActionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   function<P, R>(name: string) {
@@ -86,71 +86,71 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
   }
 
   count() {
-    return ODataCountResource.factory(this.api, this.pathSegments.clone(), this.queryOptions.clone());
+    return ODataCountResource.factory(this.api, this.cloneSegments(), this.cloneQuery());
   }
 
   select(opts: Select<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   expand(opts: Expand<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   transform(opts: Transform<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Transform<T>>(QueryOptionNames.transform, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   search(opts: string) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<string>(QueryOptionNames.search, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   filter(opts: Filter) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<Filter>(QueryOptionNames.filter, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   orderBy(opts: OrderBy<T>) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   format(opts: string) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<string>(QueryOptionNames.format, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   top(opts: number) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<number>(QueryOptionNames.top, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   skip(opts: number) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<number>(QueryOptionNames.skip, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
 
   skiptoken(opts: string) {
-    let options = this.queryOptions.clone();
+    let options = this.cloneQuery();
     options.option<string>(QueryOptionNames.skiptoken, opts);
-    return new ODataEntitySetResource<T>(this.api, this.pathSegments.clone(), options);
+    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
   }
   //#endregion
 

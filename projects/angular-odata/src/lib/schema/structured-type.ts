@@ -6,11 +6,12 @@ import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 
 export class ODataStructuredType<T> {
+  name: string;
   schema: ODataSchema;
   base?: string;
+  open: boolean;
   parent?: ODataStructuredType<any>;
   children: ODataStructuredType<any>[] = [];
-  name: string;
   model?: typeof ODataModel;
   collection?: typeof ODataCollection;
   parser: ODataStructuredTypeParser<T>;
@@ -20,12 +21,13 @@ export class ODataStructuredType<T> {
     this.schema = schema;
     this.name = config.name;
     this.base = config.base;
+    this.open = config.open || false;
     this.parser = new ODataStructuredTypeParser(config, schema.namespace, schema.alias);
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
     if (config.model !== undefined) {
       this.model = config.model as typeof ODataModel;
-      const fields = (this.model.hasOwnProperty("fields") ? this.model.fields : []);
-      this.model.options = new ODataModelOptions<T>(config, fields, this);
+      const options = (this.model.hasOwnProperty("options") ? this.model.options : {fields: []});
+      this.model.meta = new ODataModelOptions<T>(options, this);
       if (config.collection !== undefined) {
         this.collection = config.collection as typeof ODataCollection;
         this.collection.model = this.model;
@@ -43,7 +45,7 @@ export class ODataStructuredType<T> {
     }
     this.parser.configure({options: this.api.options, findParserForType});
     if (this.model !== undefined && this.model.options !== null) {
-      this.model.options.configure({options: this.api.options, findOptionsForType});
+      this.model.meta.configure({options: this.api.options, findOptionsForType});
     }
   }
 
