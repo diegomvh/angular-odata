@@ -134,12 +134,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   toEntities({
     client_id = false,
     include_navigation = false,
+    include_concurrency = false,
     include_key = false,
     changes_only = false,
     field_mapping = false
   }: {
     client_id?: boolean;
     include_navigation?: boolean;
+    include_concurrency?: boolean;
     include_key?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
@@ -150,6 +152,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       return entry.model.toEntity({
         client_id,
         include_navigation,
+        include_concurrency,
         field_mapping,
         include_key,
         changes_only: changesOnly

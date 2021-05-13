@@ -3,7 +3,7 @@ import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';
 import { ODataEnumType } from './enum-type';
 import { ODataApi } from '../api';
-import { SchemaConfig, Parser, CallableConfig, Annotation } from '../types';
+import { SchemaConfig, Parser, CallableConfig } from '../types';
 import { ODataEntitySet } from './entity-set';
 import { ODataAnnotation } from './annotation';
 import { ODataModelOptions } from '../models/options';
@@ -51,7 +51,7 @@ export class ODataSchema {
         (acc, container) => [...acc, ...container.entitySets], [] as ODataEntitySet[]);
   }
 
-  findAnnotation(predicate: (annot: Annotation) => boolean) {
+  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
 

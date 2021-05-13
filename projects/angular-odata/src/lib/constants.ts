@@ -54,3 +54,9 @@ export const ODATA_ALIAS_PREFIX = '@';
 
 export const NEWLINE = '\r\n';
 export const NEWLINE_REGEXP = /\r?\n/;
+
+
+// Standard vocabularies for annotating OData services
+
+export const COMPUTED = 'Org.OData.Core.V1.Computed';
+export const OPTIMISTIC_CONCURRENCY = 'Org.OData.Core.V1.OptimisticConcurrency';

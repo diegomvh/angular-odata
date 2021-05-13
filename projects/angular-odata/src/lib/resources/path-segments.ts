@@ -23,7 +23,7 @@ export enum PathSegmentNames {
 }
 
 export type ODataSegment = {
-  name: string;
+  name: PathSegmentNames;
   path: string;
   type?: string;
   key?: any;
@@ -90,9 +90,11 @@ export class ODataPathSegments {
     return [...this.segments].reverse().find(predicate);
   }
 
-  last() {
-    return (this.segments.length > 0) ?
-       new SegmentHandler(this.segments[this.segments.length - 1]) : undefined;
+  last({key = false}: {key?: boolean} = {}) {
+    let segments = [...this.segments];
+    if (key)
+      segments  = segments.filter(s => [PathSegmentNames.entitySet, PathSegmentNames.navigationProperty, PathSegmentNames.property].indexOf(s.name) !== -1);
+    return segments.length > 0 ? new SegmentHandler(segments[segments.length - 1]) : undefined;
   }
 
   add(name: string, path: string) {

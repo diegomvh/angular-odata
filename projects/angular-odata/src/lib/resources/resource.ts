@@ -52,8 +52,7 @@ export abstract class ODataResource<T> {
    * @returns boolean The resource has key ?
    */
   hasKey() {
-    const lastSegment  = this.pathSegments.last();
-    return lastSegment !== undefined && lastSegment.hasKey();
+    return Boolean(this.pathSegments.last({key: true})?.hasKey());
   }
 
   isSubtypeOf(other: ODataResource<any>) {

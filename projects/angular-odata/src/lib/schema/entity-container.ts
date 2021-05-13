@@ -1,5 +1,5 @@
 import { ODataSchema } from './schema';
-import { Annotation, EntityContainerConfig } from '../types';
+import { EntityContainerConfig } from '../types';
 import { ODataEntitySet } from './entity-set';
 import { ODataAnnotation } from './annotation';
 
@@ -19,7 +19,7 @@ export class ODataEntityContainer {
     return this.schema.api;
   }
 
-  findAnnotation(predicate: (annot: Annotation) => boolean) {
+  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
 }

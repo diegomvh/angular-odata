@@ -1,7 +1,7 @@
 import { ODataCollection, ODataModelOptions } from '../models';
 import { ODataModel } from '../models/model';
 import { JsonSchemaOptions, ODataEntityTypeKey, ODataStructuredTypeFieldParser, ODataStructuredTypeParser } from '../parsers';
-import { Annotation, EntityKey, Parser, StructuredTypeConfig } from '../types';
+import { Parser, StructuredTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 
@@ -26,7 +26,7 @@ export class ODataStructuredType<T> {
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
     if (config.model !== undefined) {
       this.model = config.model as typeof ODataModel;
-      const options = (this.model.hasOwnProperty("options") ? this.model.options : {fields: []});
+      const options = (this.model.hasOwnProperty("options") ? this.model.options : {fields: {}});
       this.model.meta = new ODataModelOptions<T>(options, this);
       if (config.collection !== undefined) {
         this.collection = config.collection as typeof ODataCollection;
@@ -61,7 +61,7 @@ export class ODataStructuredType<T> {
     return this.schema.api;
   }
 
-  findAnnotation(predicate: (annot: Annotation) => boolean) {
+  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
 

@@ -1,6 +1,8 @@
 import { Objects, Types } from '../utils';
-import { Parser, StructuredTypeField, StructuredTypeConfig, Annotation, OptionsHelper, NONE_PARSER, EntityKey } from '../types';
+import { Parser, StructuredTypeFieldConfig, StructuredTypeConfig, OptionsHelper, NONE_PARSER, EntityKey } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
+import { COMPUTED } from '../constants';
+import { ODataAnnotation } from '../schema/annotation';
 
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
@@ -27,7 +29,7 @@ export class ODataEntityTypeKey {
   }
 }
 
-export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, Parser<T> {
+export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   name: string;
   type: string;
   private parser: Parser<T>;
@@ -40,13 +42,13 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
   precision?: number;
   scale?: number;
   ref?: string;
-  annotations: Annotation[];
+  annotations: ODataAnnotation[];
 
-  constructor(name: string, field: StructuredTypeField) {
+  constructor(name: string, field: StructuredTypeFieldConfig) {
     this.name = name;
     this.type = field.type;
     this.parser = NONE_PARSER;
-    this.annotations = field.annotations || [];
+    this.annotations = (field.annotations || []).map(annot => new ODataAnnotation(annot));
     this.default = field.default;
     this.maxLength = field.maxLength;
     this.collection = field.collection !== undefined ? field.collection : false;
@@ -57,7 +59,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     this.scale = field.scale;
     this.ref = field.ref;
   }
-  findAnnotation(predicate: (annot: Annotation) => boolean) {
+  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
 
@@ -81,7 +83,7 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     }
     else {
       // IsEdmType
-      const computed = this.findAnnotation(a => a.type === "Org.OData.Core.V1.Computed");
+      const computed = this.findAnnotation(a => a.type === COMPUTED);
       errors = [];
       if (
         !this.nullable &&
@@ -234,8 +236,8 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     this.alias = alias;
     if (Array.isArray(config.keys))
       this.keys = config.keys.map(key => new ODataEntityTypeKey(key));
-    this.fields = Object.entries(config.fields)
-      .map(([name, f]) => new ODataStructuredTypeFieldParser(name, f as StructuredTypeField));
+    this.fields = Object.entries<StructuredTypeFieldConfig>(config.fields as { [P in keyof T]: StructuredTypeFieldConfig })
+      .map(([name, f]) => new ODataStructuredTypeFieldParser(name, f));
   }
 
   isTypeOf(type: string) {

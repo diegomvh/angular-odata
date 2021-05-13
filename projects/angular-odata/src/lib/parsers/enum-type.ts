@@ -1,16 +1,17 @@
 import { EnumHelper } from '../helpers';
-import { EnumTypeConfig, Parser, OptionsHelper, EnumTypeField, Annotation } from '../types';
+import { ODataAnnotation } from '../schema/annotation';
+import { EnumTypeConfig, Parser, OptionsHelper, EnumTypeFieldConfig } from '../types';
 
-export class ODataEnumTypeFieldParser implements EnumTypeField {
+export class ODataEnumTypeFieldParser {
   name: string;
   value: number;
-  annotations: Annotation[];
-  constructor(name: string, field: EnumTypeField) {
+  annotations: ODataAnnotation[];
+  constructor(name: string, field: EnumTypeFieldConfig) {
     this.name = name;
     this.value = field.value;
-    this.annotations = field.annotations || [];
+    this.annotations = (field.annotations || []).map(annot => new ODataAnnotation(annot));
   }
-  findAnnotation(predicate: (annot: Annotation) => boolean) {
+  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
 }
@@ -28,7 +29,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     this.flags = config.flags;
     this.members = config.members;
     this.fields = Object.entries(config.fields)
-      .map(([name, f]) => new ODataEnumTypeFieldParser(name, f as EnumTypeField));
+      .map(([name, f]) => new ODataEnumTypeFieldParser(name, f));
   }
 
   isTypeOf(type: string) {

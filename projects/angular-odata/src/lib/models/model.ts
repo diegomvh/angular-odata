@@ -119,27 +119,31 @@ export class ODataModel<T> {
   toEntity({
     client_id = false,
     include_navigation = false,
+    include_concurrency = false,
     include_key = false,
     changes_only = false,
     field_mapping = false
   }: {
     client_id?: boolean,
     include_navigation?: boolean,
+    include_concurrency?: boolean,
     include_key?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    return this._meta.toEntity(this, { client_id, include_navigation, include_key, changes_only, field_mapping});
+    return this._meta.toEntity(this, { client_id, include_navigation, include_concurrency, include_key, changes_only, field_mapping});
   }
 
   attributes({
     changes_only = false,
+    include_concurrency = false,
     field_mapping = false
   }: {
     changes_only?: boolean,
+    include_concurrency?: boolean,
     field_mapping?: boolean
   } = {}): {[name: string]: any} {
-    return this._meta.attributes(this, { changes_only, field_mapping });
+    return this._meta.attributes(this, { changes_only, field_mapping, include_concurrency });
   }
 
   set(path: string | string[], value: any) {
@@ -170,7 +174,14 @@ export class ODataModel<T> {
 
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.resource(), annots: this.annots() });
+    return new Ctor(
+      this.toEntity({
+        include_navigation: true,
+        include_concurrency: true
+      }), {
+        resource: this.resource(),
+        annots: this.annots()
+      });
   }
 
   private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
@@ -230,7 +241,7 @@ export class ODataModel<T> {
     const isNew = !resource.hasKey();
     let obs$: Observable<ODataEntity<any>>;
     if (!validate || this.valid({create: isNew, patch, navigation})) {
-      const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_navigation: navigation }) as T;
+      const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_concurrency: true, include_navigation: navigation }) as T;
       obs$ = (
         isNew ? resource.post(_entity, options) :
         patch ? resource.patch(_entity, options) :
@@ -268,7 +279,7 @@ export class ODataModel<T> {
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
       format(opts?: string): OptionHandler<string>;
     }) => void) {
-    const resource = this.resource();
+    const resource = this._meta.resource(this, {entity: false});
     if (resource !== undefined)
       return this._meta.query(this, resource, func);
   }
@@ -303,7 +314,7 @@ export class ODataModel<T> {
     responseType: 'property' | 'model' | 'collection' | 'none',
     options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    let resource = this.resource();
+    const resource = this._meta.resource(this, {entity: false});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.function<P, R>(name), responseType, options);
     }
@@ -316,7 +327,7 @@ export class ODataModel<T> {
     responseType: 'property' | 'model' | 'collection' | 'none',
     options?: HttpCallableOptions<R>
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    let resource = this.resource();
+    const resource = this._meta.resource(this, {entity: false});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.action<P, R>(name), responseType, options);
     }
@@ -325,9 +336,9 @@ export class ODataModel<T> {
 
   // As Derived
   protected asDerived<S>(type: string): ODataModel<S> {
-    const resource = this.resource();
+    const resource = this._meta.resource(this, {entity: false});
     if (resource instanceof ODataEntityResource) {
-      return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true }), {annots: this.annots()});
+      return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true, include_concurrency: true }), {annots: this.annots()});
     }
     throw new Error(`Can't cast to derived model without ODataEntityResource`);
   }
@@ -337,7 +348,7 @@ export class ODataModel<T> {
     responseType: 'model' | 'collection',
     options?: HttpOptions
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
-    let resource = this.resource();
+    const resource = this._meta.resource(this, {entity: false});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       const nav = resource.navigationProperty<S>(path);
       switch (responseType) {
@@ -362,7 +373,7 @@ export class ODataModel<T> {
     if (prop.parser?.collection)
       throw new Error(`Can't set ${prop.name} to collection, use add`);
 
-    const resource = this.resource();
+    const resource = this._meta.resource(this, {entity: false});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       let ref = resource.navigationProperty(prop.field).reference();
       const etag = this.annots().etag;
