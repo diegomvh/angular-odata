@@ -229,7 +229,7 @@ describe('ODataClient', () => {
         Friends: [{FirstName: 'FirstName'} as Person, {FirstName: 'FirstName', LastName: 'LastName'}],
         Trips: [],
         Gender: PersonGender.Male,
-      }, {create: true})
+      }, {create: true, navigation: true})
     ).toEqual({
       UserName: [ 'required' ],
       Friends: [ { UserName: [ 'required' ], LastName: [ 'required' ] }, { UserName: [ 'required' ] }]
