@@ -107,13 +107,21 @@ export class ODataModelField<F> {
     this.meta = settings.findOptionsForType(this.parser.type);
   }
 
-  validate(value: any, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
-    if (this.navigation && value instanceof ODataModel) {
-      return !value.valid({create, patch}) ? value.errors : undefined;
+  validate(value: any, {
+    create = false,
+    patch = false,
+    navigation = false
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}) {
+    if (value instanceof ODataModel) {
+      return !value.valid({create, patch, navigation}) ? value._errors : undefined;
     } else if (value instanceof ODataCollection) {
-      return value.models().some(m => !m.valid({create, patch})) ? value.models().map(m => m.errors) : undefined;
+      return value.models().some(m => !m.valid({create, patch, navigation})) ? value.models().map(m => m.errors) : undefined;
     } else {
-      let errors = this.parser?.validate(value, {create, patch}) || [];
+      let errors = this.parser?.validate(value, {create, patch, navigation}) || [];
       if (
         this.options.required &&
         (value === null || (value === undefined && !patch)) // Is null or undefined without patch flag?
@@ -359,8 +367,16 @@ export class ODataModelOptions<T> {
     return resolve ? Objects.resolveKey(key) : key;
   }
 
-  validate(self: ODataModel<T>, { create = false, patch = false }: { create?: boolean, patch?: boolean } = {}): {[name: string]: string[]} | undefined {
-    let errors = this.fields({include_parents: true, include_navigation: true}).reduce((acc, prop) => {
+  validate(self: ODataModel<T>, {
+    create = false,
+    patch = false,
+    navigation = false
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}): {[name: string]: string[]} | undefined {
+    let errors = this.fields({include_parents: true, include_navigation: navigation}).reduce((acc, prop) => {
       let value = (self as any)[prop.name];
       let errs = prop.validate(value, {create, patch});
       return (errs !== undefined) ?
@@ -397,7 +413,8 @@ export class ODataModelOptions<T> {
     changes_only?: boolean,
     field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    let attrs = this.attributes(self, { changes_only, field_mapping });
+
+    let attrs = self.attributes({ changes_only, field_mapping });
 
     let relations = Object.entries(self._relations)
       .filter(([, {model, state}]) => !changes_only || (changes_only && (state === ODataModelState.Changed || (model !== null && model.hasChanged()))))

@@ -120,7 +120,15 @@ export class ODataStructuredType<T> {
     return this.parser.toJsonSchema(options);
   }
 
-  validate(attrs: Partial<T>, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}) {
-    return this.parser.validate(attrs, {create, patch});
+  validate(attrs: Partial<T>, {
+    create = false,
+    patch = false,
+    navigation = false
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}) {
+    return this.parser.validate(attrs, {create, patch, navigation});
   }
 }

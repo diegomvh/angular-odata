@@ -61,18 +61,23 @@ export class ODataStructuredTypeFieldParser<T> implements StructuredTypeField, P
     return this.annotations.find(predicate);
   }
 
-  validate(
-    value: any,
-    {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
-  ): {[name: string]: any} | {[name: string]: any}[] | string[] | undefined {
+  validate(value: any, {
+    create = false,
+    patch = false,
+    navigation = false
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}): {[name: string]: any} | {[name: string]: any}[] | string[] | undefined {
     let errors;
     if (this.collection && Array.isArray(value)) {
-      errors = value.map(v => this.validate(v, {create, patch})) as {[name: string]: any[]}[];
+      errors = value.map(v => this.validate(v, {create, patch, navigation})) as {[name: string]: any[]}[];
     } else if ((this.isStructuredType() && typeof value === 'object' && value !== null) ||
       (this.navigation && value !== undefined)) {
-      errors = this.structured().validate(value, {create, patch}) || {} as {[name: string]: any[]};
+      errors = this.structured().validate(value, {create, patch, navigation}) || {} as {[name: string]: any[]};
     } else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
-      errors = this.enum().validate(value, {create, patch});
+      errors = this.enum().validate(value, {create, patch, navigation});
     }
     else {
       // IsEdmType
@@ -338,14 +343,21 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     return schema;
   }
 
-  validate(
-    attrs: any,
-    {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}
+  validate(attrs: any, {
+    create = false,
+    patch = false,
+    navigation = false,
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}
   ): {[name: string]: any} | undefined {
-    const errors = (this.parent && this.parent.validate(attrs, {create, patch}) || {}) as {[name: string]: any };
-    for (var field of this.fields) {
+    const errors = (this.parent && this.parent.validate(attrs, {create, patch, navigation}) || {}) as {[name: string]: any };
+    const fields = this.fields.filter(f => !f.navigation || navigation);
+    for (var field of fields) {
       const value = attrs[field.name as keyof T];
-      const errs = field.validate(value, {create, patch});
+      const errs = field.validate(value, {create, patch, navigation});
       if (errs !== undefined) {
         errors[field.name] = errs;
       }

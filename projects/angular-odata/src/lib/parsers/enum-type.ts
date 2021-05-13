@@ -73,7 +73,15 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     property.enum = this.fields.map(f => f.name);
     return property;
   }
-  validate(member: string | number, {create = false, patch = false}: {create?: boolean, patch?: boolean} = {}): string[] | undefined {
+  validate(member: string | number, {
+    create = false,
+    patch = false,
+    navigation = false,
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}): string[] | undefined {
     if (this.flags) {
       let members = EnumHelper.toValues(this.members, member);
       return members.some(member => !(member in this.members)) ? ['mismatch'] : undefined;

@@ -84,16 +84,32 @@ export class ODataModel<T> {
   }
 
   // Validation
-  errors?: { [key: string]: any };
-  protected validate({ create = false, patch = false }: { create?: boolean, patch?: boolean } = {}) {
-    return this._meta.validate(this, {create, patch});
+  _errors?: { [key: string]: any };
+  protected validate({
+    create = false,
+    patch = false,
+    navigation = false
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}) {
+    return this._meta.validate(this, {create, patch, navigation});
   }
 
-  valid({ create = false, patch = false }: { create?: boolean, patch?: boolean } = {}): boolean {
-    this.errors = this.validate({create, patch});
-    if (this.errors !== undefined)
-      this.events$.emit({name: 'invalid', model: this, value: this.errors, options: {create, patch}});
-    return this.errors === undefined;
+  valid({
+    create = false,
+    patch = false,
+    navigation = false
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } = {}): boolean {
+    this._errors = this.validate({create, patch, navigation});
+    if (this._errors !== undefined)
+      this.events$.emit({name: 'invalid', model: this, value: this._errors, options: {create, patch}});
+    return this._errors === undefined;
   }
 
   protected defaults() {
@@ -116,8 +132,14 @@ export class ODataModel<T> {
     return this._meta.toEntity(this, { client_id, include_navigation, include_key, changes_only, field_mapping});
   }
 
-  attributes({ changes_only = false }: { changes_only?: boolean } = {}): {[name: string]: any} {
-    return this._meta.attributes(this, { changes_only });
+  attributes({
+    changes_only = false,
+    field_mapping = false
+  }: {
+    changes_only?: boolean,
+    field_mapping?: boolean
+  } = {}): {[name: string]: any} {
+    return this._meta.attributes(this, { changes_only, field_mapping });
   }
 
   set(path: string | string[], value: any) {
@@ -162,8 +184,14 @@ export class ODataModel<T> {
       }));
   }
 
-  fetch(options?: HttpOptions): Observable<this> {
-    let resource = this.resource();
+  fetch({
+    entity = false,
+    ...options
+  }: HttpOptions & {
+    entity?: boolean,
+    options?: HttpOptions
+  } = {}): Observable<this> {
+    let resource = this._meta.resource(this, {entity});
     if (resource === undefined)
       return throwError("fetch: Resource is undefined");
 
@@ -180,32 +208,48 @@ export class ODataModel<T> {
     return this._request(obs$);
   }
 
-  save(
-    { patch = false, include_navigation = false, validate = true, ...options }: HttpOptions & { patch?: boolean, include_navigation?: boolean, validate?: boolean, options?: HttpOptions } = {}
-  ): Observable<this> {
-    let resource = this.resource();
+  save({
+    entity = false,
+    patch = false,
+    navigation = false,
+    validate = true,
+    ...options
+  }: HttpOptions & {
+    entity?: boolean,
+    patch?: boolean,
+    navigation?: boolean,
+    validate?: boolean,
+    options?: HttpOptions
+  } = {}): Observable<this> {
+    let resource = this._meta.resource(this, {entity});
     if (resource === undefined)
       return throwError("save: Resource is undefined");
     if (!(resource instanceof ODataEntityResource))
       return throwError("save: Resource type ODataEntityResource needed");
 
+    const isNew = !resource.hasKey();
     let obs$: Observable<ODataEntity<any>>;
-    if (!validate || this.valid({create: !resource.hasKey(), patch})) {
-      const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_navigation }) as T;
-      obs$ = (!resource.hasKey() ?
-        resource.post(_entity, options) :
-        patch ?
-          resource.patch(_entity, options) :
-          resource.put(_entity, options)
+    if (!validate || this.valid({create: isNew, patch, navigation})) {
+      const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_navigation: navigation }) as T;
+      obs$ = (
+        isNew ? resource.post(_entity, options) :
+        patch ? resource.patch(_entity, options) :
+        resource.put(_entity, options)
       ).pipe(map(({ entity, annots }) => ({ entity: entity || _entity, annots })));
     } else {
-      obs$ = throwError(this.errors);
+      obs$ = throwError(this._errors);
     }
     return this._request(obs$);
   }
 
-  destroy(options?: HttpOptions): Observable<this> {
-    let resource = this.resource();
+  destroy({
+    entity = false,
+    ...options
+  }: HttpOptions & {
+    entity?: boolean,
+    options?: HttpOptions
+  } = {}): Observable<this> {
+    let resource = this._meta.resource(this, {entity});
     if (resource === undefined)
       return throwError("destroy: Resource is undefined");
     if (!(resource instanceof ODataEntityResource))
