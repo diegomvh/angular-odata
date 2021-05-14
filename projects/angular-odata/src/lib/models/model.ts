@@ -1,4 +1,4 @@
-import { Observable, throwError } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import {
@@ -137,13 +137,15 @@ export class ODataModel<T> {
   attributes({
     changes_only = false,
     include_concurrency = false,
+    include_computed = false,
     field_mapping = false
   }: {
     changes_only?: boolean,
     include_concurrency?: boolean,
+    include_computed?: boolean,
     field_mapping?: boolean
   } = {}): {[name: string]: any} {
-    return this._meta.attributes(this, { changes_only, field_mapping, include_concurrency });
+    return this._meta.attributes(this, { changes_only, field_mapping, include_concurrency, include_computed });
   }
 
   set(path: string | string[], value: any) {
@@ -196,13 +198,13 @@ export class ODataModel<T> {
   }
 
   fetch({
-    entity = false,
+    asEntity,
     ...options
   }: HttpOptions & {
-    entity?: boolean,
+    asEntity?: boolean,
     options?: HttpOptions
   } = {}): Observable<this> {
-    let resource = this._meta.resource(this, {entity});
+    let resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource === undefined)
       return throwError("fetch: Resource is undefined");
 
@@ -220,19 +222,19 @@ export class ODataModel<T> {
   }
 
   save({
-    entity = false,
+    asEntity,
     patch = false,
     navigation = false,
     validate = true,
     ...options
   }: HttpOptions & {
-    entity?: boolean,
+    asEntity?: boolean,
     patch?: boolean,
     navigation?: boolean,
     validate?: boolean,
     options?: HttpOptions
   } = {}): Observable<this> {
-    let resource = this._meta.resource(this, {entity});
+    let resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource === undefined)
       return throwError("save: Resource is undefined");
     if (!(resource instanceof ODataEntityResource))
@@ -254,13 +256,13 @@ export class ODataModel<T> {
   }
 
   destroy({
-    entity = false,
+    asEntity,
     ...options
   }: HttpOptions & {
-    entity?: boolean,
+    asEntity?: boolean,
     options?: HttpOptions
   } = {}): Observable<this> {
-    let resource = this._meta.resource(this, {entity});
+    let resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource === undefined)
       return throwError("destroy: Resource is undefined");
     if (!(resource instanceof ODataEntityResource))
@@ -279,7 +281,7 @@ export class ODataModel<T> {
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
       format(opts?: string): OptionHandler<string>;
     }) => void) {
-    const resource = this._meta.resource(this, {entity: false});
+    const resource = this._meta.resource(this, {toEntity: false});
     if (resource !== undefined)
       return this._meta.query(this, resource, func);
   }
@@ -313,12 +315,12 @@ export class ODataModel<T> {
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
     {
-      entity = false,
+      asEntity,
       ...options
     }: {
-      entity?: boolean
+      asEntity?: boolean
     } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    const resource = this._meta.resource(this, {entity});
+    const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.function<P, R>(name), responseType, options);
     }
@@ -330,12 +332,12 @@ export class ODataModel<T> {
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
     {
-      entity = false,
+      asEntity,
       ...options
     }: {
-      entity?: boolean
+      asEntity?: boolean
     } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    const resource = this._meta.resource(this, {entity});
+    const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.action<P, R>(name), responseType, options);
     }
@@ -344,7 +346,8 @@ export class ODataModel<T> {
 
   // As Derived
   protected asDerived<S>(type: string): ODataModel<S> {
-    const resource = this._meta.resource(this, {entity: false});
+    //TODO: Derived
+    const resource = this._meta.resource(this, {toEntity: false});
     if (resource instanceof ODataEntityResource) {
       return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true, include_concurrency: true }), {annots: this.annots()});
     }
@@ -352,13 +355,17 @@ export class ODataModel<T> {
   }
 
   protected getBinding<S>(
-    path: string,
+    name: string,
     responseType: 'model' | 'collection',
-    options?: HttpOptions
-  ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
-    const resource = this._meta.resource(this, {entity: false});
+    {
+      asEntity,
+      ...options
+    }: {
+      asEntity?: boolean
+    } & HttpOptions = {}): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
+    const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      const nav = resource.navigationProperty<S>(path);
+      const nav = resource.navigationProperty<S>(name);
       switch (responseType) {
         case 'model':
           return nav.fetchModel(options);
@@ -373,26 +380,31 @@ export class ODataModel<T> {
   protected setReference<P>(
     name: string,
     model: ODataModel<P> | null,
-    options?: HttpOptions): Observable<this> {
-    const prop = this._meta.fields({include_navigation: true}).find(p => p.name === name);
-    if (prop === undefined)
-      throw new Error(`Can't find property ${name}`);
-    if (prop.collection)
-      throw new Error(`Can't set ${prop.name} to collection, use add`);
+    {
+      asEntity,
+      ...options
+    }: {
+      asEntity?: boolean
+    } & HttpOptions = {}): Observable<this> {
+    const field = this._meta.fields({include_navigation: true}).find(p => p.name === name);
+    if (field === undefined || !field.navigation)
+      throw new Error(`Can't find navigation property ${name}`);
+    if (field.collection)
+      throw new Error(`Can't set ${field.name} to collection, use add`);
 
-    const resource = this._meta.resource(this, {entity: true});
+    const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      let ref = (prop.resourceFactory<T, any>(resource) as ODataNavigationPropertyResource<any>).reference();
+      let ref = (field.resourceFactory<T, any>(resource) as ODataNavigationPropertyResource<any>).reference();
       const etag = this.annots().etag;
       const obs$ = (model instanceof ODataModel) ?
-        ref.set(model._meta.resource(model, {entity: true}) as ODataEntityResource<P>, {etag, ...options}) :
+        ref.set(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<P>, {etag, ...options}) :
         ref.unset({etag, ...options});
       this.events$.emit({name: 'request', model: this, value: obs$ });
       return obs$.pipe(
         map(() => {
           let attrs: any = { [name]: model };
-          if (prop.referential !== undefined) {
-            attrs[prop.referential] = (model instanceof ODataModel) ? model.key() : model;
+          if (field.referential !== undefined) {
+            attrs[field.referential] = (model instanceof ODataModel) ? model.key() : model;
           }
           this.assign(attrs, { reset: true });
           this.events$.emit({name: 'sync', model: this});
@@ -400,31 +412,48 @@ export class ODataModel<T> {
         }
         ));
       }
-    return throwError("Can't set reference without ODataEntityResource with key");
+    return throwError("Can't set reference without ODataEntityResource");
   }
 
   protected getReference<P>(
     name: string,
-    options?: HttpOptions
-  ): Observable<ODataModel<P>> {
+    {
+      asEntity,
+      ...options
+    }: {
+      asEntity?: boolean
+    } & HttpOptions = {}): Observable<ODataModel<P>> {
     const field = this._meta.fields({include_navigation: true}).find(p => p.name === name);
-    if (field === undefined)
-      throw new Error(`Can't find property ${name}`);
+    if (field === undefined || !field.navigation)
+      throw new Error(`Can't find navigation property ${name}`);
     if (field.collection)
       throw new Error(`Can't get ${field.name} collection`);
 
-    const resource = this._meta.resource(this, {entity: true});
-    if (field.referential !== undefined && field.referenced !== undefined) {
-      const key = (<any>this)[field.referential];
-      const model = field.modelCollectionFactory<T, P>({
-        value: {[field.referenced]: key},
-        baseResource: resource,
+    let model: ODataModel<P> | undefined;
+    if (asEntity) {
+      if (field.referential !== undefined && field.referenced !== undefined) {
+        let key = (<any>this)[field.referential];
+        if (key !== undefined) {
+          const resource = field.meta?.modelResourceFactory({fromSet: asEntity});
+          model = field.modelCollectionFactory<T, P>({
+            value: {[field.referenced]: key},
+            baseSchema: this.schema(),
+            baseAnnots: this.annots()
+          }) as ODataModel<P>;
+          model.resource(resource);
+        }
+      }
+    } else {
+      model = field.modelCollectionFactory<T, P>({
+        baseResource: this.resource(),
         baseSchema: this.schema(),
         baseAnnots: this.annots()
       }) as ODataModel<P>;
+    }
+    if (model !== undefined) {
       (<any>this)[field.name] = model;
       return model.fetch(options);
     }
-    return throwError("Can't get reference without ODataEntityResource with key");
+    return throwError("Can't get reference without ODataEntityResource");
   }
 }

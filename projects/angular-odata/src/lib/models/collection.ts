@@ -92,7 +92,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
       this._entries.forEach(({ model }) => {
         const mr = model.resource();
-        const er = this._model.meta.modelResourceFactory(resource);
+        const er = this._model.meta.modelResourceFactory({baseResource: resource});
         if (er !== undefined && (mr === undefined || !mr.isEqualTo(er))) {
           model.resource(er);
         }
@@ -126,7 +126,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         Model = schema.model;
     }
 
-    const resource = Model.meta.modelResourceFactory(this.resource(), {fromSet: !reset});
+    const resource = Model.meta.modelResourceFactory({baseResource: this.resource(), fromSet: !reset});
 
     return new Model(data, { resource, annots, reset }) as M;
   }
@@ -173,7 +173,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return new Ctor(this.toEntities({include_navigation: true}), { resource, annots });
   }
   fetch({
-    withCount = true,
+    withCount,
     ...options
   }: HttpOptions & {
     withCount?: boolean;
@@ -233,12 +233,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       resource instanceof ODataNavigationPropertyResource
     ) ? resource
           .reference()
-          .add(model._meta.resource(model, {entity: true}) as ODataEntityResource<T>)
+          .add(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>)
           .pipe(map(() => this)) : of(this);
 
     const add = () => {
       if (model.resource() === undefined) {
-        model.resource(this._model.meta.modelResourceFactory(resource));
+        model.resource(this._model.meta.modelResourceFactory({baseResource: resource}));
       }
       if (entry !== undefined && entry.state === ODataModelState.Removed) {
         const index = this._entries.indexOf(entry);
@@ -274,7 +274,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       resource instanceof ODataNavigationPropertyResource
     ) ? resource
           .reference()
-          .remove(model._meta.resource(model, {entity: true}) as ODataEntityResource<T>)
+          .remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>)
           .pipe(map(() => this)) :
         of(this);
 
@@ -431,11 +431,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpCallableOptions<R>
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      const resource = this._resource.function<P, R>(name);
-      return this._call(params, resource, responseType, options);
+    {
+      asEntitySet,
+      ...options
+    }: {
+      asEntitySet?: boolean
+    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
+    if (resource instanceof ODataEntitySetResource) {
+      return this._call(params, resource.function<P, R>(name), responseType, options);
     }
     throw new Error(`Can't function without ODataEntitySetResource`);
   }
@@ -444,11 +448,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpCallableOptions<R>
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    if (this._resource instanceof ODataEntitySetResource) {
-      const resource = this._resource.action<P, R>(name);
-      return this._call(params, resource, responseType, options);
+    {
+      asEntitySet,
+      ...options
+    }: {
+      asEntitySet?: boolean
+    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
+    if (resource instanceof ODataEntitySetResource) {
+      return this._call(params, resource.action<P, R>(name), responseType, options);
     }
     throw new Error(`Can't action without ODataEntitySetResource`);
   }
