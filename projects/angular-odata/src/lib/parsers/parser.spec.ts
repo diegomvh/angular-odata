@@ -91,7 +91,7 @@ describe('ODataClient', () => {
                 ID: {
                   type: 'Edm.Int32',
                   key: true,
-                  ref: 'ID',
+                  referenced: 'ID',
                   nullable: false,
                 },
                 Value: { type: 'Edm.String' },

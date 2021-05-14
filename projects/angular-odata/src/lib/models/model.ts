@@ -312,9 +312,13 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpCallableOptions<R>
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    const resource = this._meta.resource(this, {entity: false});
+    {
+      entity = false,
+      ...options
+    }: {
+      entity?: boolean
+    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    const resource = this._meta.resource(this, {entity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.function<P, R>(name), responseType, options);
     }
@@ -325,9 +329,13 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    options?: HttpCallableOptions<R>
-  ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    const resource = this._meta.resource(this, {entity: false});
+    {
+      entity = false,
+      ...options
+    }: {
+      entity?: boolean
+    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+    const resource = this._meta.resource(this, {entity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       return this._call(params, resource.action<P, R>(name), responseType, options);
     }
@@ -365,28 +373,26 @@ export class ODataModel<T> {
   protected setReference<P>(
     name: string,
     model: ODataModel<P> | null,
-    options?: HttpOptions
-  ): Observable<this> {
-    const prop = this._meta.fields().find(p => p.name === name);
+    options?: HttpOptions): Observable<this> {
+    const prop = this._meta.fields({include_navigation: true}).find(p => p.name === name);
     if (prop === undefined)
       throw new Error(`Can't find property ${name}`);
-    if (prop.parser?.collection)
+    if (prop.collection)
       throw new Error(`Can't set ${prop.name} to collection, use add`);
 
-    const resource = this._meta.resource(this, {entity: false});
+    const resource = this._meta.resource(this, {entity: true});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      let ref = resource.navigationProperty(prop.field).reference();
+      let ref = (prop.resourceFactory<T, any>(resource) as ODataNavigationPropertyResource<any>).reference();
       const etag = this.annots().etag;
-      const opts = Object.assign({ etag }, options || {});
       const obs$ = (model instanceof ODataModel) ?
-        ref.set(model._meta.resource(model, {entity: true}) as ODataEntityResource<P>, opts) :
-        ref.unset(opts);
+        ref.set(model._meta.resource(model, {entity: true}) as ODataEntityResource<P>, {etag, ...options}) :
+        ref.unset({etag, ...options});
       this.events$.emit({name: 'request', model: this, value: obs$ });
       return obs$.pipe(
         map(() => {
           let attrs: any = { [name]: model };
-          if (prop.field !== undefined) {
-            attrs[prop.field] = (model instanceof ODataModel) ? model.key() : model;
+          if (prop.referential !== undefined) {
+            attrs[prop.referential] = (model instanceof ODataModel) ? model.key() : model;
           }
           this.assign(attrs, { reset: true });
           this.events$.emit({name: 'sync', model: this});
@@ -394,6 +400,31 @@ export class ODataModel<T> {
         }
         ));
       }
-    return throwError("Can't binding without ODataEntityResource with key");
+    return throwError("Can't set reference without ODataEntityResource with key");
+  }
+
+  protected getReference<P>(
+    name: string,
+    options?: HttpOptions
+  ): Observable<ODataModel<P>> {
+    const field = this._meta.fields({include_navigation: true}).find(p => p.name === name);
+    if (field === undefined)
+      throw new Error(`Can't find property ${name}`);
+    if (field.collection)
+      throw new Error(`Can't get ${field.name} collection`);
+
+    const resource = this._meta.resource(this, {entity: true});
+    if (field.referential !== undefined && field.referenced !== undefined) {
+      const key = (<any>this)[field.referential];
+      const model = field.modelCollectionFactory<T, P>({
+        value: {[field.referenced]: key},
+        baseResource: resource,
+        baseSchema: this.schema(),
+        baseAnnots: this.annots()
+      }) as ODataModel<P>;
+      (<any>this)[field.name] = model;
+      return model.fetch(options);
+    }
+    return throwError("Can't get reference without ODataEntityResource with key");
   }
 }

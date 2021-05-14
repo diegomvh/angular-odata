@@ -56,11 +56,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     singleton.segment.singleton().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
     return singleton;
   }
-  entity(key?: EntityKey<T>) {
-    const singleton = this.clone();
-    singleton.segment.singleton().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
-    return singleton;
-  }
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {

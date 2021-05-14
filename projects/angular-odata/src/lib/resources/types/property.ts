@@ -67,12 +67,6 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return property;
   }
 
-  entity(key?: EntityKey<T>) {
-    const property = this.clone();
-    property.segment.property().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
-    return property;
-  }
-
   value() {
     return ODataValueResource.factory<T>(this.api, this.type(), this.cloneSegments(), this.cloneQuery());
   }

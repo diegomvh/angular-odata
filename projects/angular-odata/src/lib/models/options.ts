@@ -1,7 +1,7 @@
 import { Subscription } from "rxjs";
 import { OPTIMISTIC_CONCURRENCY } from "../constants";
 import { ODataStructuredTypeFieldParser } from "../parsers";
-import { Expand, ODataEntitiesAnnotations, ODataEntityAnnotations, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPathSegments, ODataPropertyResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
+import { Expand, ODataEntitiesAnnotations, ODataEntityAnnotations, ODataEntityResource, ODataEntitySetResource, ODataNavigationPropertyResource, ODataPathSegments, ODataPropertyResource, ODataQueryOptions, ODataResource, ODataSingletonResource, OptionHandler, Select } from "../resources";
 import { ODataEntitySet, ODataStructuredType } from "../schema";
 import { EntityKey, OptionsHelper } from "../types";
 import { Objects, Types } from "../utils";
@@ -110,6 +110,14 @@ export class ODataModelField<F> {
 
   get concurrency() {
     return Boolean(this.options.concurrency);
+  }
+
+  get referential() {
+    return this.parser.referential;
+  }
+
+  get referenced() {
+    return this.parser.referenced;
   }
 
   configure({findOptionsForType, concurrency, options}: {
@@ -256,13 +264,14 @@ export class ODataModelOptions<T> {
     return this.schema.isTypeOf(type);
   }
 
-  resourceFactory(resource?: ODataCollectionResource<T> | ODataModelResource<T>, {reset = false}: {reset?: boolean} = {}) {
-    if (resource !== undefined) {
-      if (reset && !(resource instanceof ODataEntityResource)) return resource.entity();
-      if (this.entitySet !== undefined)
-        return ODataEntitySetResource.factory<T>(this.api, this.entitySet.name, this.type(), new ODataPathSegments(), resource.cloneQuery()).entity();
-    }
-    return undefined;
+  modelResourceFactory(resourceBase?: ODataResource<T>, {fromSet = false}: {fromSet?: boolean} = {}): ODataModelResource<T> | undefined {
+    if (fromSet && this.entitySet !== undefined)
+      return ODataEntitySetResource.factory<T>(this.api, this.entitySet.name, this.type(),
+        new ODataPathSegments(),
+        resourceBase?.cloneQuery() || new ODataQueryOptions()
+      ).entity();
+    if (resourceBase instanceof ODataEntitySetResource) return resourceBase.entity();
+    return resourceBase?.clone() as ODataModelResource<T> | undefined;
   }
 
   find(predicate: (p: ODataModelOptions<any>) => boolean): ODataModelOptions<any> | undefined {
@@ -337,7 +346,7 @@ export class ODataModelOptions<T> {
 
   resource(self: ODataModel<T>, {entity = false}: {entity?: boolean} = {}): ODataModelResource<T> | undefined {
     let resource = self._resource?.clone() as ODataModelResource<T> | undefined;
-    if (entity) resource = this.resourceFactory(resource, {reset: false});
+    if (entity) resource = this.modelResourceFactory(resource, {fromSet: true});
     if (resource !== undefined) {
       const key = self.key({field_mapping: true}) as EntityKey<T>;
       if (key !== undefined)
@@ -556,7 +565,7 @@ export class ODataModelOptions<T> {
       }
       return (field.name in self._relations) ? self._relations[field.name].model : undefined;
     }
-    const attrs = this.attributes(self);
+    const attrs = this.attributes(self, {include_concurrency: true});
     return attrs[field.name];
   }
 

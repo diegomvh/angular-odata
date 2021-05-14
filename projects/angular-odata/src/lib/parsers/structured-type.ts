@@ -38,10 +38,10 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   collection: boolean;
   nullable: boolean;
   navigation: boolean;
-  field?: string;
   precision?: number;
   scale?: number;
-  ref?: string;
+  referential?: string;
+  referenced?: string;
   annotations: ODataAnnotation[];
 
   constructor(name: string, field: StructuredTypeFieldConfig) {
@@ -54,10 +54,10 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     this.collection = field.collection !== undefined ? field.collection : false;
     this.nullable = field.nullable !== undefined ? field.nullable : true;
     this.navigation = field.navigation !== undefined ? field.navigation : false;
-    this.field = field.field;
     this.precision = field.precision;
     this.scale = field.scale;
-    this.ref = field.ref;
+    this.referential = field.referential;
+    this.referenced = field.referenced;
   }
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);

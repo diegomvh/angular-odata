@@ -92,8 +92,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
       this._entries.forEach(({ model }) => {
         const mr = model.resource();
-        const er = resource.entity(model.key() as EntityKey<T> | undefined);
-        if (mr === undefined || !mr.isEqualTo(er)) {
+        const er = this._model.meta.modelResourceFactory(resource);
+        if (er !== undefined && (mr === undefined || !mr.isEqualTo(er))) {
           model.resource(er);
         }
       });
@@ -126,7 +126,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         Model = schema.model;
     }
 
-    const resource = Model.meta.resourceFactory(this.resource(), {reset});
+    const resource = Model.meta.modelResourceFactory(this.resource(), {fromSet: !reset});
 
     return new Model(data, { resource, annots, reset }) as M;
   }
@@ -237,10 +237,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
           .pipe(map(() => this)) : of(this);
 
     const add = () => {
-      if (model.resource() === undefined && resource !== undefined) {
-        model.resource(
-          resource.entity(model.toEntity({ field_mapping: true }) as T)
-        );
+      if (model.resource() === undefined) {
+        model.resource(this._model.meta.modelResourceFactory(resource));
       }
       if (entry !== undefined && entry.state === ODataModelState.Removed) {
         const index = this._entries.indexOf(entry);

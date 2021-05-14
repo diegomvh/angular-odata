@@ -121,11 +121,11 @@ export type StructuredTypeFieldConfig = {
   collection?: boolean;
   nullable?: boolean;
   navigation?: boolean;
-  field?: string;
   precision?: number;
   annotations?: AnnotationConfig[];
   scale?: number;
-  ref?: string;
+  referential?: string;
+  referenced?: string;
 }
 
 export type StructuredTypeConfig<T> = {
