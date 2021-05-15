@@ -756,7 +756,7 @@ export class ODataModelOptions<T> {
         : Object.assign({}, self._attributes, self._changes)
     ).reduce((acc, [k, v]) => {
       const field = this.fields().find((p) => p.name === k);
-      if (field === undefined || (field.concurrency && !include_concurrency) || (field.computed || !include_computed))
+      if (field === undefined || (field.concurrency && !include_concurrency) || (field.computed && !include_computed))
         return acc;
       let name = k;
       if (field_mapping) {
