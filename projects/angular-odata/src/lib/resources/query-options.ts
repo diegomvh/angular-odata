@@ -82,10 +82,6 @@ export class ODataQueryOptions {
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
-  // Aliases
-  alias(name: string, value: any): Alias {
-    return alias(name, value);
-  }
 
   // Clear
   clear() {

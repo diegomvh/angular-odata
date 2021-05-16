@@ -18,6 +18,7 @@ import { ODataApi } from '../api';
 import { Parser } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
+import { alias } from './builder';
 
 export abstract class ODataResource<T> {
   // VARIABLES
@@ -138,7 +139,7 @@ export abstract class ODataResource<T> {
   }
 
   createAlias(name: string, value?: any) {
-    return this.queryOptions.alias(name, value);
+    return alias(name, value);
   }
 
   clearQuery() {

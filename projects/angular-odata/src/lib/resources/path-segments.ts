@@ -142,9 +142,4 @@ export class SegmentHandler {
   hasParameters() {
     return !Types.isEmpty(this.segment.parameters);
   }
-
-  // Aliases
-  alias(name: string, value?: any): Alias {
-    return alias(name, value);
-  }
 }
