@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions, HttpCallableOptions } from './options';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity, ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { ODataApi } from '../../api';
 import { map } from 'rxjs/operators';

@@ -11,8 +11,7 @@ import {
   ODataFunctionResource,
   Select,
   Expand,
-  OptionHandler,
-  HttpCallableOptions} from '../resources/index';
+  OptionHandler} from '../resources/index';
 
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
@@ -289,40 +288,37 @@ export class ODataModel<T> {
   hasChanged() {
     return this._meta.hasChanged(this);
   }
-
-  private _call<P, R>(
-    params: P | null,
-    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
-    responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: HttpCallableOptions<R> = {}
-  ) {
-    if (expand !== undefined) resource.query.expand(expand);
-    if (select !== undefined) resource.query.select(select);
-    switch (responseType) {
-      case 'property':
-        return resource.callProperty(params, options);
-      case 'model':
-        return resource.callModel(params, options);
-      case 'collection':
-        return resource.callCollection(params, options);
-      default:
-        return resource.call(params, options);
-    }
-  }
-
   protected callFunction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
     {
       asEntity,
+      alias,
+      expand,
+      select,
       ...options
     }: {
       asEntity?: boolean
-    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+      alias?: boolean
+      expand?: Expand<R>,
+      select?: Select<R>
+    } & HttpOptions = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      return this._call(params, resource.function<P, R>(name), responseType, options);
+      const func = resource.function<P, R>(name);
+      if (expand !== undefined) func.query.expand(expand);
+      if (select !== undefined) func.query.select(select);
+      switch (responseType) {
+        case 'property':
+          return func.callProperty(params, {alias, ...options});
+        case 'model':
+          return func.callModel(params, {alias, ...options});
+        case 'collection':
+          return func.callCollection(params, {alias, ...options});
+        default:
+          return func.call(params, {alias, ...options});
+      }
     }
     return throwError("Can't call function without ODataEntityResource with key");
   }
@@ -333,13 +329,29 @@ export class ODataModel<T> {
     responseType: 'property' | 'model' | 'collection' | 'none',
     {
       asEntity,
+      expand,
+      select,
       ...options
     }: {
       asEntity?: boolean
-    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+      expand?: Expand<R>,
+      select?: Select<R>
+    } & HttpOptions = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      return this._call(params, resource.action<P, R>(name), responseType, options);
+      const action = resource.action<P, R>(name);
+      if (expand !== undefined) action.query.expand(expand);
+      if (select !== undefined) action.query.select(select);
+      switch (responseType) {
+        case 'property':
+          return action.callProperty(params, options);
+        case 'model':
+          return action.callModel(params, options);
+        case 'collection':
+          return action.callCollection(params, options);
+        default:
+          return action.call(params, options);
+      }
     }
     return throwError("Can't call action without ODataEntityResource with key");
   }

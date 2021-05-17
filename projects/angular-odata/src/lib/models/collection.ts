@@ -17,8 +17,7 @@ import {
   OptionHandler,
   Transform,
   Filter,
-  OrderBy,
-  HttpCallableOptions,
+  OrderBy
 } from '../resources/index';
 
 import { EventEmitter } from '@angular/core';
@@ -411,7 +410,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     params: P | null,
     resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: HttpCallableOptions<R> = {}
+    { expand, select, ...options }: {expand?: Expand<R>, select?: Select<R> } & HttpOptions = {}
   ) {
     if (expand !== undefined) resource.query.expand(expand);
     if (select !== undefined) resource.query.select(select);
@@ -433,10 +432,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     responseType: 'property' | 'model' | 'collection' | 'none',
     {
       asEntitySet,
+      expand,
+      select,
       ...options
     }: {
-      asEntitySet?: boolean
-    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+      asEntitySet?: boolean,
+      expand?: Expand<R>,
+      select?: Select<R>
+    } & HttpOptions = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
       return this._call(params, resource.function<P, R>(name), responseType, options);
@@ -450,10 +453,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     responseType: 'property' | 'model' | 'collection' | 'none',
     {
       asEntitySet,
+      expand,
+      select,
       ...options
     }: {
-      asEntitySet?: boolean
-    } & HttpCallableOptions<R> = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
+      asEntitySet?: boolean,
+      expand?: Expand<R>,
+      select?: Select<R>
+    } & HttpOptions = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
       return this._call(params, resource.action<P, R>(name), responseType, options);
