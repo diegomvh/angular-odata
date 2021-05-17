@@ -406,25 +406,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     func(resource.query);
     this.resource(resource);
   }
-  private _call<P, R>(
-    params: P | null,
-    resource: ODataFunctionResource<P, R> | ODataActionResource<P, R>,
-    responseType: 'property' | 'model' | 'collection' | 'none',
-    { expand, select, ...options }: {expand?: Expand<R>, select?: Select<R> } & HttpOptions = {}
-  ) {
-    if (expand !== undefined) resource.query.expand(expand);
-    if (select !== undefined) resource.query.select(select);
-    switch (responseType) {
-      case 'property':
-        return resource.callProperty(params, options);
-      case 'model':
-        return resource.callModel(params, options);
-      case 'collection':
-        return resource.callCollection(params, options);
-      default:
-        return resource.call(params, options);
-    }
-  }
 
   protected callFunction<P, R>(
     name: string,
@@ -432,17 +413,31 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     responseType: 'property' | 'model' | 'collection' | 'none',
     {
       asEntitySet,
+      alias,
       expand,
       select,
       ...options
     }: {
       asEntitySet?: boolean,
+      alias?: boolean,
       expand?: Expand<R>,
       select?: Select<R>
     } & HttpOptions = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
-      return this._call(params, resource.function<P, R>(name), responseType, options);
+      const func = resource.function<P, R>(name);
+      if (expand !== undefined) func.query.expand(expand);
+      if (select !== undefined) func.query.select(select);
+      switch (responseType) {
+        case 'property':
+          return func.callProperty(params, {alias, ...options});
+        case 'model':
+          return func.callModel(params, {alias, ...options});
+        case 'collection':
+          return func.callCollection(params, {alias, ...options});
+        default:
+          return func.call(params, {alias, ...options});
+      }
     }
     throw new Error(`Can't function without ODataEntitySetResource`);
   }
@@ -463,7 +458,19 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     } & HttpOptions = {}): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
-      return this._call(params, resource.action<P, R>(name), responseType, options);
+      const action = resource.action<P, R>(name);
+      if (expand !== undefined) action.query.expand(expand);
+      if (select !== undefined) action.query.select(select);
+      switch (responseType) {
+        case 'property':
+          return action.callProperty(params, options);
+        case 'model':
+          return action.callModel(params, options);
+        case 'collection':
+          return action.callCollection(params, options);
+        default:
+          return action.call(params, options);
+      }
     }
     throw new Error(`Can't action without ODataEntitySetResource`);
   }
