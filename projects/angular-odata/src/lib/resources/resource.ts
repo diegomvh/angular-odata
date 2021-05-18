@@ -88,14 +88,9 @@ export abstract class ODataResource<T> {
   }
 
   pathAndParams(): [string, {[name: string]: any}] {
-    let path = this.pathSegments.path();
-    let params = this.queryOptions.params();
-    if (path.indexOf(QUERY_SEPARATOR) !== -1) {
-      let parts = path.split(QUERY_SEPARATOR);
-      path = parts[0];
-      Object.assign(params, Urls.parseQueryString(parts[1]));
-    }
-    return [path, params];
+    const [spath, sparams] = this.pathSegments.pathAndParams();
+    const [, qparams] = this.queryOptions.pathAndParams();
+    return [spath, {...sparams, ...qparams}];
   }
 
   endpointUrl(params: boolean = true) {

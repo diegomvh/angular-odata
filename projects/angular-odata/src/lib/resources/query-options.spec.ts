@@ -148,7 +148,8 @@ describe('ODataQueryOptions', () => {
     queryOptions.option(QueryOptionNames.search, 'value');
     queryOptions.option(QueryOptionNames.skip, 10);
     queryOptions.option(QueryOptionNames.top, 20);
-    expect(queryOptions.params()).toEqual({$select: 'value', $filter: 'property eq value', $expand: 'entitySet', $orderby: 'property', $search: 'value', $skip: '10', $top: '20'});
+    const [, params] = queryOptions.pathAndParams();
+    expect(params).toEqual({$select: 'value', $filter: 'property eq value', $expand: 'entitySet', $orderby: 'property', $search: 'value', $skip: 10, $top: 20});
   });
 
   it('test isEmpty', () => {

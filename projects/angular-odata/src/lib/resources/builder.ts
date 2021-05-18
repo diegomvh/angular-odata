@@ -110,30 +110,30 @@ export default function <T>({
   action,
   func
 }: Partial<QueryOptions<T>> = {}) {
-  const [path, query] = buildPathAndQuery({
-    select, 
-    search, 
-    skiptoken, 
-    format, 
-    top, 
-    skip, 
-    filter, 
-    transform, 
-    orderBy, 
-    key, 
-    count, 
-    expand, 
-    action, 
+  const [path, params] = buildPathAndQuery({
+    select,
+    search,
+    skiptoken,
+    format,
+    top,
+    skip,
+    filter,
+    transform,
+    orderBy,
+    key,
+    count,
+    expand,
+    action,
     func});
 
-  return buildUrl(path, query);
+  return buildUrl(path, params);
 }
 
 export function buildPathAndQuery<T>({
-  select: $select,
-  search: $search,
-  skiptoken: $skiptoken,
-  format: $format,
+  select,
+  search,
+  skiptoken,
+  format,
   top,
   skip,
   filter,
@@ -148,39 +148,59 @@ export function buildPathAndQuery<T>({
   let path: string = '';
   let aliases: Alias[] = [];
 
-  const params: any = {};
+  const query: any = {};
 
   // key is not (null, undefined)
   if (key != undefined) {
     path += `(${handleValue(key as Value, aliases)})`;
-    }
+  }
 
-  if (filter || typeof count === 'object')
-    params.$filter = buildFilter(typeof count === 'object' ? count : filter, aliases);
+  if (select) {
+    query.$select = Array.isArray(select) ? select.join(",") : select;
+  }
 
-  if (transform)
-    params.$apply = buildTransforms(transform);
+  if (search) {
+    query.$search = search;
+  }
 
-  if (expand)
-    params.$expand = buildExpand(expand);
+  if (skiptoken) {
+    query.$skiptoken = skiptoken;
+  }
 
-  if (orderBy)
-    params.$orderby = buildOrderBy(orderBy);
+  if (format) {
+    query.$format = format;
+  }
+
+  if (filter || typeof count === 'object') {
+    query.$filter = buildFilter(typeof count === 'object' ? count : filter, aliases);
+  }
+
+  if (transform) {
+    query.$apply = buildTransforms(transform);
+  }
+
+  if (expand) {
+    query.$expand = buildExpand(expand);
+  }
+
+  if (orderBy) {
+    query.$orderby = buildOrderBy(orderBy);
+  }
 
   if (count) {
     if (typeof count === 'boolean') {
-      params.$count = true;
+      query.$count = true;
     } else {
       path += '/$count';
     }
   }
 
   if (typeof top === 'number') {
-    params.$top = top;
+    query.$top = top;
   }
 
   if (typeof skip === 'number') {
-    params.$skip = skip;
+    query.$skip = skip;
   }
 
   if (action) {
@@ -202,12 +222,17 @@ export function buildPathAndQuery<T>({
   }
 
   if (aliases.length > 0) {
-    Object.assign(params, aliases.reduce((acc, alias) =>
+    Object.assign(query, aliases.reduce((acc, alias) =>
       Object.assign(acc, { [`@${alias.name}`]: handleValue(alias.value) })
       , {}));
   }
 
-  return [path, { $select, $search, $skiptoken, $format, ...params }];
+  // Filter empty values
+  const params = Object.entries(query)
+    .filter(([, value]) => value !== undefined && value !== '')
+    .reduce((acc, [key, value]) => Object.assign(acc, {[key]: value}), {});
+
+  return [path, params];
 }
 
 function renderPrimitiveValue(key: string, val: any, aliases: Alias[] = []) {
@@ -594,9 +619,7 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
 
 function buildUrl(path: string, params: {[name: string]: any}): string {
   // This can be refactored using URL API. But IE does not support it.
-  const queries: string[] = Object.getOwnPropertyNames(params)
-    .filter(key => params[key] !== undefined && params[key] !== '')
-    .map(key => `${key}=${params[key]}`);
+  const queries: string[] = Object.entries(params).map(([key, value]) => `${key}=${value}`);
   return queries.length ? `${path}?${queries.join('&')}` : path;
 }
 

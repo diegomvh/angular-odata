@@ -1,4 +1,4 @@
-import buildQuery, { alias, Alias } from './builder';
+import {buildPathAndQuery} from './builder';
 
 import { Dates, Types, Urls, Objects } from '../utils';
 
@@ -24,7 +24,7 @@ export class ODataQueryOptions {
   }
 
   // Params
-  params(): {[name: string]: any} {
+  pathAndParams(): [string, {[name: string]: any}] {
     let options = [
       QueryOptionNames.select,
       QueryOptionNames.filter,
@@ -39,15 +39,13 @@ export class ODataQueryOptions {
         .filter(key => !Types.isEmpty(this.options[key]))
         .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
 
-    let query = buildQuery(options);
-    let params = (query) ? Urls.parseQueryString(query.substr(1)) : {};
-
-    return params;
+    return buildPathAndQuery(options);
   }
 
   toString(): string {
-    return Object.entries(this.params())
-      .filter(([, value]) => value)
+    const [path, params] = this.pathAndParams();
+    return path + Object.entries(params)
+      .filter(([, value]) => !Types.isEmpty(value))
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
   }

@@ -1421,7 +1421,7 @@ describe('function', () => {
       Test: { SomeCollection: someCollection },
     };
     const expected =
-      '/Test(SomeCollection=@SomeCollection)?@SomeCollection=%5B%7B%22Name%22%3A%22Sean%22%7D%2C%7B%22Name%22%3A%22Jason%22%7D%5D';
+      '/Test(SomeCollection=@SomeCollection)?@SomeCollection=[{\"Name\":\"Sean\"},{\"Name\":\"Jason\"}]';
     const actual = buildQuery({ func, aliases: [someCollection] });
     expect(actual).toEqual(expected);
   });
