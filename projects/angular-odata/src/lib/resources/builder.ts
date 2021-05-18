@@ -430,7 +430,7 @@ function handleValue(value: Value, aliases?: Alias[]): any {
           aliases.push(value as Alias);
         return `@${(value as Alias).name}`;
       case 'json':
-        return escape(JSON.stringify(value.value));
+        return JSON.stringify(value.value);
       case 'decimal':
         return `${value.value}M`;
       default:
