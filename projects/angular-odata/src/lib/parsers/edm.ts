@@ -2,7 +2,7 @@ import { Parser, StructuredTypeFieldOptions } from '../types';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
 
-type Duration = {
+export type Duration = {
   sign?: 1 | -1;
   years?: number;
   months?: number;
@@ -30,6 +30,10 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     serialize(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
       const _serialize = (v: Date) => v.toISOString().substring(0, 10);
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+      const _encode = (v: Date) => v.toISOString().substring(0, 10);
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   },
   'Edm.TimeOfDay': <Parser<Date | Date[]>>{
@@ -40,6 +44,10 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     serialize(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
       const _serialize = (v: Date) => v.toISOString().substring(11, 23);
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+      const _encode = (v: Date) => v.toISOString().substring(11, 23);
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   },
   'Edm.DateTimeOffset': <Parser<Date>>{
@@ -47,9 +55,13 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       const _deserialize = (v: string) => new Date(v);
       return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: Date, options: StructuredTypeFieldOptions): string | string[] {
+    serialize(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
       const _serialize = (v: Date) => v.toISOString();
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+      const _encode = (v: Date) => v.toISOString();
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   },
   'Edm.Duration': <Parser<Duration>>{
@@ -83,6 +95,20 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         v.seconds ? v.seconds + 'S' : '',
       ].join("");
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: Duration | Duration[], options: StructuredTypeFieldOptions): string | string[] {
+      const _encode = (v: Duration) => [
+        (v.sign === -1) ? '-' : '',
+        'P',
+        v.years ? v.years + 'Y' : '',
+        v.months ? v.months + 'M' : '',
+        v.days ? v.days + 'D' : '',
+        'T',
+        v.hours ? v.hours + 'H' : '',
+        v.minutes ? v.minutes + 'M' : '',
+        v.seconds ? v.seconds + 'S' : '',
+      ].join("");
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   },
   'Edm.Decimal': <Parser<number>>{
@@ -103,6 +129,15 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         return v;
       }
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+      const _encode = (v: number) => {
+        if (options.ieee754Compatible) {
+          return parseFloat(v.toPrecision(options.field.precision)).toFixed(options.field.scale);
+        }
+        return v;
+      }
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   },
   'Edm.Double': <Parser<number>>{
@@ -113,6 +148,10 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     serialize(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
       const _serialize = (v: number) => (v === Infinity)? 'INF' : v;
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+      const _encode = (v: number) => (v === Infinity)? 'INF' : v;
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   },
   'Edm.Single': <Parser<number>>{
@@ -123,6 +162,10 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     serialize(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
       const _serialize = (v: number) => (v === Infinity)? 'INF' : v;
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+      const _encode = (v: number) => (v === Infinity)? 'INF' : v;
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   },
   'Edm.Binary': <Parser<ArrayBuffer>>{
@@ -177,6 +220,27 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         return base64;
       }
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+    },
+    encode(value: ArrayBuffer | ArrayBuffer[], options: StructuredTypeFieldOptions): string | string[] {
+      const _encode = (v: ArrayBuffer) => {
+        var bytes = new Uint8Array(v),
+          i, len = bytes.length, base64 = "";
+
+        for (i = 0; i < len; i += 3) {
+          base64 += chars[bytes[i] >> 2];
+          base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
+          base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
+          base64 += chars[bytes[i + 2] & 63];
+        }
+
+        if ((len % 3) === 2) {
+          base64 = base64.substring(0, base64.length - 1) + "=";
+        } else if (len % 3 === 1) {
+          base64 = base64.substring(0, base64.length - 2) + "==";
+        }
+        return base64;
+      }
+      return Array.isArray(value) ? value.map(_encode) : _encode(value);
     }
   }
 }

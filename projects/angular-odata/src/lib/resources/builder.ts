@@ -63,21 +63,11 @@ export type GroupBy<T> = {
 }
 
 export type Raw = { type: 'raw'; value: any; }
-export type Guid = { type: 'guid'; value: any; }
-export type Duration = { type: 'duration'; value: any; }
-export type Binary = { type: 'binary'; value: any; }
-export type Json = { type: 'json'; value: any; }
-export type Alias = { type: 'alias'; name: string; value: any; }
-export type Decimal = { type: 'decimal'; value: any; }
-export type Value = string | Date | number | boolean | Raw | Guid | Duration | Binary | Json | Alias | Decimal;
+export type Alias = { type: 'alias'; value: any; name?: string;}
+export type Value = string | Date | number | boolean | Raw | Alias;
 
 export const raw = (value: string): Raw => ({ type: 'raw', value });
-export const guid = (value: string): Guid => ({ type: 'guid', value });
-export const duration = (value: string): Duration => ({ type: 'duration', value });
-export const binary = (value: string): Binary => ({ type: 'binary', value });
-export const json = (value: {[name: string]: any}): Json => ({ type: 'json', value });
-export const alias = (name: string, value: {[name: string]: any}): Alias => ({ type: 'alias', name, value });
-export const decimal = (value: string): Decimal => ({ type: 'decimal', value });
+export const alias = (value: any, name?: string): Alias => ({ type: 'alias', value, name });
 
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
@@ -443,21 +433,12 @@ function handleValue(value: Value, aliases?: Alias[]): any {
   } else if (typeof value === 'object') {
     switch (value.type) {
       case 'raw':
-      case 'guid':
         return value.value;
-      case 'duration':
-        return `duration'${value.value}'`;
-      case 'binary':
-        return `binary'${value.value}'`;
       case 'alias':
         // Store
         if (Array.isArray(aliases))
           aliases.push(value as Alias);
         return `@${(value as Alias).name}`;
-      case 'json':
-        return JSON.stringify(value.value);
-      case 'decimal':
-        return `${value.value}M`;
       default:
         return Object.entries(value)
             .filter(([, v]) => v !== undefined)

@@ -65,6 +65,11 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     }
   }
 
+  //Encode
+  encode(value: T, options: OptionsHelper): string {
+    return this.serialize(value, options);
+  }
+
   // Json Schema
   toJsonSchema() {
     let property = <any>{

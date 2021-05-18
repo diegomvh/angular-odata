@@ -126,15 +126,25 @@ export abstract class ODataResource<T> {
     return value;
   }
 
+  encode(value: any): any {
+    let api = this.api;
+    let type = this.type();
+    if (type !== undefined) {
+      let parser = api.findParserForType<T>(type);
+      if (parser !== undefined && 'encode' in parser) {
+        return Array.isArray(value) ?
+          value.map(e => (parser as Parser<T>).encode(e, api.options)) :
+          parser.encode(value, api.options);
+      }
+    }
+    return value;
+  }
+
   toJSON() {
     return {
       segments: this.pathSegments.toJSON(),
       options: this.queryOptions.toJSON()
     };
-  }
-
-  createAlias(name: string, value?: any) {
-    return alias(name, value);
   }
 
   clearQuery() {

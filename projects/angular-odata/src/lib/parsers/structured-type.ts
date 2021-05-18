@@ -139,6 +139,12 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   }
   //#endregion
 
+  //#region Encode
+  encode(value: T, options: OptionsHelper): string {
+    return this.parser.encode(value, Object.assign({field: this}, options));
+  }
+  //#endregion
+
   configure({findParserForType, options}: {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
@@ -287,6 +293,11 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
       .filter(f => f.name in value && (value as any)[f.name] !== undefined && (value as any)[f.name] !== null)
       .reduce((acc, f) => Object.assign(acc, { [f.name]: f.serialize((value as any)[f.name], options) }), {})
     );
+  }
+
+  // Encode
+  encode(value: T, options: OptionsHelper): string {
+    return JSON.stringify(this.serialize(value, options));
   }
 
   configure({findParserForType, options}: {

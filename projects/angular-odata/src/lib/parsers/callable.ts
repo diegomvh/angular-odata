@@ -23,12 +23,20 @@ export class ODataParameterParser<T> {
       this.parser.serialize(value, options);
   }
 
+  //Encode
+  encode(value: any, options: StructuredTypeFieldOptions): string {
+    return Array.isArray(value) ?
+      value.map(v => this.parser.encode(v, options)) :
+      this.parser.encode(value, options);
+  }
+
   configure({findParserForType, options}: {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
     this.parser = findParserForType(this.type);
   }
+
   isEdmType() {
     return this.type.startsWith("Edm.");
   }
@@ -87,6 +95,14 @@ export class ODataCallableParser<R> implements Parser<R> {
     return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
+    );
+  }
+
+  //Encode
+  encode(params: any, options: StructuredTypeFieldOptions): any {
+    return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
+      .filter(p => p.name in params && params[p.name] !== undefined)
+      .reduce((acc, p) => Object.assign(acc, { [p.name]: p.encode(params[p.name], options) }), {})
     );
   }
 

@@ -1,4 +1,4 @@
-import { guid, buildPathAndQuery } from './builder';
+import { raw, buildPathAndQuery } from './builder';
 
 import { Types, Dates } from '../utils';
 
@@ -47,7 +47,7 @@ function pathSegmentsBuilder(
         key
       )
     ) {
-      key = guid(key);
+      key = raw(key);
     }
     let [path, params] = key ? buildPathAndQuery({ key }) : ['', {}];
     return [segment.path + path, params];

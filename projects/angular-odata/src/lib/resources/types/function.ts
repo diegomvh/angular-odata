@@ -14,6 +14,7 @@ import { ODataEntitySetResource } from './entity-set';
 import { ODataEntityResource } from './entity';
 import { ODataStructuredType } from '../../schema';
 import { ODataResource } from '../resource';
+import { alias as functionAlias } from '../builder';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -137,10 +138,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   parameters(params: P | null, {alias}: {alias?:boolean} = {}) {
     const segments = this.cloneSegments();
     const segment = segments.get(PathSegmentNames.function);
-    let parameters =  params !== null ? this.serialize(params) : null;
+    let parameters =  params !== null ? this.encode(params) : null;
     if (alias && parameters !== null) {
       parameters = Object.entries(parameters).reduce((acc, [name, param]) => {
-        return Object.assign(acc, {[name]: this.createAlias(name, param)});
+        return Object.assign(acc, {[name]: functionAlias(param, name)});
       }, {});
     }
     segment.parameters(parameters);
