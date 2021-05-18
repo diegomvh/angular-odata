@@ -64,10 +64,14 @@ export type GroupBy<T> = {
 
 export type Raw = { type: 'raw'; value: any; }
 export type Alias = { type: 'alias'; value: any; name?: string;}
-export type Value = string | Date | number | boolean | Raw | Alias;
+export type Duration = { type: 'duration'; value: any; }
+export type Binary = { type: 'binary'; value: any; }
+export type Value = string | Date | number | boolean | Raw | Alias | Duration | Binary;
 
 export const raw = (value: string): Raw => ({ type: 'raw', value });
 export const alias = (value: any, name?: string): Alias => ({ type: 'alias', value, name });
+export const duration = (value: string): Duration => ({ type: 'duration', value });
+export const binary = (value: string): Binary => ({ type: 'binary', value });
 
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
@@ -434,6 +438,10 @@ function handleValue(value: Value, aliases?: Alias[]): any {
     switch (value.type) {
       case 'raw':
         return value.value;
+      case 'duration':
+        return `duration'${value.value}'`;
+      case 'binary':
+        return `binary'${value.value}'`;
       case 'alias':
         // Store
         if (Array.isArray(aliases))

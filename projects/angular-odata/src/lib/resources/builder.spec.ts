@@ -1,4 +1,4 @@
-import buildQuery, { Expand, OrderBy, alias, json, guid, raw, binary, Filter } from './builder';
+import buildQuery, { Expand, OrderBy, alias, raw, Filter, binary } from './builder';
 
 it('should return an empty string by default', () => {
   expect(buildQuery()).toEqual('');
@@ -276,8 +276,8 @@ describe('filter', () => {
     });
 
     it('should handle implied logical operator on a single property using alises', () => {
-      const start = alias("start", new Date(Date.UTC(2017, 0, 1)));
-      const end = alias("end", new Date(Date.UTC(2017, 2, 1)));
+      const start = alias(new Date(Date.UTC(2017, 0, 1)), "start");
+      const end = alias(new Date(Date.UTC(2017, 2, 1)), "end");
       const filter = { DateProp: { ge: start, le: end } };
       let expected =
         '?$filter=DateProp ge @start and DateProp le @end&@start=2017-01-01T00:00:00.000Z&@end=2017-03-01T00:00:00.000Z';
@@ -646,7 +646,7 @@ describe('filter', () => {
     it('should handle GUID values', () => {
       const filter = {
         someProp: {
-          eq: guid('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'),
+          eq: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'),
         },
       };
       const expected =
@@ -657,7 +657,7 @@ describe('filter', () => {
 
     it('should handle GUID values with explicit eq ', () => {
       const filter = {
-        someProp: guid('cd5977c2-4a64-42de-b2fc-7fe4707c65cd')
+        someProp: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd')
       };
       const expected =
         '?$filter=someProp eq cd5977c2-4a64-42de-b2fc-7fe4707c65cd';
@@ -668,7 +668,7 @@ describe('filter', () => {
     it('should handle GUID values with an in operator', () => {
       const filter = {
         someProp: {
-          in: [guid('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'), guid('cd5977c2-4a64-42de-b2fc-7fe4707c65ce')]
+          in: [raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'), raw('cd5977c2-4a64-42de-b2fc-7fe4707c65ce')]
         },
       };
       const expected =
@@ -1116,7 +1116,7 @@ describe('key', () => {
   });
 
   it('should support key with GUID values', () => {
-    const key = guid('cd5977c2-4a64-42de-b2fc-7fe4707c65cd');
+    const key = raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd');
     const expected = '(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)';
     const actual = buildQuery({ key });
     expect(actual).toEqual(expected);
@@ -1405,7 +1405,7 @@ describe('function', () => {
   });
 
   it('should support a function on a collection with an array/collection parameter of a strings', () => {
-    const someCollection = alias("SomeCollection", ['Sean', 'Jason']);
+    const someCollection = alias(['Sean', 'Jason'], "SomeCollection");
     const func = {
       Test: { SomeCollection: someCollection },
     };
@@ -1416,7 +1416,7 @@ describe('function', () => {
   });
 
   it('should support a function on a collection with an array/collection parameter of a complex type', () => {
-    const someCollection = alias("SomeCollection", json([{ Name: 'Sean' }, { Name: 'Jason' }]));
+    const someCollection = alias(raw(JSON.stringify([{ Name: 'Sean' }, { Name: 'Jason' }])), "SomeCollection");
     const func = {
       Test: { SomeCollection: someCollection },
     };
