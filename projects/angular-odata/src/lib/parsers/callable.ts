@@ -1,5 +1,7 @@
 import { CALLABLE_BINDING_PARAMETER } from '../constants';
 import { Parser, Parameter, CallableConfig, StructuredTypeFieldOptions, NONE_PARSER, OptionsHelper } from '../types';
+import { ODataEnumTypeParser } from './enum-type';
+import { ODataStructuredTypeParser } from './structured-type';
 
 export class ODataParameterParser<T> {
   name: string;
@@ -26,6 +28,29 @@ export class ODataParameterParser<T> {
     options: OptionsHelper
   }) {
     this.parser = findParserForType(this.type);
+  }
+  isEdmType() {
+    return this.type.startsWith("Edm.");
+  }
+
+  isEnumType() {
+    return this.parser instanceof ODataEnumTypeParser;
+  }
+
+  enum() {
+    if (!this.isEnumType())
+      throw new Error("Field are not EnumType")
+    return this.parser as ODataEnumTypeParser<T>;
+  }
+
+  isStructuredType() {
+    return this.parser instanceof ODataStructuredTypeParser;
+  }
+
+  structured() {
+    if (!this.isStructuredType())
+      throw new Error("Field are not StrucuturedType")
+    return this.parser as ODataStructuredTypeParser<T>;
   }
 }
 
