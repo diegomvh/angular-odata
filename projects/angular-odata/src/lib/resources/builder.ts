@@ -16,11 +16,10 @@ const FUNCTION_REGEX = /\((.*)\)/;
 const INDEXOF_REGEX = /(?!indexof)\((\w+)\)/;
 
 export type Unpacked<T> = T extends (infer U)[] ? U : T;
-export type PlainObject = { [property: string]: any };
 export type Select<T> = SelectType<T> | SelectType<T>[];
 export type SelectType<T> = string | keyof T;
 export type Filter = FilterType | FilterType[];
-export type FilterType = string | PlainObject;
+export type FilterType = string | {[name: string]: any};
 
 export enum StandardAggregateMethods {
   sum = "sum",
@@ -76,16 +75,16 @@ export const raw = (value: string): Raw => ({ type: 'raw', value });
 export const guid = (value: string): Guid => ({ type: 'guid', value });
 export const duration = (value: string): Duration => ({ type: 'duration', value });
 export const binary = (value: string): Binary => ({ type: 'binary', value });
-export const json = (value: PlainObject): Json => ({ type: 'json', value });
-export const alias = (name: string, value: PlainObject): Alias => ({ type: 'alias', name, value });
+export const json = (value: {[name: string]: any}): Json => ({ type: 'json', value });
+export const alias = (name: string, value: {[name: string]: any}): Alias => ({ type: 'alias', name, value });
 export const decimal = (value: string): Decimal => ({ type: 'decimal', value });
 
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
-  transform: PlainObject | PlainObject[];
+  transform: {[name: string]: any} | {[name: string]: any}[];
   skip: number;
   skiptoken: string;
-  key: string | number | PlainObject;
+  key: string | number | {[name: string]: any};
   count: boolean | Filter;
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
@@ -96,6 +95,41 @@ export type QueryOptions<T> = ExpandOptions<T> & {
 export const ITEM_ROOT = "";
 
 export default function <T>({
+  select,
+  search,
+  skiptoken,
+  format,
+  top,
+  skip,
+  filter,
+  transform,
+  orderBy,
+  key,
+  count,
+  expand,
+  action,
+  func
+}: Partial<QueryOptions<T>> = {}) {
+  const [path, query] = buildPathAndQuery({
+    select, 
+    search, 
+    skiptoken, 
+    format, 
+    top, 
+    skip, 
+    filter, 
+    transform, 
+    orderBy, 
+    key, 
+    count, 
+    expand, 
+    action, 
+    func});
+
+  return buildUrl(path, query);
+}
+
+export function buildPathAndQuery<T>({
   select: $select,
   search: $search,
   skiptoken: $skiptoken,
@@ -110,7 +144,7 @@ export default function <T>({
   expand,
   action,
   func
-}: Partial<QueryOptions<T>> = {}) {
+}: Partial<QueryOptions<T>> = {}): [string, {[name: string]: any}] {
   let path: string = '';
   let aliases: Alias[] = [];
 
@@ -173,7 +207,7 @@ export default function <T>({
       , {}));
   }
 
-  return buildUrl(path, { $select, $search, $skiptoken, $format, ...params });
+  return [path, { $select, $search, $skiptoken, $format, ...params }];
 }
 
 function renderPrimitiveValue(key: string, val: any, aliases: Alias[] = []) {
@@ -558,7 +592,7 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
   return `${prefix}${orderBy}`;
 }
 
-function buildUrl(path: string, params: PlainObject): string {
+function buildUrl(path: string, params: {[name: string]: any}): string {
   // This can be refactored using URL API. But IE does not support it.
   const queries: string[] = Object.getOwnPropertyNames(params)
     .filter(key => params[key] !== undefined && params[key] !== '')

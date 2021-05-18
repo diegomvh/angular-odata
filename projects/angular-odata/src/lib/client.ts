@@ -8,7 +8,6 @@ import {
   ODataCollection
 } from './models/index';
 import {
-  PlainObject,
   ODataResource,
   ODataBatchResource,
   ODataMetadataResource,
@@ -135,9 +134,9 @@ export class ODataClient {
     return this.injector.get(this.settings.serviceByName(name));
   }
 
-  fromJSON<P, R>(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
-  fromJSON<E>(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string): ODataEntityResource<E> | ODataEntitySetResource<E> | ODataNavigationPropertyResource<E> | ODataSingletonResource<E>;
-  fromJSON(json: { segments: ODataSegment[], options: PlainObject }, apiName?: string) {
+  fromJSON<P, R>(json: { segments: ODataSegment[], options: {[name: string]: any} }, apiName?: string): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
+  fromJSON<E>(json: { segments: ODataSegment[], options: {[name: string]: any} }, apiName?: string): ODataEntityResource<E> | ODataEntitySetResource<E> | ODataNavigationPropertyResource<E> | ODataSingletonResource<E>;
+  fromJSON(json: { segments: ODataSegment[], options: {[name: string]: any} }, apiName?: string) {
     const segments = new ODataPathSegments(json.segments);
     const query = new ODataQueryOptions(json.options);
     const api = this.apiFor(apiName || segments.last()?.type());

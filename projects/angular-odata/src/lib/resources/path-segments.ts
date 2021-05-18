@@ -1,6 +1,4 @@
 import buildQuery, { guid, Alias, alias } from './builder';
-import { PlainObject } from './builder';
-//import buildQuery from 'odata-query';
 
 import { Types, Dates } from '../utils';
 
