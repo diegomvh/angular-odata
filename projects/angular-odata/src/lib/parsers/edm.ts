@@ -1,3 +1,4 @@
+import { binary, duration, raw } from '../resources/builder';
 import { Parser, StructuredTypeFieldOptions } from '../types';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
@@ -31,9 +32,9 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       const _serialize = (v: Date) => v.toISOString().substring(0, 10);
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+    encode(value: Date | Date[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: Date) => v.toISOString().substring(0, 10);
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => raw(_encode(v))) : raw(_encode(value));
     }
   },
   'Edm.TimeOfDay': <Parser<Date | Date[]>>{
@@ -45,9 +46,9 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       const _serialize = (v: Date) => v.toISOString().substring(11, 23);
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+    encode(value: Date | Date[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: Date) => v.toISOString().substring(11, 23);
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => raw(_encode(v))) : raw(_encode(value));
     }
   },
   'Edm.DateTimeOffset': <Parser<Date>>{
@@ -59,9 +60,9 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       const _serialize = (v: Date) => v.toISOString();
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: Date | Date[], options: StructuredTypeFieldOptions): string | string[] {
+    encode(value: Date | Date[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: Date) => v.toISOString();
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => raw(_encode(v))) : raw(_encode(value));
     }
   },
   'Edm.Duration': <Parser<Duration>>{
@@ -96,7 +97,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       ].join("");
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: Duration | Duration[], options: StructuredTypeFieldOptions): string | string[] {
+    encode(value: Duration | Duration[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: Duration) => [
         (v.sign === -1) ? '-' : '',
         'P',
@@ -108,7 +109,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         v.minutes ? v.minutes + 'M' : '',
         v.seconds ? v.seconds + 'S' : '',
       ].join("");
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => duration(_encode(v))) : duration(_encode(value));
     }
   },
   'Edm.Decimal': <Parser<number>>{
@@ -121,7 +122,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       }
       return Array.isArray(value) ? value.map(_deserialize) : _deserialize(value);
     },
-    serialize(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+    serialize(value: number | number[], options: StructuredTypeFieldOptions): any {
       const _serialize = (v: number) => {
         if (options.ieee754Compatible) {
           return parseFloat(v.toPrecision(options.field.precision)).toFixed(options.field.scale);
@@ -130,14 +131,14 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       }
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+    encode(value: number | number[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: number) => {
         if (options.ieee754Compatible) {
           return parseFloat(v.toPrecision(options.field.precision)).toFixed(options.field.scale);
         }
         return v;
       }
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => raw(`${_encode(v)}`)) : raw(`${_encode(value)}`);
     }
   },
   'Edm.Double': <Parser<number>>{
@@ -149,9 +150,9 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       const _serialize = (v: number) => (v === Infinity)? 'INF' : v;
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+    encode(value: number | number[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: number) => (v === Infinity)? 'INF' : v;
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => raw(`${_encode(v)}`)) : raw(`${_encode(value)}`);
     }
   },
   'Edm.Single': <Parser<number>>{
@@ -163,9 +164,9 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       const _serialize = (v: number) => (v === Infinity)? 'INF' : v;
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: number | number[], options: StructuredTypeFieldOptions): string | number | (string | number)[] {
+    encode(value: number | number[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: number) => (v === Infinity)? 'INF' : v;
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => raw(`${_encode(v)}`)) : raw(`${_encode(value)}`);
     }
   },
   'Edm.Binary': <Parser<ArrayBuffer>>{
@@ -221,7 +222,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       }
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
-    encode(value: ArrayBuffer | ArrayBuffer[], options: StructuredTypeFieldOptions): string | string[] {
+    encode(value: ArrayBuffer | ArrayBuffer[], options: StructuredTypeFieldOptions): any {
       const _encode = (v: ArrayBuffer) => {
         var bytes = new Uint8Array(v),
           i, len = bytes.length, base64 = "";
@@ -240,7 +241,43 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         }
         return base64;
       }
-      return Array.isArray(value) ? value.map(_encode) : _encode(value);
+      return Array.isArray(value) ? value.map(v => binary(_encode(v))) : binary(_encode(value));
     }
   }
 }
+
+/*
+Edm.Binary Binary data
+Edm.Boolean Binary-valued logic
+Edm.Byte Unsigned 8-bit integer
+Edm.Date Date without a time-zone offset
+Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
+Edm.Decimal Numeric values with fixed precision and scale
+Edm.Double IEEE 754 binary64 floating-point number (15-17 decimal digits)
+Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
+Edm.Guid 16-byte (128-bit) unique identifier
+Edm.Int16 Signed 16-bit integer
+Edm.Int32 Signed 32-bit integer
+Edm.Int64 Signed 64-bit integer
+Edm.SByte Signed 8-bit integer
+Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
+Edm.Stream Binary data stream
+Edm.String Sequence of UTF-8 characters
+Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
+Edm.Geography Abstract base type for all Geography types
+Edm.GeographyPoint A point in a round-earth coordinate system
+Edm.GeographyLineString Line string in a round-earth coordinate system
+Edm.GeographyPolygon Polygon in a round-earth coordinate system
+Edm.GeographyMultiPoint Collection of points in a round-earth coordinate system
+Edm.GeographyMultiLineString Collection of line strings in a round-earth coordinate system
+Edm.GeographyMultiPolygon Collection of polygons in a round-earth coordinate system
+Edm.GeographyCollection Collection of arbitrary Geography values
+Edm.Geometry Abstract base type for all Geometry types
+Edm.GeometryPoint Point in a flat-earth coordinate system
+Edm.GeometryLineString Line string in a flat-earth coordinate system
+Edm.GeometryPolygon Polygon in a flat-earth coordinate system
+Edm.GeometryMultiPoint Collection of points in a flat-earth coordinate system
+Edm.GeometryMultiLineString Collection of line strings in a flat-earth coordinate system
+Edm.GeometryMultiPolygon Collection of polygons in a flat-earth coordinate system
+Edm.GeometryCollection Collection of arbitrary Geometry values
+*/

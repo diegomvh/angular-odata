@@ -3,6 +3,7 @@ import { Parser, StructuredTypeFieldConfig, StructuredTypeConfig, OptionsHelper,
 import { ODataEnumTypeParser } from './enum-type';
 import { COMPUTED } from '../constants';
 import { ODataAnnotation } from '../schema/annotation';
+import { raw } from '../resources/builder';
 
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
@@ -296,8 +297,8 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   // Encode
-  encode(value: T, options: OptionsHelper): string {
-    return JSON.stringify(this.serialize(value, options));
+  encode(value: T, options: OptionsHelper): any {
+    return raw(JSON.stringify(this.serialize(value, options)));
   }
 
   configure({findParserForType, options}: {

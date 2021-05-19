@@ -68,6 +68,7 @@ export type Duration = { type: 'duration'; value: any; }
 export type Binary = { type: 'binary'; value: any; }
 export type Value = string | Date | number | boolean | Raw | Alias | Duration | Binary;
 
+//https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_QueryOptions
 export const raw = (value: string): Raw => ({ type: 'raw', value });
 export const alias = (value: any, name?: string): Alias => ({ type: 'alias', value, name });
 export const duration = (value: string): Duration => ({ type: 'duration', value });

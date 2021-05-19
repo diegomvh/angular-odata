@@ -1,4 +1,5 @@
 import { EnumHelper } from '../helpers';
+import { raw } from '../resources/builder';
 import { ODataAnnotation } from '../schema/annotation';
 import { EnumTypeConfig, Parser, OptionsHelper, EnumTypeFieldConfig } from '../types';
 
@@ -66,8 +67,8 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   //Encode
-  encode(value: T, options: OptionsHelper): string {
-    return this.serialize(value, options);
+  encode(value: T, options: OptionsHelper): any {
+    return raw(this.serialize(value, options));
   }
 
   // Json Schema
