@@ -68,7 +68,8 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
 
   //Encode
   encode(value: T, options: OptionsHelper): any {
-    return raw(this.serialize(value, options));
+    const serialized = this.serialize(value, options);
+    return options.stringAsEnum ? raw(`'${serialized}'`) : serialized;
   }
 
   // Json Schema
