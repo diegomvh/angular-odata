@@ -266,10 +266,8 @@ interface StoragePayload {
 }
 
 export class ODataInStorageCache extends ODataCache&lt;StoragePayload&gt; {
-  constructor(init: {timeout?: number, name: string, storage?: Storage}) {
-    super(init);
-    const name &#x3D; init.name;
-    const storage &#x3D; init.storage || sessionStorage;
+  constructor({name, storage &#x3D; sessionStorage, timeout}: {timeout?: number, name: string, storage?: Storage}) {
+    super({timeout});
     this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;StoragePayload&gt;&gt;(JSON.parse(storage.getItem(name) || &quot;[]&quot;));
     window.addEventListener(&quot;beforeunload&quot;, ((backend, key, responses) &#x3D;&gt; function() {
       backend.setItem(key, JSON.stringify(Array.from(responses.entries())))
@@ -277,11 +275,11 @@ export class ODataInStorageCache extends ODataCache&lt;StoragePayload&gt; {
   }
 
   putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
-    this.put(req.urlWithParams, res.toJSON(), res.options.maxAge);
+    this.put(req.pathWithParams, res.toJSON(), {timeout: res.options.maxAge, pattern: &#x60;^${req.path}&#x60;});
   }
 
   getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
-    const data &#x3D; this.get(req.urlWithParams);
+    const data &#x3D; this.get(req.pathWithParams);
 
     return data !&#x3D;&#x3D; undefined ? ODataResponse.fromJSON(req, data) : undefined;
   }

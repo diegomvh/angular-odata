@@ -901,7 +901,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpHeaders, HttpResponse } from &#x27;@angular/common/http&#x27;;
-import { ODataEntityMeta, ODataEntitiesMeta, ODataPropertyMeta } from &#x27;./meta&#x27;;
+import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from &#x27;./annotations&#x27;;
 import { Parser } from &#x27;../../types&#x27;;
 import { Types } from &#x27;../../utils/types&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
@@ -1013,32 +1013,32 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
 
   entity(): ODataEntity&lt;T&gt; {
     const payload &#x3D; this.body &amp;&amp; this.options.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? (&lt;any&gt;this.body)[&quot;d&quot;] : this.body;
-    const meta &#x3D; new ODataEntityMeta(payload || {}, {options: this.options, headers: this.headers});
+    const meta &#x3D; new ODataEntityAnnotations({data: payload || {}, options: this.options, headers: this.headers});
     let entity &#x3D; payload ? meta.data(payload) as T : null;
     const type &#x3D; this.resource.type();
     if (entity !&#x3D;&#x3D; null &amp;&amp; type !&#x3D;&#x3D; undefined)
       entity &#x3D; this.deserialize(type, entity) as T;
-    return { entity, meta };
+    return { entity, annots: meta };
   }
 
   entities(): ODataEntities&lt;T&gt; {
     const payload &#x3D; this.options.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? (&lt;any&gt;this.body)[&quot;d&quot;] : this.body;
-    const meta &#x3D; new ODataEntitiesMeta(payload || {}, {options: this.options, headers: this.headers});
+    const meta &#x3D; new ODataEntitiesAnnotations({data: payload || {}, options: this.options, headers: this.headers});
     let entities &#x3D; payload ? meta.data(payload) as T[] : null;
     const type &#x3D; this.resource.type();
     if (entities !&#x3D;&#x3D; null &amp;&amp; type !&#x3D;&#x3D; undefined)
       entities &#x3D; this.deserialize(type, entities) as T[];
-    return { entities, meta };
+    return { entities, annots: meta };
   }
 
   property(): ODataProperty&lt;T&gt; {
     const payload &#x3D; this.options.version &#x3D;&#x3D;&#x3D; &quot;2.0&quot; ? (&lt;any&gt;this.body)[&quot;d&quot;] : this.body;
-    const meta &#x3D; new ODataPropertyMeta(payload || {}, {options: this.options, headers: this.headers});
+    const meta &#x3D; new ODataPropertyAnnotations({data: payload || {}, options: this.options, headers: this.headers});
     let property &#x3D; payload ? meta.data(payload) as T : null;
     const type &#x3D; this.resource.type();
     if (property !&#x3D;&#x3D; null &amp;&amp; type !&#x3D;&#x3D; undefined)
       property &#x3D; this.deserialize(type, property) as T;
-    return { property, meta };
+    return { property, annots: meta };
   }
 
   value(): T | null {

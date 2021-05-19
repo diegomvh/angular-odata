@@ -91,7 +91,7 @@ export class AppComponent {
     // Fetch airports with count
     airports
     .get({withCount: true})
-    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, meta));
+    .subscribe(({entities, annots}) =&gt; console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, annots));
 
     // Fetch all airports
     airports
@@ -104,19 +104,19 @@ export class AppComponent {
     .get()
     .pipe(
       switchMap(() =&gt; airports.entity(&quot;CYYZ&quot;).get({fetchPolicy: &#39;cache-first&#39;}))) // From Cache!
-    .subscribe(({entity, meta}) =&gt; console.log(&quot;Airport: &quot;, entity, &quot;Annotations: &quot;, meta));
+    .subscribe(({entity, annots}) =&gt; console.log(&quot;Airport: &quot;, entity, &quot;Annotations: &quot;, annots));
 
     // Filter airports (inmutable resource)
     airports
     .filter({Location: {City: {CountryRegion: &quot;United States&quot;}}})
     .get()
-    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports of United States: &quot;, entities, &quot;Annotations: &quot;, meta));
+    .subscribe(({entities, annots}) =&gt; console.log(&quot;Airports of United States: &quot;, entities, &quot;Annotations: &quot;, annots));
 
     // Add filter (mutable resource)
     airports.query.filter().push({Location: {City: {Region: &quot;California&quot;}}});
     airports
     .get()
-    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports in California: &quot;, entities, &quot;Annotations: &quot;, meta));
+    .subscribe(({entities, annots}) =&gt; console.log(&quot;Airports in California: &quot;, entities, &quot;Annotations: &quot;, annots));
 
     // Resource to JSON
     const json = airports.toJSON();
@@ -129,7 +129,7 @@ export class AppComponent {
     airports.query.filter().clear();
     airports
     .get()
-    .subscribe(({entities, meta}) =&gt; console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, meta));
+    .subscribe(({entities, annots}) =&gt; console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, annots));
 
     let people = peopleService.entities();
 
@@ -141,7 +141,7 @@ export class AppComponent {
       Trips: { select: [&#39;Name&#39;, &#39;Tags&#39;] },
     })
     .get({withCount: true})
-    .subscribe(({entities, meta}) =&gt; console.log(&quot;People with Friends and Trips: &quot;, entities, &quot;Annotations: &quot;, meta));
+    .subscribe(({entities, annots}) =&gt; console.log(&quot;People with Friends and Trips: &quot;, entities, &quot;Annotations: &quot;, annots));
 
     this.odata.batch(&quot;TripPin&quot;).post(batch =&gt; {
       airports.get().subscribe(console.log);

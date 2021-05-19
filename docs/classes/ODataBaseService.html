@@ -82,7 +82,11 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Protected</span>
-                                <a href="#call">call</a>
+                                <a href="#callAction">callAction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#callFunction">callFunction</a>
                             </li>
                         </ul>
                     </td>
@@ -193,28 +197,28 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="call"></a>
+                    <a name="callAction"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Protected</span>
-                            call
+                            callAction
                         </b>
-                        <a href="#call"><span class="icon ion-ios-link"></span></a>
+                        <a href="#callAction"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>call(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "entity" | "entities" | "none", undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+                    <code>callAction(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "entity" | "entities" | "none", undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="14"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/base.ts:14</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="41"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/base.ts:41</a></div>
                 </td>
             </tr>
 
@@ -287,7 +291,131 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callFunction"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Protected</span>
+                            callFunction
+                        </b>
+                        <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>callFunction(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "entity" | "entities" | "none", undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="13"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/base.ts:13</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>P</li>
+                        <li>R</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>params</td>
+                                    <td>
+                                            <code>P | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                            <code>ODataFunctionResource&lt;P | R&gt; | ODataActionResource&lt;P | R&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>responseType</td>
+                                    <td>
+                                            <code>&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
                                     </td>
 
                                     <td>
@@ -352,7 +480,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpCallableOptions, ODataActionResource, ODataFunctionResource, ODataResource } from &#x27;../resources&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Expand, HttpOptions, ODataActionResource, ODataFunctionResource, Select } from &#x27;../resources&#x27;;
 import { ODataClient } from &quot;../client&quot;;
 import { Observable } from &#x27;rxjs&#x27;;
 
@@ -364,13 +492,46 @@ export abstract class ODataBaseService {
     return this.client.apiFor(this.apiNameOrEntityType);
   }
 
-  // Callable Call
-  protected call&lt;P, R&gt;(
+  protected callFunction&lt;P, R&gt;(
     params: P | null,
     resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
     responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}
-  ): Observable&lt;any&gt; {
+    {
+      alias,
+      expand,
+      select,
+      ...options
+    }: {
+      alias?: boolean,
+      expand?: Expand&lt;R&gt;,
+      select?: Select&lt;R&gt;
+    } &amp; HttpOptions &#x3D; {}): Observable&lt;any&gt; {
+    if (expand !&#x3D;&#x3D; undefined) resource.query.expand(expand);
+    if (select !&#x3D;&#x3D; undefined) resource.query.select(select);
+    switch (responseType) {
+      case &#x27;property&#x27;:
+        return resource.callProperty(params, {alias, ...options});
+      case &#x27;entity&#x27;:
+        return resource.callEntity(params, {alias, ...options});
+      case &#x27;entities&#x27;:
+        return resource.callEntities(params, {alias, ...options});
+      default:
+        return resource.call(params, {alias, ...options});
+    }
+  }
+
+  protected callAction&lt;P, R&gt;(
+    params: P | null,
+    resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
+    responseType: &#x27;property&#x27; | &#x27;entity&#x27; | &#x27;entities&#x27; | &#x27;none&#x27;,
+    {
+      expand,
+      select,
+      ...options
+    }: {
+      expand?: Expand&lt;R&gt;,
+      select?: Select&lt;R&gt;
+    } &amp; HttpOptions &#x3D; {}): Observable&lt;any&gt; {
     if (expand !&#x3D;&#x3D; undefined) resource.query.expand(expand);
     if (select !&#x3D;&#x3D; undefined) resource.query.select(select);
     switch (responseType) {

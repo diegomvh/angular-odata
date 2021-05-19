@@ -80,20 +80,44 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#_options">_options</a>
+                                <a href="#_annotations">_annotations</a>
                             </li>
                             <li>
-                                    <span class="modifier">Private</span>
-                                    <span class="modifier">Optional</span>
-                                <a href="#_properties">_properties</a>
+                                <a href="#_attributes">_attributes</a>
+                            </li>
+                            <li>
+                                <a href="#_changes">_changes</a>
                             </li>
                             <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#errors">errors</a>
+                                <a href="#_errors">_errors</a>
+                            </li>
+                            <li>
+                                <a href="#_meta">_meta</a>
+                            </li>
+                            <li>
+                                <a href="#_relations">_relations</a>
+                            </li>
+                            <li>
+                                <a href="#_resetting">_resetting</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Optional</span>
+                                <a href="#_resource">_resource</a>
+                            </li>
+                            <li>
+                                <a href="#_silent">_silent</a>
                             </li>
                             <li>
                                 <a href="#events$">events$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#meta">meta</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#options">options</a>
                             </li>
                         </ul>
                     </td>
@@ -109,11 +133,10 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#_call">_call</a>
+                                <a href="#_request">_request</a>
                             </li>
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#_request">_request</a>
+                                <a href="#annots">annots</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
@@ -144,6 +167,9 @@
                                 <a href="#destroy">destroy</a>
                             </li>
                             <li>
+                                <a href="#equals">equals</a>
+                            </li>
+                            <li>
                                 <a href="#fetch">fetch</a>
                             </li>
                             <li>
@@ -154,10 +180,14 @@
                                 <a href="#getBinding">getBinding</a>
                             </li>
                             <li>
-                                <a href="#key">key</a>
+                                    <span class="modifier">Protected</span>
+                                <a href="#getReference">getReference</a>
                             </li>
                             <li>
-                                <a href="#meta">meta</a>
+                                <a href="#hasChanged">hasChanged</a>
+                            </li>
+                            <li>
+                                <a href="#key">key</a>
                             </li>
                             <li>
                                 <a href="#query">query</a>
@@ -206,12 +236,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(entity?: Partial<T> | literal type, undefined: literal type)</code>
+<code>constructor(data: Partial<T> | literal type, undefined: literal type)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:36</a></div>
                             </td>
                         </tr>
 
@@ -229,14 +259,14 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>entity</td>
+                                                        <td>data</td>
                                                   
                                                         <td>
                                                                     <code>Partial&lt;T&gt; | literal type</code>
                                                         </td>
                                                   
                                                     <td>
-                                                            Yes
+                                                            No
                                                     </td>
                                                     
                                                 </tr>
@@ -269,19 +299,50 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="_options"></a>
+                        <a name="_annotations"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Private</span>
-                            _options</b>
-                            <a href="#_options"><span class="icon ion-ios-link"></span></a>
+                            _annotations</b>
+                            <a href="#_annotations"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ODataModelOptions&lt;T&gt;</a></code>
+                            <i>Type : </i>        <code><a href="../classes/ODataEntityAnnotations.html" target="_self" >ODataEntityAnnotations</a></code>
 
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:32</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="_attributes"></a>
+                        <span class="name">
+                            <b>
+                            _attributes</b>
+                            <a href="#_attributes"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>literal type</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{}</code>
                         </td>
                     </tr>
                         <tr>
@@ -297,25 +358,28 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="_properties"></a>
+                        <a name="_changes"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Private</span>
-                                <span class="modifier">Optional</span>
-                            _properties</b>
-                            <a href="#_properties"><span class="icon ion-ios-link"></span></a>
+                            _changes</b>
+                            <a href="#_changes"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Type : </i>        <code><a href="../miscellaneous/typealiases.html#ModelProperty" target="_self" >ModelProperty&lt;any&gt;[]</a></code>
+                            <i>Type : </i>    <code>literal type</code>
 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{}</code>
                         </td>
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:27</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:29</a></div>
                             </td>
                         </tr>
 
@@ -326,12 +390,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="errors"></a>
+                        <a name="_errors"></a>
                         <span class="name">
                             <b>
                                 <span class="modifier">Optional</span>
-                            errors</b>
-                            <a href="#errors"><span class="icon ion-ios-link"></span></a>
+                            _errors</b>
+                            <a href="#_errors"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -343,7 +407,158 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="67" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:67</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="86" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:86</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="_meta"></a>
+                        <span class="name">
+                            <b>
+                            _meta</b>
+                            <a href="#_meta"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ODataModelOptions&lt;T&gt;</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:35</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="_relations"></a>
+                        <span class="name">
+                            <b>
+                            _relations</b>
+                            <a href="#_relations"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>literal type</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{}</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:30</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="_resetting"></a>
+                        <span class="name">
+                            <b>
+                            _resetting</b>
+                            <a href="#_resetting"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:33</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="_resource"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Optional</span>
+                            _resource</b>
+                            <a href="#_resource"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../classes/ODataModel.html" target="_self" >ODataModelResource&lt;T&gt;</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:31</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="_silent"></a>
+                        <span class="name">
+                            <b>
+                            _silent</b>
+                            <a href="#_silent"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:34</a></div>
                             </td>
                         </tr>
 
@@ -369,7 +584,63 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:29</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:36</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="meta"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Static</span>
+                            meta</b>
+                            <a href="#meta"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ODataModelOptions&lt;any&gt;</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:26</a></div>
+                            </td>
+                        </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="options"></a>
+                        <span class="name">
+                            <b>
+                                <span class="modifier">Static</span>
+                            options</b>
+                            <a href="#options"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ModelOptions</a></code>
+
+                        </td>
+                    </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:25</a></div>
                             </td>
                         </tr>
 
@@ -387,132 +658,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="_call"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Private</span>
-                            _call
-                        </b>
-                        <a href="#_call"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>_call(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "model" | "collection" | "none", undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="204"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:204</a></div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                            <code>ODataFunctionResource&lt;P | R&gt; | ODataActionResource&lt;P | R&gt;</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                            <code>&quot;property&quot; | &quot;model&quot; | &quot;collection&quot; | &quot;none&quot;</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="_request"></a>
                     <span class="name">
                         <b>
@@ -526,15 +671,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>_request(resource: <a href="../classes/ODataModel.html">ODataModelResource<T></a>, obs$: <a href="../undefineds/ODataEntity.html">Observable<ODataEntity<any>></a>)</code>
+                    <code>_request(obs$: <a href="../undefineds/ODataEntity.html">Observable<ODataEntity<any>></a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="124"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:124</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="188"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:188</a></div>
                 </td>
             </tr>
 
@@ -553,18 +698,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataModel.html" target="_self" >ODataModelResource&lt;T&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
                                 <tr>
                                     <td>obs$</td>
                                     <td>
@@ -584,6 +717,76 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>    <code>Observable&lt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="annots"></a>
+                    <span class="name">
+                        <b>
+                            annots
+                        </b>
+                        <a href="#annots"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>annots(annots?: <a href="../classes/ODataEntityAnnotations.html">ODataEntityAnnotations</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:76</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>annots</td>
+                                    <td>
+                                                <code><a href="../classes/ODataEntityAnnotations.html" target="_self" >ODataEntityAnnotations</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -617,8 +820,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="251"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:251</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="360"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:360</a></div>
                 </td>
             </tr>
 
@@ -695,8 +898,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="117"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:117</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="172"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:172</a></div>
                 </td>
             </tr>
 
@@ -750,7 +953,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -782,8 +985,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="94"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:94</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="136"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:136</a></div>
                 </td>
             </tr>
 
@@ -850,15 +1053,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", options?: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+                    <code>callAction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="237"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:237</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="326"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:326</a></div>
                 </td>
             </tr>
 
@@ -883,6 +1086,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -896,6 +1100,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -908,6 +1114,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -920,18 +1128,21 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
-                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -940,7 +1151,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;R | ODataModel | ODataCollection | null&gt;</code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#Model" target="_self" >Observable&lt;R | ODataModel | ODataCollection | null&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -967,15 +1178,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", options?: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+                    <code>callFunction(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, params: P | null, responseType: "property" | "model" | "collection" | "none", undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="224"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:224</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="291"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:291</a></div>
                 </td>
             </tr>
 
@@ -1000,6 +1211,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1013,6 +1225,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1025,6 +1239,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1037,18 +1253,21 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
-                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -1057,7 +1276,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;R | ODataModel | ODataCollection | null&gt;</code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#Model" target="_self" >Observable&lt;R | ODataModel | ODataCollection | null&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1089,8 +1308,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="120"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:120</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="176"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:176</a></div>
                 </td>
             </tr>
 
@@ -1130,8 +1349,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="78"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:78</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="114"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:114</a></div>
                 </td>
             </tr>
 
@@ -1162,15 +1381,84 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>destroy(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+<code>destroy(undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="179"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:179</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="257"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:257</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="equals"></a>
+                    <span class="name">
+                        <b>
+                            equals
+                        </b>
+                        <a href="#equals"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>equals(other: <a href="../classes/ODataModel.html">ODataModel<T></a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:60</a></div>
                 </td>
             </tr>
 
@@ -1190,13 +1478,13 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>options</td>
+                                    <td>other</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../classes/ODataModel.html" target="_self" >ODataModel&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
 
@@ -1207,7 +1495,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;&gt;</code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1232,15 +1520,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetch(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+<code>fetch(undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="135"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:135</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="199"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:199</a></div>
                 </td>
             </tr>
 
@@ -1254,21 +1542,20 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>options</td>
+
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                        No
                                     </td>
 
                                     <td>
-                                        Yes
+                                        <code>{}</code>
                                     </td>
-
 
                                 </tr>
                             </tbody>
@@ -1309,8 +1596,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="108"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:108</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="162"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:162</a></div>
                 </td>
             </tr>
 
@@ -1374,15 +1661,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getBinding(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, responseType: "model" | "collection", options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                    <code>getBinding(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, responseType: "model" | "collection", undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="259"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:259</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="369"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:369</a></div>
                 </td>
             </tr>
 
@@ -1406,11 +1693,12 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>path</td>
+                                    <td>name</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -1419,6 +1707,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1431,18 +1721,21 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
-                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -1451,11 +1744,146 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;ODataModel | ODataCollection | null&gt;</code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#Model" target="_self" >Observable&lt;ODataModel | ODataCollection | null&gt;</a></code>
 
                     </div>
                     <div class="io-description">
                         
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getReference"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Protected</span>
+                            getReference
+                        </b>
+                        <a href="#getReference"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getReference(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="430"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:430</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>P</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataModel.html" target="_self" >Observable&lt;ODataModel&lt;P&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="hasChanged"></a>
+                    <span class="name">
+                        <b>
+                            hasChanged
+                        </b>
+                        <a href="#hasChanged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>hasChanged()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="288"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:288</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
                     </div>
                 </td>
             </tr>
@@ -1476,54 +1904,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>key()</code>
+<code>key(undefined: literal type)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="62"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:62</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="meta"></a>
-                    <span class="name">
-                        <b>
-                            meta
-                        </b>
-                        <a href="#meta"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>meta(meta?: <a href="../classes/ODataEntityMeta.html">ODataEntityMeta</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:81</a></div>
                 </td>
             </tr>
 
@@ -1539,19 +1928,22 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>meta</td>
                                     <td>
-                                                <code><a href="../classes/ODataEntityMeta.html" target="_self" >ODataEntityMeta</a></code>
+                                            <code>literal type</code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -1560,7 +1952,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey | literal type | undefined</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1592,8 +1984,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="194"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:194</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="278"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:278</a></div>
                 </td>
             </tr>
 
@@ -1662,8 +2054,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:44</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:66</a></div>
                 </td>
             </tr>
 
@@ -1732,8 +2124,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="155"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:155</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="223"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:223</a></div>
                 </td>
             </tr>
 
@@ -1794,15 +2186,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>schema(schema?: <a href="../classes/ODataStructuredType.html">ODataStructuredType<T></a>)</code>
+<code>schema()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="50"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:50</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:72</a></div>
                 </td>
             </tr>
 
@@ -1810,40 +2202,9 @@
             <tr>
                 <td class="col-md-4">
 
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>schema</td>
-                                    <td>
-                                                <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;T&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
-                    </div>
-                    <div class="io-description">
-                        
                     </div>
                 </td>
             </tr>
@@ -1871,8 +2232,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="97"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:97</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="150"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:150</a></div>
                 </td>
             </tr>
 
@@ -1948,15 +2309,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>setReference(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, model: <a href="../classes/ODataModel.html">ODataModel<P> | null</a>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                    <code>setReference(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, model: <a href="../classes/ODataModel.html">ODataModel<P> | null</a>, undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="278"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:278</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="392"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:392</a></div>
                 </td>
             </tr>
 
@@ -1980,6 +2341,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1993,6 +2355,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -2005,18 +2369,21 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
-                                    <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -2057,8 +2424,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="81"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:81</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="118"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:118</a></div>
                 </td>
             </tr>
 
@@ -2130,8 +2497,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="72"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:72</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:99</a></div>
                 </td>
             </tr>
 
@@ -2205,8 +2572,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="68"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:68</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="87"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:87</a></div>
                 </td>
             </tr>
 
@@ -2266,102 +2633,155 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { NEVER, Observable, throwError } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EMPTY, Observable, throwError } from &#x27;rxjs&#x27;;
 import { map, tap } from &#x27;rxjs/operators&#x27;;
 
 import {
   ODataEntityResource,
-  ODataPropertyResource,
   ODataNavigationPropertyResource,
   HttpOptions,
-  HttpEntityOptions,
-  ODataEntityMeta,
+  ODataEntityAnnotations,
   ODataEntity,
   ODataActionResource,
   ODataFunctionResource,
   Select,
   Expand,
-  OptionHandler,
-  HttpCallableOptions} from &#x27;../resources/index&#x27;;
+  OptionHandler} from &#x27;../resources/index&#x27;;
 
 import { ODataCollection } from &#x27;./collection&#x27;;
 import { Objects, Types } from &#x27;../utils&#x27;;
 import { EventEmitter } from &#x27;@angular/core&#x27;;
-import { ODataStructuredType } from &#x27;../schema&#x27;;
-import { EntitySelect, ModelProperty, ODataModelEvent, ODataModelOptions, ODataModelResource } from &#x27;./options&#x27;;
+import { ModelOptions, ODataModelEvent, ODataModelOptions, ODataModelRelation, ODataModelResource } from &#x27;./options&#x27;;
+import { EntityKey } from &#x27;../types&#x27;;
 
+// @dynamic
 export class ODataModel&lt;T&gt; {
-  //Events
-  private _properties?: ModelProperty&lt;any&gt;[];
-  private _options: ODataModelOptions&lt;T&gt;;
+  // Properties
+  static options: ModelOptions;
+  static meta: ODataModelOptions&lt;any&gt;;
+  // Events
+  _attributes: {[name: string]: any} &#x3D; {};
+  _changes: {[name: string]: any} &#x3D; {};
+  _relations: { [name: string]: ODataModelRelation } &#x3D; {};
+  _resource?: ODataModelResource&lt;T&gt;;
+  _annotations!: ODataEntityAnnotations;
+  _resetting: boolean &#x3D; false;
+  _silent: boolean &#x3D; false;
+  _meta: ODataModelOptions&lt;T&gt;;
   events$ &#x3D; new EventEmitter&lt;ODataModelEvent&lt;T&gt;&gt;();
-  constructor(entity?: Partial&lt;T&gt; | {[name: string]: any}, { resource, schema, meta, reset &#x3D; false }: {
+  constructor(data: Partial&lt;T&gt; | {[name: string]: any} &#x3D; {}, { resource, annots, reset &#x3D; false }: {
     resource?: ODataModelResource&lt;T&gt;,
-    schema?: ODataStructuredType&lt;T&gt;,
-    meta?: ODataEntityMeta,
+    annots?: ODataEntityAnnotations,
     reset?: boolean
   } &#x3D; {}) {
-    this._options &#x3D; new ODataModelOptions(this._properties || []);
+
+    const Klass &#x3D; this.constructor as typeof ODataModel;
+    if (Klass.meta &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x60;Can&#x27;t create model without metadata&#x60;);
+    this._meta &#x3D; Klass.meta;
+    this._meta.bind(this);
+
+    (&lt;any&gt;this)[this._meta.cid] &#x3D; (&lt;any&gt;data)[this._meta.cid] || Objects.uniqueId(&quot;c&quot;);
+
     this.resource(resource);
-    this.schema(schema);
-    this.meta(meta);
-    entity &#x3D; Objects.merge(this.defaults(), entity || {});
-    this.assign(entity, { reset });
+    this.annots(annots || new ODataEntityAnnotations());
+
+    let attrs &#x3D; this.annots().attributes&lt;T&gt;(data);
+    let defaults &#x3D; this.defaults();
+
+    this.assign(Objects.merge(defaults, attrs), { reset });
+  }
+
+  equals(other: ODataModel&lt;T&gt;) {
+    const thisKey &#x3D; this.key();
+    const otherKey &#x3D; other.key();
+    return this &#x3D;&#x3D;&#x3D; other || (&lt;any&gt;this)[this._meta.cid] &#x3D;&#x3D;&#x3D; (&lt;any&gt;other)[this._meta.cid] || (thisKey !&#x3D;&#x3D; undefined &amp;&amp; otherKey !&#x3D;&#x3D; undefined &amp;&amp; Types.isEqual(thisKey, otherKey));
   }
 
   resource(resource?: ODataModelResource&lt;T&gt;) {
     if (resource !&#x3D;&#x3D; undefined)
-      this._options.attach(this, resource);
-    return this._options.resource(this);
+      this._meta.attach(this, resource);
+    return this._meta.resource(this);
   }
 
-  schema(schema?: ODataStructuredType&lt;T&gt;) {
-    if (schema !&#x3D;&#x3D; undefined)
-      this._options.bind(this, schema);
-    return this._options.schema(this);
+  schema() {
+    return this._meta.schema;
   }
 
-  meta(meta?: ODataEntityMeta) {
-    if (meta !&#x3D;&#x3D; undefined)
-      this._options.annotate(this, meta);
-    return this._options.meta(this);
+  annots(annots?: ODataEntityAnnotations) {
+    if (annots !&#x3D;&#x3D; undefined) this._annotations &#x3D; annots;
+    return this._annotations;
   }
 
-  key() {
-    return this._options.key(this);
+  key({field_mapping &#x3D; false, resolve &#x3D; true}: {field_mapping?: boolean, resolve?: boolean} &#x3D; {}): EntityKey&lt;T&gt; | {[name: string]: any} | undefined {
+    return this._meta.resolveKey(this, {field_mapping, resolve});
   }
 
   // Validation
-  errors?: { [key: string]: any };
-  protected validate({ create &#x3D; false, patch &#x3D; false }: { create?: boolean, patch?: boolean } &#x3D; {}) {
-    return this._options.validate(this, {create, patch});
+  _errors?: { [key: string]: any };
+  protected validate({
+    create &#x3D; false,
+    patch &#x3D; false,
+    navigation &#x3D; false
+  }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } &#x3D; {}) {
+    return this._meta.validate(this, {create, patch, navigation});
   }
 
-  valid({ create &#x3D; false, patch &#x3D; false }: { create?: boolean, patch?: boolean } &#x3D; {}): boolean {
-    this.errors &#x3D; this.validate({create, patch});
-    if (this.errors !&#x3D;&#x3D; undefined)
-      this.events$.emit({name: &#x27;invalid&#x27;, model: this, value: this.errors, options: {create, patch}});
-    return this.errors &#x3D;&#x3D;&#x3D; undefined;
-  }
-  protected defaults() {
-    return this._options.defaults(this);
-  }
-  toEntity({
-    include_navigation &#x3D; false,
-    changes_only &#x3D; false,
-    field_mapping &#x3D; false,
-    select
+  valid({
+    create &#x3D; false,
+    patch &#x3D; false,
+    navigation &#x3D; false
   }: {
+    create?: boolean,
+    patch?: boolean,
+    navigation?: boolean
+  } &#x3D; {}): boolean {
+    this._errors &#x3D; this.validate({create, patch, navigation});
+    if (this._errors !&#x3D;&#x3D; undefined)
+      this.events$.emit({name: &#x27;invalid&#x27;, model: this, value: this._errors, options: {create, patch}});
+    return this._errors &#x3D;&#x3D;&#x3D; undefined;
+  }
+
+  protected defaults() {
+    return this._meta.defaults(this);
+  }
+
+  toEntity({
+    client_id &#x3D; false,
+    include_navigation &#x3D; false,
+    include_concurrency &#x3D; false,
+    include_key &#x3D; false,
+    changes_only &#x3D; false,
+    field_mapping &#x3D; false
+  }: {
+    client_id?: boolean,
     include_navigation?: boolean,
+    include_concurrency?: boolean,
+    include_key?: boolean,
     changes_only?: boolean,
-    field_mapping?: boolean,
-    select?: EntitySelect&lt;T&gt;
+    field_mapping?: boolean
   } &#x3D; {}): T | {[name: string]: any} {
-    return this._options.toEntity(this, { include_navigation, changes_only, field_mapping, select });
+    return this._meta.toEntity(this, { client_id, include_navigation, include_concurrency, include_key, changes_only, field_mapping});
   }
-  attributes({ changes_only &#x3D; false }: { changes_only?: boolean } &#x3D; {}): {[name: string]: any} {
-    return this._options.attributes(this, { changes_only });
+
+  attributes({
+    changes_only &#x3D; false,
+    include_concurrency &#x3D; false,
+    include_computed &#x3D; false,
+    field_mapping &#x3D; false
+  }: {
+    changes_only?: boolean,
+    include_concurrency?: boolean,
+    include_computed?: boolean,
+    field_mapping?: boolean
+  } &#x3D; {}): {[name: string]: any} {
+    return this._meta.attributes(this, { changes_only, field_mapping, include_concurrency, include_computed });
   }
+
   set(path: string | string[], value: any) {
     const pathArray &#x3D; (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length &#x3D;&#x3D;&#x3D; 0) return undefined;
@@ -2373,6 +2793,7 @@ export class ODataModel&lt;T&gt; {
       return ((&lt;any&gt;this)[pathArray[0]] &#x3D; value);
     }
   }
+
   get(path: string | string[]): any {
     const pathArray &#x3D; (Types.isArray(path) ? path : (path as string).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length &#x3D;&#x3D;&#x3D; 0) return undefined;
@@ -2382,122 +2803,157 @@ export class ODataModel&lt;T&gt; {
     }
     return value;
   }
+
   assign(entity: Partial&lt;T&gt; | {[name: string]: any}, { reset &#x3D; false, silent &#x3D; false }: { reset?: boolean, silent?: boolean } &#x3D; {}) {
-    this._options.assign(this, entity, { reset, silent });
+    return this._meta.assign(this, entity, { reset, silent });
   }
+
   clone() {
     let Ctor &#x3D; &lt;typeof ODataModel&gt;this.constructor;
-    return new Ctor(this.toEntity({ include_navigation: true }), { resource: this.resource(), meta: this.meta() });
+    return new Ctor(
+      this.toEntity({
+        include_navigation: true,
+        include_concurrency: true
+      }), {
+        resource: this.resource(),
+        annots: this.annots()
+      });
   }
-  private _request(resource: ODataModelResource&lt;T&gt;, obs$: Observable&lt;ODataEntity&lt;any&gt;&gt;): Observable&lt;this&gt; {
-    this.events$.emit({name: &#x27;request&#x27;, model: this, value: obs$ });
+
+  private _request(obs$: Observable&lt;ODataEntity&lt;any&gt;&gt;): Observable&lt;this&gt; {
+    this.events$.emit({ name: &#x27;request&#x27;, model: this, value: obs$ });
     return obs$.pipe(
-      map(({ entity, meta }) &#x3D;&gt; {
-        this.resource(resource);
-        this.meta(meta);
-        this.assign(meta.attributes&lt;T&gt;(entity || {}), { reset: true });
+      map(({ entity, annots }) &#x3D;&gt; {
+        this.annots(annots);
+        this.assign(annots.attributes&lt;T&gt;(entity || {}), { reset: true });
         this.events$.emit({name: &#x27;sync&#x27;, model: this });
         return this;
       }));
   }
-  fetch(options?: HttpOptions): Observable&lt;this&gt; {
-    let resource &#x3D; this.resource();
-    if (resource !&#x3D;&#x3D; undefined) {
-      let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt; &#x3D; NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!resource.segment.entitySet().hasKey())
-          return throwError(&quot;Can&#x27;t fetch model without key&quot;);
-        obs$ &#x3D; resource.get(options);
-      } else if (resource instanceof ODataNavigationPropertyResource) {
-        obs$ &#x3D; resource.get(
-          Object.assign&lt;HttpEntityOptions, HttpOptions&gt;(&lt;HttpEntityOptions&gt;{ responseType: &#x27;entity&#x27; }, options || {}));
-      } else if (resource instanceof ODataPropertyResource) {
-        obs$ &#x3D; resource.get(
-          Object.assign&lt;HttpEntityOptions, HttpOptions&gt;(&lt;HttpEntityOptions&gt;{ responseType: &#x27;entity&#x27; }, options || {}));
-      }
-      return this._request(resource, obs$);
+
+  fetch({
+    asEntity,
+    ...options
+  }: HttpOptions &amp; {
+    asEntity?: boolean,
+    options?: HttpOptions
+  } &#x3D; {}): Observable&lt;this&gt; {
+    let resource &#x3D; this._meta.resource(this, {toEntity: asEntity});
+    if (resource &#x3D;&#x3D;&#x3D; undefined)
+      return throwError(&quot;fetch: Resource is undefined&quot;);
+
+    let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt;;
+    if (resource instanceof ODataEntityResource) {
+      if (!resource.hasKey())
+        return throwError(&quot;fetch: Can&#x27;t fetch model without key&quot;);
+      obs$ &#x3D; resource.get(options);
+    } else if (resource instanceof ODataNavigationPropertyResource) {
+      obs$ &#x3D; resource.get({responseType: &#x27;entity&#x27;, ...options});
+    } else {
+      obs$ &#x3D; resource.get({responseType: &#x27;entity&#x27;, ...options});
     }
-    return throwError(&quot;Resource is undefined&quot;);
+    return this._request(obs$);
   }
 
-  save(
-    { patch &#x3D; false, include_navigation &#x3D; false, validate &#x3D; true, ...options }: HttpOptions &amp; { patch?: boolean, include_navigation?: boolean, validate?: boolean, options?: HttpOptions } &#x3D; {}
-  ): Observable&lt;this&gt; {
-    let resource &#x3D; this.resource();
-    if (resource !&#x3D;&#x3D; undefined) {
-      let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt; &#x3D; NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!validate || this.valid({create: !resource.segment.entitySet().hasKey(), patch})) {
-          const _entity &#x3D; this.toEntity({ changes_only: patch, field_mapping: true, include_navigation }) as T;
-          obs$ &#x3D; (!resource.segment.entitySet().hasKey() ?
-            resource.post(_entity, options) :
-            patch ?
-              resource.patch(_entity, options) :
-              resource.put(_entity, options)
-          ).pipe(map(({ entity, meta }) &#x3D;&gt; ({ entity: entity || _entity, meta })));
-        } else {
-          obs$ &#x3D; throwError(this.errors);
-        }
-      }
-      return this._request(resource, obs$);
+  save({
+    asEntity,
+    patch &#x3D; false,
+    navigation &#x3D; false,
+    validate &#x3D; true,
+    ...options
+  }: HttpOptions &amp; {
+    asEntity?: boolean,
+    patch?: boolean,
+    navigation?: boolean,
+    validate?: boolean,
+    options?: HttpOptions
+  } &#x3D; {}): Observable&lt;this&gt; {
+    let resource &#x3D; this._meta.resource(this, {toEntity: asEntity});
+    if (resource &#x3D;&#x3D;&#x3D; undefined)
+      return throwError(&quot;save: Resource is undefined&quot;);
+    if (!(resource instanceof ODataEntityResource))
+      return throwError(&quot;save: Resource type ODataEntityResource needed&quot;);
+
+    const isNew &#x3D; !resource.hasKey();
+    let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt;;
+    if (!validate || this.valid({create: isNew, patch, navigation})) {
+      const _entity &#x3D; this.toEntity({ changes_only: patch, field_mapping: true, include_concurrency: true, include_navigation: navigation }) as T;
+      obs$ &#x3D; (
+        isNew ? resource.post(_entity, options) :
+        patch ? resource.patch(_entity, options) :
+        resource.put(_entity, options)
+      ).pipe(map(({ entity, annots }) &#x3D;&gt; ({ entity: entity || _entity, annots })));
+    } else {
+      obs$ &#x3D; throwError(this._errors);
     }
-    return throwError(&quot;Resource Error&quot;);
+    return this._request(obs$);
   }
 
-  destroy(options?: HttpOptions): Observable&lt;this&gt; {
-    let resource &#x3D; this.resource();
-    if (resource !&#x3D;&#x3D; undefined) {
-      let obs$: Observable&lt;ODataEntity&lt;any&gt;&gt; &#x3D; NEVER;
-      if (resource instanceof ODataEntityResource) {
-        if (!resource.segment.entitySet().hasKey())
-          return throwError(&quot;Can&#x27;t destroy model without key&quot;);
-        const _entity &#x3D; this.toEntity({field_mapping: true}) as T;
-        obs$ &#x3D; resource.delete(Object.assign({ etag: this.meta().etag }, options || {})).pipe(
-          map(({ entity, meta }) &#x3D;&gt; ({ entity: entity || _entity, meta })));
-      }
-      return this._request(resource, obs$).pipe(tap(() &#x3D;&gt; this.events$.emit({name: &#x27;destroy&#x27;, model: this})));
-    }
-    return throwError(&quot;Resource Error&quot;);
+  destroy({
+    asEntity,
+    ...options
+  }: HttpOptions &amp; {
+    asEntity?: boolean,
+    options?: HttpOptions
+  } &#x3D; {}): Observable&lt;this&gt; {
+    let resource &#x3D; this._meta.resource(this, {toEntity: asEntity});
+    if (resource &#x3D;&#x3D;&#x3D; undefined)
+      return throwError(&quot;destroy: Resource is undefined&quot;);
+    if (!(resource instanceof ODataEntityResource))
+      return throwError(&quot;destroy: Resource type ODataEntityResource needed&quot;);
+    if (!resource.hasKey())
+      return throwError(&quot;destroy: Can&#x27;t destroy model without key&quot;);
+
+    const _entity &#x3D; this.toEntity({field_mapping: true}) as T;
+    const obs$ &#x3D; resource.delete(Object.assign({ etag: this.annots().etag }, options || {})).pipe(
+      map(({ entity, annots }) &#x3D;&gt; ({ entity: entity || _entity, annots })));
+    return this._request(obs$).pipe(tap(() &#x3D;&gt; this.events$.emit({name: &#x27;destroy&#x27;, model: this})));
   }
+
   query(func: (q:
     { select(opts?: Select&lt;T&gt;): OptionHandler&lt;Select&lt;T&gt;&gt;;
       expand(opts?: Expand&lt;T&gt;): OptionHandler&lt;Expand&lt;T&gt;&gt;;
       format(opts?: string): OptionHandler&lt;string&gt;;
     }) &#x3D;&gt; void) {
-    const resource &#x3D; this.resource();
-    if (resource &#x3D;&#x3D;&#x3D; undefined)
-      throw new Error(&#x60;Can&#x27;t query without ODataResource&#x60;);
-    return this._options.query(this, resource, func);
-  }
-  private _call&lt;P, R&gt;(
-    params: P | null,
-    resource: ODataFunctionResource&lt;P, R&gt; | ODataActionResource&lt;P, R&gt;,
-    responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    { expand, select, ...options }: HttpCallableOptions&lt;R&gt; &#x3D; {}
-  ) {
-    if (expand !&#x3D;&#x3D; undefined) resource.query.expand(expand);
-    if (select !&#x3D;&#x3D; undefined) resource.query.select(select);
-    switch (responseType) {
-      case &#x27;property&#x27;:
-        return resource.callProperty(params, options);
-      case &#x27;model&#x27;:
-        return resource.callModel(params, options);
-      case &#x27;collection&#x27;:
-        return resource.callCollection(params, options);
-      default:
-        return resource.call(params, options);
-    }
+    const resource &#x3D; this._meta.resource(this, {toEntity: false});
+    if (resource !&#x3D;&#x3D; undefined)
+      return this._meta.query(this, resource, func);
   }
 
+  hasChanged() {
+    return this._meta.hasChanged(this);
+  }
   protected callFunction&lt;P, R&gt;(
     name: string,
     params: P | null,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    options?: HttpCallableOptions&lt;R&gt;
-  ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
-    let resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.function&lt;P, R&gt;(name), responseType, options);
+    {
+      asEntity,
+      alias,
+      expand,
+      select,
+      ...options
+    }: {
+      asEntity?: boolean
+      alias?: boolean
+      expand?: Expand&lt;R&gt;,
+      select?: Select&lt;R&gt;
+    } &amp; HttpOptions &#x3D; {}): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
+    const resource &#x3D; this._meta.resource(this, {toEntity: asEntity});
+    if (resource instanceof ODataEntityResource &amp;&amp; resource.hasKey()) {
+      const func &#x3D; resource.function&lt;P, R&gt;(name);
+      if (expand !&#x3D;&#x3D; undefined) func.query.expand(expand);
+      if (select !&#x3D;&#x3D; undefined) func.query.select(select);
+      switch (responseType) {
+        case &#x27;property&#x27;:
+          return func.callProperty(params, {alias, ...options});
+        case &#x27;model&#x27;:
+          return func.callModel(params, {alias, ...options});
+        case &#x27;collection&#x27;:
+          return func.callCollection(params, {alias, ...options});
+        default:
+          return func.call(params, {alias, ...options});
+      }
     }
     return throwError(&quot;Can&#x27;t call function without ODataEntityResource with key&quot;);
   }
@@ -2506,32 +2962,57 @@ export class ODataModel&lt;T&gt; {
     name: string,
     params: P | null,
     responseType: &#x27;property&#x27; | &#x27;model&#x27; | &#x27;collection&#x27; | &#x27;none&#x27;,
-    options?: HttpCallableOptions&lt;R&gt;
-  ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
-    let resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      return this._call(params, resource.action&lt;P, R&gt;(name), responseType, options);
+    {
+      asEntity,
+      expand,
+      select,
+      ...options
+    }: {
+      asEntity?: boolean
+      expand?: Expand&lt;R&gt;,
+      select?: Select&lt;R&gt;
+    } &amp; HttpOptions &#x3D; {}): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
+    const resource &#x3D; this._meta.resource(this, {toEntity: asEntity});
+    if (resource instanceof ODataEntityResource &amp;&amp; resource.hasKey()) {
+      const action &#x3D; resource.action&lt;P, R&gt;(name);
+      if (expand !&#x3D;&#x3D; undefined) action.query.expand(expand);
+      if (select !&#x3D;&#x3D; undefined) action.query.select(select);
+      switch (responseType) {
+        case &#x27;property&#x27;:
+          return action.callProperty(params, options);
+        case &#x27;model&#x27;:
+          return action.callModel(params, options);
+        case &#x27;collection&#x27;:
+          return action.callCollection(params, options);
+        default:
+          return action.call(params, options);
+      }
     }
     return throwError(&quot;Can&#x27;t call action without ODataEntityResource with key&quot;);
   }
 
   // As Derived
   protected asDerived&lt;S&gt;(type: string): ODataModel&lt;S&gt; {
-    const resource &#x3D; this.resource();
+    //TODO: Derived
+    const resource &#x3D; this._meta.resource(this, {toEntity: false});
     if (resource instanceof ODataEntityResource) {
-      return resource.cast&lt;S&gt;(type).asModel(this.toEntity({ include_navigation: true }), {meta: this.meta()});
+      return resource.cast&lt;S&gt;(type).asModel(this.toEntity({ include_navigation: true, include_concurrency: true }), {annots: this.annots()});
     }
     throw new Error(&#x60;Can&#x27;t cast to derived model without ODataEntityResource&#x60;);
   }
 
   protected getBinding&lt;S&gt;(
-    path: string,
+    name: string,
     responseType: &#x27;model&#x27; | &#x27;collection&#x27;,
-    options?: HttpOptions
-  ): Observable&lt;ODataModel&lt;S&gt; | ODataCollection&lt;S, ODataModel&lt;S&gt;&gt; | null&gt; {
-    let resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      const nav &#x3D; resource.navigationProperty&lt;S&gt;(path);
+    {
+      asEntity,
+      ...options
+    }: {
+      asEntity?: boolean
+    } &amp; HttpOptions &#x3D; {}): Observable&lt;ODataModel&lt;S&gt; | ODataCollection&lt;S, ODataModel&lt;S&gt;&gt; | null&gt; {
+    const resource &#x3D; this._meta.resource(this, {toEntity: asEntity});
+    if (resource instanceof ODataEntityResource &amp;&amp; resource.hasKey()) {
+      const nav &#x3D; resource.navigationProperty&lt;S&gt;(name);
       switch (responseType) {
         case &#x27;model&#x27;:
           return nav.fetchModel(options);
@@ -2546,28 +3027,31 @@ export class ODataModel&lt;T&gt; {
   protected setReference&lt;P&gt;(
     name: string,
     model: ODataModel&lt;P&gt; | null,
-    options?: HttpOptions
-  ): Observable&lt;this&gt; {
-    const prop &#x3D; this._options.findProperty(p &#x3D;&gt; p.name &#x3D;&#x3D;&#x3D; name);
-    if (prop &#x3D;&#x3D;&#x3D; undefined)
-      throw new Error(&#x60;Can&#x27;t find property ${name}&#x60;);
-    if (prop.parser?.collection)
-      throw new Error(&#x60;Can&#x27;t set ${prop.name} to collection, use add&#x60;);
+    {
+      asEntity,
+      ...options
+    }: {
+      asEntity?: boolean
+    } &amp; HttpOptions &#x3D; {}): Observable&lt;this&gt; {
+    const field &#x3D; this._meta.fields({include_navigation: true}).find(p &#x3D;&gt; p.name &#x3D;&#x3D;&#x3D; name);
+    if (field &#x3D;&#x3D;&#x3D; undefined || !field.navigation)
+      throw new Error(&#x60;Can&#x27;t find navigation property ${name}&#x60;);
+    if (field.collection)
+      throw new Error(&#x60;Can&#x27;t set ${field.name} to collection, use add&#x60;);
 
-    const resource &#x3D; this.resource();
-    if (resource instanceof ODataEntityResource &amp;&amp; resource.segment.entitySet().hasKey()) {
-      let ref &#x3D; resource.navigationProperty(prop.field).reference();
-      const etag &#x3D; this.meta().etag;
-      const opts &#x3D; Object.assign({ etag }, options || {});
+    const resource &#x3D; this._meta.resource(this, {toEntity: asEntity});
+    if (resource instanceof ODataEntityResource &amp;&amp; resource.hasKey()) {
+      let ref &#x3D; (field.resourceFactory&lt;T, any&gt;(resource) as ODataNavigationPropertyResource&lt;any&gt;).reference();
+      const etag &#x3D; this.annots().etag;
       const obs$ &#x3D; (model instanceof ODataModel) ?
-        ref.set(model.resource() as ODataEntityResource&lt;P&gt;, opts) :
-        ref.unset(opts);
+        ref.set(model._meta.resource(model, {toEntity: true}) as ODataEntityResource&lt;P&gt;, {etag, ...options}) :
+        ref.unset({etag, ...options});
       this.events$.emit({name: &#x27;request&#x27;, model: this, value: obs$ });
       return obs$.pipe(
         map(() &#x3D;&gt; {
           let attrs: any &#x3D; { [name]: model };
-          if (prop.field !&#x3D;&#x3D; undefined) {
-            attrs[prop.field] &#x3D; (model instanceof ODataModel) ? model.key() : model;
+          if (field.referential !&#x3D;&#x3D; undefined) {
+            attrs[field.referential] &#x3D; (model instanceof ODataModel) ? model.key() : model;
           }
           this.assign(attrs, { reset: true });
           this.events$.emit({name: &#x27;sync&#x27;, model: this});
@@ -2575,7 +3059,49 @@ export class ODataModel&lt;T&gt; {
         }
         ));
       }
-    return throwError(&quot;Can&#x27;t binding without ODataEntityResource with key&quot;);
+    return throwError(&quot;Can&#x27;t set reference without ODataEntityResource&quot;);
+  }
+
+  protected getReference&lt;P&gt;(
+    name: string,
+    {
+      asEntity,
+      ...options
+    }: {
+      asEntity?: boolean
+    } &amp; HttpOptions &#x3D; {}): Observable&lt;ODataModel&lt;P&gt;&gt; {
+    const field &#x3D; this._meta.fields({include_navigation: true}).find(p &#x3D;&gt; p.name &#x3D;&#x3D;&#x3D; name);
+    if (field &#x3D;&#x3D;&#x3D; undefined || !field.navigation)
+      throw new Error(&#x60;Can&#x27;t find navigation property ${name}&#x60;);
+    if (field.collection)
+      throw new Error(&#x60;Can&#x27;t get ${field.name} collection&#x60;);
+
+    let model: ODataModel&lt;P&gt; | undefined;
+    if (asEntity) {
+      if (field.referential !&#x3D;&#x3D; undefined &amp;&amp; field.referenced !&#x3D;&#x3D; undefined) {
+        let key &#x3D; (&lt;any&gt;this)[field.referential];
+        if (key !&#x3D;&#x3D; undefined) {
+          const resource &#x3D; field.meta?.modelResourceFactory({fromSet: asEntity});
+          model &#x3D; field.modelCollectionFactory&lt;T, P&gt;({
+            value: {[field.referenced]: key},
+            baseSchema: this.schema(),
+            baseAnnots: this.annots()
+          }) as ODataModel&lt;P&gt;;
+          model.resource(resource);
+        }
+      }
+    } else {
+      model &#x3D; field.modelCollectionFactory&lt;T, P&gt;({
+        baseResource: this.resource(),
+        baseSchema: this.schema(),
+        baseAnnots: this.annots()
+      }) as ODataModel&lt;P&gt;;
+    }
+    if (model !&#x3D;&#x3D; undefined) {
+      (&lt;any&gt;this)[field.name] &#x3D; model;
+      return model.fetch(options);
+    }
+    return throwError(&quot;Can&#x27;t get reference without ODataEntityResource&quot;);
   }
 }
 </code></pre>

@@ -78,7 +78,7 @@ export class AppComponent {
     // Fetch airports with count
     airports
     .get({withCount: true})
-    .subscribe(({entities, meta}) => console.log("Airports: ", entities, "Annotations: ", meta));
+    .subscribe(({entities, annots}) => console.log("Airports: ", entities, "Annotations: ", annots));
 
     // Fetch all airports
     airports
@@ -91,19 +91,19 @@ export class AppComponent {
     .get()
     .pipe(
       switchMap(() => airports.entity("CYYZ").get({fetchPolicy: 'cache-first'}))) // From Cache!
-    .subscribe(({entity, meta}) => console.log("Airport: ", entity, "Annotations: ", meta));
+    .subscribe(({entity, annots}) => console.log("Airport: ", entity, "Annotations: ", annots));
 
     // Filter airports (inmutable resource)
     airports
     .filter({Location: {City: {CountryRegion: "United States"}}})
     .get()
-    .subscribe(({entities, meta}) => console.log("Airports of United States: ", entities, "Annotations: ", meta));
+    .subscribe(({entities, annots}) => console.log("Airports of United States: ", entities, "Annotations: ", annots));
 
     // Add filter (mutable resource)
     airports.query.filter().push({Location: {City: {Region: "California"}}});
     airports
     .get()
-    .subscribe(({entities, meta}) => console.log("Airports in California: ", entities, "Annotations: ", meta));
+    .subscribe(({entities, annots}) => console.log("Airports in California: ", entities, "Annotations: ", annots));
 
     // Resource to JSON
     const json = airports.toJSON();
@@ -116,7 +116,7 @@ export class AppComponent {
     airports.query.filter().clear();
     airports
     .get()
-    .subscribe(({entities, meta}) => console.log("Airports: ", entities, "Annotations: ", meta));
+    .subscribe(({entities, annots}) => console.log("Airports: ", entities, "Annotations: ", annots));
 
     let people = peopleService.entities();
 
@@ -128,7 +128,7 @@ export class AppComponent {
       Trips: { select: ['Name', 'Tags'] },
     })
     .get({withCount: true})
-    .subscribe(({entities, meta}) => console.log("People with Friends and Trips: ", entities, "Annotations: ", meta));
+    .subscribe(({entities, annots}) => console.log("People with Friends and Trips: ", entities, "Annotations: ", annots));
 
     this.odata.batch("TripPin").post(batch => {
       airports.get().subscribe(console.log);

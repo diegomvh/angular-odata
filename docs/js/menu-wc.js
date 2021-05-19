@@ -191,6 +191,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataAnnotation.html" data-type="entity-link">ODataAnnotation</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataAnnotations.html" data-type="entity-link">ODataAnnotations</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataApi.html" data-type="entity-link">ODataApi</a>
                             </li>
                             <li class="link">
@@ -221,13 +224,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataCountResource.html" data-type="entity-link">ODataCountResource</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataEntitiesMeta.html" data-type="entity-link">ODataEntitiesMeta</a>
+                                <a href="classes/ODataEntitiesAnnotations.html" data-type="entity-link">ODataEntitiesAnnotations</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataEntityAnnotations.html" data-type="entity-link">ODataEntityAnnotations</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataEntityContainer.html" data-type="entity-link">ODataEntityContainer</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/ODataEntityMeta.html" data-type="entity-link">ODataEntityMeta</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataEntityResource.html" data-type="entity-link">ODataEntityResource</a>
@@ -243,6 +246,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/ODataEntitySetService.html" data-type="entity-link">ODataEntitySetService</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataEntityTypeKey.html" data-type="entity-link">ODataEntityTypeKey</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataEnumType.html" data-type="entity-link">ODataEnumType</a>
@@ -263,9 +269,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataInStorageCache.html" data-type="entity-link">ODataInStorageCache</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataMeta.html" data-type="entity-link">ODataMeta</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/ODataMetadata.html" data-type="entity-link">ODataMetadata</a>
                             </li>
                             <li class="link">
@@ -275,10 +278,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataModel.html" data-type="entity-link">ODataModel</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataModelOptions.html" data-type="entity-link">ODataModelOptions</a>
+                                <a href="classes/ODataModelField.html" data-type="entity-link">ODataModelField</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataModelProperty.html" data-type="entity-link">ODataModelProperty</a>
+                                <a href="classes/ODataModelOptions.html" data-type="entity-link">ODataModelOptions</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataNavigationPropertyResource.html" data-type="entity-link">ODataNavigationPropertyResource</a>
@@ -290,7 +293,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataPathSegments.html" data-type="entity-link">ODataPathSegments</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataPropertyMeta.html" data-type="entity-link">ODataPropertyMeta</a>
+                                <a href="classes/ODataPropertyAnnotations.html" data-type="entity-link">ODataPropertyAnnotations</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataPropertyResource.html" data-type="entity-link">ODataPropertyResource</a>
@@ -367,16 +370,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? ' id="interfaces-links"' : 'id="xs-interfaces-links"' }>
                             <li class="link">
-                                <a href="interfaces/Annotation.html" data-type="entity-link">Annotation</a>
-                            </li>
-                            <li class="link">
                                 <a href="interfaces/ApiOptions.html" data-type="entity-link">ApiOptions</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Cache.html" data-type="entity-link">Cache</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/EnumTypeField.html" data-type="entity-link">EnumTypeField</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/ODataCacheEntry.html" data-type="entity-link">ODataCacheEntry</a>
@@ -398,9 +395,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/StoragePayload.html" data-type="entity-link">StoragePayload</a>
-                            </li>
-                            <li class="link">
-                                <a href="interfaces/StructuredTypeField.html" data-type="entity-link">StructuredTypeField</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/StructuredTypeFieldOptions.html" data-type="entity-link">StructuredTypeFieldOptions</a>

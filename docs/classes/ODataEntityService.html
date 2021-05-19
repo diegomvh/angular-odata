@@ -98,7 +98,11 @@
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
-                                <a href="#call">call</a>
+                                <a href="#callAction">callAction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#callFunction">callFunction</a>
                             </li>
                         </ul>
                     </td>
@@ -291,20 +295,20 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="call"></a>
+                    <a name="callAction"></a>
                     <span class="name">
                         <b>
                             <span class="modifier">Protected</span>
-                            call
+                            callAction
                         </b>
-                        <a href="#call"><span class="icon ion-ios-link"></span></a>
+                        <a href="#callAction"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>call(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "entity" | "entities" | "none", undefined: <a href="../interfaces/Options.html">HttpCallableOptions<R></a>)</code>
+                    <code>callAction(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "entity" | "entities" | "none", undefined)</code>
                 </td>
             </tr>
 
@@ -317,7 +321,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:14</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:41</a></code>
 </div>
                 </td>
             </tr>
@@ -391,7 +395,137 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpCallableOptions&lt;R&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="callFunction"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Protected</span>
+                            callFunction
+                        </b>
+                        <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>callFunction(params: P | null, resource: ODataFunctionResource<P | R> | ODataActionResource<P | R>, responseType: "property" | "entity" | "entities" | "none", undefined)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:13</a></code>
+</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>P</li>
+                        <li>R</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>params</td>
+                                    <td>
+                                            <code>P | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>resource</td>
+                                    <td>
+                                            <code>ODataFunctionResource&lt;P | R&gt; | ODataActionResource&lt;P | R&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>responseType</td>
+                                    <td>
+                                            <code>&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
                                     </td>
 
                                     <td>
