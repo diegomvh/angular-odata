@@ -3,10 +3,11 @@ import { Parser, StructuredTypeFieldOptions } from '../types';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
 
-type Duration = {
+export type Duration = {
   sign?: 1 | -1;
   years?: number;
   months?: number;
+  weeks?: number;
   days?: number;
   hours?: number;
   minutes?: number;
@@ -74,7 +75,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         }
         let duration: Duration = {};
         duration.sign = (matches[1] === '-') ? -1 : 1;
-        return ['years', 'months', 'days', 'hours', 'minutes', 'seconds'].reduce((acc: any, name, index) => {
+        return ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].reduce((acc: any, name, index) => {
           const v = parseFloat(matches[index + 3]);
           if (!Number.isNaN(v))
             acc[name] = v;
@@ -89,6 +90,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         'P',
         v.years ? v.years + 'Y' : '',
         v.months ? v.months + 'M' : '',
+        v.weeks ? v.weeks + 'W' : '',
         v.days ? v.days + 'D' : '',
         'T',
         v.hours ? v.hours + 'H' : '',
