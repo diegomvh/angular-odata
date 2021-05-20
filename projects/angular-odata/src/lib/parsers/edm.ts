@@ -68,15 +68,16 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   },
   'Edm.Duration': <Parser<Duration>>{
     deserialize(value: string, options: StructuredTypeFieldOptions): Duration | Duration[] {
-      const matches = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(value);
       const _deserialize = (v: string) => {
+        const matches = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(v);
         if (!matches || value.length < 3) {
           throw new TypeError(`duration invalid: "${value}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`)
         }
+        console.log(matches);
         let duration: Duration = {};
         duration.sign = (matches[1] === '-') ? -1 : 1;
         return ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].reduce((acc: any, name, index) => {
-          const v = parseFloat(matches[index + 3]);
+          const v = parseFloat(matches[index + 2]);
           if (!Number.isNaN(v))
             acc[name] = v;
           return acc;
@@ -97,6 +98,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         v.minutes ? v.minutes + 'M' : '',
         v.seconds ? v.seconds + 'S' : '',
       ].join("");
+      console.log(value);
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
     encode(value: Duration | Duration[], options: StructuredTypeFieldOptions): any {
@@ -105,6 +107,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         'P',
         v.years ? v.years + 'Y' : '',
         v.months ? v.months + 'M' : '',
+        v.weeks ? v.weeks + 'W' : '',
         v.days ? v.days + 'D' : '',
         'T',
         v.hours ? v.hours + 'H' : '',

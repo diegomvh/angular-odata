@@ -2016,7 +2016,7 @@
         }
         let duration: Duration &#x3D; {};
         duration.sign &#x3D; (matches[1] &#x3D;&#x3D;&#x3D; &#x27;-&#x27;) ? -1 : 1;
-        return [&#x27;years&#x27;, &#x27;months&#x27;, &#x27;days&#x27;, &#x27;hours&#x27;, &#x27;minutes&#x27;, &#x27;seconds&#x27;].reduce((acc: any, name, index) &#x3D;&gt; {
+        return [&#x27;years&#x27;, &#x27;months&#x27;, &#x27;weeks&#x27;, &#x27;days&#x27;, &#x27;hours&#x27;, &#x27;minutes&#x27;, &#x27;seconds&#x27;].reduce((acc: any, name, index) &#x3D;&gt; {
           const v &#x3D; parseFloat(matches[index + 3]);
           if (!Number.isNaN(v))
             acc[name] &#x3D; v;
@@ -2031,6 +2031,7 @@
         &#x27;P&#x27;,
         v.years ? v.years + &#x27;Y&#x27; : &#x27;&#x27;,
         v.months ? v.months + &#x27;M&#x27; : &#x27;&#x27;,
+        v.weeks ? v.weeks + &#x27;W&#x27; : &#x27;&#x27;,
         v.days ? v.days + &#x27;D&#x27; : &#x27;&#x27;,
         &#x27;T&#x27;,
         v.hours ? v.hours + &#x27;H&#x27; : &#x27;&#x27;,

@@ -351,7 +351,7 @@ describe('ODataClient', () => {
       timeOfDay: '07:59:59.999',
       dateTimeOffset: '2012-12-03T07:16:23.000Z',
       dateTimeOffsets: [ '2012-12-03T07:16:23.000Z' ],
-      duration: 'P12DT23H59M59.999999999999S',
+      duration: 'P2Y1M1W12DT23H59M59.999999999999S',
       guid: '01234567-89ab-cdef-0123-456789abcdef',
       enumeration: 'Yellow',
       point: { type: 'point', coordinates: [142.1, 64.1] },
