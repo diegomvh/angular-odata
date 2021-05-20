@@ -62,18 +62,22 @@ export type GroupBy<T> = {
   transform?: Transform<T>;
 }
 
-export type Raw = { type: 'raw'; value: any; }
-export type Alias = { type: 'alias'; value: any; name?: string;}
-export type Duration = { type: 'duration'; value: any; }
-export type Binary = { type: 'binary'; value: any; }
-export type Value = string | Date | number | boolean | Raw | Alias | Duration | Binary;
+export enum QueryCustomTypes {
+  Raw,
+  Alias,
+  Duration,
+  Binary
+};
+
+export type QueryCustomType = {type: QueryCustomTypes, value: any, name?: string};
+export type Value = string | Date | number | boolean | QueryCustomType;
 
 //https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_QueryOptions
-export const raw = (value: string): Raw => ({ type: 'raw', value });
-export const alias = (value: any, name?: string): Alias => ({ type: 'alias', value, name });
-export const duration = (value: string): Duration => ({ type: 'duration', value });
-export const binary = (value: string): Binary => ({ type: 'binary', value });
-
+export const raw = (value: string): QueryCustomType => ({ type: QueryCustomTypes.Raw, value });
+export const alias = (value: any, name?: string): QueryCustomType => ({ type: QueryCustomTypes.Alias, value, name });
+export const duration = (value: string): QueryCustomType => ({ type: QueryCustomTypes.Duration, value });
+export const binary = (value: string): QueryCustomType => ({ type: QueryCustomTypes.Binary, value });
+export const isQueryCustomType = (value: any) => typeof value === 'object' && 'type' in value && value.type in QueryCustomTypes;
 export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
   transform: {[name: string]: any} | {[name: string]: any}[];
@@ -84,7 +88,7 @@ export type QueryOptions<T> = ExpandOptions<T> & {
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;
-  aliases: Alias[];
+  aliases: QueryCustomType[];
 }
 
 export const ITEM_ROOT = "";
@@ -141,7 +145,7 @@ export function buildPathAndQuery<T>({
   func
 }: Partial<QueryOptions<T>> = {}): [string, {[name: string]: any}] {
   let path: string = '';
-  let aliases: Alias[] = [];
+  let aliases: QueryCustomType[] = [];
 
   const query: any = {};
 
@@ -230,11 +234,11 @@ export function buildPathAndQuery<T>({
   return [path, params];
 }
 
-function renderPrimitiveValue(key: string, val: any, aliases: Alias[] = []) {
+function renderPrimitiveValue(key: string, val: any, aliases: QueryCustomType[] = []) {
   return `${key} eq ${handleValue(val, aliases)}`
 }
 
-function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix = ''): string {
+function buildFilter(filters: Filter = {}, aliases: QueryCustomType[] = [], propPrefix = ''): string {
   return ((Array.isArray(filters) ? filters : [filters])
     .reduce((acc: string[], filter) => {
       if (filter) {
@@ -246,7 +250,7 @@ function buildFilter(filters: Filter = {}, aliases: Alias[] = [], propPrefix = '
       return acc;
     }, []) as string[]).join(' and ');
 
-  function buildFilterCore(filter: Filter = {}, aliases: Alias[] = [], propPrefix = '') {
+  function buildFilterCore(filter: Filter = {}, aliases: QueryCustomType[] = [], propPrefix = '') {
     let filterExpr = "";
     if (typeof filter === 'string') {
       // Use raw filter string
@@ -424,7 +428,7 @@ function escapeIllegalChars(string: string) {
   return string;
 }
 
-function handleValue(value: Value, aliases?: Alias[]): any {
+function handleValue(value: Value, aliases?: QueryCustomType[]): any {
   if (typeof value === 'string') {
     return `'${escapeIllegalChars(value)}'`;
   } else if (value instanceof Date) {
@@ -437,17 +441,17 @@ function handleValue(value: Value, aliases?: Alias[]): any {
     return value;
   } else if (typeof value === 'object') {
     switch (value.type) {
-      case 'raw':
+      case QueryCustomTypes.Raw:
         return value.value;
-      case 'duration':
+      case QueryCustomTypes.Duration:
         return `duration'${value.value}'`;
-      case 'binary':
+      case QueryCustomTypes.Binary:
         return `binary'${value.value}'`;
-      case 'alias':
+      case QueryCustomTypes.Alias:
         // Store
         if (Array.isArray(aliases))
-          aliases.push(value as Alias);
-        return `@${(value as Alias).name}`;
+          aliases.push(value);
+        return `@${(value).name}`;
       default:
         return Object.entries(value)
             .filter(([, v]) => v !== undefined)

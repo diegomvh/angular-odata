@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { Expand, Select } from '../builder';
+import { Expand, isQueryCustomType, Select } from '../builder';
 import { QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
@@ -10,7 +10,7 @@ import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { HttpOptions, HttpEntityOptions } from './options';
+import { HttpOptions } from './options';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { map } from 'rxjs/operators';
@@ -18,6 +18,7 @@ import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
 import { EntityKey } from '../../types';
 import { Types } from '../../utils/types';
+import { Objects } from '../../utils';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
@@ -53,7 +54,9 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
     const singleton = this.clone();
-    singleton.segment.singleton().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
+    key = (this.schema !== undefined && Types.isObject(key) && !isQueryCustomType(key)) ? this.schema.resolveKey(key as {[name: string]: any}) :
+      (Types.isObject(key) && !isQueryCustomType(key)) ? Objects.resolveKey(key) : key;
+    singleton.segment.singleton().key(key);
     return singleton;
   }
   navigationProperty<N>(path: string) {

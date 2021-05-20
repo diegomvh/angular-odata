@@ -1,5 +1,5 @@
 import { ODataResource } from '../resource';
-import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
+import { Expand, Select, Transform, Filter, OrderBy, isQueryCustomType } from '../builder';
 import { QueryOptionNames } from '../query-options';
 
 import { ODataReferenceResource } from './reference';
@@ -17,6 +17,7 @@ import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Types } from '../../utils/types';
+import { Objects } from '../../utils';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -66,7 +67,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
     const navigation = this.clone();
-    navigation.segment.navigationProperty().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
+    key = (this.schema !== undefined && Types.isObject(key) && !isQueryCustomType(key)) ? this.schema.resolveKey(key as {[name: string]: any}) :
+      (Types.isObject(key) && !isQueryCustomType(key)) ? Objects.resolveKey(key) : key;
+    navigation.segment.navigationProperty().key(key);
     return navigation;
   }
 

@@ -1,7 +1,7 @@
-import { Observable, empty, EMPTY } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 
-import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
+import { Expand, Select, Transform, Filter, OrderBy, isQueryCustomType } from '../builder';
 import { QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 
@@ -12,11 +12,12 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
-import { HttpOptions, HttpEntityOptions, HttpEntitiesOptions } from './options';
+import { HttpOptions } from './options';
 import { ODataEntity, ODataEntities, ODataEntitiesAnnotations } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Types } from '../../utils';
+import { Objects } from 'angular-odata';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -56,8 +57,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   entity(key?: EntityKey<T>) {
     const entity = ODataEntityResource.factory<T>(this.api, this.cloneSegments(), this.cloneQuery());
-    if (key !== undefined)
-      entity.segment.entitySet().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
+    if (key !== undefined) {
+      return entity.key(key);
+    }
     return entity;
   }
 

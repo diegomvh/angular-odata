@@ -7,6 +7,7 @@ import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataSettings } from '../settings';
 import { Photo } from '../trippin.spec';
+import { raw } from './builder';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';
@@ -44,10 +45,34 @@ describe('ODataResource', () => {
     expect(set.toString()).toEqual('People');
   });
 
-  it('should create entity resource', () => {
+  it('should create entity resource with string key', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     expect(entity.toString()).toEqual("People('russellwhyte')");
+  });
+
+  it('should create entity resource with number key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity(1);
+    expect(entity.toString()).toEqual("People(1)");
+  });
+
+  it('should create entity resource with guid key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity(raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'));
+    expect(entity.toString()).toEqual("People(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)");
+  });
+
+  it('should create entity resource with object simple key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity({id: 1});
+    expect(entity.toString()).toEqual("People(1)");
+  });
+
+  it('should create entity resource with object composite key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity({id1: 1, id2: 2});
+    expect(entity.toString()).toEqual("People(id1=1,id2=2)");
   });
 
   it('should create collection function', () => {
@@ -110,12 +135,44 @@ describe('ODataResource', () => {
     expect(friends.toString()).toEqual("People('russellwhyte')/Friends");
   });
 
-  it('should create entity single navigation', () => {
+  it('should create entity single navigation with string key', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
-    friends.segment.navigationProperty().key('mirsking');
-    expect(friends.toString()).toEqual("People('russellwhyte')/Friends('mirsking')");
+    const friend = friends.key('mirsking');
+    expect(friend.toString()).toEqual("People('russellwhyte')/Friends('mirsking')");
+  });
+
+  it('should create entity single navigation with number key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
+    const friend = friends.key(1);
+    expect(friend.toString()).toEqual("People('russellwhyte')/Friends(1)");
+  });
+
+  it('should create entity single navigation with guid key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
+    const friend = friends.key(raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'));
+    expect(friend.toString()).toEqual("People('russellwhyte')/Friends(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)");
+  });
+
+  it('should create entity single navigation with object simple key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
+    const friend = friends.key({id: 1});
+    expect(friend.toString()).toEqual("People('russellwhyte')/Friends(1)");
+  });
+
+  it('should create entity single navigation with object composite key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const friends: ODataNavigationPropertyResource<Person> = entity.navigationProperty<Person>("Friends");
+    const friend = friends.key({id1: 1, id2: 2});
+    expect(friend.toString()).toEqual("People('russellwhyte')/Friends(id1=1,id2=2)");
   });
 
   it('should create entity multiple navigation', () => {

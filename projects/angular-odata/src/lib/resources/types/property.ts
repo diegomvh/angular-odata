@@ -11,10 +11,10 @@ import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
+import { Expand, Filter, isQueryCustomType, OrderBy, Select, Transform } from '../builder';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { EntityKey } from '../../types';
-import { Types } from '../../utils';
+import { Objects, Types } from '../../utils';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -63,7 +63,9 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
     const property = this.clone();
-    property.segment.property().key( Types.isObject(key) ? this.schema?.resolveKey(key as {[name: string]: any}) : key );
+    key = (this.schema !== undefined && Types.isObject(key) && !isQueryCustomType(key)) ? this.schema.resolveKey(key as {[name: string]: any}) :
+      (Types.isObject(key) && !isQueryCustomType(key)) ? Objects.resolveKey(key) : key;
+    property.segment.property().key(key);
     return property;
   }
 

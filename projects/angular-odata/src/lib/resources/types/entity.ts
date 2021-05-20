@@ -6,7 +6,7 @@ import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
-import { Expand, Select } from '../builder';
+import { Expand, isQueryCustomType, Select } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
@@ -17,6 +17,7 @@ import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
+import { Objects, Types } from '../../utils';
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
@@ -50,6 +51,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Inmutable Resource
   key(key: EntityKey<T>) {
     const entity = this.clone();
+    key = (this.schema !== undefined && Types.isObject(key) && !isQueryCustomType(key)) ? this.schema.resolveKey(key as {[name: string]: any}) :
+      (Types.isObject(key) && !isQueryCustomType(key)) ? Objects.resolveKey(key) : key;
     entity.segment.entitySet().key(key);
     return entity;
   }
