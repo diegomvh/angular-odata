@@ -5,11 +5,14 @@ import { Types } from '../../utils/types';
 import { ODataResource } from '../resource';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
-import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE, CACHE_CONTROL, MAX_AGE } from '../../constants';
+import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE, CACHE_CONTROL } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
 import { ODataResponseOptions } from './options';
 
+/**
+ * OData Response
+ */
 export class ODataResponse<T> extends HttpResponse<T> {
   readonly api: ODataApi;
   readonly resource: ODataResource<T>;
@@ -109,36 +112,52 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return value;
   }
 
+  /**
+   * Handle the response body as an entity
+   * @returns
+   */
   entity(): ODataEntity<T> {
     const payload = this.body && this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const meta = new ODataEntityAnnotations({data: payload || {}, options: this.options, headers: this.headers});
-    let entity = payload ? meta.data(payload) as T : null;
+    const annots = new ODataEntityAnnotations({data: payload || {}, options: this.options, headers: this.headers});
+    let entity = payload ? annots.data(payload) as T : null;
     const type = this.resource.type();
     if (entity !== null && type !== undefined)
       entity = this.deserialize(type, entity) as T;
-    return { entity, annots: meta };
+    return { entity, annots };
   }
 
+  /**
+   * Handle the response body as entities
+   * @returns
+   */
   entities(): ODataEntities<T> {
     const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const meta = new ODataEntitiesAnnotations({data: payload || {}, options: this.options, headers: this.headers});
-    let entities = payload ? meta.data(payload) as T[] : null;
+    const annots = new ODataEntitiesAnnotations({data: payload || {}, options: this.options, headers: this.headers});
+    let entities = payload ? annots.data(payload) as T[] : null;
     const type = this.resource.type();
     if (entities !== null && type !== undefined)
       entities = this.deserialize(type, entities) as T[];
-    return { entities, annots: meta };
+    return { entities, annots };
   }
 
+  /**
+   * Handle the response body as a property
+   * @returns
+   */
   property(): ODataProperty<T> {
     const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const meta = new ODataPropertyAnnotations({data: payload || {}, options: this.options, headers: this.headers});
-    let property = payload ? meta.data(payload) as T : null;
+    const annots = new ODataPropertyAnnotations({data: payload || {}, options: this.options, headers: this.headers});
+    let property = payload ? annots.data(payload) as T : null;
     const type = this.resource.type();
     if (property !== null && type !== undefined)
       property = this.deserialize(type, property) as T;
-    return { property, annots: meta };
+    return { property, annots };
   }
 
+  /**
+   * Handle the response body as a value
+   * @returns
+   */
   value(): T | null {
     const payload = this.body && this.options.version === "2.0" ? this.body : this.body;
     const type = this.resource.type();
