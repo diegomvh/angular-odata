@@ -37,7 +37,7 @@ export class ODataApi {
       throw new Error("The 'serviceRootUrl' should not contain query string. Please use 'params' to add extra parameters");
     if (!this.serviceRootUrl.endsWith('/'))
       this.serviceRootUrl += '/';
-    this.metadataUrl = `${config.serviceRootUrl}$metadata`;
+    this.metadataUrl = `${this.serviceRootUrl}$metadata`;
     this.name = config.name;
     this.version = config.version || DEFAULT_VERSION;
     this.default = config.default || false;
