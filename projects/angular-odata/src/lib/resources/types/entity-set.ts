@@ -16,8 +16,6 @@ import { HttpOptions } from './options';
 import { ODataEntity, ODataEntities, ODataEntitiesAnnotations } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
-import { Types } from '../../utils';
-import { Objects } from 'angular-odata';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory

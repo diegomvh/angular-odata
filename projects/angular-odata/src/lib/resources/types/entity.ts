@@ -10,7 +10,7 @@ import { Expand, isQueryCustomType, Select } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataResource } from '../resource';
-import { HttpOptions, HttpEntityOptions } from './options';
+import { HttpOptions } from './options';
 import { ODataValueResource } from './value';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { map } from 'rxjs/operators';

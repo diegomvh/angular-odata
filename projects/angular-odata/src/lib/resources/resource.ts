@@ -18,7 +18,6 @@ import { ODataApi } from '../api';
 import { Parser } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
-import { alias } from './builder';
 
 export abstract class ODataResource<T> {
   // VARIABLES
