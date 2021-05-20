@@ -16,12 +16,15 @@ export class ODataEnumType<E> {
     this.parser = new ODataEnumTypeParser<E>(config, schema.namespace, schema.alias);
     this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
   }
+
   type({alias = false}: {alias?: boolean} = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
+
   isTypeOf(type: string) {
     return this.parser.isTypeOf(type);
   }
+
   get api() {
     return this.schema.api;
   }
@@ -44,5 +47,17 @@ export class ODataEnumType<E> {
 
   mapFields<T>(mapper: (field: ODataEnumTypeFieldParser) => T) {
     return this.fields().map(mapper);
+  }
+
+  deserialize(value: any): E {
+    return this.parser.deserialize(value, this.api.options);
+  }
+
+  serialize(value: E): any {
+    return this.parser.serialize(value, this.api.options);
+  }
+
+  encode(value: E): any {
+    return this.parser.encode(value, this.api.options);
   }
 }

@@ -17,14 +17,14 @@ export class ODataParameterParser<T> {
     Object.assign(this, parameter);
   }
 
-  serialize(value: T, options: StructuredTypeFieldOptions): any {
+  serialize(value: T, options: OptionsHelper): any {
     return Array.isArray(value) ?
       value.map(v => this.parser.serialize(v, options)) :
       this.parser.serialize(value, options);
   }
 
   //Encode
-  encode(value: any, options: StructuredTypeFieldOptions): string {
+  encode(value: any, options: OptionsHelper): string {
     return Array.isArray(value) ?
       value.map(v => this.parser.encode(v, options)) :
       this.parser.encode(value, options);
@@ -86,12 +86,12 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   // Deserialize
-  deserialize(value: any, options: StructuredTypeFieldOptions): R {
+  deserialize(value: any, options: OptionsHelper): R {
     return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(params: any, options: StructuredTypeFieldOptions): any {
+  serialize(params: any, options: OptionsHelper): any {
     return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
@@ -99,7 +99,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   //Encode
-  encode(params: any, options: StructuredTypeFieldOptions): any {
+  encode(params: any, options: OptionsHelper): any {
     return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.encode(params[p.name], options) }), {})

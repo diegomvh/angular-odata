@@ -29,12 +29,15 @@ export class ODataCallable<R> {
       path = this.parser.return ? this.api.findEntitySetForType(this.parser.return.type)?.name || this.name : this.name;
     return path;
   }
+
   type({alias = false}: {alias?: boolean} = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
+
   isTypeOf(type: string) {
     return this.parser.isTypeOf(type);
   }
+
   get api() {
     return this.schema.api;
   }
@@ -43,5 +46,17 @@ export class ODataCallable<R> {
     findParserForType: (type: string) => Parser<any>
   }) {
     this.parser.configure({options: this.api.options, findParserForType});
+  }
+
+  deserialize(value: any): any {
+    return this.parser.deserialize(value, this.api.options);
+  }
+
+  serialize(value: any): any {
+    return this.parser.serialize(value, this.api.options);
+  }
+
+  encode(value: any): any {
+    return this.parser.encode(value, this.api.options);
   }
 }

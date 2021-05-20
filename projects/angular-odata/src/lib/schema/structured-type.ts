@@ -108,6 +108,10 @@ export class ODataStructuredType<T> {
     return this.parser.serialize(value, this.api.options);
   }
 
+  encode(value: T): any {
+    return this.parser.encode(value, this.api.options);
+  }
+
   resolveKey(attrs: T | {[name: string]: any}) {
     return this.parser.resolveKey(attrs);
   }
