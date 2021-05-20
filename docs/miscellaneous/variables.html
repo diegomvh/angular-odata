@@ -190,6 +190,9 @@
                             <a href="#ISO_REGEX" title="projects/angular-odata/src/lib/utils/dates.ts"><b>ISO_REGEX</b>&nbsp;&nbsp;&nbsp;(projects/.../dates.ts)</a>
                         </li>
                         <li>
+                            <a href="#isQueryCustomType" title="projects/angular-odata/src/lib/resources/builder.ts"><b>isQueryCustomType</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
                             <a href="#ITEM_ROOT" title="projects/angular-odata/src/lib/resources/builder.ts"><b>ITEM_ROOT</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -1544,7 +1547,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: any, name?: string): Alias &#x3D;&gt; ({ type: &#x27;alias&#x27;, value, name })</code>
+                            <i>Default value : </i><code>(value: any, name?: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Alias, value, name })</code>
                         </td>
                     </tr>
 
@@ -1565,7 +1568,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: string): Binary &#x3D;&gt; ({ type: &#x27;binary&#x27;, value })</code>
+                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Binary, value })</code>
                         </td>
                     </tr>
 
@@ -1667,7 +1670,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: string): Duration &#x3D;&gt; ({ type: &#x27;duration&#x27;, value })</code>
+                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Duration, value })</code>
                         </td>
                     </tr>
 
@@ -1710,6 +1713,27 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>/(?!indexof)\((\w+)\)/</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="isQueryCustomType"></a>
+                        <span class="name">
+                            <b>
+                            isQueryCustomType</b>
+                            <a href="#isQueryCustomType"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>(value: any) &#x3D;&gt; typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; &#x27;type&#x27; in value &amp;&amp; value.type in QueryCustomTypes</code>
                         </td>
                     </tr>
 
@@ -1784,7 +1808,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: string): Raw &#x3D;&gt; ({ type: &#x27;raw&#x27;, value })</code>
+                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Raw, value })</code>
                         </td>
                     </tr>
 
