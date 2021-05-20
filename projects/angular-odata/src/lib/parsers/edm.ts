@@ -73,7 +73,6 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         if (!matches || value.length < 3) {
           throw new TypeError(`duration invalid: "${value}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`)
         }
-        console.log(matches);
         let duration: Duration = {};
         duration.sign = (matches[1] === '-') ? -1 : 1;
         return ['years', 'months', 'weeks', 'days', 'hours', 'minutes', 'seconds'].reduce((acc: any, name, index) => {
@@ -98,7 +97,6 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         v.minutes ? v.minutes + 'M' : '',
         v.seconds ? v.seconds + 'S' : '',
       ].join("");
-      console.log(value);
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
     encode(value: Duration | Duration[], options: StructuredTypeFieldOptions): any {
