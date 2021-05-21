@@ -314,7 +314,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   resolveKey(attrs: T | {[name: string]: any}): EntityKey<T> | undefined {
-    let key = this.parent ? this.parent.resolveKey(attrs) : {};
+    let key = this.parent ? this.parent.resolveKey(attrs) || {} : {};
     key = (this.keys || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
     return Objects.resolveKey(key) as EntityKey<T> | undefined;
   }
