@@ -2014,7 +2014,6 @@
         if (!matches || value.length &lt; 3) {
           throw new TypeError(&#x60;duration invalid: &quot;${value}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;)
         }
-        console.log(matches);
         let duration: Duration &#x3D; {};
         duration.sign &#x3D; (matches[1] &#x3D;&#x3D;&#x3D; &#x27;-&#x27;) ? -1 : 1;
         return [&#x27;years&#x27;, &#x27;months&#x27;, &#x27;weeks&#x27;, &#x27;days&#x27;, &#x27;hours&#x27;, &#x27;minutes&#x27;, &#x27;seconds&#x27;].reduce((acc: any, name, index) &#x3D;&gt; {
@@ -2039,7 +2038,6 @@
         v.minutes ? v.minutes + &#x27;M&#x27; : &#x27;&#x27;,
         v.seconds ? v.seconds + &#x27;S&#x27; : &#x27;&#x27;,
       ].join(&quot;&quot;);
-      console.log(value);
       return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
     },
     encode(value: Duration | Duration[], options: StructuredTypeFieldOptions): any {

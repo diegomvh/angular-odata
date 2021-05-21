@@ -135,6 +135,9 @@
                                 <a href="#deserialize">deserialize</a>
                             </li>
                             <li>
+                                <a href="#encode">encode</a>
+                            </li>
+                            <li>
                                 <a href="#fields">fields</a>
                             </li>
                             <li>
@@ -621,8 +624,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="115"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:115</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="119"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:119</a></div>
                 </td>
             </tr>
 
@@ -699,6 +702,76 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>    <code>T</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="encode"></a>
+                    <span class="name">
+                        <b>
+                            encode
+                        </b>
+                        <a href="#encode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>encode(value: T)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="111"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:111</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                            <code>T</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1103,8 +1176,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="111"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:111</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:115</a></div>
                 </td>
             </tr>
 
@@ -1243,8 +1316,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="119"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:119</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="123"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:123</a></div>
                 </td>
             </tr>
 
@@ -1390,8 +1463,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="123"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:123</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="127"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:127</a></div>
                 </td>
             </tr>
 
@@ -1600,6 +1673,10 @@ export class ODataStructuredType&lt;T&gt; {
 
   serialize(value: T): any {
     return this.parser.serialize(value, this.api.options);
+  }
+
+  encode(value: T): any {
+    return this.parser.encode(value, this.api.options);
   }
 
   resolveKey(attrs: T | {[name: string]: any}) {

@@ -519,7 +519,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/StructuredTypeFieldOptions.html">StructuredTypeFieldOptions</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/OptionsHelper.html">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -561,7 +561,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/StructuredTypeFieldOptions.html" target="_self" >StructuredTypeFieldOptions</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -601,7 +601,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(params: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/StructuredTypeFieldOptions.html">StructuredTypeFieldOptions</a>)</code>
+<code>encode(params: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/OptionsHelper.html">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -643,7 +643,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/StructuredTypeFieldOptions.html" target="_self" >StructuredTypeFieldOptions</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -753,7 +753,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(params: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/StructuredTypeFieldOptions.html">StructuredTypeFieldOptions</a>)</code>
+<code>serialize(params: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options: <a href="../interfaces/OptionsHelper.html">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -795,7 +795,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/StructuredTypeFieldOptions.html" target="_self" >StructuredTypeFieldOptions</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -849,14 +849,14 @@ export class ODataParameterParser&lt;T&gt; {
     Object.assign(this, parameter);
   }
 
-  serialize(value: T, options: StructuredTypeFieldOptions): any {
+  serialize(value: T, options: OptionsHelper): any {
     return Array.isArray(value) ?
       value.map(v &#x3D;&gt; this.parser.serialize(v, options)) :
       this.parser.serialize(value, options);
   }
 
   //Encode
-  encode(value: any, options: StructuredTypeFieldOptions): string {
+  encode(value: any, options: OptionsHelper): string {
     return Array.isArray(value) ?
       value.map(v &#x3D;&gt; this.parser.encode(v, options)) :
       this.parser.encode(value, options);
@@ -918,12 +918,12 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
   }
 
   // Deserialize
-  deserialize(value: any, options: StructuredTypeFieldOptions): R {
+  deserialize(value: any, options: OptionsHelper): R {
     return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(params: any, options: StructuredTypeFieldOptions): any {
+  serialize(params: any, options: OptionsHelper): any {
     return Object.assign({}, this.parameters.filter(p &#x3D;&gt; p.name !&#x3D;&#x3D; CALLABLE_BINDING_PARAMETER)
       .filter(p &#x3D;&gt; p.name in params &amp;&amp; params[p.name] !&#x3D;&#x3D; undefined)
       .reduce((acc, p) &#x3D;&gt; Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
@@ -931,7 +931,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
   }
 
   //Encode
-  encode(params: any, options: StructuredTypeFieldOptions): any {
+  encode(params: any, options: OptionsHelper): any {
     return Object.assign({}, this.parameters.filter(p &#x3D;&gt; p.name !&#x3D;&#x3D; CALLABLE_BINDING_PARAMETER)
       .filter(p &#x3D;&gt; p.name in params &amp;&amp; params[p.name] !&#x3D;&#x3D; undefined)
       .reduce((acc, p) &#x3D;&gt; Object.assign(acc, { [p.name]: p.encode(params[p.name], options) }), {})

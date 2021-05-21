@@ -420,7 +420,7 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
   //Encode
   encode(value: T, options: OptionsHelper): any {
     const serialized &#x3D; this.serialize(value, options);
-    return options.stringAsEnum ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;) : serialized;
+    return options.stringAsEnum ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;) : raw(serialized);
   }
 
   // Json Schema
