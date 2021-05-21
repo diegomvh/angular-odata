@@ -1,5 +1,5 @@
-import { map, tap } from 'rxjs/operators';
-import { Observable, of, Subscription, throwError } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 
 import {
   ODataEntitySetResource,
@@ -9,8 +9,6 @@ import {
   HttpOptions,
   ODataEntities,
   ODataPropertyResource,
-  ODataActionResource,
-  ODataFunctionResource,
   ODataEntityAnnotations,
   Select,
   Expand,
@@ -171,6 +169,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     let Ctor = <typeof ODataCollection>this.constructor;
     return new Ctor(this.toEntities({include_navigation: true}), { resource, annots });
   }
+
   fetch({
     withCount,
     ...options
@@ -219,25 +218,57 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       }));
   }
 
+  saveAll({
+    withCount,
+    ...options
+  }: HttpOptions & {
+    withCount?: boolean;
+  } = {}): Observable<this> {
+    const resource = this.resource();
+    if (resource === undefined)
+      return throwError("saveAll: Resource is undefined");
+    if (resource instanceof ODataPropertyResource)
+      return throwError("fetchAll: Resource is ODataPropertyResource");
+    let changes = this._entries.map(entry => {
+      const model = entry.model;
+      if (entry.state === ODataModelState.Removed) {
+        return this.removeReference(model);
+      } else if (entry.state === ODataModelState.Added) {
+        return model.save({asEntity: true}).pipe(switchMap(m => this.addReference(m)));
+      }
+      return of(null);
+    });
+    return forkJoin(changes).pipe(map(() => {
+      this._entries = this._entries
+        .filter(entry => entry.state !== ODataModelState.Removed)
+        .map(entry => ({
+          state: ODataModelState.Unchanged,
+          model: entry.model,
+          key: entry.key,
+          subscription: entry.subscription
+        }));
+      return this;
+    }));
+  }
+
+  protected addReference(model: M) {
+    let resource = this.resource();
+    if (model.key() !== undefined && resource instanceof ODataNavigationPropertyResource) {
+      return resource.reference().add(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>);
+    } else if (resource instanceof ODataEntitySetResource) {
+      return model.save({asEntity: true});
+    }
+    return of(null);
+  }
+
   add(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
-    let resource = this.resource();
     let entry = this._findEntry({model, key, cid: (<any>model)[this._model.meta.cid]});
     if (entry !== undefined && entry.state !== ODataModelState.Removed) return of(this);
 
-    const server$ = (
-      server &&
-      key !== undefined &&
-      resource !== undefined &&
-      resource instanceof ODataNavigationPropertyResource
-    ) ? resource
-          .reference()
-          .add(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>)
-          .pipe(map(() => this)) : of(this);
-
     const add = () => {
       if (model.resource() === undefined) {
-        model.resource(this._model.meta.modelResourceFactory({baseResource: resource}));
+        model.resource(this._model.meta.modelResourceFactory({baseResource: this.resource()}));
       }
       if (entry !== undefined && entry.state === ODataModelState.Removed) {
         const index = this._entries.indexOf(entry);
@@ -257,25 +288,25 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       return this;
     };
 
-    return server$.pipe(map(add));
+    return server ? this.addReference(model).pipe(map(add)) : of(add());
+  }
+
+  protected removeReference(model: M) {
+    let resource = this.resource();
+    if (model.key() !== undefined) {
+      if (resource instanceof ODataNavigationPropertyResource) {
+        return resource.reference().remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>);
+      } else if (resource instanceof ODataEntitySetResource) {
+        return model.destroy({asEntity: true});
+      }
+    }
+    return of(null);
   }
 
   remove(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
-    let resource = this.resource();
     let entry = this._findEntry({model, key, cid: (<any>model)[this._model.meta.cid]});
     if (entry === undefined || entry.state === ODataModelState.Removed) return of(this);
-
-    const server$ = (
-      server &&
-      key !== undefined &&
-      resource !== undefined &&
-      resource instanceof ODataNavigationPropertyResource
-    ) ? resource
-          .reference()
-          .remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>)
-          .pipe(map(() => this)) :
-        of(this);
 
     const remove = () => {
       // Emit Event
@@ -289,7 +320,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       return this;
     };
 
-    return server$.pipe(map(remove));
+    return server ? this.removeReference(model).pipe(map(remove)) : of(remove());
   }
 
   create(attrs: T = {} as T, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}) {
@@ -342,7 +373,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return value;
   }
 
-  assign(objects: Array<Partial<T> | {[name: string]: any} | M>, { reset = false, silent = false }: { reset?: boolean, silent?: boolean } = {}) {
+  assign(objects: Array<Partial<T> | {[name: string]: any} | M>, { server = true, reset = false, silent = false }: { server?: boolean, reset?: boolean, silent?: boolean } = {}) {
     if (reset) {
       this._entries.forEach((e) => e.subscription.unsubscribe());
       const models = objects.map(obj => !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M);
@@ -374,12 +405,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         } else {
           // Add
           model = !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M;
-          this.add(model, {silent}).toPromise();
+          this.add(model, {server, silent}).toPromise();
         }
         modelMap.push((<any>model)[this._model.meta.cid]);
       });
       this._entries.filter(e => modelMap.indexOf((<any>e.model)[this._model.meta.cid]) === -1).forEach(entry => {
-        this.remove(entry.model, {silent}).toPromise();
+        this.remove(entry.model, {server, silent}).toPromise();
       });
       if (!silent)
         this.events$.emit({ name: 'update', collection: this });
