@@ -119,18 +119,20 @@ export class ODataModel<T> {
     client_id = false,
     include_navigation = false,
     include_concurrency = false,
-    include_key = false,
+    include_computed = false,
+    include_key = true,
     changes_only = false,
     field_mapping = false
   }: {
     client_id?: boolean,
     include_navigation?: boolean,
     include_concurrency?: boolean,
+    include_computed?: boolean,
     include_key?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    return this._meta.toEntity(this, { client_id, include_navigation, include_concurrency, include_key, changes_only, field_mapping});
+    return this._meta.toEntity(this, { client_id, include_navigation, include_concurrency, include_computed, include_key, changes_only, field_mapping});
   }
 
   attributes({

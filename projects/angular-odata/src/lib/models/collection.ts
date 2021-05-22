@@ -1,4 +1,4 @@
-import { map, switchMap, tap } from 'rxjs/operators';
+import { defaultIfEmpty, map, switchMap, tap } from 'rxjs/operators';
 import { forkJoin, Observable, of, Subscription, throwError } from 'rxjs';
 
 import {
@@ -132,13 +132,15 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     client_id = false,
     include_navigation = false,
     include_concurrency = false,
-    include_key = false,
+    include_computed = false,
+    include_key = true,
     changes_only = false,
     field_mapping = false
   }: {
     client_id?: boolean;
     include_navigation?: boolean;
     include_concurrency?: boolean;
+    include_computed?: boolean,
     include_key?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
@@ -150,6 +152,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         client_id,
         include_navigation,
         include_concurrency,
+        include_computed,
         field_mapping,
         include_key,
         changes_only: changesOnly
@@ -167,7 +170,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (this._resource) resource = this._resource.clone();
     if (this._annotations) annots = this._annotations.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
-    return new Ctor(this.toEntities({include_navigation: true}), { resource, annots });
+    return new Ctor(this.toEntities({include_navigation: true, include_computed: true}), { resource, annots });
   }
 
   fetch({
@@ -234,21 +237,24 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (entry.state === ODataModelState.Removed) {
         return this.removeReference(model);
       } else if (entry.state === ODataModelState.Added) {
-        return model.save({asEntity: true}).pipe(switchMap(m => this.addReference(m)));
+        return this.addReference(model);
       }
       return of(null);
     });
-    return forkJoin(changes).pipe(map(() => {
-      this._entries = this._entries
-        .filter(entry => entry.state !== ODataModelState.Removed)
-        .map(entry => ({
-          state: ODataModelState.Unchanged,
-          model: entry.model,
-          key: entry.key,
-          subscription: entry.subscription
-        }));
-      return this;
-    }));
+    return forkJoin(changes).pipe(
+        map(() => {
+        this._entries = this._entries
+          .filter(entry => entry.state !== ODataModelState.Removed)
+          .map(entry => ({
+            state: ODataModelState.Unchanged,
+            model: entry.model,
+            key: entry.key,
+            subscription: entry.subscription
+          }));
+        return this;
+      }),
+      defaultIfEmpty(this)
+    );
   }
 
   protected addReference(model: M) {
@@ -549,11 +555,6 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         };
       },
     };
-  }
-
-  // IndexOf
-  public indexOf(model: M) {
-    return
   }
   //#endregion
 }

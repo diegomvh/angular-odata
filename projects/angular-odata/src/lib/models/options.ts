@@ -641,7 +641,7 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     {
       client_id = false,
-      include_key = false,
+      include_key = true,
       include_navigation = false,
       include_concurrency = false,
       include_computed = false,
@@ -780,6 +780,7 @@ export class ODataModelOptions<T> {
       // Apply current changes and start new tracking
       Object.assign(self._attributes, self._changes);
       self._changes = {} as T;
+      Object.values(self._relations).forEach(rel => rel.state = ODataModelState.Unchanged);
     }
     for (let key in entity) {
       const value = (<any>entity)[key];
