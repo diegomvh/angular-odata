@@ -244,11 +244,15 @@ export class ODataModel<T> {
     const isNew = !resource.hasKey();
     let obs$: Observable<ODataEntity<any>>;
     if (!validate || this.valid({create: isNew, patch, navigation})) {
-      const _entity = this.toEntity({ changes_only: patch, field_mapping: true, include_concurrency: true, include_navigation: navigation }) as T;
+      const _entity = this.toEntity({
+        changes_only: patch,
+        field_mapping: true,
+        include_concurrency: true,
+        include_navigation: navigation }) as T;
       obs$ = (
         isNew ? resource.post(_entity, options) :
-        patch ? resource.patch(_entity, options) :
-        resource.put(_entity, options)
+        patch ? resource.patch(_entity, { etag: this.annots().etag, ...options}) :
+        resource.put(_entity, { etag: this.annots().etag, ...options})
       ).pipe(map(({ entity, annots }) => ({ entity: entity || _entity, annots })));
     } else {
       obs$ = throwError(this._errors);
@@ -272,7 +276,7 @@ export class ODataModel<T> {
       return throwError("destroy: Can't destroy model without key");
 
     const _entity = this.toEntity({field_mapping: true}) as T;
-    const obs$ = resource.delete(Object.assign({ etag: this.annots().etag }, options || {})).pipe(
+    const obs$ = resource.delete({ etag: this.annots().etag, ...options}).pipe(
       map(({ entity, annots }) => ({ entity: entity || _entity, annots })));
     return this._request(obs$).pipe(tap(() => this.events$.emit({name: 'destroy', model: this})));
   }

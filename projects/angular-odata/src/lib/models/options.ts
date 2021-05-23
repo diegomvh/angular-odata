@@ -724,14 +724,17 @@ export class ODataModelOptions<T> {
     let entity = Object.assign(attrs, relations);
 
     // Add client_id
-    if (client_id) entity[this.cid] = (<any>self)[this.cid];
+    if (client_id) {
+      entity[this.cid] = (<any>self)[this.cid];
+    }
 
     // Add key
-    if (include_key)
+    if (include_key) {
       entity = Object.assign(
         entity,
-        self.key({ field_mapping, resolve: false })
+        this.resolveKey(self, { field_mapping, resolve: false })
       );
+    }
 
     return entity;
   }
@@ -750,19 +753,20 @@ export class ODataModelOptions<T> {
       field_mapping?: boolean;
     } = {}
   ): { [name: string]: any } {
-    return Object.entries(
-      changes_only
-        ? self._changes
-        : Object.assign({}, self._attributes, self._changes)
-    ).reduce((acc, [k, v]) => {
-      const field = this.fields().find((p) => p.name === k);
-      if (field === undefined || (field.concurrency && !include_concurrency) || (field.computed && !include_computed))
+    return this.fields().reduce((acc, f) => {
+      const name = (field_mapping) ? f.field : f.name;
+      const value = self._changes[f.name] || self._attributes[f.name];
+      if (f.concurrency && include_concurrency) {
+        return Object.assign(acc, { [name]: value });
+      } else if (f.computed && include_computed) {
+        return Object.assign(acc, { [name]: value });
+      } else if (changes_only && f.name in self._changes) {
+        return Object.assign(acc, { [name]: value });
+      } else if (!changes_only && !f.concurrency && !f.computed) {
+        return Object.assign(acc, { [name]: value });
+      } else {
         return acc;
-      let name = k;
-      if (field_mapping) {
-        name = field.field;
       }
-      return Object.assign(acc, { [name]: v });
     }, {});
   }
 
