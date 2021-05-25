@@ -278,7 +278,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
 
   // Deserialize
   deserialize(value: any, options: OptionsHelper): T {
-    if (this.parent)
+    if (this.parent !== undefined)
       value = this.parent.deserialize(value, options);
     return Object.assign({}, value, this.fields
       .filter(f => f.name in value && value[f.name] !== undefined && value[f.name] !== null)
@@ -288,7 +288,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
 
   // Serialize
   serialize(value: T, options: OptionsHelper): any {
-    if (this.parent)
+    if (this.parent !== undefined)
       value = this.parent.serialize(value, options);
     return Object.assign({}, value, this.fields
       .filter(f => f.name in value && (value as any)[f.name] !== undefined && (value as any)[f.name] !== null)
@@ -314,13 +314,13 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   resolveKey(attrs: T | {[name: string]: any}): EntityKey<T> | undefined {
-    let key = this.parent ? this.parent.resolveKey(attrs) || {} : {};
+    let key = this.parent?.resolveKey(attrs) || {};
     key = (this.keys || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
     return Objects.resolveKey(key) as EntityKey<T> | undefined;
   }
 
   defaults(): {[name: string]: any} {
-    let value = (this.parent) ? this.parent.defaults() : {};
+    let value = this.parent?.defaults() || {};
     let fields = this.fields.filter(f => f.default !== undefined || f.isStructuredType());
     return Object.assign({}, value, fields.reduce((acc, f) => {
       let value = f.isStructuredType() ? f.structured().defaults() : f.default;
@@ -332,8 +332,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
 
   // Json Schema
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
-    let schema: any = this.parent ?
-      this.parent.toJsonSchema(options) :
+    let schema: any = this.parent?.toJsonSchema(options) ||
       {
         $schema: "http://json-schema.org/draft-07/schema#",
         $id: `${this.namespace}.${this.name}`,
@@ -367,7 +366,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     navigation?: boolean
   } = {}
   ): {[name: string]: any} | undefined {
-    const errors = (this.parent && this.parent.validate(attrs, {create, patch, navigation}) || {}) as {[name: string]: any };
+    const errors = (this.parent?.validate(attrs, {create, patch, navigation}) || {}) as {[name: string]: any };
     const fields = this.fields.filter(f => !f.navigation || navigation);
     for (var field of fields) {
       const value = attrs[field.name as keyof T];
