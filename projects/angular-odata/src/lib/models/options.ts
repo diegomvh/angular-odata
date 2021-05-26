@@ -754,13 +754,14 @@ export class ODataModelOptions<T> {
     } = {}
   ): { [name: string]: any } {
     return this.fields().reduce((acc, f) => {
+      const isChanged = f.name in self._changes;
       const name = (field_mapping) ? f.field : f.name;
-      const value = self._changes[f.name] || self._attributes[f.name];
+      const value = isChanged ? self._changes[f.name] : self._attributes[f.name];
       if (f.concurrency && include_concurrency) {
         return Object.assign(acc, { [name]: value });
       } else if (f.computed && include_computed) {
         return Object.assign(acc, { [name]: value });
-      } else if (changes_only && f.name in self._changes) {
+      } else if (changes_only && isChanged) {
         return Object.assign(acc, { [name]: value });
       } else if (!changes_only && !f.concurrency && !f.computed) {
         return Object.assign(acc, { [name]: value });
@@ -924,7 +925,8 @@ export class ODataModelOptions<T> {
       const attrs = this.attributes(self, {include_computed: true, include_concurrency: true});
       const currentValue = attrs[field.name];
       if (!Types.isEqual(currentValue, value)) {
-        if (self._resetting) self._attributes[field.name] = value;
+        if (self._resetting)
+          self._attributes[field.name] = value;
         else if (Types.isEqual(value, self._attributes[field.name]))
           delete self._changes[field.name];
         else self._changes[field.name] = value;
