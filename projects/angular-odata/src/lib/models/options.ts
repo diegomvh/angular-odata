@@ -686,10 +686,10 @@ export class ODataModelOptions<T> {
           state !== ODataModelState.Changed &&
           !!property.navigation;
         let includeKey = include_key && !!property.navigation;
-        if (model instanceof ODataModel) {
+        if (this.isModel(model)) {
           return [
             k,
-            model.toEntity({
+            (model as ODataModel<any>).toEntity({
               client_id,
               include_navigation,
               include_concurrency,
@@ -698,10 +698,10 @@ export class ODataModelOptions<T> {
               include_key: includeKey,
             }),
           ];
-        } else if (model instanceof ODataCollection) {
+        } else if (this.isCollection(model)) {
           return [
             k,
-            model.toEntities({
+            (model as ODataCollection<any, ODataModel<any>>).toEntities({
               client_id,
               include_navigation,
               include_concurrency,
@@ -787,34 +787,41 @@ export class ODataModelOptions<T> {
       self._changes = {} as T;
       Object.values(self._relations).forEach(rel => rel.state = ODataModelState.Unchanged);
     }
+    var changes: string[] = [];
     for (let key in entity) {
       const value = (<any>entity)[key];
       const name = self._resetting
         ? this.fields().find((p) => p.field === key)?.name || key
         : key;
+      const current = (self as any)[name];
       if (value !== null && Types.isObject(value)) {
-        const current = (self as any)[name];
         if (
-          (!(value instanceof ODataModel) && current instanceof ODataModel) ||
-          (!(value instanceof ODataCollection) &&
-            current instanceof ODataCollection)
+          (!this.isModel(value) && this.isModel(current)) ||
+          (!this.isCollection(value) && this.isCollection(current))
         ) {
           current.assign(value, { reset, silent });
-        } else {
-          (self as any)[name] = value;
         }
-      } else {
-        const current = (self as any)[name];
-        if (current !== value) (self as any)[name] = value;
+      } else if (!Types.isEqual(current, value)) {
+        (self as any)[name] = value;
+        changes.push(name);
       }
     }
-    if (!self._silent)
+    if (!self._silent && changes.length > 0)
       self.events$.emit({
         name: self._resetting ? 'reset' : 'update',
         model: self,
+        options: {changes}
       });
     self._resetting = false;
     self._silent = false;
+  }
+
+  isModel(obj: any) {
+    return obj instanceof ODataModel;
+  }
+
+  isCollection(obj: any) {
+    return obj instanceof ODataCollection;
   }
 
   private _get<F>(
@@ -871,8 +878,7 @@ export class ODataModelOptions<T> {
         const selfAnnots = self.annots();
         if (
           !(
-            newModel instanceof ODataModel ||
-            newModel instanceof ODataCollection
+            this.isModel(newModel) || this.isCollection(newModel)
           )
         ) {
           newModel = field.modelCollectionFactory<T, F>({
@@ -890,10 +896,10 @@ export class ODataModelOptions<T> {
           const resource = field.resourceFactory<T, F>(selfResource);
           const annots = field.annotationsFactory(selfAnnots);
           newModel.resource(resource);
-          if (newModel instanceof ODataModel)
-            newModel.annots(annots as ODataEntityAnnotations);
-          else if (newModel instanceof ODataCollection)
-            newModel.annots(annots as ODataEntitiesAnnotations);
+          if (this.isModel(newModel))
+            (newModel as ODataModel<F>).annots(annots as ODataEntityAnnotations);
+          else if (this.isCollection(newModel))
+            (newModel as ODataCollection<F, ODataModel<F>>).annots(annots as ODataEntitiesAnnotations);
         }
 
         const newModelResource = newModel.resource();
@@ -953,9 +959,9 @@ export class ODataModelOptions<T> {
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
       if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
         let path = field.name;
-        if (value instanceof ODataModel && event.path)
+        if (this.isModel(value) && event.path)
           path = `${path}.${event.path}`;
-        else if (value instanceof ODataCollection && event.path) {
+        else if (this.isCollection(value) && event.path) {
           path = `${path}${event.path}`;
         }
         self.events$.emit({ ...event, path });

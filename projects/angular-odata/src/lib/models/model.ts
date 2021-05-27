@@ -7,8 +7,6 @@ import {
   HttpOptions,
   ODataEntityAnnotations,
   ODataEntity,
-  ODataActionResource,
-  ODataFunctionResource,
   Select,
   Expand,
   OptionHandler} from '../resources/index';

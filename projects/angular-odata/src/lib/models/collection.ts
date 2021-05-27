@@ -73,7 +73,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     this.annots(annots || new ODataEntitiesAnnotations({ options: resource?.api.options }));
     entities = entities || [];
 
-    this.assign(entities, { reset });
+    this.assign(entities, { reset, server: false });
   }
 
   resource(resource?: ODataCollectionResource<T>) {
@@ -113,8 +113,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     data: Partial<T> | {[name: string]: any},
     { reset = false }: { reset?: boolean } = {}
   ): M {
-    const annots = new ODataEntityAnnotations({data, options: this._annotations.options });
     let Model = this._model;
+    const annots = new ODataEntityAnnotations({data, options: this._annotations.options });
 
     if (annots?.type !== undefined && Model.meta !== null) {
       let schema = Model.meta.find(o => o.isTypeOf(annots.type as string))?.schema;
@@ -195,7 +195,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$.pipe(
       map(({ entities, annots }) => {
         this.annots(annots);
-        this.assign(entities || [], { reset: true });
+        this.assign(entities || [], { reset: true, server: false });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
       })
@@ -215,7 +215,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return obs$.pipe(
       map((entities) => {
         this.annots(new ODataEntitiesAnnotations({ options: resource?.api.options }));
-        this.assign(entities || [], { reset: true });
+        this.assign(entities || [], { reset: true, server: false });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
       }));
@@ -235,36 +235,32 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     let changes = this._entries.map(entry => {
       const model = entry.model;
       if (entry.state === ODataModelState.Removed) {
-        return this.removeReference(model, options);
+        return this.removeReference(model, {models, ...options});
       } else if (entry.state === ODataModelState.Added) {
-        return this.addReference(model, options);
+        return this.addReference(model, {models, ...options});
       }
-      return of(model);
+      return models ? model.save(options) : of(model);
     });
-    return forkJoin(changes).pipe(
-        map(() => {
+    return forkJoin(changes)
+    .pipe(
+      map(() => {
         this._entries = this._entries
           .filter(entry => entry.state !== ODataModelState.Removed)
-          .map(entry => ({
-            state: ODataModelState.Unchanged,
-            model: entry.model,
-            key: entry.key,
-            subscription: entry.subscription
-          }));
+          .map(entry => Object.assign(entry, {state: ODataModelState.Unchanged}));
         return this;
       }),
       defaultIfEmpty(this)
     );
   }
 
-  protected addReference(model: M, options?: HttpOptions): Observable<M> {
+  protected addReference(model: M, {models = true, ...options}: {models?: boolean} & HttpOptions = {}): Observable<M> {
     let resource = this.resource();
     if (model.key() !== undefined && resource instanceof ODataNavigationPropertyResource) {
       return resource.reference().add(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options);
-    } else if (resource instanceof ODataEntitySetResource) {
+    } else if (resource instanceof ODataEntitySetResource && models) {
       return model.save({asEntity: true, ...options});
     }
-    return of(model);
+    return models ? model.save() : of(model);
   }
 
   protected addModel(model: M, {silent = false, reset = false}: {silent?: boolean, reset?: boolean} = {}): Observable<this> {
@@ -294,20 +290,20 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   add(model: M, {silent = false, reset = false, server = true}: {silent?: boolean, reset?: boolean, server?: boolean} = {}): Observable<this> {
     return server ? this.addReference(model).pipe(
-      switchMap(model => this.addModel(model, {silent, reset}))
+      switchMap(model => this.addModel(model, {silent, reset: true}))
     ) : this.addModel(model, {silent, reset});
   }
 
-  protected removeReference(model: M, options?: HttpOptions): Observable<M> {
+  protected removeReference(model: M, {models = true, ...options}: {models?: boolean} & HttpOptions = {}): Observable<M> {
     let resource = this.resource();
     if (model.key() !== undefined) {
       if (resource instanceof ODataNavigationPropertyResource) {
         return resource.reference().remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options);
-      } else if (resource instanceof ODataEntitySetResource) {
+      } else if (resource instanceof ODataEntitySetResource && models) {
         return model.destroy({asEntity: true, ...options});
       }
     }
-    return of(model);
+    return models ? model.save() : of(model);
   }
 
   protected removeModel(model: M, {silent = false, reset = false}: {silent?: boolean, reset?: boolean} = {}): Observable<this> {
@@ -318,15 +314,21 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     // Emit Event
     if (!silent)
       model.events$.emit({ name: 'remove', model, collection: this });
+
     // Now remove
-    (entry as any).state = reset ? ODataModelState.Unchanged : ODataModelState.Removed,
-    (entry as any).subscription.unsubscribe();
+    if (reset) {
+      const index = this._entries.indexOf(entry);
+      this._entries.splice(index, 1);
+    } else {
+      entry.state = ODataModelState.Removed;
+    }
+    entry.subscription.unsubscribe();
     return of(this);
   }
 
   remove(model: M, {silent = false, reset = false, server = true}: {silent?: boolean, reset?: boolean, server?: boolean} = {}): Observable<this> {
     return server ? this.removeReference(model).pipe(
-      switchMap(model => this.removeModel(model, {silent, reset}))
+      switchMap(model => this.removeModel(model, {silent, reset: true}))
     ) : this.removeModel(model, {silent, reset});
   }
 
@@ -338,6 +340,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   set(path: string | string[], value: any) {
+    const Model = this._model;
     const pathArray = (Types.isArray(path)
       ? path
       : (path as string).match(/([^[.\]])+/g)) as any[];
@@ -346,7 +349,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       const model = this._entries[Number(pathArray[0])].model;
       return model.set(pathArray.slice(1), value);
     }
-    if (pathArray.length === 1 && value instanceof ODataModel) {
+    if (pathArray.length === 1 && Model.meta.isModel(value)) {
       let index = Number(pathArray[0]);
       const model = this.models()[index];
       const entry = this._findEntry({model});
@@ -369,47 +372,71 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   get(path: string | string[] | number): any {
+    const Model = this._model;
     const pathArray = (Types.isArray(path)
       ? path
       : (`${path}`).match(/([^[.\]])+/g)) as any[];
     if (pathArray.length === 0) return undefined;
     const value = this._entries[Number(pathArray[0])].model;
-    if (pathArray.length > 1 && value instanceof ODataModel) {
+    if (pathArray.length > 1 && Model.meta.isModel(value)) {
       return value.get(pathArray.slice(1));
     }
     return value;
   }
 
-  assign(objects: Array<Partial<T> | {[name: string]: any} | M>, { server = true, reset = false, silent = false }: { server?: boolean, reset?: boolean, silent?: boolean } = {}) {
+  assign(objects: Array<Partial<T> | {[name: string]: any} | M>, { reset = false, silent = false }: { server?: boolean, reset?: boolean, silent?: boolean } = {}) {
     const Model = this._model;
 
+    let toAdd: M[] = [];
+    let toMerge: M[] = [];
+    let toRemove: M[] = [];
     let modelMap: string[] = [];
     objects.forEach(obj => {
+      const isModel = Model.meta.isModel(obj);
       const key = (Model !== null && Model.meta)? Model.meta.resolveKey(obj) : undefined;
-      const cid = (this._model.meta.cid in obj) ? (<any>obj)[this._model.meta.cid] : undefined;
+      const cid = (Model.meta.cid in obj) ? (<any>obj)[Model.meta.cid] : undefined;
       // Try find entry
-      const entry = (obj instanceof ODataModel) ?
+      const entry = isModel ?
         this._findEntry({model: obj as M}) : // By Model
         this._findEntry({cid, key}); // By Cid or Key
 
       let model: M;
       if (entry !== undefined) {
-        //TODO: if obj is the same model ? but other instance
-        // Assign
+        // Merge
         model = entry.model;
-        if (model !== obj) model.assign(obj, {reset, silent});
+        if (model !== obj) {
+          // if is model toEntity else assign as entity
+          model.assign(isModel ? (obj as M).toEntity() : obj, {reset, silent});
+          toMerge.push(model);
+        }
       } else {
         // Add
-        model = !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M;
-        this.add(model, {server, silent, reset}).toPromise();
+        model = isModel ? obj as M : this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset });
+        toAdd.push(model);
       }
-      modelMap.push((<any>model)[this._model.meta.cid]);
+      modelMap.push((<any>model)[Model.meta.cid]);
     });
-    this._entries.filter(e => modelMap.indexOf((<any>e.model)[this._model.meta.cid]) === -1).forEach(entry => {
-      this.remove(entry.model, {server, silent, reset}).toPromise();
+    this._entries.filter(e => modelMap.indexOf((<any>e.model)[Model.meta.cid]) === -1).forEach(entry => {
+      toRemove.push(entry.model);
     });
-    if (!silent)
-      this.events$.emit({ name: reset ? 'reset' : 'update', collection: this });
+    forkJoin([
+      ...toRemove.map(m => this.removeModel(m, {silent, reset})),
+      ...toAdd.map(m => this.addModel(m, {silent, reset}))
+    ]).pipe(
+      map(() => this),
+      defaultIfEmpty(this)
+    ).subscribe(col => {
+      if (!silent)
+        this.events$.emit({
+          name: reset ? 'reset' : 'update',
+          collection: col,
+          options: {
+            added: toAdd,
+            removed: toRemove,
+            merged: toMerge
+          }
+        });
+    });
   }
 
   query(
@@ -512,7 +539,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         if (event.path)
           path = `${path}.${event.path}`;
         if (event.name === 'destroy' && event.model === model)
-          this.remove(model, {server: false}).toPromise();
+          this.remove(model, {reset: true, server: false}).toPromise();
         if (event.name === 'change' && event.model === model) {
           let entry = this._findEntry({model});
           if (entry !== undefined) entry.key = model.key();
