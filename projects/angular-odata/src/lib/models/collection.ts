@@ -267,7 +267,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return of(null);
   }
 
-  add(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
+  add(model: M, {silent = false, reset = false, server = true}: {silent?: boolean, reset?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
     let entry = this._findEntry({model, key, cid: (<any>model)[this._model.meta.cid]});
     if (entry !== undefined && entry.state !== ODataModelState.Removed) return of(this);
@@ -281,7 +281,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         this._entries.splice(index, 1);
       }
       this._entries.push({
-        state: ODataModelState.Added,
+        state: reset ? ODataModelState.Unchanged : ODataModelState.Added,
         model,
         key: model.key(),
         subscription: this._subscribe(model),
@@ -309,7 +309,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     return of(null);
   }
 
-  remove(model: M, {silent = false, server = true}: {silent?: boolean, server?: boolean} = {}): Observable<this> {
+  remove(model: M, {silent = false, reset = false, server = true}: {silent?: boolean, reset?: boolean, server?: boolean} = {}): Observable<this> {
     const key = model.key();
     let entry = this._findEntry({model, key, cid: (<any>model)[this._model.meta.cid]});
     if (entry === undefined || entry.state === ODataModelState.Removed) return of(this);
@@ -319,7 +319,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (!silent)
         model.events$.emit({ name: 'remove', model, collection: this });
       // Now remove
-      (entry as any).state = ODataModelState.Removed;
+      (entry as any).state = reset ? ODataModelState.Unchanged : ODataModelState.Removed,
       (entry as any).subscription.unsubscribe();
       if (!silent)
         this.events$.emit({ name: 'update', collection: this });
@@ -382,45 +382,36 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   assign(objects: Array<Partial<T> | {[name: string]: any} | M>, { server = true, reset = false, silent = false }: { server?: boolean, reset?: boolean, silent?: boolean } = {}) {
     if (reset) {
       this._entries.forEach((e) => e.subscription.unsubscribe());
-      const models = objects.map(obj => !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M);
-      this._entries = models.map(model => ({
-        state: ODataModelState.Unchanged,
-        model,
-        key: model.key(),
-        subscription: this._subscribe(model),
-      }));
-      if (!silent)
-        this.events$.emit({ name: 'reset', collection: this });
-    } else {
-      const Model = this._model;
-
-      let modelMap: string[] = [];
-      objects.forEach(obj => {
-        const key = (Model !== null && Model.meta)? Model.meta.resolveKey(obj) : undefined;
-        const cid = (this._model.meta.cid in obj) ? (<any>obj)[this._model.meta.cid] : undefined;
-        // Try find entry
-        const entry = (obj instanceof ODataModel) ?
-          this._findEntry({model: obj as M}) : // By Model
-          this._findEntry({cid, key}); // By Cid or Key
-
-        let model: M;
-        if (entry !== undefined) {
-          // Assign
-          model = entry.model;
-          if (model !== obj) model.assign(obj, {reset, silent});
-        } else {
-          // Add
-          model = !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M;
-          this.add(model, {server, silent}).toPromise();
-        }
-        modelMap.push((<any>model)[this._model.meta.cid]);
-      });
-      this._entries.filter(e => modelMap.indexOf((<any>e.model)[this._model.meta.cid]) === -1).forEach(entry => {
-        this.remove(entry.model, {server, silent}).toPromise();
-      });
-      if (!silent)
-        this.events$.emit({ name: 'update', collection: this });
+      this._entries = [];
     }
+    const Model = this._model;
+
+    let modelMap: string[] = [];
+    objects.forEach(obj => {
+      const key = (Model !== null && Model.meta)? Model.meta.resolveKey(obj) : undefined;
+      const cid = (this._model.meta.cid in obj) ? (<any>obj)[this._model.meta.cid] : undefined;
+      // Try find entry
+      const entry = (obj instanceof ODataModel) ?
+        this._findEntry({model: obj as M}) : // By Model
+        this._findEntry({cid, key}); // By Cid or Key
+
+      let model: M;
+      if (entry !== undefined) {
+        // Assign
+        model = entry.model;
+        if (model !== obj) model.assign(obj, {reset, silent});
+      } else {
+        // Add
+        model = !(obj instanceof ODataModel) ? this.modelFactory(obj as Partial<T> | {[name: string]: any}, { reset }) : obj as M;
+        this.add(model, {server, silent, reset}).toPromise();
+      }
+      modelMap.push((<any>model)[this._model.meta.cid]);
+    });
+    this._entries.filter(e => modelMap.indexOf((<any>e.model)[this._model.meta.cid]) === -1).forEach(entry => {
+      this.remove(entry.model, {server, silent, reset}).toPromise();
+    });
+    if (!silent)
+      this.events$.emit({ name: reset ? 'reset' : 'update', collection: this });
   }
 
   query(
