@@ -221,11 +221,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       }));
   }
 
-  saveAll({
-    withCount,
+  save({
+    models = false,
     ...options
   }: HttpOptions & {
-    withCount?: boolean;
+    models?: boolean;
   } = {}): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)
