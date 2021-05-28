@@ -405,9 +405,14 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         // Merge
         model = entry.model;
         if (model !== obj) {
-          // if is model toEntity else assign as entity
-          model.assign(isModel ? (obj as M).toEntity() : obj, {reset, silent});
-          toMerge.push(model);
+          // TODO: annots ?
+          // Get entity from model
+          const entity = isModel ? (obj as M).toEntity({
+            client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true
+          }) : model.annots().attributes<T>(obj);
+          model.assign(entity, {reset, silent});
+          if (model.hasChanged())
+            toMerge.push(model);
         }
       } else {
         // Add
@@ -426,15 +431,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       map(() => this),
       defaultIfEmpty(this)
     ).subscribe(col => {
-      if (!silent)
+      if (!silent && (toAdd.length > 0 || toRemove.length > 0 || toMerge.length > 0))
         this.events$.emit({
           name: reset ? 'reset' : 'update',
           collection: col,
-          options: {
-            added: toAdd,
-            removed: toRemove,
-            merged: toMerge
-          }
+          options: { added: toAdd, removed: toRemove, merged: toMerge }
         });
     });
   }

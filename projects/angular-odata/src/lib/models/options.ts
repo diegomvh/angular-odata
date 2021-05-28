@@ -787,25 +787,29 @@ export class ODataModelOptions<T> {
       self._changes = {} as T;
       Object.values(self._relations).forEach(rel => rel.state = ODataModelState.Unchanged);
     }
-    var changes: string[] = [];
-    for (let key in entity) {
-      const value = (<any>entity)[key];
+    const changes: string[] = [];
+    const model = self as any;
+    Object.entries(entity).forEach(([key, value]) => {
       const name = self._resetting
         ? this.fields().find((p) => p.field === key)?.name || key
         : key;
-      const current = (self as any)[name];
-      if (value !== null && Types.isObject(value)) {
-        if (
-          (!this.isModel(value) && this.isModel(current)) ||
-          (!this.isCollection(value) && this.isCollection(current))
-        ) {
-          current.assign(value, { reset, silent });
-        }
+
+      value = this.isModel(value) ? (value as ODataModel<any>).toEntity({client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true}) :
+        this.isCollection(value) ? (value as ODataCollection<any, ODataModel<any>>).toEntities({client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true}) :
+        value;
+      const current = model[name];
+      if (this.isCollection(current) && Types.isArray(value)) {
+        current.assign(value, {reset, silent});
+        if (current.hasChanged()) changes.push(name);
+      } else if(this.isModel(current) && Types.isObject(value)) {
+        current.assign(value, {reset, silent});
+        if (current.hasChanged()) changes.push(name);
       } else if (!Types.isEqual(current, value)) {
-        (self as any)[name] = value;
+        model[name] = value;
         changes.push(name);
       }
-    }
+    });
+
     if (!self._silent && changes.length > 0)
       self.events$.emit({
         name: self._resetting ? 'reset' : 'update',
