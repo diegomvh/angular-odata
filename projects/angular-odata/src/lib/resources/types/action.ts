@@ -71,11 +71,73 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       this.api.findCallableForType<R>(type) :
       undefined;
   }
-  //#endregion
-
   returnType() {
     return this.schema?.parser.return?.type;
   }
+
+  //#endregion
+
+  //#region Inmutable Resource
+  select(opts: Select<R>) {
+    let options = this.cloneQuery();
+    options.option<Select<R>>(QueryOptionNames.select, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  expand(opts: Expand<R>) {
+    let options = this.cloneQuery();
+    options.option<Expand<R>>(QueryOptionNames.expand, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  transform(opts: Transform<R>) {
+    let options = this.cloneQuery();
+    options.option<Transform<R>>(QueryOptionNames.transform, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  search(opts: string) {
+    let options = this.cloneQuery();
+    options.option<string>(QueryOptionNames.search, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  filter(opts: Filter) {
+    let options = this.cloneQuery();
+    options.option<Filter>(QueryOptionNames.filter, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  orderBy(opts: OrderBy<R>) {
+    let options = this.cloneQuery();
+    options.option<OrderBy<R>>(QueryOptionNames.orderBy, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  format(opts: string) {
+    let options = this.cloneQuery();
+    options.option<string>(QueryOptionNames.format, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  top(opts: number) {
+    let options = this.cloneQuery();
+    options.option<number>(QueryOptionNames.top, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  skip(opts: number) {
+    let options = this.cloneQuery();
+    options.option<number>(QueryOptionNames.skip, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  skiptoken(opts: string) {
+    let options = this.cloneQuery();
+    options.option<string>(QueryOptionNames.skiptoken, opts);
+    return new ODataActionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+  //#endregion
 
   //#region Mutable Resource
   get query() {
@@ -113,7 +175,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       }
     }
   }
-  //#region Mutable Resource
+
   get segment() {
     const segments = this.pathSegments;
     return {

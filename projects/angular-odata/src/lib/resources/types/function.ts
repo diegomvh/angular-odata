@@ -67,18 +67,91 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new Collection(entities, {resource, annots, reset}) as C;
   }
 
-  //#region Action Config
+  //#region Function Config
   get schema() {
     let type = this.type();
     return (type !== undefined) ?
       this.api.findCallableForType<R>(type) :
       undefined;
   }
-  //#endregion
-
   returnType() {
     return this.schema?.parser.return?.type;
   }
+  //#endregion
+
+  //#region Inmutable Resource
+  parameters(params: P | null, {alias}: {alias?:boolean} = {}) {
+    const segments = this.cloneSegments();
+    const segment = segments.get(PathSegmentNames.function);
+    let parameters =  params !== null ? this.encode(params) : null;
+    if (alias && parameters !== null) {
+      parameters = Object.entries(parameters).reduce((acc, [name, param]) => {
+        return Object.assign(acc, {[name]: functionAlias(param, name)});
+      }, {});
+    }
+    segment.parameters(parameters);
+    return new ODataFunctionResource<P, R>(this.api, segments, this.cloneQuery());
+  }
+  select(opts: Select<R>) {
+    let options = this.cloneQuery();
+    options.option<Select<R>>(QueryOptionNames.select, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  expand(opts: Expand<R>) {
+    let options = this.cloneQuery();
+    options.option<Expand<R>>(QueryOptionNames.expand, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  transform(opts: Transform<R>) {
+    let options = this.cloneQuery();
+    options.option<Transform<R>>(QueryOptionNames.transform, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  search(opts: string) {
+    let options = this.cloneQuery();
+    options.option<string>(QueryOptionNames.search, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  filter(opts: Filter) {
+    let options = this.cloneQuery();
+    options.option<Filter>(QueryOptionNames.filter, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  orderBy(opts: OrderBy<R>) {
+    let options = this.cloneQuery();
+    options.option<OrderBy<R>>(QueryOptionNames.orderBy, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  format(opts: string) {
+    let options = this.cloneQuery();
+    options.option<string>(QueryOptionNames.format, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  top(opts: number) {
+    let options = this.cloneQuery();
+    options.option<number>(QueryOptionNames.top, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  skip(opts: number) {
+    let options = this.cloneQuery();
+    options.option<number>(QueryOptionNames.skip, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+
+  skiptoken(opts: string) {
+    let options = this.cloneQuery();
+    options.option<string>(QueryOptionNames.skiptoken, opts);
+    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+  }
+  //#endregion
 
   //#region Mutable Resource
   get segment() {
@@ -133,22 +206,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-
-  //#region Inmutable Resource
-  parameters(params: P | null, {alias}: {alias?:boolean} = {}) {
-    const segments = this.cloneSegments();
-    const segment = segments.get(PathSegmentNames.function);
-    let parameters =  params !== null ? this.encode(params) : null;
-    if (alias && parameters !== null) {
-      parameters = Object.entries(parameters).reduce((acc, [name, param]) => {
-        return Object.assign(acc, {[name]: functionAlias(param, name)});
-      }, {});
-    }
-    segment.parameters(parameters);
-    return new ODataFunctionResource<P, R>(this.api, segments, this.cloneQuery());
-  }
-  //#endregion
-
   //#region Requests
   get(options?: HttpEntityOptions): Observable<ODataEntity<R>>;
   get(options?: HttpEntitiesOptions): Observable<ODataEntities<R>>;
@@ -158,7 +215,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  //#region Custom
+  //#region Shortcuts
   call(params: P | null, {alias, ...options}: {alias?:boolean} & HttpOptions = {}): Observable<any> {
     return this.parameters(params, {alias}).get(options) as Observable<any>;
   }

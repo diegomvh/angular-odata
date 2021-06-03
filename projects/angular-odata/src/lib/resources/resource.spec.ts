@@ -88,6 +88,19 @@ describe('ODataResource', () => {
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
   });
 
+  it('should create entity function and change parameters', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    let fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: 2})
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1,arg2=2)");
+    fun = fun.parameters({arg1: 10, arg2: 20});
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=10,arg2=20)");
+    fun = fun.parameters({arg1: 10, arg2: 20}, {alias: true});
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=@arg1,arg2=@arg2)?@arg1=10&@arg2=20");
+    fun = fun.parameters(null);
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
+  });
+
   it('should create entity function with all parameters', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity('russellwhyte');
@@ -107,6 +120,13 @@ describe('ODataResource', () => {
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: null})
     expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=1,arg2=null)");
+  });
+
+  it('should create entity function with alias parameters', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity('russellwhyte');
+    const fun: ODataFunctionResource<any, any> = entity.function<any, any>("NS.MyFunction").parameters({arg1: 1, arg2: 2}, {alias: true})
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction(arg1=@arg1,arg2=@arg2)?@arg1=1&@arg2=2");
   });
 
   it('should create collection action', () => {
