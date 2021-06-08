@@ -38,7 +38,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   }
   //#endregion
 
-  //#region Custom for collections
+  //#region Shortcuts for collections
   add(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {
     return this.post(target, options);
   }
@@ -48,7 +48,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   }
   //#region
 
-  //#region Custom for single
+  //#region Shortcuts for single
   set(target: ODataEntityResource<any>, options?: HttpOptions & { etag?: string }): Observable<any>  {
     return this.put(target, options);
   }

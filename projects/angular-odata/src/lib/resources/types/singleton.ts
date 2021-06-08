@@ -168,8 +168,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom
-  fetch(options?: HttpOptions & { etag?: string }): Observable<T | null> {
+  //#region Shortcuts
+  fetchEntity(options?: HttpOptions & { etag?: string }): Observable<T | null> {
     return this.get(options).pipe(map(({entity}) => entity));
   }
 

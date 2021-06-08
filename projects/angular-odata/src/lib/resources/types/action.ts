@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions } from './options';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions, HttpNoneOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity, ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
 import { ODataApi } from '../../api';
 import { map } from 'rxjs/operators';
@@ -201,29 +201,32 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  //#region Custom
-  call(params: P | null, options?: HttpOptions): Observable<any> {
-    return this.clone().post(params, options) as Observable<any>;
+  //#region Shortcuts
+  call(params: P | null, options?: HttpEntityOptions & HttpOptions): Observable<ODataEntity<R>>;
+  call(params: P | null, options?: HttpEntitiesOptions & HttpOptions): Observable<ODataEntities<R>>;
+  call(params: P | null, options?: HttpPropertyOptions & HttpOptions): Observable<ODataProperty<R>>;
+  call(params: P | null, options?: HttpNoneOptions & HttpOptions): Observable<null>;
+  call(params: P | null, options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions & HttpNoneOptions & HttpOptions = {}): Observable<any> {
+    return this.clone().post(params, options);
   }
-
   callProperty(params: P | null, options: HttpOptions = {}): Observable<R | null> {
-    return this.clone().post(params, {responseType: 'property', ...options}).pipe(map(({property}) => property));
+    return this.call(params, {responseType: 'property', ...options}).pipe(map(({property}) => property));
   }
 
   callEntity(params: P | null, options: HttpOptions = {}): Observable<R | null> {
-    return this.clone().post(params, {responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
+    return this.call(params, {responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
   }
 
   callModel(params: P | null, options: HttpOptions = {}): Observable<ODataModel<R> | null> {
-    return this.clone().post(params, {responseType: 'entity', ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
+    return this.call(params, {responseType: 'entity', ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
   }
 
   callEntities(params: P | null, options: HttpOptions = {}): Observable<R[] | null> {
-    return this.clone().post(params, {responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
+    return this.call(params, {responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
   }
 
   callCollection(params: P | null, options: HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
-    return this.clone().post(params, {responseType: 'entities', ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, {annots, reset: true}) : null));
+    return this.call(params, {responseType: 'entities', ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, {annots, reset: true}) : null));
   }
   //#endregion
 }

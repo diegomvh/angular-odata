@@ -178,7 +178,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Custom
-  fetch(options?: HttpOptions & { etag?: string }): Observable<T | null> {
+  fetchEntity(options?: HttpOptions & { etag?: string }): Observable<T | null> {
     if (!this.hasKey())
       return throwError("Entity resource without key");
     return this.get(options).pipe(map(({ entity }) => entity));

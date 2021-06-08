@@ -22,8 +22,8 @@ export class ODataValueResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Requests
-  fetch(options: HttpOptions = {}): Observable<T> {
+  //#region Shortcuts
+  fetchValue(options: HttpOptions = {}): Observable<T> {
     return super.get({responseType: 'value', ...options});
   }
 

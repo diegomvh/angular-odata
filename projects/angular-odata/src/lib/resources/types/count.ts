@@ -32,8 +32,8 @@ export class ODataCountResource extends ODataResource<any> {
   }
   //#endregion
 
-  //#region Requests
-  fetch(options: HttpOptions = {}): Observable<number> {
+  //#region Shortcuts
+  fetchValue(options: HttpOptions = {}): Observable<number> {
     return super.get({responseType: 'value', ...options});
   }
   //#endregion

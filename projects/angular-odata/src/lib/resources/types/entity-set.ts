@@ -12,7 +12,7 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
-import { HttpOptions } from './options';
+import { HttpEntitiesOptions, HttpOptions } from './options';
 import { ODataEntity, ODataEntities, ODataEntitiesAnnotations } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
@@ -211,9 +211,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom
-  fetch(options?: HttpOptions & { withCount?: boolean }): Observable<T[] | null> {
-    return this.get(options).pipe(map(({ entities }) => entities));
+  //#region Shortcuts
+  fetchEntities(options?: HttpOptions & { withCount?: boolean }): Observable<T[] | null> {
+    return this.get(options).pipe(map(({entities}) => entities));
   }
 
   fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {

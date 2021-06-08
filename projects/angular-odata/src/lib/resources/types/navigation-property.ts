@@ -232,21 +232,26 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  //#region Custom
+  //#region Shortcuts
+  fetch(options?: HttpEntityOptions): Observable<ODataEntity<T>>;
+  fetch(options?: HttpEntitiesOptions): Observable<ODataEntities<T>>;
+  fetch(options: HttpEntityOptions & HttpEntitiesOptions & { etag?: string } = {}): Observable<any> {
+    return this.get(options);
+  }
   fetchEntity(options: HttpOptions & { etag?: string } = {}): Observable<T | null> {
-    return this.get({ responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
+    return this.fetch({ responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
   }
 
   fetchModel(options: HttpOptions & { etag?: string } = {}): Observable<ODataModel<T> | null> {
-    return this.get({ responseType: 'entity', ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
+    return this.fetch({ responseType: 'entity', ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
   }
 
   fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
-    return this.get({ responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
+    return this.fetch({ responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
   }
 
   fetchCollection(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataCollection<T, ODataModel<T>> | null> {
-    return this.get({responseType: 'entities', ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, {annots, reset: true}) : null));
+    return this.fetch({responseType: 'entities', ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, {annots, reset: true}) : null));
   }
 
   fetchAll(options: HttpOptions = {}): Observable<T[]> {
