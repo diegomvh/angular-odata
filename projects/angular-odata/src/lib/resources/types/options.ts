@@ -14,7 +14,8 @@ export type HttpEntityOptions = HttpOptions & { responseType?: 'entity' }
 export type HttpEntitiesOptions = HttpOptions & { responseType?: 'entities', withCount?: boolean };
 export type HttpPropertyOptions = HttpOptions & { responseType?: 'property' };
 export type HttpNoneOptions = HttpOptions & { responseType?: 'none' };
-export type HttpCallableOptions<T> = HttpOptions & {
+
+export type HttpQueryOptions<T> = HttpOptions & {
   select?: Select<T>,
   expand?: Expand<T>,
   transform?: Transform<T>;
@@ -26,5 +27,6 @@ export type HttpCallableOptions<T> = HttpOptions & {
   skiptoken?: string;
 };
 
-export type HttpActionOptions<T> = HttpCallableOptions<T>;
-export type HttpFunctionOptions<T> = HttpCallableOptions<T> & {alias?: boolean};
+export type HttpActionOptions<T> = HttpQueryOptions<T>;
+export type HttpFunctionOptions<T> = HttpQueryOptions<T> & {alias?: boolean};
+export type HttpNavigationPropertyOptions<T> = HttpQueryOptions<T>;

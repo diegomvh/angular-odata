@@ -238,6 +238,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   fetch(options: HttpEntityOptions & HttpEntitiesOptions & { etag?: string } = {}): Observable<any> {
     return this.get(options);
   }
+
   fetchEntity(options: HttpOptions & { etag?: string } = {}): Observable<T | null> {
     return this.fetch({ responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
   }
