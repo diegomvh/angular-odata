@@ -849,6 +849,10 @@ export class ODataModelOptions<T> {
           model: newModel,
           subscription: this._subscribe<F>(self, field, newModel),
         };
+        if (field.referential !== undefined && field.referenced !== undefined) {
+          console.log("set referenced");
+          (newModel as any)[field.referenced] = (self as any)[field.referential];
+        }
       }
       return field.name in self._relations
         ? self._relations[field.name].model
@@ -931,6 +935,10 @@ export class ODataModelOptions<T> {
           value: newModel,
           previous: currentModel,
         });
+      if (field.referential !== undefined && field.referenced !== undefined) {
+        console.log("set referential");
+        (self as any)[field.referential] = (newModel instanceof ODataModel) ? (newModel as any)[field.referenced] : newModel;
+      }
     } else {
       const attrs = this.attributes(self, {include_computed: true, include_concurrency: true});
       const currentValue = attrs[field.name];

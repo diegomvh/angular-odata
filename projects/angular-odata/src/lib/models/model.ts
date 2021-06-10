@@ -406,11 +406,7 @@ export class ODataModel<T> {
       this.events$.emit({name: 'request', model: this, value: obs$ });
       return obs$.pipe(
         map(() => {
-          let attrs: any = { [name]: model };
-          if (field.referential !== undefined) {
-            attrs[field.referential] = (model instanceof ODataModel) ? model.key() : model;
-          }
-          this.assign(attrs, { reset: true });
+          this.assign({[name]: model}, { reset: true });
           this.events$.emit({name: 'sync', model: this});
           return this;
         }
