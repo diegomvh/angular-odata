@@ -30,4 +30,10 @@ export class ODataMetadataResource extends ODataResource<any> {
     return super.get({responseType: 'text', ...options}).pipe(map((body: any) => new ODataMetadata(body)));
   }
   //#endregion
+
+  //#region Shortcuts
+  fetch(options?: HttpOptions): Observable<ODataMetadata> {
+    return this.get(options);
+  }
+  //#endregion
 }

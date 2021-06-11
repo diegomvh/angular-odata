@@ -165,39 +165,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   get query() {
-    const options = this.queryOptions;
-    return {
-      select(opts?: Select<T>) {
-        return options.option<Select<T>>(QueryOptionNames.select, opts);
-      },
-      expand(opts?: Expand<T>) {
-        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
-      },
-      transform(opts?: Transform<T>) {
-        return options.option<Transform<T>>(QueryOptionNames.transform, opts);
-      },
-      search(opts?: string) {
-        return options.option<string>(QueryOptionNames.search, opts);
-      },
-      filter(opts?: Filter) {
-        return options.option<Filter>(QueryOptionNames.filter, opts);
-      },
-      orderBy(opts?: OrderBy<T>) {
-        return options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-      },
-      format(opts?: string) {
-        return options.option<string>(QueryOptionNames.format, opts);
-      },
-      top(opts?: number) {
-        return options.option<number>(QueryOptionNames.top, opts);
-      },
-      skip(opts?: number) {
-        return options.option<number>(QueryOptionNames.skip, opts);
-      },
-      skiptoken(opts?: string) {
-        return options.option<string>(QueryOptionNames.skiptoken, opts);
-      }
-    }
+    return this.entitiesQueryHandler();
   }
   //#endregion
 
@@ -212,12 +180,16 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+  fetch(options?: HttpOptions & { withCount?: boolean }): Observable<ODataEntities<T>> {
+    return this.get(options);
+  }
+
   fetchEntities(options?: HttpOptions & { withCount?: boolean }): Observable<T[] | null> {
-    return this.get(options).pipe(map(({entities}) => entities));
+    return this.fetch(options).pipe(map(({entities}) => entities));
   }
 
   fetchCollection(options?: HttpOptions & { withCount?: boolean }): Observable<ODataCollection<T, ODataModel<T>> | null> {
-    return this.get(options).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, { annots, reset: true}) : null));
+    return this.fetch(options).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, { annots, reset: true}) : null));
   }
 
   fetchAll(options?: HttpOptions): Observable<T[]> {

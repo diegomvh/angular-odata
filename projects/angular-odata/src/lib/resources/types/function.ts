@@ -170,39 +170,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   get query() {
-    const options = this.queryOptions;
-    return {
-      select(opts?: Select<R>) {
-        return options.option<Select<R>>(QueryOptionNames.select, opts);
-      },
-      expand(opts?: Expand<R>) {
-        return options.option<Expand<R>>(QueryOptionNames.expand, opts);
-      },
-      transform(opts?: Transform<R>) {
-        return options.option<Transform<R>>(QueryOptionNames.transform, opts);
-      },
-      search(opts?: string) {
-        return options.option<string>(QueryOptionNames.search, opts);
-      },
-      filter(opts?: Filter) {
-        return options.option<Filter>(QueryOptionNames.filter, opts);
-      },
-      orderBy(opts?: OrderBy<R>) {
-        return options.option<OrderBy<R>>(QueryOptionNames.orderBy, opts);
-      },
-      format(opts?: string) {
-        return options.option<string>(QueryOptionNames.format, opts);
-      },
-      top(opts?: number) {
-        return options.option<number>(QueryOptionNames.top, opts);
-      },
-      skip(opts?: number) {
-        return options.option<number>(QueryOptionNames.skip, opts);
-      },
-      skiptoken(opts?: string) {
-        return options.option<string>(QueryOptionNames.skiptoken, opts);
-      }
-    };
+    return this.entitiesQueryHandler();
   }
   //#endregion
 

@@ -10,7 +10,7 @@ import { Http, Types, Urls } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
 import {
-  ODataQueryOptions
+  ODataQueryOptions, QueryOptionNames
 } from './query-options';
 import { HttpOptions } from './types';
 import { ODataResponse } from './responses/index';
@@ -18,6 +18,7 @@ import { ODataApi } from '../api';
 import { Parser } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
+import { Expand, Filter, OrderBy, Select, Transform } from './builder';
 
 export abstract class ODataResource<T> {
   // VARIABLES
@@ -146,17 +147,78 @@ export abstract class ODataResource<T> {
     };
   }
 
-  clearQuery() {
-    this.queryOptions.clear();
-  }
-
   cloneSegments() {
     return this.pathSegments.clone();
+  }
+
+  //#region Query Options
+  clearQuery() {
+    this.queryOptions.clear();
   }
 
   cloneQuery() {
     return this.queryOptions.clone();
   }
+
+  /**
+   * Factorise an object handler for mutate query options for resources that match to entity
+   * @returns Object handler for mutate query options
+   */
+  protected entityQueryHandler() {
+    const options = this.queryOptions;
+    return {
+      select(opts?: Select<T>) {
+        return options.option<Select<T>>(QueryOptionNames.select, opts);
+      },
+      expand(opts?: Expand<T>) {
+        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
+      },
+      format(opts?: string) {
+        return options.option<string>(QueryOptionNames.format, opts);
+      }
+    }
+  }
+
+  /**
+   * Factorise an object handler for mutate query options for resources that match to entities
+   * @returns Object handler for mutate query options
+   */
+  protected entitiesQueryHandler() {
+    const options = this.queryOptions;
+    return {
+      select(opts?: Select<T>) {
+        return options.option<Select<T>>(QueryOptionNames.select, opts);
+      },
+      expand(opts?: Expand<T>) {
+        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
+      },
+      transform(opts?: Transform<T>) {
+        return options.option<Transform<T>>(QueryOptionNames.transform, opts);
+      },
+      search(opts?: string) {
+        return options.option<string>(QueryOptionNames.search, opts);
+      },
+      filter(opts?: Filter) {
+        return options.option<Filter>(QueryOptionNames.filter, opts);
+      },
+      orderBy(opts?: OrderBy<T>) {
+        return options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
+      },
+      format(opts?: string) {
+        return options.option<string>(QueryOptionNames.format, opts);
+      },
+      top(opts?: number) {
+        return options.option<number>(QueryOptionNames.top, opts);
+      },
+      skip(opts?: number) {
+        return options.option<number>(QueryOptionNames.skip, opts);
+      },
+      skiptoken(opts?: string) {
+        return options.option<string>(QueryOptionNames.skiptoken, opts);
+      }
+    }
+  }
+  //#endregion
 
   // Base Requests
   protected request(

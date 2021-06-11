@@ -168,39 +168,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   get query() {
-    const options = this.queryOptions;
-    return {
-      select(opts?: Select<T>) {
-        return options.option<Select<T>>(QueryOptionNames.select, opts);
-      },
-      expand(opts?: Expand<T>) {
-        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
-      },
-      transform(opts?: Transform<T>) {
-        return options.option<Transform<T>>(QueryOptionNames.transform, opts);
-      },
-      search(opts?: string) {
-        return options.option<string>(QueryOptionNames.search, opts);
-      },
-      filter(opts?: Filter) {
-        return options.option<Filter>(QueryOptionNames.filter, opts);
-      },
-      orderBy(opts?: OrderBy<T>) {
-        return options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-      },
-      format(opts?: string) {
-        return options.option<string>(QueryOptionNames.format, opts);
-      },
-      top(opts?: number) {
-        return options.option<number>(QueryOptionNames.top, opts);
-      },
-      skip(opts?: number) {
-        return options.option<number>(QueryOptionNames.skip, opts);
-      },
-      skiptoken(opts?: string) {
-        return options.option<string>(QueryOptionNames.skiptoken, opts);
-      }
-    }
+    return this.entitiesQueryHandler();
   }
   //#endregion
 
@@ -220,6 +188,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   fetch(options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions & { etag?: string } = {}): Observable<any> {
     return this.get(options);
   }
+
   fetchProperty(options: HttpOptions & { etag?: string } = {}): Observable<T | null> {
     return this.fetch({ responseType: 'property', ...options}).pipe(map(({property}) => property));
   }

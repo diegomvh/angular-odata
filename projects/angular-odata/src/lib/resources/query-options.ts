@@ -80,7 +80,6 @@ export class ODataQueryOptions {
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
-
   // Clear
   clear() {
     this.options = {};

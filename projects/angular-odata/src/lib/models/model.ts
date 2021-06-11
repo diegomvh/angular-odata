@@ -11,7 +11,8 @@ import {
   Expand,
   OptionHandler,
   HttpActionOptions,
-  HttpFunctionOptions} from '../resources/index';
+  HttpFunctionOptions,
+  HttpNavigationPropertyOptions} from '../resources/index';
 
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
@@ -366,7 +367,7 @@ export class ODataModel<T> {
       ...options
     }: {
       asEntity?: boolean
-    } & HttpOptions = {}): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
+    } & HttpNavigationPropertyOptions<S> = {}): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
     const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       const nav = resource.navigationProperty<S>(name);

@@ -23,16 +23,23 @@ export class ODataValueResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+  fetch(options?: {responseType: 'value'} & HttpOptions): Observable<T>;
+  fetch(options?: {responseType: 'arraybuffer'} & HttpOptions): Observable<ArrayBuffer>;
+  fetch(options?: {responseType: 'blob'} & HttpOptions): Observable<Blob>;
+  fetch(options: {responseType: any } & HttpOptions): Observable<any> {
+    return super.get(options);
+  }
+
   fetchValue(options: HttpOptions = {}): Observable<T> {
-    return super.get({responseType: 'value', ...options});
+    return this.fetch({responseType: 'value', ...options});
   }
 
   fetchArraybuffer(options: HttpOptions = {}): Observable<ArrayBuffer> {
-    return super.get({responseType: 'arraybuffer', ...options});
+    return this.fetch({responseType: 'arraybuffer', ...options});
   }
 
   fetchBlob(options: HttpOptions = {}): Observable<Blob> {
-    return super.get({responseType: 'blob', ...options});
+    return this.fetch({responseType: 'blob', ...options});
   }
   //#endregion
 }

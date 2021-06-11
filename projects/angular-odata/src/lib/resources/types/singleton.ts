@@ -131,18 +131,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   get query() {
-    const options = this.queryOptions;
-    return {
-      select(opts?: Select<T>) {
-        return options.option<Select<T>>(QueryOptionNames.select, opts);
-      },
-      expand(opts?: Expand<T>) {
-        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
-      },
-      format(opts?: string) {
-        return options.option<string>(QueryOptionNames.format, opts);
-      }
-    }
+    return this.entityQueryHandler();
   }
   //#endregion
 
@@ -169,12 +158,16 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+  fetch(options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
+    return this.get(options);
+  }
+
   fetchEntity(options?: HttpOptions & { etag?: string }): Observable<T | null> {
-    return this.get(options).pipe(map(({entity}) => entity));
+    return this.fetch(options).pipe(map(({entity}) => entity));
   }
 
   fetchModel(options?: HttpOptions & { etag?: string }): Observable<ODataModel<T> | null> {
-    return this.get(options).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
+    return this.fetch(options).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
   }
   //#endregion
 }
