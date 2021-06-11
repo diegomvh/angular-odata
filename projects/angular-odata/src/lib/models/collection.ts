@@ -258,7 +258,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   protected addReference(model: M, {models = true, ...options}: {models?: boolean} & HttpOptions = {}): Observable<M> {
     let resource = this.resource();
     if (model.key() !== undefined && resource instanceof ODataNavigationPropertyResource) {
-      return resource.reference().add(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options);
+      return resource.reference()
+        .add(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options)
+        .pipe(map(() => model));
     } else if (resource instanceof ODataEntitySetResource && models) {
       return model.save({asEntity: true, ...options});
     }
@@ -300,7 +302,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     let resource = this.resource();
     if (model.key() !== undefined) {
       if (resource instanceof ODataNavigationPropertyResource) {
-        return resource.reference().remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options);
+        return resource.reference()
+          .remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options)
+          .pipe(map(() => model));
       } else if (resource instanceof ODataEntitySetResource && models) {
         return model.destroy({asEntity: true, ...options});
       }

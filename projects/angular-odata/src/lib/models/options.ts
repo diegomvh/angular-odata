@@ -479,22 +479,10 @@ export class ODataModelOptions<T> {
         `Can't reattach ${resource.type()} to ${self._resource.type()}`
       );
 
-    const key = self.key({ field_mapping: true }) as EntityKey<T>;
-    if (key !== undefined) resource = resource.key(key);
-
-    // Attach relations
-    Object.values(self._relations).forEach(({ property, model }) => {
-      if (model !== null) {
-        const mr = model.resource();
-        const pr = property.resourceFactory<T, any>(resource);
-        if (mr === undefined || pr === undefined || !mr.isEqualTo(pr))
-          model.resource(pr);
-      }
-    });
-
     const current = self._resource;
     if (current === undefined || !current.isEqualTo(resource)) {
       self._resource = resource;
+      this._update(self);
       self.events$.emit({
         name: 'attach',
         model: self,
@@ -565,13 +553,13 @@ export class ODataModelOptions<T> {
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): EntityKey<T> | { [name: string]: any } | undefined {
-    const keys = this.schema.keys({ include_parents: true });
+    const keyTypes = this.schema.keys({ include_parents: true });
     const key: any = {};
-    for (var k of keys) {
+    for (var keyType of keyTypes) {
       let model = value as any;
       let options = this as ODataModelOptions<any>;
       let prop: ODataModelField<any> | undefined;
-      for (let name of k.ref.split('/')) {
+      for (let name of keyType.ref.split('/')) {
         if (options === null) break;
         prop = options
           .fields({ include_parents: true })
@@ -583,7 +571,7 @@ export class ODataModelOptions<T> {
       }
       if (prop === undefined) return undefined;
       let name = field_mapping ? prop.field : prop.name;
-      if (k.alias !== undefined) name = k.alias;
+      if (keyType.alias !== undefined) name = keyType.alias;
       key[name] = model[prop.name];
     }
     return resolve ? Objects.resolveKey(key) : key;
@@ -781,18 +769,11 @@ export class ODataModelOptions<T> {
   ) {
     self._resetting = reset;
     self._silent = silent;
-    if (self._resetting) {
-      // Apply current changes and start new tracking
-      Object.assign(self._attributes, self._changes);
-      self._changes = {} as T;
-      Object.values(self._relations).forEach(rel => rel.state = ODataModelState.Unchanged);
-    }
+
     const changes: string[] = [];
     const model = self as any;
     Object.entries(entity).forEach(([key, value]) => {
-      const name = self._resetting
-        ? this.fields().find((p) => p.field === key)?.name || key
-        : key;
+      const name = self._resetting && this.fields().find((p) => p.field === key)?.name || key;
 
       value = this.isModel(value) ? (value as ODataModel<any>).toEntity({client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true}) :
         this.isCollection(value) ? (value as ODataCollection<any, ODataModel<any>>).toEntities({client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true}) :
@@ -810,12 +791,13 @@ export class ODataModelOptions<T> {
       }
     });
 
-    if (!self._silent && changes.length > 0)
+    if (!self._silent && changes.length > 0) {
       self.events$.emit({
         name: self._resetting ? 'reset' : 'update',
         model: self,
         options: {changes}
       });
+    }
     self._resetting = false;
     self._silent = false;
   }
@@ -854,12 +836,14 @@ export class ODataModelOptions<T> {
           (newModel as any)[field.referenced] = (self as any)[field.referential];
         }
       }
-      return field.name in self._relations
-        ? self._relations[field.name].model
-        : undefined;
+      const relation = self._relations[field.name];
+      if (relation !== undefined && self._resetting)
+        relation.state = ODataModelState.Unchanged;
+      return relation?.model;
+    } else {
+      const attrs = this.attributes(self, { include_concurrency: true, include_computed: true });
+      return attrs[field.name];
     }
-    const attrs = this.attributes(self, { include_concurrency: true, include_computed: true });
-    return attrs[field.name];
   }
 
   private _set<F>(
@@ -943,11 +927,17 @@ export class ODataModelOptions<T> {
       const attrs = this.attributes(self, {include_computed: true, include_concurrency: true});
       const currentValue = attrs[field.name];
       if (!Types.isEqual(currentValue, value)) {
-        if (self._resetting)
-          self._attributes[field.name] = value;
-        else if (Types.isEqual(value, self._attributes[field.name]))
+        if (self._resetting) {
           delete self._changes[field.name];
-        else self._changes[field.name] = value;
+          self._attributes[field.name] = value;
+        } else if (Types.isEqual(value, self._attributes[field.name])) {
+          delete self._changes[field.name];
+        } else {
+          self._changes[field.name] = value;
+        }
+        if (self.schema().keys({ include_parents: true }).find(keyType => keyType.name === field.field) !== undefined) {
+          this._update(self);
+        }
         if (!self._silent)
           self.events$.emit({
             name: 'change',
@@ -960,6 +950,17 @@ export class ODataModelOptions<T> {
     }
   }
 
+  private _update(self: ODataModel<T>) {
+    const resource = self.resource();
+    Object.values(self._relations).forEach(({ property, model }) => {
+      if (model !== null) {
+        const mr = model.resource();
+        const pr = resource !== undefined ? property.resourceFactory<T, any>(resource) : undefined;
+        if (mr === undefined || pr === undefined || !mr.isEqualTo(pr))
+          model.resource(pr);
+      }
+    });
+  }
   private _subscribe<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
