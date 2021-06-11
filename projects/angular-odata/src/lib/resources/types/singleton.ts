@@ -102,21 +102,21 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   select(opts: Select<T>) {
-    let options = this.cloneQuery();
-    options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.select(opts);
+    return clone;
   }
 
   expand(opts: Expand<T>) {
-    let options = this.cloneQuery();
-    options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.expand(opts);
+    return clone;
   }
 
   format(opts: string) {
-    let options = this.cloneQuery();
-    options.option<string>(QueryOptionNames.format, opts);
-    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.format(opts);
+    return clone;
   }
   //#endregion
 

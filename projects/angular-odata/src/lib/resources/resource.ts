@@ -12,7 +12,7 @@ import { ODataPathSegments } from './path-segments';
 import {
   ODataQueryOptions, QueryOptionNames
 } from './query-options';
-import { HttpOptions } from './types';
+import { HttpOptions, HttpQueryOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
 import { Parser } from '../types';
@@ -175,6 +175,14 @@ export abstract class ODataResource<T> {
       },
       format(opts?: string) {
         return options.option<string>(QueryOptionNames.format, opts);
+      },
+      apply(query: HttpQueryOptions<T>) {
+        if (query.select !== undefined) {
+          this.select(query.select);
+        }
+        if (query.expand !== undefined) {
+          this.expand(query.expand);
+        }
       }
     }
   }
@@ -215,6 +223,40 @@ export abstract class ODataResource<T> {
       },
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
+      },
+      paging({skip, skiptoken, top}: { skip?: number, skiptoken?: string, top?: number } = {}) {
+        if (skiptoken !== undefined)
+          this.skiptoken(skiptoken);
+        else if (skip !== undefined)
+          this.skip(skip);
+        if (top !== undefined)
+          this.top(top);
+      },
+      clearPaging() {
+        this.skip().clear();
+        this.top().clear();
+        this.skiptoken().clear();
+      },
+      apply(query: HttpQueryOptions<T>) {
+        if (query.select !== undefined) {
+          this.select(query.select);
+        }
+        if (query.expand !== undefined) {
+          this.expand(query.expand);
+        }
+        if (query.transform !== undefined) {
+          this.transform(query.transform);
+        }
+        if (query.search !== undefined) {
+          this.search(query.search);
+        }
+        if (query.filter !== undefined) {
+          this.filter(query.filter);
+        }
+        if (query.orderBy !== undefined) {
+          this.orderBy(query.orderBy);
+        }
+        this.paging(query);
       }
     }
   }

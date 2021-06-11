@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ODataClient } from './client';
-import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource } from './resources';
+import { ODataMetadataResource, ODataEntitySetResource, ODataFunctionResource, ODataActionResource, ODataSingletonResource, ODataEntityResource, ODataBatchResource, ODataResource } from './resources';
 import { ODataModule } from './module';
 import { ODataStructuredTypeParser } from './parsers';
 import { HttpHeaders } from '@angular/common/http';
@@ -27,14 +27,14 @@ describe('ODataClient', () => {
   });
 
   it('should return undefined parser for resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People');
+    const set: ODataResource<Person> = client.entitySet<Person>('People');
     const api = client.apiFor(set);
     const parser = api.findParserForType<Person>("Foo") as ODataStructuredTypeParser<Person>;
     expect(parser).toBeUndefined();
   });
 
   it('should return person parser for resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
+    const set: ODataResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const api = client.apiFor(set);
     const parser = api.findParserForType<Person>(set.type() as string) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
@@ -99,7 +99,7 @@ describe('ODataClient', () => {
   });
 
   it('should return parser for resource', () => {
-    const set: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
+    const set: ODataResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
     const api = client.apiFor(set);
     const parser = api.findParserForType<Person>(set.type() as string) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();

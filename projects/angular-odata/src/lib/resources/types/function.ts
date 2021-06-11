@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataQueryOptions, QueryOptionNames } from '../query-options';
+import { ODataQueryOptions } from '../query-options';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions, HttpNoneOptions } from './options';
 
 import { ODataEntity, ODataEntities, ODataProperty, ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
@@ -92,64 +92,65 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     segment.parameters(parameters);
     return new ODataFunctionResource<P, R>(this.api, segments, this.cloneQuery());
   }
+
   select(opts: Select<R>) {
-    let options = this.cloneQuery();
-    options.option<Select<R>>(QueryOptionNames.select, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.select(opts);
+    return clone;
   }
 
   expand(opts: Expand<R>) {
-    let options = this.cloneQuery();
-    options.option<Expand<R>>(QueryOptionNames.expand, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.expand(opts);
+    return clone;
   }
 
   transform(opts: Transform<R>) {
-    let options = this.cloneQuery();
-    options.option<Transform<R>>(QueryOptionNames.transform, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.transform(opts);
+    return clone;
   }
 
   search(opts: string) {
-    let options = this.cloneQuery();
-    options.option<string>(QueryOptionNames.search, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.search(opts);
+    return clone;
   }
 
   filter(opts: Filter) {
-    let options = this.cloneQuery();
-    options.option<Filter>(QueryOptionNames.filter, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.filter(opts);
+    return clone;
   }
 
   orderBy(opts: OrderBy<R>) {
-    let options = this.cloneQuery();
-    options.option<OrderBy<R>>(QueryOptionNames.orderBy, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.orderBy(opts);
+    return clone;
   }
 
   format(opts: string) {
-    let options = this.cloneQuery();
-    options.option<string>(QueryOptionNames.format, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.format(opts);
+    return clone;
   }
 
   top(opts: number) {
-    let options = this.cloneQuery();
-    options.option<number>(QueryOptionNames.top, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.top(opts);
+    return clone;
   }
 
   skip(opts: number) {
-    let options = this.cloneQuery();
-    options.option<number>(QueryOptionNames.skip, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.skip(opts);
+    return clone;
   }
 
   skiptoken(opts: string) {
-    let options = this.cloneQuery();
-    options.option<string>(QueryOptionNames.skiptoken, opts);
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.skiptoken(opts);
+    return clone;
   }
   //#endregion
 

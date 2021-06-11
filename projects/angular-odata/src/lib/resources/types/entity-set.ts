@@ -1,8 +1,7 @@
 import { Observable, EMPTY } from 'rxjs';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 
-import { Expand, Select, Transform, Filter, OrderBy, isQueryCustomType } from '../builder';
-import { QueryOptionNames } from '../query-options';
+import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 
 import { ODataActionResource } from './action';
@@ -12,7 +11,7 @@ import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey } from '../../types';
 import { ODataResource } from '../resource';
-import { HttpEntitiesOptions, HttpOptions } from './options';
+import { HttpOptions } from './options';
 import { ODataEntity, ODataEntities, ODataEntitiesAnnotations } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
@@ -94,63 +93,63 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   select(opts: Select<T>) {
-    let options = this.cloneQuery();
-    options.option<Select<T>>(QueryOptionNames.select, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.select(opts);
+    return clone;
   }
 
   expand(opts: Expand<T>) {
-    let options = this.cloneQuery();
-    options.option<Expand<T>>(QueryOptionNames.expand, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.expand(opts);
+    return clone;
   }
 
   transform(opts: Transform<T>) {
-    let options = this.cloneQuery();
-    options.option<Transform<T>>(QueryOptionNames.transform, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.transform(opts);
+    return clone;
   }
 
   search(opts: string) {
-    let options = this.cloneQuery();
-    options.option<string>(QueryOptionNames.search, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.search(opts);
+    return clone;
   }
 
   filter(opts: Filter) {
-    let options = this.cloneQuery();
-    options.option<Filter>(QueryOptionNames.filter, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.filter(opts);
+    return clone;
   }
 
   orderBy(opts: OrderBy<T>) {
-    let options = this.cloneQuery();
-    options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.orderBy(opts);
+    return clone;
   }
 
   format(opts: string) {
-    let options = this.cloneQuery();
-    options.option<string>(QueryOptionNames.format, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.format(opts);
+    return clone;
   }
 
   top(opts: number) {
-    let options = this.cloneQuery();
-    options.option<number>(QueryOptionNames.top, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.top(opts);
+    return clone;
   }
 
   skip(opts: number) {
-    let options = this.cloneQuery();
-    options.option<number>(QueryOptionNames.skip, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.skip(opts);
+    return clone;
   }
 
   skiptoken(opts: string) {
-    let options = this.cloneQuery();
-    options.option<string>(QueryOptionNames.skiptoken, opts);
-    return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), options);
+    const clone = this.clone();
+    clone.query.skiptoken(opts);
+    return clone;
   }
   //#endregion
 
@@ -194,18 +193,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   fetchAll(options?: HttpOptions): Observable<T[]> {
     let res = this.clone();
-    // Clean
-    res.query.skip().clear();
-    res.query.top().clear();
-    res.query.skiptoken().clear();
+    // Clean Paging
+    res.query.clearPaging();
     let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
       if (opts) {
-        if (opts.skiptoken)
-          res.query.skiptoken(opts.skiptoken);
-        else if (opts.skip)
-          res.query.skip(opts.skip);
-        if (opts.top)
-          res.query.top(opts.top);
+        res.query.paging(opts);
       }
       return res.get(options);
     }
