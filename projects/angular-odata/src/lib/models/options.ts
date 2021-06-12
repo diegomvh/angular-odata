@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
+import { DEFAULT_VERSION, COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
 import { ODataStructuredTypeFieldParser } from '../parsers';
 import {
   Expand,
@@ -22,6 +22,7 @@ import { EntityKey, OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
+import { ODataHelper } from '../helpers';
 
 export const CID = '_cid';
 export type ODataModelResource<T> =
@@ -189,6 +190,18 @@ export class ODataModelField<F> {
 
   isStructuredType() {
     return this.parser.isStructuredType();
+  }
+
+  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): F {
+    return this.parser.deserialize(value, options);
+  }
+
+  serialize(value: F, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+    return this.parser.serialize(value, options);
+  }
+
+  encode(value: F, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+    return this.parser.encode(value, options);
   }
 
   validate(
