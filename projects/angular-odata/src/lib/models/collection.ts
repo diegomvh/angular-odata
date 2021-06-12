@@ -16,6 +16,7 @@ import {
   Transform,
   Filter,
   OrderBy,
+  HttpQueryOptions,
   HttpActionOptions,
   HttpFunctionOptions
 } from '../resources/index';
@@ -458,6 +459,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       top(opts?: number): OptionHandler<number>;
       skip(opts?: number): OptionHandler<number>;
       skiptoken(opts?: string): OptionHandler<string>;
+      paging({skip, skiptoken, top}: { skip?: number, skiptoken?: string, top?: number }): void;
+      clearPaging(): void;
+      apply(query: HttpQueryOptions<T>): void;
     }) => void
   ) {
     const resource = this.resource();

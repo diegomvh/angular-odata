@@ -10,6 +10,7 @@ import {
   Select,
   Expand,
   OptionHandler,
+  HttpQueryOptions,
   HttpActionOptions,
   HttpFunctionOptions,
   HttpNavigationPropertyOptions} from '../resources/index';
@@ -286,6 +287,7 @@ export class ODataModel<T> {
     { select(opts?: Select<T>): OptionHandler<Select<T>>;
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
       format(opts?: string): OptionHandler<string>;
+      apply(query: HttpQueryOptions<T>): void;
     }) => void) {
     const resource = this._meta.resource(this, {toEntity: false});
     if (resource !== undefined)
