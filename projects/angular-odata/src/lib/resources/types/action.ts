@@ -140,10 +140,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Mutable Resource
-  get query() {
-    return this.entitiesQueryHandler();
-  }
-
   get segment() {
     const segments = this.pathSegments;
     return {
@@ -158,6 +154,15 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       }
     }
   }
+
+  /**
+   * Handle query options of the action
+   * @returns Handler for mutate the query of the action
+   */
+  get query() {
+    return this.entitiesQueryHandler();
+  }
+
   //#endregion
 
   //#region Requests

@@ -170,6 +170,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     }
   }
 
+  /**
+   * Handle query options of the function
+   * @returns Handler for mutate the query of the function
+   */
   get query() {
     return this.entitiesQueryHandler();
   }

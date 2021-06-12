@@ -31,7 +31,8 @@ export abstract class ODataBaseService {
     resource: ODataFunctionResource<P, R>,
     responseType: 'property' | 'entity' | 'entities' | 'none',
     options: HttpFunctionOptions<R> = {}): Observable<any> {
-    return resource.call(params, {responseType: responseType as any, ...options});
+      resource.query.apply(options);
+      return resource.call(params, {responseType: responseType as any, ...options});
   }
 
   protected callAction<P, R>(params: P | null,
@@ -55,7 +56,8 @@ export abstract class ODataBaseService {
     resource: ODataActionResource<P, R>,
     responseType: 'property' | 'entity' | 'entities' | 'none',
     options: HttpActionOptions<R> = {}): Observable<any> {
-    return resource.call(params, {responseType: responseType as any, ...options});
+      resource.query.apply(options);
+      return resource.call(params, {responseType: responseType as any, ...options});
   }
 
   protected fetchNavigationProperty<S>(
@@ -70,6 +72,7 @@ export abstract class ODataBaseService {
     resource: ODataNavigationPropertyResource<S>,
     responseType: 'entity' | 'entities',
     options: HttpNavigationPropertyOptions<S> = {}): Observable<any> {
-    return resource.fetch({responseType: responseType as any, ...options});
+      resource.query.apply(options);
+      return resource.fetch({responseType: responseType as any, ...options});
   }
 }

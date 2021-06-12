@@ -187,6 +187,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     }
   }
 
+  /**
+   * Handle query options of the navigation property
+   * @returns Handler for mutate the query of the navigation property
+   */
   get query() {
     return this.entitiesQueryHandler();
   }
