@@ -1,6 +1,18 @@
-import {buildPathAndQuery} from './builder';
+import {buildPathAndQuery, Expand, Filter, OrderBy, Select, Transform} from './builder';
 
 import { Dates, Types, Urls, Objects } from '../utils';
+
+export type QueryOptions<T> = {
+  select?: Select<T>,
+  expand?: Expand<T>,
+  transform?: Transform<T>;
+  search?: string,
+  filter?: Filter;
+  orderBy?: OrderBy<T>;
+  top?: number;
+  skip?: number;
+  skiptoken?: string;
+};
 
 export enum QueryOptionNames {
   // System options
