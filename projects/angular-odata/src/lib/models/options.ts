@@ -496,7 +496,7 @@ export class ODataModelOptions<T> {
     const current = self._resource;
     if (current === undefined || !current.isEqualTo(resource)) {
       self._resource = resource;
-      this._update(self);
+      this._pushToRelations(self);
       self.events$.emit({
         name: 'attach',
         model: self,
@@ -846,10 +846,8 @@ export class ODataModelOptions<T> {
           model: newModel,
           subscription: this._subscribe<F>(self, field, newModel),
         };
-        if (field.referential !== undefined && field.referenced !== undefined) {
-          console.log("set referenced");
-          (newModel as any)[field.referenced] = (self as any)[field.referential];
-        }
+        if (this.isModel(newModel))
+          this._updateReferencedKey(newModel as ODataModel<any>, field, self);
       }
       const relation = self._relations[field.name];
       if (relation !== undefined && self._resetting)
@@ -926,7 +924,7 @@ export class ODataModelOptions<T> {
         property: field,
         subscription: newModel && this._subscribe(self, field, newModel),
       };
-      if (!self._silent)
+      if (!self._silent) {
         self.events$.emit({
           name: 'change',
           path: field.name,
@@ -934,10 +932,8 @@ export class ODataModelOptions<T> {
           value: newModel,
           previous: currentModel,
         });
-      if (field.referential !== undefined && field.referenced !== undefined) {
-        console.log("set referential");
-        (self as any)[field.referential] = (newModel instanceof ODataModel) ? (newModel as any)[field.referenced] : newModel;
       }
+      this._updateReferentialKey(self, field, newModel)
     } else {
       const attrs = this.attributes(self, {include_computed: true, include_concurrency: true});
       const currentValue = attrs[field.name];
@@ -951,7 +947,7 @@ export class ODataModelOptions<T> {
           self._changes[field.name] = value;
         }
         if (self.schema().keys({ include_parents: true }).find(keyType => keyType.name === field.field) !== undefined) {
-          this._update(self);
+          this._pushToRelations(self);
         }
         if (!self._silent)
           self.events$.emit({
@@ -965,7 +961,7 @@ export class ODataModelOptions<T> {
     }
   }
 
-  private _update(self: ODataModel<T>) {
+  private _pushToRelations(self: ODataModel<T>) {
     const resource = self.resource();
     Object.values(self._relations).forEach(({ property, model }) => {
       if (model !== null) {
@@ -976,6 +972,29 @@ export class ODataModelOptions<T> {
       }
     });
   }
+
+  private _updateReferencedKey(
+    to: ODataModel<any>,
+    field: ODataModelField<any>,
+    value: any
+  ) {
+    if (field.referential !== undefined && field.referenced !== undefined) {
+      console.log("Update referenced");
+      (to as any)[field.referenced] = (value instanceof ODataModel) ? (value as any)[field.referential] : value;
+    }
+  }
+
+  private _updateReferentialKey(
+    to: ODataModel<any>,
+    field: ODataModelField<any>,
+    value: any
+  ) {
+    if (field.referential !== undefined && field.referenced !== undefined) {
+      console.log("Update referential");
+      (to as any)[field.referential] = (value instanceof ODataModel) ? (value as any)[field.referenced] : value;
+    }
+  }
+
   private _subscribe<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
@@ -986,6 +1005,9 @@ export class ODataModelOptions<T> {
     const bubbling = mr === undefined || vr === undefined || !vr.isParentOf(mr);
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
       if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
+        if (field.navigation && event.model === value && ['destroy', 'change'].indexOf(event.name) !== -1) {
+          this._updateReferentialKey(self, field, value);
+        }
         let path = field.name;
         if (this.isModel(value) && event.path)
           path = `${path}.${event.path}`;
