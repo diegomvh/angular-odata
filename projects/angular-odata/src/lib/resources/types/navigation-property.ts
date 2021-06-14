@@ -5,7 +5,7 @@ import { QueryOptionNames } from '../query-options';
 import { ODataReferenceResource } from './reference';
 import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { Observable, empty, EMPTY } from 'rxjs';
+import { Observable, EMPTY } from 'rxjs';
 import { EntityKey } from '../../types';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
