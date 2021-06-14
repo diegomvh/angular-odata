@@ -2,7 +2,7 @@ import {buildPathAndQuery, Expand, Filter, OrderBy, Select, Transform} from './b
 
 import { Dates, Types, Urls, Objects } from '../utils';
 
-export type QueryOptions<T> = {
+export type QueryArguments<T> = {
   select?: Select<T>,
   expand?: Expand<T>,
   transform?: Transform<T>;

@@ -9,7 +9,7 @@ import {
 import { Http, Types, Urls } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
-import { QueryOptions, ODataQueryOptions, QueryOptionNames } from './query-options';
+import { QueryArguments, ODataQueryOptions, QueryOptionNames } from './query-options';
 import { HttpOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
@@ -174,7 +174,7 @@ export abstract class ODataResource<T> {
       format(opts?: string) {
         return options.option<string>(QueryOptionNames.format, opts);
       },
-      apply(query: QueryOptions<T>) {
+      apply(query: QueryArguments<T>) {
         if (query.select !== undefined) {
           this.select(query.select);
         }
@@ -235,7 +235,7 @@ export abstract class ODataResource<T> {
         this.top().clear();
         this.skiptoken().clear();
       },
-      apply(query: QueryOptions<T>) {
+      apply(query: QueryArguments<T>) {
         if (query.select !== undefined) {
           this.select(query.select);
         }

@@ -1,4 +1,5 @@
-import { HttpActionOptions, HttpFunctionOptions, ODataActionResource, ODataFunctionResource, ODataNavigationPropertyResource, ODataEntity, ODataEntities, HttpNavigationPropertyOptions, ODataProperty } from '../resources';
+import { ODataActionResource, ODataFunctionResource, ODataNavigationPropertyResource, ODataEntity, ODataEntities, ODataProperty } from '../resources';
+import { HttpActionOptions, HttpFunctionOptions, HttpNavigationPropertyOptions } from './options';
 import { ODataClient } from "../client";
 import { Observable } from 'rxjs';
 

@@ -14,7 +14,7 @@ import {
   ODataResource,
   ODataSingletonResource,
   OptionHandler,
-  HttpQueryOptions,
+  QueryArguments,
   Select,
 } from '../resources';
 import { ODataEntitySet, ODataStructuredType } from '../schema';
@@ -554,7 +554,7 @@ export class ODataModelOptions<T> {
       select(opts?: Select<T>): OptionHandler<Select<T>>;
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
       format(opts?: string): OptionHandler<string>;
-      apply(query: HttpQueryOptions<T>): void;
+      apply(query: QueryArguments<T>): void;
     }) => void
   ) {
     func(resource.query);

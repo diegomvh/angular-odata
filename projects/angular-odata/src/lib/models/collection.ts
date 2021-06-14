@@ -16,10 +16,10 @@ import {
   Transform,
   Filter,
   OrderBy,
-  HttpQueryOptions,
-  HttpActionOptions,
-  HttpFunctionOptions
+  QueryArguments
 } from '../resources/index';
+
+import { HttpActionOptions, HttpFunctionOptions } from '../services/index';
 
 import { EventEmitter } from '@angular/core';
 import { EntityKey } from '../types';
@@ -506,7 +506,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       skiptoken(opts?: string): OptionHandler<string>;
       paging({skip, skiptoken, top}: { skip?: number, skiptoken?: string, top?: number }): void;
       clearPaging(): void;
-      apply(query: HttpQueryOptions<T>): void;
+      apply(query: QueryArguments<T>): void;
     }) => void
   ) {
     const resource = this.resource();

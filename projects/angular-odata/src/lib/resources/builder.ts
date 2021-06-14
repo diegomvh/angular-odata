@@ -78,7 +78,7 @@ export const alias = (value: any, name?: string): QueryCustomType => ({ type: Qu
 export const duration = (value: string): QueryCustomType => ({ type: QueryCustomTypes.Duration, value });
 export const binary = (value: string): QueryCustomType => ({ type: QueryCustomTypes.Binary, value });
 export const isQueryCustomType = (value: any) => typeof value === 'object' && 'type' in value && value.type in QueryCustomTypes;
-type QueryOptions<T> = ExpandOptions<T> & {
+export type QueryOptions<T> = ExpandOptions<T> & {
   search: string;
   transform: {[name: string]: any} | {[name: string]: any}[];
   skip: number;
