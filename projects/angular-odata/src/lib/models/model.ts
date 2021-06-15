@@ -22,7 +22,7 @@ import {
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
-import { ModelOptions, ODataModelEvent, ODataModelOptions, ODataModelRelation, ODataModelResource } from './options';
+import { ModelOptions, ODataModelEvent, ODataModelOptions, ODataModelRelation, ODataModelResource, ODataModelField } from './options';
 import { EntityKey } from '../types';
 
 // @dynamic
@@ -86,6 +86,14 @@ export class ODataModel<T> {
 
   key({field_mapping = false, resolve = true}: {field_mapping?: boolean, resolve?: boolean} = {}): EntityKey<T> | {[name: string]: any} | undefined {
     return this._meta.resolveKey(this, {field_mapping, resolve});
+  }
+
+  referential(field: ODataModelField<any>, {field_mapping = false, resolve = true}: {field_mapping?: boolean, resolve?: boolean} = {}): {[name: string]: any} | undefined {
+    return this._meta.resolveReferential(this, field, {field_mapping, resolve});
+  }
+
+  referenced(field: ODataModelField<any>, {field_mapping = false, resolve = true}: {field_mapping?: boolean, resolve?: boolean} = {}): {[name: string]: any} | undefined {
+    return this._meta.resolveReferenced(this, field, {field_mapping, resolve});
   }
 
   // Validation
@@ -438,17 +446,15 @@ export class ODataModel<T> {
 
     let model: ODataModel<P> | undefined;
     if (asEntity) {
-      if (field.referential !== undefined && field.referenced !== undefined) {
-        let key = (<any>this)[field.referential];
-        if (key !== undefined) {
-          const resource = field.meta?.modelResourceFactory({fromSet: asEntity});
-          model = field.modelCollectionFactory<T, P>({
-            value: {[field.referenced]: key},
-            baseSchema: this.schema(),
-            baseAnnots: this.annots()
-          }) as ODataModel<P>;
-          model.resource(resource);
-        }
+      var ref = this.referenced(field);
+      if (ref !== undefined) {
+        const resource = field.meta?.modelResourceFactory({fromSet: asEntity});
+        model = field.modelCollectionFactory<T, P>({
+          value: ref,
+          baseSchema: this.schema(),
+          baseAnnots: this.annots()
+        }) as ODataModel<P>;
+        model.resource(resource);
       }
     } else {
       model = field.modelCollectionFactory<T, P>({

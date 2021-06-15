@@ -135,6 +135,7 @@ export type StructuredTypeFieldConfig = {
   precision?: number;
   annotations?: AnnotationConfig[];
   scale?: number;
+  referentials?: { property: string, referencedProperty: string; }[];
   referential?: string;
   referenced?: string;
 };
@@ -146,7 +147,7 @@ export type StructuredTypeConfig<T> = {
   model?: { new (...params: any[]): any };
   collection?: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
-  keys?: { ref: string; alias?: string }[];
+  keys?: { name: string; alias?: string }[];
   fields: { [P in keyof T]?: StructuredTypeFieldConfig };
 };
 

@@ -136,12 +136,12 @@ export const Objects = {
     return diffs;
   },
   uniqueId: (counter => (str = '') => `${str}${++counter}`)(0),
-  resolveKey(key: any) {
+  resolveKey(key: any, {single = true}: {single?: boolean} = {}) {
     if (['number', 'string'].indexOf(typeof key) !== -1)
       return key;
     if (Types.isObject(key)) {
       const values = Object.values(key);
-      if (values.length === 1) {
+      if (values.length === 1 && single) {
         // Single primitive key value
         key = values[0];
       } else if (values.some(v => v === undefined)) {

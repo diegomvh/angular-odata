@@ -17,21 +17,29 @@ export type JsonSchemaOptions<T> = {
 
 export class ODataEntityTypeKey {
   name: string;
-  ref: string;
   alias?: string;
-  constructor({ref, alias}: {ref: string, alias?: string}) {
-    this.ref = ref;
+  constructor({name, alias}: {name: string, alias?: string}) {
+    this.name = name;
     this.alias = alias;
-    this.name = alias || ref;
   }
 
   resolve(value: any) {
-    return this.ref.split('/').reduce((acc, name) => acc[name], value);
+    return this.name.split('/').reduce((acc, n) => acc[n], value);
+  }
+}
+
+export class ODataReferential {
+  property: string;
+  referencedProperty: string;
+  constructor({property, referencedProperty}: {property: string, referencedProperty: string}) {
+    this.property = property;
+    this.referencedProperty = referencedProperty;
   }
 }
 
 export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   name: string;
+  private structuredType: ODataStructuredTypeParser<any>
   type: string;
   private parser: Parser<T>;
   default?: any;
@@ -41,15 +49,16 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   navigation: boolean;
   precision?: number;
   scale?: number;
-  referential?: string;
-  referenced?: string;
+  referentials: ODataReferential[];
   annotations: ODataAnnotation[];
 
-  constructor(name: string, field: StructuredTypeFieldConfig) {
+  constructor(name: string, structuredType: ODataStructuredTypeParser<any>, field: StructuredTypeFieldConfig) {
     this.name = name;
+    this.structuredType = structuredType;
     this.type = field.type;
     this.parser = NONE_PARSER;
     this.annotations = (field.annotations || []).map(annot => new ODataAnnotation(annot));
+    this.referentials = (field.referentials || []).map(referential => new ODataReferential(referential));
     this.default = field.default;
     this.maxLength = field.maxLength;
     this.collection = field.collection !== undefined ? field.collection : false;
@@ -57,8 +66,6 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     this.navigation = field.navigation !== undefined ? field.navigation : false;
     this.precision = field.precision;
     this.scale = field.scale;
-    this.referential = field.referential;
-    this.referenced = field.referenced;
   }
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
@@ -199,6 +206,14 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   }
   //#endregion
 
+  isKey() {
+    return this.structuredType.keys?.find(k => k.name === this.name) !== undefined;
+  }
+
+  hasReferentials() {
+    return this.referentials.length !== 0;
+  }
+
   isEdmType() {
     return this.type.startsWith("Edm.");
   }
@@ -244,7 +259,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     if (Array.isArray(config.keys))
       this.keys = config.keys.map(key => new ODataEntityTypeKey(key));
     this.fields = Object.entries<StructuredTypeFieldConfig>(config.fields as { [P in keyof T]: StructuredTypeFieldConfig })
-      .map(([name, f]) => new ODataStructuredTypeFieldParser(name, f));
+      .map(([name, config]) => new ODataStructuredTypeFieldParser(name, this, config));
   }
 
   isTypeOf(type: string) {

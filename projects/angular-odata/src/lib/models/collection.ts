@@ -580,7 +580,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         if (event.model === model) {
           if (event.name === 'destroy') {
             this.removeModel(model);
-          } else if (event.name === 'change') {
+          } else if (event.name === 'change' && event.options?.key) {
             let entry = this._findEntry({model});
             if (entry !== undefined) entry.key = model.key();
           }

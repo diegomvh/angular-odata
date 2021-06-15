@@ -121,6 +121,7 @@ export class ODataModelField<F> {
   name: string;
   field: string;
   parser: ODataStructuredTypeFieldParser<F>;
+  modelOptions: ODataModelOptions<any>;
   meta?: ODataModelOptions<any>;
   options: {
     default?: any;
@@ -132,7 +133,8 @@ export class ODataModelField<F> {
     max?: number;
     pattern?: RegExp;
   };
-  constructor({ name, field, parser, ...options }: ODataModelFieldOptions<F>) {
+  constructor(modelOptions: ODataModelOptions<any>, { name, field, parser, ...options }: ODataModelFieldOptions<F>) {
+    this.modelOptions = modelOptions;
     this.name = name;
     this.field = field;
     this.parser = parser;
@@ -165,16 +167,6 @@ export class ODataModelField<F> {
     );
   }
 
-  get referential() {
-    // TODO: Resolve reference
-    return this.parser.referential;
-  }
-
-  get referenced() {
-    // TODO: Resolve reference
-    return this.parser.referenced;
-  }
-
   configure({
     findOptionsForType,
     concurrency,
@@ -186,6 +178,18 @@ export class ODataModelField<F> {
   }) {
     this.meta = findOptionsForType(this.parser.type);
     if (concurrency) this.options.concurrency = concurrency;
+  }
+
+  isKey() {
+    return this.parser.isKey();
+  }
+
+  hasReferentials() {
+    return this.parser.hasReferentials();
+  }
+
+  get referentials() {
+    return this.parser.referentials;
   }
 
   isStructuredType() {
@@ -383,7 +387,7 @@ export class ODataModelOptions<T> {
       const parser = schemaFields.find((f) => f.name === field);
       if (parser === undefined)
         throw new Error(`No parser for ${field} with name = ${name}`);
-      return new ODataModelField<T>({ name, field, parser, ...opts });
+      return new ODataModelField<T>(this, { name, field, parser, ...opts });
     });
   }
 
@@ -574,7 +578,7 @@ export class ODataModelOptions<T> {
       let model = value as any;
       let options = this as ODataModelOptions<any>;
       let prop: ODataModelField<any> | undefined;
-      for (let name of keyType.ref.split('/')) {
+      for (let name of keyType.name.split('/')) {
         if (options === null) break;
         prop = options
           .fields({ include_parents: true })
@@ -590,6 +594,50 @@ export class ODataModelOptions<T> {
       key[name] = model[prop.name];
     }
     return resolve ? Objects.resolveKey(key) : key;
+  }
+
+  resolveReferential(
+    self: ODataModel<T> | T | { [name: string]: any },
+    field: ODataModelField<any>,
+    {
+      field_mapping = false,
+      resolve = true
+    }: { field_mapping?: boolean; resolve?: boolean } = {}
+  ): { [name: string]: any } | undefined {
+    const referential: any = {};
+    for (var ref of field.referentials) {
+      let from = this.fields({ include_parents: true })
+          .find((p: any) => p.field === ref.referencedProperty);
+      let to = field.modelOptions.fields({ include_parents: true })
+          .find((p: any) => p.field === ref.property);
+      if (from !== undefined && to !== undefined) {
+        let name = field_mapping ? to.field : to.name;
+        referential[name] = (self as any)[from.name];
+      }
+    }
+    return resolve ? Objects.resolveKey(referential, {single: false}) : referential;
+  }
+
+  resolveReferenced(
+    self: ODataModel<T> | T | { [name: string]: any },
+    field: ODataModelField<any>,
+    {
+      field_mapping = false,
+      resolve = true
+    }: { field_mapping?: boolean; resolve?: boolean } = {}
+  ): { [name: string]: any } | undefined {
+    const referenced: any = {};
+    for (var ref of field.referentials) {
+      let from = this.fields({ include_parents: true })
+          .find((p: any) => p.field === ref.property);
+      let to = field.modelOptions.fields({ include_parents: true })
+          .find((p: any) => p.field === ref.referencedProperty);
+      if (from !== undefined && to !== undefined) {
+        let name = field_mapping ? to.field : to.name;
+        referenced[name] = (self as any)[from.name];
+      }
+    }
+    return resolve ? Objects.resolveKey(referenced, {single: false}) : referenced;
   }
 
   validate(
@@ -846,8 +894,6 @@ export class ODataModelOptions<T> {
           model: newModel,
           subscription: this._subscribe<F>(self, field, newModel),
         };
-        if (this.isModel(newModel))
-          this._updateReferencedKey(newModel as ODataModel<any>, field, self);
       }
       const relation = self._relations[field.name];
       if (relation !== undefined && self._resetting)
@@ -933,7 +979,10 @@ export class ODataModelOptions<T> {
           previous: currentModel,
         });
       }
-      this._updateReferentialKey(self, field, newModel)
+      if (this.isModel(newModel)) {
+        var ref = (newModel as ODataModel<any>).referential(field);
+        if (ref !== undefined) { self.assign(ref); }
+      }
     } else {
       const attrs = this.attributes(self, {include_computed: true, include_concurrency: true});
       const currentValue = attrs[field.name];
@@ -956,6 +1005,7 @@ export class ODataModelOptions<T> {
             model: self,
             value,
             previous: currentValue,
+            options: { key: field.isKey() }
           });
       }
     }
@@ -973,28 +1023,6 @@ export class ODataModelOptions<T> {
     });
   }
 
-  private _updateReferencedKey(
-    to: ODataModel<any>,
-    field: ODataModelField<any>,
-    value: any
-  ) {
-    if (field.referential !== undefined && field.referenced !== undefined) {
-      console.log("Update referenced");
-      (to as any)[field.referenced] = (value instanceof ODataModel) ? (value as any)[field.referential] : value;
-    }
-  }
-
-  private _updateReferentialKey(
-    to: ODataModel<any>,
-    field: ODataModelField<any>,
-    value: any
-  ) {
-    if (field.referential !== undefined && field.referenced !== undefined) {
-      console.log("Update referential");
-      (to as any)[field.referential] = (value instanceof ODataModel) ? (value as any)[field.referenced] : value;
-    }
-  }
-
   private _subscribe<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
@@ -1005,8 +1033,9 @@ export class ODataModelOptions<T> {
     const bubbling = mr === undefined || vr === undefined || !vr.isParentOf(mr);
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
       if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
-        if (field.navigation && event.model === value && ['destroy', 'change'].indexOf(event.name) !== -1) {
-          this._updateReferentialKey(self, field, value);
+        if (field.navigation && event.model === value && ['change'].indexOf(event.name) !== -1 && event.options?.key) {
+          var ref = value.referential(field);
+          if (ref !== undefined) { self.assign(ref); }
         }
         let path = field.name;
         if (this.isModel(value) && event.path)
