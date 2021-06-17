@@ -593,6 +593,7 @@ export class ODataModelOptions<T> {
       if (keyType.alias !== undefined) name = keyType.alias;
       key[name] = model[prop.name];
     }
+    if (Types.isEmpty(key)) return undefined;
     return resolve ? Objects.resolveKey(key) : key;
   }
 
@@ -615,6 +616,7 @@ export class ODataModelOptions<T> {
         referential[name] = (self as any)[from.name];
       }
     }
+    if (Types.isEmpty(referential)) return undefined;
     return resolve ? Objects.resolveKey(referential, {single: false}) : referential;
   }
 
@@ -637,6 +639,7 @@ export class ODataModelOptions<T> {
         referenced[name] = (self as any)[from.name];
       }
     }
+    if (Types.isEmpty(referenced)) return undefined;
     return resolve ? Objects.resolveKey(referenced, {single: false}) : referenced;
   }
 
