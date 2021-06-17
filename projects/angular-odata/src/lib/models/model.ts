@@ -1,4 +1,4 @@
-import { EMPTY, Observable, throwError } from 'rxjs';
+import { Observable, throwError, forkJoin, NEVER } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import {
@@ -398,7 +398,7 @@ export class ODataModel<T> {
   // Set Reference
   protected setReference<P>(
     name: string,
-    model: ODataModel<P> | null,
+    model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | null,
     {
       asEntity,
       ...options
@@ -408,26 +408,28 @@ export class ODataModel<T> {
     const field = this._meta.fields({include_navigation: true}).find(p => p.name === name);
     if (field === undefined || !field.navigation)
       throw new Error(`Can't find navigation property ${name}`);
-    if (field.collection)
-      throw new Error(`Can't set ${field.name} to collection, use add`);
 
     const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      let ref = (field.resourceFactory<T, any>(resource) as ODataNavigationPropertyResource<any>).reference();
+      let reference = (field.resourceFactory<T, any>(resource) as ODataNavigationPropertyResource<any>).reference();
       const etag = this.annots().etag;
-      const obs$ = (model instanceof ODataModel) ?
-        ref.set(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<P>, {etag, ...options}) :
-        ref.unset({etag, ...options});
+      let obs$ = NEVER as Observable<any>;
+      if (model instanceof ODataModel) {
+        obs$ = reference.set(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<P>, {etag, ...options});
+      } else if (model instanceof ODataCollection) {
+        obs$ = forkJoin(model.models().map(m => reference.add(m._meta.resource(m, {toEntity: true}) as ODataEntityResource<P>, options)));
+      } else if (model === null) {
+        obs$ = reference.unset({etag, ...options});
+      }
       this.events$.emit({name: 'request', model: this, value: obs$ });
       return obs$.pipe(
         map(() => {
-          this.assign({[name]: model}, { reset: true });
+          this.assign({[field.name]: model});
           this.events$.emit({name: 'sync', model: this});
           return this;
-        }
-        ));
+        }));
       }
-    return throwError("Can't set reference without ODataEntityResource");
+    return throwError("Can't set reference without ODataEntityResource with key");
   }
 
   protected getReference<P>(
@@ -437,15 +439,13 @@ export class ODataModel<T> {
       ...options
     }: {
       asEntity?: boolean
-    } & HttpOptions = {}): Observable<ODataModel<P>> {
+    } & HttpOptions = {}): Observable<ODataModel<P>> | Observable<ODataCollection<P, ODataModel<P>>> {
     const field = this._meta.fields({include_navigation: true}).find(p => p.name === name);
     if (field === undefined || !field.navigation)
       throw new Error(`Can't find navigation property ${name}`);
-    if (field.collection)
-      throw new Error(`Can't get ${field.name} collection`);
 
-    let model: ODataModel<P> | undefined;
-    if (asEntity) {
+    let model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | undefined;
+    if (!field.collection && asEntity) {
       var ref = this.referenced(field);
       if (ref !== undefined) {
         const resource = field.meta?.modelResourceFactory({fromSet: asEntity});
@@ -461,10 +461,10 @@ export class ODataModel<T> {
         baseResource: this.resource(),
         baseSchema: this.schema(),
         baseAnnots: this.annots()
-      }) as ODataModel<P>;
+      }) as ODataModel<P> | ODataCollection<P, ODataModel<P>> | undefined;
     }
     if (model !== undefined) {
-      (<any>this)[field.name] = model;
+      this.assign({[field.name]: model});
       return model.fetch(options);
     }
     return throwError("Can't get reference without ODataEntityResource");
