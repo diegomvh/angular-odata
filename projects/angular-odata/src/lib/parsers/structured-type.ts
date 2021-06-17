@@ -1,7 +1,8 @@
 import { Objects, Types } from '../utils';
 import { Parser, StructuredTypeFieldConfig, StructuredTypeConfig, OptionsHelper, NONE_PARSER, EntityKey } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
-import { COMPUTED } from '../constants';
+import { DEFAULT_VERSION, COMPUTED } from '../constants';
+import { ODataHelper } from '../helpers';
 import { ODataAnnotation } from '../schema/annotation';
 import { raw } from '../resources/builder';
 
@@ -116,7 +117,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options: OptionsHelper): T {
+  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): T {
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value) ?
@@ -136,7 +137,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     return parser.serialize(value, options);
   }
 
-  serialize(value: T, options: OptionsHelper): any {
+  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value) ?
@@ -148,7 +149,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   //#endregion
 
   //#region Encode
-  encode(value: T, options: OptionsHelper): string {
+  encode(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): string {
     return this.parser.encode(value, Object.assign({field: this}, options));
   }
   //#endregion
@@ -292,7 +293,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   // Deserialize
-  deserialize(value: any, options: OptionsHelper): T {
+  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): T {
     if (this.parent !== undefined)
       value = this.parent.deserialize(value, options);
     return Object.assign({}, value, this.fields
@@ -302,7 +303,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   // Serialize
-  serialize(value: T, options: OptionsHelper): any {
+  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
     if (this.parent !== undefined)
       value = this.parent.serialize(value, options);
     return Object.assign({}, value, this.fields
@@ -312,7 +313,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   // Encode
-  encode(value: T, options: OptionsHelper): any {
+  encode(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
     return raw(JSON.stringify(this.serialize(value, options)));
   }
 

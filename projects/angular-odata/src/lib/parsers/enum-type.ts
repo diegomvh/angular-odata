@@ -2,6 +2,8 @@ import { EnumHelper } from '../helpers';
 import { raw } from '../resources/builder';
 import { ODataAnnotation } from '../schema/annotation';
 import { EnumTypeConfig, Parser, OptionsHelper, EnumTypeFieldConfig } from '../types';
+import { DEFAULT_VERSION } from '../constants';
+import { ODataHelper } from '../helpers';
 
 export class ODataEnumTypeFieldParser {
   name: string;
@@ -41,7 +43,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   // Deserialize
-  deserialize(value: string, options: OptionsHelper): T {
+  deserialize(value: string, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): T {
     // string -> Type
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
@@ -51,7 +53,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   // Serialize
-  serialize(value: T, options: OptionsHelper): string {
+  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): string {
     // Type -> string
     if (this.flags) {
       let names = EnumHelper.toNames(this.members, value);
@@ -67,7 +69,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   //Encode
-  encode(value: T, options: OptionsHelper): any {
+  encode(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
     const serialized = this.serialize(value, options);
     return options.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
   }

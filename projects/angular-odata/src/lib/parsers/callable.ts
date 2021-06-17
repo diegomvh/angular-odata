@@ -1,4 +1,5 @@
-import { CALLABLE_BINDING_PARAMETER } from '../constants';
+import { DEFAULT_VERSION, CALLABLE_BINDING_PARAMETER } from '../constants';
+import { ODataHelper } from '../helpers';
 import { Parser, Parameter, CallableConfig, StructuredTypeFieldOptions, NONE_PARSER, OptionsHelper } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
 import { ODataStructuredTypeParser } from './structured-type';
@@ -17,14 +18,14 @@ export class ODataParameterParser<T> {
     Object.assign(this, parameter);
   }
 
-  serialize(value: T, options: OptionsHelper): any {
+  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
     return Array.isArray(value) ?
       value.map(v => this.parser.serialize(v, options)) :
       this.parser.serialize(value, options);
   }
 
   //Encode
-  encode(value: any, options: OptionsHelper): string {
+  encode(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): string {
     return Array.isArray(value) ?
       value.map(v => this.parser.encode(v, options)) :
       this.parser.encode(value, options);
@@ -86,12 +87,12 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   // Deserialize
-  deserialize(value: any, options: OptionsHelper): R {
+  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): R {
     return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(params: any, options: OptionsHelper): any {
+  serialize(params: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
     return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
@@ -99,7 +100,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   //Encode
-  encode(params: any, options: OptionsHelper): any {
+  encode(params: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
     return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.encode(params[p.name], options) }), {})
