@@ -52,9 +52,10 @@ export class ODataModel<T> {
     this._meta = Klass.meta;
     this._meta.bind(this);
 
+    // Client Id
     (<any>this)[this._meta.cid] = (<any>data)[this._meta.cid] || Objects.uniqueId("c");
 
-    this.resource(resource);
+    this.resource(resource || this._meta.modelResourceFactory({fromSet: true}));
     this.annots(annots || new ODataEntityAnnotations());
 
     let attrs = this.annots().attributes<T>(data);

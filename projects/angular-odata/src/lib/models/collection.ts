@@ -72,7 +72,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (model === undefined) throw new Error("Collection need model");
     this._model = model;
 
-    this.resource(resource);
+    this.resource(resource || this._model.meta.collectionResourceFactory());
     this.annots(annots || new ODataEntitiesAnnotations({ options: resource?.api.options }));
     entities = entities || [];
 
