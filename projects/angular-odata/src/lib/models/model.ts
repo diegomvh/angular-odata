@@ -304,7 +304,7 @@ export class ODataModel<T> {
       format(opts?: string): OptionHandler<string>;
       apply(query: QueryArguments<T>): void;
     }) => void) {
-    const resource = this._meta.resource(this, {toEntity: false});
+    const resource = this.resource();
     if (resource !== undefined)
       return this._meta.query(this, resource, func);
   }
@@ -368,7 +368,7 @@ export class ODataModel<T> {
 
   // As Derived
   protected asDerived<S>(type: string): ODataModel<S> {
-    const resource = this._meta.resource(this, {toEntity: false});
+    const resource = this.resource();
     if (resource instanceof ODataEntityResource) {
       return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true, include_concurrency: true }), {annots: this.annots()});
     }

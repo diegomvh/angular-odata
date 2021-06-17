@@ -513,7 +513,7 @@ export class ODataModelOptions<T> {
   resource(
     self: ODataModel<T>,
     {
-      toEntity
+      toEntity = false
     }: {
       toEntity?: boolean
     } = {}): ODataModelResource<T> | undefined {
