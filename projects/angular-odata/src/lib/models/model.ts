@@ -367,7 +367,6 @@ export class ODataModel<T> {
 
   // As Derived
   protected asDerived<S>(type: string): ODataModel<S> {
-    //TODO: Derived
     const resource = this._meta.resource(this, {toEntity: false});
     if (resource instanceof ODataEntityResource) {
       return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true, include_concurrency: true }), {annots: this.annots()});

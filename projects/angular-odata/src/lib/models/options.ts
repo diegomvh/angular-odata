@@ -804,7 +804,8 @@ export class ODataModelOptions<T> {
       field_mapping?: boolean;
     } = {}
   ): { [name: string]: any } {
-    return this.fields().reduce((acc, f) => {
+    // Attributes by fields (attributes for the model type)
+    const typeAttrs = this.fields().reduce((acc, f) => {
       const isChanged = f.name in self._changes;
       const name = (field_mapping) ? f.field : f.name;
       const value = isChanged ? self._changes[f.name] : self._attributes[f.name];
@@ -820,6 +821,12 @@ export class ODataModelOptions<T> {
         return acc;
       }
     }, {});
+    const names = Object.keys(typeAttrs);
+    // Attributes from object (attributes for object)
+    const objAttrs = Object.entries(self)
+      .filter(([k, ]) => names.indexOf(k) === -1 && !k.startsWith('_') && !k.endsWith("$"))
+      .reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
+    return {...typeAttrs, ...objAttrs};
   }
 
   assign(
