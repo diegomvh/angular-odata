@@ -66,7 +66,9 @@ export class ODataModel<T> {
   equals(other: ODataModel<T>) {
     const thisKey = this.key();
     const otherKey = other.key();
-    return this === other || (<any>this)[this._meta.cid] === (<any>other)[this._meta.cid] || (thisKey !== undefined && otherKey !== undefined && Types.isEqual(thisKey, otherKey));
+    return this === other || ((typeof this === typeof other) &&
+      ((<any>this)[this._meta.cid] === (<any>other)[this._meta.cid] ||
+      (thisKey !== undefined && otherKey !== undefined && Types.isEqual(thisKey, otherKey))));
   }
 
   resource(resource?: ODataModelResource<T>) {
