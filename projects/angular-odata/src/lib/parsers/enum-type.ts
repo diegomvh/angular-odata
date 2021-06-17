@@ -2,22 +2,23 @@ import { EnumHelper } from '../helpers';
 import { raw } from '../resources/builder';
 import { ODataAnnotation } from '../schema/annotation';
 import { EnumTypeConfig, Parser, OptionsHelper, EnumTypeFieldConfig } from '../types';
-import { DEFAULT_VERSION } from '../constants';
-import { ODataHelper } from '../helpers';
 
 export class ODataEnumTypeFieldParser {
   name: string;
   value: number;
   annotations: ODataAnnotation[];
+
   constructor(name: string, field: EnumTypeFieldConfig) {
     this.name = name;
     this.value = field.value;
     this.annotations = (field.annotations || []).map(annot => new ODataAnnotation(annot));
   }
+
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
 }
+
 export class ODataEnumTypeParser<T> implements Parser<T> {
   name: string;
   namespace: string;
@@ -25,6 +26,8 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
   fields: ODataEnumTypeFieldParser[];
+  optionsHelper?: OptionsHelper;
+
   constructor(config: EnumTypeConfig<T>, namespace: string, alias?: string) {
     this.name = config.name;
     this.namespace = namespace;
@@ -35,6 +38,12 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
       .map(([name, f]) => new ODataEnumTypeFieldParser(name, f));
   }
 
+  configure({options}: {
+    options: OptionsHelper
+  }) {
+    this.optionsHelper = options;
+  }
+
   isTypeOf(type: string) {
     var names = [`${this.namespace}.${this.name}`];
     if (this.alias)
@@ -43,8 +52,9 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   // Deserialize
-  deserialize(value: string, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): T {
+  deserialize(value: string, options?: OptionsHelper): T {
     // string -> Type
+    options = options || this.optionsHelper;
     if (this.flags) {
       return EnumHelper.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
     } else {
@@ -53,25 +63,27 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   // Serialize
-  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): string {
+  serialize(value: T, options?: OptionsHelper): string {
     // Type -> string
+    options = options || this.optionsHelper;
     if (this.flags) {
       let names = EnumHelper.toNames(this.members, value);
-      if (!options.stringAsEnum)
+      if (!options?.stringAsEnum)
         names = names.map(name => `${this.namespace}.${this.name}'${name}'`)
       return names.join(", ");
     } else {
       let name = EnumHelper.toName(this.members, (<any>value) as number);
-      if (!options.stringAsEnum)
+      if (!options?.stringAsEnum)
         name = `${this.namespace}.${this.name}'${name}'`;
       return name;
     }
   }
 
   //Encode
-  encode(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  encode(value: T, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     const serialized = this.serialize(value, options);
-    return options.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
+    return options?.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
   }
 
   // Json Schema
@@ -83,6 +95,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     property.enum = this.fields.map(f => f.name);
     return property;
   }
+
   validate(member: string | number, {
     create = false,
     patch = false,

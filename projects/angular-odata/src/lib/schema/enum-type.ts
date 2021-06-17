@@ -29,6 +29,10 @@ export class ODataEnumType<E> {
     return this.schema.api;
   }
 
+  configure() {
+    this.parser.configure({options: this.api.options});
+  }
+
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }

@@ -77,6 +77,9 @@ export class ODataSchema {
     findParserForType: (type: string) => Parser<any>,
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined
   }) {
+    // Configure Enums
+    this.enums
+      .forEach(enu => enu.configure());
     // Configure Entities
     this.entities
       .forEach(config => config.configure({findParserForType, findOptionsForType}));

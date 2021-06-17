@@ -57,16 +57,16 @@ export interface StructuredTypeFieldOptions extends OptionsHelper {
 }
 
 export interface Parser<T> {
-  deserialize(value: any, options: OptionsHelper): T;
-  serialize(value: T, options: OptionsHelper): any;
+  deserialize(value: any, options?: OptionsHelper): T;
+  serialize(value: T, options?: OptionsHelper): any;
   //Encodes the value/s of a URL parameter or query-string.
-  encode(value: T, options: OptionsHelper): any;
+  encode(value: T, options?: OptionsHelper): any;
 }
 
 export const NONE_PARSER = {
-  deserialize: (value: any, options: OptionsHelper) => value,
-  serialize: (value: any, options: OptionsHelper) => value,
-  encode: (value: any, options: OptionsHelper) => value,
+  deserialize: (value: any) => value,
+  serialize: (value: any) => value,
+  encode: (value: any) => value,
 } as Parser<any>;
 
 export interface Cache<T> {

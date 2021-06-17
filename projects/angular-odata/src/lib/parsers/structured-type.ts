@@ -1,8 +1,7 @@
 import { Objects, Types } from '../utils';
 import { Parser, StructuredTypeFieldConfig, StructuredTypeConfig, OptionsHelper, NONE_PARSER, EntityKey } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
-import { DEFAULT_VERSION, COMPUTED } from '../constants';
-import { ODataHelper } from '../helpers';
+import { COMPUTED } from '../constants';
 import { ODataAnnotation } from '../schema/annotation';
 import { raw } from '../resources/builder';
 
@@ -52,6 +51,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   scale?: number;
   referentials: ODataReferential[];
   annotations: ODataAnnotation[];
+  optionsHelper?: OptionsHelper;
 
   constructor(name: string, structuredType: ODataStructuredTypeParser<any>, field: StructuredTypeFieldConfig) {
     this.name = name;
@@ -109,15 +109,16 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   }
 
   //#region Deserialize
-  private parse(parser: ODataStructuredTypeParser<T>, value: any, options: OptionsHelper): any {
-    const type = Types.isObject(value) ? options.helper.type(value) : undefined;
+  private parse(parser: ODataStructuredTypeParser<T>, value: any, options?: OptionsHelper): any {
+    const type = Types.isObject(value) ? options?.helper.type(value) : undefined;
     if (type !== undefined) {
       return parser.findParser(c => c.isTypeOf(type)).deserialize(value, options);
     }
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): T {
+  deserialize(value: any, options?: OptionsHelper): T {
+    options = options || this.optionsHelper;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value) ?
@@ -129,15 +130,16 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   //#endregion
 
   //#region Serialize
-  private toJson(parser: ODataStructuredTypeParser<T>, value: any, options: OptionsHelper): any {
-    const type = Types.isObject(value) ? options.helper.type(value) : undefined;
+  private toJson(parser: ODataStructuredTypeParser<T>, value: any, options?: OptionsHelper): any {
+    const type = Types.isObject(value) ? options?.helper.type(value) : undefined;
     if (type !== undefined) {
       return parser.findParser(c => c.isTypeOf(type)).serialize(value, options);
     }
     return parser.serialize(value, options);
   }
 
-  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  serialize(value: T, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value) ?
@@ -149,7 +151,8 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   //#endregion
 
   //#region Encode
-  encode(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): string {
+  encode(value: T, options?: OptionsHelper): string {
+    options = options || this.optionsHelper;
     return this.parser.encode(value, Object.assign({field: this}, options));
   }
   //#endregion
@@ -158,6 +161,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
+    this.optionsHelper = options;
     this.parser = findParserForType(this.type);
     if (this.default !== undefined)
       this.default = this.deserialize(this.default, options);
@@ -250,6 +254,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   parent?: ODataStructuredTypeParser<any>;
   keys?: ODataEntityTypeKey[];
   fields: ODataStructuredTypeFieldParser<any>[];
+  optionsHelper?: OptionsHelper;
 
   constructor(config: StructuredTypeConfig<T>, namespace: string, alias?: string) {
     this.name = config.name;
@@ -293,7 +298,8 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   // Deserialize
-  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): T {
+  deserialize(value: any, options?: OptionsHelper): T {
+    options = options || this.optionsHelper;
     if (this.parent !== undefined)
       value = this.parent.deserialize(value, options);
     return Object.assign({}, value, this.fields
@@ -303,7 +309,8 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   // Serialize
-  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  serialize(value: T, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     if (this.parent !== undefined)
       value = this.parent.serialize(value, options);
     return Object.assign({}, value, this.fields
@@ -313,7 +320,8 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   // Encode
-  encode(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  encode(value: T, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     return raw(JSON.stringify(this.serialize(value, options)));
   }
 
@@ -321,6 +329,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
+    this.optionsHelper = options;
     if (this.base) {
       const parent = findParserForType(this.base) as ODataStructuredTypeParser<any>;
       parent.children.push(this);

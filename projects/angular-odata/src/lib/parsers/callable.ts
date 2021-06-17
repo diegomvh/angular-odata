@@ -1,5 +1,4 @@
-import { DEFAULT_VERSION, CALLABLE_BINDING_PARAMETER } from '../constants';
-import { ODataHelper } from '../helpers';
+import { CALLABLE_BINDING_PARAMETER } from '../constants';
 import { Parser, Parameter, CallableConfig, StructuredTypeFieldOptions, NONE_PARSER, OptionsHelper } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
 import { ODataStructuredTypeParser } from './structured-type';
@@ -10,6 +9,7 @@ export class ODataParameterParser<T> {
   private parser: Parser<T>;
   collection?: boolean;
   nullable?: boolean;
+  optionsHelper?: OptionsHelper;
 
   constructor(name: string, parameter: Parameter) {
     this.name = name;
@@ -18,14 +18,16 @@ export class ODataParameterParser<T> {
     Object.assign(this, parameter);
   }
 
-  serialize(value: T, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  serialize(value: T, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     return Array.isArray(value) ?
       value.map(v => this.parser.serialize(v, options)) :
       this.parser.serialize(value, options);
   }
 
   //Encode
-  encode(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): string {
+  encode(value: any, options?: OptionsHelper): string {
+    options = options || this.optionsHelper;
     return Array.isArray(value) ?
       value.map(v => this.parser.encode(v, options)) :
       this.parser.encode(value, options);
@@ -35,6 +37,7 @@ export class ODataParameterParser<T> {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
+    this.optionsHelper = options;
     this.parser = findParserForType(this.type);
   }
 
@@ -70,6 +73,8 @@ export class ODataCallableParser<R> implements Parser<R> {
   return?: { type: string, callable?: boolean};
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
+  optionsHelper?: OptionsHelper;
+
   constructor(config: CallableConfig, namespace: string, alias?: string) {
     this.name = config.name;
     this.namespace = namespace;
@@ -79,6 +84,7 @@ export class ODataCallableParser<R> implements Parser<R> {
     this.parameters = Object.entries(config.parameters || [])
       .map(([name, p]) => new ODataParameterParser(name, p as Parameter));
   }
+
   isTypeOf(type: string) {
     var names = [`${this.namespace}.${this.name}`];
     if (this.alias)
@@ -87,12 +93,14 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   // Deserialize
-  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): R {
+  deserialize(value: any, options?: OptionsHelper): R {
+    options = options || this.optionsHelper;
     return this.parser.deserialize(value, options);
   }
 
   // Serialize
-  serialize(params: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  serialize(params: any, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.serialize(params[p.name], options) }), {})
@@ -100,7 +108,8 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   //Encode
-  encode(params: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  encode(params: any, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     return Object.assign({}, this.parameters.filter(p => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter(p => p.name in params && params[p.name] !== undefined)
       .reduce((acc, p) => Object.assign(acc, { [p.name]: p.encode(params[p.name], options) }), {})
@@ -111,6 +120,7 @@ export class ODataCallableParser<R> implements Parser<R> {
     findParserForType: (type: string) => Parser<any>,
     options: OptionsHelper
   }) {
+    this.optionsHelper = options;
     if (this.return)
       this.parser = findParserForType(this.return.type) || NONE_PARSER;
     this.parameters.forEach(p => p.configure({findParserForType, options}));
