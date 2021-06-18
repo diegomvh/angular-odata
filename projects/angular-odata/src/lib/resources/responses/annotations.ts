@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { DEFAULT_VERSION } from '../../constants';
+import { DEFAULT_VERSION, ETAG_HEADER, ODATA_ENTITYID } from '../../constants';
 import { ODataContext, ODataHelper } from '../../helpers';
 import { OptionsHelper } from '../../types';
 
@@ -14,9 +14,13 @@ export abstract class ODataAnnotations {
     this.options = options;
     this.annotations = this.options ? this.odv.annotations(data) : data;
     if (headers) {
-      const etag = headers.get("ETag");
+      const etag = headers.get(ETAG_HEADER);
       if (etag)
         this.odv.etag(this.annotations, etag);
+      const entityId = headers.get(ODATA_ENTITYID);
+      if (entityId) {
+        this.odv.id(this.annotations, entityId);
+      }
     }
   }
 
