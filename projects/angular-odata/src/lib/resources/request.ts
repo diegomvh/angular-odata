@@ -89,6 +89,9 @@ export class ODataRequest<T> {
     if (['POST', 'PUT', 'PATCH'].indexOf(this.method) !== -1 && '$select' in resourceParams) {
       customParams['$select'] = resourceParams['$select'];
     }
+    if (['POST'].indexOf(this.method) !== -1 && '$expand' in resourceParams) {
+      customParams['$expand'] = resourceParams['$expand'];
+    }
     if (['GET'].indexOf(this.method) !== -1) {
       Object.assign(customParams, resourceParams);
     }
