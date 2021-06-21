@@ -529,6 +529,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
       const func = resource.function<P, R>(name);
+      func.query.apply(options);
       switch (responseType) {
         case 'property':
           return func.callProperty(params, options);
@@ -556,6 +557,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     const resource = this._model.meta.collectionResourceFactory({baseResource: this._resource, fromSet: asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
       const action = resource.action<P, R>(name);
+      action.query.apply(options);
       switch (responseType) {
         case 'property':
           return action.callProperty(params, options);

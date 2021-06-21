@@ -325,6 +325,7 @@ export class ODataModel<T> {
     const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       const func = resource.function<P, R>(name);
+      func.query.apply(options);
       switch (responseType) {
         case 'property':
           return func.callProperty(params, options);
@@ -352,6 +353,7 @@ export class ODataModel<T> {
     const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       const action = resource.action<P, R>(name);
+      action.query.apply(options);
       switch (responseType) {
         case 'property':
           return action.callProperty(params, options);
@@ -387,6 +389,7 @@ export class ODataModel<T> {
     const resource = this._meta.resource(this, {toEntity: asEntity});
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
       const nav = resource.navigationProperty<S>(name);
+      nav.query.apply(options);
       switch (responseType) {
         case 'model':
           return nav.fetchModel(options);
