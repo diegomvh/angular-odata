@@ -1094,6 +1094,9 @@ export class ODataSchema {
     findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;,
     findOptionsForType: (type: string) &#x3D;&gt; ODataModelOptions&lt;any&gt; | undefined
   }) {
+    // Configure Enums
+    this.enums
+      .forEach(enu &#x3D;&gt; enu.configure());
     // Configure Entities
     this.entities
       .forEach(config &#x3D;&gt; config.configure({findParserForType, findOptionsForType}));

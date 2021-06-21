@@ -584,7 +584,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:100</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="103" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:103</a></div>
                                 </td>
                             </tr>
 
@@ -606,7 +606,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:108</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:111</a></div>
                                 </td>
                             </tr>
 
@@ -628,7 +628,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="112" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:112</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">projects/angular-odata/src/lib/resources/request.ts:115</a></div>
                                 </td>
                             </tr>
 
@@ -729,6 +729,9 @@ export class ODataRequest&lt;T&gt; {
     const customParams: {[name: string]: string | string[]} &#x3D; {};
     if ([&#x27;POST&#x27;, &#x27;PUT&#x27;, &#x27;PATCH&#x27;].indexOf(this.method) !&#x3D;&#x3D; -1 &amp;&amp; &#x27;$select&#x27; in resourceParams) {
       customParams[&#x27;$select&#x27;] &#x3D; resourceParams[&#x27;$select&#x27;];
+    }
+    if ([&#x27;POST&#x27;].indexOf(this.method) !&#x3D;&#x3D; -1 &amp;&amp; &#x27;$expand&#x27; in resourceParams) {
+      customParams[&#x27;$expand&#x27;] &#x3D; resourceParams[&#x27;$expand&#x27;];
     }
     if ([&#x27;GET&#x27;].indexOf(this.method) !&#x3D;&#x3D; -1) {
       Object.assign(customParams, resourceParams);

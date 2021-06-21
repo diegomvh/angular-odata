@@ -1,6 +1,6 @@
 {
   "name": "angular-odata",
-  "version": "0.50.4",
+  "version": "0.60.0",
   "license": "MIT",
   "description": "Client side OData typescript library for Angular",
   "repository": {
@@ -27,7 +27,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng test angular-odata && ng build angular-odata --prod",
+    "build": "ng test angular-odata && ng build angular-odata --configuration production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

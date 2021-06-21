@@ -191,7 +191,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:24</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:28</a></code>
 </div>
                             </td>
                         </tr>
@@ -227,7 +227,7 @@
                             </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:31</a></code>
+                                    <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:35</a></code>
 </div>
                             </td>
                         </tr>
@@ -333,8 +333,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="49"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:49</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="53"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:53</a></div>
                 </td>
             </tr>
 
@@ -372,8 +372,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="53"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:53</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:57</a></div>
                 </td>
             </tr>
 
@@ -450,7 +450,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:44</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:48</a></code>
 </div>
                 </td>
             </tr>
@@ -497,7 +497,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:45</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:49</a></code>
 </div>
                 </td>
             </tr>
@@ -573,7 +573,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:39</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:43</a></code>
 </div>
                 </td>
             </tr>
@@ -647,7 +647,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:57</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/annotations.ts:61</a></div>
                                 </td>
                             </tr>
 
@@ -659,7 +659,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpHeaders } from &#x27;@angular/common/http&#x27;;
-import { DEFAULT_VERSION } from &#x27;../../constants&#x27;;
+import { DEFAULT_VERSION, ETAG_HEADER, ODATA_ENTITYID } from &#x27;../../constants&#x27;;
 import { ODataContext, ODataHelper } from &#x27;../../helpers&#x27;;
 import { OptionsHelper } from &#x27;../../types&#x27;;
 
@@ -674,9 +674,13 @@ export abstract class ODataAnnotations {
     this.options &#x3D; options;
     this.annotations &#x3D; this.options ? this.odv.annotations(data) : data;
     if (headers) {
-      const etag &#x3D; headers.get(&quot;ETag&quot;);
+      const etag &#x3D; headers.get(ETAG_HEADER);
       if (etag)
         this.odv.etag(this.annotations, etag);
+      const entityId &#x3D; headers.get(ODATA_ENTITYID);
+      if (entityId) {
+        this.odv.id(this.annotations, entityId);
+      }
     }
   }
 

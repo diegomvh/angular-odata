@@ -134,12 +134,20 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
 import { ODataVersionHelper } from &#x27;./helpers&#x27;;
-export type EntityKey&lt;T&gt; &#x3D; {
-  readonly [P in keyof T]?: T[P];
-} | string | number;
+export type EntityKey&lt;T&gt; &#x3D;
+  | {
+      readonly [P in keyof T]?: T[P];
+    }
+  | string
+  | number;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
-export type FetchPolicy &#x3D; &#x27;cache-first&#x27; | &#x27;cache-and-network&#x27; | &#x27;network-only&#x27; | &#x27;no-cache&#x27; | &#x27;cache-only&#x27;;
+export type FetchPolicy &#x3D;
+  | &#x27;cache-first&#x27;
+  | &#x27;cache-and-network&#x27;
+  | &#x27;network-only&#x27;
+  | &#x27;no-cache&#x27;
+  | &#x27;cache-only&#x27;;
 export type ODataMetadataType &#x3D; &#x27;minimal&#x27; | &#x27;full&#x27; | &#x27;none&#x27;;
 export type CacheCacheability &#x3D; &#x27;public&#x27; | &#x27;private&#x27; | &#x27;no-cache&#x27; | &#x27;no-store&#x27;;
 
@@ -161,8 +169,8 @@ export interface ApiOptions extends Options {
   withCredentials?: boolean;
   //Headers
   etag?: {
-    ifMatch?: boolean,
-    ifNoneMatch?:boolean
+    ifMatch?: boolean;
+    ifNoneMatch?: boolean;
   };
   prefer?: {
     maxPageSize?: number;
@@ -179,20 +187,20 @@ export interface ResponseOptions extends Options {
 }
 
 export interface StructuredTypeFieldOptions extends OptionsHelper {
-  field: StructuredTypeFieldConfig
+  field: StructuredTypeFieldConfig;
 }
 
 export interface Parser&lt;T&gt; {
-  deserialize(value: any, options: OptionsHelper): T;
-  serialize(value: T, options: OptionsHelper): any;
+  deserialize(value: any, options?: OptionsHelper): T;
+  serialize(value: T, options?: OptionsHelper): any;
   //Encodes the value/s of a URL parameter or query-string.
-  encode(value: T, options: OptionsHelper): any;
+  encode(value: T, options?: OptionsHelper): any;
 }
 
 export const NONE_PARSER &#x3D; {
-  deserialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
-  serialize: (value: any, options: OptionsHelper) &#x3D;&gt; value,
-  encode: (value: any, options: OptionsHelper) &#x3D;&gt; value,
+  deserialize: (value: any) &#x3D;&gt; value,
+  serialize: (value: any) &#x3D;&gt; value,
+  encode: (value: any) &#x3D;&gt; value,
 } as Parser&lt;any&gt;;
 
 export interface Cache&lt;T&gt; {
@@ -210,9 +218,9 @@ export type ApiConfig &#x3D; {
   cache?: Cache&lt;any&gt;;
   errorHandler?: (error: any, caught: Observable&lt;any&gt;) &#x3D;&gt; Observable&lt;never&gt;;
   options?: ApiOptions;
-  parsers?: {[type: string]: Parser&lt;any&gt;};
+  parsers?: { [type: string]: Parser&lt;any&gt; };
   schemas?: SchemaConfig[];
-}
+};
 export type AnnotationConfig &#x3D; {
   type: string;
   string?: string;
@@ -220,7 +228,7 @@ export type AnnotationConfig &#x3D; {
   int?: number;
   permissions?: string[];
   properties?: string[];
-}
+};
 export type SchemaConfig &#x3D; {
   namespace: string;
   alias?: string;
@@ -228,27 +236,27 @@ export type SchemaConfig &#x3D; {
   enums?: EnumTypeConfig&lt;any&gt;[];
   entities?: StructuredTypeConfig&lt;any&gt;[];
   callables?: CallableConfig[];
-  containers?: EntityContainerConfig[]
-}
+  containers?: EntityContainerConfig[];
+};
 
 export type EntityContainerConfig &#x3D; {
   name: string;
   annotations?: AnnotationConfig[];
   entitySets?: EntitySetConfig[];
-}
+};
 
 export type EnumTypeFieldConfig &#x3D; {
   value: number;
   annotations?: AnnotationConfig[];
-}
+};
 
 export type EnumTypeConfig&lt;T&gt; &#x3D; {
   name: string;
   flags?: boolean;
   annotations?: AnnotationConfig[];
-  members: {[name: string]: number} | {[value: number]: string};
+  members: { [name: string]: number } | { [value: number]: string };
   fields: { [member: string]: EnumTypeFieldConfig };
-}
+};
 
 export type StructuredTypeFieldConfig &#x3D; {
   type: string;
@@ -261,26 +269,27 @@ export type StructuredTypeFieldConfig &#x3D; {
   precision?: number;
   annotations?: AnnotationConfig[];
   scale?: number;
+  referentials?: { property: string, referencedProperty: string; }[];
   referential?: string;
   referenced?: string;
-}
+};
 
 export type StructuredTypeConfig&lt;T&gt; &#x3D; {
   name: string;
   base?: string;
   open?: boolean;
-  model?: { new(...params: any[]): any };
-  collection?: { new(...params: any[]): any };
+  model?: { new (...params: any[]): any };
+  collection?: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
-  keys?: {ref: string, alias?: string}[],
+  keys?: { name: string; alias?: string }[];
   fields: { [P in keyof T]?: StructuredTypeFieldConfig };
-}
+};
 
 export type Parameter &#x3D; {
   type: string;
   nullable?: boolean;
   collection?: boolean;
-}
+};
 
 export type CallableConfig &#x3D; {
   name: string;
@@ -288,14 +297,14 @@ export type CallableConfig &#x3D; {
   bound?: boolean;
   composable?: boolean;
   parameters?: { [name: string]: Parameter };
-  return?: {type: string, collection?: boolean};
-}
+  return?: { type: string; collection?: boolean };
+};
 export type EntitySetConfig &#x3D; {
   name: string;
   entityType: string;
-  service: { new(...params: any[]): any };
+  service: { new (...params: any[]): any };
   annotations?: AnnotationConfig[];
-}
+};
 //#endregion
 </code></pre>
     </div>

@@ -107,6 +107,9 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                <a href="#configure">configure</a>
+                            </li>
+                            <li>
                                 <a href="#deserialize">deserialize</a>
                             </li>
                             <li>
@@ -374,6 +377,45 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="configure"></a>
+                    <span class="name">
+                        <b>
+                            configure
+                        </b>
+                        <a href="#configure"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>configure()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="32"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:32</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="deserialize"></a>
                     <span class="name">
                         <b>
@@ -392,8 +434,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:52</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:56</a></div>
                 </td>
             </tr>
 
@@ -462,8 +504,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="60"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:60</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:64</a></div>
                 </td>
             </tr>
 
@@ -532,8 +574,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="36"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:36</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="40"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:40</a></div>
                 </td>
             </tr>
 
@@ -571,8 +613,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:32</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:36</a></div>
                 </td>
             </tr>
 
@@ -641,8 +683,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="40"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:40</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="44"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:44</a></div>
                 </td>
             </tr>
 
@@ -711,8 +753,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:44</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="48"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:48</a></div>
                 </td>
             </tr>
 
@@ -851,8 +893,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="48"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:48</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="52"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:52</a></div>
                 </td>
             </tr>
 
@@ -929,8 +971,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:60</a></div>
                 </td>
             </tr>
 
@@ -1116,6 +1158,10 @@ export class ODataEnumType&lt;E&gt; {
 
   get api() {
     return this.schema.api;
+  }
+
+  configure() {
+    this.parser.configure({options: this.api.options});
   }
 
   findAnnotation(predicate: (annot: ODataAnnotation) &#x3D;&gt; boolean) {

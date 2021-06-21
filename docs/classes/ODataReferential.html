@@ -42,7 +42,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>ODataEntityTypeKey</li>
+  <li>ODataReferential</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -80,30 +80,15 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#alias">alias</a>
+                                <a href="#property">property</a>
                             </li>
                             <li>
-                                <a href="#name">name</a>
+                                <a href="#referencedProperty">referencedProperty</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
 
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>Methods</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                <a href="#resolve">resolve</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
 
 
 
@@ -124,7 +109,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -170,12 +155,11 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="alias"></a>
+                        <a name="property"></a>
                         <span class="name">
                             <b>
-                                <span class="modifier">Optional</span>
-                            alias</b>
-                            <a href="#alias"><span class="icon ion-ios-link"></span></a>
+                            property</b>
+                            <a href="#property"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -187,7 +171,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:20</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:32</a></div>
                             </td>
                         </tr>
 
@@ -198,11 +182,11 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="name"></a>
+                        <a name="referencedProperty"></a>
                         <span class="name">
                             <b>
-                            name</b>
-                            <a href="#name"><span class="icon ion-ios-link"></span></a>
+                            referencedProperty</b>
+                            <a href="#referencedProperty"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -214,7 +198,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:19</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:33</a></div>
                             </td>
                         </tr>
 
@@ -223,82 +207,7 @@
         </table>
 </section>
 
-            <section>
-    
-    <h3 id="methods">
-        Methods
-    </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="resolve"></a>
-                    <span class="name">
-                        <b>
-                            resolve
-                        </b>
-                        <a href="#resolve"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>resolve(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
-                </td>
-            </tr>
 
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="26"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:26</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>value</td>
-                                    <td>
-                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>
 
 
 
@@ -741,7 +650,7 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ODataEntityTypeKey.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ODataReferential.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

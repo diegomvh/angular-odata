@@ -305,6 +305,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataReferenceResource.html" data-type="entity-link">ODataReferenceResource</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataReferential.html" data-type="entity-link">ODataReferential</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataRequest.html" data-type="entity-link">ODataRequest</a>
                             </li>
                             <li class="link">
