@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { DEFAULT_VERSION, COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
+import { COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
 import { ODataStructuredTypeFieldParser } from '../parsers';
 import {
   Expand,
@@ -22,7 +22,6 @@ import { EntityKey, OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';
-import { ODataHelper } from '../helpers';
 
 export const CID = '_cid';
 export type ODataModelResource<T> =
@@ -133,6 +132,7 @@ export class ODataModelField<F> {
     max?: number;
     pattern?: RegExp;
   };
+  optionsHelper?: OptionsHelper;
   constructor(modelOptions: ODataModelOptions<any>, { name, field, parser, ...options }: ODataModelFieldOptions<F>) {
     this.modelOptions = modelOptions;
     this.name = name;
@@ -178,6 +178,7 @@ export class ODataModelField<F> {
   }) {
     this.meta = findOptionsForType(this.parser.type);
     if (concurrency) this.options.concurrency = concurrency;
+    this.optionsHelper = options;
   }
 
   isKey() {
@@ -196,15 +197,18 @@ export class ODataModelField<F> {
     return this.parser.isStructuredType();
   }
 
-  deserialize(value: any, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): F {
+  deserialize(value: any, options?: OptionsHelper): F {
+    options = options || this.optionsHelper;
     return this.parser.deserialize(value, options);
   }
 
-  serialize(value: F, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  serialize(value: F, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     return this.parser.serialize(value, options);
   }
 
-  encode(value: F, options: OptionsHelper = {helper: ODataHelper[DEFAULT_VERSION]}): any {
+  encode(value: F, options?: OptionsHelper): any {
+    options = options || this.optionsHelper;
     return this.parser.encode(value, options);
   }
 
@@ -591,7 +595,7 @@ export class ODataModelOptions<T> {
       if (prop === undefined) return undefined;
       let name = field_mapping ? prop.field : prop.name;
       if (keyType.alias !== undefined) name = keyType.alias;
-      key[name] = model[prop.name];
+      key[name] = prop.encode(model[prop.name]);
     }
     if (Types.isEmpty(key)) return undefined;
     return resolve ? Objects.resolveKey(key) : key;
