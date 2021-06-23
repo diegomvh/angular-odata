@@ -30,7 +30,7 @@ export const PhotoConfig = {
   name: "Photo",
   annotations: [{"type":"Org.OData.Core.V1.AcceptableMediaTypes"}],
   fields: {
-    Id: {type: 'Edm.Int64', key: true, referenced: 'Id', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    Id: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
     Name: {type: 'Edm.String'}
   }
 } as StructuredTypeConfig<Photo>;
@@ -46,7 +46,7 @@ export const PlanItemConfig = {
   name: "PlanItem",
   annotations: [],
   fields: {
-    PlanItemId: {type: 'Edm.Int64', key: true, referenced: 'PlanItemId', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    PlanItemId: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
     ConfirmationCode: {type: 'Edm.String'},
     StartsAt: {type: 'Edm.Date'},
     EndsAt: {type: 'Edm.Date'},
@@ -70,7 +70,7 @@ export const TripConfig = {
   name: "Trip",
   annotations: [],
   fields: {
-    TripId: {type: 'Edm.Int64', key: true, referenced: 'TripId', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    TripId: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
     ShareId: {type: 'Edm.String'},
     Description: {type: 'Edm.String'},
     Name: {type: 'Edm.String', nullable: false},
@@ -97,7 +97,7 @@ export const PersonConfig = {
   name: "Person",
   annotations: [],
   fields: {
-    UserName: {type: 'Edm.String', key: true, referenced: 'UserName', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
+    UserName: {type: 'Edm.String', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
     FirstName: {type: 'Edm.String', nullable: false},
     LastName: {type: 'Edm.String', nullable: false},
     Emails: {type: 'Edm.String', collection: true},

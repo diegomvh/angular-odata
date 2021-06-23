@@ -335,23 +335,26 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   resolveKey(value: any): any {
-    let key = this.parent?.resolveKey(value);
-    key = (this.keys || []).reduce((acc: any, k) => {
-      let structured = this as ODataStructuredTypeParser<any> | undefined;
-      let field: ODataStructuredTypeFieldParser<any> | undefined;
-      let name: string | undefined = undefined;
-      for (name of k.name.split('/')) {
-        if (structured === undefined) break;
-        field = structured.fields.find(f => f.name === name);
-        if (field !== undefined) {
-          value = Types.isObject(value) ? value[field.name] : value;
-          structured = field.isStructuredType() ? field.structured() : undefined;
+    let key = this.parent?.resolveKey(value) || {};
+    if (Array.isArray(this.keys) && this.keys.length > 0) {
+      for (var k of this.keys) {
+        let structured = this as ODataStructuredTypeParser<any> | undefined;
+        let field: ODataStructuredTypeFieldParser<any> | undefined;
+        let name: string | undefined = undefined;
+        for (name of k.name.split('/')) {
+          if (structured === undefined) break;
+          field = structured.fields.find(f => f.name === name);
+          if (field !== undefined) {
+            value = Types.isObject(value) ? value[field.name] : value;
+            structured = field.isStructuredType() ? field.structured() : undefined;
+          }
         }
+        if (field === undefined) return undefined;
+        name = k.alias || field.name;
+        key[name] = field.encode(value);
       }
-      // Alias or Name
-      name = k.alias || name;
-      return (field !== undefined && name !== undefined) ? {...acc, [name]: field.encode(value)} : acc;
-    }, key) as any;
+    }
+    if (Types.isEmpty(key)) return undefined;
     return Objects.resolveKey(key);
   }
 

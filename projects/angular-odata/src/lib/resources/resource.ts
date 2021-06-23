@@ -196,15 +196,14 @@ export abstract class ODataResource<T> {
   }
 
   protected resolveKey(value: any): EntityKey<T> | undefined {
-    let schema = this.schema();
-    if (isQueryCustomType(value))
+    if (isQueryCustomType(value)) {
       return value;
-    else if (schema instanceof ODataStructuredType) {
-      return schema.resolveKey(value);
     } else if (Types.isObject(value)) {
-      return Objects.resolveKey(value);
+      let schema = this.schema();
+      return (schema instanceof ODataStructuredType) ? schema.resolveKey(value) :
+        Objects.resolveKey(value);
     }
-    return undefined;
+    return value as EntityKey<T> | undefined;
   }
 
   /**

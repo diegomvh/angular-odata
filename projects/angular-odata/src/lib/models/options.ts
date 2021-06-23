@@ -579,12 +579,11 @@ export class ODataModelOptions<T> {
   ): EntityKey<T> | { [name: string]: any } | undefined {
     const keyTypes = this.schema.keys({ include_parents: true });
     const key: any = {};
-    for (var keyType of keyTypes) {
+    for (var kt of keyTypes) {
       let model = value as any;
       let options = this as ODataModelOptions<any>;
       let prop: ODataModelField<any> | undefined;
-      //TODO: Name or Alias
-      for (let name of keyType.name.split('/')) {
+      for (let name of kt.name.split('/')) {
         if (options === undefined) break;
         prop = options
           .fields({ include_parents: true })
@@ -596,7 +595,7 @@ export class ODataModelOptions<T> {
       }
       if (prop === undefined) return undefined;
       let name = field_mapping ? prop.field : prop.name;
-      if (keyType.alias !== undefined) name = keyType.alias;
+      if (kt.alias !== undefined) name = kt.alias;
       key[name] = prop.encode(model[prop.name]);
     }
     if (Types.isEmpty(key)) return undefined;
@@ -1011,7 +1010,7 @@ export class ODataModelOptions<T> {
         } else {
           self._changes[field.name] = value;
         }
-        if (self.schema().keys({ include_parents: true }).find(keyType => keyType.name === field.field) !== undefined) {
+        if (self.schema().keys({ include_parents: true }).find(kt => kt.name === field.field) !== undefined) {
           this._pushToRelations(self);
         }
         if (!self._silent)
