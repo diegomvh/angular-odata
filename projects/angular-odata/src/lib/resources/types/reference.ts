@@ -15,11 +15,13 @@ export class ODataReferenceResource extends ODataResource<any> {
     options.clear();
     return new ODataReferenceResource(api, segments, options);
   }
+  //#endregion
 
   clone() {
     return new ODataReferenceResource(this.api, this.cloneSegments(), this.cloneQuery());
   }
-  //#endregion
+
+  schema() { return undefined; }
 
   //#region Requests
   post(target: ODataEntityResource<any>, options?: HttpOptions): Observable<any> {

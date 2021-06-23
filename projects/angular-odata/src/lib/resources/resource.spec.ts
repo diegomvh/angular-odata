@@ -63,6 +63,12 @@ describe('ODataResource', () => {
     expect(entity.toString()).toEqual("People(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)");
   });
 
+  it('should create entity resource with composed guid key', () => {
+    const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
+    const entity = set.entity({id1: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'), id2: 1});
+    expect(entity.toString()).toEqual("People(cd5977c2-4a64-42de-b2fc-7fe4707c65cd)");
+  });
+
   it('should create entity resource with object simple key', () => {
     const set: ODataEntitySetResource<Person> = ODataEntitySetResource.factory<Person>(settings.defaultApi(), 'People', undefined, segments, options);
     const entity = set.entity({id: 1});

@@ -9,8 +9,7 @@ import { ODataFunctionResource } from './function';
 import { ODataQueryOptions } from '../query-options';
 import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
-import { EntityKey } from '../../types';
-import { ODataResource } from '../resource';
+import { EntityKey, ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { ODataEntity, ODataEntities, ODataEntitiesAnnotations } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
@@ -28,28 +27,26 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   clone() {
     return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
+
+  schema() {
+    let type = this.type();
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
+  }
   //#endregion
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities: Partial<T>[] | {[name: string]: any}[],
     {annots, reset = false}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}
   ): C {
-    let schema = this.schema;
+    let schema = this.schema();
     if (annots?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(annots.type);
     }
     const Collection = schema?.collection || ODataCollection;
     return new Collection(entities, {resource: this, annots, reset}) as C;
   }
-
-  //#region Entity Config
-  get schema() {
-    let type = this.type();
-    return (type !== undefined) ?
-      this.api.findStructuredTypeForType<T>(type) :
-      undefined;
-  }
-  ////#endregion
 
   //#region Inmutable Resource
   entity(key?: EntityKey<T>) {

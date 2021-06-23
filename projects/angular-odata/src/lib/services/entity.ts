@@ -1,5 +1,4 @@
-import { ODataResource } from '../resources';
-import { EntityKey } from '../types';
+import { EntityKey, ODataResource } from '../resources';
 import { ODataModel } from '../models/model';
 import { ODataBaseService } from './base';
 

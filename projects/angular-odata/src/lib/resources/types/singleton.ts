@@ -4,7 +4,7 @@ import { Expand, isQueryCustomType, Select } from '../builder';
 import { QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
-import { ODataResource } from '../resource';
+import { EntityKey, ODataResource } from '../resource';
 
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
@@ -16,7 +16,6 @@ import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
-import { EntityKey } from '../../types';
 import { Types } from '../../utils/types';
 import { Objects } from '../../utils';
 
@@ -29,14 +28,21 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(api, segments, options);
   }
+  //#endregion
 
   clone() {
     return new ODataSingletonResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
-  //#endregion
+
+  schema() {
+    let type = this.type();
+    return (type !== undefined) ?
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
+  }
 
   asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
-    let schema = this.schema;
+    let schema = this.schema();
     if (annots?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(annots.type);
     }
@@ -44,19 +50,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return new Model(entity, {resource: this, annots, reset}) as M;
   }
 
-  //#region Function Config
-  get schema() {
-    let type = this.type();
-    return (type !== undefined) ? this.api.findStructuredTypeForType<T>(type) : undefined;
-  }
-  ////#endregion
-
   //#region Inmutable Resource
-  key(key: EntityKey<T>) {
+  key(value: any) {
     const singleton = this.clone();
-    key = (this.schema !== undefined && Types.isObject(key) && !isQueryCustomType(key)) ? this.schema.resolveKey(key as {[name: string]: any}) :
-      (Types.isObject(key) && !isQueryCustomType(key)) ? Objects.resolveKey(key) : key;
-    singleton.segment.singleton().key(key);
+    var key = this.resolveKey(value);
+    if (key !== undefined)
+      singleton.segment.singleton().key(key);
     return singleton;
   }
   navigationProperty<N>(path: string) {

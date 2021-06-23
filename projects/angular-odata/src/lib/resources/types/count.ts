@@ -14,6 +14,12 @@ export class ODataCountResource extends ODataResource<any> {
     query.keep(QueryOptionNames.filter, QueryOptionNames.search);
     return new ODataCountResource(api, segments, query);
   }
+  //#endregion
+
+  clone() {
+    return new ODataCountResource(this.api, this.cloneSegments(), this.cloneQuery());
+  }
+  schema() { return undefined; }
 
   get segment() {
     const segments = this.pathSegments;
@@ -26,11 +32,6 @@ export class ODataCountResource extends ODataResource<any> {
       }
     }
   }
-
-  clone() {
-    return new ODataCountResource(this.api, this.cloneSegments(), this.cloneQuery());
-  }
-  //#endregion
 
   //#region Shortcuts
   fetch(options?: HttpOptions): Observable<number> {

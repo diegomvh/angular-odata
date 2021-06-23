@@ -16,11 +16,13 @@ export class ODataValueResource<T> extends ODataResource<T> {
     options.clear();
     return new ODataValueResource<V>(api, segments, options);
   }
+  //#endregion
 
   clone() {
     return new ODataValueResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
-  //#endregion
+
+  schema() { return undefined; }
 
   //#region Shortcuts
   fetch(options?: {responseType: 'value'} & HttpOptions): Observable<T>;

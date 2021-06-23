@@ -1,5 +1,5 @@
 import { Objects, Types } from '../utils';
-import { Parser, StructuredTypeFieldConfig, StructuredTypeConfig, OptionsHelper, NONE_PARSER, EntityKey } from '../types';
+import { Parser, StructuredTypeFieldConfig, StructuredTypeConfig, OptionsHelper, NONE_PARSER } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
 import { COMPUTED } from '../constants';
 import { ODataAnnotation } from '../schema/annotation';
@@ -334,24 +334,25 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     this.fields.forEach(f => f.configure({findParserForType, options}));
   }
 
-  resolveKey(attrs: T | {[name: string]: any}): EntityKey<T> | undefined {
-    let key = this.parent?.resolveKey(attrs) || {};
+  resolveKey(value: any): any {
+    let key = this.parent?.resolveKey(value);
     key = (this.keys || []).reduce((acc: any, k) => {
-      let value = attrs as any;
       let structured = this as ODataStructuredTypeParser<any> | undefined;
       let field: ODataStructuredTypeFieldParser<any> | undefined;
-      //TODO: Name or Alias
-      for (let name of k.name.split('/')) {
+      let name: string | undefined = undefined;
+      for (name of k.name.split('/')) {
         if (structured === undefined) break;
         field = structured.fields.find(f => f.name === name);
         if (field !== undefined) {
-          value = value[field.name];
+          value = Types.isObject(value) ? value[field.name] : value;
           structured = field.isStructuredType() ? field.structured() : undefined;
         }
       }
-      return (field !== undefined) ? {...acc, [k.name]: field.encode(value)} : acc;
+      // Alias or Name
+      name = k.alias || name;
+      return (field !== undefined && name !== undefined) ? {...acc, [name]: field.encode(value)} : acc;
     }, key) as any;
-    return Objects.resolveKey(key) as EntityKey<T> | undefined;
+    return Objects.resolveKey(key);
   }
 
   defaults(): {[name: string]: any} {

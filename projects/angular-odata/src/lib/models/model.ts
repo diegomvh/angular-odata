@@ -9,6 +9,7 @@ import {
   ODataEntity,
   Select,
   Expand,
+  EntityKey,
   OptionHandler,
   QueryArguments
 } from '../resources/index';
@@ -23,7 +24,6 @@ import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
 import { ModelOptions, ODataModelEvent, ODataModelOptions, ODataModelRelation, ODataModelResource, ODataModelField } from './options';
-import { EntityKey } from '../types';
 
 // @dynamic
 export class ODataModel<T> {

@@ -22,11 +22,22 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     query.clear();
     return new ODataActionResource<P, R>(api, segments, query);
   }
+  //#endregion
 
   clone() {
     return new ODataActionResource<P, R>(this.api, this.cloneSegments(), this.cloneQuery());
   }
-  //#endregion
+
+  schema() {
+    let type = this.type();
+    return (type !== undefined) ?
+      this.api.findCallableForType<R>(type) :
+      undefined;
+  }
+
+  returnType() {
+    return this.schema()?.parser.return?.type;
+  }
 
   asModel<M extends ODataModel<R>>(entity: Partial<R> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?:boolean} = {}): M {
     let resource: ODataEntityResource<R> | undefined;
@@ -63,19 +74,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     }
     return new Collection(entities, {resource, annots, reset}) as C;
   }
-
-  //#region Action Config
-  get schema() {
-    let type = this.type();
-    return (type !== undefined) ?
-      this.api.findCallableForType<R>(type) :
-      undefined;
-  }
-  returnType() {
-    return this.schema?.parser.return?.type;
-  }
-
-  //#endregion
 
   //#region Inmutable Resource
   select(opts: Select<R>) {

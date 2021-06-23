@@ -1,11 +1,5 @@
 import { Observable } from 'rxjs';
 import { ODataVersionHelper } from './helpers';
-export type EntityKey<T> =
-  | {
-      readonly [P in keyof T]?: T[P];
-    }
-  | string
-  | number;
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy =

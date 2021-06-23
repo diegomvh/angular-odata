@@ -16,13 +16,13 @@ import {
   Transform,
   Filter,
   OrderBy,
+  EntityKey,
   QueryArguments
 } from '../resources/index';
 
 import { HttpActionOptions, HttpFunctionOptions } from '../services/index';
 
 import { EventEmitter } from '@angular/core';
-import { EntityKey } from '../types';
 import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {

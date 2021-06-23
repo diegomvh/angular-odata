@@ -160,6 +160,8 @@ export class ODataBatchResource extends ODataResource<any> {
     return new ODataBatchResource(this.api, this.cloneSegments());
   }
 
+  schema() { return undefined; }
+
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();

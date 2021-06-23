@@ -1,5 +1,4 @@
-import { ODataEntitySetResource, ODataEntityResource, HttpOptions } from '../resources';
-import { EntityKey } from '../types';
+import { EntityKey, ODataEntitySetResource, ODataEntityResource, HttpOptions } from '../resources';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
 import { Observable, throwError } from 'rxjs';

@@ -6,7 +6,7 @@ import {
   PARAM_SEPARATOR,
   QUERY_SEPARATOR
 } from '../constants';
-import { Http, Types, Urls } from '../utils/index';
+import { Objects, Http, Types, Urls } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
 import { QueryArguments, ODataQueryOptions, QueryOptionNames } from './query-options';
@@ -16,7 +16,16 @@ import { ODataApi } from '../api';
 import { Parser } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
-import { Expand, Filter, OrderBy, Select, Transform } from './builder';
+import { Expand, Filter, OrderBy, Select, Transform, QueryCustomType, isQueryCustomType } from './builder';
+import { ODataStructuredType, ODataCallable } from '../schema/index';
+
+export type EntityKey<T> =
+  | {
+      readonly [P in keyof T]?: T[P];
+    }
+  | QueryCustomType
+  | string
+  | number;
 
 export abstract class ODataResource<T> {
   // VARIABLES
@@ -109,6 +118,7 @@ export abstract class ODataResource<T> {
   }
 
   abstract clone(): ODataResource<T>;
+  abstract schema(): ODataStructuredType<T> | ODataCallable<T> | undefined;
 
   serialize(value: any): any {
     let api = this.api;
@@ -183,6 +193,18 @@ export abstract class ODataResource<T> {
         }
       }
     }
+  }
+
+  protected resolveKey(value: any): EntityKey<T> | undefined {
+    let schema = this.schema();
+    if (isQueryCustomType(value))
+      return value;
+    else if (schema instanceof ODataStructuredType) {
+      return schema.resolveKey(value);
+    } else if (Types.isObject(value)) {
+      return Objects.resolveKey(value);
+    }
+    return undefined;
   }
 
   /**

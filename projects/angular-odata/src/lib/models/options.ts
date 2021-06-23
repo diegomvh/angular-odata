@@ -11,6 +11,7 @@ import {
   ODataPathSegments,
   ODataPropertyResource,
   ODataQueryOptions,
+  EntityKey,
   ODataResource,
   ODataSingletonResource,
   OptionHandler,
@@ -18,7 +19,7 @@ import {
   Select,
 } from '../resources';
 import { ODataEntitySet, ODataStructuredType } from '../schema';
-import { EntityKey, OptionsHelper } from '../types';
+import { OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import { ODataCollection } from './collection';
 import { ODataModel } from './model';

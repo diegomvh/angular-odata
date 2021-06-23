@@ -1,15 +1,13 @@
 import { Observable, throwError } from 'rxjs';
 
-import { EntityKey } from '../../types';
-
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
-import { Expand, isQueryCustomType, Select } from '../builder';
+import { Expand, Select } from '../builder';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataResource } from '../resource';
+import { EntityKey, ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { ODataValueResource } from './value';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
@@ -17,43 +15,40 @@ import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
-import { Objects, Types } from '../../utils';
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
     options.keep(QueryOptionNames.expand, QueryOptionNames.select, QueryOptionNames.format);
     return new ODataEntityResource<E>(api, segments, options);
   }
+  //#endregion
 
   clone() {
     return new ODataEntityResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
-  //#endregion
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
-    let schema = this.schema;
-    if (annots?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(annots.type);
-    }
-    const Model = schema?.model || ODataModel;
-    return new Model(entity, { resource: this, annots, reset }) as M;
-  }
-
-  //#region Entity Config
-  get schema() {
+  schema() {
     let type = this.type();
     return (type !== undefined) ?
       this.api.findStructuredTypeForType<T>(type) :
       undefined;
   }
-  ////#endregion
+
+  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
+    let schema = this.schema();
+    if (annots?.type !== undefined) {
+      schema = this.api.findStructuredTypeForType<T>(annots.type);
+    }
+    const Model = schema?.model || ODataModel;
+    return new Model(entity, { resource: this, annots, reset }) as M;
+  }
 
   //#region Inmutable Resource
-  key(key: EntityKey<T>) {
+  key(value: any) {
     const entity = this.clone();
-    key = (this.schema !== undefined && Types.isObject(key) && !isQueryCustomType(key)) ? this.schema.resolveKey(key as {[name: string]: any}) :
-      (Types.isObject(key) && !isQueryCustomType(key)) ? Objects.resolveKey(key) : key;
-    entity.segment.entitySet().key(key);
+    var key = this.resolveKey(value);
+    if (key !== undefined)
+      entity.segment.entitySet().key(key);
     return entity;
   }
 

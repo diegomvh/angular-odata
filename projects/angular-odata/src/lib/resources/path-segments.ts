@@ -3,7 +3,7 @@ import { raw, buildPathAndQuery } from './builder';
 import { Types, Dates } from '../utils';
 
 import { PATH_SEPARATOR } from '../constants';
-import { EntityKey } from '../types';
+import { EntityKey } from './resource';
 
 export enum PathSegmentNames {
   batch = 'batch',

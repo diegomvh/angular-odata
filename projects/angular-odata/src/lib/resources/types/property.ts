@@ -2,7 +2,7 @@ import { EMPTY, Observable } from 'rxjs';
 
 import { ODataValueResource } from './value';
 
-import { ODataResource } from '../resource';
+import { EntityKey, ODataResource } from '../resource';
 import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
@@ -13,7 +13,6 @@ import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Expand, Filter, isQueryCustomType, OrderBy, Select, Transform } from '../builder';
 import { ODataNavigationPropertyResource } from './navigation-property';
-import { EntityKey } from '../../types';
 import { Objects, Types } from '../../utils';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -25,22 +24,21 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     options.clear();
     return new ODataPropertyResource<P>(api, segments, options);
   }
+  //#endregion
 
   clone() {
     return new ODataPropertyResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
   }
-  //#endregion
 
-  //#region Function Config
-  get schema() {
+  schema() {
     let type = this.type();
     return (type !== undefined) ?
-      this.api.findStructuredTypeForType<T>(type) : undefined;
+      this.api.findStructuredTypeForType<T>(type) :
+      undefined;
   }
-  ////#endregion
 
   asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
-    let schema = this.schema;
+    let schema = this.schema();
     if (annots?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(annots.type);
     }
@@ -52,7 +50,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     entities: Partial<T>[] | {[name: string]: any}[],
     {annots, reset}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}
   ): C {
-    let schema = this.schema;
+    let schema = this.schema();
     if (annots?.type !== undefined) {
       schema = this.api.findStructuredTypeForType(annots.type);
     }
@@ -61,11 +59,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   //#region Inmutable Resource
-  key(key: EntityKey<T>) {
+  key(value: any) {
     const property = this.clone();
-    key = (this.schema !== undefined && Types.isObject(key) && !isQueryCustomType(key)) ? this.schema.resolveKey(key as {[name: string]: any}) :
-      (Types.isObject(key) && !isQueryCustomType(key)) ? Objects.resolveKey(key) : key;
-    property.segment.property().key(key);
+    var key = this.resolveKey(value);
+    if (key !== undefined)
+      property.segment.property().key(key);
     return property;
   }
 

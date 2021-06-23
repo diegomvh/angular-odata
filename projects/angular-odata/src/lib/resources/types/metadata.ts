@@ -17,6 +17,8 @@ export class ODataMetadataResource extends ODataResource<any> {
     return new ODataMetadataResource(this.api, this.cloneSegments());
   }
 
+  schema() { return undefined; }
+
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
