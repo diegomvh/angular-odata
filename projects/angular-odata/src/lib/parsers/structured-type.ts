@@ -22,10 +22,6 @@ export class ODataEntityTypeKey {
     this.name = name;
     this.alias = alias;
   }
-
-  resolve(value: any) {
-    return this.name.split('/').reduce((acc, n) => acc[n], value);
-  }
 }
 
 export class ODataReferential {
@@ -340,7 +336,21 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
 
   resolveKey(attrs: T | {[name: string]: any}): EntityKey<T> | undefined {
     let key = this.parent?.resolveKey(attrs) || {};
-    key = (this.keys || []).reduce((acc, k) => Object.assign(acc, { [k.name]: k.resolve(attrs) }), key) as any;
+    key = (this.keys || []).reduce((acc: any, k) => {
+      let value = attrs as any;
+      let structured = this as ODataStructuredTypeParser<any> | undefined;
+      let field: ODataStructuredTypeFieldParser<any> | undefined;
+      //TODO: Name or Alias
+      for (let name of k.name.split('/')) {
+        if (structured === undefined) break;
+        field = structured.fields.find(f => f.name === name);
+        if (field !== undefined) {
+          value = value[field.name];
+          structured = field.isStructuredType() ? field.structured() : undefined;
+        }
+      }
+      return (field !== undefined) ? {...acc, [k.name]: field.encode(value)} : acc;
+    }, key) as any;
     return Objects.resolveKey(key) as EntityKey<T> | undefined;
   }
 

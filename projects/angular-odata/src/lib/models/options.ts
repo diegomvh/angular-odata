@@ -582,12 +582,13 @@ export class ODataModelOptions<T> {
       let model = value as any;
       let options = this as ODataModelOptions<any>;
       let prop: ODataModelField<any> | undefined;
+      //TODO: Name or Alias
       for (let name of keyType.name.split('/')) {
-        if (options === null) break;
+        if (options === undefined) break;
         prop = options
           .fields({ include_parents: true })
           .find((p: any) => p.field === name);
-        if (prop !== undefined && prop.meta !== undefined) {
+        if (prop !== undefined) {
           model = model[prop.name];
           options = prop.meta as ODataModelOptions<any>;
         }
