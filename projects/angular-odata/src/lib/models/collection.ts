@@ -29,7 +29,8 @@ import {
   BUBBLING,
   ODataCollectionResource,
   ODataModelEvent,
-  ODataModelState
+  ODataModelState,
+  INCLUDE_ALL
 } from './options';
 
 export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> {
@@ -137,6 +138,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     include_concurrency = false,
     include_computed = false,
     include_key = true,
+    include_non_field = false,
     changes_only = false,
     field_mapping = false
   }: {
@@ -145,6 +147,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     include_concurrency?: boolean;
     include_computed?: boolean,
     include_key?: boolean;
+    include_non_field?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
   } = {}): (T | { [name: string]: any; })[] {
@@ -156,8 +159,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         include_navigation,
         include_concurrency,
         include_computed,
-        field_mapping,
         include_key,
+        include_non_field,
+        field_mapping,
         changes_only: changesOnly
       });
     });
@@ -173,7 +177,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (this._resource) resource = this._resource.clone();
     if (this._annotations) annots = this._annotations.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
-    return new Ctor(this.toEntities({include_navigation: true, include_computed: true}), { resource, annots });
+    return new Ctor(this.toEntities(INCLUDE_ALL), { resource, annots });
   }
 
   fetch({
@@ -399,9 +403,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (entry !== undefined) {
         //TODO: Remove/Add or Merge?
         // Merge
-        entry.model.assign(value.toEntity({
-          client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true
-        }));
+        entry.model.assign(value.toEntity({client_id: true, ...INCLUDE_ALL}));
         if (entry.model.hasChanged())
           toMerge.push(model);
       } else {
@@ -454,9 +456,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         if (model !== obj) {
           // TODO: annots ?
           // Get entity from model
-          const entity = isModel ? (obj as M).toEntity({
-            client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true
-          }) : model.annots().attributes<T>(obj);
+          const entity = isModel ? (obj as M).toEntity({client_id: true, ...INCLUDE_ALL}) : model.annots().attributes<T>(obj);
           model.assign(entity, {reset, silent});
           if (model.hasChanged())
             toMerge.push(model);

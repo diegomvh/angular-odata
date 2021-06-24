@@ -23,7 +23,7 @@ import {
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
 import { EventEmitter } from '@angular/core';
-import { ModelOptions, ODataModelEvent, ODataModelOptions, ODataModelRelation, ODataModelResource, ODataModelField } from './options';
+import { ModelOptions, ODataModelEvent, ODataModelOptions, ODataModelRelation, ODataModelResource, ODataModelField, INCLUDE_ALL } from './options';
 
 // @dynamic
 export class ODataModel<T> {
@@ -138,6 +138,7 @@ export class ODataModel<T> {
     include_concurrency = false,
     include_computed = false,
     include_key = true,
+    include_non_field = false,
     changes_only = false,
     field_mapping = false
   }: {
@@ -146,24 +147,42 @@ export class ODataModel<T> {
     include_concurrency?: boolean,
     include_computed?: boolean,
     include_key?: boolean,
+    include_non_field?: boolean,
     changes_only?: boolean,
     field_mapping?: boolean
   } = {}): T | {[name: string]: any} {
-    return this._meta.toEntity(this, { client_id, include_navigation, include_concurrency, include_computed, include_key, changes_only, field_mapping});
+    return this._meta.toEntity(this, {
+      client_id,
+      include_navigation,
+      include_concurrency,
+      include_computed,
+      include_key,
+      include_non_field,
+      changes_only,
+      field_mapping
+    });
   }
 
   attributes({
     changes_only = false,
     include_concurrency = false,
     include_computed = false,
+    include_non_field = false,
     field_mapping = false
   }: {
     changes_only?: boolean,
     include_concurrency?: boolean,
     include_computed?: boolean,
+    include_non_field?: boolean,
     field_mapping?: boolean
   } = {}): {[name: string]: any} {
-    return this._meta.attributes(this, { changes_only, field_mapping, include_concurrency, include_computed });
+    return this._meta.attributes(this, {
+      changes_only,
+      include_concurrency,
+      include_computed,
+      include_non_field,
+      field_mapping
+    });
   }
 
   set(path: string | string[], value: any) {
@@ -195,10 +214,7 @@ export class ODataModel<T> {
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
     return new Ctor(
-      this.toEntity({
-        include_navigation: true,
-        include_concurrency: true
-      }), {
+      this.toEntity(INCLUDE_ALL), {
         resource: this.resource(),
         annots: this.annots()
       });
@@ -372,7 +388,7 @@ export class ODataModel<T> {
   protected asDerived<S>(type: string): ODataModel<S> {
     const resource = this.resource();
     if (resource instanceof ODataEntityResource) {
-      return resource.cast<S>(type).asModel(this.toEntity({ include_navigation: true, include_concurrency: true }), {annots: this.annots()});
+      return resource.cast<S>(type).asModel(this.toEntity(INCLUDE_ALL), {annots: this.annots()});
     }
     throw new Error(`Can't cast to derived model without ODataEntityResource`);
   }

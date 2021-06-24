@@ -64,6 +64,14 @@ export const BUBBLING = [
   'remove',
 ];
 
+export const INCLUDE_ALL = {
+  include_navigation: true,
+  include_concurrency: true,
+  include_computed: true,
+  include_key: true,
+  include_non_field: true
+};
+
 export enum ODataModelState {
   Added,
   Removed,
@@ -684,18 +692,20 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     {
       client_id = false,
-      include_key = true,
       include_navigation = false,
       include_concurrency = false,
       include_computed = false,
+      include_key = true,
+      include_non_field = false,
       changes_only = false,
       field_mapping = false,
     }: {
       client_id?: boolean;
-      include_key?: boolean;
-      include_navigation?: boolean;
-      include_concurrency?: boolean;
-      include_computed?: boolean;
+      include_navigation?: boolean,
+      include_concurrency?: boolean,
+      include_computed?: boolean,
+      include_key?: boolean,
+      include_non_field?: boolean,
       changes_only?: boolean;
       field_mapping?: boolean;
     } = {}
@@ -704,7 +714,8 @@ export class ODataModelOptions<T> {
       changes_only,
       field_mapping,
       include_concurrency,
-      include_computed
+      include_computed,
+      include_non_field
     });
 
     let relations = Object.entries(self._relations)
@@ -736,6 +747,7 @@ export class ODataModelOptions<T> {
               client_id,
               include_navigation,
               include_concurrency,
+              include_non_field,
               field_mapping,
               changes_only: changesOnly,
               include_key: includeKey,
@@ -748,6 +760,7 @@ export class ODataModelOptions<T> {
               client_id,
               include_navigation,
               include_concurrency,
+              include_non_field,
               field_mapping,
               changes_only: changesOnly,
               include_key: includeKey,
@@ -788,16 +801,18 @@ export class ODataModelOptions<T> {
       changes_only = false,
       include_concurrency = false,
       include_computed = false,
+      include_non_field = false,
       field_mapping = false,
     }: {
       changes_only?: boolean;
       include_concurrency?: boolean;
       include_computed?: boolean;
+      include_non_field?: boolean;
       field_mapping?: boolean;
     } = {}
   ): { [name: string]: any } {
     // Attributes by fields (attributes for the model type)
-    const typeAttrs = this.fields().reduce((acc, f) => {
+    const fieldAttrs = this.fields().reduce((acc, f) => {
       const isChanged = f.name in self._changes;
       const name = (field_mapping) ? f.field : f.name;
       const value = isChanged ? self._changes[f.name] : self._attributes[f.name];
@@ -813,12 +828,13 @@ export class ODataModelOptions<T> {
         return acc;
       }
     }, {});
-    const names = Object.keys(typeAttrs);
+    if (!include_non_field) return fieldAttrs;
+    const names = Object.keys(fieldAttrs);
     // Attributes from object (attributes for object)
-    const objAttrs = Object.entries(self)
+    const nonFieldAttrs = Object.entries(self)
       .filter(([k, ]) => names.indexOf(k) === -1 && !k.startsWith('_') && !k.endsWith("$"))
       .reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
-    return {...typeAttrs, ...objAttrs};
+    return {...fieldAttrs, ...nonFieldAttrs};
   }
 
   assign(
