@@ -164,7 +164,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   hasChanged() {
-    return this._entries.some(e => e.state !== ODataModelState.Unchanged) || this.models().some(m => m.hasChanged());
+    return this._entries.some(e => e.state !== ODataModelState.Unchanged);
   }
 
   clone() {
@@ -225,10 +225,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   save({
-    models = false,
+    asModel = false,
+    patch = false,
     ...options
   }: HttpOptions & {
-    models?: boolean;
+    asModel?: boolean;
+    patch?: boolean;
   } = {}): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)
@@ -238,11 +240,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     let changes = this._entries.map(entry => {
       const model = entry.model;
       if (entry.state === ODataModelState.Removed) {
-        return this.removeReference(model, {models, ...options});
+        return asModel ? model.destroy({asEntity: true, ...options}) : this.removeReference(model, options);
       } else if (entry.state === ODataModelState.Added) {
-        return this.addReference(model, {models, ...options});
+        return asModel ? model.save({asEntity: true, patch, ...options}) : this.addReference(model, options);
       }
-      return models ? model.save(options) : of(model);
+      return (asModel && entry.state === ODataModelState.Changed) ? model.save({asEntity: true, patch, ...options}) : of(model);
     });
     return forkJoin(changes)
     .pipe(
@@ -256,16 +258,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     );
   }
 
-  protected addReference(model: M, {models = true, ...options}: {models?: boolean} & HttpOptions = {}): Observable<M> {
+  protected addReference(model: M, options?: HttpOptions): Observable<M> {
     let resource = this.resource();
-    if (model.key() !== undefined && resource instanceof ODataNavigationPropertyResource) {
-      return resource.reference()
+    return (model.key() !== undefined && resource instanceof ODataNavigationPropertyResource) ?
+      resource.reference()
         .add(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options)
-        .pipe(map(() => model));
-    } else if (resource instanceof ODataEntitySetResource && models) {
-      return model.save({asEntity: true, ...options});
-    }
-    return models ? model.save() : of(model);
+        .pipe(map(() => model)) : of(model);
   }
 
   private _addModel(model: M, {silent = false, reset = false}: {silent?: boolean, reset?: boolean} = {}): M | undefined {
@@ -321,18 +319,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     }
   }
 
-  protected removeReference(model: M, {models = true, ...options}: {models?: boolean} & HttpOptions = {}): Observable<M> {
+  protected removeReference(model: M, options?: HttpOptions): Observable<M> {
     let resource = this.resource();
-    if (model.key() !== undefined) {
-      if (resource instanceof ODataNavigationPropertyResource) {
-        return resource.reference()
-          .remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options)
-          .pipe(map(() => model));
-      } else if (resource instanceof ODataEntitySetResource && models) {
-        return model.destroy({asEntity: true, ...options});
-      }
-    }
-    return models ? model.save() : of(model);
+    return (model.key() !== undefined && resource instanceof ODataNavigationPropertyResource) ?
+      resource.reference()
+        .remove(model._meta.resource(model, {toEntity: true}) as ODataEntityResource<T>, options)
+        .pipe(map(() => model)) : of(model);
   }
 
   private _removeModel(model: M, {silent = false, reset = false}: {silent?: boolean, reset?: boolean} = {}): M | undefined {
@@ -582,9 +574,12 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         if (event.model === model) {
           if (event.name === 'destroy') {
             this.removeModel(model);
-          } else if (event.name === 'change' && event.options?.key) {
+          } else if (event.name === 'change') {
             let entry = this._findEntry({model});
-            if (entry !== undefined) entry.key = model.key();
+            if (entry !== undefined) {
+              if (event.options?.key) entry.key = model.key();
+              entry.state = model.hasChanged() ? ODataModelState.Changed : ODataModelState.Unchanged;
+            }
           }
         }
 
