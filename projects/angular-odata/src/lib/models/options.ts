@@ -198,21 +198,6 @@ export class ODataModelField<F> {
     return this.parser.isStructuredType();
   }
 
-  deserialize(value: any, options?: OptionsHelper): F {
-    options = options || this.optionsHelper;
-    return this.parser.deserialize(value, options);
-  }
-
-  serialize(value: F, options?: OptionsHelper): any {
-    options = options || this.optionsHelper;
-    return this.parser.serialize(value, options);
-  }
-
-  encode(value: F, options?: OptionsHelper): any {
-    options = options || this.optionsHelper;
-    return this.parser.encode(value, options);
-  }
-
   validate(
     value: any,
     {
@@ -570,8 +555,7 @@ export class ODataModelOptions<T> {
     self.resource(resource);
   }
 
-  resolveKey(
-    value: ODataModel<T> | T | { [name: string]: any },
+  resolveKey(value: any,
     {
       field_mapping = false,
       resolve = true,
@@ -580,7 +564,7 @@ export class ODataModelOptions<T> {
     const keyTypes = this.schema.keys({ include_parents: true });
     const key: any = {};
     for (var kt of keyTypes) {
-      let model = value as any;
+      let v = value as any;
       let options = this as ODataModelOptions<any>;
       let prop: ODataModelField<any> | undefined;
       for (let name of kt.name.split('/')) {
@@ -589,14 +573,14 @@ export class ODataModelOptions<T> {
           .fields({ include_parents: true })
           .find((p: any) => p.field === name);
         if (prop !== undefined) {
-          model = model[prop.name];
+          v = (Types.isObject(v) || v instanceof ODataModel) ? v[prop.name] : v;
           options = prop.meta as ODataModelOptions<any>;
         }
       }
       if (prop === undefined) return undefined;
       let name = field_mapping ? prop.field : prop.name;
       if (kt.alias !== undefined) name = kt.alias;
-      key[name] = prop.encode(model[prop.name]);
+      key[name] = v;
     }
     if (Types.isEmpty(key)) return undefined;
     return resolve ? Objects.resolveKey(key) : key;

@@ -338,20 +338,20 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     let key = this.parent?.resolveKey(value) || {};
     if (Array.isArray(this.keys) && this.keys.length > 0) {
       for (var k of this.keys) {
+        let v = value as any;
         let structured = this as ODataStructuredTypeParser<any> | undefined;
         let field: ODataStructuredTypeFieldParser<any> | undefined;
-        let name: string | undefined = undefined;
-        for (name of k.name.split('/')) {
+        for (let name of k.name.split('/')) {
           if (structured === undefined) break;
           field = structured.fields.find(f => f.name === name);
           if (field !== undefined) {
-            value = Types.isObject(value) ? value[field.name] : value;
+            v = Types.isObject(v) ? v[field.name] : v;
             structured = field.isStructuredType() ? field.structured() : undefined;
           }
         }
         if (field === undefined) return undefined;
-        name = k.alias || field.name;
-        key[name] = field.encode(value);
+        let name = k.alias || field.name;
+        key[name] = field.encode(v);
       }
     }
     if (Types.isEmpty(key)) return undefined;
