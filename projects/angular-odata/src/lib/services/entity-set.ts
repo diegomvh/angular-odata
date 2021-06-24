@@ -12,8 +12,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   }
 
   public entity(key?: EntityKey<T>): ODataEntityResource<T> {
-    return this.entities()
-      .entity(key);
+    return this.entities().entity(key);
   }
 
   // Models
@@ -32,63 +31,57 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return this.api.findEntitySetByName(this.name);
   }
 
-  public fetch(entity: EntityKey<T>, options?: HttpOptions & {etag?: string}): Observable<T | null> {
-    return this.entity(entity)
-      .get(options)
+  public fetch(key: EntityKey<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}): Observable<T | null> {
+    return this.entity(key)
+      .get({etag, ...options})
       .pipe(map(({entity}) => entity));
   }
 
-  public create(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
+  public create(attrs: Partial<T>, options: HttpOptions = {}): Observable<T | null> {
     return this.entities()
-      .post(entity, options)
+      .post(attrs, options)
       .pipe(map(({entity}) => entity));
   }
 
-  public update(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
-    const odata = this.api.options.helper;
-    const etag = odata.etag(entity);
-    const res = this.entity(entity);
+  public update(key: EntityKey<T>, attrs: Partial<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}): Observable<T | null> {
+    etag = etag || this.api.options.helper.etag(attrs);
+    const res = this.entity(key);
     if (!res.hasKey())
       return throwError("Resource without key");
-    return this.entity(entity as EntityKey<T>)
-      .put(entity, Object.assign({etag}, options || {}))
+    return res.put(attrs, {etag, ...options})
       .pipe(map(({entity}) => entity));
   }
 
-  public assign(entity: Partial<T>, attrs: Partial<T>, options?: HttpOptions): Observable<T> {
-    const odata = this.api.options.helper;
-    const etag = odata.etag(entity);
-    const res = this.entity(entity);
+  public assign(key: EntityKey<T>, attrs: Partial<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}): Observable<T | null> {
+    etag = etag || this.api.options.helper.etag(attrs);
+    const res = this.entity(key);
     if (!res.hasKey())
       return throwError("Resource without key");
-    return res.patch(attrs, Object.assign({etag}, options || {}))
-      .pipe(map(({entity: newentity, annots: meta}) => newentity ? newentity :
-        Object.assign(entity, attrs, meta.annotations) as T));
+    return res.patch(attrs, {etag, ...options})
+      .pipe(map(({entity}) => entity));
   }
 
-  public destroy(entity: Partial<T>, options?: HttpOptions) {
-    const odata = this.api.options.helper;
-    const etag = odata.etag(entity);
-    const res = this.entity(entity);
+  public destroy(key: EntityKey<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}) {
+    const res = this.entity(key);
     if (!res.hasKey())
       return throwError("Resource without key");
-    return res.delete(Object.assign({etag}, options || {}));
+    return res.delete({etag, ...options});
   }
 
   // Shortcuts
-  public fetchOrCreate(entity: Partial<T>, options?: HttpOptions): Observable<T | null> {
-    return this.fetch(entity, options)
+  public fetchOrCreate(key: EntityKey<T>, attrs: Partial<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}): Observable<T | null> {
+    return this.fetch(key, {etag, ...options})
       .pipe(catchError((error: HttpErrorResponse) => {
         if (error.status === 404)
-          return this.create(entity, options);
+          return this.create(attrs, options);
         else
           return throwError(error);
       }));
   }
 
-  public save(entity: Partial<T>, options?: HttpOptions) {
-    return this.entity(entity).hasKey() ?
-      this.update(entity, options) :
-      this.create(entity, options);
+  public save(key: EntityKey<T>, attrs: Partial<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}) {
+    return this.entity(key).hasKey() ?
+      this.update(key, attrs, {etag, ...options}) :
+      this.create(attrs, options);
   }
 }
