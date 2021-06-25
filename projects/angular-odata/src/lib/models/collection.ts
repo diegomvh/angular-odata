@@ -235,7 +235,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     ...options
   }: HttpOptions & {
     asModel?: boolean;
-    method?: 'create' | 'update' | 'patch',
+    method?: 'update' | 'patch',
   } = {}): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)
@@ -247,7 +247,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (entry.state === ODataModelState.Removed) {
         return asModel ? model.destroy({asEntity: true, ...options}) : this.removeReference(model, options);
       } else if (entry.state === ODataModelState.Added) {
-        return asModel ? model.save({asEntity: true, method, ...options}) : this.addReference(model, options);
+        return asModel ? model.save({asEntity: true, method: 'create', ...options}) : this.addReference(model, options);
       }
       return (asModel && model.hasChanged()) ? model.save({asEntity: true, method, ...options}) : of(model);
     });

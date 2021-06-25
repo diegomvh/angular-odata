@@ -269,10 +269,13 @@ export class ODataModel<T> {
       return throwError("save: Resource is undefined");
     if (!(resource instanceof ODataEntityResource))
       return throwError("save: Resource type ODataEntityResource needed");
+    if (method === undefined && this.schema().isCompoundKey())
+      return throwError("Composite key require a specific method, use create/update/patch");
 
     if (method === undefined) {
       method = !resource.hasKey() ? 'create' : 'update';
     }
+
     let obs$: Observable<ODataEntity<any>>;
     if (!validate || this.valid({method, navigation})) {
       const _entity = this.toEntity({

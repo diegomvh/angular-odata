@@ -79,9 +79,24 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
       }));
   }
 
-  public save(key: EntityKey<T>, attrs: Partial<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}) {
-    return this.entity(key).hasKey() ?
-      this.update(key, attrs, {etag, ...options}) :
-      this.create(attrs, options);
+  public save(attrs: Partial<T>, {
+    etag, method, ...options
+  }: {
+    etag?: string
+    method?: 'create' | 'update' | 'patch'
+  } & HttpOptions = {}) {
+    let schema = this.structuredTypeSchema;
+    if (method === undefined && schema !== undefined && schema.isCompoundKey())
+      return throwError("Composite key require a specific method, use create/update/patch");
+    let key = schema && schema.resolveKey(attrs);
+    if (method === undefined)
+      method = key !== undefined ? 'update' : 'create';
+    if ((method === 'update' || method === 'patch') && key === undefined)
+      return throwError("Can't update/patch entity without key");
+    return (
+      method === 'create' ? this.create(attrs, options) :
+      method === 'patch' ? this.patch(key, attrs, {etag, ...options}) :
+      this.update(key, attrs, {etag, ...options})
+    );
   }
 }

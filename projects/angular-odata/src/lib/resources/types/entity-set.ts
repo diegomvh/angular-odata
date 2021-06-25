@@ -23,6 +23,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       segment.type(type);
     return new ODataEntitySetResource<E>(api, segments, query);
   }
+  //#endregion
 
   clone() {
     return new ODataEntitySetResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
@@ -34,7 +35,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.api.findStructuredTypeForType<T>(type) :
       undefined;
   }
-  //#endregion
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities: Partial<T>[] | {[name: string]: any}[],
