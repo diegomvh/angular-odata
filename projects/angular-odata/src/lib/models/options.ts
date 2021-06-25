@@ -209,29 +209,27 @@ export class ODataModelField<F> {
   validate(
     value: any,
     {
-      create = false,
-      patch = false,
+      method,
       navigation = false,
     }: {
-      create?: boolean;
-      patch?: boolean;
+      method?: 'create' | 'update' | 'patch',
       navigation?: boolean;
     } = {}
   ) {
     if (value instanceof ODataModel) {
-      return !value.valid({ create, patch, navigation })
+      return !value.valid({ method, navigation })
         ? value._errors
         : undefined;
     } else if (value instanceof ODataCollection) {
-      return value.models().some((m) => !m.valid({ create, patch, navigation }))
+      return value.models().some((m) => !m.valid({ method, navigation }))
         ? value.models().map((m) => m.errors)
         : undefined;
     } else {
       let errors =
-        this.parser?.validate(value, { create, patch, navigation }) || [];
+        this.parser?.validate(value, { method, navigation }) || [];
       if (
         this.options.required &&
-        (value === null || (value === undefined && !patch)) // Is null or undefined without patch flag?
+        (value === null || (value === undefined && method !== 'patch')) // Is null or undefined without patch?
       ) {
         errors.push(`required`);
       }
@@ -643,12 +641,10 @@ export class ODataModelOptions<T> {
   validate(
     self: ODataModel<T>,
     {
-      create = false,
-      patch = false,
+      method,
       navigation = false,
     }: {
-      create?: boolean;
-      patch?: boolean;
+      method?: 'create' | 'update' | 'patch',
       navigation?: boolean;
     } = {}
   ): { [name: string]: string[] } | undefined {
@@ -657,7 +653,7 @@ export class ODataModelOptions<T> {
       include_navigation: navigation,
     }).reduce((acc, prop) => {
       let value = (self as any)[prop.name];
-      let errs = prop.validate(value, { create, patch });
+      let errs = prop.validate(value, { method });
       return errs !== undefined
         ? Object.assign(acc, { [prop.name]: errs })
         : acc;
@@ -666,6 +662,7 @@ export class ODataModelOptions<T> {
   }
 
   hasChanged(self: ODataModel<T>): boolean {
+    //TODO: Can remove every test over relations ?
     return (
       !Types.isEmpty(self._changes) ||
       Object.values(self._relations).some(
@@ -1010,7 +1007,7 @@ export class ODataModelOptions<T> {
         } else {
           self._changes[field.name] = value;
         }
-        if (self.schema().keys({ include_parents: true }).find(kt => kt.name === field.field) !== undefined) {
+        if (field.isKey()) {
           this._pushToRelations(self);
         }
         if (!self._silent)
@@ -1037,7 +1034,6 @@ export class ODataModelOptions<T> {
       }
     });
   }
-
   private _subscribe<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
@@ -1048,10 +1044,14 @@ export class ODataModelOptions<T> {
     const bubbling = mr === undefined || vr === undefined || !vr.isParentOf(mr);
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
       if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
-        if (field.navigation && event.model === value && ['change'].indexOf(event.name) !== -1 && event.options?.key) {
-          var ref = value.referential(field);
-          if (ref !== undefined) { self.assign(ref); }
+
+        if (event.model === value) {
+          if (event.name === 'change' && field.navigation && event.options?.key) {
+            var ref = value.referential(field);
+            if (ref !== undefined) { self.assign(ref); }
+          }
         }
+
         let path = field.name;
         if (this.isModel(value) && event.path)
           path = `${path}.${event.path}`;

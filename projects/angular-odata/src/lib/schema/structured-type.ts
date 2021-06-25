@@ -125,14 +125,12 @@ export class ODataStructuredType<T> {
   }
 
   validate(attrs: Partial<T>, {
-    create = false,
-    patch = false,
+    method,
     navigation = false
   }: {
-    create?: boolean,
-    patch?: boolean,
+    method?: 'create' | 'update' | 'patch',
     navigation?: boolean
   } = {}) {
-    return this.parser.validate(attrs, {create, patch, navigation});
+    return this.parser.validate(attrs, {method, navigation});
   }
 }

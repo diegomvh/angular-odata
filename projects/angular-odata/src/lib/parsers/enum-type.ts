@@ -97,12 +97,10 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   validate(member: string | number, {
-    create = false,
-    patch = false,
+    method,
     navigation = false,
   }: {
-    create?: boolean,
-    patch?: boolean,
+    method?: 'create' | 'update' | 'patch',
     navigation?: boolean
   } = {}): string[] | undefined {
     if (this.flags) {

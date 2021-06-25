@@ -102,29 +102,25 @@ export class ODataModel<T> {
   // Validation
   _errors?: { [key: string]: any };
   protected validate({
-    create = false,
-    patch = false,
+    method,
     navigation = false
   }: {
-    create?: boolean,
-    patch?: boolean,
+    method?: 'create' | 'update' | 'patch',
     navigation?: boolean
   } = {}) {
-    return this._meta.validate(this, {create, patch, navigation});
+    return this._meta.validate(this, {method, navigation});
   }
 
   valid({
-    create = false,
-    patch = false,
+    method,
     navigation = false
   }: {
-    create?: boolean,
-    patch?: boolean,
+    method?: 'create' | 'update' | 'patch',
     navigation?: boolean
   } = {}): boolean {
-    this._errors = this.validate({create, patch, navigation});
+    this._errors = this.validate({method, navigation});
     if (this._errors !== undefined)
-      this.events$.emit({name: 'invalid', model: this, value: this._errors, options: {create, patch}});
+      this.events$.emit({name: 'invalid', model: this, value: this._errors, options: {method}});
     return this._errors === undefined;
   }
 
@@ -257,13 +253,13 @@ export class ODataModel<T> {
 
   save({
     asEntity,
-    patch = false,
+    method,
     navigation = false,
     validate = true,
     ...options
   }: HttpOptions & {
     asEntity?: boolean,
-    patch?: boolean,
+    method?: 'create' | 'update' | 'patch',
     navigation?: boolean,
     validate?: boolean,
     options?: HttpOptions
@@ -274,17 +270,19 @@ export class ODataModel<T> {
     if (!(resource instanceof ODataEntityResource))
       return throwError("save: Resource type ODataEntityResource needed");
 
-    const isNew = !resource.hasKey();
+    if (method === undefined) {
+      method = !resource.hasKey() ? 'create' : 'update';
+    }
     let obs$: Observable<ODataEntity<any>>;
-    if (!validate || this.valid({create: isNew, patch, navigation})) {
+    if (!validate || this.valid({method, navigation})) {
       const _entity = this.toEntity({
-        changes_only: patch,
+        changes_only: method === 'patch',
         field_mapping: true,
         include_concurrency: true,
         include_navigation: navigation }) as T;
       obs$ = (
-        isNew ? resource.post(_entity, options) :
-        patch ? resource.patch(_entity, { etag: this.annots().etag, ...options}) :
+        method === 'create' ? resource.post(_entity, options) :
+        method === 'patch' ? resource.patch(_entity, { etag: this.annots().etag, ...options}) :
         resource.put(_entity, { etag: this.annots().etag, ...options})
       ).pipe(map(({ entity, annots }) => ({ entity: entity || _entity, annots })));
     } else {

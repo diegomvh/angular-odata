@@ -69,22 +69,20 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   }
 
   validate(value: any, {
-    create = false,
-    patch = false,
+    method,
     navigation = false
   }: {
-    create?: boolean,
-    patch?: boolean,
+    method?: 'create' | 'update' | 'patch',
     navigation?: boolean
   } = {}): {[name: string]: any} | {[name: string]: any}[] | string[] | undefined {
     let errors;
     if (this.collection && Array.isArray(value)) {
-      errors = value.map(v => this.validate(v, {create, patch, navigation})) as {[name: string]: any[]}[];
+      errors = value.map(v => this.validate(v, {method, navigation})) as {[name: string]: any[]}[];
     } else if ((this.isStructuredType() && typeof value === 'object' && value !== null) ||
       (this.navigation && value !== undefined)) {
-      errors = this.structured().validate(value, {create, patch, navigation}) || {} as {[name: string]: any[]};
+      errors = this.structured().validate(value, {method, navigation}) || {} as {[name: string]: any[]};
     } else if (this.isEnumType() && (typeof value === 'string' || typeof value === 'number')) {
-      errors = this.enum().validate(value, {create, patch, navigation});
+      errors = this.enum().validate(value, {method, navigation});
     }
     else {
       // IsEdmType
@@ -92,8 +90,8 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
       errors = [];
       if (
         !this.nullable &&
-        (value === null || (value === undefined && !patch)) && // Is null or undefined without patch flag?
-        !(computed?.bool && create) // Not (Is Computed field and create) ?
+        (value === null || (value === undefined && method !== 'patch')) && // Is null or undefined without patch?
+        !(computed?.bool && method === 'create') // Not (Is Computed field and create) ?
       ) {
         errors.push(`required`);
       }
@@ -396,20 +394,19 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   validate(attrs: any, {
-    create = false,
-    patch = false,
+    method,
     navigation = false,
   }: {
     create?: boolean,
-    patch?: boolean,
+    method?: 'create' | 'update' | 'patch',
     navigation?: boolean
   } = {}
   ): {[name: string]: any} | undefined {
-    const errors = (this.parent?.validate(attrs, {create, patch, navigation}) || {}) as {[name: string]: any };
+    const errors = (this.parent?.validate(attrs, {method, navigation}) || {}) as {[name: string]: any };
     const fields = this.fields.filter(f => !f.navigation || navigation);
     for (var field of fields) {
       const value = attrs[field.name as keyof T];
-      const errs = field.validate(value, {create, patch, navigation});
+      const errs = field.validate(value, {method, navigation});
       if (errs !== undefined) {
         errors[field.name] = errs;
       }

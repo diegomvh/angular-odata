@@ -168,7 +168,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   }
 
   hasChanged() {
-    return this._entries.some(e => e.state !== ODataModelState.Unchanged);
+    //TODO: Can remove every test over models ?
+    return this._entries.some(e => e.state !== ODataModelState.Unchanged) || this.models().some(m => m.hasChanged());
   }
 
   clone() {
@@ -230,11 +231,11 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
   save({
     asModel = false,
-    patch = false,
+    method,
     ...options
   }: HttpOptions & {
     asModel?: boolean;
-    patch?: boolean;
+    method?: 'create' | 'update' | 'patch',
   } = {}): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)
@@ -246,9 +247,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
       if (entry.state === ODataModelState.Removed) {
         return asModel ? model.destroy({asEntity: true, ...options}) : this.removeReference(model, options);
       } else if (entry.state === ODataModelState.Added) {
-        return asModel ? model.save({asEntity: true, patch, ...options}) : this.addReference(model, options);
+        return asModel ? model.save({asEntity: true, method, ...options}) : this.addReference(model, options);
       }
-      return (asModel && entry.state === ODataModelState.Changed) ? model.save({asEntity: true, patch, ...options}) : of(model);
+      return (asModel && model.hasChanged()) ? model.save({asEntity: true, method, ...options}) : of(model);
     });
     return forkJoin(changes)
     .pipe(
@@ -298,8 +299,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     }
     return undefined;
   }
-  protected addModel(model: M, {silent = false}: {silent?: boolean} = {}) {
-    const added = this._addModel(model, {silent, reset: false});
+  protected addModel(model: M, {silent = false, reset = false}: {silent?: boolean, reset?: boolean} = {}) {
+    const added = this._addModel(model, {silent, reset});
     if (!silent && added !== undefined) {
       this.events$.emit({
         name: 'update',
@@ -313,7 +314,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (server) {
       return this.addReference(model).pipe(
         map(model => {
-          this.addModel(model, {silent});
+          this.addModel(model, {silent, reset: true});
           return this;
         })
       );
@@ -340,7 +341,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         model.events$.emit({ name: 'remove', model, collection: this });
 
       // Now remove
-      if (reset) {
+      if (reset || entry.state === ODataModelState.Added) {
         const index = this._entries.indexOf(entry);
         this._entries.splice(index, 1);
       } else {
@@ -351,8 +352,8 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     }
     return undefined;
   }
-  protected removeModel(model: M, {silent = false}: {silent?: boolean} = {}) {
-    const removed = this._removeModel(model, {silent, reset: false});
+  protected removeModel(model: M, {silent = false, reset = false}: {silent?: boolean, reset?: boolean} = {}) {
+    const removed = this._removeModel(model, {silent, reset});
     if (!silent && removed !== undefined) {
       this.events$.emit({
         name: 'update',
@@ -366,7 +367,7 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
     if (server) {
       return this.removeReference(model).pipe(
         map(model => {
-          this.removeModel(model, {silent});
+          this.removeModel(model, {silent, reset: true});
           return this;
         })
       );
@@ -573,13 +574,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
 
         if (event.model === model) {
           if (event.name === 'destroy') {
-            this.removeModel(model);
-          } else if (event.name === 'change') {
+            this.removeModel(model, {reset: true});
+          } else if (event.name === 'change' && event.options?.key) {
             let entry = this._findEntry({model});
-            if (entry !== undefined) {
-              if (event.options?.key) entry.key = model.key();
-              entry.state = model.hasChanged() ? ODataModelState.Changed : ODataModelState.Unchanged;
-            }
+            if (entry !== undefined) entry.key = model.key();
           }
         }
 
@@ -614,6 +612,10 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
         };
       },
     };
+  }
+
+  contains(model: M) {
+    return this.models().some(m => m.equals(model));
   }
   //#endregion
 }
