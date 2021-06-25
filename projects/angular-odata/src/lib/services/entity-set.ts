@@ -52,7 +52,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
       .pipe(map(({entity}) => entity));
   }
 
-  public assign(key: EntityKey<T>, attrs: Partial<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}): Observable<T | null> {
+  public patch(key: EntityKey<T>, attrs: Partial<T>, {etag, ...options}: {etag?: string} & HttpOptions = {}): Observable<T | null> {
     etag = etag || this.api.options.helper.etag(attrs);
     const res = this.entity(key);
     if (!res.hasKey())
