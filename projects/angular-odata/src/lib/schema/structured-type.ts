@@ -35,6 +35,10 @@ export class ODataStructuredType<T> {
     }
   }
 
+  get api() {
+    return this.schema.api;
+  }
+
   configure({findParserForType, findOptionsForType}: {
     findParserForType: (type: string) => Parser<any>,
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined }) {
@@ -57,8 +61,12 @@ export class ODataStructuredType<T> {
     return this.parser.isTypeOf(type);
   }
 
-  get api() {
-    return this.schema.api;
+  isSimpleKey() {
+    return this.keys().length === 1;
+  }
+
+  isCompoundKey() {
+    return this.keys().length > 1;
   }
 
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
@@ -75,7 +83,9 @@ export class ODataStructuredType<T> {
     ];
   }
 
-  keys({include_parents = true}: {
+  keys({
+    include_parents = true
+  }: {
     include_parents?: boolean
   } = {}): ODataEntityTypeKey[] {
     return [
