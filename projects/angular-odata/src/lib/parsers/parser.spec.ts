@@ -229,7 +229,7 @@ describe('ODataClient', () => {
         Friends: [{FirstName: 'FirstName'} as Person, {FirstName: 'FirstName', LastName: 'LastName'}],
         Trips: [],
         Gender: PersonGender.Male,
-      }, {create: true, navigation: true})
+      }, {method: 'create', navigation: true})
     ).toEqual({
       UserName: [ 'required' ],
       Friends: [ { UserName: [ 'required' ], LastName: [ 'required' ] }, { UserName: [ 'required' ] }]
@@ -251,7 +251,7 @@ describe('ODataClient', () => {
           Emails: [],
           Gender: PersonGender.Male,
         },
-        { create: true }
+        { method: 'create' }
       )
     ).toBeUndefined();
   });
@@ -267,7 +267,7 @@ describe('ODataClient', () => {
           FirstName: 'FirstName',
           LastName: 'LastName',
         },
-        { create: true }
+        { method: 'create' }
       )
     ).toEqual({ UserName: [ 'required' ] });
   });
