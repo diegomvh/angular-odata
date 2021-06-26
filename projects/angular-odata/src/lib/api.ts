@@ -104,11 +104,15 @@ export class ODataApi {
   public findModelForType(type: string) {
     return this.findStructuredTypeForType<any>(type)?.model as typeof ODataModel | undefined;
   }
-
+  public modelForType(type?: string) {
+    return (type && this.findModelForType(type) || ODataModel);
+  }
   public findCollectionForType(type: string) {
     return this.findStructuredTypeForType<any>(type)?.collection as typeof ODataCollection | undefined;
   }
-
+  public collectionForType(type?: string) {
+    return type && this.findCollectionForType(type) || ODataCollection;
+  }
   public findServiceForType(type: string) {
     return this.findEntitySetForType(type)?.service as typeof ODataEntityService | undefined;
   }

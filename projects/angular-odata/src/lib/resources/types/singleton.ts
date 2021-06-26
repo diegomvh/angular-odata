@@ -41,13 +41,9 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       undefined;
   }
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
-    let schema = this.schema();
-    if (annots?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(annots.type);
-    }
-    const Model = schema?.model || ODataModel;
-    return new Model(entity, {resource: this, annots, reset}) as M;
+  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
+    const Model = this.api.modelForType(annots?.type || this.type());
+    return new Model(entity, { resource: this, annots, reset }) as M;
   }
 
   //#region Inmutable Resource

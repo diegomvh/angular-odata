@@ -50,6 +50,13 @@ export abstract class ODataResource<T> {
   }
 
   /**
+   * @returns string The type of the return
+   */
+  returnType() {
+    return this.pathSegments.last()?.type();
+  }
+
+  /**
    * @returns string All covered types of the resource
    */
   types(): string[] {
@@ -61,6 +68,10 @@ export abstract class ODataResource<T> {
    */
   hasKey() {
     return Boolean(this.pathSegments.last({key: true})?.hasKey());
+  }
+
+  clearKey() {
+    return this.pathSegments.last({key: true})?.clearKey();
   }
 
   isSubtypeOf(other: ODataResource<any>) {

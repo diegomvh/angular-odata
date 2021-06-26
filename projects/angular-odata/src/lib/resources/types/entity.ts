@@ -35,11 +35,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
-    let schema = this.schema();
-    if (annots?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType<T>(annots.type);
-    }
-    const Model = schema?.model || ODataModel;
+    const type = annots?.type || this.type();
+    const Model = this.api.modelForType(type);
     return new Model(entity, { resource: this, annots, reset }) as M;
   }
 

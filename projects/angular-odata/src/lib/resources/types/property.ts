@@ -38,23 +38,14 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
-    let schema = this.schema();
-    if (annots?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(annots.type);
-    }
-    const Model = schema?.model || ODataModel;
-    return new Model(entity, {resource: this, annots, reset}) as M;
+    const type = annots?.type || this.type();
+    const Model = this.api.modelForType(type);
+    return new Model(entity, { resource: this, annots, reset }) as M;
   }
 
-  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
-    entities: Partial<T>[] | {[name: string]: any}[],
-    {annots, reset}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}
-  ): C {
-    let schema = this.schema();
-    if (annots?.type !== undefined) {
-      schema = this.api.findStructuredTypeForType(annots.type);
-    }
-    const Collection = schema?.collection || ODataCollection;
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[] | {[name: string]: any}[], {annots, reset}: {annots?: ODataEntitiesAnnotations, reset?: boolean} = {}): C {
+    const type = annots?.type || this.type();
+    const Collection = this.api.collectionForType(type);
     return new Collection(entities, {resource: this, annots, reset}) as C;
   }
 

@@ -269,8 +269,12 @@ export class ODataModel<T> {
       return throwError("save: Resource is undefined");
     if (!(resource instanceof ODataEntityResource))
       return throwError("save: Resource type ODataEntityResource needed");
-    if (method === undefined && this.schema().isCompoundKey())
-      return throwError("Composite key require a specific method, use create/update/patch");
+    if (this.schema().isCompoundKey()) {
+      if (method === undefined)
+        return throwError("Composite key require a specific method, use create/update/patch");
+      else if (method === 'create' && resource.hasKey())
+        resource.clearKey();
+    }
 
     if (method === undefined) {
       method = !resource.hasKey() ? 'create' : 'update';

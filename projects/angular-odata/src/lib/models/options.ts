@@ -494,7 +494,7 @@ export class ODataModelOptions<T> {
       );
 
     const current = self._resource;
-    if (current === undefined || !current.isEqualTo(resource)) {
+    if (current === undefined || (!current.isEqualTo(resource) && !current.isParentOf(resource))) {
       self._resource = resource;
       this._pushToRelations(self);
       self.events$.emit({
@@ -850,8 +850,8 @@ export class ODataModelOptions<T> {
     Object.entries(entity).forEach(([key, value]) => {
       const name = self._resetting && this.fields().find((p) => p.field === key)?.name || key;
 
-      value = this.isModel(value) ? (value as ODataModel<any>).toEntity({client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true}) :
-        this.isCollection(value) ? (value as ODataCollection<any, ODataModel<any>>).toEntities({client_id: true, include_computed: true, include_key: true, include_concurrency: true, include_navigation: true}) :
+      value = this.isModel(value) ? (value as ODataModel<any>).toEntity(INCLUDE_ALL) :
+        this.isCollection(value) ? (value as ODataCollection<any, ODataModel<any>>).toEntities(INCLUDE_ALL) :
         value;
       const current = model[name];
       if (this.isCollection(current) && Types.isArray(value)) {
@@ -920,80 +920,57 @@ export class ODataModelOptions<T> {
   private _set<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
-    value: F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null
+    value: F | F[] | { [name: string]: any } | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null
   ) {
     if (field.isStructuredType()) {
-      let newModel = value as
-        | ODataModel<F>
-        | ODataCollection<F, ODataModel<F>>
-        | null;
-      const relation = self._relations[field.name];
-      if (relation !== undefined && relation.subscription !== null) {
-        relation.subscription.unsubscribe();
+      if (!(field.name in self._relations)) {
+        self._relations[field.name] = { state: ODataModelState.Unchanged, model: null, property: field, subscription: null };
       }
-      const currentModel = relation?.model as
+      const relation = self._relations[field.name];
+      value = this.isModel(value) ? (value as ODataModel<F>).toEntity(INCLUDE_ALL) :
+        this.isCollection(value) ? (value as ODataCollection<F, ODataModel<F>>).toEntities(INCLUDE_ALL) :
+        value;
+      if (value === null && relation.subscription !== null) {
+        relation.subscription.unsubscribe();
+        relation.subscription = null;
+      }
+      const currentModel = relation.model as
         | ODataModel<any>
         | ODataCollection<any, ODataModel<any>>
         | null;
-      if (newModel !== null) {
-        const selfResource = self.resource();
-        const selfSchema = self.schema();
-        const selfAnnots = self.annots();
-        if (
-          !(
-            this.isModel(newModel) || this.isCollection(newModel)
-          )
-        ) {
-          newModel = field.modelCollectionFactory<T, F>({
-            value: value as F,
+      if (value !== null) {
+        if (this.isCollection(currentModel) && Types.isArray(value)) {
+          // Current is collection
+          (currentModel as ODataCollection<F, ODataModel<F>>).assign(value as F[], {reset: self._resetting, silent: self._silent});
+          if ((currentModel as ODataCollection<F, ODataModel<F>>).hasChanged()) relation.state = self._resetting ? ODataModelState.Unchanged : ODataModelState.Changed;
+        } else if (this.isModel(currentModel) && Types.isObject(value)) {
+          // Current is model
+          (currentModel as ODataModel<F>).assign(value as F, {reset: self._resetting, silent: self._silent});
+          if ((currentModel as ODataModel<F>).hasChanged()) relation.state = self._resetting ? ODataModelState.Unchanged : ODataModelState.Changed;
+        } else if (currentModel === null && (Types.isArray(value) || Types.isObject(value))) {
+          relation.model = value = field.modelCollectionFactory<T, F>({
+            value: value,
             reset: self._resetting,
-            baseResource: selfResource,
-            baseSchema: selfSchema,
-            baseAnnots: selfAnnots,
+            baseResource: self.resource(),
+            baseSchema: self.schema(),
+            baseAnnots: self.annots(),
           });
-        } else if (
-          newModel.resource() === undefined &&
-          selfResource !== undefined &&
-          selfResource.hasKey()
-        ) {
-          const resource = field.resourceFactory<T, F>(selfResource);
-          const annots = field.annotationsFactory(selfAnnots);
-          newModel.resource(resource);
-          if (this.isModel(newModel))
-            (newModel as ODataModel<F>).annots(annots as ODataEntityAnnotations);
-          else if (this.isCollection(newModel))
-            (newModel as ODataCollection<F, ODataModel<F>>).annots(annots as ODataEntitiesAnnotations);
+          relation.state = self._resetting ? ODataModelState.Unchanged : ODataModelState.Changed;
+          relation.subscription = this._subscribe(self, field, value as ODataModel<F> | ODataCollection<F, ODataModel<F>>);
+          if (this.isModel(value)) {
+            var ref = (value as ODataModel<F>).referential(field);
+            if (ref !== undefined) { self.assign(ref); }
+          }
         }
-
-        const newModelResource = newModel.resource();
-        if (
-          newModelResource !== undefined &&
-          newModelResource.type() !== field.type
-        )
-          throw new Error(
-            `Can't set ${newModelResource.type()} to ${field.type}`
-          );
       }
-      self._relations[field.name] = {
-        state: self._resetting
-          ? ODataModelState.Unchanged
-          : ODataModelState.Changed,
-        model: newModel,
-        property: field,
-        subscription: newModel && this._subscribe(self, field, newModel),
-      };
-      if (!self._silent) {
+      if (!self._silent && value !== currentModel && (value === null || currentModel === null)) {
         self.events$.emit({
           name: 'change',
           path: field.name,
           model: self,
-          value: newModel,
+          value: value,
           previous: currentModel,
         });
-      }
-      if (this.isModel(newModel)) {
-        var ref = (newModel as ODataModel<any>).referential(field);
-        if (ref !== undefined) { self.assign(ref); }
       }
     } else {
       const attrs = this.attributes(self, {include_computed: true, include_concurrency: true});

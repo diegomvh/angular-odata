@@ -42,15 +42,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return this.schema()?.parser.return?.type;
   }
 
-  asModel<M extends ODataModel<R>>(entity: Partial<R> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<R>>(entity: Partial<R> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?:boolean} = {}): M {
     let resource: ODataEntityResource<R> | undefined;
-    // TODO: Structured Only?
-    let schema: ODataStructuredType<R> | undefined;
-    let type = annots?.type || this.returnType();
-    if (type !== undefined) {
-      schema = this.api.findStructuredTypeForType(type);
-    }
-    let Model = schema?.model || ODataModel;
+    const type = annots?.type || this.returnType();
+    const Model = this.api.modelForType(type);
     let path = annots?.context.entitySet;
     if (path !== undefined) {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery())
@@ -59,18 +54,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new Model(entity, {resource, annots, reset}) as M;
   }
 
-  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
-    entities: Partial<R>[] | {[name: string]: any}[],
-    {annots, reset=false}: {annots?: ODataEntitiesAnnotations, reset?: boolean} = {}
-  ): C {
+  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(entities: Partial<R>[] | {[name: string]: any}[], {annots, reset}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}): C {
     let resource: ODataEntitySetResource<R> | undefined;
-    // TODO: Structured Only?
-    let schema: ODataStructuredType<R> | undefined;
-    let type = annots?.type || this.returnType();
-    if (type !== undefined) {
-      schema = this.api.findStructuredTypeForType(type);
-    }
-    let Collection = schema?.collection || ODataCollection;
+    const type = annots?.type || this.returnType();
+    const Collection = this.api.collectionForType(type);
     let path = annots?.context.entitySet;
     if (path !== undefined) {
       resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery());

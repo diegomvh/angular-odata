@@ -41,6 +41,7 @@ function pathSegmentsBuilder(
     return [path, params];
   } else {
     let key = segment.key;
+    // HACK: Check guid string
     if (
       typeof key === 'string' &&
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
@@ -166,11 +167,17 @@ export class SegmentHandler {
   hasKey() {
     return !Types.isEmpty(this.segment.key);
   }
+  clearKey() {
+    delete this.segment.key;
+  }
   parameters<T>(value?: T) {
     if (value !== undefined) this.segment.parameters = value;
     return this.segment.parameters as T;
   }
   hasParameters() {
     return !Types.isEmpty(this.segment.parameters);
+  }
+  clearParameters() {
+    delete this.segment.parameters;
   }
 }
