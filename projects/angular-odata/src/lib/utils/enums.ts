@@ -1,4 +1,4 @@
-export const EnumHelper = {
+export const Enums = {
   names<E>(Enum: E): string[] {
     return Object.keys(Enum).filter(k => typeof (Enum as any)[k] === 'number');
   },

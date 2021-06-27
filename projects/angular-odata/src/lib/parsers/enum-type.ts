@@ -1,4 +1,4 @@
-import { EnumHelper } from '../helpers';
+import { Enums } from '../utils';
 import { raw } from '../resources/builder';
 import { ODataAnnotation } from '../schema/annotation';
 import { EnumTypeConfig, Parser, OptionsHelper, EnumTypeFieldConfig } from '../types';
@@ -56,9 +56,9 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     // string -> Type
     options = options || this.optionsHelper;
     if (this.flags) {
-      return EnumHelper.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
+      return Enums.toValues(this.members, value).reduce((acc, v) => acc | v, 0) as any;
     } else {
-      return EnumHelper.toValue(this.members, value) as any;
+      return Enums.toValue(this.members, value) as any;
     }
   }
 
@@ -67,12 +67,12 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     // Type -> string
     options = options || this.optionsHelper;
     if (this.flags) {
-      let names = EnumHelper.toNames(this.members, value);
+      let names = Enums.toNames(this.members, value);
       if (!options?.stringAsEnum)
         names = names.map(name => `${this.namespace}.${this.name}'${name}'`)
       return names.join(", ");
     } else {
-      let name = EnumHelper.toName(this.members, (<any>value) as number);
+      let name = Enums.toName(this.members, (<any>value) as number);
       if (!options?.stringAsEnum)
         name = `${this.namespace}.${this.name}'${name}'`;
       return name;
@@ -104,7 +104,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     navigation?: boolean
   } = {}): string[] | undefined {
     if (this.flags) {
-      let members = EnumHelper.toValues(this.members, member);
+      let members = Enums.toValues(this.members, member);
       return members.some(member => !(member in this.members)) ? ['mismatch'] : undefined;
     } else {
       return (!(member in this.members)) ? ['mismatch'] : undefined;
