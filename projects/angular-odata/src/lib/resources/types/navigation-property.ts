@@ -1,101 +1,163 @@
-import { EntityKey, ODataResource } from '../resource';
-import { Expand, Select, Transform, Filter, OrderBy, isQueryCustomType } from '../builder';
-import { QueryOptionNames } from '../query-options';
-
-import { ODataReferenceResource } from './reference';
-import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { Observable, EMPTY } from 'rxjs';
-import { ODataCountResource } from './count';
-import { ODataPropertyResource } from './property';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
-import { ODataEntities, ODataEntitiesAnnotations, ODataEntity, ODataEntityAnnotations } from '../responses';
-import { ODataValueResource } from './value';
+
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { Types } from '../../utils/types';
 import { Objects } from '../../utils';
+import { EntityKey, ODataResource } from '../resource';
+import {
+  Expand,
+  Select,
+  Transform,
+  Filter,
+  OrderBy,
+  isQueryCustomType,
+} from '../builder';
+import {
+  ODataEntities,
+  ODataEntitiesAnnotations,
+  ODataEntity,
+  ODataEntityAnnotations,
+} from '../responses';
+import { ODataQueryOptions } from '../query-options';
+import { QueryOptionNames } from '../query-options';
+import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataReferenceResource } from './reference';
+import { ODataCountResource } from './count';
+import { ODataPropertyResource } from './property';
+import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
+import { ODataValueResource } from './value';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.add(PathSegmentNames.navigationProperty, path)
-    if (type)
-      segment.type(type);
+  static factory<E>(
+    api: ODataApi,
+    path: string,
+    type: string | undefined,
+    segments: ODataPathSegments,
+    options: ODataQueryOptions
+  ) {
+    const segment = segments.add(PathSegmentNames.navigationProperty, path);
+    if (type) segment.type(type);
     options.keep(QueryOptionNames.format);
     return new ODataNavigationPropertyResource<E>(api, segments, options);
   }
   //#endregion
 
   clone() {
-    return new ODataNavigationPropertyResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
+    return new ODataNavigationPropertyResource<T>(
+      this.api,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   schema() {
     let type = this.type();
-    return (type !== undefined) ?
-      this.api.findStructuredTypeForType<T>(type) :
-      undefined;
+    return type !== undefined
+      ? this.api.findStructuredTypeForType<T>(type)
+      : undefined;
   }
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<T>>(
+    entity: Partial<T> | { [name: string]: any },
+    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
+  ): M {
     const type = annots?.type || this.type();
     const Model = this.api.modelForType(type);
     return new Model(entity, { resource: this, annots, reset }) as M;
   }
 
-  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(entities: Partial<T>[] | {[name: string]: any}[], {annots, reset}: {annots?: ODataEntitiesAnnotations, reset?: boolean} = {}): C {
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+    entities: Partial<T>[] | { [name: string]: any }[],
+    {
+      annots,
+      reset,
+    }: { annots?: ODataEntitiesAnnotations; reset?: boolean } = {}
+  ): C {
     const type = annots?.type || this.type();
     const Collection = this.api.collectionForType(type);
-    return new Collection(entities, {resource: this, annots, reset}) as C;
+    return new Collection(entities, { resource: this, annots, reset }) as C;
   }
 
   //#region Inmutable Resource
   key(value: any) {
     const navigation = this.clone();
     var key = this.resolveKey(value);
-    if (key !== undefined)
-      navigation.segment.navigationProperty().key(key);
+    if (key !== undefined) navigation.segment.navigationProperty().key(key);
     return navigation;
   }
 
   value() {
-    return ODataValueResource.factory<T>(this.api, this.type(), this.cloneSegments(), this.cloneQuery());
+    return ODataValueResource.factory<T>(
+      this.api,
+      this.type(),
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   reference() {
-    return ODataReferenceResource.factory(this.api, this.cloneSegments(), this.cloneQuery());
+    return ODataReferenceResource.factory(
+      this.api,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<N>(type);
-      type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : undefined;
+      type =
+        parser instanceof ODataStructuredTypeParser
+          ? parser.typeFor(path)
+          : undefined;
     }
-    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataNavigationPropertyResource.factory<N>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   property<P>(path: string) {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
-      type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : undefined;
+      type =
+        parser instanceof ODataStructuredTypeParser
+          ? parser.typeFor(path)
+          : undefined;
     }
-    return ODataPropertyResource.factory<P>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataPropertyResource.factory<P>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   count() {
-    return ODataCountResource.factory(this.api, this.cloneSegments(), this.cloneQuery());
+    return ODataCountResource.factory(
+      this.api,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   cast<C>(type: string) {
     let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataNavigationPropertyResource<C>(this.api, segments, this.cloneQuery());
+    return new ODataNavigationPropertyResource<C>(
+      this.api,
+      segments,
+      this.cloneQuery()
+    );
   }
 
   select(opts: Select<T>) {
@@ -171,8 +233,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       },
       navigationProperty() {
         return segments.get(PathSegmentNames.navigationProperty);
-      }
-    }
+      },
+    };
   }
 
   /**
@@ -195,41 +257,67 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Shortcuts
   fetch(options?: HttpEntityOptions): Observable<ODataEntity<T>>;
   fetch(options?: HttpEntitiesOptions): Observable<ODataEntities<T>>;
-  fetch(options: HttpEntityOptions & HttpEntitiesOptions & { etag?: string } = {}): Observable<any> {
+  fetch(
+    options: HttpEntityOptions & HttpEntitiesOptions & { etag?: string } = {}
+  ): Observable<any> {
     return this.get(options);
   }
 
-  fetchEntity(options: HttpOptions & { etag?: string } = {}): Observable<T | null> {
-    return this.fetch({ responseType: 'entity', ...options}).pipe(map(({entity}) => entity));
+  fetchEntity(
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<T | null> {
+    return this.fetch({ responseType: 'entity', ...options }).pipe(
+      map(({ entity }) => entity)
+    );
   }
 
-  fetchModel(options: HttpOptions & { etag?: string } = {}): Observable<ODataModel<T> | null> {
-    return this.fetch({ responseType: 'entity', ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
+  fetchModel(
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataModel<T> | null> {
+    return this.fetch({ responseType: 'entity', ...options }).pipe(
+      map(({ entity, annots }) =>
+        entity ? this.asModel(entity, { annots, reset: true }) : null
+      )
+    );
   }
 
   fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
-    return this.fetch({ responseType: 'entities', ...options}).pipe(map(({entities}) => entities));
+    return this.fetch({ responseType: 'entities', ...options }).pipe(
+      map(({ entities }) => entities)
+    );
   }
 
-  fetchCollection(options: HttpOptions & { withCount?: boolean } = {}): Observable<ODataCollection<T, ODataModel<T>> | null> {
-    return this.fetch({responseType: 'entities', ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, {annots, reset: true}) : null));
+  fetchCollection(
+    options: HttpOptions & { withCount?: boolean } = {}
+  ): Observable<ODataCollection<T, ODataModel<T>> | null> {
+    return this.fetch({ responseType: 'entities', ...options }).pipe(
+      map(({ entities, annots }) =>
+        entities ? this.asCollection(entities, { annots, reset: true }) : null
+      )
+    );
   }
 
   fetchAll(options: HttpOptions = {}): Observable<T[]> {
     let res = this.clone();
     // Clean Paging
     res.query.clearPaging();
-    let fetch = (opts?: { skip?: number, skiptoken?: string, top?: number }): Observable<ODataEntities<T>> => {
+    let fetch = (opts?: {
+      skip?: number;
+      skiptoken?: string;
+      top?: number;
+    }): Observable<ODataEntities<T>> => {
       if (opts) {
         res.query.paging(opts);
       }
-      return res.get({responseType: 'entities', ...options});
-    }
-    return fetch()
-      .pipe(
-        expand(({annots: meta}) => (meta.skip || meta.skiptoken) ? fetch(meta) : EMPTY),
-        concatMap(({entities}) => entities || []),
-        toArray());
+      return res.get({ responseType: 'entities', ...options });
+    };
+    return fetch().pipe(
+      expand(({ annots: meta }) =>
+        meta.skip || meta.skiptoken ? fetch(meta) : EMPTY
+      ),
+      concatMap(({ entities }) => entities || []),
+      toArray()
+    );
   }
   //#endregion
 }

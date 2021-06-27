@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ODataResource } from '../resource';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { map } from 'rxjs/operators';
 import { HttpOptions } from './options';
 import { ODataMetadata } from '../responses';
 import { $METADATA } from '../../constants';
@@ -17,7 +17,9 @@ export class ODataMetadataResource extends ODataResource<any> {
     return new ODataMetadataResource(this.api, this.cloneSegments());
   }
 
-  schema() { return undefined; }
+  schema() {
+    return undefined;
+  }
 
   //#region Factory
   static factory(api: ODataApi) {
@@ -29,7 +31,9 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   //#region Requests
   get(options?: HttpOptions): Observable<ODataMetadata> {
-    return super.get({responseType: 'text', ...options}).pipe(map((body: any) => new ODataMetadata(body)));
+    return super
+      .get({ responseType: 'text', ...options })
+      .pipe(map((body: any) => new ODataMetadata(body)));
   }
   //#endregion
 

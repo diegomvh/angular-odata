@@ -1,4 +1,5 @@
 import { Observable, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
@@ -11,30 +12,44 @@ import { EntityKey, ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { ODataValueResource } from './value';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
-import { map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<E>(api: ODataApi, segments: ODataPathSegments, options: ODataQueryOptions) {
-    options.keep(QueryOptionNames.expand, QueryOptionNames.select, QueryOptionNames.format);
+  static factory<E>(
+    api: ODataApi,
+    segments: ODataPathSegments,
+    options: ODataQueryOptions
+  ) {
+    options.keep(
+      QueryOptionNames.expand,
+      QueryOptionNames.select,
+      QueryOptionNames.format
+    );
     return new ODataEntityResource<E>(api, segments, options);
   }
   //#endregion
 
   clone() {
-    return new ODataEntityResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
+    return new ODataEntityResource<T>(
+      this.api,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   schema() {
     let type = this.type();
-    return (type !== undefined) ?
-      this.api.findStructuredTypeForType<T>(type) :
-      undefined;
+    return type !== undefined
+      ? this.api.findStructuredTypeForType<T>(type)
+      : undefined;
   }
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<T>>(
+    entity: Partial<T> | { [name: string]: any },
+    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
+  ): M {
     const type = annots?.type || this.type();
     const Model = this.api.modelForType(type);
     return new Model(entity, { resource: this, annots, reset }) as M;
@@ -44,33 +59,53 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   key(value: any) {
     const entity = this.clone();
     var key = this.resolveKey(value);
-    if (key !== undefined)
-      entity.segment.entitySet().key(key);
+    if (key !== undefined) entity.segment.entitySet().key(key);
     return entity;
   }
 
   value() {
-    return ODataValueResource.factory<T>(this.api, this.type(), this.cloneSegments(), this.cloneQuery());
+    return ODataValueResource.factory<T>(
+      this.api,
+      this.type(),
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<N>(type);
-      type = parser instanceof ODataStructuredTypeParser ?
-        parser.typeFor(path) : undefined;
+      type =
+        parser instanceof ODataStructuredTypeParser
+          ? parser.typeFor(path)
+          : undefined;
     }
-    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataNavigationPropertyResource.factory<N>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   property<P>(path: string) {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
-      type = parser instanceof ODataStructuredTypeParser ?
-        parser.typeFor(path) : undefined;
+      type =
+        parser instanceof ODataStructuredTypeParser
+          ? parser.typeFor(path)
+          : undefined;
     }
-    return ODataPropertyResource.factory<P>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataPropertyResource.factory<P>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   action<P, R>(name: string) {
@@ -81,7 +116,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataActionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataActionResource.factory<P, R>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   function<P, R>(name: string) {
@@ -92,7 +133,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataFunctionResource.factory<P, R>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   //TODO: Check
@@ -127,8 +174,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return {
       entitySet() {
         return segments.get(PathSegmentNames.entitySet);
-      }
-    }
+      },
+    };
   }
 
   get query() {
@@ -137,31 +184,41 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
-    return super.get({responseType: 'entity', ...options});
+  get(
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.get({ responseType: 'entity', ...options });
   }
 
-  post(attrs: Partial<T>, options: HttpOptions = {}): Observable<ODataEntity<T>> {
-    return super.post(attrs, {responseType: 'entity', ...options});
+  post(
+    attrs: Partial<T>,
+    options: HttpOptions = {}
+  ): Observable<ODataEntity<T>> {
+    return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  put(attrs: Partial<T>, options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
-    return super.put(attrs, {responseType: 'entity', ...options});
+  put(
+    attrs: Partial<T>,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.put(attrs, { responseType: 'entity', ...options });
   }
 
-  patch(attrs: Partial<T>, options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
-    return super.patch(attrs, {responseType: 'entity', ...options});
+  patch(
+    attrs: Partial<T>,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
   delete(options: HttpOptions & { etag?: string } = {}): Observable<any> {
-    return super.delete({responseType: 'entity', ...options});
+    return super.delete({ responseType: 'entity', ...options });
   }
   //#endregion
 
   //#region Shortcuts
   fetch(options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
-    if (!this.hasKey())
-      return throwError("Entity resource without key");
+    if (!this.hasKey()) return throwError('Entity resource without key');
     return this.get(options);
   }
 
@@ -169,8 +226,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
   }
 
-  fetchModel(options?: HttpOptions & { etag?: string }): Observable<ODataModel<T> | null> {
-    return this.fetch(options).pipe(map(({ entity, annots }) => entity ? this.asModel(entity, { annots, reset: true }) : null));
+  fetchModel(
+    options?: HttpOptions & { etag?: string }
+  ): Observable<ODataModel<T> | null> {
+    return this.fetch(options).pipe(
+      map(({ entity, annots }) =>
+        entity ? this.asModel(entity, { annots, reset: true }) : null
+      )
+    );
   }
   //#endregion
 }

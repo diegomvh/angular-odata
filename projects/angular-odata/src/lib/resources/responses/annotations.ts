@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { DEFAULT_VERSION, ETAG_HEADER, ODATA_ENTITYID } from '../../constants';
-import { ODataContext, ODataHelper } from '../../helpers';
+import { ODataContext, ODataHelper } from '../../helper';
 import { OptionsHelper } from '../../types';
 
 export abstract class ODataAnnotations {

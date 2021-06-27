@@ -1,4 +1,4 @@
-import { VERSION_3_0, VERSION_2_0, VERSION_4_0, $COUNT, $INLINECOUNT } from '../constants';
+import { VERSION_3_0, VERSION_2_0, VERSION_4_0, $COUNT, $INLINECOUNT } from './constants';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 

@@ -6,7 +6,6 @@ import { ODataApi } from '../api';
 import { SchemaConfig, Parser, CallableConfig } from '../types';
 import { ODataEntitySet } from './entity-set';
 import { ODataAnnotation } from './annotation';
-import { ODataModelOptions } from '../models/options';
 
 export class ODataSchema {
   api: ODataApi;
@@ -75,7 +74,7 @@ export class ODataSchema {
 
   configure({findOptionsForType, findParserForType}: {
     findParserForType: (type: string) => Parser<any>,
-    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined
+    findOptionsForType: (type: string) => any
   }) {
     // Configure Enums
     this.enums

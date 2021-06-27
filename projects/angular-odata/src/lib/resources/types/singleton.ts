@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Expand, isQueryCustomType, Select } from '../builder';
 import { QueryOptionNames } from '../query-options';
@@ -13,7 +14,6 @@ import { ODataFunctionResource } from './function';
 import { HttpOptions } from './options';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
-import { map } from 'rxjs/operators';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
 import { Types } from '../../utils/types';

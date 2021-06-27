@@ -1,4 +1,5 @@
 import { EMPTY, Observable } from 'rxjs';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
 
 import { ODataValueResource } from './value';
 
@@ -7,7 +8,6 @@ import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { HttpPropertyOptions, HttpEntitiesOptions, HttpEntityOptions, HttpOptions } from './options';
 import { ODataProperty, ODataEntities, ODataEntity, ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
-import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';

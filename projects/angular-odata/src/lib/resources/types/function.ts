@@ -1,12 +1,24 @@
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpPropertyOptions, HttpOptions, HttpNoneOptions } from './options';
+import {
+  HttpEntityOptions,
+  HttpEntitiesOptions,
+  HttpPropertyOptions,
+  HttpOptions,
+  HttpNoneOptions,
+} from './options';
 
-import { ODataEntity, ODataEntities, ODataProperty, ODataEntityAnnotations, ODataEntitiesAnnotations } from '../responses';
+import {
+  ODataEntity,
+  ODataEntities,
+  ODataProperty,
+  ODataEntityAnnotations,
+  ODataEntitiesAnnotations,
+} from '../responses';
 import { ODataApi } from '../../api';
-import { map } from 'rxjs/operators';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
@@ -18,65 +30,98 @@ import { alias as functionAlias } from '../builder';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
-  static factory<P, R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
+  static factory<P, R>(
+    api: ODataApi,
+    path: string,
+    type: string | undefined,
+    segments: ODataPathSegments,
+    options: ODataQueryOptions
+  ) {
     const segment = segments.add(PathSegmentNames.function, path);
-    if (type)
-      segment.type(type);
+    if (type) segment.type(type);
     options.clear();
     return new ODataFunctionResource<P, R>(api, segments, options);
   }
   //#endregion
 
   clone() {
-    return new ODataFunctionResource<P, R>(this.api, this.cloneSegments(), this.cloneQuery());
+    return new ODataFunctionResource<P, R>(
+      this.api,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   schema() {
     let type = this.type();
-    return (type !== undefined) ?
-      this.api.findCallableForType<R>(type) :
-      undefined;
+    return type !== undefined
+      ? this.api.findCallableForType<R>(type)
+      : undefined;
   }
 
   returnType() {
     return this.schema()?.parser.return?.type;
   }
 
-  asModel<M extends ODataModel<R>>(entity: Partial<R> | {[name: string]: any}, {annots, reset}: { annots?: ODataEntityAnnotations, reset?:boolean} = {}): M {
+  asModel<M extends ODataModel<R>>(
+    entity: Partial<R> | { [name: string]: any },
+    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
+  ): M {
     let resource: ODataEntityResource<R> | undefined;
     const type = annots?.type || this.returnType();
     const Model = this.api.modelForType(type);
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery())
-        .entity(entity as Partial<R>);
+      resource = ODataEntitySetResource.factory<R>(
+        this.api,
+        path,
+        type,
+        new ODataPathSegments(),
+        this.cloneQuery()
+      ).entity(entity as Partial<R>);
     }
-    return new Model(entity, {resource, annots, reset}) as M;
+    return new Model(entity, { resource, annots, reset }) as M;
   }
 
-  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(entities: Partial<R>[] | {[name: string]: any}[], {annots, reset}: { annots?: ODataEntitiesAnnotations, reset?: boolean} = {}): C {
+  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
+    entities: Partial<R>[] | { [name: string]: any }[],
+    {
+      annots,
+      reset,
+    }: { annots?: ODataEntitiesAnnotations; reset?: boolean } = {}
+  ): C {
     let resource: ODataEntitySetResource<R> | undefined;
     const type = annots?.type || this.returnType();
     const Collection = this.api.collectionForType(type);
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(this.api, path, type, new ODataPathSegments(), this.cloneQuery());
+      resource = ODataEntitySetResource.factory<R>(
+        this.api,
+        path,
+        type,
+        new ODataPathSegments(),
+        this.cloneQuery()
+      );
     }
-    return new Collection(entities, {resource, annots, reset}) as C;
+    return new Collection(entities, { resource, annots, reset }) as C;
   }
 
   //#region Inmutable Resource
-  parameters(params: P | null, {alias}: {alias?:boolean} = {}) {
+  parameters(params: P | null, { alias }: { alias?: boolean } = {}) {
     const segments = this.cloneSegments();
     const segment = segments.get(PathSegmentNames.function);
-    let parameters =  params !== null ? this.encode(params) : null;
+    let parameters = params !== null ? this.encode(params) : null;
     if (alias && parameters !== null) {
       parameters = Object.entries(parameters).reduce((acc, [name, param]) => {
-        return Object.assign(acc, {[name]: functionAlias(param, name)});
+        return Object.assign(acc, { [name]: functionAlias(param, name) });
       }, {});
     }
     segment.parameters(parameters);
-    return new ODataFunctionResource<P, R>(this.api, segments, this.cloneQuery());
+    return new ODataFunctionResource<P, R>(
+      this.api,
+      segments,
+      this.cloneQuery()
+    );
   }
 
   select(opts: Select<R>) {
@@ -152,8 +197,8 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       },
       function() {
         return segments.get(PathSegmentNames.function);
-      }
-    }
+      },
+    };
   }
 
   /**
@@ -169,38 +214,104 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   get(options?: HttpEntityOptions): Observable<ODataEntity<R>>;
   get(options?: HttpEntitiesOptions): Observable<ODataEntities<R>>;
   get(options?: HttpPropertyOptions): Observable<ODataProperty<R>>;
-  get(options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions): Observable<any> {
+  get(
+    options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions
+  ): Observable<any> {
     return super.get(options);
   }
   //#endregion
 
   //#region Shortcuts
-  call(params: P | null, options?: {alias?:boolean} & HttpEntityOptions): Observable<ODataEntity<R>>;
-  call(params: P | null, options?: {alias?:boolean} & HttpEntitiesOptions): Observable<ODataEntities<R>>;
-  call(params: P | null, options?: {alias?:boolean} & HttpPropertyOptions): Observable<ODataProperty<R>>;
-  call(params: P | null, options?: {alias?:boolean} & HttpNoneOptions): Observable<null>;
-  call(params: P | null, {alias, ...options}: {alias?:boolean} & HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions & HttpNoneOptions = {}): Observable<any> {
-    return this.parameters(params, {alias}).get(options);
+  call(
+    params: P | null,
+    options?: { alias?: boolean } & HttpEntityOptions
+  ): Observable<ODataEntity<R>>;
+  call(
+    params: P | null,
+    options?: { alias?: boolean } & HttpEntitiesOptions
+  ): Observable<ODataEntities<R>>;
+  call(
+    params: P | null,
+    options?: { alias?: boolean } & HttpPropertyOptions
+  ): Observable<ODataProperty<R>>;
+  call(
+    params: P | null,
+    options?: { alias?: boolean } & HttpNoneOptions
+  ): Observable<null>;
+  call(
+    params: P | null,
+    {
+      alias,
+      ...options
+    }: { alias?: boolean } & HttpEntityOptions &
+      HttpEntitiesOptions &
+      HttpPropertyOptions &
+      HttpNoneOptions = {}
+  ): Observable<any> {
+    return this.parameters(params, { alias }).get(options);
   }
 
-  callProperty(params: P | null, {alias, ...options}: {alias?:boolean} & HttpOptions = {}): Observable<R | null> {
-    return this.call(params, {responseType: 'property', alias, ...options}).pipe(map(({property}) => property));
+  callProperty(
+    params: P | null,
+    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+  ): Observable<R | null> {
+    return this.call(params, {
+      responseType: 'property',
+      alias,
+      ...options,
+    }).pipe(map(({ property }) => property));
   }
 
-  callEntity(params: P | null, {alias, ...options}: {alias?:boolean} & HttpOptions = {}): Observable<R | null> {
-    return this.call(params, {responseType: 'entity', alias, ...options}).pipe(map(({entity}) => entity));
+  callEntity(
+    params: P | null,
+    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+  ): Observable<R | null> {
+    return this.call(params, {
+      responseType: 'entity',
+      alias,
+      ...options,
+    }).pipe(map(({ entity }) => entity));
   }
 
-  callModel(params: P | null, {alias, ...options}: {alias?:boolean} & HttpOptions = {}): Observable<ODataModel<R> | null> {
-    return this.call(params, {responseType: 'entity', alias, ...options}).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
+  callModel(
+    params: P | null,
+    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+  ): Observable<ODataModel<R> | null> {
+    return this.call(params, {
+      responseType: 'entity',
+      alias,
+      ...options,
+    }).pipe(
+      map(({ entity, annots }) =>
+        entity ? this.asModel(entity, { annots, reset: true }) : null
+      )
+    );
   }
 
-  callEntities(params: P | null, {alias, ...options}: {alias?:boolean} & HttpOptions = {}): Observable<R[] | null> {
-    return this.call(params, {responseType: 'entities', alias, ...options}).pipe(map(({entities}) => entities));
+  callEntities(
+    params: P | null,
+    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+  ): Observable<R[] | null> {
+    return this.call(params, {
+      responseType: 'entities',
+      alias,
+      ...options,
+    }).pipe(map(({ entities }) => entities));
   }
 
-  callCollection(params: P | null, {alias, ...options}: {alias?:boolean} & HttpOptions = {}): Observable<ODataCollection<R, ODataModel<R>> | null> {
-    return this.call(params, {responseType: 'entities', alias, ...options}).pipe(map(({entities, annots}) => entities ? this.asCollection(entities, { annots, reset: true }) : null));
+  callCollection(
+    params: P | null,
+    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+  ): Observable<ODataCollection<R, ODataModel<R>> | null> {
+    return this.call(params, {
+      responseType: 'entities',
+      alias,
+      ...options,
+    }).pipe(
+      map(({ entities, annots }) =>
+        entities ? this.asCollection(entities, { annots, reset: true }) : null
+      )
+    );
   }
   //#endregion
 }
