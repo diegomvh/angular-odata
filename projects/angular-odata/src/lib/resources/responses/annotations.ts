@@ -4,19 +4,25 @@ import { ODataContext, ODataHelper } from '../../helper';
 import { OptionsHelper } from '../../types';
 
 export abstract class ODataAnnotations {
-  annotations: {[annot: string]: any};
+  annotations: { [annot: string]: any };
   options?: OptionsHelper;
   protected get odv() {
     return this.options?.helper || ODataHelper[DEFAULT_VERSION];
   }
-  constructor({ data = {}, options, headers }: {
-    data?: {[name: string]: any}, options?: OptionsHelper, headers?: HttpHeaders } = {}) {
+  constructor({
+    data = {},
+    options,
+    headers,
+  }: {
+    data?: { [name: string]: any };
+    options?: OptionsHelper;
+    headers?: HttpHeaders;
+  } = {}) {
     this.options = options;
     this.annotations = this.options ? this.odv.annotations(data) : data;
     if (headers) {
       const etag = headers.get(ETAG_HEADER);
-      if (etag)
-        this.odv.etag(this.annotations, etag);
+      if (etag) this.odv.etag(this.annotations, etag);
       const entityId = headers.get(ODATA_ENTITYID);
       if (entityId) {
         this.odv.id(this.annotations, entityId);
@@ -51,7 +57,10 @@ export abstract class ODataAnnotations {
 
 export class ODataPropertyAnnotations extends ODataAnnotations {
   clone(): ODataPropertyAnnotations {
-    return new ODataPropertyAnnotations({ data: Object.assign({}, this.annotations), options: this.options });
+    return new ODataPropertyAnnotations({
+      data: Object.assign({}, this.annotations),
+      options: this.options,
+    });
   }
 
   data(data: Object) {
@@ -65,7 +74,10 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
 
 export class ODataEntityAnnotations extends ODataAnnotations {
   clone(): ODataEntityAnnotations {
-    return new ODataEntityAnnotations({ data: Object.assign({}, this.annotations), options: this.options });
+    return new ODataEntityAnnotations({
+      data: Object.assign({}, this.annotations),
+      options: this.options,
+    });
   }
 
   data(data: Object) {
@@ -85,35 +97,35 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   }
 
   get etag() {
-    return this.odv.etag(this.annotations)
+    return this.odv.etag(this.annotations);
   }
 
   get mediaEtag() {
-    return this.odv.mediaEtag(this.annotations)
+    return this.odv.mediaEtag(this.annotations);
   }
 
   get metadataEtag() {
-    return this.odv.metadataEtag(this.annotations)
+    return this.odv.metadataEtag(this.annotations);
   }
 
   get readLink() {
-    return this.odv.readLink(this.annotations)
+    return this.odv.readLink(this.annotations);
   }
 
   get editLink() {
-    return this.odv.editLink(this.annotations)
+    return this.odv.editLink(this.annotations);
   }
 
   get mediaReadLink() {
-    return this.odv.mediaReadLink(this.annotations)
+    return this.odv.mediaReadLink(this.annotations);
   }
 
   get mediaEditLink() {
-    return this.odv.mediaEditLink(this.annotations)
+    return this.odv.mediaEditLink(this.annotations);
   }
 
   get mediaContentType() {
-    return this.odv.mediaContentType(this.annotations)
+    return this.odv.mediaContentType(this.annotations);
   }
 
   private _functions?: { [name: string]: any };
@@ -131,7 +143,10 @@ export class ODataEntityAnnotations extends ODataAnnotations {
 
 export class ODataEntitiesAnnotations extends ODataAnnotations {
   clone(): ODataEntitiesAnnotations {
-    return new ODataEntitiesAnnotations({ data: Object.assign({}, this.annotations), options: this.options });
+    return new ODataEntitiesAnnotations({
+      data: Object.assign({}, this.annotations),
+      options: this.options,
+    });
   }
 
   data(data: Object) {
@@ -158,17 +173,17 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
   }
 
   get top() {
-    let match = (this.nextLink || "").match(/[&?]{1}\$top=(\d+)/);
+    let match = (this.nextLink || '').match(/[&?]{1}\$top=(\d+)/);
     return match !== null ? Number(match[1]) : undefined;
   }
 
   get skip() {
-    let match = (this.nextLink || "").match(/[&?]{1}\$skip=(\d+)/);
+    let match = (this.nextLink || '').match(/[&?]{1}\$skip=(\d+)/);
     return match !== null ? Number(match[1]) : undefined;
   }
 
   get skiptoken() {
-    let match = (this.nextLink || "").match(/[&?]{1}\$skiptoken=([\d\w\s']+)/);
+    let match = (this.nextLink || '').match(/[&?]{1}\$skiptoken=([\d\w\s']+)/);
     return match !== null ? match[1] : undefined;
   }
 

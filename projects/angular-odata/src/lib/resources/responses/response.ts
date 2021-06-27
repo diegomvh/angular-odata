@@ -1,11 +1,20 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ODataEntityAnnotations, ODataEntitiesAnnotations, ODataPropertyAnnotations } from './annotations';
+import {
+  ODataEntityAnnotations,
+  ODataEntitiesAnnotations,
+  ODataPropertyAnnotations,
+} from './annotations';
 import { Parser } from '../../types';
 import { Types } from '../../utils/types';
 import { ODataResource } from '../resource';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
-import { APPLICATION_JSON, ODATA_VERSION_HEADERS, CONTENT_TYPE, CACHE_CONTROL } from '../../constants';
+import {
+  APPLICATION_JSON,
+  ODATA_VERSION_HEADERS,
+  CONTENT_TYPE,
+  CACHE_CONTROL,
+} from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
 import { ODataResponseOptions } from './options';
@@ -18,13 +27,13 @@ export class ODataResponse<T> extends HttpResponse<T> {
   readonly resource: ODataResource<T>;
 
   constructor(init: {
-      api: ODataApi,
-      resource: ODataResource<T>,
-      body: T | null;
-      headers: HttpHeaders;
-      status: number;
-      statusText: string;
-      url?: string;
+    api: ODataApi;
+    resource: ODataResource<T>;
+    body: T | null;
+    headers: HttpHeaders;
+    status: number;
+    statusText: string;
+    url?: string;
   }) {
     super(init);
     this.api = init.api;
@@ -43,13 +52,16 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
   }
 
-  static fromJSON<T>(req: ODataRequest<T>, json: {
+  static fromJSON<T>(
+    req: ODataRequest<T>,
+    json: {
       body: T | null;
-      headers: {[name: string]: string | string[]};
+      headers: { [name: string]: string | string[] };
       status: number;
       statusText: string;
       url: string | null;
-  }) {
+    }
+  ) {
     return new ODataResponse<T>({
       api: req.api,
       resource: req.resource,
@@ -64,13 +76,14 @@ export class ODataResponse<T> extends HttpResponse<T> {
   toJSON() {
     return {
       body: this.body,
-      headers: this.headers.keys()
-        .map(name => ({[name]: this.headers.getAll(name) || []}))
+      headers: this.headers
+        .keys()
+        .map((name) => ({ [name]: this.headers.getAll(name) || [] }))
         .reduce((acc, header) => Object.assign(acc, header), {}),
       status: this.status,
       statusText: this.statusText,
-      url: this.url
-    }
+      url: this.url,
+    };
   }
 
   private _options: ODataResponseOptions | null = null;
@@ -79,12 +92,19 @@ export class ODataResponse<T> extends HttpResponse<T> {
       this._options = new ODataResponseOptions(this.api.options);
       const contentType = this.headers.get(CONTENT_TYPE);
       if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
-        const features = contentType.split(",").find(p => p.startsWith(APPLICATION_JSON)) as string;
+        const features = contentType
+          .split(',')
+          .find((p) => p.startsWith(APPLICATION_JSON)) as string;
         this._options.setFeatures(features);
       }
-      const key = this.headers.keys().find(k => ODATA_VERSION_HEADERS.indexOf(k) !== -1);
+      const key = this.headers
+        .keys()
+        .find((k) => ODATA_VERSION_HEADERS.indexOf(k) !== -1);
       if (key) {
-        const version = (this.headers.get(key) || "").replace(/\;/g, "") as '2.0' | '3.0' | '4.0';
+        const version = (this.headers.get(key) || '').replace(/\;/g, '') as
+          | '2.0'
+          | '3.0'
+          | '4.0';
         this._options.setVersion(version);
       }
       const cacheControl = this.headers.get(CACHE_CONTROL);
@@ -96,9 +116,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
   }
 
   private parse(parser: Parser<T>, value: any): any {
-    const type = Types.isObject(value) ? this.options.helper.type(value) : undefined;
+    const type = Types.isObject(value)
+      ? this.options.helper.type(value)
+      : undefined;
     if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
-      parser = parser.findParser(c => c.isTypeOf(type));
+      parser = parser.findParser((c) => c.isTypeOf(type));
     }
     return parser.deserialize(value, this.options);
   }
@@ -106,9 +128,9 @@ export class ODataResponse<T> extends HttpResponse<T> {
   private deserialize(type: string, value: any): any {
     const parser = this.api.findParserForType<T>(type);
     if (parser !== undefined)
-      return Array.isArray(value) ?
-        value.map(v => this.parse(parser, v)) :
-        this.parse(parser, value);
+      return Array.isArray(value)
+        ? value.map((v) => this.parse(parser, v))
+        : this.parse(parser, value);
     return value;
   }
 
@@ -117,9 +139,16 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   entity(): ODataEntity<T> {
-    const payload = this.body && this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const annots = new ODataEntityAnnotations({data: payload || {}, options: this.options, headers: this.headers});
-    let entity = payload ? annots.data(payload) as T : null;
+    const payload =
+      this.body && this.options.version === '2.0'
+        ? (<any>this.body)['d']
+        : this.body;
+    const annots = new ODataEntityAnnotations({
+      data: payload || {},
+      options: this.options,
+      headers: this.headers,
+    });
+    let entity = payload ? (annots.data(payload) as T) : null;
     const type = this.resource.type();
     if (entity !== null && type !== undefined)
       entity = this.deserialize(type, entity) as T;
@@ -131,9 +160,14 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   entities(): ODataEntities<T> {
-    const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const annots = new ODataEntitiesAnnotations({data: payload || {}, options: this.options, headers: this.headers});
-    let entities = payload ? annots.data(payload) as T[] : null;
+    const payload =
+      this.options.version === '2.0' ? (<any>this.body)['d'] : this.body;
+    const annots = new ODataEntitiesAnnotations({
+      data: payload || {},
+      options: this.options,
+      headers: this.headers,
+    });
+    let entities = payload ? (annots.data(payload) as T[]) : null;
     const type = this.resource.type();
     if (entities !== null && type !== undefined)
       entities = this.deserialize(type, entities) as T[];
@@ -145,9 +179,14 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   property(): ODataProperty<T> {
-    const payload = this.options.version === "2.0" ? (<any>this.body)["d"] : this.body;
-    const annots = new ODataPropertyAnnotations({data: payload || {}, options: this.options, headers: this.headers});
-    let property = payload ? annots.data(payload) as T : null;
+    const payload =
+      this.options.version === '2.0' ? (<any>this.body)['d'] : this.body;
+    const annots = new ODataPropertyAnnotations({
+      data: payload || {},
+      options: this.options,
+      headers: this.headers,
+    });
+    let property = payload ? (annots.data(payload) as T) : null;
     const type = this.resource.type();
     if (property !== null && type !== undefined)
       property = this.deserialize(type, property) as T;
@@ -159,10 +198,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   value(): T | null {
-    const payload = this.body && this.options.version === "2.0" ? this.body : this.body;
+    const payload =
+      this.body && this.options.version === '2.0' ? this.body : this.body;
     const type = this.resource.type();
-    return payload ?
-      (type !== undefined ? this.deserialize(type, payload) : payload) as T:
-      null;
+    return payload
+      ? ((type !== undefined ? this.deserialize(type, payload) : payload) as T)
+      : null;
   }
 }
