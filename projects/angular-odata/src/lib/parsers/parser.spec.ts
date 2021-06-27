@@ -70,7 +70,10 @@ describe('ODataClient', () => {
                 date: { type: 'Edm.Date' }, //The date without a time-zone offset
                 dates: { type: 'Edm.Date', collection: true }, //The date without a time-zone offset
                 dateTimeOffset: { type: 'Edm.DateTimeOffset' },
-                dateTimeOffsets: { type: 'Edm.DateTimeOffset', collection: true },
+                dateTimeOffsets: {
+                  type: 'Edm.DateTimeOffset',
+                  collection: true,
+                },
                 duration: { type: 'Edm.Duration' },
                 timeOfDay: { type: 'Edm.TimeOfDay' }, //The clock time 00:00 - 23:59:59.999999999999
                 guid: { type: 'Edm.Guid' },
@@ -222,17 +225,26 @@ describe('ODataClient', () => {
     const options = schema.api.options;
     options.stringAsEnum = false;
     expect(
-      schema.parser.validate({
-        FirstName: 'FirstName',
-        LastName: 'LastName',
-        Emails: ["some@email.com", "other@email.com"],
-        Friends: [{FirstName: 'FirstName'} as Person, {FirstName: 'FirstName', LastName: 'LastName'}],
-        Trips: [],
-        Gender: PersonGender.Male,
-      }, {method: 'create', navigation: true})
+      schema.parser.validate(
+        {
+          FirstName: 'FirstName',
+          LastName: 'LastName',
+          Emails: ['some@email.com', 'other@email.com'],
+          Friends: [
+            { FirstName: 'FirstName' } as Person,
+            { FirstName: 'FirstName', LastName: 'LastName' },
+          ],
+          Trips: [],
+          Gender: PersonGender.Male,
+        },
+        { method: 'create', navigation: true }
+      )
     ).toEqual({
-      UserName: [ 'required' ],
-      Friends: [ { UserName: [ 'required' ], LastName: [ 'required' ] }, { UserName: [ 'required' ] }]
+      UserName: ['required'],
+      Friends: [
+        { UserName: ['required'], LastName: ['required'] },
+        { UserName: ['required'] },
+      ],
     });
   });
 
@@ -263,13 +275,14 @@ describe('ODataClient', () => {
     const options = schema.api.options;
     options.stringAsEnum = false;
     expect(
-      schema.parser.validate({
+      schema.parser.validate(
+        {
           FirstName: 'FirstName',
           LastName: 'LastName',
         },
         { method: 'create' }
       )
-    ).toEqual({ UserName: [ 'required' ] });
+    ).toEqual({ UserName: ['required'] });
   });
 
   it('should validate entity on update', () => {
@@ -347,10 +360,10 @@ describe('ODataClient', () => {
       string: 'Say "Hello",\nthen go',
       binary: 'T0RhdGE=',
       date: '2012-12-03',
-      dates: [ '2012-12-03' ],
+      dates: ['2012-12-03'],
       timeOfDay: '07:59:59.999',
       dateTimeOffset: '2012-12-03T07:16:23.000Z',
-      dateTimeOffsets: [ '2012-12-03T07:16:23.000Z' ],
+      dateTimeOffsets: ['2012-12-03T07:16:23.000Z'],
       duration: 'P2Y1M1W12DT23H59M59.999999999999S',
       guid: '01234567-89ab-cdef-0123-456789abcdef',
       enumeration: 'Yellow',

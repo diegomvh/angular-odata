@@ -21,33 +21,55 @@ export class ODataSchema {
     this.api = api;
     this.namespace = config.namespace;
     this.alias = config.alias;
-    this.enums = (config.enums || []).map(config => new ODataEnumType(config, this));
-    this.entities = (config.entities || []).map(config => new ODataStructuredType(config, this));
+    this.enums = (config.enums || []).map(
+      (config) => new ODataEnumType(config, this)
+    );
+    this.entities = (config.entities || []).map(
+      (config) => new ODataStructuredType(config, this)
+    );
     // Merge callables
-    let callableConfigs = (config.callables || []);
-    callableConfigs = callableConfigs.reduce((acc: CallableConfig[], config) => {
-      if (acc.every(c => c.name !== config.name)) {
-        config = callableConfigs.filter(c => c.name === config.name).reduce((acc, c) => {
-          acc.parameters = Object.assign(acc.parameters || {}, c.parameters || {});
-          return acc;
-        }, config);
-        return [...acc, config];
-      }
-      return acc;
-    }, [] as CallableConfig[]);
-    this.callables = callableConfigs.map(config => new ODataCallable(config, this));
-    this.containers = (config.containers || []).map(container => new ODataEntityContainer(container, this));
-    this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
+    let callableConfigs = config.callables || [];
+    callableConfigs = callableConfigs.reduce(
+      (acc: CallableConfig[], config) => {
+        if (acc.every((c) => c.name !== config.name)) {
+          config = callableConfigs
+            .filter((c) => c.name === config.name)
+            .reduce((acc, c) => {
+              acc.parameters = Object.assign(
+                acc.parameters || {},
+                c.parameters || {}
+              );
+              return acc;
+            }, config);
+          return [...acc, config];
+        }
+        return acc;
+      },
+      [] as CallableConfig[]
+    );
+    this.callables = callableConfigs.map(
+      (config) => new ODataCallable(config, this)
+    );
+    this.containers = (config.containers || []).map(
+      (container) => new ODataEntityContainer(container, this)
+    );
+    this.annotations = (config.annotations || []).map(
+      (annot) => new ODataAnnotation(annot)
+    );
   }
 
   isNamespaceOf(type: string) {
-    return type.startsWith(this.namespace) || (this.alias && type.startsWith(this.alias));
+    return (
+      type.startsWith(this.namespace) ||
+      (this.alias && type.startsWith(this.alias))
+    );
   }
 
   get entitySets() {
-    return this.containers
-      .reduce(
-        (acc, container) => [...acc, ...container.entitySets], [] as ODataEntitySet[]);
+    return this.containers.reduce(
+      (acc, container) => [...acc, ...container.entitySets],
+      [] as ODataEntitySet[]
+    );
   }
 
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
@@ -56,34 +78,44 @@ export class ODataSchema {
 
   //#region Find for Type
   public findEnumTypeForType<T>(type: string) {
-    return this.enums.find(e => e.isTypeOf(type)) as ODataEnumType<T> | undefined;
+    return this.enums.find((e) => e.isTypeOf(type)) as
+      | ODataEnumType<T>
+      | undefined;
   }
 
   public findStructuredTypeForType<T>(type: string) {
-    return this.entities.find(e => e.isTypeOf(type)) as ODataStructuredType<T> | undefined;
+    return this.entities.find((e) => e.isTypeOf(type)) as
+      | ODataStructuredType<T>
+      | undefined;
   }
 
   public findCallableForType<T>(type: string) {
-    return this.callables.find(e => e.isTypeOf(type)) as ODataCallable<T> | undefined;
+    return this.callables.find((e) => e.isTypeOf(type)) as
+      | ODataCallable<T>
+      | undefined;
   }
 
   public findEntitySetForType(type: string) {
-      return this.entitySets.find(e => e.isTypeOf(type));
+    return this.entitySets.find((e) => e.isTypeOf(type));
   }
   //#endregion
 
-  configure({findOptionsForType, findParserForType}: {
-    findParserForType: (type: string) => Parser<any>,
-    findOptionsForType: (type: string) => any
+  configure({
+    findOptionsForType,
+    findParserForType,
+  }: {
+    findParserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
   }) {
     // Configure Enums
-    this.enums
-      .forEach(enu => enu.configure());
+    this.enums.forEach((enu) => enu.configure());
     // Configure Entities
-    this.entities
-      .forEach(config => config.configure({findParserForType, findOptionsForType}));
+    this.entities.forEach((config) =>
+      config.configure({ findParserForType, findOptionsForType })
+    );
     // Configure callables
-    this.callables
-      .forEach(callable => callable.configure({findParserForType}));
+    this.callables.forEach((callable) =>
+      callable.configure({ findParserForType })
+    );
   }
 }

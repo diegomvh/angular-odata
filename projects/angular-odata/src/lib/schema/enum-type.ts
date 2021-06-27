@@ -13,11 +13,17 @@ export class ODataEnumType<E> {
     this.schema = schema;
     this.name = config.name;
     this.members = config.members;
-    this.parser = new ODataEnumTypeParser<E>(config, schema.namespace, schema.alias);
-    this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
+    this.parser = new ODataEnumTypeParser<E>(
+      config,
+      schema.namespace,
+      schema.alias
+    );
+    this.annotations = (config.annotations || []).map(
+      (annot) => new ODataAnnotation(annot)
+    );
   }
 
-  type({alias = false}: {alias?: boolean} = {}) {
+  type({ alias = false }: { alias?: boolean } = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
 
@@ -30,7 +36,7 @@ export class ODataEnumType<E> {
   }
 
   configure() {
-    this.parser.configure({options: this.api.options});
+    this.parser.configure({ options: this.api.options });
   }
 
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
@@ -42,11 +48,11 @@ export class ODataEnumType<E> {
   }
 
   findFieldByName(name: string) {
-    return this.fields().find(f => f.name === name);
+    return this.fields().find((f) => f.name === name);
   }
 
   findFieldByValue(value: number) {
-    return this.fields().find(f => f.value === value);
+    return this.fields().find((f) => f.value === value);
   }
 
   mapFields<T>(mapper: (field: ODataEnumTypeFieldParser) => T) {

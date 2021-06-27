@@ -1,9 +1,11 @@
-import { Types } from "./types";
+import { Types } from './types';
 
 export const Objects = {
   set(obj: Object, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray = (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
 
     pathArray.reduce((acc, key, i) => {
       if (acc[key] === undefined) acc[key] = {};
@@ -14,14 +16,20 @@ export const Objects = {
 
   get(obj: Object, path: string, def?: any): any {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray = (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
     // Find value if exist return otherwise return undefined value;
-    return (pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj) || def);
+    return (
+      pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj) || def
+    );
   },
 
   unset(obj: Object, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray = (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
 
     pathArray.reduce((acc, key, i) => {
       if (i === pathArray.length - 1) delete acc[key];
@@ -31,7 +39,9 @@ export const Objects = {
 
   has(obj: Object, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
-    const pathArray = (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray = (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
 
     return !!pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj);
   },
@@ -64,8 +74,8 @@ export const Objects = {
       const val2 = object2[key];
       const areObjects = Types.isObject(val1) && Types.isObject(val2);
       if (
-        areObjects && !Objects.equal(val1, val2) ||
-        !areObjects && val1 !== val2
+        (areObjects && !Objects.equal(val1, val2)) ||
+        (!areObjects && val1 !== val2)
       ) {
         return false;
       }
@@ -73,7 +83,10 @@ export const Objects = {
     return true;
   },
 
-  difference(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
+  difference(
+    object1: { [attr: string]: any },
+    object2: { [attr: string]: any }
+  ) {
     if (!object2 || !Types.isObject(object2)) {
       return object1;
     }
@@ -135,21 +148,24 @@ export const Objects = {
     }
     return diffs;
   },
-  uniqueId: (counter => (str = '') => `${str}${++counter}`)(0),
-  resolveKey(key: any, {single = true}: {single?: boolean} = {}) {
-    if (['number', 'string'].indexOf(typeof key) !== -1)
-      return key;
+  uniqueId: (
+    (counter) =>
+    (str = '') =>
+      `${str}${++counter}`
+  )(0),
+  resolveKey(key: any, { single = true }: { single?: boolean } = {}) {
+    if (['number', 'string'].indexOf(typeof key) !== -1) return key;
     if (Types.isObject(key)) {
       const values = Object.values(key);
       if (values.length === 1 && single) {
         // Single primitive key value
         key = values[0];
-      } else if (values.some(v => v === undefined)) {
+      } else if (values.some((v) => v === undefined)) {
         // Compose key, needs all values
         return undefined;
       }
       return !Types.isEmpty(key) ? key : undefined;
     }
     return undefined;
-  }
-}
+  },
+};

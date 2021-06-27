@@ -2,16 +2,24 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 export const Http = {
   //Merge Headers
-  mergeHttpHeaders(...values: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
+  mergeHttpHeaders(
+    ...values: (HttpHeaders | { [header: string]: string | string[] })[]
+  ): HttpHeaders {
     let headers = new HttpHeaders();
-    values.forEach(value => {
+    values.forEach((value) => {
       if (value instanceof HttpHeaders) {
-        value.keys().forEach(key => {
-          headers = ((value as HttpHeaders).getAll(key) || []).reduce((acc, v) => acc.append(key, v), headers);
+        value.keys().forEach((key) => {
+          headers = ((value as HttpHeaders).getAll(key) || []).reduce(
+            (acc, v) => acc.append(key, v),
+            headers
+          );
         });
       } else if (typeof value === 'object') {
         Object.entries(value).forEach(([key, value]) => {
-          headers = (Array.isArray(value) ? value : [value]).reduce((acc, v) => acc.append(key, v), headers);
+          headers = (Array.isArray(value) ? value : [value]).reduce(
+            (acc, v) => acc.append(key, v),
+            headers
+          );
         });
       }
     });
@@ -19,19 +27,27 @@ export const Http = {
   },
 
   // Merge Params
-  mergeHttpParams(...values: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
+  mergeHttpParams(
+    ...values: (HttpParams | { [param: string]: string | string[] })[]
+  ): HttpParams {
     let params = new HttpParams();
-    values.forEach(value => {
+    values.forEach((value) => {
       if (value instanceof HttpParams) {
-        value.keys().forEach(key => {
-          params = ((value as HttpParams).getAll(key) || []).reduce((acc, v) => acc.append(key, v), params);
+        value.keys().forEach((key) => {
+          params = ((value as HttpParams).getAll(key) || []).reduce(
+            (acc, v) => acc.append(key, v),
+            params
+          );
         });
       } else if (typeof value === 'object') {
         Object.entries(value).forEach(([key, value]) => {
-          params = (Array.isArray(value) ? value : [value]).reduce((acc, v) => acc.append(key, v), params);
+          params = (Array.isArray(value) ? value : [value]).reduce(
+            (acc, v) => acc.append(key, v),
+            params
+          );
         });
       }
     });
     return params;
-  }
-}
+  },
+};

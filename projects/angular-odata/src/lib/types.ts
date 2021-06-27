@@ -129,7 +129,7 @@ export type StructuredTypeFieldConfig = {
   precision?: number;
   annotations?: AnnotationConfig[];
   scale?: number;
-  referentials?: { property: string, referencedProperty: string; }[];
+  referentials?: { property: string; referencedProperty: string }[];
   referential?: string;
   referenced?: string;
 };

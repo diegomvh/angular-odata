@@ -1,12 +1,19 @@
-import {buildPathAndQuery, Expand, Filter, OrderBy, Select, Transform} from './builder';
+import {
+  buildPathAndQuery,
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+} from './builder';
 
 import { Dates, Types, Urls, Objects } from '../utils';
 
 export type QueryArguments<T> = {
-  select?: Select<T>,
-  expand?: Expand<T>,
+  select?: Select<T>;
+  expand?: Expand<T>;
   transform?: Transform<T>;
-  search?: string,
+  search?: string;
   filter?: Filter;
   orderBy?: OrderBy<T>;
   top?: number;
@@ -25,18 +32,18 @@ export enum QueryOptionNames {
   top = 'top',
   skip = 'skip',
   skiptoken = 'skiptoken',
-  format = 'format'
+  format = 'format',
 }
 
 export class ODataQueryOptions {
-  options: {[name: string]: any};
+  options: { [name: string]: any };
 
-  constructor(options?: {[name: string]: any}) {
+  constructor(options?: { [name: string]: any }) {
     this.options = options || {};
   }
 
   // Params
-  pathAndParams(): [string, {[name: string]: any}] {
+  pathAndParams(): [string, { [name: string]: any }] {
     let options = [
       QueryOptionNames.select,
       QueryOptionNames.filter,
@@ -47,19 +54,26 @@ export class ODataQueryOptions {
       QueryOptionNames.skip,
       QueryOptionNames.skiptoken,
       QueryOptionNames.expand,
-      QueryOptionNames.format]
-        .filter(key => !Types.isEmpty(this.options[key]))
-        .reduce((acc, key) => Object.assign(acc, {[key]: this.options[key]}), {});
+      QueryOptionNames.format,
+    ]
+      .filter((key) => !Types.isEmpty(this.options[key]))
+      .reduce(
+        (acc, key) => Object.assign(acc, { [key]: this.options[key] }),
+        {}
+      );
 
     return buildPathAndQuery(options);
   }
 
   toString(): string {
     const [path, params] = this.pathAndParams();
-    return path + Object.entries(params)
-      .filter(([, value]) => !Types.isEmpty(value))
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
+    return (
+      path +
+      Object.entries(params)
+        .filter(([, value]) => !Types.isEmpty(value))
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&')
+    );
   }
 
   toJSON() {
@@ -72,8 +86,7 @@ export class ODataQueryOptions {
 
   // Option Handler
   option<T>(name: QueryOptionNames, opts?: T) {
-    if (opts !== undefined)
-      this.options[name] = opts;
+    if (opts !== undefined) this.options[name] = opts;
     return new OptionHandler<T>(this.options, name);
   }
 
@@ -83,12 +96,12 @@ export class ODataQueryOptions {
   }
 
   remove(...names: QueryOptionNames[]) {
-    names.forEach(name => this.option(name).clear());
+    names.forEach((name) => this.option(name).clear());
   }
 
   keep(...names: QueryOptionNames[]) {
     this.options = Object.keys(this.options)
-      .filter(k => names.indexOf(k as QueryOptionNames) !== -1)
+      .filter((k) => names.indexOf(k as QueryOptionNames) !== -1)
       .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
   }
 
@@ -99,7 +112,10 @@ export class ODataQueryOptions {
 }
 
 export class OptionHandler<T> {
-  constructor(private o: {[name: string]: any}, private n: QueryOptionNames) { }
+  constructor(
+    private o: { [name: string]: any },
+    private n: QueryOptionNames
+  ) {}
 
   get name() {
     return this.n;
@@ -115,7 +131,7 @@ export class OptionHandler<T> {
 
   //#region Primitive Value
   value(v?: any) {
-    return v !== undefined && (this.o[this.n] = v) || this.o[this.n];
+    return (v !== undefined && (this.o[this.n] = v)) || this.o[this.n];
   }
   //#endregion
 
@@ -131,10 +147,9 @@ export class OptionHandler<T> {
   }
 
   remove(value: T) {
-    this.o[this.n] = this.assertArray().filter(v => v !== value);
+    this.o[this.n] = this.assertArray().filter((v) => v !== value);
     // If only one... down to value
-    if (this.o[this.n].length === 1)
-      this.o[this.n] = this.o[this.n][0];
+    if (this.o[this.n].length === 1) this.o[this.n] = this.o[this.n][0];
   }
 
   at(index: number) {
@@ -143,12 +158,12 @@ export class OptionHandler<T> {
   //#endregion
 
   //#region HashMap Value
-  private assertObject(create: boolean): {[name: string]: any} {
+  private assertObject(create: boolean): { [name: string]: any } {
     if (!Types.isArray(this.o[this.n]) && Types.isObject(this.o[this.n])) {
       return this.o[this.n];
     }
     let arr = this.assertArray();
-    let obj = arr.find(v => Types.isObject(v));
+    let obj = arr.find((v) => Types.isObject(v));
     if (!obj && create) {
       obj = {};
       arr.push(obj);
@@ -172,8 +187,7 @@ export class OptionHandler<T> {
 
     if (Types.isArray(this.o[this.n])) {
       this.o[this.n] = this.o[this.n].filter((v: any) => !Types.isEmpty(v));
-      if (this.o[this.n].length === 1)
-        this.o[this.n] = this.o[this.n][0];
+      if (this.o[this.n].length === 1) this.o[this.n] = this.o[this.n][0];
     }
   }
 
@@ -182,7 +196,7 @@ export class OptionHandler<T> {
     return Objects.has(obj, path);
   }
 
-  assign(values: {[attr: string]: any}) {
+  assign(values: { [attr: string]: any }) {
     let obj = this.assertObject(true);
     return Objects.merge(obj, values);
   }

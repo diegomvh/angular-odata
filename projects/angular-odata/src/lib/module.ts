@@ -13,10 +13,12 @@ export function createSettings(configs: ApiConfig[]) {
 
 @NgModule({
   imports: [HttpClientModule],
-  providers: [ODataClient, ODataServiceFactory]
+  providers: [ODataClient, ODataServiceFactory],
 })
 export class ODataModule {
-  public static forRoot(...configs: ApiConfig[]): ModuleWithProviders<ODataModule> {
+  public static forRoot(
+    ...configs: ApiConfig[]
+  ): ModuleWithProviders<ODataModule> {
     return {
       ngModule: ODataModule,
       providers: [
@@ -24,11 +26,11 @@ export class ODataModule {
         {
           provide: ODataSettings,
           useFactory: createSettings,
-          deps: [ODATA_CONFIGURATIONS]
+          deps: [ODATA_CONFIGURATIONS],
         },
         ODataClient,
-        ODataServiceFactory
-      ]
+        ODataServiceFactory,
+      ],
     };
   }
 }

@@ -1,6 +1,6 @@
 import { ODataModel } from '../models/model';
 import { ODataSingletonResource } from '../resources';
-import { ODataEntityService } from "./entity";
+import { ODataEntityService } from './entity';
 
 export class ODataSingletonService<T> extends ODataEntityService<T> {
   public entity(): ODataSingletonResource<T> {
@@ -16,4 +16,3 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
     return this.api.findEntitySetByName(this.name);
   }
 }
-

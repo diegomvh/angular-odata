@@ -37,7 +37,9 @@ describe('ODataPathSegments', () => {
   it('test type', () => {
     const pathSegments: ODataPathSegments = new ODataPathSegments();
     pathSegments.add(PathSegmentNames.type, TYPE);
-    expect(pathSegments.toString()).toEqual('Microsoft.OData.SampleService.Models.TripPin.Person');
+    expect(pathSegments.toString()).toEqual(
+      'Microsoft.OData.SampleService.Models.TripPin.Person'
+    );
   });
 
   it('test property', () => {
@@ -81,5 +83,4 @@ describe('ODataPathSegments', () => {
     pathSegments.add(PathSegmentNames.action, ACTION);
     expect(pathSegments.toString()).toEqual('ResetDataSource');
   });
-
 });

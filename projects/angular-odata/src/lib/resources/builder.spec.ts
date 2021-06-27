@@ -1,4 +1,11 @@
-import buildQuery, { Expand, OrderBy, alias, raw, Filter, binary } from './builder';
+import buildQuery, {
+  Expand,
+  OrderBy,
+  alias,
+  raw,
+  Filter,
+  binary,
+} from './builder';
 
 it('should return an empty string by default', () => {
   expect(buildQuery()).toEqual('');
@@ -41,8 +48,7 @@ describe('filter', () => {
 
     it('should allow "in" operator', () => {
       const filter = { SomeProp: { in: [1, 2, 3] } };
-      const expected =
-        '?$filter=SomeProp in (1,2,3)';
+      const expected = '?$filter=SomeProp in (1,2,3)';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -62,16 +68,14 @@ describe('filter', () => {
 
     it('allows "in" operator when using in an array', () => {
       const filter = [{ SomeProp: { in: [1, 2, 3] }, AnotherProp: 4 }];
-      const expected =
-        '?$filter=SomeProp in (1,2,3) and AnotherProp eq 4';
+      const expected = '?$filter=SomeProp in (1,2,3) and AnotherProp eq 4';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
 
     it('allows "in" operator in negated case', () => {
       const filter = { not: { SomeProp: { in: [1, 2, 3] } } };
-      const expected =
-        '?$filter=not(SomeProp in (1,2,3))';
+      const expected = '?$filter=not(SomeProp in (1,2,3))';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
     });
@@ -151,7 +155,7 @@ describe('filter', () => {
         not: [
           { FooProp: { startswith: 'foo' } },
           { BarProp: { startswith: 'bar' } },
-          { FizProp: { in: [1, 2, 3]     } },
+          { FizProp: { in: [1, 2, 3] } },
         ],
       };
       const expected =
@@ -167,7 +171,7 @@ describe('filter', () => {
             not: [
               { FooProp: { startswith: 'foo' } },
               { BarProp: { startswith: 'bar' } },
-              { FizProp: { in: [1, 2, 3]     } },
+              { FizProp: { in: [1, 2, 3] } },
             ],
           },
         ],
@@ -276,8 +280,8 @@ describe('filter', () => {
     });
 
     it('should handle implied logical operator on a single property using alises', () => {
-      const start = alias(new Date(Date.UTC(2017, 0, 1)), "start");
-      const end = alias(new Date(Date.UTC(2017, 2, 1)), "end");
+      const start = alias(new Date(Date.UTC(2017, 0, 1)), 'start');
+      const end = alias(new Date(Date.UTC(2017, 2, 1)), 'end');
       const filter = { DateProp: { ge: start, le: end } };
       let expected =
         '?$filter=DateProp ge @start and DateProp le @end&@start=2017-01-01T00:00:00.000Z&@end=2017-03-01T00:00:00.000Z';
@@ -657,7 +661,7 @@ describe('filter', () => {
 
     it('should handle GUID values with explicit eq ', () => {
       const filter = {
-        someProp: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd')
+        someProp: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'),
       };
       const expected =
         '?$filter=someProp eq cd5977c2-4a64-42de-b2fc-7fe4707c65cd';
@@ -668,7 +672,10 @@ describe('filter', () => {
     it('should handle GUID values with an in operator', () => {
       const filter = {
         someProp: {
-          in: [raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'), raw('cd5977c2-4a64-42de-b2fc-7fe4707c65ce')]
+          in: [
+            raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'),
+            raw('cd5977c2-4a64-42de-b2fc-7fe4707c65ce'),
+          ],
         },
       };
       const expected =
@@ -678,7 +685,7 @@ describe('filter', () => {
     });
 
     it('should handle raw values', () => {
-      const filter = { someProp: { eq: raw('2018-03-30') }};
+      const filter = { someProp: { eq: raw('2018-03-30') } };
       const expected = '?$filter=someProp eq 2018-03-30';
       const actual = buildQuery({ filter });
       expect(actual).toEqual(expected);
@@ -813,19 +820,18 @@ describe('transform', () => {
 
   it('custom aggregation as string', () => {
     const transform = {
-      aggregate: "Forecast",
+      aggregate: 'Forecast',
     };
     const expected = '?$apply=aggregate(Forecast)';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
 
-
   it('multiple aggregations with same property as array', () => {
     const transform = [
       {
         aggregate: [
-          "Forecast",
+          'Forecast',
           {
             Amount: {
               with: 'max',
@@ -835,8 +841,7 @@ describe('transform', () => {
         ],
       },
     ];
-    const expected =
-      '?$apply=aggregate(Forecast,Amount with max as Max)';
+    const expected = '?$apply=aggregate(Forecast,Amount with max as Max)';
     const actual = buildQuery({ transform });
     expect(actual).toEqual(expected);
   });
@@ -1017,7 +1022,7 @@ describe('orderBy', () => {
   });
 
   it('should support passing an array of fields', () => {
-    type Bar = {foo: any, bar: any};
+    type Bar = { foo: any; bar: any };
     const orderBy = ['foo', 'bar'] as OrderBy<Bar>;
     const expected = '?$orderby=foo,bar';
     const actual = buildQuery({ orderBy });
@@ -1025,24 +1030,27 @@ describe('orderBy', () => {
   });
 
   it('should support passing an array of [fields, order]', () => {
-    type Bar = {foo: any, bar: any};
-    const orderBy = [['foo', 'asc'], ['bar', 'desc']] as OrderBy<Bar>;
+    type Bar = { foo: any; bar: any };
+    const orderBy = [
+      ['foo', 'asc'],
+      ['bar', 'desc'],
+    ] as OrderBy<Bar>;
     const expected = '?$orderby=foo asc,bar desc';
     const actual = buildQuery({ orderBy });
     expect(actual).toEqual(expected);
   });
 
   it('should support passing an object', () => {
-    type Bar = {foo: {bar: any}};
-    const orderBy = {foo: ['bar']} as OrderBy<Bar>;
+    type Bar = { foo: { bar: any } };
+    const orderBy = { foo: ['bar'] } as OrderBy<Bar>;
     const expected = '?$orderby=foo/bar';
     const actual = buildQuery({ orderBy });
     expect(actual).toEqual(expected);
   });
 
   it('should support passing an object of [fields, order]', () => {
-    type Bar = {foo: {bar: any}};
-    const orderBy = {foo: [['bar', 'asc']]} as OrderBy<Bar>;
+    type Bar = { foo: { bar: any } };
+    const orderBy = { foo: [['bar', 'asc']] } as OrderBy<Bar>;
     const expected = '?$orderby=foo/bar asc';
     const actual = buildQuery({ orderBy });
     expect(actual).toEqual(expected);
@@ -1230,7 +1238,7 @@ describe('expand', () => {
   });
 
   it('should support multiple expands as an array', () => {
-    type Bar = { Foo: any, Bar: any };
+    type Bar = { Foo: any; Bar: any };
     const expand = ['Foo', 'Bar'] as Expand<Bar>;
     const expected = '?$expand=Foo,Bar';
     const actual = buildQuery<Bar>({ expand });
@@ -1273,7 +1281,7 @@ describe('expand', () => {
   });
 
   it('should allow multiple nested expands with objects', () => {
-    type Bar = { Friends: { Photos: any}, One: { Two: any }};
+    type Bar = { Friends: { Photos: any }; One: { Two: any } };
     const expand: Expand<Bar> = [
       { Friends: { expand: 'Photos' } },
       { One: { expand: 'Two' } },
@@ -1284,8 +1292,11 @@ describe('expand', () => {
   });
 
   it('should allow multiple expands mixing objects and strings', () => {
-    type Bar = { Friends: { Photos: any}, One: { Two: any }};
-    const expand: Expand<Bar> = [{ Friends: { expand: 'Photos' } }, 'Foo/Bar/Baz'];
+    type Bar = { Friends: { Photos: any }; One: { Two: any } };
+    const expand: Expand<Bar> = [
+      { Friends: { expand: 'Photos' } },
+      'Foo/Bar/Baz',
+    ];
     const expected =
       '?$expand=Friends($expand=Photos),Foo($expand=Bar($expand=Baz))';
     const actual = buildQuery({ expand });
@@ -1405,7 +1416,7 @@ describe('function', () => {
   });
 
   it('should support a function on a collection with an array/collection parameter of a strings', () => {
-    const someCollection = alias(['Sean', 'Jason'], "SomeCollection");
+    const someCollection = alias(['Sean', 'Jason'], 'SomeCollection');
     const func = {
       Test: { SomeCollection: someCollection },
     };
@@ -1416,12 +1427,15 @@ describe('function', () => {
   });
 
   it('should support a function on a collection with an array/collection parameter of a complex type', () => {
-    const someCollection = alias(raw(JSON.stringify([{ Name: 'Sean' }, { Name: 'Jason' }])), "SomeCollection");
+    const someCollection = alias(
+      raw(JSON.stringify([{ Name: 'Sean' }, { Name: 'Jason' }])),
+      'SomeCollection'
+    );
     const func = {
       Test: { SomeCollection: someCollection },
     };
     const expected =
-      '/Test(SomeCollection=@SomeCollection)?@SomeCollection=[{\"Name\":\"Sean\"},{\"Name\":\"Jason\"}]';
+      '/Test(SomeCollection=@SomeCollection)?@SomeCollection=[{"Name":"Sean"},{"Name":"Jason"}]';
     const actual = buildQuery({ func, aliases: [someCollection] });
     expect(actual).toEqual(expected);
   });

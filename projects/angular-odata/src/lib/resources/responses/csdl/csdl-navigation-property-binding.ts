@@ -1,6 +1,3 @@
 export class CsdlNavigationPropertyBinding {
-    constructor(
-        public path: string,
-        public target: string,
-    ) { }
+  constructor(public path: string, public target: string) {}
 }

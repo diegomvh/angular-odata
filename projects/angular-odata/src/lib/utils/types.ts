@@ -5,7 +5,7 @@ export const Types = {
   },
 
   isFunction(value: any): boolean {
-    return typeof value === "function";
+    return typeof value === 'function';
   },
 
   isArray(value: any): boolean {
@@ -13,13 +13,17 @@ export const Types = {
   },
 
   isEmpty(value: any): boolean {
-    return value === undefined
-      || value === null
-      || (typeof (value) === 'string' && !value.length)
-      || (Types.isArray(value) && !value.length)
-      || (Types.isFunction(value.isEmpty) && value.isEmpty())
-      || (Types.isArray(value) && (value as any[]).every(v => Types.isEmpty(v)))
-      || (Types.isObject(value) && !Object.keys(value).filter(k => value.hasOwnProperty(k)).length);
+    return (
+      value === undefined ||
+      value === null ||
+      (typeof value === 'string' && !value.length) ||
+      (Types.isArray(value) && !value.length) ||
+      (Types.isFunction(value.isEmpty) && value.isEmpty()) ||
+      (Types.isArray(value) &&
+        (value as any[]).every((v) => Types.isEmpty(v))) ||
+      (Types.isObject(value) &&
+        !Object.keys(value).filter((k) => value.hasOwnProperty(k)).length)
+    );
   },
 
   isEqual(value1: any, value2: any) {
@@ -27,12 +31,11 @@ export const Types = {
       return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
     }
 
-    function areDatesEqual () {
+    function areDatesEqual() {
       return value1.getTime() === value2.getTime();
     }
 
-    function areArraysBufferEqual () {
-
+    function areArraysBufferEqual() {
       if (value1.byteLength !== value2.byteLength) {
         return false;
       }
@@ -50,8 +53,7 @@ export const Types = {
       return true;
     }
 
-    function areArraysEqual () {
-
+    function areArraysEqual() {
       // Check length
       if (value1.length !== value2.length) return false;
 
@@ -62,12 +64,11 @@ export const Types = {
 
       // If no errors, return true
       return true;
-
     }
 
-    function areObjectsEqual () {
-
-      if (Object.keys(value1).length !== Object.keys(value2).length) return false;
+    function areObjectsEqual() {
+      if (Object.keys(value1).length !== Object.keys(value2).length)
+        return false;
 
       // Check each item in the object
       for (let key in value1) {
@@ -78,14 +79,13 @@ export const Types = {
 
       // If no errors, return true
       return true;
-
     }
 
-    function areFunctionsEqual () {
+    function areFunctionsEqual() {
       return value1.toString() === value2.toString();
     }
 
-    function arePrimativesEqual () {
+    function arePrimativesEqual() {
       return value1 === value2;
     }
 
@@ -102,5 +102,5 @@ export const Types = {
     if (type === 'object') return areObjectsEqual();
     if (type === 'function') return areFunctionsEqual();
     return arePrimativesEqual();
-  }
-}
+  },
+};

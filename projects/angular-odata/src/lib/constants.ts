@@ -20,7 +20,11 @@ export const ODATA_ENTITYID = 'OData-EntityId';
 export const ETAG_HEADER = 'ETag';
 export const ACCEPT = 'Accept';
 export const PREFER = 'Prefer';
-export const ODATA_VERSION_HEADERS = [ODATA_VERSION, ODATA_VERSION.toLowerCase(), 'dataserviceversion'];
+export const ODATA_VERSION_HEADERS = [
+  ODATA_VERSION,
+  ODATA_VERSION.toLowerCase(),
+  'dataserviceversion',
+];
 
 // HTTP HEADER VALUES
 export const APPLICATION_JSON = 'application/json';
@@ -56,7 +60,6 @@ export const ODATA_ALIAS_PREFIX = '@';
 
 export const NEWLINE = '\r\n';
 export const NEWLINE_REGEXP = /\r?\n/;
-
 
 // Standard vocabularies for annotating OData services
 

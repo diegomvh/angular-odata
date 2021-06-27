@@ -4,19 +4,31 @@ import { map } from 'rxjs/operators';
 import {
   VALUE_SEPARATOR,
   PARAM_SEPARATOR,
-  QUERY_SEPARATOR
+  QUERY_SEPARATOR,
 } from '../constants';
 import { Objects, Http, Types, Urls } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
-import { QueryArguments, ODataQueryOptions, QueryOptionNames } from './query-options';
+import {
+  QueryArguments,
+  ODataQueryOptions,
+  QueryOptionNames,
+} from './query-options';
 import { HttpOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
 import { Parser } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
-import { Expand, Filter, OrderBy, Select, Transform, QueryCustomType, isQueryCustomType } from './builder';
+import {
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+  QueryCustomType,
+  isQueryCustomType,
+} from './builder';
 import { ODataStructuredType, ODataCallable } from '../schema/index';
 
 export type EntityKey<T> =
@@ -67,11 +79,11 @@ export abstract class ODataResource<T> {
    * @returns boolean The resource has key ?
    */
   hasKey() {
-    return Boolean(this.pathSegments.last({key: true})?.hasKey());
+    return Boolean(this.pathSegments.last({ key: true })?.hasKey());
   }
 
   clearKey() {
-    return this.pathSegments.last({key: true})?.clearKey();
+    return this.pathSegments.last({ key: true })?.clearKey();
   }
 
   isSubtypeOf(other: ODataResource<any>) {
@@ -79,43 +91,47 @@ export abstract class ODataResource<T> {
     const selfType = this.type();
     const otherType = other.type();
     if (selfType !== undefined && otherType !== undefined) {
-      const otherParser = api.findParserForType<T>(otherType) as ODataStructuredTypeParser<T>;
-      return otherParser.findParser(c => c.isTypeOf(selfType)) !== undefined;
+      const otherParser = api.findParserForType<T>(
+        otherType
+      ) as ODataStructuredTypeParser<T>;
+      return otherParser.findParser((c) => c.isTypeOf(selfType)) !== undefined;
     }
     return false;
   }
 
   isParentOf(other: ODataResource<any>) {
-    const [selfPath, ] = this.pathAndParams();
-    const [otherPath, ] = other.pathAndParams();
+    const [selfPath] = this.pathAndParams();
+    const [otherPath] = other.pathAndParams();
     return otherPath !== selfPath && otherPath.startsWith(selfPath);
   }
 
   isChildOf(other: ODataResource<any>) {
-    const [selfPath, ] = this.pathAndParams();
-    const [otherPath, ] = other.pathAndParams();
+    const [selfPath] = this.pathAndParams();
+    const [otherPath] = other.pathAndParams();
     return otherPath !== selfPath && selfPath.startsWith(otherPath);
   }
 
   isEqualTo(other: ODataResource<any>, test?: 'path' | 'params') {
     const [selfPath, selfParams] = this.pathAndParams();
     const [otherPath, otherParams] = other.pathAndParams();
-    return (test === 'path') ? otherPath === selfPath :
-      (test === 'params') ? Types.isEqual(selfParams, otherParams) :
-      (otherPath === selfPath && Types.isEqual(selfParams, otherParams));
+    return test === 'path'
+      ? otherPath === selfPath
+      : test === 'params'
+      ? Types.isEqual(selfParams, otherParams)
+      : otherPath === selfPath && Types.isEqual(selfParams, otherParams);
   }
 
-  pathAndParams(): [string, {[name: string]: any}] {
+  pathAndParams(): [string, { [name: string]: any }] {
     const [spath, sparams] = this.pathSegments.pathAndParams();
     const [, qparams] = this.queryOptions.pathAndParams();
-    return [spath, {...sparams, ...qparams}];
+    return [spath, { ...sparams, ...qparams }];
   }
 
   endpointUrl(params: boolean = true) {
     if (params) {
       return `${this.api.serviceRootUrl}${this}`;
     } else {
-      let [path, ] = this.pathAndParams();
+      let [path] = this.pathAndParams();
       return `${this.api.serviceRootUrl}${path}`;
     }
   }
@@ -123,7 +139,7 @@ export abstract class ODataResource<T> {
   toString(): string {
     let [path, params] = this.pathAndParams();
     let queryString = Object.entries(params)
-      .map(e => `${e[0]}${VALUE_SEPARATOR}${e[1]}`)
+      .map((e) => `${e[0]}${VALUE_SEPARATOR}${e[1]}`)
       .join(PARAM_SEPARATOR);
     return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
   }
@@ -137,9 +153,9 @@ export abstract class ODataResource<T> {
     if (type !== undefined) {
       let parser = api.findParserForType<T>(type);
       if (parser !== undefined && 'serialize' in parser) {
-        return Array.isArray(value) ?
-          value.map(e => (parser as Parser<T>).serialize(e, api.options)) :
-          parser.serialize(value, api.options);
+        return Array.isArray(value)
+          ? value.map((e) => (parser as Parser<T>).serialize(e, api.options))
+          : parser.serialize(value, api.options);
       }
     }
     return value;
@@ -151,9 +167,9 @@ export abstract class ODataResource<T> {
     if (type !== undefined) {
       let parser = api.findParserForType<T>(type);
       if (parser !== undefined && 'encode' in parser) {
-        return Array.isArray(value) ?
-          value.map(e => (parser as Parser<T>).encode(e, api.options)) :
-          parser.encode(value, api.options);
+        return Array.isArray(value)
+          ? value.map((e) => (parser as Parser<T>).encode(e, api.options))
+          : parser.encode(value, api.options);
       }
     }
     return value;
@@ -162,7 +178,7 @@ export abstract class ODataResource<T> {
   toJSON() {
     return {
       segments: this.pathSegments.toJSON(),
-      options: this.queryOptions.toJSON()
+      options: this.queryOptions.toJSON(),
     };
   }
 
@@ -202,8 +218,8 @@ export abstract class ODataResource<T> {
         if (query.expand !== undefined) {
           this.expand(query.expand);
         }
-      }
-    }
+      },
+    };
   }
 
   protected resolveKey(value: any): EntityKey<T> | undefined {
@@ -211,8 +227,9 @@ export abstract class ODataResource<T> {
       return value;
     } else if (Types.isObject(value)) {
       let schema = this.schema();
-      return (schema instanceof ODataStructuredType) ? schema.resolveKey(value) :
-        Objects.resolveKey(value);
+      return schema instanceof ODataStructuredType
+        ? schema.resolveKey(value)
+        : Objects.resolveKey(value);
     }
     return value as EntityKey<T> | undefined;
   }
@@ -254,13 +271,14 @@ export abstract class ODataResource<T> {
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
       },
-      paging({skip, skiptoken, top}: { skip?: number, skiptoken?: string, top?: number } = {}) {
-        if (skiptoken !== undefined)
-          this.skiptoken(skiptoken);
-        else if (skip !== undefined)
-          this.skip(skip);
-        if (top !== undefined)
-          this.top(top);
+      paging({
+        skip,
+        skiptoken,
+        top,
+      }: { skip?: number; skiptoken?: string; top?: number } = {}) {
+        if (skiptoken !== undefined) this.skiptoken(skiptoken);
+        else if (skip !== undefined) this.skip(skip);
+        if (top !== undefined) this.top(top);
       },
       clearPaging() {
         this.skip().clear();
@@ -287,8 +305,8 @@ export abstract class ODataResource<T> {
           this.orderBy(query.orderBy);
         }
         this.paging(query);
-      }
-    }
+      },
+    };
   }
   //#endregion
 
@@ -296,12 +314,20 @@ export abstract class ODataResource<T> {
   protected request(
     method: string,
     options: HttpOptions & {
-      attrs?: any,
-      etag?: string,
-      responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
-      withCount?: boolean
-    }): Observable<any> {
-
+      attrs?: any;
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      withCount?: boolean;
+    }
+  ): Observable<any> {
     //let api = options.apiName ? this.client.apiByName(options.apiName) : this.api;
     const copts = this.api.options;
     let params = options.params || {};
@@ -310,13 +336,15 @@ export abstract class ODataResource<T> {
     }
 
     let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' =
-      (options.responseType && ['property', 'entity', 'entities'].indexOf(options.responseType) !== -1) ?
-        'json' :
-      (options.responseType === 'value') ?
-        'text' :
-        <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
+      options.responseType &&
+      ['property', 'entity', 'entities'].indexOf(options.responseType) !== -1
+        ? 'json'
+        : options.responseType === 'value'
+        ? 'text'
+        : <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
-    let body = options.attrs !== undefined ? this.serialize(options.attrs) : null;
+    let body =
+      options.attrs !== undefined ? this.serialize(options.attrs) : null;
 
     let etag = options.etag;
     if (etag === undefined && options.attrs != null) {
@@ -335,7 +363,7 @@ export abstract class ODataResource<T> {
       params: params,
       responseType: responseType,
       fetchPolicy: options.fetchPolicy,
-      withCredentials: options.withCredentials
+      withCredentials: options.withCredentials,
     });
 
     const res$ = this.api.request(request);
@@ -354,42 +382,95 @@ export abstract class ODataResource<T> {
     }
   }
 
-  protected get(options: HttpOptions & {
-    etag?: string,
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
-    withCount?: boolean
-  } = {}): Observable<any> {
+  protected get(
+    options: HttpOptions & {
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      withCount?: boolean;
+    } = {}
+  ): Observable<any> {
     return this.request('GET', options);
   }
 
-  protected post(attrs: any, options: HttpOptions & {
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
-    withCount?: boolean
-  } = {}): Observable<any> {
-    return this.request('POST', { attrs, ...options});
+  protected post(
+    attrs: any,
+    options: HttpOptions & {
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      withCount?: boolean;
+    } = {}
+  ): Observable<any> {
+    return this.request('POST', { attrs, ...options });
   }
 
-  protected put(attrs: any, options: HttpOptions & {
-    etag?: string,
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
-    withCount?: boolean
-  } = {}): Observable<any> {
+  protected put(
+    attrs: any,
+    options: HttpOptions & {
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      withCount?: boolean;
+    } = {}
+  ): Observable<any> {
     return this.request('PUT', { attrs, ...options });
   }
 
-  protected patch(attrs: any, options: HttpOptions & {
-    etag?: string,
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
-    withCount?: boolean
-  } = {}): Observable<any> {
+  protected patch(
+    attrs: any,
+    options: HttpOptions & {
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      withCount?: boolean;
+    } = {}
+  ): Observable<any> {
     return this.request('PATCH', { attrs, ...options });
   }
 
-  protected delete(options: HttpOptions & {
-    etag?: string,
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text' | 'value' | 'property' | 'entity' | 'entities',
-    withCount?: boolean
-  } = {}): Observable<any> {
+  protected delete(
+    options: HttpOptions & {
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      withCount?: boolean;
+    } = {}
+  ): Observable<any> {
     return this.request('DELETE', options);
   }
 }

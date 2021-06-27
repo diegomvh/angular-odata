@@ -318,9 +318,11 @@ export class ODataModelField<F> {
     baseSchema: ODataStructuredType<T>;
     baseAnnots: ODataEntityAnnotations;
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
-    const resource = baseResource && this.resourceFactory<T, F>(baseResource) as
-      | ODataNavigationPropertyResource<F>
-      | ODataPropertyResource<F>;
+    const resource =
+      baseResource &&
+      (this.resourceFactory<T, F>(baseResource) as
+        | ODataNavigationPropertyResource<F>
+        | ODataPropertyResource<F>);
     const schema = this.schemaFactory<T, F>(baseSchema);
     const annots = this.annotationsFactory(baseAnnots);
     const Model = schema?.model || ODataModel;

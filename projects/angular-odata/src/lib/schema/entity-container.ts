@@ -11,8 +11,12 @@ export class ODataEntityContainer {
   constructor(config: EntityContainerConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
-    this.entitySets = (config.entitySets || []).map(config => new ODataEntitySet(config, schema));
-    this.annotations = (config.annotations || []).map(annot => new ODataAnnotation(annot));
+    this.entitySets = (config.entitySets || []).map(
+      (config) => new ODataEntitySet(config, schema)
+    );
+    this.annotations = (config.annotations || []).map(
+      (annot) => new ODataAnnotation(annot)
+    );
   }
 
   get api() {

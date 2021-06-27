@@ -21,27 +21,39 @@ import { Objects } from '../../utils';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<R>(api: ODataApi, path: string, type: string | undefined, segments: ODataPathSegments, options: ODataQueryOptions) {
-    const segment = segments.add(PathSegmentNames.singleton, path)
-    if (type !== undefined)
-      segment.type(type);
+  static factory<R>(
+    api: ODataApi,
+    path: string,
+    type: string | undefined,
+    segments: ODataPathSegments,
+    options: ODataQueryOptions
+  ) {
+    const segment = segments.add(PathSegmentNames.singleton, path);
+    if (type !== undefined) segment.type(type);
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(api, segments, options);
   }
   //#endregion
 
   clone() {
-    return new ODataSingletonResource<T>(this.api, this.cloneSegments(), this.cloneQuery());
+    return new ODataSingletonResource<T>(
+      this.api,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   schema() {
     let type = this.type();
-    return (type !== undefined) ?
-      this.api.findStructuredTypeForType<T>(type) :
-      undefined;
+    return type !== undefined
+      ? this.api.findStructuredTypeForType<T>(type)
+      : undefined;
   }
 
-  asModel<M extends ODataModel<T>>(entity: Partial<T> | {[name: string]: any}, {annots, reset}: {annots?: ODataEntityAnnotations, reset?: boolean} = {}): M {
+  asModel<M extends ODataModel<T>>(
+    entity: Partial<T> | { [name: string]: any },
+    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
+  ): M {
     const Model = this.api.modelForType(annots?.type || this.type());
     return new Model(entity, { resource: this, annots, reset }) as M;
   }
@@ -50,28 +62,43 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   key(value: any) {
     const singleton = this.clone();
     var key = this.resolveKey(value);
-    if (key !== undefined)
-      singleton.segment.singleton().key(key);
+    if (key !== undefined) singleton.segment.singleton().key(key);
     return singleton;
   }
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<N>(type);
-      type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : undefined;
+      type =
+        parser instanceof ODataStructuredTypeParser
+          ? parser.typeFor(path)
+          : undefined;
     }
-    return ODataNavigationPropertyResource.factory<N>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataNavigationPropertyResource.factory<N>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   property<P>(path: string) {
     let type = this.type();
     if (type !== undefined) {
       let parser = this.api.findParserForType<P>(type);
-      type = parser instanceof ODataStructuredTypeParser?
-        parser.typeFor(path) : undefined;
+      type =
+        parser instanceof ODataStructuredTypeParser
+          ? parser.typeFor(path)
+          : undefined;
     }
-    return ODataPropertyResource.factory<P>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataPropertyResource.factory<P>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   action<P, R>(name: string) {
@@ -82,7 +109,13 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataActionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataActionResource.factory<P, R>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   function<P, R>(name: string) {
@@ -93,7 +126,13 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path = callable.path();
       type = callable.type();
     }
-    return ODataFunctionResource.factory<P, R>(this.api, path, type, this.cloneSegments(), this.cloneQuery());
+    return ODataFunctionResource.factory<P, R>(
+      this.api,
+      path,
+      type,
+      this.cloneSegments(),
+      this.cloneQuery()
+    );
   }
 
   select(opts: Select<T>) {
@@ -121,8 +160,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return {
       singleton() {
         return segments.get(PathSegmentNames.singleton);
-      }
-    }
+      },
+    };
   }
 
   get query() {
@@ -131,24 +170,35 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
-    return super.get({responseType: 'entity', ...options});
+  get(
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.get({ responseType: 'entity', ...options });
   }
 
-  post(attrs: Partial<T>, options: HttpOptions = {}): Observable<ODataEntity<T>> {
-    return super.post(attrs, {responseType: 'entity', ...options});
+  post(
+    attrs: Partial<T>,
+    options: HttpOptions = {}
+  ): Observable<ODataEntity<T>> {
+    return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  put(attrs: Partial<T>, options: HttpOptions & { etag?: string } = {}): Observable<ODataEntity<T>> {
-    return super.put(attrs, {responseType: 'entity', ...options});
+  put(
+    attrs: Partial<T>,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.put(attrs, { responseType: 'entity', ...options });
   }
 
-  patch(attrs: Partial<T>, options: HttpOptions & { etag?: string } = {}): Observable<T> {
-    return super.patch(attrs, {responseType: 'entity', ...options});
+  patch(
+    attrs: Partial<T>,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<T> {
+    return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
   delete(options: HttpOptions & { etag?: string } = {}): Observable<any> {
-    return super.delete({responseType: 'entity', ...options});
+    return super.delete({ responseType: 'entity', ...options });
   }
   //#endregion
 
@@ -158,11 +208,17 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   fetchEntity(options?: HttpOptions & { etag?: string }): Observable<T | null> {
-    return this.fetch(options).pipe(map(({entity}) => entity));
+    return this.fetch(options).pipe(map(({ entity }) => entity));
   }
 
-  fetchModel(options?: HttpOptions & { etag?: string }): Observable<ODataModel<T> | null> {
-    return this.fetch(options).pipe(map(({entity, annots}) => entity ? this.asModel(entity, {annots, reset: true}) : null));
+  fetchModel(
+    options?: HttpOptions & { etag?: string }
+  ): Observable<ODataModel<T> | null> {
+    return this.fetch(options).pipe(
+      map(({ entity, annots }) =>
+        entity ? this.asModel(entity, { annots, reset: true }) : null
+      )
+    );
   }
   //#endregion
 }

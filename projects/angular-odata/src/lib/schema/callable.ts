@@ -16,21 +16,26 @@ export class ODataCallable<R> {
     this.entitySetPath = config.entitySetPath;
     this.bound = config.bound;
     this.composable = config.composable;
-    this.parser = new ODataCallableParser(config, schema.namespace, schema.alias);
+    this.parser = new ODataCallableParser(
+      config,
+      schema.namespace,
+      schema.alias
+    );
   }
 
   path() {
     let path: string;
-    if (this.entitySetPath)
-      path = this.entitySetPath;
-    else if (this.bound)
-      path = `${this.schema.namespace}.${this.name}`;
+    if (this.entitySetPath) path = this.entitySetPath;
+    else if (this.bound) path = `${this.schema.namespace}.${this.name}`;
     else
-      path = this.parser.return ? this.api.findEntitySetForType(this.parser.return.type)?.name || this.name : this.name;
+      path = this.parser.return
+        ? this.api.findEntitySetForType(this.parser.return.type)?.name ||
+          this.name
+        : this.name;
     return path;
   }
 
-  type({alias = false}: {alias?: boolean} = {}) {
+  type({ alias = false }: { alias?: boolean } = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
 
@@ -42,10 +47,12 @@ export class ODataCallable<R> {
     return this.schema.api;
   }
 
-  configure({findParserForType}: {
-    findParserForType: (type: string) => Parser<any>
+  configure({
+    findParserForType,
+  }: {
+    findParserForType: (type: string) => Parser<any>;
   }) {
-    this.parser.configure({options: this.api.options, findParserForType});
+    this.parser.configure({ options: this.api.options, findParserForType });
   }
 
   deserialize(value: any): any {

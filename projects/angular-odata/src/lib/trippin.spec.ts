@@ -1,5 +1,9 @@
-
-import { ApiConfig, EnumTypeConfig, StructuredTypeConfig, EntitySetConfig } from './types';
+import {
+  ApiConfig,
+  EnumTypeConfig,
+  StructuredTypeConfig,
+  EntitySetConfig,
+} from './types';
 import { EDM_PARSERS } from './parsers';
 import { ODataEntitySetService } from './services';
 import { Injectable } from '@angular/core';
@@ -15,9 +19,9 @@ export enum PersonGender {
   Unknown = 2,
 }
 export const PersonGenderConfig = {
-  name: "PersonGender",
+  name: 'PersonGender',
   members: PersonGender,
-  fields: {}
+  fields: {},
 } as EnumTypeConfig<PersonGender>;
 //#endregion
 
@@ -27,12 +31,21 @@ export interface Photo {
   Name?: string;
 }
 export const PhotoConfig = {
-  name: "Photo",
-  annotations: [{"type":"Org.OData.Core.V1.AcceptableMediaTypes"}],
+  name: 'Photo',
+  annotations: [{ type: 'Org.OData.Core.V1.AcceptableMediaTypes' }],
   fields: {
-    Id: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    Name: {type: 'Edm.String'}
-  }
+    Id: {
+      type: 'Edm.Int64',
+      nullable: false,
+      annotations: [
+        {
+          type: 'Org.OData.Core.V1.Permissions',
+          permissions: ['Org.OData.Core.V1.Permission/Read'],
+        },
+      ],
+    },
+    Name: { type: 'Edm.String' },
+  },
 } as StructuredTypeConfig<Photo>;
 
 export interface PlanItem {
@@ -43,15 +56,24 @@ export interface PlanItem {
   Duration?: string;
 }
 export const PlanItemConfig = {
-  name: "PlanItem",
+  name: 'PlanItem',
   annotations: [],
   fields: {
-    PlanItemId: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    ConfirmationCode: {type: 'Edm.String'},
-    StartsAt: {type: 'Edm.Date'},
-    EndsAt: {type: 'Edm.Date'},
-    Duration: {type: 'Edm.String'}
-  }
+    PlanItemId: {
+      type: 'Edm.Int64',
+      nullable: false,
+      annotations: [
+        {
+          type: 'Org.OData.Core.V1.Permissions',
+          permissions: ['Org.OData.Core.V1.Permission/Read'],
+        },
+      ],
+    },
+    ConfirmationCode: { type: 'Edm.String' },
+    StartsAt: { type: 'Edm.Date' },
+    EndsAt: { type: 'Edm.Date' },
+    Duration: { type: 'Edm.String' },
+  },
 } as StructuredTypeConfig<PlanItem>;
 
 export interface Trip {
@@ -67,20 +89,40 @@ export interface Trip {
   PlanItems?: PlanItem[];
 }
 export const TripConfig = {
-  name: "Trip",
+  name: 'Trip',
   annotations: [],
   fields: {
-    TripId: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    ShareId: {type: 'Edm.String'},
-    Description: {type: 'Edm.String'},
-    Name: {type: 'Edm.String', nullable: false},
-    Budget: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Measures.V1.ISOCurrency","string":"USD"},{"type":"Org.OData.Measures.V1.Scale","int":2}]},
-    StartsAt: {type: 'Edm.Date', nullable: false},
-    EndsAt: {type: 'Edm.Date', nullable: false},
-    Tags: {type: 'Edm.String', nullable: false, collection: true},
-    Photos: {type: `${NAMESPACE}.Photo`, collection: true, navigation: true},
-    PlanItems: {type: `${NAMESPACE}.PlanItem`, collection: true, navigation: true}
-  }
+    TripId: {
+      type: 'Edm.Int64',
+      nullable: false,
+      annotations: [
+        {
+          type: 'Org.OData.Core.V1.Permissions',
+          permissions: ['Org.OData.Core.V1.Permission/Read'],
+        },
+      ],
+    },
+    ShareId: { type: 'Edm.String' },
+    Description: { type: 'Edm.String' },
+    Name: { type: 'Edm.String', nullable: false },
+    Budget: {
+      type: 'Edm.Int64',
+      nullable: false,
+      annotations: [
+        { type: 'Org.OData.Measures.V1.ISOCurrency', string: 'USD' },
+        { type: 'Org.OData.Measures.V1.Scale', int: 2 },
+      ],
+    },
+    StartsAt: { type: 'Edm.Date', nullable: false },
+    EndsAt: { type: 'Edm.Date', nullable: false },
+    Tags: { type: 'Edm.String', nullable: false, collection: true },
+    Photos: { type: `${NAMESPACE}.Photo`, collection: true, navigation: true },
+    PlanItems: {
+      type: `${NAMESPACE}.PlanItem`,
+      collection: true,
+      navigation: true,
+    },
+  },
 } as StructuredTypeConfig<Trip>;
 
 export interface Person {
@@ -94,19 +136,36 @@ export interface Person {
   Photo?: Photo;
 }
 export const PersonConfig = {
-  name: "Person",
+  name: 'Person',
   annotations: [],
   fields: {
-    UserName: {type: 'Edm.String', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    FirstName: {type: 'Edm.String', nullable: false},
-    LastName: {type: 'Edm.String', nullable: false},
-    Emails: {type: 'Edm.String', collection: true},
-    Gender: {type: `${NAMESPACE}.PersonGender`},
-    Concurrency: {type: 'Edm.Int64', nullable: false, annotations: [{"type":"Org.OData.Core.V1.Computed","bool":true}]},
-    Friends: {type: `${NAMESPACE}.Person`, collection: true, navigation: true},
-    Trips: {type: `${NAMESPACE}.Trip`, collection: true, navigation: true},
-    Photo: {type: `${NAMESPACE}.Photo`, navigation: true}
-  }
+    UserName: {
+      type: 'Edm.String',
+      nullable: false,
+      annotations: [
+        {
+          type: 'Org.OData.Core.V1.Permissions',
+          permissions: ['Org.OData.Core.V1.Permission/Read'],
+        },
+      ],
+    },
+    FirstName: { type: 'Edm.String', nullable: false },
+    LastName: { type: 'Edm.String', nullable: false },
+    Emails: { type: 'Edm.String', collection: true },
+    Gender: { type: `${NAMESPACE}.PersonGender` },
+    Concurrency: {
+      type: 'Edm.Int64',
+      nullable: false,
+      annotations: [{ type: 'Org.OData.Core.V1.Computed', bool: true }],
+    },
+    Friends: {
+      type: `${NAMESPACE}.Person`,
+      collection: true,
+      navigation: true,
+    },
+    Trips: { type: `${NAMESPACE}.Trip`, collection: true, navigation: true },
+    Photo: { type: `${NAMESPACE}.Photo`, navigation: true },
+  },
 } as StructuredTypeConfig<Person>;
 //#endregion
 
@@ -118,7 +177,7 @@ export class PeopleService extends ODataEntitySetService<Person> {
   }
 }
 export const PeopleConfig = {
-  name: "People",
+  name: 'People',
   entityType: `${NAMESPACE}.Person`,
   service: PeopleService,
 } as EntitySetConfig;
@@ -128,20 +187,19 @@ export const TripPinConfig = {
   serviceRootUrl: SERVICE_ROOT,
   options: {
     stringAsEnum: true,
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'no-cache',
   },
-  schemas: [{
-    namespace: `${NAMESPACE}`,
-    enums: [ PersonGenderConfig ],
-    entities: [
-      PhotoConfig,
-      PersonConfig,
-      PlanItemConfig,
-      TripConfig
-    ],
-    containers: [{
-      entitySets: [ PeopleConfig ]
-    }]
-  }],
-  parsers: EDM_PARSERS
+  schemas: [
+    {
+      namespace: `${NAMESPACE}`,
+      enums: [PersonGenderConfig],
+      entities: [PhotoConfig, PersonConfig, PlanItemConfig, TripConfig],
+      containers: [
+        {
+          entitySets: [PeopleConfig],
+        },
+      ],
+    },
+  ],
+  parsers: EDM_PARSERS,
 } as ApiConfig;

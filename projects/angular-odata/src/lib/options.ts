@@ -1,6 +1,12 @@
 import { DEFAULT_FETCH_POLICY, DEFAULT_VERSION } from './constants';
 import { ODataHelper } from './helper';
-import { ApiOptions, FetchPolicy, ODataMetadataType, ODataVersion, OptionsHelper } from './types';
+import {
+  ApiOptions,
+  FetchPolicy,
+  ODataMetadataType,
+  ODataVersion,
+  OptionsHelper,
+} from './types';
 
 export class ODataApiOptions implements ApiOptions, OptionsHelper {
   version: ODataVersion;
@@ -18,7 +24,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     ifMatch: boolean;
     //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398230
     ifNoneMatch: boolean;
-  } = {ifMatch: true, ifNoneMatch: false};
+  } = { ifMatch: true, ifNoneMatch: false };
   prefer?: {
     //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398238
     maxPageSize?: number;
@@ -47,4 +53,3 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     return ODataHelper[this.version];
   }
 }
-
