@@ -617,5 +617,9 @@ export class ODataCollection<T, M extends ODataModel<T>> implements Iterable<M> 
   contains(model: M) {
     return this.models().some(m => m.equals(model));
   }
+
+  filter(predicate: (m: M) => boolean): M[] {
+    return this.models().filter(predicate);
+  }
   //#endregion
 }

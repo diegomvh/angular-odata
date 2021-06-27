@@ -69,7 +69,7 @@ export const INCLUDE_ALL = {
   include_concurrency: true,
   include_computed: true,
   include_key: true,
-  include_non_field: true
+  include_non_field: true,
 };
 
 export enum ODataModelState {
@@ -142,7 +142,10 @@ export class ODataModelField<F> {
     pattern?: RegExp;
   };
   optionsHelper?: OptionsHelper;
-  constructor(modelOptions: ODataModelOptions<any>, { name, field, parser, ...options }: ODataModelFieldOptions<F>) {
+  constructor(
+    modelOptions: ODataModelOptions<any>,
+    { name, field, parser, ...options }: ODataModelFieldOptions<F>
+  ) {
     this.modelOptions = modelOptions;
     this.name = name;
     this.field = field;
@@ -212,21 +215,18 @@ export class ODataModelField<F> {
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'patch',
+      method?: 'create' | 'update' | 'patch';
       navigation?: boolean;
     } = {}
   ) {
     if (value instanceof ODataModel) {
-      return !value.valid({ method, navigation })
-        ? value._errors
-        : undefined;
+      return !value.valid({ method, navigation }) ? value._errors : undefined;
     } else if (value instanceof ODataCollection) {
       return value.models().some((m) => !m.valid({ method, navigation }))
         ? value.models().map((m) => m.errors)
         : undefined;
     } else {
-      let errors =
-        this.parser?.validate(value, { method, navigation }) || [];
+      let errors = this.parser?.validate(value, { method, navigation }) || [];
       if (
         this.options.required &&
         (value === null || (value === undefined && method !== 'patch')) // Is null or undefined without patch?
@@ -275,8 +275,9 @@ export class ODataModelField<F> {
   resourceFactory<T, F>(
     resource: ODataModelResource<T>
   ): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> | undefined {
-    return resource instanceof ODataEntityResource ||
-      resource instanceof ODataNavigationPropertyResource ||
+    return ((resource instanceof ODataEntityResource ||
+      resource instanceof ODataNavigationPropertyResource) &&
+      resource.hasKey()) ||
       resource instanceof ODataPropertyResource
       ? this.navigation
         ? resource?.navigationProperty<F>(this.parser.name)
@@ -317,36 +318,22 @@ export class ODataModelField<F> {
     baseSchema: ODataStructuredType<T>;
     baseAnnots: ODataEntityAnnotations;
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
+    const resource = baseResource && this.resourceFactory<T, F>(baseResource) as
+      | ODataNavigationPropertyResource<F>
+      | ODataPropertyResource<F>;
+    const schema = this.schemaFactory<T, F>(baseSchema);
     const annots = this.annotationsFactory(baseAnnots);
-    if (baseResource !== undefined && baseResource.hasKey()) {
-      // Build for Resource
-      const resource = this.resourceFactory<T, F>(baseResource) as
-        | ODataNavigationPropertyResource<F>
-        | ODataPropertyResource<F>;
-      return this.parser.collection
-        ? resource.asCollection(
-            (value || []) as (F | { [name: string]: any })[],
-            { reset, annots: annots as ODataEntitiesAnnotations }
-          )
-        : resource.asModel((value || {}) as F | { [name: string]: any }, {
-            reset,
-            annots: annots as ODataEntityAnnotations,
-          });
-    } else {
-      // Build for Schema
-      const schema = this.schemaFactory<T, F>(baseSchema);
-      const Model = schema?.model || ODataModel;
-      const Collection = schema?.collection || ODataCollection;
-      return this.parser.collection
-        ? (new Collection((value || []) as (F | { [name: string]: any })[], {
-            annots: annots as ODataEntitiesAnnotations,
-            reset,
-          }) as ODataCollection<F, ODataModel<F>>)
-        : (new Model((value || {}) as F | { [name: string]: any }, {
-            annots: annots as ODataEntityAnnotations,
-            reset,
-          }) as ODataModel<F>);
-    }
+    const Model = schema?.model || ODataModel;
+    const Collection = schema?.collection || ODataCollection;
+    return this.parser.collection
+      ? (new Collection((value || []) as (F | { [name: string]: any })[], {
+          annots: annots as ODataEntitiesAnnotations,
+          reset,
+        }) as ODataCollection<F, ODataModel<F>>)
+      : (new Model((value || {}) as F | { [name: string]: any }, {
+          annots: annots as ODataEntityAnnotations,
+          reset,
+        }) as ODataModel<F>);
   }
 }
 
@@ -494,7 +481,10 @@ export class ODataModelOptions<T> {
       );
 
     const current = self._resource;
-    if (current === undefined || (!current.isEqualTo(resource) && !current.isParentOf(resource))) {
+    if (
+      current === undefined ||
+      (!current.isEqualTo(resource) && !current.isParentOf(resource))
+    ) {
       self._resource = resource;
       this._pushToRelations(self);
       self.events$.emit({
@@ -509,10 +499,11 @@ export class ODataModelOptions<T> {
   resource(
     self: ODataModel<T>,
     {
-      toEntity = false
+      toEntity = false,
     }: {
-      toEntity?: boolean
-    } = {}): ODataModelResource<T> | undefined {
+      toEntity?: boolean;
+    } = {}
+  ): ODataModelResource<T> | undefined {
     let resource = self._resource?.clone() as ODataModelResource<T> | undefined;
     if (toEntity)
       resource = this.modelResourceFactory({
@@ -561,7 +552,8 @@ export class ODataModelOptions<T> {
     self.resource(resource);
   }
 
-  resolveKey(value: any,
+  resolveKey(
+    value: any,
     {
       field_mapping = false,
       resolve = true,
@@ -579,7 +571,7 @@ export class ODataModelOptions<T> {
           .fields({ include_parents: true })
           .find((p: any) => p.field === name);
         if (prop !== undefined) {
-          v = (Types.isObject(v) || v instanceof ODataModel) ? v[prop.name] : v;
+          v = Types.isObject(v) || v instanceof ODataModel ? v[prop.name] : v;
           options = prop.meta as ODataModelOptions<any>;
         }
       }
@@ -597,22 +589,26 @@ export class ODataModelOptions<T> {
     field: ODataModelField<any>,
     {
       field_mapping = false,
-      resolve = true
+      resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | undefined {
     const referential: any = {};
     for (var ref of field.referentials) {
-      let from = this.fields({ include_parents: true })
-          .find((p: any) => p.field === ref.referencedProperty);
-      let to = field.modelOptions.fields({ include_parents: true })
-          .find((p: any) => p.field === ref.property);
+      let from = this.fields({ include_parents: true }).find(
+        (p: any) => p.field === ref.referencedProperty
+      );
+      let to = field.modelOptions
+        .fields({ include_parents: true })
+        .find((p: any) => p.field === ref.property);
       if (from !== undefined && to !== undefined) {
         let name = field_mapping ? to.field : to.name;
         referential[name] = (self as any)[from.name];
       }
     }
     if (Types.isEmpty(referential)) return undefined;
-    return resolve ? Objects.resolveKey(referential, {single: false}) : referential;
+    return resolve
+      ? Objects.resolveKey(referential, { single: false })
+      : referential;
   }
 
   resolveReferenced(
@@ -620,22 +616,26 @@ export class ODataModelOptions<T> {
     field: ODataModelField<any>,
     {
       field_mapping = false,
-      resolve = true
+      resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | undefined {
     const referenced: any = {};
     for (var ref of field.referentials) {
-      let from = this.fields({ include_parents: true })
-          .find((p: any) => p.field === ref.property);
-      let to = field.modelOptions.fields({ include_parents: true })
-          .find((p: any) => p.field === ref.referencedProperty);
+      let from = this.fields({ include_parents: true }).find(
+        (p: any) => p.field === ref.property
+      );
+      let to = field.modelOptions
+        .fields({ include_parents: true })
+        .find((p: any) => p.field === ref.referencedProperty);
       if (from !== undefined && to !== undefined) {
         let name = field_mapping ? to.field : to.name;
         referenced[name] = (self as any)[from.name];
       }
     }
     if (Types.isEmpty(referenced)) return undefined;
-    return resolve ? Objects.resolveKey(referenced, {single: false}) : referenced;
+    return resolve
+      ? Objects.resolveKey(referenced, { single: false })
+      : referenced;
   }
 
   validate(
@@ -644,7 +644,7 @@ export class ODataModelOptions<T> {
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'patch',
+      method?: 'create' | 'update' | 'patch';
       navigation?: boolean;
     } = {}
   ): { [name: string]: string[] } | undefined {
@@ -698,11 +698,11 @@ export class ODataModelOptions<T> {
       field_mapping = false,
     }: {
       client_id?: boolean;
-      include_navigation?: boolean,
-      include_concurrency?: boolean,
-      include_computed?: boolean,
-      include_key?: boolean,
-      include_non_field?: boolean,
+      include_navigation?: boolean;
+      include_concurrency?: boolean;
+      include_computed?: boolean;
+      include_key?: boolean;
+      include_non_field?: boolean;
       changes_only?: boolean;
       field_mapping?: boolean;
     } = {}
@@ -712,7 +712,7 @@ export class ODataModelOptions<T> {
       field_mapping,
       include_concurrency,
       include_computed,
-      include_non_field
+      include_non_field,
     });
 
     let relations = Object.entries(self._relations)
@@ -811,8 +811,10 @@ export class ODataModelOptions<T> {
     // Attributes by fields (attributes for the model type)
     const fieldAttrs = this.fields().reduce((acc, f) => {
       const isChanged = f.name in self._changes;
-      const name = (field_mapping) ? f.field : f.name;
-      const value = isChanged ? self._changes[f.name] : self._attributes[f.name];
+      const name = field_mapping ? f.field : f.name;
+      const value = isChanged
+        ? self._changes[f.name]
+        : self._attributes[f.name];
       if (f.concurrency && include_concurrency) {
         return Object.assign(acc, { [name]: value });
       } else if (f.computed && include_computed) {
@@ -829,9 +831,12 @@ export class ODataModelOptions<T> {
     const names = Object.keys(fieldAttrs);
     // Attributes from object (attributes for object)
     const nonFieldAttrs = Object.entries(self)
-      .filter(([k, ]) => names.indexOf(k) === -1 && !k.startsWith('_') && !k.endsWith("$"))
-      .reduce((acc, [k, v]) => Object.assign(acc, {[k]: v}), {});
-    return {...fieldAttrs, ...nonFieldAttrs};
+      .filter(
+        ([k]) =>
+          names.indexOf(k) === -1 && !k.startsWith('_') && !k.endsWith('$')
+      )
+      .reduce((acc, [k, v]) => Object.assign(acc, { [k]: v }), {});
+    return { ...fieldAttrs, ...nonFieldAttrs };
   }
 
   assign(
@@ -848,17 +853,23 @@ export class ODataModelOptions<T> {
     const changes: string[] = [];
     const model = self as any;
     Object.entries(entity).forEach(([key, value]) => {
-      const name = self._resetting && this.fields().find((p) => p.field === key)?.name || key;
+      const name =
+        (self._resetting && this.fields().find((p) => p.field === key)?.name) ||
+        key;
 
-      value = this.isModel(value) ? (value as ODataModel<any>).toEntity(INCLUDE_ALL) :
-        this.isCollection(value) ? (value as ODataCollection<any, ODataModel<any>>).toEntities(INCLUDE_ALL) :
-        value;
+      value = this.isModel(value)
+        ? (value as ODataModel<any>).toEntity(INCLUDE_ALL)
+        : this.isCollection(value)
+        ? (value as ODataCollection<any, ODataModel<any>>).toEntities(
+            INCLUDE_ALL
+          )
+        : value;
       const current = model[name];
       if (this.isCollection(current) && Types.isArray(value)) {
-        current.assign(value, {reset, silent});
+        current.assign(value, { reset, silent });
         if (current.hasChanged()) changes.push(name);
-      } else if(this.isModel(current) && Types.isObject(value)) {
-        current.assign(value, {reset, silent});
+      } else if (this.isModel(current) && Types.isObject(value)) {
+        current.assign(value, { reset, silent });
         if (current.hasChanged()) changes.push(name);
       } else if (!Types.isEqual(current, value)) {
         model[name] = value;
@@ -870,7 +881,7 @@ export class ODataModelOptions<T> {
       self.events$.emit({
         name: self._resetting ? 'reset' : 'update',
         model: self,
-        options: {changes}
+        options: { changes },
       });
     }
     self._resetting = false;
@@ -912,7 +923,10 @@ export class ODataModelOptions<T> {
         relation.state = ODataModelState.Unchanged;
       return relation?.model;
     } else {
-      const attrs = this.attributes(self, { include_concurrency: true, include_computed: true });
+      const attrs = this.attributes(self, {
+        include_concurrency: true,
+        include_computed: true,
+      });
       return attrs[field.name];
     }
   }
@@ -920,17 +934,32 @@ export class ODataModelOptions<T> {
   private _set<F>(
     self: ODataModel<T>,
     field: ODataModelField<F>,
-    value: F | F[] | { [name: string]: any } | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null
+    value:
+      | F
+      | F[]
+      | { [name: string]: any }
+      | ODataModel<F>
+      | ODataCollection<F, ODataModel<F>>
+      | null
   ) {
     if (field.isStructuredType()) {
       if (!(field.name in self._relations)) {
-        self._relations[field.name] = { state: ODataModelState.Unchanged, model: null, property: field, subscription: null };
+        self._relations[field.name] = {
+          state: ODataModelState.Unchanged,
+          model: null,
+          property: field,
+          subscription: null,
+        };
       }
       const relation = self._relations[field.name];
-      value = this.isModel(value) ? (value as ODataModel<F>).toEntity(INCLUDE_ALL) :
-        this.isCollection(value) ? (value as ODataCollection<F, ODataModel<F>>).toEntities(INCLUDE_ALL) :
-        value;
-      if (value === null && relation.subscription !== null) {
+      const data = (
+        this.isModel(value)
+          ? (value as ODataModel<F>).toEntity(INCLUDE_ALL)
+          : this.isCollection(value)
+          ? (value as ODataCollection<F, ODataModel<F>>).toEntities(INCLUDE_ALL)
+          : value
+      ) as F | F[] | null;
+      if (data === null && relation.subscription !== null) {
         relation.subscription.unsubscribe();
         relation.subscription = null;
       }
@@ -938,42 +967,75 @@ export class ODataModelOptions<T> {
         | ODataModel<any>
         | ODataCollection<any, ODataModel<any>>
         | null;
-      if (value !== null) {
-        if (this.isCollection(currentModel) && Types.isArray(value)) {
+      if (data !== null) {
+        if (this.isCollection(currentModel) && Types.isArray(data)) {
           // Current is collection
-          (currentModel as ODataCollection<F, ODataModel<F>>).assign(value as F[], {reset: self._resetting, silent: self._silent});
-          if ((currentModel as ODataCollection<F, ODataModel<F>>).hasChanged()) relation.state = self._resetting ? ODataModelState.Unchanged : ODataModelState.Changed;
-        } else if (this.isModel(currentModel) && Types.isObject(value)) {
+          (currentModel as ODataCollection<F, ODataModel<F>>).assign(
+            data as F[],
+            { reset: self._resetting, silent: self._silent }
+          );
+          if ((currentModel as ODataCollection<F, ODataModel<F>>).hasChanged())
+            relation.state = self._resetting
+              ? ODataModelState.Unchanged
+              : ODataModelState.Changed;
+        } else if (this.isModel(currentModel) && Types.isObject(data)) {
           // Current is model
-          (currentModel as ODataModel<F>).assign(value as F, {reset: self._resetting, silent: self._silent});
-          if ((currentModel as ODataModel<F>).hasChanged()) relation.state = self._resetting ? ODataModelState.Unchanged : ODataModelState.Changed;
-        } else if (currentModel === null && (Types.isArray(value) || Types.isObject(value))) {
-          relation.model = value = field.modelCollectionFactory<T, F>({
-            value: value,
+          (currentModel as ODataModel<F>).assign(data as F, {
             reset: self._resetting,
-            baseResource: self.resource(),
-            baseSchema: self.schema(),
-            baseAnnots: self.annots(),
+            silent: self._silent,
           });
-          relation.state = self._resetting ? ODataModelState.Unchanged : ODataModelState.Changed;
-          relation.subscription = this._subscribe(self, field, value as ODataModel<F> | ODataCollection<F, ODataModel<F>>);
-          if (this.isModel(value)) {
-            var ref = (value as ODataModel<F>).referential(field);
-            if (ref !== undefined) { self.assign(ref); }
+          if ((currentModel as ODataModel<F>).hasChanged())
+            relation.state = self._resetting
+              ? ODataModelState.Unchanged
+              : ODataModelState.Changed;
+        } else if (
+          currentModel === null &&
+          (Types.isArray(data) || Types.isObject(data))
+        ) {
+          const selfResource = self.resource();
+          const selfSchema = self.schema();
+          const selfAnnots = self.annots();
+          relation.model = field.modelCollectionFactory<T, F>({
+            value: data,
+            reset: self._resetting,
+            baseResource: selfResource,
+            baseSchema: selfSchema,
+            baseAnnots: selfAnnots,
+          });
+          relation.state = self._resetting
+            ? ODataModelState.Unchanged
+            : ODataModelState.Changed;
+          relation.subscription = this._subscribe(
+            self,
+            field,
+            relation.model as ODataModel<F> | ODataCollection<F, ODataModel<F>>
+          );
+          if (this.isModel(relation.model)) {
+            var ref = (relation.model as ODataModel<F>).referential(field);
+            if (ref !== undefined) {
+              self.assign(ref);
+            }
           }
         }
       }
-      if (!self._silent && value !== currentModel && (value === null || currentModel === null)) {
+      if (
+        !self._silent &&
+        relation.model !== currentModel &&
+        (relation.model === null || currentModel === null)
+      ) {
         self.events$.emit({
           name: 'change',
           path: field.name,
           model: self,
-          value: value,
+          value: relation.model,
           previous: currentModel,
         });
       }
     } else {
-      const attrs = this.attributes(self, {include_computed: true, include_concurrency: true});
+      const attrs = this.attributes(self, {
+        include_computed: true,
+        include_concurrency: true,
+      });
       const currentValue = attrs[field.name];
       if (!Types.isEqual(currentValue, value)) {
         if (self._resetting) {
@@ -994,7 +1056,7 @@ export class ODataModelOptions<T> {
             model: self,
             value,
             previous: currentValue,
-            options: { key: field.isKey() }
+            options: { key: field.isKey() },
           });
       }
     }
@@ -1005,7 +1067,10 @@ export class ODataModelOptions<T> {
     Object.values(self._relations).forEach(({ property, model }) => {
       if (model !== null) {
         const mr = model.resource();
-        const pr = resource !== undefined ? property.resourceFactory<T, any>(resource) : undefined;
+        const pr =
+          resource !== undefined
+            ? property.resourceFactory<T, any>(resource)
+            : undefined;
         if (mr === undefined || pr === undefined || !mr.isEqualTo(pr))
           model.resource(pr);
       }
@@ -1021,17 +1086,21 @@ export class ODataModelOptions<T> {
     const bubbling = mr === undefined || vr === undefined || !vr.isParentOf(mr);
     return value.events$.subscribe((event: ODataModelEvent<any>) => {
       if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
-
         if (event.model === value) {
-          if (event.name === 'change' && field.navigation && event.options?.key) {
+          if (
+            event.name === 'change' &&
+            field.navigation &&
+            event.options?.key
+          ) {
             var ref = value.referential(field);
-            if (ref !== undefined) { self.assign(ref); }
+            if (ref !== undefined) {
+              self.assign(ref);
+            }
           }
         }
 
         let path = field.name;
-        if (this.isModel(value) && event.path)
-          path = `${path}.${event.path}`;
+        if (this.isModel(value) && event.path) path = `${path}.${event.path}`;
         else if (this.isCollection(value) && event.path) {
           path = `${path}${event.path}`;
         }
