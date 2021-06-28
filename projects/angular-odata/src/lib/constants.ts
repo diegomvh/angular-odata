@@ -15,15 +15,23 @@ export const IF_NONE_MATCH_HEADER = 'If-None-Match';
 export const CONTENT_TYPE = 'Content-Type';
 export const CACHE_CONTROL = 'Cache-Control';
 export const HTTP11 = 'HTTP/1.1';
-export const ODATA_VERSION = 'OData-Version';
-export const ODATA_ENTITYID = 'OData-EntityId';
-export const ETAG_HEADER = 'ETag';
 export const ACCEPT = 'Accept';
 export const PREFER = 'Prefer';
+export const ODATA_VERSION = 'OData-Version';
 export const ODATA_VERSION_HEADERS = [
   ODATA_VERSION,
   ODATA_VERSION.toLowerCase(),
   'dataserviceversion',
+];
+export const ETAG_HEADER = 'ETag';
+export const ETAG_HEADERS = [
+  ETAG_HEADER,
+  ETAG_HEADER.toLowerCase()
+];
+export const ODATA_ENTITYID = 'OData-EntityId';
+export const ODATA_ENTITYID_HEADERS = [
+  ODATA_ENTITYID,
+  ODATA_ENTITYID.toLowerCase()
 ];
 
 // HTTP HEADER VALUES

@@ -1,4 +1,5 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { Types } from './types';
 
 export const Http = {
   //Merge Headers
@@ -14,7 +15,7 @@ export const Http = {
             headers
           );
         });
-      } else if (typeof value === 'object') {
+      } else if (Types.isObject(value)) {
         Object.entries(value).forEach(([key, value]) => {
           headers = (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) => acc.append(key, v),
@@ -39,7 +40,7 @@ export const Http = {
             params
           );
         });
-      } else if (typeof value === 'object') {
+      } else if (Types.isObject(value)) {
         Object.entries(value).forEach(([key, value]) => {
           params = (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) => acc.append(key, v),
@@ -50,4 +51,15 @@ export const Http = {
     });
     return params;
   },
+  resolveHeaderKey(
+    headers: HttpHeaders | { [param: string]: string | string[] },
+    options: string[]
+  ): string | undefined {
+    if (headers instanceof HttpHeaders) {
+      return headers.keys().find((k) => options.indexOf(k) !== -1);
+    } else if (Types.isObject(headers)) {
+      return Object.keys(headers).find((k) => options.indexOf(k) !== -1);
+    }
+    return undefined;
+  }
 };
