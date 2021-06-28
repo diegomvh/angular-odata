@@ -3,12 +3,14 @@ import {
   ODataEntitySetResource,
   ODataEntityResource,
   HttpOptions,
+  ODataEntity,
+  ODataEntities,
 } from '../resources';
 import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
 import { Observable, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { ODataEntityService } from './entity';
 
 export class ODataEntitySetService<T> extends ODataEntityService<T> {
@@ -36,48 +38,52 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return this.api.findEntitySetByName(this.name);
   }
 
-  public fetch(
+  public fetchAll(
+    options?: HttpOptions
+  ): Observable<T[]> {
+    return this.entities().fetchAll(options);
+  }
+
+  public fetchMany(
+    options?: HttpOptions & { withCount?: boolean }
+  ): Observable<ODataEntities<T>> {
+    return this.entities().fetch(options);
+  }
+
+  public fetchOne(
     key: EntityKey<T>,
-    { etag, ...options }: { etag?: string } & HttpOptions = {}
-  ): Observable<T | null> {
-    return this.entity(key)
-      .get({ etag, ...options })
-      .pipe(map(({ entity }) => entity));
+    options?: HttpOptions & { etag?: string }
+  ): Observable<ODataEntity<T>> {
+    return this.entity(key).fetch(options);
   }
 
   public create(
     attrs: Partial<T>,
-    options: HttpOptions = {}
-  ): Observable<T | null> {
-    return this.entities()
-      .post(attrs, options)
-      .pipe(map(({ entity }) => entity));
+    options?: HttpOptions
+  ): Observable<ODataEntity<T>> {
+    return this.entities().post(attrs, options);
   }
 
   public update(
     key: EntityKey<T>,
     attrs: Partial<T>,
-    { etag, ...options }: { etag?: string } & HttpOptions = {}
-  ): Observable<T | null> {
+    { etag, ...options }: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
     etag = etag || this.api.options.helper.etag(attrs);
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res
-      .put(attrs, { etag, ...options })
-      .pipe(map(({ entity }) => entity));
+    return res.put(attrs, { etag, ...options });
   }
 
   public patch(
     key: EntityKey<T>,
     attrs: Partial<T>,
     { etag, ...options }: { etag?: string } & HttpOptions = {}
-  ): Observable<T | null> {
+  ): Observable<ODataEntity<T>> {
     etag = etag || this.api.options.helper.etag(attrs);
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res
-      .patch(attrs, { etag, ...options })
-      .pipe(map(({ entity }) => entity));
+    return res.patch(attrs, { etag, ...options });
   }
 
   public destroy(
@@ -94,8 +100,8 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     key: EntityKey<T>,
     attrs: Partial<T>,
     { etag, ...options }: { etag?: string } & HttpOptions = {}
-  ): Observable<T | null> {
-    return this.fetch(key, { etag, ...options }).pipe(
+  ): Observable<ODataEntity<T>> {
+    return this.fetchOne(key, { etag, ...options }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) return this.create(attrs, options);
         else return throwError(error);

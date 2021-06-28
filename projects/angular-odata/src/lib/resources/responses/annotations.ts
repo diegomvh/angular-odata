@@ -1,7 +1,8 @@
 import { HttpHeaders } from '@angular/common/http';
-import { DEFAULT_VERSION, ETAG_HEADER, ODATA_ENTITYID } from '../../constants';
+import { DEFAULT_VERSION, ETAG_HEADER, ETAG_HEADERS, ODATA_ENTITYID, ODATA_ENTITYID_HEADERS } from '../../constants';
 import { ODataContext, ODataHelper } from '../../helper';
 import { OptionsHelper } from '../../types';
+import { Http } from '../../utils/http';
 
 export abstract class ODataAnnotations {
   annotations: { [annot: string]: any };
@@ -21,11 +22,15 @@ export abstract class ODataAnnotations {
     this.options = options;
     this.annotations = this.options ? this.odv.annotations(data) : data;
     if (headers) {
-      const etag = headers.get(ETAG_HEADER);
-      if (etag) this.odv.etag(this.annotations, etag);
-      const entityId = headers.get(ODATA_ENTITYID);
-      if (entityId) {
-        this.odv.id(this.annotations, entityId);
+      let header = Http.resolveHeaderKey(headers, ETAG_HEADERS);
+      if (header) {
+        const etag = headers.get(header);
+        if (etag) this.odv.etag(this.annotations, etag);
+      }
+      header = Http.resolveHeaderKey(headers, ODATA_ENTITYID_HEADERS);
+      if (header) {
+        const entityId = headers.get(header);
+        if (entityId) this.odv.id(this.annotations, entityId);
       }
     }
   }
@@ -50,6 +55,13 @@ export abstract class ODataAnnotations {
     return this.properties[name];
   }
 
+  attributes<T>(data: Object): T {
+    let attrs = this.odv.attributes(data);
+    // TODO: Is Optional by Settings ? Update Etag
+    this.odv.etag(attrs, this.odv.etag(this.annotations));
+    return attrs as T;
+  }
+
   // Method
   abstract clone(): ODataAnnotations;
   abstract data(data: Object): Object;
@@ -64,7 +76,7 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 
   data(data: Object) {
-    return this.odv.property(data, this.context);
+    return this.odv.property(data, this.context)
   }
 
   get type() {
@@ -82,10 +94,6 @@ export class ODataEntityAnnotations extends ODataAnnotations {
 
   data(data: Object) {
     return this.odv.entity(data, this.context);
-  }
-
-  attributes<T>(data: Object): T {
-    return this.odv.attributes(data) as T;
   }
 
   get type() {
