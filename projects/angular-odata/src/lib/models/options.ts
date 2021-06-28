@@ -329,10 +329,12 @@ export class ODataModelField<F> {
     const Collection = schema?.collection || ODataCollection;
     return this.parser.collection
       ? (new Collection((value || []) as (F | { [name: string]: any })[], {
+          resource: resource as ODataCollectionResource<F>,
           annots: annots as ODataEntitiesAnnotations,
           reset,
         }) as ODataCollection<F, ODataModel<F>>)
       : (new Model((value || {}) as F | { [name: string]: any }, {
+          resource: resource as ODataModelResource<F>,
           annots: annots as ODataEntityAnnotations,
           reset,
         }) as ODataModel<F>);
@@ -485,7 +487,7 @@ export class ODataModelOptions<T> {
     const current = self._resource;
     if (
       current === undefined ||
-      (!current.isEqualTo(resource) && !current.isParentOf(resource))
+      !(current.isEqualTo(resource) || resource.isParentOf(current))
     ) {
       self._resource = resource;
       this._pushToRelations(self);
