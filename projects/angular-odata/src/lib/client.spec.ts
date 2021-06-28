@@ -243,6 +243,7 @@ describe('ODataClient', () => {
         "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
       '@odata.etag': 'W/"08D814450D6BDB6F"',
     });
+    const entityPerson = Object.assign({}, dummyPerson, { '@odata.etag': 'W/"08D814450D6BDB6F"' });
     const entity: ODataEntityResource<Person> = client
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
       .entity('russellwhyte');
@@ -250,7 +251,7 @@ describe('ODataClient', () => {
     entity.get().subscribe(({ entity, annots: meta }) => {
       expect(meta.context.entitySet).toEqual('People');
       expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
-      expect(entity).toEqual(data);
+      expect(entity).toEqual(entityPerson);
     });
 
     const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);

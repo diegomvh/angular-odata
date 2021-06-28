@@ -134,11 +134,11 @@ const ODataVersionBaseHelper = <any>{
       .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
   },
   attributes(value: { [name: string]: any }) {
-    // Preserve ETAG
+    // Preserve ETAG, ID and CONTEXT
     return Object.keys(value)
       .filter(
         (key) =>
-          key === this.ODATA_ETAG || (
+          key === this.ODATA_ETAG  || (
             key.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 &&
             !key.startsWith(this.ODATA_FUNCTION_PREFIX)
           )
