@@ -134,7 +134,7 @@ const ODataVersionBaseHelper = <any>{
       .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
   },
   attributes(value: { [name: string]: any }) {
-    // Preserve ETAG, ID and CONTEXT
+    // Preserve ETAG
     return Object.keys(value)
       .filter(
         (key) =>
