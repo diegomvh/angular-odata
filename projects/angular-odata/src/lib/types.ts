@@ -13,14 +13,7 @@ export type CacheCacheability = 'public' | 'private' | 'no-cache' | 'no-store';
 
 export interface Options {
   version?: ODataVersion;
-  metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
-  ieee754Compatible?: boolean;
-  streaming?: boolean;
-}
-
-export interface OptionsHelper extends Options {
-  helper: ODataVersionHelper;
 }
 
 export interface ApiOptions extends Options {
@@ -28,6 +21,10 @@ export interface ApiOptions extends Options {
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
   //Headers
+  accept?: {
+    metadata?: ODataMetadataType;
+    ieee754Compatible?: boolean;
+  },
   etag?: {
     ifMatch?: boolean;
     ifNoneMatch?: boolean;
@@ -41,7 +38,14 @@ export interface ApiOptions extends Options {
   fetchPolicy?: FetchPolicy;
 }
 
-export interface ResponseOptions extends Options {
+export interface OptionsHelper extends Options {
+  helper: ODataVersionHelper;
+  metadata?: ODataMetadataType;
+  ieee754Compatible?: boolean;
+  streaming?: boolean;
+}
+
+export interface ResponseOptions extends OptionsHelper {
   cacheability?: CacheCacheability;
   maxAge?: number;
 }
@@ -51,10 +55,10 @@ export interface StructuredTypeFieldOptions extends OptionsHelper {
 }
 
 export interface Parser<T> {
-  deserialize(value: any, options?: OptionsHelper): T;
-  serialize(value: T, options?: OptionsHelper): any;
+  deserialize(value: any, options?: OptionsHelper | StructuredTypeFieldOptions): T;
+  serialize(value: T, options?: OptionsHelper | StructuredTypeFieldOptions): any;
   //Encodes the value/s of a URL parameter or query-string.
-  encode(value: T, options?: OptionsHelper): any;
+  encode(value: T, options?: OptionsHelper | StructuredTypeFieldOptions): any;
 }
 
 export const NONE_PARSER = {

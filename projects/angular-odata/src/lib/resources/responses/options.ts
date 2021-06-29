@@ -11,11 +11,10 @@ import {
   ODataMetadataType,
   ODataVersion,
   Options,
-  OptionsHelper,
   ResponseOptions,
 } from '../../types';
 
-export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
+export class ODataResponseOptions implements ResponseOptions {
   version: ODataVersion;
   streaming?: boolean;
   // OData
@@ -28,9 +27,7 @@ export class ODataResponseOptions implements ResponseOptions, OptionsHelper {
 
   constructor(config: Options) {
     this.version = config.version || DEFAULT_VERSION;
-    this.metadata = config.metadata;
     this.stringAsEnum = config.stringAsEnum;
-    this.ieee754Compatible = config.ieee754Compatible;
   }
 
   get helper() {

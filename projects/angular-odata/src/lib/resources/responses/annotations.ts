@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { DEFAULT_VERSION, ETAG_HEADER, ETAG_HEADERS, ODATA_ENTITYID, ODATA_ENTITYID_HEADERS } from '../../constants';
+import { DEFAULT_VERSION, ETAG_HEADERS, ODATA_ENTITYID_HEADERS } from '../../constants';
 import { ODataContext, ODataHelper } from '../../helper';
 import { OptionsHelper } from '../../types';
 import { Http } from '../../utils/http';
@@ -7,7 +7,7 @@ import { Http } from '../../utils/http';
 export abstract class ODataAnnotations {
   annotations: { [annot: string]: any };
   options?: OptionsHelper;
-  protected get odv() {
+  protected get helper() {
     return this.options?.helper || ODataHelper[DEFAULT_VERSION];
   }
   constructor({
@@ -20,17 +20,17 @@ export abstract class ODataAnnotations {
     headers?: HttpHeaders;
   } = {}) {
     this.options = options;
-    this.annotations = this.options ? this.odv.annotations(data) : data;
+    this.annotations = this.options ? this.helper.annotations(data) : data;
     if (headers) {
       let header = Http.resolveHeaderKey(headers, ETAG_HEADERS);
       if (header) {
         const etag = headers.get(header);
-        if (etag) this.odv.etag(this.annotations, etag);
+        if (etag) this.helper.etag(this.annotations, etag);
       }
       header = Http.resolveHeaderKey(headers, ODATA_ENTITYID_HEADERS);
       if (header) {
         const entityId = headers.get(header);
-        if (entityId) this.odv.id(this.annotations, entityId);
+        if (entityId) this.helper.id(this.annotations, entityId);
       }
     }
   }
@@ -39,14 +39,14 @@ export abstract class ODataAnnotations {
   private _context?: ODataContext;
   get context(): ODataContext {
     if (this._context === undefined) {
-      this._context = this.odv.context(this.annotations);
+      this._context = this.helper.context(this.annotations);
     }
     return this._context;
   }
   private _properties?: { [name: string]: any };
   get properties() {
     if (this._properties === undefined) {
-      this._properties = this.odv.properties(this.annotations);
+      this._properties = this.helper.properties(this.annotations);
     }
     return this._properties;
   }
@@ -56,10 +56,7 @@ export abstract class ODataAnnotations {
   }
 
   attributes<T>(data: Object): T {
-    let attrs = this.odv.attributes(data);
-    // TODO: Is Optional by Settings ? Update Etag
-    this.odv.etag(attrs, this.odv.etag(this.annotations));
-    return attrs as T;
+    return this.helper.attributes(data) as T;
   }
 
   // Method
@@ -76,11 +73,11 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 
   data(data: Object) {
-    return this.odv.property(data, this.context)
+    return this.helper.property(data, this.context)
   }
 
   get type() {
-    return this.odv.type(this.annotations) || this.context.type;
+    return this.helper.type(this.annotations) || this.context.type;
   }
 }
 
@@ -93,53 +90,53 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   }
 
   data(data: Object) {
-    return this.odv.entity(data, this.context);
+    return this.helper.entity(data, this.context);
   }
 
   get type() {
-    return this.odv.type(this.annotations) || this.context.type;
+    return this.helper.type(this.annotations) || this.context.type;
   }
 
   get id() {
-    return this.odv.id(this.annotations);
+    return this.helper.id(this.annotations);
   }
 
   get etag() {
-    return this.odv.etag(this.annotations);
+    return this.helper.etag(this.annotations);
   }
 
   get mediaEtag() {
-    return this.odv.mediaEtag(this.annotations);
+    return this.helper.mediaEtag(this.annotations);
   }
 
   get metadataEtag() {
-    return this.odv.metadataEtag(this.annotations);
+    return this.helper.metadataEtag(this.annotations);
   }
 
   get readLink() {
-    return this.odv.readLink(this.annotations);
+    return this.helper.readLink(this.annotations);
   }
 
   get editLink() {
-    return this.odv.editLink(this.annotations);
+    return this.helper.editLink(this.annotations);
   }
 
   get mediaReadLink() {
-    return this.odv.mediaReadLink(this.annotations);
+    return this.helper.mediaReadLink(this.annotations);
   }
 
   get mediaEditLink() {
-    return this.odv.mediaEditLink(this.annotations);
+    return this.helper.mediaEditLink(this.annotations);
   }
 
   get mediaContentType() {
-    return this.odv.mediaContentType(this.annotations);
+    return this.helper.mediaContentType(this.annotations);
   }
 
   private _functions?: { [name: string]: any };
   get functions() {
     if (this._functions === undefined) {
-      this._functions = this.odv.functions(this.annotations);
+      this._functions = this.helper.functions(this.annotations);
     }
     return this._functions;
   }
@@ -158,26 +155,26 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
   }
 
   data(data: Object) {
-    return this.odv.entities(data, this.context);
+    return this.helper.entities(data, this.context);
   }
   get type() {
     return this.context.type;
   }
 
   get readLink() {
-    return this.odv.readLink(this.annotations);
+    return this.helper.readLink(this.annotations);
   }
 
   get count() {
-    return this.odv.count(this.annotations);
+    return this.helper.count(this.annotations);
   }
 
   get nextLink() {
-    return this.odv.nextLink(this.annotations);
+    return this.helper.nextLink(this.annotations);
   }
 
   get deltaLink() {
-    return this.odv.deltaLink(this.annotations);
+    return this.helper.deltaLink(this.annotations);
   }
 
   get top() {
@@ -198,7 +195,7 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
   private _functions?: { [name: string]: any };
   get functions() {
     if (this._functions === undefined) {
-      this._functions = this.odv.functions(this.annotations);
+      this._functions = this.helper.functions(this.annotations);
     }
     return this._functions;
   }

@@ -5,6 +5,7 @@ import {
   StructuredTypeConfig,
   OptionsHelper,
   NONE_PARSER,
+  StructuredTypeFieldOptions,
 } from '../types';
 import { ODataEnumTypeParser } from './enum-type';
 import { COMPUTED } from '../constants';
@@ -175,7 +176,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     }
     return this.parser.deserialize(
       value,
-      Object.assign({ field: this }, options)
+      { field: this, ...options } as StructuredTypeFieldOptions
     );
   }
   //#endregion
@@ -205,17 +206,20 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
         ? (value as any[]).map((v) => this.toJson(parser, v, options))
         : this.toJson(parser, value, options);
     }
-    return this.parser.serialize(
-      value,
-      Object.assign({ field: this }, options)
-    );
+    return this.parser.serialize(value, {
+      field: this,
+      ...options,
+    } as StructuredTypeFieldOptions);
   }
   //#endregion
 
   //#region Encode
   encode(value: T, options?: OptionsHelper): string {
     options = options || this.optionsHelper;
-    return this.parser.encode(value, Object.assign({ field: this }, options));
+    return this.parser.encode(value, {
+      field: this,
+      ...options,
+    } as StructuredTypeFieldOptions);
   }
   //#endregion
 
