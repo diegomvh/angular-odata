@@ -187,6 +187,7 @@ export const TripPinConfig = {
   serviceRootUrl: SERVICE_ROOT,
   options: {
     stringAsEnum: true,
+    stripMetadata: 'minimal',
     fetchPolicy: 'no-cache',
   },
   schemas: [

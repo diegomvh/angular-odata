@@ -230,32 +230,42 @@ describe('ODataClient', () => {
   });
 
   it('should fetch person', () => {
-    const dummyPerson = {
+    const person = {
       UserName: 'russellwhyte',
       FirstName: 'Russell',
       LastName: 'Whyte',
       Emails: ['Russell@example.com', 'Russell@contoso.com'],
     };
-    const data = Object.assign({}, dummyPerson, {
+    const entityMetadata = {
       '@odata.context':
         'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
       '@odata.id':
         "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
       '@odata.etag': 'W/"08D814450D6BDB6F"',
-    });
-    const entityPerson = Object.assign({}, dummyPerson, { '@odata.etag': 'W/"08D814450D6BDB6F"' });
+    };
+    const entityFunctions = {
+      '#Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips': {
+        title: 'Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips',
+        target:
+          "http://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/People('diegomvh')/Microsoft.OData.SampleService.Models.TripPin.GetFriendsTrips",
+      },
+    };
+
     const entity: ODataEntityResource<Person> = client
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
       .entity('russellwhyte');
 
-    entity.get().subscribe(({ entity, annots: meta }) => {
-      expect(meta.context.entitySet).toEqual('People');
-      expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
+    const entityPerson = Object.assign({}, person, entityMetadata);
+    entity.get().subscribe(({ entity, annots }) => {
+      expect(annots.context.entitySet).toEqual('People');
+      expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
       expect(entity).toEqual(entityPerson);
     });
 
     const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);
     expect(req.request.method).toBe('GET');
+
+    const data = Object.assign({}, person, entityMetadata, entityFunctions);
     req.flush(data);
   });
 

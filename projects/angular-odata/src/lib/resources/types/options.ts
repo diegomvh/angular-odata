@@ -1,4 +1,5 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { FetchPolicy } from '../../types';
 
 export type HttpOptions = {
   //apiName?: string,
@@ -6,12 +7,7 @@ export type HttpOptions = {
   params?: HttpParams | { [param: string]: string | string[] };
   reportProgress?: boolean;
   withCredentials?: boolean;
-  fetchPolicy?:
-    | 'cache-first'
-    | 'cache-and-network'
-    | 'network-only'
-    | 'no-cache'
-    | 'cache-only';
+  fetchPolicy?: FetchPolicy;
 };
 
 export type HttpEntityOptions = HttpOptions & { responseType?: 'entity' };
