@@ -574,7 +574,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           // Get entity from model
           const entity = isModel
             ? (obj as M).toEntity({ client_id: true, ...INCLUDE_ALL })
-            : model.annots().attributes<T>(obj);
+            : model.annots().attributes<T>(obj, 'full');
           model.assign(entity, { reset, silent });
           if (model.hasChanged()) toMerge.push(model);
         }

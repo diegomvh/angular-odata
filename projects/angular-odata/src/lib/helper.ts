@@ -5,6 +5,7 @@ import {
   $COUNT,
   $INLINECOUNT,
 } from './constants';
+import { ODataMetadataType } from './types';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
 
@@ -31,7 +32,7 @@ export interface ODataVersionHelper {
   entities(value: { [name: string]: any }, context: ODataContext): any;
   property(value: { [name: string]: any }, context: ODataContext): any;
   annotations(value: { [name: string]: any }): { [name: string]: any };
-  attributes(value: { [name: string]: any }): { [name: string]: any };
+  attributes(value: { [name: string]: any }, metadata: ODataMetadataType): any;
   //Get or Set Id
   id(value: { [name: string]: any }, id?: string): string | undefined;
   //Get or Set Etag
@@ -133,14 +134,12 @@ const ODataVersionBaseHelper = <any>{
       )
       .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
   },
-  attributes(value: { [name: string]: any }) {
-    return Object.keys(value)
-      .filter(
-        (key) =>
-          key.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 &&
-          !key.startsWith(this.ODATA_FUNCTION_PREFIX)
-      )
-      .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
+  attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
+    return Object.entries(value).filter(
+      ([k, ]) => (metadata === 'none' ||
+        (metadata === 'minimal' && (k.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 || k.startsWith(this.ODATA_ANNOTATION_PREFIX)) && !k.startsWith(this.ODATA_FUNCTION_PREFIX)) ||
+        (metadata === 'full' && k.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 && !k.startsWith(this.ODATA_FUNCTION_PREFIX)))
+    ).reduce((acc, e) => ({...acc, [e[0]]: e[1] }), {});
   },
   nextLink(value: { [name: string]: any }) {
     return this.ODATA_NEXTLINK in value
@@ -301,7 +300,7 @@ export const ODataHelper = {
       if (this.ODATA_ANNOTATION in value) return value[this.ODATA_ANNOTATION];
       return value;
     },
-    attributes(value: { [name: string]: any }) {
+    attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
       return value;
     },
     countParam() {

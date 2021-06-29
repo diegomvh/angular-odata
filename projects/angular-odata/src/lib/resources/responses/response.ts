@@ -114,22 +114,21 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return this._options;
   }
 
-  private parse(parser: Parser<T>, value: any): any {
-    const type = Types.isObject(value)
-      ? this.options.helper.type(value)
-      : undefined;
+  private parse(parser: Parser<T>, value: any, options: ODataResponseOptions): any {
+    const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
       parser = parser.findParser((c) => c.isTypeOf(type));
     }
-    return parser.deserialize(value, this.options);
+    const attrs = (Types.isObject(value) ? options.helper.attributes(value, this.api.options.stripMetadata) : value) as T;
+    return parser.deserialize(attrs, options);
   }
 
-  private deserialize(type: string, value: any): any {
+  private deserialize(type: string, value: any, options: ODataResponseOptions): any {
     const parser = this.api.findParserForType<T>(type);
     if (parser !== undefined)
       return Array.isArray(value)
-        ? value.map((v) => this.parse(parser, v))
-        : this.parse(parser, value);
+        ? value.map((v) => this.parse(parser, v, options))
+        : this.parse(parser, value, options);
     return value;
   }
 
@@ -138,24 +137,20 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   entity(): ODataEntity<T> {
+    const options = this.options;
     const payload =
-      this.body && this.options.version === '2.0'
+      this.body && options.version === '2.0'
         ? (<any>this.body)['d']
         : this.body;
     const annots = new ODataEntityAnnotations({
       data: payload || {},
-      options: this.options,
+      options: options,
       headers: this.headers,
     });
-    let attrs = payload ? annots.data(payload) : null;
-    if (attrs === null)
-      return { entity: null, annots };
-
-    // TODO: Is Optional by Settings ? Strip Metadata from Entity
-    let entity = annots.attributes<T>(attrs);
+    let entity = payload ? annots.data(payload) : null;
     const type = this.resource.type();
-    if (type !== undefined)
-      entity = this.deserialize(type, entity) as T;
+    if (entity !== null && type !== undefined)
+      entity = this.deserialize(type, entity, options) as T;
     return { entity, annots };
   }
 
@@ -164,21 +159,20 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   entities(): ODataEntities<T> {
+    const options = this.options;
     const payload =
-      this.options.version === '2.0' ? (<any>this.body)['d'] : this.body;
+      this.body && options.version === '2.0'
+        ? (<any>this.body)['d']
+        : this.body;
     const annots = new ODataEntitiesAnnotations({
       data: payload || {},
-      options: this.options,
+      options: options,
       headers: this.headers,
     });
-    let values = payload ? annots.data(payload) : null;
-    if (values === null)
-      return { entities: null, annots };
-
-    let entities = values as T[];
+    let entities = payload ? annots.data(payload) : null;
     const type = this.resource.type();
-    if (type !== undefined)
-      entities = this.deserialize(type, entities) as T[];
+    if (entities !== null && type !== undefined)
+      entities = this.deserialize(type, entities, options) as T[];
     return { entities, annots };
   }
 
@@ -187,22 +181,20 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   property(): ODataProperty<T> {
+    const options = this.options;
     const payload =
-      this.options.version === '2.0' ? (<any>this.body)['d'] : this.body;
+      this.body && options.version === '2.0'
+        ? (<any>this.body)['d']
+        : this.body;
     const annots = new ODataPropertyAnnotations({
       data: payload || {},
-      options: this.options,
+      options: options,
       headers: this.headers,
     });
-    let value = payload ? (annots.data(payload) as T) : null;
-    if (value === null)
-      return { property: null, annots };
-
-    // TODO: Is Optional by Settings ? Strip Metadata from Property
-    let property = Types.isObject(value) ? annots.attributes<T>(value) : value as T;
+    let property = payload ? (annots.data(payload) as T) : null;
     const type = this.resource.type();
-    if (type !== undefined)
-      property = this.deserialize(type, property) as T;
+    if (property !== null && type !== undefined)
+      property = this.deserialize(type, property, options) as T;
     return { property, annots };
   }
 
@@ -211,11 +203,14 @@ export class ODataResponse<T> extends HttpResponse<T> {
    * @returns
    */
   value(): T | null {
+    const options = this.options;
     const payload =
-      this.body && this.options.version === '2.0' ? this.body : this.body;
+      this.body && options.version === '2.0' ? this.body : this.body;
     const type = this.resource.type();
     return payload
-      ? ((type !== undefined ? this.deserialize(type, payload) : payload) as T)
+      ? ((type !== undefined
+          ? this.deserialize(type, payload, options)
+          : payload) as T)
       : null;
   }
 }

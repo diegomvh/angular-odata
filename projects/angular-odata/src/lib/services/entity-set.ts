@@ -67,32 +67,30 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   public update(
     key: EntityKey<T>,
     attrs: Partial<T>,
-    { etag, ...options }: HttpOptions & { etag?: string } = {}
+    options?: HttpOptions & { etag?: string }
   ): Observable<ODataEntity<T>> {
-    etag = etag || this.api.options.helper.etag(attrs);
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res.put(attrs, { etag, ...options });
+    return res.put(attrs, options);
   }
 
   public patch(
     key: EntityKey<T>,
     attrs: Partial<T>,
-    { etag, ...options }: { etag?: string } & HttpOptions = {}
+    options?: HttpOptions & { etag?: string }
   ): Observable<ODataEntity<T>> {
-    etag = etag || this.api.options.helper.etag(attrs);
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res.patch(attrs, { etag, ...options });
+    return res.patch(attrs, options);
   }
 
   public destroy(
     key: EntityKey<T>,
-    { etag, ...options }: { etag?: string } & HttpOptions = {}
+    options?: HttpOptions & { etag?: string }
   ) {
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res.delete({ etag, ...options });
+    return res.delete(options);
   }
 
   // Shortcuts

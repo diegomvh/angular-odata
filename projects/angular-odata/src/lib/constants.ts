@@ -54,6 +54,7 @@ export const BINARY = 'binary';
 export const BOUNDARY_PREFIX_SUFFIX = '--';
 export const BATCH_PREFIX = 'batch_';
 export const CHANGESET_PREFIX = 'changeset_';
+export const DEFAULT_STRIP_METADATA = 'full';
 export const DEFAULT_FETCH_POLICY = 'network-only';
 export const DEFAULT_TIMEOUT = 60; // Time in seconds
 export const CALLABLE_BINDING_PARAMETER = 'bindingParameter';

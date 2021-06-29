@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { DEFAULT_VERSION, ETAG_HEADERS, ODATA_ENTITYID_HEADERS } from '../../constants';
 import { ODataContext, ODataHelper } from '../../helper';
-import { OptionsHelper } from '../../types';
+import { OptionsHelper, ODataMetadataType } from '../../types';
 import { Http } from '../../utils/http';
 
 export abstract class ODataAnnotations {
@@ -55,13 +55,13 @@ export abstract class ODataAnnotations {
     return this.properties[name];
   }
 
-  attributes<T>(data: Object): T {
-    return this.helper.attributes(data) as T;
+  attributes<T>(data: { [name: string]: any }, metadata: ODataMetadataType): T {
+    return this.helper.attributes(data, metadata) as T;
   }
 
   // Method
   abstract clone(): ODataAnnotations;
-  abstract data(data: Object): Object;
+  abstract data(data: { [name: string]: any }): { [name: string]: any };
 }
 
 export class ODataPropertyAnnotations extends ODataAnnotations {
@@ -72,7 +72,7 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
     });
   }
 
-  data(data: Object) {
+  data(data: { [name: string]: any }) {
     return this.helper.property(data, this.context)
   }
 
@@ -89,7 +89,7 @@ export class ODataEntityAnnotations extends ODataAnnotations {
     });
   }
 
-  data(data: Object) {
+  data(data: { [name: string]: any }) {
     return this.helper.entity(data, this.context);
   }
 
@@ -154,7 +154,7 @@ export class ODataEntitiesAnnotations extends ODataAnnotations {
     });
   }
 
-  data(data: Object) {
+  data(data: { [name: string]: any }) {
     return this.helper.entities(data, this.context);
   }
   get type() {

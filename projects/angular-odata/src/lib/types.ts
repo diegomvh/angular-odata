@@ -35,6 +35,7 @@ export interface ApiOptions extends Options {
     continueOnError?: boolean;
     includeAnnotations?: string;
   };
+  stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
 }
 

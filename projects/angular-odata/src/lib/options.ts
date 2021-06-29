@@ -1,4 +1,4 @@
-import { DEFAULT_FETCH_POLICY, DEFAULT_VERSION } from './constants';
+import { DEFAULT_FETCH_POLICY, DEFAULT_STRIP_METADATA, DEFAULT_VERSION } from './constants';
 import { ODataHelper } from './helper';
 import {
   ApiOptions,
@@ -11,6 +11,7 @@ import {
 export class ODataApiOptions implements ApiOptions, OptionsHelper {
   version: ODataVersion;
   stringAsEnum?: boolean;
+  stripMetadata: ODataMetadataType;
   fetchPolicy: FetchPolicy;
   streaming?: boolean;
   // Http
@@ -44,6 +45,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.params = config.params || {};
     this.headers = config.headers || {};
     this.withCredentials = config.withCredentials;
+    this.stripMetadata = config.stripMetadata || DEFAULT_STRIP_METADATA;
     this.fetchPolicy = config.fetchPolicy || DEFAULT_FETCH_POLICY;
     this.accept = config.accept;
     this.prefer = config.prefer;

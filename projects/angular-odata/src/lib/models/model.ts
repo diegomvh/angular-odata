@@ -75,7 +75,7 @@ export class ODataModel<T> {
     );
     this.annots(annots || new ODataEntityAnnotations());
 
-    let attrs = this.annots().attributes<T>(data);
+    let attrs = this.annots().attributes<T>(data, 'full');
     let defaults = this.defaults();
 
     this.assign(Objects.merge(defaults, attrs), { reset });
@@ -283,7 +283,7 @@ export class ODataModel<T> {
     return obs$.pipe(
       map(({ entity, annots }) => {
         this.annots(annots);
-        this.assign(annots.attributes<T>(entity || {}), { reset: true });
+        this.assign(annots.attributes<T>(entity || {}, 'full'), { reset: true });
         this.events$.emit({ name: 'sync', model: this });
         return this;
       })
