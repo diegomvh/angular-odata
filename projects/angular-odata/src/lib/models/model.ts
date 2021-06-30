@@ -518,7 +518,7 @@ export class ODataModel<T> {
       .fields({ include_navigation: true })
       .find((p) => p.name === name);
     if (field === undefined || !field.navigation)
-      throw new Error(`Can't find navigation property ${name}`);
+      return throwError(`Can't find navigation property ${name}`);
 
     const resource = this._meta.resource(this, { toEntity: asEntity });
     if (resource instanceof ODataEntityResource && resource.hasKey()) {
@@ -577,7 +577,7 @@ export class ODataModel<T> {
       .fields({ include_navigation: true })
       .find((p) => p.name === name);
     if (field === undefined || !field.navigation)
-      throw new Error(`Can't find navigation property ${name}`);
+      return throwError(`Can't find navigation property ${name}`);
 
     let model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | undefined;
     if (!field.collection && asEntity) {

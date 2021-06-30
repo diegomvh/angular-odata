@@ -271,8 +271,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const resource = this.resource();
     if (resource === undefined)
       return throwError('saveAll: Resource is undefined');
+
     if (resource instanceof ODataPropertyResource)
       return throwError('fetchAll: Resource is ODataPropertyResource');
+
     let changes = this._entries.map((entry) => {
       const model = entry.model;
       if (entry.state === ODataModelState.Removed) {
@@ -302,19 +304,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   protected addReference(model: M, options?: HttpOptions): Observable<M> {
-    let resource = this.resource();
-    return model.key() !== undefined &&
-      resource instanceof ODataNavigationPropertyResource
-      ? resource
-          .reference()
-          .add(
-            model._meta.resource(model, {
-              toEntity: true,
-            }) as ODataEntityResource<T>,
-            options
-          )
-          .pipe(map(() => model))
-      : of(model);
+    const resource = this.resource();
+    if (
+      model.key() === undefined ||
+      !(resource instanceof ODataNavigationPropertyResource)
+    )
+      return throwError("addReference: Can't add reference");
+    return resource
+      .reference()
+      .add(
+        model._meta.resource(model, {
+          toEntity: true,
+        }) as ODataEntityResource<T>,
+        options
+      )
+      .pipe(map(() => model));
   }
 
   private _addModel(
@@ -397,19 +401,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   protected removeReference(model: M, options?: HttpOptions): Observable<M> {
-    let resource = this.resource();
-    return model.key() !== undefined &&
-      resource instanceof ODataNavigationPropertyResource
-      ? resource
-          .reference()
-          .remove(
-            model._meta.resource(model, {
-              toEntity: true,
-            }) as ODataEntityResource<T>,
-            options
-          )
-          .pipe(map(() => model))
-      : of(model);
+    const resource = this.resource();
+    if (
+      model.key() === undefined ||
+      !(resource instanceof ODataNavigationPropertyResource)
+    )
+      return throwError("removeReference: Can't remove reference");
+    return resource
+      .reference()
+      .remove(
+        model._meta.resource(model, {
+          toEntity: true,
+        }) as ODataEntityResource<T>,
+        options
+      )
+      .pipe(map(() => model));
   }
 
   private _removeModel(
@@ -671,7 +677,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           return func.call(params, { responseType, ...options });
       }
     }
-    throw new Error(`Can't function without ODataEntitySetResource`);
+    return throwError(`Can't function without ODataEntitySetResource`);
   }
 
   protected callAction<P, R>(
@@ -703,7 +709,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           return action.call(params, { responseType, ...options });
       }
     }
-    throw new Error(`Can't action without ODataEntitySetResource`);
+    return throwError(`Can't action without ODataEntitySetResource`);
   }
 
   private _subscribe(model: M) {
