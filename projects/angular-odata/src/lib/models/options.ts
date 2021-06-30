@@ -485,10 +485,7 @@ export class ODataModelOptions<T> {
       );
 
     const current = self._resource;
-    if (
-      current === undefined ||
-      !(current.isEqualTo(resource) || resource.isParentOf(current))
-    ) {
+    if (current === undefined || !current.isEqualTo(resource)) {
       self._resource = resource;
       this._pushToRelations(self);
       self.events$.emit({
@@ -1075,8 +1072,7 @@ export class ODataModelOptions<T> {
           resource !== undefined
             ? property.resourceFactory<T, any>(resource)
             : undefined;
-        if (mr === undefined || pr === undefined || !mr.isEqualTo(pr))
-          model.resource(pr);
+        model.resource(pr);
       }
     });
   }
