@@ -41,14 +41,14 @@ export class ODataParameterParser<T> {
   }
 
   configure({
-    findParserForType,
+    parserForType,
     options,
   }: {
-    findParserForType: (type: string) => Parser<any>;
+    parserForType: (type: string) => Parser<any>;
     options: OptionsHelper;
   }) {
     this.optionsHelper = options;
-    this.parser = findParserForType(this.type);
+    this.parser = parserForType(this.type);
   }
 
   isEdmType() {
@@ -142,16 +142,16 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   configure({
-    findParserForType,
+    parserForType,
     options,
   }: {
-    findParserForType: (type: string) => Parser<any>;
+    parserForType: (type: string) => Parser<any>;
     options: OptionsHelper;
   }) {
     this.optionsHelper = options;
     if (this.return)
-      this.parser = findParserForType(this.return.type) || NONE_PARSER;
-    this.parameters.forEach((p) => p.configure({ findParserForType, options }));
+      this.parser = parserForType(this.return.type) || NONE_PARSER;
+    this.parameters.forEach((p) => p.configure({ parserForType, options }));
   }
 
   binding() {

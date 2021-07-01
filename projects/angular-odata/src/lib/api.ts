@@ -71,7 +71,7 @@ export class ODataApi {
     this.requester = settings.requester;
     this.schemas.forEach((schema) => {
       schema.configure({
-        findParserForType: (type: string) => this.findParserForType(type),
+        parserForType: (type: string) => this.parserForType(type),
         findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
     });
@@ -220,7 +220,7 @@ export class ODataApi {
   //#endregion
   //#endregion
 
-  public findParserForType<T>(type: string) {
+  public parserForType<T>(type: string) {
     // Base Parsers
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;

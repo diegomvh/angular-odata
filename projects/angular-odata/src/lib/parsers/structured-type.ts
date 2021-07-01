@@ -160,7 +160,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
       : undefined;
     if (type !== undefined) {
       return parser
-        .findParser((c) => c.isTypeOf(type))
+        .childParser((c) => c.isTypeOf(type))
         .deserialize(value, options);
     }
     return parser.deserialize(value, options);
@@ -192,7 +192,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
       : undefined;
     if (type !== undefined) {
       return parser
-        .findParser((c) => c.isTypeOf(type))
+        .childParser((c) => c.isTypeOf(type))
         .serialize(value, options);
     }
     return parser.serialize(value, options);
@@ -224,14 +224,14 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   //#endregion
 
   configure({
-    findParserForType,
+    parserForType,
     options,
   }: {
-    findParserForType: (type: string) => Parser<any>;
+    parserForType: (type: string) => Parser<any>;
     options: OptionsHelper;
   }) {
     this.optionsHelper = options;
-    this.parser = findParserForType(this.type);
+    this.parser = parserForType(this.type);
     if (this.default !== undefined)
       this.default = this.deserialize(this.default, options);
   }
@@ -368,22 +368,22 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     return field !== undefined ? field.type : undefined;
   }
 
-  find(
+  findChildParser(
     predicate: (p: ODataStructuredTypeParser<any>) => boolean
   ): ODataStructuredTypeParser<any> | undefined {
     if (predicate(this)) return this;
     let match: ODataStructuredTypeParser<any> | undefined;
     for (let ch of this.children) {
-      match = ch.find(predicate);
+      match = ch.findChildParser(predicate);
       if (match !== undefined) break;
     }
     return match;
   }
 
-  findParser(
+  childParser(
     predicate: (p: ODataStructuredTypeParser<any>) => boolean
   ): Parser<any> {
-    return this.find(predicate) || NONE_PARSER;
+    return this.findChildParser(predicate) || NONE_PARSER;
   }
 
   // Deserialize
@@ -443,21 +443,21 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }
 
   configure({
-    findParserForType,
+    parserForType,
     options,
   }: {
-    findParserForType: (type: string) => Parser<any>;
+    parserForType: (type: string) => Parser<any>;
     options: OptionsHelper;
   }) {
     this.optionsHelper = options;
     if (this.base) {
-      const parent = findParserForType(
+      const parent = parserForType(
         this.base
       ) as ODataStructuredTypeParser<any>;
       parent.children.push(this);
       this.parent = parent;
     }
-    this.fields.forEach((f) => f.configure({ findParserForType, options }));
+    this.fields.forEach((f) => f.configure({ parserForType, options }));
   }
 
   resolveKey(value: any): any {

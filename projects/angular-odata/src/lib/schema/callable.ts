@@ -48,11 +48,11 @@ export class ODataCallable<R> {
   }
 
   configure({
-    findParserForType,
+    parserForType,
   }: {
-    findParserForType: (type: string) => Parser<any>;
+    parserForType: (type: string) => Parser<any>;
   }) {
-    this.parser.configure({ options: this.api.options, findParserForType });
+    this.parser.configure({ options: this.api.options, parserForType });
   }
 
   deserialize(value: any): any {

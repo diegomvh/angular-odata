@@ -91,10 +91,10 @@ export abstract class ODataResource<T> {
     const selfType = this.type();
     const otherType = other.type();
     if (selfType !== undefined && otherType !== undefined) {
-      const otherParser = api.findParserForType<T>(
+      const otherParser = api.parserForType<T>(
         otherType
       ) as ODataStructuredTypeParser<T>;
-      return otherParser.findParser((c) => c.isTypeOf(selfType)) !== undefined;
+      return otherParser.findChildParser((c) => c.isTypeOf(selfType)) !== undefined;
     }
     return false;
   }
@@ -151,7 +151,7 @@ export abstract class ODataResource<T> {
     let api = this.api;
     let type = this.type();
     if (type !== undefined) {
-      let parser = api.findParserForType<T>(type);
+      let parser = api.parserForType<T>(type);
       if (parser !== undefined && 'serialize' in parser) {
         return Array.isArray(value)
           ? value.map((e) => (parser as Parser<T>).serialize(e, api.options))
@@ -165,7 +165,7 @@ export abstract class ODataResource<T> {
     let api = this.api;
     let type = this.type();
     if (type !== undefined) {
-      let parser = api.findParserForType<T>(type);
+      let parser = api.parserForType<T>(type);
       if (parser !== undefined && 'encode' in parser) {
         return Array.isArray(value)
           ? value.map((e) => (parser as Parser<T>).encode(e, api.options))

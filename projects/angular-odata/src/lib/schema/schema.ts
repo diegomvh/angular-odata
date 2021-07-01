@@ -101,21 +101,21 @@ export class ODataSchema {
   //#endregion
 
   configure({
+    parserForType,
     findOptionsForType,
-    findParserForType,
   }: {
-    findParserForType: (type: string) => Parser<any>;
+    parserForType: (type: string) => Parser<any>;
     findOptionsForType: (type: string) => any;
   }) {
     // Configure Enums
     this.enums.forEach((enu) => enu.configure());
     // Configure Entities
     this.entities.forEach((config) =>
-      config.configure({ findParserForType, findOptionsForType })
+      config.configure({ parserForType, findOptionsForType })
     );
     // Configure callables
     this.callables.forEach((callable) =>
-      callable.configure({ findParserForType })
+      callable.configure({ parserForType })
     );
   }
 }

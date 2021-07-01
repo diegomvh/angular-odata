@@ -117,19 +117,17 @@ export class ODataResponse<T> extends HttpResponse<T> {
   private parse(parser: Parser<T>, value: any, options: ODataResponseOptions): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
-      parser = parser.findParser((c) => c.isTypeOf(type));
+      parser = parser.childParser((c) => c.isTypeOf(type));
     }
     const attrs = (Types.isObject(value) ? options.helper.attributes(value, this.api.options.stripMetadata) : value) as T;
     return parser.deserialize(attrs, options);
   }
 
   private deserialize(type: string, value: any, options: ODataResponseOptions): any {
-    const parser = this.api.findParserForType<T>(type);
-    if (parser !== undefined)
-      return Array.isArray(value)
-        ? value.map((v) => this.parse(parser, v, options))
-        : this.parse(parser, value, options);
-    return value;
+    const parser = this.api.parserForType<T>(type);
+    return Array.isArray(value)
+      ? value.map((v) => this.parse(parser, v, options))
+      : this.parse(parser, value, options);
   }
 
   /**

@@ -75,7 +75,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {
-      let parser = this.api.findParserForType<N>(type);
+      let parser = this.api.parserForType<N>(type);
       type =
         parser instanceof ODataStructuredTypeParser
           ? parser.typeFor(path)
@@ -93,7 +93,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   property<P>(path: string) {
     let type = this.type();
     if (type !== undefined) {
-      let parser = this.api.findParserForType<P>(type);
+      let parser = this.api.parserForType<P>(type);
       type =
         parser instanceof ODataStructuredTypeParser
           ? parser.typeFor(path)

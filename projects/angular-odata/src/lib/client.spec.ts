@@ -41,7 +41,7 @@ describe('ODataClient', () => {
   it('should return undefined parser for resource', () => {
     const set: ODataResource<Person> = client.entitySet<Person>('People');
     const api = client.apiFor(set);
-    const parser = api.findParserForType<Person>(
+    const parser = api.parserForType<Person>(
       'Foo'
     ) as ODataStructuredTypeParser<Person>;
     expect(parser).toBeUndefined();
@@ -53,7 +53,7 @@ describe('ODataClient', () => {
       `${NAMESPACE}.Person`
     );
     const api = client.apiFor(set);
-    const parser = api.findParserForType<Person>(
+    const parser = api.parserForType<Person>(
       set.type() as string
     ) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
@@ -129,7 +129,7 @@ describe('ODataClient', () => {
       `${NAMESPACE}.Person`
     );
     const api = client.apiFor(set);
-    const parser = api.findParserForType<Person>(
+    const parser = api.parserForType<Person>(
       set.type() as string
     ) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();

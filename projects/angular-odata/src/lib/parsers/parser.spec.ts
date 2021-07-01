@@ -369,7 +369,7 @@ describe('ODataClient', () => {
       enumeration: 'Yellow',
       point: { type: 'point', coordinates: [142.1, 64.1] },
     };
-    const parser = api.findParserForType<any>(
+    const parser = api.parserForType<any>(
       'ParserTesting.Entity'
     ) as Parser<any>;
     const result = parser.deserialize(primitives, api.options);
@@ -387,7 +387,7 @@ describe('ODataClient', () => {
         },
       ],
     };
-    const parser = api.findParserForType<any>(
+    const parser = api.parserForType<any>(
       'ParserTesting.TestingAction'
     ) as Parser<any>;
     const result = parser.serialize(parameters, api.options);

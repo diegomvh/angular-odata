@@ -53,10 +53,10 @@ export class ODataStructuredType<T> {
   }
 
   configure({
-    findParserForType,
+    parserForType,
     findOptionsForType,
   }: {
-    findParserForType: (type: string) => Parser<any>;
+    parserForType: (type: string) => Parser<any>;
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
   }) {
     if (this.base) {
@@ -66,7 +66,7 @@ export class ODataStructuredType<T> {
       parent.children.push(this);
       this.parent = parent;
     }
-    this.parser.configure({ options: this.api.options, findParserForType });
+    this.parser.configure({ options: this.api.options, parserForType });
     if (this.model !== undefined && this.model.options !== null) {
       this.model.meta.configure({
         options: this.api.options,

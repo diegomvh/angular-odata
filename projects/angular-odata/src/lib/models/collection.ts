@@ -124,6 +124,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._resource?.clone();
   }
 
+  switchToEntitySetResource() {
+    this.resource(this._model.meta.collectionResourceFactory({ baseResource: this.resource(), fromSet: true }));
+  }
+
   annots(annots?: ODataEntitiesAnnotations) {
     if (annots !== undefined) this._annotations = annots;
     return this._annotations;
@@ -275,32 +279,40 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource instanceof ODataPropertyResource)
       return throwError('fetchAll: Resource is ODataPropertyResource');
 
-    let changes = this._entries.map((entry) => {
+    let toDestroy: M[] = [];
+    let toCreate: M[] = [];
+    let toUpdate: M[] = [];
+
+    this._entries.forEach((entry) => {
       const model = entry.model;
       if (entry.state === ODataModelState.Removed) {
-        return asModel
-          ? model.destroy({ asEntity: true, ...options })
-          : this.removeReference(model, options);
+        toDestroy.push(entry.model);
       } else if (entry.state === ODataModelState.Added) {
-        return asModel
-          ? model.save({ asEntity: true, method: 'create', ...options })
-          : this.addReference(model, options);
+        toCreate.push(entry.model);
+      } else if (model.hasChanged()) {
+        toUpdate.push(entry.model);
       }
-      return asModel && model.hasChanged()
-        ? model.save({ asEntity: true, method, ...options })
-        : of(model);
     });
-    return forkJoin(changes).pipe(
-      map(() => {
-        this._entries = this._entries
-          .filter((entry) => entry.state !== ODataModelState.Removed)
-          .map((entry) =>
-            Object.assign(entry, { state: ODataModelState.Unchanged })
-          );
-        return this;
-      }),
-      defaultIfEmpty(this)
-    );
+    if (toDestroy.length > 0 || toCreate.length > 0 || toUpdate.length > 0) {
+      const obs$ = forkJoin([
+        ...toDestroy.map(m => asModel ? m.destroy({ asEntity: true, ...options }) : this.removeReference(m, options)),
+        ...toCreate.map(m => asModel ? m.save({ asEntity: true, method: 'create', ...options }) : this.addReference(m, options)),
+        ...toUpdate.map(m => asModel ? m.save({ asEntity: true, method, ...options }) : of(m))
+      ]);
+      this.events$.emit({ name: 'request', collection: this, value: obs$ });
+      return obs$.pipe(
+        map(() => {
+          this._entries = this._entries
+            .filter((entry) => entry.state !== ODataModelState.Removed)
+            .map((entry) =>
+              Object.assign(entry, { state: ODataModelState.Unchanged })
+            );
+          this.events$.emit({ name: 'sync', collection: this });
+          return this;
+        })
+      );
+    }
+    return of(this);
   }
 
   protected addReference(model: M, options?: HttpOptions): Observable<M> {

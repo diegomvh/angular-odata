@@ -102,7 +102,7 @@ export class ODataSettings {
 
   public parserForType<T>(type: string) {
     let values = this.apis
-      .map((api) => api.findParserForType<T>(type))
+      .map((api) => api.parserForType<T>(type))
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No Parser for type ${type} was found`);

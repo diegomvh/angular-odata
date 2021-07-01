@@ -99,6 +99,10 @@ export class ODataModel<T> {
     return this._meta.resource(this);
   }
 
+  switchToEntityResource() {
+    this.resource(this._meta.modelResourceFactory({ baseResource: this.resource(), fromSet: true }));
+  }
+
   schema() {
     return this._meta.schema;
   }
@@ -332,16 +336,21 @@ export class ODataModel<T> {
       return throwError('save: Resource is undefined');
     if (!(resource instanceof ODataEntityResource))
       return throwError('save: Resource type ODataEntityResource needed');
-    if (this.schema().isCompoundKey()) {
-      if (method === undefined)
+
+    // Resolve method and resource key
+    if (method === undefined) {
+      if (this.schema().isCompoundKey())
         return throwError(
           'Composite key require a specific method, use create/update/patch'
         );
-      else if (method === 'create' && resource.hasKey()) resource.clearKey();
-    }
-
-    if (method === undefined) {
       method = !resource.hasKey() ? 'create' : 'update';
+    } else {
+      if ((method === 'update' || method === 'patch') && !resource.hasKey())
+        return throwError(
+          'Update/Patch require entity key'
+        );
+      if (method === 'create')
+        resource.clearKey();
     }
 
     let obs$: Observable<ODataEntity<any>>;
@@ -408,6 +417,7 @@ export class ODataModel<T> {
   hasChanged() {
     return this._meta.hasChanged(this);
   }
+
   protected callFunction<P, R>(
     name: string,
     params: P | null,
