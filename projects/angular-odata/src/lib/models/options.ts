@@ -840,6 +840,36 @@ export class ODataModelOptions<T> {
     return { ...fieldAttrs, ...nonFieldAttrs };
   }
 
+  reset(self: ODataModel<T>, { name, silent = false}: {name?: string, silent?: boolean} = {}) {
+    if (!Types.isEmpty(name) && (name as string) in self._changes) {
+      const value = self._attributes[name as string];
+      const previous = self._changes[name as string];
+      delete self._changes[name as string];
+      if (!silent) {
+        self.events$.emit({
+          name: 'change',
+          path: name as string,
+          model: self,
+          value, previous
+        });
+      }
+    } else if (Types.isEmpty(name)) {
+      const entries = Object.entries(self._changes);
+      self._changes = {};
+      if (!silent) {
+        entries.forEach(e => {
+          self.events$.emit({
+            name: 'change',
+            path: e[0],
+            model: self,
+            value: self._attributes[e[0]],
+            previous: e[1]
+          });
+        });
+      }
+    }
+  }
+
   assign(
     self: ODataModel<T>,
     entity: Partial<T> | { [name: string]: any },
@@ -1034,19 +1064,20 @@ export class ODataModelOptions<T> {
       }
     } else {
       const attrs = this.attributes(self, {
-        include_computed: true,
         include_concurrency: true,
+        include_computed: true,
       });
       const currentValue = attrs[field.name];
-      if (!Types.isEqual(currentValue, value)) {
-        if (self._resetting) {
-          delete self._changes[field.name];
-          self._attributes[field.name] = value;
-        } else if (Types.isEqual(value, self._attributes[field.name])) {
-          delete self._changes[field.name];
-        } else {
-          self._changes[field.name] = value;
-        }
+      const equal = Types.isEqual(currentValue, value);
+      if (self._resetting) {
+        delete self._changes[field.name];
+        self._attributes[field.name] = value;
+      } else if (Types.isEqual(value, self._attributes[field.name])) {
+        delete self._changes[field.name];
+      } else if (!equal) {
+        self._changes[field.name] = value;
+      }
+      if (!equal) {
         if (field.isKey()) {
           this._pushToRelations(self);
         }

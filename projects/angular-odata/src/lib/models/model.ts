@@ -264,6 +264,19 @@ export class ODataModel<T> {
     return value;
   }
 
+  reset({path, silent = false}: {path?: string | string[], silent?: boolean} = {}) {
+    const pathArray: string[] = (path === undefined ? [] :
+     Types.isArray(path) ? path :
+     (path as string).match(/([^[.\]])+/g)) as any[];
+    const name = pathArray[0];
+    const value = (name !== undefined) ? (<any>this)[name] : undefined;
+    if (this._meta.isModel(value) || this._meta.isCollection(value)) {
+      value.reset({path: pathArray.slice(1), silent});
+    } else {
+      this._meta.reset(this, {name: pathArray[0], silent});
+    }
+  }
+
   assign(
     entity: Partial<T> | { [name: string]: any },
     {

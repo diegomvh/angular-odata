@@ -552,11 +552,26 @@ export class ODataCollection<T, M extends ODataModel<T>>
       Types.isArray(path) ? path : `${path}`.match(/([^[.\]])+/g)
     ) as any[];
     if (pathArray.length === 0) return undefined;
-    const value = this._entries[Number(pathArray[0])].model;
+    const value = this.models()[Number(pathArray[0])];
     if (pathArray.length > 1 && Model.meta.isModel(value)) {
       return value.get(pathArray.slice(1));
     }
     return value;
+  }
+
+  reset({path, silent=false}: {path?: string | string[], silent?: boolean} = {}) {
+    if (Types.isEmpty(path)) {
+      this.models().forEach(m => m.reset({silent}));
+    } else {
+      const Model = this._model;
+      const pathArray = (
+        Types.isArray(path) ? path : `${path}`.match(/([^[.\]])+/g)
+      ) as any[];
+      const value = this.models()[Number(pathArray[0])];
+      if (Model.meta.isModel(value)) {
+        value.reset({path: pathArray.slice(1), silent});
+      }
+    }
   }
 
   assign(
