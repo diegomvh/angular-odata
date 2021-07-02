@@ -43,17 +43,6 @@ export abstract class ODataAnnotations {
     }
     return this._context;
   }
-  private _properties?: { [name: string]: any };
-  get properties() {
-    if (this._properties === undefined) {
-      this._properties = this.helper.properties(this.annotations);
-    }
-    return this._properties;
-  }
-
-  property(name: string) {
-    return this.properties[name];
-  }
 
   attributes<T>(data: { [name: string]: any }, metadata: ODataMetadataType): T {
     return this.helper.attributes(data, metadata) as T;
@@ -131,6 +120,18 @@ export class ODataEntityAnnotations extends ODataAnnotations {
 
   get mediaContentType() {
     return this.helper.mediaContentType(this.annotations);
+  }
+
+  private _properties?: { [name: string]: any };
+  get properties() {
+    if (this._properties === undefined) {
+      this._properties = this.helper.properties(this.annotations);
+    }
+    return this._properties;
+  }
+
+  property(name: string) {
+    return this.properties[name];
   }
 
   private _functions?: { [name: string]: any };
