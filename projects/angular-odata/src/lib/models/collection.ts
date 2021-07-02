@@ -86,7 +86,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
     entities = entities || [];
 
-    this.assign(entities, { reset, server: false });
+    this.assign(entities, { reset });
   }
 
   resource(resource?: ODataCollectionResource<T>) {
@@ -235,7 +235,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return obs$.pipe(
       map(({ entities, annots }) => {
         this.annots(annots);
-        this.assign(entities || [], { reset: true, server: false });
+        this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
       })
@@ -257,7 +257,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         this.annots(
           new ODataEntitiesAnnotations({ options: resource?.api.options })
         );
-        this.assign(entities || [], { reset: true, server: false });
+        this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
       })
@@ -564,7 +564,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       reset = false,
       silent = false,
-    }: { server?: boolean; reset?: boolean; silent?: boolean } = {}
+    }: { reset?: boolean; silent?: boolean } = {}
   ) {
     const Model = this._model;
 
