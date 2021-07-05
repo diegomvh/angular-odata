@@ -1044,7 +1044,7 @@ export class ODataModelOptions<T> {
           if (this.isModel(relation.model)) {
             var ref = (relation.model as ODataModel<F>).referential(field);
             if (ref !== undefined) {
-              self.assign(ref);
+              self.assign(ref, {reset: self._resetting, silent: self._silent});
             }
           }
         }
@@ -1125,7 +1125,7 @@ export class ODataModelOptions<T> {
           ) {
             var ref = value.referential(field);
             if (ref !== undefined) {
-              self.assign(ref);
+              self.assign(ref, {reset: self._resetting, silent: self._silent});
             }
           }
         }
