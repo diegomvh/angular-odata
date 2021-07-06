@@ -24,7 +24,7 @@ export interface ApiOptions extends Options {
   accept?: {
     metadata?: ODataMetadataType;
     ieee754Compatible?: boolean;
-  },
+  };
   etag?: {
     ifMatch?: boolean;
     ifNoneMatch?: boolean;
@@ -56,8 +56,14 @@ export interface StructuredTypeFieldOptions extends OptionsHelper {
 }
 
 export interface Parser<T> {
-  deserialize(value: any, options?: OptionsHelper | StructuredTypeFieldOptions): T;
-  serialize(value: T, options?: OptionsHelper | StructuredTypeFieldOptions): any;
+  deserialize(
+    value: any,
+    options?: OptionsHelper | StructuredTypeFieldOptions
+  ): T;
+  serialize(
+    value: T,
+    options?: OptionsHelper | StructuredTypeFieldOptions
+  ): any;
   //Encodes the value/s of a URL parameter or query-string.
   encode(value: T, options?: OptionsHelper | StructuredTypeFieldOptions): any;
 }

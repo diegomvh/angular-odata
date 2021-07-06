@@ -135,11 +135,19 @@ const ODataVersionBaseHelper = <any>{
       .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
   },
   attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
-    return Object.entries(value).filter(
-      ([k, ]) => (metadata === 'none' ||
-        (metadata === 'minimal' && (k.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 || k.startsWith(this.ODATA_ANNOTATION_PREFIX)) && !k.startsWith(this.ODATA_FUNCTION_PREFIX)) ||
-        (metadata === 'full' && k.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 && !k.startsWith(this.ODATA_FUNCTION_PREFIX)))
-    ).reduce((acc, e) => ({...acc, [e[0]]: e[1] }), {});
+    return Object.entries(value)
+      .filter(
+        ([k]) =>
+          metadata === 'none' ||
+          (metadata === 'minimal' &&
+            (k.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 ||
+              k.startsWith(this.ODATA_ANNOTATION_PREFIX)) &&
+            !k.startsWith(this.ODATA_FUNCTION_PREFIX)) ||
+          (metadata === 'full' &&
+            k.indexOf(this.ODATA_ANNOTATION_PREFIX) === -1 &&
+            !k.startsWith(this.ODATA_FUNCTION_PREFIX))
+      )
+      .reduce((acc, e) => ({ ...acc, [e[0]]: e[1] }), {});
   },
   nextLink(value: { [name: string]: any }) {
     return this.ODATA_NEXTLINK in value

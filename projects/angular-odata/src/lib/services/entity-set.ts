@@ -38,9 +38,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return this.api.findEntitySetByName(this.name);
   }
 
-  public fetchAll(
-    options?: HttpOptions
-  ): Observable<T[]> {
+  public fetchAll(options?: HttpOptions): Observable<T[]> {
     return this.entities().fetchAll(options);
   }
 
@@ -84,10 +82,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return res.patch(attrs, options);
   }
 
-  public destroy(
-    key: EntityKey<T>,
-    options?: HttpOptions & { etag?: string }
-  ) {
+  public destroy(key: EntityKey<T>, options?: HttpOptions & { etag?: string }) {
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
     return res.delete(options);

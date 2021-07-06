@@ -114,7 +114,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return this._options;
   }
 
-  private parse(parser: Parser<T>, value: any, options: ODataResponseOptions): any {
+  private parse(
+    parser: Parser<T>,
+    value: any,
+    options: ODataResponseOptions
+  ): any {
     const type = Types.isObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
       parser = parser.childParser((c) => c.isTypeOf(type));
@@ -122,7 +126,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return parser.deserialize(value, options);
   }
 
-  private deserialize(type: string, value: any, options: ODataResponseOptions): any {
+  private deserialize(
+    type: string,
+    value: any,
+    options: ODataResponseOptions
+  ): any {
     const parser = this.api.parserForType<T>(type);
     return Array.isArray(value)
       ? value.map((v) => this.parse(parser, v, options))
@@ -145,7 +153,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
       headers: this.headers,
     });
     const data = payload ? annots.data(payload) : null;
-    let entity = ((data !== null && Types.isObject(data)) ? options.helper.attributes(data, this.api.options.stripMetadata) : data) as T | null;
+    let entity = (
+      data !== null && Types.isObject(data)
+        ? options.helper.attributes(data, this.api.options.stripMetadata)
+        : data
+    ) as T | null;
 
     const type = this.resource.type();
     if (entity !== null && type !== undefined)
@@ -192,7 +204,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
       headers: this.headers,
     });
     const data = payload ? (annots.data(payload) as T) : null;
-    let property = ((data !== null && Types.isObject(data)) ? options.helper.attributes(data, this.api.options.stripMetadata) : data) as T | null;
+    let property = (
+      data !== null && Types.isObject(data)
+        ? options.helper.attributes(data, this.api.options.stripMetadata)
+        : data
+    ) as T | null;
 
     const type = this.resource.type();
     if (property !== null && type !== undefined)
@@ -207,7 +223,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
   value(): T | null {
     const options = this.options;
     const data = this.body && options.version === '2.0' ? this.body : this.body;
-    let value = ((data !== null && Types.isObject(data)) ? options.helper.attributes(data, this.api.options.stripMetadata) : data) as T | null;
+    let value = (
+      data !== null && Types.isObject(data)
+        ? options.helper.attributes(data, this.api.options.stripMetadata)
+        : data
+    ) as T | null;
 
     const type = this.resource.type();
     if (value !== null && type !== undefined)

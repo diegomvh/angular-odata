@@ -87,7 +87,9 @@ export class ODataRequest<T> {
       accept.push(`odata.metadata=${this.api.options.accept?.metadata}`);
     // IEEE754
     if (this.api.options.accept?.ieee754Compatible !== undefined)
-      accept.push(`IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`);
+      accept.push(
+        `IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`
+      );
     if (accept.length > 0)
       customHeaders[ACCEPT] = [
         `application/json;${accept.join(';')}`,

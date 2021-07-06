@@ -519,7 +519,10 @@ export class ODataModelOptions<T> {
   }
 
   bind(self: ODataModel<T>) {
-    const modelFields = this.fields({ include_navigation: true, include_parents: true });
+    const modelFields = this.fields({
+      include_navigation: true,
+      include_parents: true,
+    });
     for (let modelField of modelFields) {
       Object.defineProperty(self, modelField.name, {
         configurable: true,
@@ -653,15 +656,20 @@ export class ODataModelOptions<T> {
     return !Types.isEmpty(errors) ? errors : undefined;
   }
 
-  hasChanged(self: ODataModel<T>): boolean {
-    //TODO: Can remove every test over relations ?
+  hasChanged(
+    self: ODataModel<T>,
+    { include_navigation = false }: { include_navigation?: boolean } = {}
+  ): boolean {
     return (
       !Types.isEmpty(self._changes) ||
-      Object.values(self._relations).some(
-        (r) =>
-          r.state === ODataModelState.Changed ||
-          (r.model !== null && r.model.hasChanged())
-      )
+      Object.values(self._relations)
+        .filter(({ property }) => !property.navigation || include_navigation)
+        .some(
+          ({ property, state, model }) =>
+            (!include_navigation || property.navigation) &&
+            (state === ODataModelState.Changed ||
+              (model !== null && model.hasChanged({ include_navigation })))
+        )
     );
   }
 
@@ -713,7 +721,7 @@ export class ODataModelOptions<T> {
           !changes_only ||
           (changes_only &&
             (state === ODataModelState.Changed ||
-              (model !== null && model.hasChanged())))
+              (model !== null && model.hasChanged({ include_navigation }))))
       )
       .filter(([, { property, model }]) => {
         if (include_navigation && property.navigation) {
@@ -831,7 +839,10 @@ export class ODataModelOptions<T> {
     return { ...fieldAttrs, ...nonFieldAttrs };
   }
 
-  reset(self: ODataModel<T>, { name, silent = false}: {name?: string, silent?: boolean} = {}) {
+  reset(
+    self: ODataModel<T>,
+    { name, silent = false }: { name?: string; silent?: boolean } = {}
+  ) {
     if (!Types.isEmpty(name) && (name as string) in self._changes) {
       const value = self._attributes[name as string];
       const previous = self._changes[name as string];
@@ -841,20 +852,21 @@ export class ODataModelOptions<T> {
           name: 'change',
           path: name as string,
           model: self,
-          value, previous
+          value,
+          previous,
         });
       }
     } else if (Types.isEmpty(name)) {
       const entries = Object.entries(self._changes);
       self._changes = {};
       if (!silent) {
-        entries.forEach(e => {
+        entries.forEach((e) => {
           self.events$.emit({
             name: 'change',
             path: e[0],
             model: self,
             value: self._attributes[e[0]],
-            previous: e[1]
+            previous: e[1],
           });
         });
       }

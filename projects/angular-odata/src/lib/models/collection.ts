@@ -125,7 +125,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   switchToEntitySetResource() {
-    this.resource(this._model.meta.collectionResourceFactory({ baseResource: this.resource(), fromSet: true }));
+    const current = this.resource();
+    this.resource(
+      this._model.meta.collectionResourceFactory({
+        baseResource: current,
+        fromSet: true,
+      })
+    );
+    return current;
   }
 
   annots(annots?: ODataEntitiesAnnotations) {
@@ -196,11 +203,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
   }
 
-  hasChanged() {
-    //TODO: Can remove every test over models ?
+  hasChanged({ include_navigation }: { include_navigation?: boolean } = {}) {
     return (
       this._entries.some((e) => e.state !== ODataModelState.Unchanged) ||
-      this.models().some((m) => m.hasChanged())
+      this.models().some((m) => m.hasChanged({ include_navigation }))
     );
   }
 
@@ -295,9 +301,19 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
     if (toDestroy.length > 0 || toCreate.length > 0 || toUpdate.length > 0) {
       const obs$ = forkJoin([
-        ...toDestroy.map(m => asModel ? m.destroy({ asEntity: true, ...options }) : this.removeReference(m, options)),
-        ...toCreate.map(m => asModel ? m.save({ asEntity: true, method: 'create', ...options }) : this.addReference(m, options)),
-        ...toUpdate.map(m => asModel ? m.save({ asEntity: true, method, ...options }) : of(m))
+        ...toDestroy.map((m) =>
+          asModel
+            ? m.destroy({ asEntity: true, ...options })
+            : this.removeReference(m, options)
+        ),
+        ...toCreate.map((m) =>
+          asModel
+            ? m.save({ asEntity: true, method: 'create', ...options })
+            : this.addReference(m, options)
+        ),
+        ...toUpdate.map((m) =>
+          asModel ? m.save({ asEntity: true, method, ...options }) : of(m)
+        ),
       ]);
       this.events$.emit({ name: 'request', collection: this, value: obs$ });
       return obs$.pipe(
@@ -559,9 +575,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return value;
   }
 
-  reset({path, silent=false}: {path?: string | string[], silent?: boolean} = {}) {
+  reset({
+    path,
+    silent = false,
+  }: { path?: string | string[]; silent?: boolean } = {}) {
     if (Types.isEmpty(path)) {
-      this.models().forEach(m => m.reset({silent}));
+      this.models().forEach((m) => m.reset({ silent }));
     } else {
       const Model = this._model;
       const pathArray = (
@@ -569,7 +588,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       ) as any[];
       const value = this.models()[Number(pathArray[0])];
       if (Model.meta.isModel(value)) {
-        value.reset({path: pathArray.slice(1), silent});
+        value.reset({ path: pathArray.slice(1), silent });
       }
     }
   }

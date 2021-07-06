@@ -114,8 +114,6 @@ export class ODataSchema {
       config.configure({ parserForType, findOptionsForType })
     );
     // Configure callables
-    this.callables.forEach((callable) =>
-      callable.configure({ parserForType })
-    );
+    this.callables.forEach((callable) => callable.configure({ parserForType }));
   }
 }

@@ -1,5 +1,9 @@
 import { HttpHeaders } from '@angular/common/http';
-import { DEFAULT_VERSION, ETAG_HEADERS, ODATA_ENTITYID_HEADERS } from '../../constants';
+import {
+  DEFAULT_VERSION,
+  ETAG_HEADERS,
+  ODATA_ENTITYID_HEADERS,
+} from '../../constants';
 import { ODataContext, ODataHelper } from '../../helper';
 import { OptionsHelper, ODataMetadataType } from '../../types';
 import { Http } from '../../utils/http';
@@ -62,7 +66,7 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 
   data(data: { [name: string]: any }) {
-    return this.helper.property(data, this.context)
+    return this.helper.property(data, this.context);
   }
 
   get type() {

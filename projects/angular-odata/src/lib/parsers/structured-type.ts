@@ -174,10 +174,10 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
         ? value.map((v) => this.parse(parser, v, options))
         : this.parse(parser, value, options);
     }
-    return this.parser.deserialize(
-      value,
-      { field: this, ...options } as StructuredTypeFieldOptions
-    );
+    return this.parser.deserialize(value, {
+      field: this,
+      ...options,
+    } as StructuredTypeFieldOptions);
   }
   //#endregion
 
@@ -451,9 +451,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
   }) {
     this.optionsHelper = options;
     if (this.base) {
-      const parent = parserForType(
-        this.base
-      ) as ODataStructuredTypeParser<any>;
+      const parent = parserForType(this.base) as ODataStructuredTypeParser<any>;
       parent.children.push(this);
       this.parent = parent;
     }

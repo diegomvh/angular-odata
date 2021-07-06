@@ -61,5 +61,5 @@ export const Http = {
       return Object.keys(headers).find((k) => options.indexOf(k) !== -1);
     }
     return undefined;
-  }
+  },
 };

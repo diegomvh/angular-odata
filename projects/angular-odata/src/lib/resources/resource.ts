@@ -94,7 +94,9 @@ export abstract class ODataResource<T> {
       const otherParser = api.parserForType<T>(
         otherType
       ) as ODataStructuredTypeParser<T>;
-      return otherParser.findChildParser((c) => c.isTypeOf(selfType)) !== undefined;
+      return (
+        otherParser.findChildParser((c) => c.isTypeOf(selfType)) !== undefined
+      );
     }
     return false;
   }

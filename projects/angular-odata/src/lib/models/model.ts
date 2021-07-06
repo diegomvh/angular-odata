@@ -100,7 +100,11 @@ export class ODataModel<T> {
   }
 
   switchToEntityResource() {
-    this.resource(this._meta.modelResourceFactory({ baseResource: this.resource(), fromSet: true }));
+    const current = this.resource();
+    this.resource(
+      this._meta.modelResourceFactory({ baseResource: current, fromSet: true })
+    );
+    return current;
   }
 
   schema() {
@@ -264,16 +268,23 @@ export class ODataModel<T> {
     return value;
   }
 
-  reset({path, silent = false}: {path?: string | string[], silent?: boolean} = {}) {
-    const pathArray: string[] = (path === undefined ? [] :
-     Types.isArray(path) ? path :
-     (path as string).match(/([^[.\]])+/g)) as any[];
+  reset({
+    path,
+    silent = false,
+  }: { path?: string | string[]; silent?: boolean } = {}) {
+    const pathArray: string[] = (
+      path === undefined
+        ? []
+        : Types.isArray(path)
+        ? path
+        : (path as string).match(/([^[.\]])+/g)
+    ) as any[];
     const name = pathArray[0];
-    const value = (name !== undefined) ? (<any>this)[name] : undefined;
+    const value = name !== undefined ? (<any>this)[name] : undefined;
     if (this._meta.isModel(value) || this._meta.isCollection(value)) {
-      value.reset({path: pathArray.slice(1), silent});
+      value.reset({ path: pathArray.slice(1), silent });
     } else {
-      this._meta.reset(this, {name: pathArray[0], silent});
+      this._meta.reset(this, { name: pathArray[0], silent });
     }
   }
 
@@ -300,7 +311,9 @@ export class ODataModel<T> {
     return obs$.pipe(
       map(({ entity, annots }) => {
         this.annots(annots);
-        this.assign(annots.attributes<T>(entity || {}, 'full'), { reset: true });
+        this.assign(annots.attributes<T>(entity || {}, 'full'), {
+          reset: true,
+        });
         this.events$.emit({ name: 'sync', model: this });
         return this;
       })
@@ -359,11 +372,8 @@ export class ODataModel<T> {
       method = !resource.hasKey() ? 'create' : 'update';
     } else {
       if ((method === 'update' || method === 'patch') && !resource.hasKey())
-        return throwError(
-          'Update/Patch require entity key'
-        );
-      if (method === 'create')
-        resource.clearKey();
+        return throwError('Update/Patch require entity key');
+      if (method === 'create') resource.clearKey();
     }
 
     let obs$: Observable<ODataEntity<any>>;
@@ -427,8 +437,10 @@ export class ODataModel<T> {
     if (resource !== undefined) return this._meta.query(this, resource, func);
   }
 
-  hasChanged() {
-    return this._meta.hasChanged(this);
+  hasChanged({
+    include_navigation = false,
+  }: { include_navigation?: boolean } = {}) {
+    return this._meta.hasChanged(this, { include_navigation });
   }
 
   protected callFunction<P, R>(

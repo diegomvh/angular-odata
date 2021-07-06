@@ -1,4 +1,8 @@
-import { DEFAULT_FETCH_POLICY, DEFAULT_STRIP_METADATA, DEFAULT_VERSION } from './constants';
+import {
+  DEFAULT_FETCH_POLICY,
+  DEFAULT_STRIP_METADATA,
+  DEFAULT_VERSION,
+} from './constants';
 import { ODataHelper } from './helper';
 import {
   ApiOptions,

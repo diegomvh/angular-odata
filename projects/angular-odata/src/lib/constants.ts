@@ -24,14 +24,11 @@ export const ODATA_VERSION_HEADERS = [
   'dataserviceversion',
 ];
 export const ETAG_HEADER = 'ETag';
-export const ETAG_HEADERS = [
-  ETAG_HEADER,
-  ETAG_HEADER.toLowerCase()
-];
+export const ETAG_HEADERS = [ETAG_HEADER, ETAG_HEADER.toLowerCase()];
 export const ODATA_ENTITYID = 'OData-EntityId';
 export const ODATA_ENTITYID_HEADERS = [
   ODATA_ENTITYID,
-  ODATA_ENTITYID.toLowerCase()
+  ODATA_ENTITYID.toLowerCase(),
 ];
 
 // HTTP HEADER VALUES
