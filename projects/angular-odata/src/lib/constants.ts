@@ -25,11 +25,17 @@ export const ODATA_VERSION_HEADERS = [
 ];
 export const ETAG_HEADER = 'ETag';
 export const ETAG_HEADERS = [ETAG_HEADER, ETAG_HEADER.toLowerCase()];
+export const LOCATION_HEADER = 'Location';
+export const LOCATION_HEADERS = [LOCATION_HEADER, LOCATION_HEADER.toLowerCase()];
 export const ODATA_ENTITYID = 'OData-EntityId';
 export const ODATA_ENTITYID_HEADERS = [
   ODATA_ENTITYID,
   ODATA_ENTITYID.toLowerCase(),
 ];
+export const PREFERENCE_APPLIED = 'Preference-Applied';
+export const PREFERENCE_APPLIED_HEADERS = [PREFERENCE_APPLIED, PREFERENCE_APPLIED.toLowerCase()];
+export const RETRY_AFTER = 'Retry-After';
+export const RETRY_AFTER_HEADERS = [RETRY_AFTER, RETRY_AFTER.toLowerCase()];
 
 // HTTP HEADER VALUES
 export const APPLICATION_JSON = 'application/json';
