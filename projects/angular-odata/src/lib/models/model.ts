@@ -126,6 +126,9 @@ export class ODataModel<T> {
     return this._meta.resolveKey(this, { field_mapping, resolve });
   }
 
+  isNew() {
+    return this.key() === undefined;
+  }
   referential(
     field: ODataModelField<any>,
     {
@@ -164,7 +167,7 @@ export class ODataModel<T> {
     return this._meta.validate(this, { method, navigation });
   }
 
-  valid({
+  isValid({
     method,
     navigation = false,
   }: {
@@ -377,7 +380,7 @@ export class ODataModel<T> {
     }
 
     let obs$: Observable<ODataEntity<any>>;
-    if (!validate || this.valid({ method, navigation })) {
+    if (!validate || this.isValid({ method, navigation })) {
       const _entity = this.toEntity({
         changes_only: method === 'patch',
         field_mapping: true,

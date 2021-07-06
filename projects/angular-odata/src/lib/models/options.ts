@@ -220,7 +220,7 @@ export class ODataModelField<F> {
     } = {}
   ) {
     if (value instanceof ODataModel) {
-      return !value.valid({ method, navigation }) ? value._errors : undefined;
+      return !value.isValid({ method, navigation }) ? value._errors : undefined;
     } else if (value instanceof ODataCollection) {
       return value.models().some((m) => !m.valid({ method, navigation }))
         ? value.models().map((m) => m.errors)

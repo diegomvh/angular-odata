@@ -522,7 +522,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }: { asModel?: boolean, silent?: boolean; server?: boolean } = {}
   ) {
     const model = this.modelFactory(attrs);
-    return (model.valid() && server ? model.save({asEntity: asModel}) : of(model))
+    return (model.isValid() && server ? model.save({asEntity: asModel}) : of(model))
     .pipe(
       switchMap((model) => this.add(model, { silent, server })),
       map(() => model)
