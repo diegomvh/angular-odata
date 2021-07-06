@@ -519,24 +519,15 @@ export class ODataModelOptions<T> {
   }
 
   bind(self: ODataModel<T>) {
-    const values: any = {};
-    for (let prop of this.fields({
-      include_navigation: true,
-      include_parents: true,
-    })) {
-      let value = (<any>self)[prop.name];
-      if (value !== undefined) {
-        delete (<any>self)[prop.name];
-        values[prop.name] = value;
-      }
-      Object.defineProperty(self, prop.name, {
+    const modelFields = this.fields({ include_navigation: true, include_parents: true });
+    for (let modelField of modelFields) {
+      Object.defineProperty(self, modelField.name, {
         configurable: true,
-        get: () => this._get(self, prop as ODataModelField<any>),
+        get: () => this._get(self, modelField as ODataModelField<any>),
         set: (value: any) =>
-          this._set(self, prop as ODataModelField<any>, value),
+          this._set(self, modelField as ODataModelField<any>, value),
       });
     }
-    if (!Types.isEmpty(values)) self.assign(values, { silent: true });
   }
 
   query(
@@ -897,14 +888,14 @@ export class ODataModelOptions<T> {
         : value;
       const current = model[name];
       if (this.isCollection(current) && Types.isArray(value)) {
-        current.assign(value, { reset, silent });
+        current.assign(value, { reset: self._resetting, silent: self._silent });
         if (current.hasChanged()) changes.push(name);
       } else if (this.isModel(current) && Types.isObject(value)) {
-        current.assign(value, { reset, silent });
+        current.assign(value, { reset: self._resetting, silent: self._silent });
         if (current.hasChanged()) changes.push(name);
-      } else if (!Types.isEqual(current, value)) {
+      } else {
         model[name] = value;
-        changes.push(name);
+        if (!Types.isEqual(current, value)) changes.push(name);
       }
     });
 
@@ -1044,7 +1035,7 @@ export class ODataModelOptions<T> {
           if (this.isModel(relation.model)) {
             var ref = (relation.model as ODataModel<F>).referential(field);
             if (ref !== undefined) {
-              self.assign(ref, {reset: self._resetting, silent: self._silent});
+              Object.assign(self, ref);
             }
           }
         }
@@ -1125,7 +1116,7 @@ export class ODataModelOptions<T> {
           ) {
             var ref = value.referential(field);
             if (ref !== undefined) {
-              self.assign(ref, {reset: self._resetting, silent: self._silent});
+              Object.assign(self, ref);
             }
           }
         }
