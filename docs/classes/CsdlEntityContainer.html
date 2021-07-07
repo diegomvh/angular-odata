@@ -425,14 +425,14 @@ import { CsdlSingleton } from &#x27;./csdl-singleton&#x27;;
 import { CsdlFunctionImport, CsdlActionImport } from &#x27;./csdl-function-action&#x27;;
 
 export class CsdlEntityContainer {
-    constructor(
-        public name: string,
-        public extend?: string,
-        public entitySets?: CsdlEntitySet[],
-        public singletons?: CsdlSingleton[],
-        public functionImports?: CsdlFunctionImport[],
-        public actionImports?: CsdlActionImport[]
-    ) { }
+  constructor(
+    public name: string,
+    public extend?: string,
+    public entitySets?: CsdlEntitySet[],
+    public singletons?: CsdlSingleton[],
+    public functionImports?: CsdlFunctionImport[],
+    public actionImports?: CsdlActionImport[]
+  ) {}
 }
 </code></pre>
     </div>

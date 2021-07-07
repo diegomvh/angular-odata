@@ -189,7 +189,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-reference.ts:17</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-reference.ts:15</a></div>
                             </td>
                         </tr>
 
@@ -217,7 +217,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-reference.ts:16</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-reference.ts:15</a></div>
                             </td>
                         </tr>
 
@@ -239,29 +239,26 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAnnotable, CsdlAnnotation } from &#x27;./csdl-annotation&#x27;;
 
 export class CsdlReference extends CsdlAnnotable {
-    constructor(
-        public uri: string,
-        public includes?: CsdlInclude[],
-        public includeAnnotations?: CsdlIncludeAnnotations[],
-        annotationList?: CsdlAnnotation[]
-    ) {
-        super(annotationList);
-    }
+  constructor(
+    public uri: string,
+    public includes?: CsdlInclude[],
+    public includeAnnotations?: CsdlIncludeAnnotations[],
+    annotationList?: CsdlAnnotation[]
+  ) {
+    super(annotationList);
+  }
 }
 
 export class CsdlInclude {
-    constructor(
-        public namespace: string,
-        public alias?: string
-    ) { }
+  constructor(public namespace: string, public alias?: string) {}
 }
 
 export class CsdlIncludeAnnotations {
-    constructor(
-        public termNamespace: string,
-        public qualifier?: string,
-        public targetNamespace?: string
-    ) { }
+  constructor(
+    public termNamespace: string,
+    public qualifier?: string,
+    public targetNamespace?: string
+  ) {}
 }
 </code></pre>
     </div>

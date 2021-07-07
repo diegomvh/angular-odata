@@ -526,17 +526,18 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAnnotable, CsdlAnnotation } from &#x27;./csdl-annotation&#x27;;
 
 export class CsdlTypeDefinition extends CsdlAnnotable {
-    constructor(
-        public name: string,
-        public underlayingType: string,
-        public maxLength?: number,
-        public precision?: number,
-        public scale?: number,
-        public unicode?: boolean,
-        public srid?: string,
-        annotationList?: CsdlAnnotation[]) {
-        super(annotationList);
-    }
+  constructor(
+    public name: string,
+    public underlayingType: string,
+    public maxLength?: number,
+    public precision?: number,
+    public scale?: number,
+    public unicode?: boolean,
+    public srid?: string,
+    annotationList?: CsdlAnnotation[]
+  ) {
+    super(annotationList);
+  }
 }
 </code></pre>
     </div>

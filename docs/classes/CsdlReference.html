@@ -344,29 +344,26 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlAnnotable, CsdlAnnotation } from &#x27;./csdl-annotation&#x27;;
 
 export class CsdlReference extends CsdlAnnotable {
-    constructor(
-        public uri: string,
-        public includes?: CsdlInclude[],
-        public includeAnnotations?: CsdlIncludeAnnotations[],
-        annotationList?: CsdlAnnotation[]
-    ) {
-        super(annotationList);
-    }
+  constructor(
+    public uri: string,
+    public includes?: CsdlInclude[],
+    public includeAnnotations?: CsdlIncludeAnnotations[],
+    annotationList?: CsdlAnnotation[]
+  ) {
+    super(annotationList);
+  }
 }
 
 export class CsdlInclude {
-    constructor(
-        public namespace: string,
-        public alias?: string
-    ) { }
+  constructor(public namespace: string, public alias?: string) {}
 }
 
 export class CsdlIncludeAnnotations {
-    constructor(
-        public termNamespace: string,
-        public qualifier?: string,
-        public targetNamespace?: string
-    ) { }
+  constructor(
+    public termNamespace: string,
+    public qualifier?: string,
+    public targetNamespace?: string
+  ) {}
 }
 </code></pre>
     </div>

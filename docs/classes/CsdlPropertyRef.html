@@ -112,7 +112,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structured-type.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structured-type.ts:49</a></div>
                             </td>
                         </tr>
 
@@ -189,7 +189,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structured-type.ts:51</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/csdl/csdl-structured-type.ts:50</a></div>
                             </td>
                         </tr>
 
@@ -236,58 +236,56 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CsdlProperty, CsdlNavigationProperty } from &#x27;./csdl-structural-property&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  CsdlProperty,
+  CsdlNavigationProperty,
+} from &#x27;./csdl-structural-property&#x27;;
 
 export class CsdlStructuredType {
-    constructor(
-        public name: string,
-        public properties?: CsdlProperty[],
-        public navigationProperties?: CsdlNavigationProperty[],
-        public baseType?: string,
-        public openType?: boolean,
-        public abstract?: boolean
-    ) { }
+  constructor(
+    public name: string,
+    public properties?: CsdlProperty[],
+    public navigationProperties?: CsdlNavigationProperty[],
+    public baseType?: string,
+    public openType?: boolean,
+    public abstract?: boolean
+  ) {}
 }
 
 export class CsdlComplexType extends CsdlStructuredType {
-    constructor(
-        name: string,
-        properties?: CsdlProperty[],
-        navigationProperties?: CsdlNavigationProperty[],
-        baseType?: string,
-        openType?: boolean,
-        abstract?: boolean
-    ) {
-        super(name, properties, navigationProperties, baseType, openType, abstract);
-    }
+  constructor(
+    name: string,
+    properties?: CsdlProperty[],
+    navigationProperties?: CsdlNavigationProperty[],
+    baseType?: string,
+    openType?: boolean,
+    abstract?: boolean
+  ) {
+    super(name, properties, navigationProperties, baseType, openType, abstract);
+  }
 }
 
 export class CsdlEntityType extends CsdlStructuredType {
-    constructor(
-        name: string,
-        public key?: CsdlKey,
-        properties?: CsdlProperty[],
-        navigationProperties?: CsdlNavigationProperty[],
-        baseType?: string,
-        openType?: boolean,
-        abstract?: boolean,
-        public hasStream?: boolean
-    ) {
-        super(name, properties, navigationProperties, baseType, openType, abstract);
-    }
+  constructor(
+    name: string,
+    public key?: CsdlKey,
+    properties?: CsdlProperty[],
+    navigationProperties?: CsdlNavigationProperty[],
+    baseType?: string,
+    openType?: boolean,
+    abstract?: boolean,
+    public hasStream?: boolean
+  ) {
+    super(name, properties, navigationProperties, baseType, openType, abstract);
+  }
 }
 
 export class CsdlKey {
-    constructor(
-        public propertyRefs: CsdlPropertyRef[],
-    ) { }
+  constructor(public propertyRefs: CsdlPropertyRef[]) {}
 }
 
 export class CsdlPropertyRef {
-    constructor(
-        public name: string,
-        public alias?: string
-    ) { }
+  constructor(public name: string, public alias?: string) {}
 }
 </code></pre>
     </div>

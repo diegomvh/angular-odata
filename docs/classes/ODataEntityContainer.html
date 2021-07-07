@@ -335,8 +335,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="22"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:22</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="26"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:26</a></div>
                 </td>
             </tr>
 
@@ -409,7 +409,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:18</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">projects/angular-odata/src/lib/schema/entity-container.ts:22</a></div>
                                 </td>
                             </tr>
 
@@ -433,8 +433,12 @@ export class ODataEntityContainer {
   constructor(config: EntityContainerConfig, schema: ODataSchema) {
     this.schema &#x3D; schema;
     this.name &#x3D; config.name;
-    this.entitySets &#x3D; (config.entitySets || []).map(config &#x3D;&gt; new ODataEntitySet(config, schema));
-    this.annotations &#x3D; (config.annotations || []).map(annot &#x3D;&gt; new ODataAnnotation(annot));
+    this.entitySets &#x3D; (config.entitySets || []).map(
+      (config) &#x3D;&gt; new ODataEntitySet(config, schema)
+    );
+    this.annotations &#x3D; (config.annotations || []).map(
+      (annot) &#x3D;&gt; new ODataAnnotation(annot)
+    );
   }
 
   get api() {

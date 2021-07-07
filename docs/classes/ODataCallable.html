@@ -419,8 +419,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="45"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:45</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="50"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:50</a></div>
                 </td>
             </tr>
 
@@ -488,8 +488,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="51"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:51</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:58</a></div>
                 </td>
             </tr>
 
@@ -558,8 +558,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="59"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:59</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:66</a></div>
                 </td>
             </tr>
 
@@ -628,8 +628,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="37"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:37</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="42"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:42</a></div>
                 </td>
             </tr>
 
@@ -698,8 +698,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="22"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:22</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="26"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:26</a></div>
                 </td>
             </tr>
 
@@ -737,8 +737,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="55"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:55</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="62"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:62</a></div>
                 </td>
             </tr>
 
@@ -807,8 +807,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:33</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="38"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:38</a></div>
                 </td>
             </tr>
 
@@ -884,7 +884,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:41</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:46</a></div>
                                 </td>
                             </tr>
 
@@ -913,21 +913,26 @@ export class ODataCallable&lt;R&gt; {
     this.entitySetPath &#x3D; config.entitySetPath;
     this.bound &#x3D; config.bound;
     this.composable &#x3D; config.composable;
-    this.parser &#x3D; new ODataCallableParser(config, schema.namespace, schema.alias);
+    this.parser &#x3D; new ODataCallableParser(
+      config,
+      schema.namespace,
+      schema.alias
+    );
   }
 
   path() {
     let path: string;
-    if (this.entitySetPath)
-      path &#x3D; this.entitySetPath;
-    else if (this.bound)
-      path &#x3D; &#x60;${this.schema.namespace}.${this.name}&#x60;;
+    if (this.entitySetPath) path &#x3D; this.entitySetPath;
+    else if (this.bound) path &#x3D; &#x60;${this.schema.namespace}.${this.name}&#x60;;
     else
-      path &#x3D; this.parser.return ? this.api.findEntitySetForType(this.parser.return.type)?.name || this.name : this.name;
+      path &#x3D; this.parser.return
+        ? this.api.findEntitySetForType(this.parser.return.type)?.name ||
+          this.name
+        : this.name;
     return path;
   }
 
-  type({alias &#x3D; false}: {alias?: boolean} &#x3D; {}) {
+  type({ alias &#x3D; false }: { alias?: boolean } &#x3D; {}) {
     return &#x60;${alias ? this.schema.alias : this.schema.namespace}.${this.name}&#x60;;
   }
 
@@ -939,10 +944,12 @@ export class ODataCallable&lt;R&gt; {
     return this.schema.api;
   }
 
-  configure({findParserForType}: {
-    findParserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;
+  configure({
+    parserForType,
+  }: {
+    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
   }) {
-    this.parser.configure({options: this.api.options, findParserForType});
+    this.parser.configure({ options: this.api.options, parserForType });
   }
 
   deserialize(value: any): any {

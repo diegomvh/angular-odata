@@ -114,15 +114,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/OptionsHelper.html">OptionsHelper</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="60"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:60</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:59</a></div>
                 </td>
             </tr>
 
@@ -156,7 +156,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
+                                                <code><a href="../classes/Field.html" target="_self" >OptionsHelper | StructuredTypeFieldOptions</a></code>
                                     </td>
 
                                     <td>
@@ -196,7 +196,89 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: T, options?: <a href="../interfaces/OptionsHelper.html">OptionsHelper</a>)</code>
+<code>encode(value: T, options?: <a href="../classes/Field.html">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:68</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                            <code>T</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../classes/Field.html" target="_self" >OptionsHelper | StructuredTypeFieldOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="serialize"></a>
+                    <span class="name">
+                        <b>
+                            serialize
+                        </b>
+                        <a href="#serialize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>serialize(value: T, options?: <a href="../classes/Field.html">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -238,89 +320,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="serialize"></a>
-                    <span class="name">
-                        <b>
-                            serialize
-                        </b>
-                        <a href="#serialize"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>serialize(value: T, options?: <a href="../interfaces/OptionsHelper.html">OptionsHelper</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:61</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>value</td>
-                                    <td>
-                                            <code>T</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
+                                                <code><a href="../classes/Field.html" target="_self" >OptionsHelper | StructuredTypeFieldOptions</a></code>
                                     </td>
 
                                     <td>
@@ -352,13 +352,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
-import { ODataVersionHelper } from &#x27;./helpers&#x27;;
-export type EntityKey&lt;T&gt; &#x3D;
-  | {
-      readonly [P in keyof T]?: T[P];
-    }
-  | string
-  | number;
+import { ODataVersionHelper } from &#x27;./helper&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -372,14 +366,7 @@ export type CacheCacheability &#x3D; &#x27;public&#x27; | &#x27;private&#x27; | 
 
 export interface Options {
   version?: ODataVersion;
-  metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
-  ieee754Compatible?: boolean;
-  streaming?: boolean;
-}
-
-export interface OptionsHelper extends Options {
-  helper: ODataVersionHelper;
 }
 
 export interface ApiOptions extends Options {
@@ -387,6 +374,10 @@ export interface ApiOptions extends Options {
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
   //Headers
+  accept?: {
+    metadata?: ODataMetadataType;
+    ieee754Compatible?: boolean;
+  };
   etag?: {
     ifMatch?: boolean;
     ifNoneMatch?: boolean;
@@ -397,10 +388,18 @@ export interface ApiOptions extends Options {
     continueOnError?: boolean;
     includeAnnotations?: string;
   };
+  stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
 }
 
-export interface ResponseOptions extends Options {
+export interface OptionsHelper extends Options {
+  helper: ODataVersionHelper;
+  metadata?: ODataMetadataType;
+  ieee754Compatible?: boolean;
+  streaming?: boolean;
+}
+
+export interface ResponseOptions extends OptionsHelper {
   cacheability?: CacheCacheability;
   maxAge?: number;
 }
@@ -410,10 +409,16 @@ export interface StructuredTypeFieldOptions extends OptionsHelper {
 }
 
 export interface Parser&lt;T&gt; {
-  deserialize(value: any, options?: OptionsHelper): T;
-  serialize(value: T, options?: OptionsHelper): any;
+  deserialize(
+    value: any,
+    options?: OptionsHelper | StructuredTypeFieldOptions
+  ): T;
+  serialize(
+    value: T,
+    options?: OptionsHelper | StructuredTypeFieldOptions
+  ): any;
   //Encodes the value/s of a URL parameter or query-string.
-  encode(value: T, options?: OptionsHelper): any;
+  encode(value: T, options?: OptionsHelper | StructuredTypeFieldOptions): any;
 }
 
 export const NONE_PARSER &#x3D; {
@@ -488,7 +493,7 @@ export type StructuredTypeFieldConfig &#x3D; {
   precision?: number;
   annotations?: AnnotationConfig[];
   scale?: number;
-  referentials?: { property: string, referencedProperty: string; }[];
+  referentials?: { property: string; referencedProperty: string }[];
   referential?: string;
   referenced?: string;
 };

@@ -124,7 +124,7 @@
                             <a href="#CID" title="projects/angular-odata/src/lib/models/options.ts"><b>CID</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
                         </li>
                         <li>
-                            <a href="#COLLECTION" title="projects/angular-odata/src/lib/helpers/odata.ts"><b>COLLECTION</b>&nbsp;&nbsp;&nbsp;(projects/.../odata.ts)</a>
+                            <a href="#COLLECTION" title="projects/angular-odata/src/lib/helper.ts"><b>COLLECTION</b>&nbsp;&nbsp;&nbsp;(projects/.../helper.ts)</a>
                         </li>
                         <li>
                             <a href="#COLLECTION_OPERATORS" title="projects/angular-odata/src/lib/resources/builder.ts"><b>COLLECTION_OPERATORS</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -151,6 +151,9 @@
                             <a href="#DEFAULT_FETCH_POLICY" title="projects/angular-odata/src/lib/constants.ts"><b>DEFAULT_FETCH_POLICY</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#DEFAULT_STRIP_METADATA" title="projects/angular-odata/src/lib/constants.ts"><b>DEFAULT_STRIP_METADATA</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
                             <a href="#DEFAULT_TIMEOUT" title="projects/angular-odata/src/lib/constants.ts"><b>DEFAULT_TIMEOUT</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
@@ -163,10 +166,13 @@
                             <a href="#EDM_PARSERS" title="projects/angular-odata/src/lib/parsers/edm.ts"><b>EDM_PARSERS</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
-                            <a href="#EnumHelper" title="projects/angular-odata/src/lib/helpers/enums.ts"><b>EnumHelper</b>&nbsp;&nbsp;&nbsp;(projects/.../enums.ts)</a>
+                            <a href="#Enums" title="projects/angular-odata/src/lib/utils/enums.ts"><b>Enums</b>&nbsp;&nbsp;&nbsp;(projects/.../enums.ts)</a>
                         </li>
                         <li>
                             <a href="#ETAG_HEADER" title="projects/angular-odata/src/lib/constants.ts"><b>ETAG_HEADER</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#ETAG_HEADERS" title="projects/angular-odata/src/lib/constants.ts"><b>ETAG_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
                             <a href="#FUNCTION_REGEX" title="projects/angular-odata/src/lib/resources/builder.ts"><b>FUNCTION_REGEX</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -185,6 +191,9 @@
                         </li>
                         <li>
                             <a href="#IF_NONE_MATCH_HEADER" title="projects/angular-odata/src/lib/constants.ts"><b>IF_NONE_MATCH_HEADER</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#INCLUDE_ALL" title="projects/angular-odata/src/lib/models/options.ts"><b>INCLUDE_ALL</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
                         </li>
                         <li>
                             <a href="#INDEXOF_REGEX" title="projects/angular-odata/src/lib/resources/builder.ts"><b>INDEXOF_REGEX</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -235,6 +244,9 @@
                             <a href="#ODATA_ENTITYID" title="projects/angular-odata/src/lib/constants.ts"><b>ODATA_ENTITYID</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#ODATA_ENTITYID_HEADERS" title="projects/angular-odata/src/lib/constants.ts"><b>ODATA_ENTITYID_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
                             <a href="#ODATA_ID" title="projects/angular-odata/src/lib/constants.ts"><b>ODATA_ID</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
@@ -247,10 +259,10 @@
                             <a href="#ODATA_VERSION_HEADERS" title="projects/angular-odata/src/lib/constants.ts"><b>ODATA_VERSION_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
-                            <a href="#ODataHelper" title="projects/angular-odata/src/lib/helpers/odata.ts"><b>ODataHelper</b>&nbsp;&nbsp;&nbsp;(projects/.../odata.ts)</a>
+                            <a href="#ODataHelper" title="projects/angular-odata/src/lib/helper.ts"><b>ODataHelper</b>&nbsp;&nbsp;&nbsp;(projects/.../helper.ts)</a>
                         </li>
                         <li>
-                            <a href="#ODataVersionBaseHelper" title="projects/angular-odata/src/lib/helpers/odata.ts"><b>ODataVersionBaseHelper</b>&nbsp;&nbsp;&nbsp;(projects/.../odata.ts)</a>
+                            <a href="#ODataVersionBaseHelper" title="projects/angular-odata/src/lib/helper.ts"><b>ODataVersionBaseHelper</b>&nbsp;&nbsp;&nbsp;(projects/.../helper.ts)</a>
                         </li>
                         <li>
                             <a href="#OPTIMISTIC_CONCURRENCY" title="projects/angular-odata/src/lib/constants.ts"><b>OPTIMISTIC_CONCURRENCY</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
@@ -877,6 +889,33 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="DEFAULT_STRIP_METADATA"></a>
+                        <span class="name">
+                            <b>
+                            DEFAULT_STRIP_METADATA</b>
+                            <a href="#DEFAULT_STRIP_METADATA"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>&#x27;full&#x27;</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="DEFAULT_TIMEOUT"></a>
                         <span class="name">
                             <b>
@@ -942,6 +981,33 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>&#x27;ETag&#x27;</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ETAG_HEADERS"></a>
+                        <span class="name">
+                            <b>
+                            ETAG_HEADERS</b>
+                            <a href="#ETAG_HEADERS"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[ETAG_HEADER, ETAG_HEADER.toLowerCase()]</code>
                         </td>
                     </tr>
 
@@ -1216,6 +1282,36 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="ODATA_ENTITYID_HEADERS"></a>
+                        <span class="name">
+                            <b>
+                            ODATA_ENTITYID_HEADERS</b>
+                            <a href="#ODATA_ENTITYID_HEADERS"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>    <code>[]</code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>[
+  ODATA_ENTITYID,
+  ODATA_ENTITYID.toLowerCase(),
+]</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="ODATA_ID"></a>
                         <span class="name">
                             <b>
@@ -1313,7 +1409,11 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>[ODATA_VERSION, ODATA_VERSION.toLowerCase(), &#x27;dataserviceversion&#x27;]</code>
+                            <i>Default value : </i><code>[
+  ODATA_VERSION,
+  ODATA_VERSION.toLowerCase(),
+  &#x27;dataserviceversion&#x27;,
+]</code>
                         </td>
                     </tr>
 
@@ -1607,7 +1707,11 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: any, name?: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Alias, value, name })</code>
+                            <i>Default value : </i><code>(value: any, name?: string): QueryCustomType &#x3D;&gt; ({
+  type: QueryCustomTypes.Alias,
+  value,
+  name,
+})</code>
                         </td>
                     </tr>
 
@@ -1628,7 +1732,10 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Binary, value })</code>
+                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({
+  type: QueryCustomTypes.Binary,
+  value,
+})</code>
                         </td>
                     </tr>
 
@@ -1730,7 +1837,10 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Duration, value })</code>
+                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({
+  type: QueryCustomTypes.Duration,
+  value,
+})</code>
                         </td>
                     </tr>
 
@@ -1793,7 +1903,10 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: any) &#x3D;&gt; typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; &#x27;type&#x27; in value &amp;&amp; value.type in QueryCustomTypes</code>
+                            <i>Default value : </i><code>(value: any) &#x3D;&gt;
+  typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
+  &#x27;type&#x27; in value &amp;&amp;
+  value.type in QueryCustomTypes</code>
                         </td>
                     </tr>
 
@@ -1820,7 +1933,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>&quot;&quot;</code>
+                            <i>Default value : </i><code>&#x27;&#x27;</code>
                         </td>
                     </tr>
 
@@ -1868,7 +1981,10 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({ type: QueryCustomTypes.Raw, value })</code>
+                            <i>Default value : </i><code>(value: string): QueryCustomType &#x3D;&gt; ({
+  type: QueryCustomTypes.Raw,
+  value,
+})</code>
                         </td>
                     </tr>
 
@@ -1968,6 +2084,39 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>&#x27;_cid&#x27;</code>
+                        </td>
+                    </tr>
+
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="INCLUDE_ALL"></a>
+                        <span class="name">
+                            <b>
+                            INCLUDE_ALL</b>
+                            <a href="#INCLUDE_ALL"><span class="icon ion-ios-link"></span></a>
+                        </span>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>{
+  include_navigation: true,
+  include_concurrency: true,
+  include_computed: true,
+  include_key: true,
+  include_non_field: true,
+}</code>
                         </td>
                     </tr>
 
@@ -2409,7 +2558,7 @@
             </tbody>
         </table>
 </section>
-    <h3>projects/angular-odata/src/lib/helpers/odata.ts</h3>
+    <h3>projects/angular-odata/src/lib/helper.ts</h3>
     <section>
     <h3></h3>        <table class="table table-sm table-bordered">
             <tbody>
@@ -2502,11 +2651,11 @@
       let ctx: ODataContext &#x3D; {};
       if (this.ODATA_CONTEXT in value) {
         const str &#x3D; value[this.ODATA_CONTEXT] as string;
-        let index &#x3D; str.indexOf(&quot;$metadata&quot;);
+        let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
         ctx.serviceRootUrl &#x3D; str.substr(0, index);
-        index &#x3D; str.indexOf(&quot;#&quot;);
+        index &#x3D; str.indexOf(&#x27;#&#x27;);
         ctx.metadataUrl &#x3D; str.substr(0, index);
-        const parts &#x3D; str.substr(index + 1).split(&quot;/&quot;);
+        const parts &#x3D; str.substr(index + 1).split(&#x27;/&#x27;);
         const col &#x3D; COLLECTION.exec(parts[0]);
         if (col) {
           ctx.type &#x3D; col[1];
@@ -2520,8 +2669,7 @@
             ctx.property &#x3D; parts[1];
           } else {
             ctx.entitySet &#x3D; parts[0];
-            if (parts[1] &amp;&amp; parts[1] !&#x3D;&#x3D; &#x27;$entity&#x27;)
-              ctx.type &#x3D; parts[1];
+            if (parts[1] &amp;&amp; parts[1] !&#x3D;&#x3D; &#x27;$entity&#x27;) ctx.type &#x3D; parts[1];
           }
         }
       }
@@ -2529,7 +2677,7 @@
     },
     countParam() {
       return { [$COUNT]: &#x27;true&#x27; };
-    }
+    },
   }),
   //#endregion
   //#region Version 3.0
@@ -2547,18 +2695,18 @@
       let ctx: ODataContext &#x3D; {};
       if (this.ODATA_CONTEXT in value) {
         const str &#x3D; value[this.ODATA_CONTEXT] as string;
-        let index &#x3D; str.indexOf(&quot;$metadata&quot;);
+        let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
         ctx.serviceRootUrl &#x3D; str.substr(0, index);
-        index &#x3D; str.indexOf(&quot;#&quot;);
+        index &#x3D; str.indexOf(&#x27;#&#x27;);
         ctx.metadataUrl &#x3D; str.substr(0, index);
-        const parts &#x3D; str.substr(index + 1).split(&quot;/&quot;);
+        const parts &#x3D; str.substr(index + 1).split(&#x27;/&#x27;);
         ctx.entitySet &#x3D; parts[0];
       }
       return ctx;
     },
     countParam() {
       return { [$INLINECOUNT]: &#x27;allpages&#x27; };
-    }
+    },
   }),
   //#endregion
   //#region Version 2.0
@@ -2572,15 +2720,16 @@
     ODATA_TYPE: &#x27;type&#x27;,
     VALUE: &#x27;results&#x27;,
     annotations(value: { [name: string]: any }) {
-      if (this.ODATA_ANNOTATION in value)
-        return value[this.ODATA_ANNOTATION];
+      if (this.ODATA_ANNOTATION in value) return value[this.ODATA_ANNOTATION];
       return value;
     },
-    attributes(value: { [name: string]: any }) { return value; },
+    attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
+      return value;
+    },
     countParam() {
       return { [$INLINECOUNT]: &#x27;allpages&#x27; };
-    }
-  })
+    },
+  }),
   //#endregion
 }</code>
                         </td>
@@ -2604,96 +2753,135 @@
                     <tr>
                         <td class="col-md-4">
                             <i>Default value : </i><code>&lt;any&gt;{
-  entity(data: { [name: string]: any }, context: ODataContext) { return data; },
-  entities(data: { [name: string]: any }, context: ODataContext) { return data[this.VALUE]; },
-  property(data: { [name: string]: any }, context: ODataContext) { return (this.VALUE in data) ? data[this.VALUE] : data; },
+  entity(data: { [name: string]: any }, context: ODataContext) {
+    return data;
+  },
+  entities(data: { [name: string]: any }, context: ODataContext) {
+    return data[this.VALUE];
+  },
+  property(data: { [name: string]: any }, context: ODataContext) {
+    return this.VALUE in data ? data[this.VALUE] : data;
+  },
   functions(value: { [name: string]: any }) {
     return Object.keys(value)
-      .filter(k &#x3D;&gt; k.startsWith(this.ODATA_FUNCTION_PREFIX))
-      .reduce((acc, key) &#x3D;&gt; Object.assign(acc, { [key.substr(1)]: value[key] }), {});
+      .filter((k) &#x3D;&gt; k.startsWith(this.ODATA_FUNCTION_PREFIX))
+      .reduce(
+        (acc, key) &#x3D;&gt; Object.assign(acc, { [key.substr(1)]: value[key] }),
+        {}
+      );
   },
   properties(value: { [name: string]: any }) {
     return Object.keys(value)
-      .filter(k &#x3D;&gt; k.indexOf(this.ODATA_ANNOTATION_PREFIX) &gt; 0)
+      .filter((k) &#x3D;&gt; k.indexOf(this.ODATA_ANNOTATION_PREFIX) &gt; 0)
       .reduce((acc: { [name: string]: any }, key) &#x3D;&gt; {
         let name &#x3D; key.substr(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
         if (!(name in acc)) {
           acc[name] &#x3D; {};
         }
-        Object.assign(acc[name], { [key.substr(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key] });
+        Object.assign(acc[name], {
+          [key.substr(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key],
+        });
         return acc;
       }, {});
   },
   id(value: { [name: string]: any }, id?: string) {
-    if (id !&#x3D;&#x3D; undefined)
-      value[this.ODATA_ID] &#x3D; id;
-    return (this.ODATA_ID in value) ? value[this.ODATA_ID] as string : undefined;
+    if (id !&#x3D;&#x3D; undefined) value[this.ODATA_ID] &#x3D; id;
+    return this.ODATA_ID in value
+      ? (value[this.ODATA_ID] as string)
+      : undefined;
   },
   etag(value: { [name: string]: any }, etag?: string) {
-    if (etag !&#x3D;&#x3D; undefined)
-      value[this.ODATA_ETAG] &#x3D; etag;
-    return (this.ODATA_ETAG in value) ? value[this.ODATA_ETAG] as string : undefined;
+    if (etag !&#x3D;&#x3D; undefined) value[this.ODATA_ETAG] &#x3D; etag;
+    return this.ODATA_ETAG in value
+      ? (value[this.ODATA_ETAG] as string)
+      : undefined;
   },
   mediaEtag(value: { [name: string]: any }) {
-    return (this.ODATA_MEDIA_ETAG in value) ?
-      decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string) : undefined;
+    return this.ODATA_MEDIA_ETAG in value
+      ? decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string)
+      : undefined;
   },
   metadataEtag(value: { [name: string]: any }) {
-    return (this.ODATA_METADATA_ETAG in value) ?
-      decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string) : undefined;
+    return this.ODATA_METADATA_ETAG in value
+      ? decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string)
+      : undefined;
   },
   type(value: { [name: string]: any }) {
     if (this.ODATA_TYPE in value) {
       const type &#x3D; value[this.ODATA_TYPE].substr(1) as string;
       const matches &#x3D; COLLECTION.exec(type);
       if (matches)
-        return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1 ? &#x60;Edm.${matches[1]}&#x60; : matches[1];
+        return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1
+          ? &#x60;Edm.${matches[1]}&#x60;
+          : matches[1];
       return type;
     }
     return undefined;
   },
   count(value: { [name: string]: any }) {
-    return (this.ODATA_COUNT in value) ?
-      Number(value[this.ODATA_COUNT]) :
-      undefined;
+    return this.ODATA_COUNT in value
+      ? Number(value[this.ODATA_COUNT])
+      : undefined;
   },
   annotations(value: { [name: string]: any }) {
     return Object.keys(value)
-      .filter(key &#x3D;&gt; key.indexOf(this.ODATA_ANNOTATION_PREFIX) !&#x3D;&#x3D; -1 || key.startsWith(this.ODATA_FUNCTION_PREFIX))
+      .filter(
+        (key) &#x3D;&gt;
+          key.indexOf(this.ODATA_ANNOTATION_PREFIX) !&#x3D;&#x3D; -1 ||
+          key.startsWith(this.ODATA_FUNCTION_PREFIX)
+      )
       .reduce((acc, key) &#x3D;&gt; Object.assign(acc, { [key]: value[key] }), {});
   },
-  attributes(value: { [name: string]: any }) {
-    return Object.keys(value)
-      .filter(key &#x3D;&gt; key.indexOf(this.ODATA_ANNOTATION_PREFIX) &#x3D;&#x3D;&#x3D; -1 &amp;&amp; !key.startsWith(this.ODATA_FUNCTION_PREFIX))
-      .reduce((acc, key) &#x3D;&gt; Object.assign(acc, { [key]: value[key] }), {});
+  attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
+    return Object.entries(value)
+      .filter(
+        ([k]) &#x3D;&gt;
+          metadata &#x3D;&#x3D;&#x3D; &#x27;none&#x27; ||
+          (metadata &#x3D;&#x3D;&#x3D; &#x27;minimal&#x27; &amp;&amp;
+            (k.indexOf(this.ODATA_ANNOTATION_PREFIX) &#x3D;&#x3D;&#x3D; -1 ||
+              k.startsWith(this.ODATA_ANNOTATION_PREFIX)) &amp;&amp;
+            !k.startsWith(this.ODATA_FUNCTION_PREFIX)) ||
+          (metadata &#x3D;&#x3D;&#x3D; &#x27;full&#x27; &amp;&amp;
+            k.indexOf(this.ODATA_ANNOTATION_PREFIX) &#x3D;&#x3D;&#x3D; -1 &amp;&amp;
+            !k.startsWith(this.ODATA_FUNCTION_PREFIX))
+      )
+      .reduce((acc, e) &#x3D;&gt; ({ ...acc, [e[0]]: e[1] }), {});
   },
   nextLink(value: { [name: string]: any }) {
-    return (this.ODATA_NEXTLINK in value) ? decodeURIComponent(value[this.ODATA_NEXTLINK] as string) : undefined;
+    return this.ODATA_NEXTLINK in value
+      ? decodeURIComponent(value[this.ODATA_NEXTLINK] as string)
+      : undefined;
   },
   readLink(value: { [name: string]: any }) {
-    return (this.ODATA_READLINK in value) ?
-      decodeURIComponent(value[this.ODATA_READLINK] as string) : undefined;
+    return this.ODATA_READLINK in value
+      ? decodeURIComponent(value[this.ODATA_READLINK] as string)
+      : undefined;
   },
   mediaReadLink(value: { [name: string]: any }) {
-    return (this.ODATA_MEDIA_READLINK in value) ?
-      decodeURIComponent(value[this.ODATA_MEDIA_READLINK] as string) : undefined;
+    return this.ODATA_MEDIA_READLINK in value
+      ? decodeURIComponent(value[this.ODATA_MEDIA_READLINK] as string)
+      : undefined;
   },
   editLink(value: { [name: string]: any }) {
-    return (this.ODATA_EDITLINK in value) ?
-      decodeURIComponent(value[this.ODATA_EDITLINK] as string) : undefined;
+    return this.ODATA_EDITLINK in value
+      ? decodeURIComponent(value[this.ODATA_EDITLINK] as string)
+      : undefined;
   },
   mediaEditLink(value: { [name: string]: any }) {
-    return (this.ODATA_MEDIA_EDITLINK in value) ?
-      decodeURIComponent(value[this.ODATA_MEDIA_EDITLINK] as string) : undefined;
+    return this.ODATA_MEDIA_EDITLINK in value
+      ? decodeURIComponent(value[this.ODATA_MEDIA_EDITLINK] as string)
+      : undefined;
   },
   deltaLink(value: { [name: string]: any }) {
-    return (this.ODATA_DELTALINK in value) ?
-      decodeURIComponent(value[this.ODATA_DELTALINK] as string) : undefined;
+    return this.ODATA_DELTALINK in value
+      ? decodeURIComponent(value[this.ODATA_DELTALINK] as string)
+      : undefined;
   },
   mediaContentType(value: { [name: string]: any }) {
-    return (this.ODATA_MEDIA_CONTENTTYPE in value) ?
-      decodeURIComponent(value[this.ODATA_MEDIA_CONTENTTYPE] as string) : undefined;
-  }
+    return this.ODATA_MEDIA_CONTENTTYPE in value
+      ? decodeURIComponent(value[this.ODATA_MEDIA_CONTENTTYPE] as string)
+      : undefined;
+  },
 }</code>
                         </td>
                     </tr>
@@ -2726,17 +2914,17 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
   isoStringToDate(value: any): any {
-    if (typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp; value.search(ISO_REGEX) &#x3D;&#x3D;&#x3D; 0) {
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; value.search(ISO_REGEX) &#x3D;&#x3D;&#x3D; 0) {
       return new Date(value);
     } else if (Array.isArray(value)) {
-      return value.map(v &#x3D;&gt; this.isoStringToDate(v));
+      return value.map((v) &#x3D;&gt; this.isoStringToDate(v));
     } else if (value &amp;&amp; value.constructor &#x3D;&#x3D;&#x3D; Object) {
       return Object.keys(value)
-        .map(key &#x3D;&gt; [key, this.isoStringToDate(value[key])])
+        .map((key) &#x3D;&gt; [key, this.isoStringToDate(value[key])])
         .reduce((acc, v) &#x3D;&gt; Object.assign(acc, { [v[0]]: v[1] }), {});
     }
     return value;
-  }
+  },
 }</code>
                         </td>
                     </tr>
@@ -2766,17 +2954,17 @@
             </tbody>
         </table>
 </section>
-    <h3>projects/angular-odata/src/lib/helpers/enums.ts</h3>
+    <h3>projects/angular-odata/src/lib/utils/enums.ts</h3>
     <section>
     <h3></h3>        <table class="table table-sm table-bordered">
             <tbody>
                 <tr>
                     <td class="col-md-4">
-                        <a name="EnumHelper"></a>
+                        <a name="Enums"></a>
                         <span class="name">
                             <b>
-                            EnumHelper</b>
-                            <a href="#EnumHelper"><span class="icon ion-ios-link"></span></a>
+                            Enums</b>
+                            <a href="#Enums"><span class="icon ion-ios-link"></span></a>
                         </span>
                     </td>
                 </tr>
@@ -2790,11 +2978,13 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
   names&lt;E&gt;(Enum: E): string[] {
-    return Object.keys(Enum).filter(k &#x3D;&gt; typeof (Enum as any)[k] &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
+    return Object.keys(Enum).filter(
+      (k) &#x3D;&gt; typeof (Enum as any)[k] &#x3D;&#x3D;&#x3D; &#x27;number&#x27;
+    );
   },
 
   values&lt;E&gt;(Enum: E): number[] {
-    return Object.values(Enum).filter(v &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
+    return Object.values(Enum).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
   },
 
   toValue&lt;E&gt;(Enum: E, value: string): number {
@@ -2803,11 +2993,16 @@
 
   toValues&lt;E&gt;(Enum: E, value: any): number[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
-      return value.split(&#x27;,&#x27;).map(opcion &#x3D;&gt; this.toValue(Enum, opcion.trim()));
-    } else if (Array.isArray(value) &amp;&amp; value.every(v &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;)) {
-      return value.map(opcion &#x3D;&gt; this.toValue(Enum, opcion.trim()));
+      return value
+        .split(&#x27;,&#x27;)
+        .map((opcion) &#x3D;&gt; this.toValue(Enum, opcion.trim()));
+    } else if (
+      Array.isArray(value) &amp;&amp;
+      value.every((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;)
+    ) {
+      return value.map((opcion) &#x3D;&gt; this.toValue(Enum, opcion.trim()));
     } else if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
-      return this.values(Enum).filter(v &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v);
+      return this.values(Enum).filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v);
     }
     return [];
   },
@@ -2818,13 +3013,17 @@
 
   toNames&lt;E&gt;(Enum: E, value: any): string[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
-      return this.names(Enum)
-        .filter(k &#x3D;&gt; (value &amp; (Enum as any)[k]) &#x3D;&#x3D;&#x3D; (Enum as any)[k]);
-    } else if (Array.isArray(value) &amp;&amp; value.every(v &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;)) {
-      return value.map(v &#x3D;&gt; this.toName(Enum, v));
+      return this.names(Enum).filter(
+        (k) &#x3D;&gt; (value &amp; (Enum as any)[k]) &#x3D;&#x3D;&#x3D; (Enum as any)[k]
+      );
+    } else if (
+      Array.isArray(value) &amp;&amp;
+      value.every((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;)
+    ) {
+      return value.map((v) &#x3D;&gt; this.toName(Enum, v));
     }
     return [];
-  }
+  },
 }</code>
                         </td>
                     </tr>
@@ -2903,16 +3102,24 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
   //Merge Headers
-  mergeHttpHeaders(...values: (HttpHeaders | { [header: string]: string | string[]; })[]): HttpHeaders {
+  mergeHttpHeaders(
+    ...values: (HttpHeaders | { [header: string]: string | string[] })[]
+  ): HttpHeaders {
     let headers &#x3D; new HttpHeaders();
-    values.forEach(value &#x3D;&gt; {
+    values.forEach((value) &#x3D;&gt; {
       if (value instanceof HttpHeaders) {
-        value.keys().forEach(key &#x3D;&gt; {
-          headers &#x3D; ((value as HttpHeaders).getAll(key) || []).reduce((acc, v) &#x3D;&gt; acc.append(key, v), headers);
+        value.keys().forEach((key) &#x3D;&gt; {
+          headers &#x3D; ((value as HttpHeaders).getAll(key) || []).reduce(
+            (acc, v) &#x3D;&gt; acc.append(key, v),
+            headers
+          );
         });
-      } else if (typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+      } else if (Types.isObject(value)) {
         Object.entries(value).forEach(([key, value]) &#x3D;&gt; {
-          headers &#x3D; (Array.isArray(value) ? value : [value]).reduce((acc, v) &#x3D;&gt; acc.append(key, v), headers);
+          headers &#x3D; (Array.isArray(value) ? value : [value]).reduce(
+            (acc, v) &#x3D;&gt; acc.append(key, v),
+            headers
+          );
         });
       }
     });
@@ -2920,21 +3127,40 @@
   },
 
   // Merge Params
-  mergeHttpParams(...values: (HttpParams | { [param: string]: string | string[]; })[]): HttpParams {
+  mergeHttpParams(
+    ...values: (HttpParams | { [param: string]: string | string[] })[]
+  ): HttpParams {
     let params &#x3D; new HttpParams();
-    values.forEach(value &#x3D;&gt; {
+    values.forEach((value) &#x3D;&gt; {
       if (value instanceof HttpParams) {
-        value.keys().forEach(key &#x3D;&gt; {
-          params &#x3D; ((value as HttpParams).getAll(key) || []).reduce((acc, v) &#x3D;&gt; acc.append(key, v), params);
+        value.keys().forEach((key) &#x3D;&gt; {
+          params &#x3D; ((value as HttpParams).getAll(key) || []).reduce(
+            (acc, v) &#x3D;&gt; acc.append(key, v),
+            params
+          );
         });
-      } else if (typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+      } else if (Types.isObject(value)) {
         Object.entries(value).forEach(([key, value]) &#x3D;&gt; {
-          params &#x3D; (Array.isArray(value) ? value : [value]).reduce((acc, v) &#x3D;&gt; acc.append(key, v), params);
+          params &#x3D; (Array.isArray(value) ? value : [value]).reduce(
+            (acc, v) &#x3D;&gt; acc.append(key, v),
+            params
+          );
         });
       }
     });
     return params;
-  }
+  },
+  resolveHeaderKey(
+    headers: HttpHeaders | { [param: string]: string | string[] },
+    options: string[]
+  ): string | undefined {
+    if (headers instanceof HttpHeaders) {
+      return headers.keys().find((k) &#x3D;&gt; options.indexOf(k) !&#x3D;&#x3D; -1);
+    } else if (Types.isObject(headers)) {
+      return Object.keys(headers).find((k) &#x3D;&gt; options.indexOf(k) !&#x3D;&#x3D; -1);
+    }
+    return undefined;
+  },
 }</code>
                         </td>
                     </tr>
@@ -2996,7 +3222,9 @@
                             <i>Default value : </i><code>{
   set(obj: Object, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray &#x3D; (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
 
     pathArray.reduce((acc, key, i) &#x3D;&gt; {
       if (acc[key] &#x3D;&#x3D;&#x3D; undefined) acc[key] &#x3D; {};
@@ -3007,14 +3235,20 @@
 
   get(obj: Object, path: string, def?: any): any {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray &#x3D; (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
     // Find value if exist return otherwise return undefined value;
-    return (pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj) || def);
+    return (
+      pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj) || def
+    );
   },
 
   unset(obj: Object, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray &#x3D; (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
 
     pathArray.reduce((acc, key, i) &#x3D;&gt; {
       if (i &#x3D;&#x3D;&#x3D; pathArray.length - 1) delete acc[key];
@@ -3024,7 +3258,9 @@
 
   has(obj: Object, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
-    const pathArray &#x3D; (Types.isArray(path) ? path : path.match(/([^[.\]])+/g)) as any[];
+    const pathArray &#x3D; (
+      Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
+    ) as any[];
 
     return !!pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj);
   },
@@ -3057,8 +3293,8 @@
       const val2 &#x3D; object2[key];
       const areObjects &#x3D; Types.isObject(val1) &amp;&amp; Types.isObject(val2);
       if (
-        areObjects &amp;&amp; !Objects.equal(val1, val2) ||
-        !areObjects &amp;&amp; val1 !&#x3D;&#x3D; val2
+        (areObjects &amp;&amp; !Objects.equal(val1, val2)) ||
+        (!areObjects &amp;&amp; val1 !&#x3D;&#x3D; val2)
       ) {
         return false;
       }
@@ -3066,7 +3302,10 @@
     return true;
   },
 
-  difference(object1: { [attr: string]: any }, object2: { [attr: string]: any }) {
+  difference(
+    object1: { [attr: string]: any },
+    object2: { [attr: string]: any }
+  ) {
     if (!object2 || !Types.isObject(object2)) {
       return object1;
     }
@@ -3128,23 +3367,26 @@
     }
     return diffs;
   },
-  uniqueId: (counter &#x3D;&gt; (str &#x3D; &#x27;&#x27;) &#x3D;&gt; &#x60;${str}${++counter}&#x60;)(0),
-  resolveKey(key: any, {single &#x3D; true}: {single?: boolean} &#x3D; {}) {
-    if ([&#x27;number&#x27;, &#x27;string&#x27;].indexOf(typeof key) !&#x3D;&#x3D; -1)
-      return key;
+  uniqueId: (
+    (counter) &#x3D;&gt;
+    (str &#x3D; &#x27;&#x27;) &#x3D;&gt;
+      &#x60;${str}${++counter}&#x60;
+  )(0),
+  resolveKey(key: any, { single &#x3D; true }: { single?: boolean } &#x3D; {}) {
+    if ([&#x27;number&#x27;, &#x27;string&#x27;].indexOf(typeof key) !&#x3D;&#x3D; -1) return key;
     if (Types.isObject(key)) {
       const values &#x3D; Object.values(key);
       if (values.length &#x3D;&#x3D;&#x3D; 1 &amp;&amp; single) {
         // Single primitive key value
         key &#x3D; values[0];
-      } else if (values.some(v &#x3D;&gt; v &#x3D;&#x3D;&#x3D; undefined)) {
+      } else if (values.some((v) &#x3D;&gt; v &#x3D;&#x3D;&#x3D; undefined)) {
         // Compose key, needs all values
         return undefined;
       }
       return !Types.isEmpty(key) ? key : undefined;
     }
     return undefined;
-  }
+  },
 }</code>
                         </td>
                     </tr>
@@ -3169,7 +3411,9 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                            <i>Default value : </i><code>new InjectionToken&lt;ApiConfig&gt;(&#x27;odata.configuraions&#x27;)</code>
+                            <i>Default value : </i><code>new InjectionToken&lt;ApiConfig&gt;(
+  &#x27;odata.configuraions&#x27;
+)</code>
                         </td>
                     </tr>
 
@@ -3206,7 +3450,7 @@
   },
 
   isFunction(value: any): boolean {
-    return typeof value &#x3D;&#x3D;&#x3D; &quot;function&quot;;
+    return typeof value &#x3D;&#x3D;&#x3D; &#x27;function&#x27;;
   },
 
   isArray(value: any): boolean {
@@ -3214,13 +3458,17 @@
   },
 
   isEmpty(value: any): boolean {
-    return value &#x3D;&#x3D;&#x3D; undefined
-      || value &#x3D;&#x3D;&#x3D; null
-      || (typeof (value) &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; !value.length)
-      || (Types.isArray(value) &amp;&amp; !value.length)
-      || (Types.isFunction(value.isEmpty) &amp;&amp; value.isEmpty())
-      || (Types.isArray(value) &amp;&amp; (value as any[]).every(v &#x3D;&gt; Types.isEmpty(v)))
-      || (Types.isObject(value) &amp;&amp; !Object.keys(value).filter(k &#x3D;&gt; value.hasOwnProperty(k)).length);
+    return (
+      value &#x3D;&#x3D;&#x3D; undefined ||
+      value &#x3D;&#x3D;&#x3D; null ||
+      (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; !value.length) ||
+      (Types.isArray(value) &amp;&amp; !value.length) ||
+      (Types.isFunction(value.isEmpty) &amp;&amp; value.isEmpty()) ||
+      (Types.isArray(value) &amp;&amp;
+        (value as any[]).every((v) &#x3D;&gt; Types.isEmpty(v))) ||
+      (Types.isObject(value) &amp;&amp;
+        !Object.keys(value).filter((k) &#x3D;&gt; value.hasOwnProperty(k)).length)
+    );
   },
 
   isEqual(value1: any, value2: any) {
@@ -3228,12 +3476,11 @@
       return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
     }
 
-    function areDatesEqual () {
+    function areDatesEqual() {
       return value1.getTime() &#x3D;&#x3D;&#x3D; value2.getTime();
     }
 
-    function areArraysBufferEqual () {
-
+    function areArraysBufferEqual() {
       if (value1.byteLength !&#x3D;&#x3D; value2.byteLength) {
         return false;
       }
@@ -3251,8 +3498,7 @@
       return true;
     }
 
-    function areArraysEqual () {
-
+    function areArraysEqual() {
       // Check length
       if (value1.length !&#x3D;&#x3D; value2.length) return false;
 
@@ -3263,12 +3509,11 @@
 
       // If no errors, return true
       return true;
-
     }
 
-    function areObjectsEqual () {
-
-      if (Object.keys(value1).length !&#x3D;&#x3D; Object.keys(value2).length) return false;
+    function areObjectsEqual() {
+      if (Object.keys(value1).length !&#x3D;&#x3D; Object.keys(value2).length)
+        return false;
 
       // Check each item in the object
       for (let key in value1) {
@@ -3279,14 +3524,13 @@
 
       // If no errors, return true
       return true;
-
     }
 
-    function areFunctionsEqual () {
+    function areFunctionsEqual() {
       return value1.toString() &#x3D;&#x3D;&#x3D; value2.toString();
     }
 
-    function arePrimativesEqual () {
+    function arePrimativesEqual() {
       return value1 &#x3D;&#x3D;&#x3D; value2;
     }
 
@@ -3303,7 +3547,7 @@
     if (type &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) return areObjectsEqual();
     if (type &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) return areFunctionsEqual();
     return arePrimativesEqual();
-  }
+  },
 }</code>
                         </td>
                     </tr>
@@ -3336,13 +3580,14 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
   parseQueryString(query: string) {
-    return query.split(PARAM_SEPARATOR)
-      .reduce((acc, param: string) &#x3D;&gt; {
-        let index &#x3D; param.indexOf(VALUE_SEPARATOR);
-        if (index !&#x3D;&#x3D; -1)
-          Object.assign(acc, {[param.substr(0, index)]: param.substr(index + 1)});
-        return acc;
-      }, {});
+    return query.split(PARAM_SEPARATOR).reduce((acc, param: string) &#x3D;&gt; {
+      let index &#x3D; param.indexOf(VALUE_SEPARATOR);
+      if (index !&#x3D;&#x3D; -1)
+        Object.assign(acc, {
+          [param.substr(0, index)]: param.substr(index + 1),
+        });
+      return acc;
+    }, {});
   },
   escapeIllegalChars(string: string) {
     string &#x3D; string.replace(/%/g, &#x27;%25&#x27;);
@@ -3353,7 +3598,7 @@
     string &#x3D; string.replace(/&amp;/g, &#x27;%26&#x27;);
     string &#x3D; string.replace(/&#x27;/g, &quot;&#x27;&#x27;&quot;);
     return string;
-  }
+  },
 }</code>
                         </td>
                     </tr>

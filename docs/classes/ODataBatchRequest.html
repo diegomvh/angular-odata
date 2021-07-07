@@ -133,7 +133,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:50</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="76" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:76</a></div>
                             </td>
                         </tr>
 
@@ -197,7 +197,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:51</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="77" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:77</a></div>
                             </td>
                         </tr>
 
@@ -233,8 +233,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="136"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:136</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="174"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:174</a></div>
                 </td>
             </tr>
 
@@ -315,8 +315,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:74</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:107</a></div>
                 </td>
             </tr>
 
@@ -397,8 +397,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:81</a></div>
                 </td>
             </tr>
 
@@ -424,13 +424,36 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, Subject } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  HttpHeaders,
+  HttpErrorResponse,
+  HttpResponse,
+} from &#x27;@angular/common/http&#x27;;
+import { Observable, Subject } from &#x27;rxjs&#x27;;
 import { map } from &#x27;rxjs/operators&#x27;;
 
 import { ODataPathSegments, PathSegmentNames } from &#x27;../path-segments&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
-import { HttpHeaders, HttpErrorResponse, HttpResponse } from &#x27;@angular/common/http&#x27;;
-import { BOUNDARY_PREFIX_SUFFIX, APPLICATION_JSON, HTTP11, CONTENT_TYPE, NEWLINE, BATCH_PREFIX, $BATCH, MULTIPART_MIXED_BOUNDARY, VERSION_4_0, MULTIPART_MIXED, ODATA_VERSION, ACCEPT, CONTENT_TRANSFER_ENCODING, APPLICATION_HTTP, CONTENT_ID, BINARY, CHANGESET_PREFIX, NEWLINE_REGEXP } from &#x27;../../constants&#x27;;
+import {
+  BOUNDARY_PREFIX_SUFFIX,
+  APPLICATION_JSON,
+  HTTP11,
+  CONTENT_TYPE,
+  NEWLINE,
+  BATCH_PREFIX,
+  $BATCH,
+  MULTIPART_MIXED_BOUNDARY,
+  VERSION_4_0,
+  MULTIPART_MIXED,
+  ODATA_VERSION,
+  ACCEPT,
+  CONTENT_TRANSFER_ENCODING,
+  APPLICATION_HTTP,
+  CONTENT_ID,
+  BINARY,
+  CHANGESET_PREFIX,
+  NEWLINE_REGEXP,
+} from &#x27;../../constants&#x27;;
 import { ODataRequest } from &#x27;../request&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import { ODataResponse } from &#x27;../responses&#x27;;
@@ -444,9 +467,11 @@ var glast: number;
 function now() {
   let time &#x3D; Date.now();
   let last &#x3D; glast || time;
-  return glast &#x3D; time &gt; last ? time : last + 1;
+  return (glast &#x3D; time &gt; last ? time : last + 1);
 }
-function uniqid(prefix?: string, suffix?: string): string { return (prefix ? prefix : &#x27;&#x27;) + now().toString(36) + (suffix ? suffix : &#x27;&#x27;); }
+function uniqid(prefix?: string, suffix?: string): string {
+  return (prefix ? prefix : &#x27;&#x27;) + now().toString(36) + (suffix ? suffix : &#x27;&#x27;);
+}
 
 function getHeaderValue(header: string): string {
   let res: string &#x3D; header.split(&#x27;;&#x27;)[0].trim();
@@ -458,7 +483,8 @@ function getBoundaryDelimiter(contentType: string): string {
   const contentTypeParts: string[] &#x3D; contentType.split(&#x27;;&#x27;);
   if (contentTypeParts.length &#x3D;&#x3D;&#x3D; 2) {
     const boundary: string &#x3D; contentType.split(&#x27;;&#x27;)[1].trim();
-    const boundaryDelimiter: string &#x3D; BOUNDARY_PREFIX_SUFFIX + boundary.split(&#x27;&#x3D;&#x27;)[1];
+    const boundaryDelimiter: string &#x3D;
+      BOUNDARY_PREFIX_SUFFIX + boundary.split(&#x27;&#x3D;&#x27;)[1];
     return boundaryDelimiter;
   } else {
     return &#x27;&#x27;;
@@ -474,15 +500,20 @@ function getBoundaryEnd(boundaryDelimiter: string): string {
 }
 
 export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt;&gt; {
-  constructor(public request: ODataRequest&lt;any&gt;)
-   {
+  constructor(public request: ODataRequest&lt;any&gt;) {
     super();
   }
 
   toString() {
     //TODO: Relative or Absolute url ?
-    let res &#x3D; [&#x60;${this.request.method} ${this.request.pathWithParams} ${HTTP11}&#x60;];
-    if (this.request.method &#x3D;&#x3D;&#x3D; &#x27;POST&#x27; || this.request.method &#x3D;&#x3D;&#x3D; &#x27;PATCH&#x27; || this.request.method &#x3D;&#x3D;&#x3D; &#x27;PUT&#x27;) {
+    let res &#x3D; [
+      &#x60;${this.request.method} ${this.request.pathWithParams} ${HTTP11}&#x60;,
+    ];
+    if (
+      this.request.method &#x3D;&#x3D;&#x3D; &#x27;POST&#x27; ||
+      this.request.method &#x3D;&#x3D;&#x3D; &#x27;PATCH&#x27; ||
+      this.request.method &#x3D;&#x3D;&#x3D; &#x27;PUT&#x27;
+    ) {
       res.push(&#x60;${CONTENT_TYPE}: ${APPLICATION_JSON}&#x60;);
     }
 
@@ -490,14 +521,16 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
       let headers &#x3D; this.request.headers;
       res &#x3D; [
         ...res,
-        ...headers.keys().map(key &#x3D;&gt; &#x60;${key}: ${(headers.getAll(key) || []).join(&#x27;,&#x27;)}&#x60;)
+        ...headers
+          .keys()
+          .map((key) &#x3D;&gt; &#x60;${key}: ${(headers.getAll(key) || []).join(&#x27;,&#x27;)}&#x60;),
       ];
     }
 
     return res.join(NEWLINE);
   }
 
-  onLoad(content: string[], status: { code: number, text: string }) {
+  onLoad(content: string[], status: { code: number; text: string }) {
     let headers: HttpHeaders &#x3D; new HttpHeaders();
     var index &#x3D; 1;
     for (; index &lt; content.length; index++) {
@@ -508,10 +541,13 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
       }
 
       const batchBodyLineParts: string[] &#x3D; batchBodyLine.split(&#x27;: &#x27;);
-      headers &#x3D; headers.append(batchBodyLineParts[0].trim(), batchBodyLineParts[1].trim());
+      headers &#x3D; headers.append(
+        batchBodyLineParts[0].trim(),
+        batchBodyLineParts[1].trim()
+      );
     }
 
-    let body: string | { error: any, text: string } &#x3D; &#x27;&#x27;;
+    let body: string | { error: any; text: string } &#x3D; &#x27;&#x27;;
     for (; index &lt; content.length; index++) {
       body +&#x3D; content[index];
     }
@@ -542,24 +578,26 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
         headers,
         status: status.code,
         statusText: status.text,
-        url: this.request.urlWithParams
+        url: this.request.urlWithParams,
       });
       this.next(ODataResponse.fromHttpResponse(this.request, res));
       this.complete();
     } else {
       // An unsuccessful request is delivered on the error channel.
-      this.error(new HttpErrorResponse({
-        // The error in this case is the response body (error from the server).
-        error: body,
-        headers,
-        status: status.code,
-        statusText: status.text,
-        url: this.request.urlWithParams
-      }));
+      this.error(
+        new HttpErrorResponse({
+          // The error in this case is the response body (error from the server).
+          error: body,
+          headers,
+          status: status.code,
+          statusText: status.text,
+          url: this.request.urlWithParams,
+        })
+      );
     }
   }
 
-  onError(content: string[], status: { code: number, text: string }) {
+  onError(content: string[], status: { code: number; text: string }) {
     const res &#x3D; new HttpErrorResponse({
       error: content.join(NEWLINE),
       status: status.code || 0,
@@ -586,6 +624,10 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     return new ODataBatchResource(this.api, this.cloneSegments());
   }
 
+  schema() {
+    return undefined;
+  }
+
   //#region Factory
   static factory(api: ODataApi) {
     let segments &#x3D; new ODataPathSegments();
@@ -594,16 +636,19 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   }
   //#endregion
 
-  post(func: (batch: ODataBatchResource) &#x3D;&gt; void, options?: HttpOptions): Observable&lt;ODataResponse&lt;any&gt;&gt; {
+  post(
+    func: (batch: ODataBatchResource) &#x3D;&gt; void,
+    options?: HttpOptions
+  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
     const current &#x3D; this.api.request;
     this.api.request &#x3D; (req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; &#x3D;&gt; {
       if (req.api !&#x3D;&#x3D; this.api)
-        throw new Error(&quot;Batch Request are for the same api.&quot;);
+        throw new Error(&#x27;Batch Request are for the same api.&#x27;);
       if (req.observe &#x3D;&#x3D;&#x3D; &#x27;events&#x27;)
         throw new Error(&quot;Batch Request does not allows observe &#x3D;&#x3D; &#x27;events&#x27;.&quot;);
       this.requests.push(new ODataBatchRequest&lt;any&gt;(req));
       return this.requests[this.requests.length - 1];
-    }
+    };
     try {
       func(this);
     } finally {
@@ -613,10 +658,10 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     const headers &#x3D; Http.mergeHttpHeaders((options &amp;&amp; options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
-      [ACCEPT]: MULTIPART_MIXED
+      [ACCEPT]: MULTIPART_MIXED,
     });
     const request &#x3D; new ODataRequest({
-      method: &quot;POST&quot;,
+      method: &#x27;POST&#x27;,
       body: this.body(),
       api: this.api,
       resource: this,
@@ -624,7 +669,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       responseType: &#x27;text&#x27;,
       headers: headers,
       params: options ? options.params : undefined,
-      withCredentials: options ? options.withCredentials : undefined
+      withCredentials: options ? options.withCredentials : undefined,
     });
 
     return this.api.request(request).pipe(
@@ -643,7 +688,9 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     for (const batch of this.requests) {
       // if method is GET and there is a changeset boundary open then close it
       if (batch.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; changesetBoundary !&#x3D;&#x3D; null) {
-        res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;);
+        res.push(
+          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
+        );
         changesetBoundary &#x3D; null;
       }
 
@@ -656,7 +703,9 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       if (batch.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
         if (changesetBoundary &#x3D;&#x3D;&#x3D; null) {
           changesetBoundary &#x3D; uniqid(CHANGESET_PREFIX);
-          res.push(&#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;);
+          res.push(
+            &#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;
+          );
           res.push(NEWLINE);
         }
         res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}&#x60;);
@@ -681,17 +730,21 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
 
     if (res.length) {
       if (changesetBoundary !&#x3D;&#x3D; null) {
-        res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;);
+        res.push(
+          &#x60;${BOUNDARY_PREFIX_SUFFIX}${changesetBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
+        );
         changesetBoundary &#x3D; null;
       }
-      res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;);
+      res.push(
+        &#x60;${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
+      );
     }
     return res.join(NEWLINE);
   }
 
   handleResponse(response: ODataResponse&lt;any&gt;) {
     let chunks: string[][] &#x3D; [];
-    const contentType: string &#x3D; response.headers.get(CONTENT_TYPE) || &quot;&quot;;
+    const contentType: string &#x3D; response.headers.get(CONTENT_TYPE) || &#x27;&#x27;;
     const batchBoundary: string &#x3D; getBoundaryDelimiter(contentType);
     const endLine: string &#x3D; getBoundaryEnd(batchBoundary);
 
@@ -719,8 +772,12 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
         contentId &#x3D; Number(getHeaderValue(line));
       } else if (line.startsWith(HTTP11)) {
         startIndex &#x3D; index;
-      } else if (line &#x3D;&#x3D;&#x3D; batchBoundary || line &#x3D;&#x3D;&#x3D; changesetBoundary
-        || line &#x3D;&#x3D;&#x3D; endLine || line &#x3D;&#x3D;&#x3D; changesetEndLine) {
+      } else if (
+        line &#x3D;&#x3D;&#x3D; batchBoundary ||
+        line &#x3D;&#x3D;&#x3D; changesetBoundary ||
+        line &#x3D;&#x3D;&#x3D; endLine ||
+        line &#x3D;&#x3D;&#x3D; changesetEndLine
+      ) {
         if (!startIndex) {
           continue;
         }
@@ -753,7 +810,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       const statusParts &#x3D; chunk[0].split(&#x27; &#x27;);
       req.onLoad(chunk.slice(1), {
         code: Number(statusParts[1]),
-        text: statusParts[2]
+        text: statusParts[2],
       });
     });
   }

@@ -60,13 +60,13 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="modules/ODataModule.html" data-type="entity-link">ODataModule</a>
                                 <li class="chapter inner">
                                     <div class="simple menu-toggler" data-toggle="collapse" ${ isNormalMode ?
-                                        'data-target="#injectables-links-module-ODataModule-e32e7a43c8769fe6275e41ebe9b07007"' : 'data-target="#xs-injectables-links-module-ODataModule-e32e7a43c8769fe6275e41ebe9b07007"' }>
+                                        'data-target="#injectables-links-module-ODataModule-526d93906693bfb2830d92fdc9e5db72"' : 'data-target="#xs-injectables-links-module-ODataModule-526d93906693bfb2830d92fdc9e5db72"' }>
                                         <span class="icon ion-md-arrow-round-down"></span>
                                         <span>Injectables</span>
                                         <span class="icon ion-ios-arrow-down"></span>
                                     </div>
-                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-e32e7a43c8769fe6275e41ebe9b07007"' :
-                                        'id="xs-injectables-links-module-ODataModule-e32e7a43c8769fe6275e41ebe9b07007"' }>
+                                    <ul class="links collapse" ${ isNormalMode ? 'id="injectables-links-module-ODataModule-526d93906693bfb2830d92fdc9e5db72"' :
+                                        'id="xs-injectables-links-module-ODataModule-526d93906693bfb2830d92fdc9e5db72"' }>
                                         <li class="link">
                                             <a href="injectables/ODataClient.html"
                                                 data-type="entity-link" data-context="sub-entity" data-context-id="modules" }>ODataClient</a>

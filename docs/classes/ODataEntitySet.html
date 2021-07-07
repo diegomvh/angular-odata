@@ -368,8 +368,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="29"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-set.ts:29</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="30"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-set.ts:30</a></div>
                 </td>
             </tr>
 
@@ -438,8 +438,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-set.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="20"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/entity-set.ts:20</a></div>
                 </td>
             </tr>
 
@@ -512,7 +512,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">projects/angular-odata/src/lib/schema/entity-set.ts:25</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">projects/angular-odata/src/lib/schema/entity-set.ts:26</a></div>
                                 </td>
                             </tr>
 
@@ -527,23 +527,24 @@
 import { EntitySetConfig } from &#x27;../types&#x27;;
 import { ODataAnnotation } from &#x27;./annotation&#x27;;
 export class ODataEntitySet {
-  schema: ODataSchema
+  schema: ODataSchema;
   name: string;
   entityType: string;
-  service: { new(...params: any[]): any };
+  service: { new (...params: any[]): any };
   annotations: ODataAnnotation[];
   constructor(config: EntitySetConfig, schema: ODataSchema) {
     this.schema &#x3D; schema;
     this.name &#x3D; config.name;
     this.entityType &#x3D; config.entityType;
     this.service &#x3D; config.service;
-    this.annotations &#x3D; (config.annotations || []).map(annot &#x3D;&gt; new ODataAnnotation(annot));
+    this.annotations &#x3D; (config.annotations || []).map(
+      (annot) &#x3D;&gt; new ODataAnnotation(annot)
+    );
   }
 
   isTypeOf(type: string) {
     var names &#x3D; [&#x60;${this.schema.namespace}.${this.name}&#x60;];
-    if (this.schema.alias)
-      names.push(&#x60;${this.schema.alias}.${this.name}&#x60;);
+    if (this.schema.alias) names.push(&#x60;${this.schema.alias}.${this.name}&#x60;);
     return names.indexOf(type) !&#x3D;&#x3D; -1;
   }
 

@@ -320,8 +320,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/memory.ts:12</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="15"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/memory.ts:15</a></div>
                 </td>
             </tr>
 
@@ -565,7 +565,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:57</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:66</a></code>
 </div>
                 </td>
             </tr>
@@ -610,7 +610,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:46</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:55</a></code>
 </div>
                 </td>
             </tr>
@@ -689,7 +689,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:41</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:48</a></code>
 </div>
                 </td>
             </tr>
@@ -845,7 +845,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:82</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:91</a></code>
 </div>
                 </td>
             </tr>
@@ -935,7 +935,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:106</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:126</a></code>
 </div>
                 </td>
             </tr>
@@ -1023,7 +1023,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:111</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:134</a></code>
 </div>
                 </td>
             </tr>
@@ -1111,7 +1111,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:70</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:79</a></code>
 </div>
                 </td>
             </tr>
@@ -1187,7 +1187,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:62</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:71</a></code>
 </div>
                 </td>
             </tr>
@@ -1263,7 +1263,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:74</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:83</a></code>
 </div>
                 </td>
             </tr>
@@ -1339,7 +1339,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:66</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:75</a></code>
 </div>
                 </td>
             </tr>
@@ -1427,7 +1427,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:78</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:87</a></code>
 </div>
                 </td>
             </tr>
@@ -1503,7 +1503,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:35</a></code>
+                        <div class="io-line">Defined in         <code><a href="../interfaces/Cache.html#source" target="_self" >ODataCache:38</a></code>
 </div>
                 </td>
             </tr>
@@ -1677,12 +1677,15 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
 import { ODataCache } from &#x27;./cache&#x27;;
 export class ODataInMemoryCache extends ODataCache&lt;ODataResponse&lt;any&gt;&gt; {
-  constructor({timeout}: {timeout?: number} &#x3D; {}) {
-    super({timeout});
+  constructor({ timeout }: { timeout?: number } &#x3D; {}) {
+    super({ timeout });
   }
 
   putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
-    this.put(req.pathWithParams, res, {timeout: res.options.maxAge, pattern: &#x60;^${req.path}&#x60;});
+    this.put(req.pathWithParams, res, {
+      timeout: res.options.maxAge,
+      pattern: &#x60;^${req.path}&#x60;,
+    });
   }
 
   getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
