@@ -487,7 +487,7 @@ export class ODataModelOptions<T> {
     const current = self._resource;
     if (current === undefined || !current.isEqualTo(resource)) {
       self._resource = resource;
-      this._pushToRelations(self);
+      //this._pushToRelations(self);
       self.events$.emit({
         name: 'attach',
         model: self,
@@ -885,11 +885,9 @@ export class ODataModelOptions<T> {
     self._silent = silent;
 
     const changes: string[] = [];
-    const model = self as any;
+    const relations: any[] = [];
     Object.entries(entity).forEach(([key, value]) => {
-      const name =
-        (self._resetting && this.fields().find((p) => p.field === key)?.name) ||
-        key;
+      const field = this.fields().find((p) => (self._resetting && p.field === key) || p.name === key);
 
       value = this.isModel(value)
         ? (value as ODataModel<any>).toEntity(INCLUDE_ALL)
@@ -898,16 +896,28 @@ export class ODataModelOptions<T> {
             INCLUDE_ALL
           )
         : value;
-      const current = model[name];
+
+      if (field?.navigation) {
+        relations.push([field, value]);
+      } else {
+        const name = field?.name || key;
+        const current = (<any>self)[name];
+        (<any>self)[name] = value;
+        if (!Types.isEqual(current, value)) changes.push(name);
+      }
+    });
+
+    relations.forEach(([field, value]) => {
+      const current = (<any>self)[field.name];
       if (this.isCollection(current) && Types.isArray(value)) {
         current.assign(value, { reset: self._resetting, silent: self._silent });
-        if (current.hasChanged()) changes.push(name);
+        if (current.hasChanged()) changes.push(field.name);
       } else if (this.isModel(current) && Types.isObject(value)) {
         current.assign(value, { reset: self._resetting, silent: self._silent });
-        if (current.hasChanged()) changes.push(name);
-      } else {
-        model[name] = value;
-        if (!Types.isEqual(current, value)) changes.push(name);
+        if (current.hasChanged()) changes.push(field.name);
+      } else if (!current) {
+        (<any>self)[field.name] = value;
+        changes.push(field.name);
       }
     });
 
@@ -935,27 +945,7 @@ export class ODataModelOptions<T> {
     field: ODataModelField<F>
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     if (field.isStructuredType()) {
-      if (self._resetting && !(field.name in self._relations)) {
-        const selfResource = self.resource();
-        const selfSchema = self.schema();
-        const selfAnnots = self.annots();
-        const newModel = field.modelCollectionFactory<T, F>({
-          reset: self._resetting,
-          baseResource: selfResource,
-          baseSchema: selfSchema,
-          baseAnnots: selfAnnots,
-        });
-        self._relations[field.name] = {
-          state: ODataModelState.Unchanged,
-          property: field,
-          model: newModel,
-          subscription: this._subscribe<F>(self, field, newModel),
-        };
-      }
-      const relation = self._relations[field.name];
-      if (relation !== undefined && self._resetting)
-        relation.state = ODataModelState.Unchanged;
-      return relation?.model;
+      return self._relations[field.name]?.model;
     } else {
       const attrs = this.attributes(self, {
         include_concurrency: true,
@@ -1081,9 +1071,11 @@ export class ODataModelOptions<T> {
         self._changes[field.name] = value;
       }
       if (!equal) {
+        /*
         if (field.isKey()) {
           this._pushToRelations(self);
         }
+        */
         if (!self._silent)
           self.events$.emit({
             name: 'change',

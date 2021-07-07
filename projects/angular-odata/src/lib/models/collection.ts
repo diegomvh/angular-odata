@@ -331,11 +331,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return of(this);
   }
 
-  protected addReference(model: M, options?: HttpOptions): Observable<M> {
+  private addReference(model: M, options?: HttpOptions): Observable<M> {
     const resource = this.resource();
     if (
-      model.key() === undefined ||
-      !(resource instanceof ODataNavigationPropertyResource)
+      !(model.isNew() && resource instanceof ODataNavigationPropertyResource)
     )
       return throwError("addReference: Can't add reference");
     return resource
@@ -391,6 +390,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     return undefined;
   }
+
   protected addModel(
     model: M,
     {
@@ -415,7 +415,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       server = true,
     }: { silent?: boolean; server?: boolean } = {}
   ): Observable<this> {
-    if (server) {
+    if (server && !model.isNew() && this.resource() instanceof ODataNavigationPropertyResource) {
       return this.addReference(model).pipe(
         map((model) => {
           this.addModel(model, { silent, reset: true });
@@ -428,11 +428,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  protected removeReference(model: M, options?: HttpOptions): Observable<M> {
+  private removeReference(model: M, options?: HttpOptions): Observable<M> {
     const resource = this.resource();
     if (
-      model.key() === undefined ||
-      !(resource instanceof ODataNavigationPropertyResource)
+      !(model.isNew() && resource instanceof ODataNavigationPropertyResource)
     )
       return throwError("removeReference: Can't remove reference");
     return resource
@@ -476,6 +475,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     return undefined;
   }
+
   protected removeModel(
     model: M,
     {
@@ -500,7 +500,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       server = true,
     }: { silent?: boolean; server?: boolean } = {}
   ): Observable<this> {
-    if (server) {
+    if (server && !model.isNew() && this.resource() instanceof ODataNavigationPropertyResource) {
       return this.removeReference(model).pipe(
         map((model) => {
           this.removeModel(model, { silent, reset: true });
