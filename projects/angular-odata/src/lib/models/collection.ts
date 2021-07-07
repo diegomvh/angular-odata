@@ -101,7 +101,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.assign(entities, { reset });
   }
 
-  resource(resource?: ODataCollectionResource<T>) {
+  resource(resource?: ODataCollectionResource<T>): ODataCollectionResource<T> | undefined {
     if (resource !== undefined) {
       if (
         this._resource !== undefined &&
@@ -129,11 +129,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
           value: resource,
         });
       }
-    } else {
-      let resource = this._resource.clone() as ODataCollectionResource<T>;
-      return resolveResource(resource, this) as ODataCollectionResource<T> | undefined;
     }
-    return undefined;
+    resource = this._resource.clone() as ODataCollectionResource<T>;
+    return resolveResource(resource, this) as ODataCollectionResource<T> | undefined;
   }
 
   switchToEntitySetResource() {
