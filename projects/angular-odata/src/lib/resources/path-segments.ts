@@ -56,14 +56,14 @@ function pathSegmentsBuilder(
 }
 
 export class ODataPathSegments {
-  protected segments: ODataSegment[];
+  private _segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments = segments || [];
+    this._segments = segments || [];
   }
 
   pathAndParams(): [string, { [name: string]: any }] {
-    const result = this.segments.reduce(
+    const result = this._segments.reduce(
       (acc, segment) => {
         const [path, params] = pathSegmentsBuilder(segment);
         acc.paths.push(path);
@@ -76,7 +76,7 @@ export class ODataPathSegments {
   }
 
   types(): string[] {
-    return this.segments
+    return this._segments
       .map((s) => s.type)
       .filter((t) => t !== undefined) as string[];
   }
@@ -93,7 +93,7 @@ export class ODataPathSegments {
   }
 
   toJSON() {
-    return this.segments.map((segment) => {
+    return this._segments.map((segment) => {
       let json = <any>{ name: segment.name, path: segment.path };
       if (segment.type !== undefined) json.type = segment.type;
       if (segment.key !== undefined)
@@ -114,11 +114,11 @@ export class ODataPathSegments {
 
   find(predicate: (segment: ODataSegment) => boolean) {
     //Backward Find
-    return [...this.segments].reverse().find(predicate);
+    return [...this._segments].reverse().find(predicate);
   }
 
-  last({ key = false }: { key?: boolean } = {}) {
-    let segments = [...this.segments];
+  segments({ key = false }: { key?: boolean } = {}) {
+    let segments = [...this._segments];
     if (key)
       segments = segments.filter(
         (s) =>
@@ -128,14 +128,17 @@ export class ODataPathSegments {
             PathSegmentNames.property,
           ].indexOf(s.name) !== -1
       );
-    return segments.length > 0
-      ? new SegmentHandler(segments[segments.length - 1])
-      : undefined;
+    return segments.map(s => new SegmentHandler(s));
+  }
+
+  last({ key = false }: { key?: boolean } = {}) {
+    const segments = this.segments({key});
+    return segments.length > 0 ? segments[segments.length - 1] : undefined;
   }
 
   add(name: string, path: string) {
     const segment = { name, path } as ODataSegment;
-    this.segments.push(segment);
+    this._segments.push(segment);
     return new SegmentHandler(segment);
   }
 

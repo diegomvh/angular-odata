@@ -38,23 +38,27 @@ export class ODataModel<T> {
   // Properties
   static options: ModelOptions;
   static meta: ODataModelOptions<any>;
-  // Events
+  // Parent
+  _parent: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null = null;
   _attributes: { [name: string]: any } = {};
   _changes: { [name: string]: any } = {};
   _relations: { [name: string]: ODataModelRelation } = {};
-  _resource?: ODataModelResource<T>;
+  _resource!: ODataModelResource<T>;
   _annotations!: ODataEntityAnnotations;
   _resetting: boolean = false;
   _silent: boolean = false;
   _meta: ODataModelOptions<T>;
+  // Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
     {
+      parent,
       resource,
       annots,
       reset = false,
     }: {
+      parent?: ODataModel<any> | ODataCollection<any, ODataModel<any>>;
       resource?: ODataModelResource<T>;
       annots?: ODataEntityAnnotations;
       reset?: boolean;
@@ -64,15 +68,18 @@ export class ODataModel<T> {
     if (Klass.meta === undefined)
       throw new Error(`Can't create model without metadata`);
     this._meta = Klass.meta;
-    this._meta.bind(this);
+    this._meta.bind(this, parent);
 
     // Client Id
     (<any>this)[this._meta.cid] =
       (<any>data)[this._meta.cid] || Objects.uniqueId('c');
 
+    // Resource
     this.resource(
       resource || this._meta.modelResourceFactory({ fromSet: true })
     );
+
+    // Annotations
     this.annots(annots || new ODataEntityAnnotations());
 
     let attrs = this.annots().attributes<T>(data, 'full');
@@ -100,7 +107,7 @@ export class ODataModel<T> {
   }
 
   switchToEntityResource() {
-    const current = this.resource();
+    const current = this.resource() as ODataModelResource<T>;
     this.resource(
       this._meta.modelResourceFactory({ baseResource: current, fromSet: true })
     );
@@ -304,7 +311,7 @@ export class ODataModel<T> {
   clone() {
     let Ctor = <typeof ODataModel>this.constructor;
     return new Ctor(this.toEntity(INCLUDE_ALL), {
-      resource: this.resource(),
+      resource: this.resource() as ODataModelResource<T> | undefined,
       annots: this.annots(),
     });
   }
@@ -436,7 +443,7 @@ export class ODataModel<T> {
       apply(query: QueryArguments<T>): void;
     }) => void
   ) {
-    const resource = this.resource();
+    const resource = this.resource() as ODataModelResource<T> | undefined;
     if (resource !== undefined) return this._meta.query(this, resource, func);
   }
 
@@ -624,19 +631,11 @@ export class ODataModel<T> {
         const resource = field.meta?.modelResourceFactory({
           fromSet: asEntity,
         });
-        model = field.modelCollectionFactory<T, P>({
-          value: ref,
-          baseSchema: this.schema(),
-          baseAnnots: this.annots(),
-        }) as ODataModel<P>;
+        model = field.modelCollectionFactory<T, P>({ parent: this, value: ref }) as ODataModel<P>;
         model.resource(resource);
       }
     } else {
-      model = field.modelCollectionFactory<T, P>({
-        baseResource: this.resource(),
-        baseSchema: this.schema(),
-        baseAnnots: this.annots(),
-      }) as ODataModel<P> | ODataCollection<P, ODataModel<P>> | undefined;
+      model = field.modelCollectionFactory<T, P>({ parent: this }) as ODataModel<P> | ODataCollection<P, ODataModel<P>> | undefined;
     }
     if (model !== undefined) {
       this.assign({ [field.name]: model });

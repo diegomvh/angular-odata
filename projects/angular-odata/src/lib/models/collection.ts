@@ -31,13 +31,15 @@ import {
   ODataModelEvent,
   ODataModelState,
   INCLUDE_ALL,
+  resolveResource
 } from './options';
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M>
 {
   static model: typeof ODataModel | null = null;
-  _resource?: ODataCollectionResource<T>;
+  _parent: ODataModel<any> | null = null;
+  _resource!: ODataCollectionResource<T>;
   _annotations!: ODataEntitiesAnnotations;
   _entries: {
     state: ODataModelState;
@@ -62,11 +64,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
   constructor(
     entities: Partial<T>[] | { [name: string]: any }[] = [],
     {
+      parent,
       resource,
       annots,
       model,
       reset = false,
     }: {
+      parent?: ODataModel<any>;
       resource?: ODataCollectionResource<T>;
       annots?: ODataEntitiesAnnotations;
       model?: typeof ODataModel;
@@ -78,9 +82,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (model === undefined) throw new Error('Collection need model');
     this._model = model;
 
+    // Parent
+    if (parent !== undefined) {
+      this._parent = parent;
+    }
+
+    // Resource
     this.resource(
       resource || this._model.meta.collectionResourceFactory({ fromSet: true })
     );
+
+    // Annotations
     this.annots(
       annots || new ODataEntitiesAnnotations({ options: resource?.api.options })
     );
@@ -101,13 +113,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
         );
 
       this._entries.forEach(({ model }) => {
-        const mr = model.resource();
-        const er = this._model.meta.modelResourceFactory({
+        const mr = this._model.meta.modelResourceFactory({
           baseResource: resource,
         });
-        if (er !== undefined && (mr === undefined || !mr.isEqualTo(er))) {
-          model.resource(er);
-        }
+        model.resource(mr);
       });
 
       const current = this._resource;
@@ -120,12 +129,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
           value: resource,
         });
       }
+    } else {
+      let resource = this._resource.clone() as ODataCollectionResource<T>;
+      return resolveResource(resource, this) as ODataCollectionResource<T> | undefined;
     }
-    return this._resource?.clone();
+    return undefined;
   }
 
   switchToEntitySetResource() {
-    const current = this.resource();
+    const current = this.resource() as ODataCollectionResource<T>;
     this.resource(
       this._model.meta.collectionResourceFactory({
         baseResource: current,
@@ -164,7 +176,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       fromSet: !reset,
     });
 
-    return new Model(data, { resource, annots, reset }) as M;
+    return new Model(data, { resource, annots, reset, parent: this }) as M;
   }
 
   toEntities({
@@ -211,12 +223,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   clone() {
-    let resource: ODataCollectionResource<T> | undefined;
-    let annots: ODataEntitiesAnnotations | undefined;
-    if (this._resource) resource = this._resource.clone();
-    if (this._annotations) annots = this._annotations.clone();
     let Ctor = <typeof ODataCollection>this.constructor;
-    return new Ctor(this.toEntities(INCLUDE_ALL), { resource, annots });
+    return new Ctor(this.toEntities(INCLUDE_ALL), {
+      resource: this.resource() as ODataCollectionResource<T> | undefined,
+      annots: this.annots()
+    });
   }
 
   fetch({
@@ -249,7 +260,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   fetchAll(options?: HttpOptions): Observable<this> {
-    const resource = this.resource();
+    const resource = this.resource() as ODataCollectionResource<T> | undefined;
     if (resource === undefined)
       return throwError('fetchAll: Resource is undefined');
 
@@ -691,7 +702,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       apply(query: QueryArguments<T>): void;
     }) => void
   ) {
-    const resource = this.resource();
+    const resource = this.resource() as ODataCollectionResource<T> | undefined;
     if (resource === undefined)
       throw new Error(`Can't query without ODataResource`);
     func(resource.query);

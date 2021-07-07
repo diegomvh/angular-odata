@@ -86,6 +86,21 @@ export abstract class ODataResource<T> {
     return this.pathSegments.last({ key: true })?.clearKey();
   }
 
+  setKeys(keys: EntityKey<any>[]) {
+    const segments = this.pathSegments.segments({key: true});
+    if (keys.length > segments.length) {
+      throw Error("Keys length > Segment length");
+    }
+    segments.forEach((segment, index) => {
+      const key = keys[index];
+      if (key === undefined) {
+        segment.clearKey();
+      } else {
+        segment.key(key);
+      }
+    });
+  }
+
   isSubtypeOf(other: ODataResource<any>) {
     const api = this.api;
     const selfType = this.type();
