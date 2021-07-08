@@ -335,22 +335,6 @@ export class ODataModelField<F> {
   }
 }
 
-export const resolveResource = (
-  resource: ODataModelResource<any> | ODataCollectionResource<any>,
-  model: ODataModel<any> | ODataCollection<any, ODataModel<any>>
-  ): ODataModelResource<any> | ODataCollectionResource<any> => {
-  const keys = [] as EntityKey<any>[];
-  let node = model as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
-  while (node !== null) {
-    if (node instanceof ODataModel) {
-      keys.splice(0, 0, node.key({ field_mapping: true }) as EntityKey<any>);
-    }
-    node = node._parent;
-  }
-  resource.segment.keys(keys);
-  return resource;
-}
-
 export type ODataModelRelation = {
   state: ODataModelState;
   model: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
@@ -398,34 +382,6 @@ export class ODataModelOptions<T> {
 
   isTypeOf(type: string) {
     return this.schema.isTypeOf(type);
-  }
-
-  collectionResourceFactory({
-    fromSet = false,
-    baseResource,
-  }: { fromSet?: boolean; baseResource?: ODataResource<T> } = {}):
-    | ODataCollectionResource<T>
-    | undefined {
-    if (fromSet && this.entitySet !== undefined)
-      return ODataEntitySetResource.factory<T>(
-        this.api,
-        this.entitySet.name,
-        this.type(),
-        new ODataPathSegments(),
-        baseResource?.cloneQuery() || new ODataQueryOptions()
-      );
-    return baseResource?.clone() as ODataCollectionResource<T> | undefined;
-  }
-
-  modelResourceFactory({
-    fromSet = false,
-    baseResource,
-  }: { fromSet?: boolean; baseResource?: ODataResource<T> } = {}):
-    | ODataModelResource<T>
-    | undefined {
-    const resource = this.collectionResourceFactory({ baseResource, fromSet });
-    if (resource instanceof ODataEntitySetResource) return resource.entity();
-    return resource as ODataModelResource<T> | undefined;
   }
 
   find(
@@ -509,26 +465,68 @@ export class ODataModelOptions<T> {
     }
   }
 
-  resource(
-    self: ODataModel<T>,
-    {
-      toEntity = false,
-    }: {
-      toEntity?: boolean;
-    } = {}
-  ): ODataModelResource<T> | undefined {
-    let resource = self._resource?.clone() as ODataModelResource<T> | undefined;
-    if (toEntity) {
-      resource = this.modelResourceFactory({ baseResource: resource, fromSet: true }) as ODataModelResource<T>;
-      const key = self.key({ field_mapping: true }) as EntityKey<T>;
-      if (resource !== undefined && key !== undefined)
-        return resource.key(key);
-      return resource;
-    }
-    return (resource && resolveResource(resource, self)) as ODataModelResource<T> | undefined;
+  //# region Resource
+  collectionResourceFactory({
+    fromSet = false,
+    baseResource,
+  }: { fromSet?: boolean; baseResource?: ODataResource<T> } = {}):
+    | ODataCollectionResource<T>
+    | undefined {
+    if (fromSet && this.entitySet !== undefined)
+      return ODataEntitySetResource.factory<T>(
+        this.api,
+        this.entitySet.name,
+        this.type(),
+        new ODataPathSegments(),
+        baseResource?.cloneQuery() || new ODataQueryOptions()
+      );
+    return baseResource?.clone() as ODataCollectionResource<T> | undefined;
   }
 
-  bind(self: ODataModel<T>, parent?: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
+  modelResourceFactory({
+    fromSet = false,
+    baseResource,
+  }: { fromSet?: boolean; baseResource?: ODataResource<T> } = {}):
+    | ODataModelResource<T>
+    | undefined {
+    const resource = this.collectionResourceFactory({ baseResource, fromSet });
+    if (resource instanceof ODataEntitySetResource) return resource.entity();
+    return resource as ODataModelResource<T> | undefined;
+  }
+
+  static resource<T>(
+    model: ODataModel<T> | ODataCollection<T, ODataModel<T>>
+  ) {
+    const models = [] as any[];
+    let node: ODataModel<any> | ODataCollection<any, ODataModel<any>> | null = model;
+    while (node !== null) {
+      models.splice(0, 0, node);
+      node = node._parent;
+    }
+    let resource: ODataModelResource<any> | ODataCollectionResource<any> | undefined;
+    for (let m of models) {
+      let relation = Object.values<ODataModelRelation>(m._relations).find(r => r.model === m) as ODataModelRelation;
+      resource = relation.property.resourceFactory<any, any>(resource || m._resource);
+      if (m instanceof ODataModel) {
+        let key = (m as ODataModel<any>).key({ field_mapping: true }) as EntityKey<any>;
+        if (key !== undefined)
+          resource = (resource as ODataModelResource<any>).key(key);
+      }
+    }
+    return resource;
+  }
+
+  entityResource(self: ODataModel<T>): ODataModelResource<T> {
+    let resource = self._resource?.clone();
+    resource = this.modelResourceFactory({ baseResource: resource, fromSet: true });
+    const key = self.key({ field_mapping: true }) as EntityKey<T>;
+    if (resource !== undefined && key !== undefined)
+      return resource.key(key);
+    return resource as ODataModelResource<T>;
+  }
+  //#endregion
+
+  bind(self: ODataModel<T>, parent?: ODataModel<any>) {
     // Parent
     if (parent !== undefined) {
       self._parent = parent;
@@ -556,7 +554,7 @@ export class ODataModelOptions<T> {
     }) => void
   ) {
     func(resource.query);
-    self.resource(resource);
+    this.attach(self, resource);
   }
 
   resolveKey(

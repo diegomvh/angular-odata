@@ -27,11 +27,12 @@ import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
   BUBBLING,
+  ODataModelResource,
   ODataCollectionResource,
+  ODataModelOptions,
   ODataModelEvent,
   ODataModelState,
   INCLUDE_ALL,
-  resolveResource
 } from './options';
 
 export class ODataCollection<T, M extends ODataModel<T>>
@@ -88,9 +89,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
 
     // Resource
-    this.resource(
-      resource || this._model.meta.collectionResourceFactory({ fromSet: true })
-    );
+    resource = resource || this._model.meta.collectionResourceFactory({ fromSet: true });
+    if (resource !== undefined)
+      this.attach(resource);
 
     // Annotations
     this.annots(
@@ -101,51 +102,50 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.assign(entities, { reset });
   }
 
-  resource(resource?: ODataCollectionResource<T>): ODataCollectionResource<T> | undefined {
-    if (resource !== undefined) {
-      if (
-        this._resource !== undefined &&
-        this._resource.type() !== resource.type() &&
-        !resource.isSubtypeOf(this._resource)
-      )
-        throw new Error(
-          `Can't reattach ${resource.type()} to ${this._resource.type()}`
-        );
-
-      this._entries.forEach(({ model }) => {
-        const mr = this._model.meta.modelResourceFactory({
-          baseResource: resource,
-        });
-        model.resource(mr);
-      });
-
-      const current = this._resource;
-      if (current === undefined || !current.isEqualTo(resource)) {
-        if (resource instanceof ODataEntitySetResource) {
-          this._parent = null;
-        }
-        this._resource = resource;
-        this.events$.emit({
-          name: 'attach',
-          collection: this,
-          previous: current,
-          value: resource,
-        });
-      }
-    }
-    resource = this._resource?.clone() as ODataCollectionResource<T> | undefined;
-    return (resource && resolveResource(resource, this)) as ODataCollectionResource<T> | undefined;
+  resource(): ODataCollectionResource<T> | undefined {
+    return ODataModelOptions.resource<T>(this) as ODataCollectionResource<T> | undefined;
   }
 
-  switchToEntitySetResource() {
-    const current = this.resource() as ODataCollectionResource<T>;
-    this.resource(
-      this._model.meta.collectionResourceFactory({
-        baseResource: current,
+  attach(resource: ODataCollectionResource<T>) {
+    if (
+      this._resource !== undefined &&
+      this._resource.type() !== resource.type() &&
+      !resource.isSubtypeOf(this._resource)
+    )
+      throw new Error(
+        `Can't reattach ${resource.type()} to ${this._resource.type()}`
+      );
+
+    this._entries.forEach(({ model }) => {
+      const mr = this._model.meta.modelResourceFactory({
+        baseResource: resource,
+      }) as ODataModelResource<T>;
+      model.attach(mr);
+    });
+
+    const current = this._resource;
+    if (current === undefined || !current.isEqualTo(resource)) {
+      if (resource instanceof ODataEntitySetResource) {
+        this._parent = null;
+      }
+      this._resource = resource;
+      this.events$.emit({
+        name: 'attach',
+        collection: this,
+        previous: current,
+        value: resource,
+      });
+    }
+  }
+
+  attachToEntitySet() {
+    const resource = this._model.meta.collectionResourceFactory({
+        baseResource: this._resource,
         fromSet: true,
-      })
-    );
-    return current;
+      });
+    if (resource !== undefined) {
+      this.attach(resource);
+    }
   }
 
   annots(annots?: ODataEntitiesAnnotations) {
@@ -177,7 +177,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
       fromSet: !reset,
     });
 
-    return new Model(data, { resource, annots, reset, parent: this }) as M;
+    return new Model(data, {
+      resource,
+      annots,
+      reset,
+      parent: this._parent !== null ? this._parent : undefined,
+    }) as M;
   }
 
   toEntities({
@@ -227,7 +232,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let Ctor = <typeof ODataCollection>this.constructor;
     return new Ctor(this.toEntities(INCLUDE_ALL), {
       resource: this.resource() as ODataCollectionResource<T> | undefined,
-      annots: this.annots()
+      annots: this.annots(),
     });
   }
 
@@ -349,7 +354,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       return resource
         .reference()
         .add(
-          model._meta.resource(model, { toEntity: true, }) as ODataEntityResource<T>,
+          model._meta.entityResource(model) as ODataEntityResource<T>,
           options
         )
         .pipe(map(() => model));
@@ -372,10 +377,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
     if (entry === undefined || entry.state === ODataModelState.Removed) {
       if (model.resource() === undefined) {
-        model.resource(
+        model.attach(
           this._model.meta.modelResourceFactory({
             baseResource: this.resource(),
-          })
+          }) as ODataModelResource<T>
         );
       }
       if (entry !== undefined && entry.state === ODataModelState.Removed) {
@@ -424,7 +429,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       server = true,
     }: { silent?: boolean; server?: boolean } = {}
   ): Observable<this> {
-    if (server && !model.isNew() && this.resource() instanceof ODataNavigationPropertyResource) {
+    if (
+      server &&
+      !model.isNew() &&
+      this.resource() instanceof ODataNavigationPropertyResource
+    ) {
       return this.addReference(model).pipe(
         map((model) => {
           this.addModel(model, { silent, reset: true });
@@ -443,9 +452,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       return resource
         .reference()
         .remove(
-          model._meta.resource(model, {
-            toEntity: true,
-          }) as ODataEntityResource<T>,
+          model._meta.entityResource(model) as ODataEntityResource<T>,
           options
         )
         .pipe(map(() => model));
@@ -508,7 +515,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       server = true,
     }: { silent?: boolean; server?: boolean } = {}
   ): Observable<this> {
-    if (server && !model.isNew() && this.resource() instanceof ODataNavigationPropertyResource) {
+    if (
+      server &&
+      !model.isNew() &&
+      this.resource() instanceof ODataNavigationPropertyResource
+    ) {
       return this.removeReference(model).pipe(
         map((model) => {
           this.removeModel(model, { silent, reset: true });
@@ -703,7 +714,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource === undefined)
       throw new Error(`Can't query without ODataResource`);
     func(resource.query);
-    this.resource(resource);
+    this.attach(resource);
   }
 
   protected callFunction<P, R>(
