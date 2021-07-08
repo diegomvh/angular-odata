@@ -376,6 +376,39 @@ describe('ODataResource', () => {
     expect(friend.toString()).toEqual("People('russellwhyte')/Friends(1)");
   });
 
+  it('should create entity single navigation and return keys', () => {
+    const set: ODataEntitySetResource<Person> =
+      ODataEntitySetResource.factory<Person>(
+        settings.defaultApi(),
+        'People',
+        undefined,
+        segments,
+        options
+      );
+    const entity = set.entity('russellwhyte');
+    const friends: ODataNavigationPropertyResource<Person> =
+      entity.navigationProperty<Person>('Friends');
+    const friend = friends.key(1);
+    expect(friend.segment.keys()).toEqual(['russellwhyte', 1]);
+  });
+
+  it('should create entity single navigation and set keys', () => {
+    const set: ODataEntitySetResource<Person> =
+      ODataEntitySetResource.factory<Person>(
+        settings.defaultApi(),
+        'People',
+        undefined,
+        segments,
+        options
+      );
+    const entity = set.entity();
+    const friends: ODataNavigationPropertyResource<Person> =
+      entity.navigationProperty<Person>('Friends');
+    const friend = friends.key(1);
+    const other = friend.keys(['other', 3]);
+    expect(other.toString()).toEqual("People('other')/Friends(3)");
+  });
+
   it('should create entity single navigation with guid key', () => {
     const set: ODataEntitySetResource<Person> =
       ODataEntitySetResource.factory<Person>(

@@ -93,7 +93,7 @@ export class ODataPathSegments {
         }
       });
     }
-    return segments.map(s => s.key());
+    return segments.map(s => s.key() as EntityKey<any> | undefined);
   }
 
   toString(): string {

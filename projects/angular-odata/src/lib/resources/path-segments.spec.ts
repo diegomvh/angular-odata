@@ -84,9 +84,44 @@ describe('ODataPathSegments', () => {
     expect(pathSegments.toString()).toEqual('ResetDataSource');
   });
 
-  it('test key', () => {
+  it('test set key to last segment', () => {
     const pathSegments: ODataPathSegments = new ODataPathSegments();
     pathSegments.add(PathSegmentNames.entitySet, ENTITY_SET);
-    expect(pathSegments.toString()).toEqual('hola');
+    pathSegments.last({key: true})?.key('russellwhyte');
+    expect(pathSegments.last({key: true})?.hasKey()).toBeTruthy();
+    expect(pathSegments.toString()).toEqual("People('russellwhyte')");
+  });
+
+  it('test set keys', () => {
+    const pathSegments: ODataPathSegments = new ODataPathSegments();
+    pathSegments.add(PathSegmentNames.entitySet, ENTITY_SET);
+    pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
+    pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
+    pathSegments.keys(['foo', 'bar']);
+    expect(pathSegments.toString()).toEqual("People('foo')/Friends('bar')/Friends");
+  });
+
+  it('test unset keys', () => {
+    const pathSegments: ODataPathSegments = new ODataPathSegments();
+    pathSegments.add(PathSegmentNames.entitySet, ENTITY_SET);
+    pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
+    pathSegments.keys(['foo', 'bar']);
+    expect(pathSegments.toString()).toEqual("People('foo')/Friends('bar')");
+    pathSegments.keys([ undefined, 'bar']);
+    expect(pathSegments.toString()).toEqual("People/Friends('bar')");
+    pathSegments.keys(['foo']);
+    expect(pathSegments.toString()).toEqual("People('foo')/Friends");
+  });
+
+  it('test get keys', () => {
+    const pathSegments: ODataPathSegments = new ODataPathSegments();
+    pathSegments.add(PathSegmentNames.entitySet, ENTITY_SET);
+    pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
+    pathSegments.keys(['foo', 'bar']);
+    expect(pathSegments.keys()).toEqual(['foo', 'bar']);
+    pathSegments.keys([ undefined, 'bar']);
+    expect(pathSegments.keys()).toEqual([undefined, 'bar']);
+    pathSegments.keys(['foo', undefined, 'FooBar']);
+    expect(pathSegments.keys()).toEqual(['foo', undefined]);
   });
 });

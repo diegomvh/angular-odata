@@ -69,7 +69,9 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   keys(values: any[]) {
     const singleton = this.clone();
     const types = this.pathSegments.types({key: true});
-    const keys = types.map((type, index) => ODataResource.resolveKey(values[index], this.api.findStructuredTypeForType<T>(type)));
+    const keys = values.map((value, index) =>
+      ODataResource.resolveKey(value, this.api.findStructuredTypeForType<T>(types[index]))
+    );
     singleton.segment.keys(keys);
     return singleton;
   }
