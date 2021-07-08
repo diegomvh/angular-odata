@@ -63,6 +63,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return entity;
   }
 
+  keys(values: any[]) {
+    const entity = this.clone();
+    const types = this.pathSegments.types({key: true});
+    const keys = types.map((type, index) => ODataResource.resolveKey(values[index], this.api.findStructuredTypeForType<T>(type)));
+    entity.segment.keys(keys);
+    return entity;
+  }
+
   value() {
     return ODataValueResource.factory<T>(
       this.api,
@@ -175,6 +183,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       entitySet() {
         return segments.get(PathSegmentNames.entitySet);
       },
+      keys(values?: (EntityKey<T> | undefined)[]) {
+        return segments.keys(values);
+      }
     };
   }
 

@@ -190,6 +190,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       entitySet() {
         return segments.get(PathSegmentNames.entitySet);
       },
+      keys(values?: (EntityKey<T> | undefined)[]) {
+        return segments.keys(values);
+      }
     };
   }
 

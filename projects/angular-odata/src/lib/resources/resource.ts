@@ -86,18 +86,6 @@ export abstract class ODataResource<T> {
     return this.pathSegments.last({ key: true })?.clearKey();
   }
 
-  setKeys(keys: EntityKey<any>[]) {
-    const segments = this.pathSegments.segments({key: true});
-    segments.forEach((segment, index) => {
-      const key = keys[index];
-      if (key === undefined) {
-        segment.clearKey();
-      } else {
-        segment.key(key);
-      }
-    });
-  }
-
   isSubtypeOf(other: ODataResource<any>) {
     const api = this.api;
     const selfType = this.type();
@@ -236,16 +224,19 @@ export abstract class ODataResource<T> {
     };
   }
 
-  protected resolveKey(value: any): EntityKey<T> | undefined {
+  static resolveKey<T>(value: any, schema?: ODataStructuredType<T> | ODataCallable<T>): EntityKey<T> | undefined {
     if (isQueryCustomType(value)) {
       return value;
     } else if (Types.isObject(value)) {
-      let schema = this.schema();
       return schema instanceof ODataStructuredType
         ? schema.resolveKey(value)
         : Objects.resolveKey(value);
     }
     return value as EntityKey<T> | undefined;
+  }
+
+  protected resolveKey(value: any): EntityKey<T> | undefined {
+    return ODataResource.resolveKey<T>(value, this.schema());
   }
 
   /**

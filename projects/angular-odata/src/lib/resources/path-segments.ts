@@ -75,10 +75,25 @@ export class ODataPathSegments {
     return [result.paths.join(PATH_SEPARATOR), result.params];
   }
 
-  types(): string[] {
-    return this._segments
-      .map((s) => s.type)
+  types({ key = false }: { key?: boolean } = {}): string[] {
+    return this.segments({key})
+      .map((s) => s.type())
       .filter((t) => t !== undefined) as string[];
+  }
+
+  keys(values?: (EntityKey<any> | undefined)[]) {
+    const segments = this.segments({key: true});
+    if (values !== undefined) {
+      segments.forEach((segment, index) => {
+        const key = values[index];
+        if (key === undefined) {
+          segment.clearKey();
+        } else {
+          segment.key(key);
+        }
+      });
+    }
+    return segments.map(s => s.key());
   }
 
   toString(): string {

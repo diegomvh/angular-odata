@@ -83,4 +83,10 @@ describe('ODataPathSegments', () => {
     pathSegments.add(PathSegmentNames.action, ACTION);
     expect(pathSegments.toString()).toEqual('ResetDataSource');
   });
+
+  it('test key', () => {
+    const pathSegments: ODataPathSegments = new ODataPathSegments();
+    pathSegments.add(PathSegmentNames.entitySet, ENTITY_SET);
+    expect(pathSegments.toString()).toEqual('hola');
+  });
 });

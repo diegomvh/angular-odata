@@ -347,7 +347,7 @@ export const resolveResource = (
     }
     node = node._parent;
   }
-  resource.setKeys(keys);
+  resource.segment.keys(keys);
   return resource;
 }
 
