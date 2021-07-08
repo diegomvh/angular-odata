@@ -43,7 +43,7 @@ export class ODataModel<T> {
   _attributes: { [name: string]: any } = {};
   _changes: { [name: string]: any } = {};
   _relations: { [name: string]: ODataModelRelation } = {};
-  _resource!: ODataModelResource<T>;
+  _resource?: ODataModelResource<T>;
   _annotations!: ODataEntityAnnotations;
   _resetting: boolean = false;
   _silent: boolean = false;

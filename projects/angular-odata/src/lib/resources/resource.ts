@@ -88,9 +88,6 @@ export abstract class ODataResource<T> {
 
   setKeys(keys: EntityKey<any>[]) {
     const segments = this.pathSegments.segments({key: true});
-    if (keys.length > segments.length) {
-      throw Error("Keys length > Segment length");
-    }
     segments.forEach((segment, index) => {
       const key = keys[index];
       if (key === undefined) {

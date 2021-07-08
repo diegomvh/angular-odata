@@ -39,7 +39,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 {
   static model: typeof ODataModel | null = null;
   _parent: ODataModel<any> | null = null;
-  _resource!: ODataCollectionResource<T>;
+  _resource?: ODataCollectionResource<T>;
   _annotations!: ODataEntitiesAnnotations;
   _entries: {
     state: ODataModelState;
@@ -121,6 +121,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
       const current = this._resource;
       if (current === undefined || !current.isEqualTo(resource)) {
+        if (resource instanceof ODataEntitySetResource) {
+          this._parent = null;
+        }
         this._resource = resource;
         this.events$.emit({
           name: 'attach',
@@ -130,8 +133,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
         });
       }
     }
-    resource = this._resource.clone() as ODataCollectionResource<T>;
-    return resolveResource(resource, this) as ODataCollectionResource<T> | undefined;
+    resource = this._resource?.clone() as ODataCollectionResource<T> | undefined;
+    return (resource && resolveResource(resource, this)) as ODataCollectionResource<T> | undefined;
   }
 
   switchToEntitySetResource() {
@@ -342,19 +345,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private addReference(model: M, options?: HttpOptions): Observable<M> {
     const resource = this.resource();
-    if (
-      !(model.isNew() && resource instanceof ODataNavigationPropertyResource)
-    )
-      return throwError("addReference: Can't add reference");
-    return resource
-      .reference()
-      .add(
-        model._meta.resource(model, {
-          toEntity: true,
-        }) as ODataEntityResource<T>,
-        options
-      )
-      .pipe(map(() => model));
+    if (!model.isNew() && resource instanceof ODataNavigationPropertyResource) {
+      return resource
+        .reference()
+        .add(
+          model._meta.resource(model, { toEntity: true, }) as ODataEntityResource<T>,
+          options
+        )
+        .pipe(map(() => model));
+    }
+    return throwError("addReference: Can't add reference");
   }
 
   private _addModel(
@@ -439,19 +439,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private removeReference(model: M, options?: HttpOptions): Observable<M> {
     const resource = this.resource();
-    if (
-      !(model.isNew() && resource instanceof ODataNavigationPropertyResource)
-    )
-      return throwError("removeReference: Can't remove reference");
-    return resource
-      .reference()
-      .remove(
-        model._meta.resource(model, {
-          toEntity: true,
-        }) as ODataEntityResource<T>,
-        options
-      )
-      .pipe(map(() => model));
+    if (!model.isNew() && resource instanceof ODataNavigationPropertyResource) {
+      return resource
+        .reference()
+        .remove(
+          model._meta.resource(model, {
+            toEntity: true,
+          }) as ODataEntityResource<T>,
+          options
+        )
+        .pipe(map(() => model));
+    }
+    return throwError("removeReference: Can't remove reference");
   }
 
   private _removeModel(

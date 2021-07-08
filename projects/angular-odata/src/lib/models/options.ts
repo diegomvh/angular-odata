@@ -338,7 +338,7 @@ export class ODataModelField<F> {
 export const resolveResource = (
   resource: ODataModelResource<any> | ODataCollectionResource<any>,
   model: ODataModel<any> | ODataCollection<any, ODataModel<any>>
-  ): ODataModelResource<any> | ODataCollectionResource<any> | undefined => {
+  ): ODataModelResource<any> | ODataCollectionResource<any> => {
   const keys = [] as EntityKey<any>[];
   let node = model as ODataModel<any> | ODataCollection<any, ODataModel<any>> | null;
   while (node !== null) {
@@ -347,7 +347,6 @@ export const resolveResource = (
     }
     node = node._parent;
   }
-  if (keys.some(k => k === undefined)) return undefined
   resource.setKeys(keys);
   return resource;
 }
@@ -497,8 +496,10 @@ export class ODataModelOptions<T> {
 
     const current = self._resource;
     if (current === undefined || !current.isEqualTo(resource)) {
+      if (resource instanceof ODataEntityResource) {
+        self._parent = null;
+      }
       self._resource = resource;
-      //this._pushToRelations(self);
       self.events$.emit({
         name: 'attach',
         model: self,
@@ -516,10 +517,15 @@ export class ODataModelOptions<T> {
       toEntity?: boolean;
     } = {}
   ): ODataModelResource<T> | undefined {
-    let resource = self._resource.clone() as ODataModelResource<T>;
-    if (toEntity)
+    let resource = self._resource?.clone() as ODataModelResource<T> | undefined;
+    if (toEntity) {
       resource = this.modelResourceFactory({ baseResource: resource, fromSet: true }) as ODataModelResource<T>;
-    return resolveResource(resource, self) as ODataModelResource<T> | undefined;
+      const key = self.key({ field_mapping: true }) as EntityKey<T>;
+      if (resource !== undefined && key !== undefined)
+        return resource.key(key);
+      return resource;
+    }
+    return (resource && resolveResource(resource, self)) as ODataModelResource<T> | undefined;
   }
 
   bind(self: ODataModel<T>, parent?: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
