@@ -40,7 +40,7 @@ export class ODataModel<T> {
   static options: ModelOptions;
   static meta: ODataModelOptions<any>;
   // Parent
-  _parent: ODataModel<any> | null = null;
+  _parent: [string, ODataModel<any>] | null = null;
   _attributes: { [name: string]: any } = {};
   _changes: { [name: string]: any } = {};
   _relations: { [name: string]: ODataModelRelation } = {};
@@ -59,7 +59,7 @@ export class ODataModel<T> {
       annots,
       reset = false,
     }: {
-      parent?: ODataModel<any>;
+      parent?: [string, ODataModel<any>];
       resource?: ODataModelResource<T>;
       annots?: ODataEntityAnnotations;
       reset?: boolean;
@@ -69,19 +69,12 @@ export class ODataModel<T> {
     if (Klass.meta === undefined)
       throw new Error(`Can't create model without metadata`);
     this._meta = Klass.meta;
-    this._meta.bind(this, parent);
+    this._meta.bind(this, {parent, resource, annots});
 
     // Client Id
     (<any>this)[this._meta.cid] =
       (<any>data)[this._meta.cid] || Objects.uniqueId('c');
 
-    // Resource
-    resource = resource || this._meta.modelResourceFactory({ fromSet: true });
-    if (resource !== undefined)
-      this.attach(resource);
-
-    // Annotations
-    this.annots(annots || new ODataEntityAnnotations());
 
     let attrs = this.annots().attributes<T>(data, 'full');
     let defaults = this.defaults();
@@ -121,8 +114,7 @@ export class ODataModel<T> {
     return this._meta.schema;
   }
 
-  annots(annots?: ODataEntityAnnotations) {
-    if (annots !== undefined) this._annotations = annots;
+  annots() {
     return this._annotations;
   }
 
@@ -323,7 +315,7 @@ export class ODataModel<T> {
     this.events$.emit({ name: 'request', model: this, value: obs$ });
     return obs$.pipe(
       map(({ entity, annots }) => {
-        this.annots(annots);
+        this._annotations = annots;
         this.assign(annots.attributes<T>(entity || {}, 'full'), {
           reset: true,
         });

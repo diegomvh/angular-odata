@@ -39,7 +39,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M>
 {
   static model: typeof ODataModel | null = null;
-  _parent: ODataModel<any> | null = null;
+  _parent: [string, ODataModel<any>] | null = null;
   _resource?: ODataCollectionResource<T>;
   _annotations!: ODataEntitiesAnnotations;
   _entries: {
@@ -71,7 +71,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       model,
       reset = false,
     }: {
-      parent?: ODataModel<any>;
+      parent?: [string, ODataModel<any>];
       resource?: ODataCollectionResource<T>;
       annots?: ODataEntitiesAnnotations;
       model?: typeof ODataModel;
@@ -86,19 +86,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     // Parent
     if (parent !== undefined) {
       this._parent = parent;
+    } else {
+      // Resource
+      resource = resource || this._model.meta.collectionResourceFactory({ fromSet: true });
+      if (resource === undefined)
+        throw new Error(`Can't create collection without resource`);
+      this.attach(resource);
     }
 
-    // Resource
-    resource = resource || this._model.meta.collectionResourceFactory({ fromSet: true });
-    if (resource !== undefined)
-      this.attach(resource);
-
     // Annotations
-    this.annots(
-      annots || new ODataEntitiesAnnotations({ options: resource?.api.options })
-    );
-    entities = entities || [];
+    this._annotations = annots || new ODataEntitiesAnnotations({ options: resource?.api.options });
 
+    entities = entities || [];
     this.assign(entities, { reset });
   }
 
@@ -148,8 +147,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  annots(annots?: ODataEntitiesAnnotations) {
-    if (annots !== undefined) this._annotations = annots;
+  annots() {
     return this._annotations;
   }
 
@@ -257,7 +255,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map(({ entities, annots }) => {
-        this.annots(annots);
+        this._annotations = annots;
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
@@ -277,9 +275,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map((entities) => {
-        this.annots(
-          new ODataEntitiesAnnotations({ options: resource?.api.options })
-        );
+        this._annotations = new ODataEntitiesAnnotations({ options: resource?.api.options });
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
