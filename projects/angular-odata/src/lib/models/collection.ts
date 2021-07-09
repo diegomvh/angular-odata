@@ -31,6 +31,7 @@ import {
   ODataCollectionResource,
   ODataModelOptions,
   ODataModelEvent,
+  ODataModelField,
   ODataModelState,
   INCLUDE_ALL,
 } from './options';
@@ -39,7 +40,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M>
 {
   static model: typeof ODataModel | null = null;
-  _parent: [string, ODataModel<any>] | null = null;
+  _parent: [ODataModel<any>, ODataModelField<any>] | null = null;
   _resource?: ODataCollectionResource<T>;
   _annotations!: ODataEntitiesAnnotations;
   _entries: {
@@ -71,7 +72,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       model,
       reset = false,
     }: {
-      parent?: [string, ODataModel<any>];
+      parent?: [ODataModel<any>, ODataModelField<any>];
       resource?: ODataCollectionResource<T>;
       annots?: ODataEntitiesAnnotations;
       model?: typeof ODataModel;
@@ -641,12 +642,19 @@ export class ODataCollection<T, M extends ODataModel<T>>
         // Merge
         model = entry.model;
         if (model !== obj) {
-          // TODO: annots ?
           // Get entity from model
-          const entity = isModel
-            ? (obj as M).toEntity({ client_id: true, ...INCLUDE_ALL })
-            : model.annots().attributes<T>(obj, 'full');
-          model.assign(entity, { reset, silent });
+          if (isModel) {
+            const entity = (obj as M).toEntity({ client_id: true, ...INCLUDE_ALL });
+            model.assign(entity, { reset, silent });
+          } else {
+            const annots = new ODataEntityAnnotations({
+              data: obj,
+              options: this._annotations.options,
+            });
+            const entity = annots.attributes<T>(obj, 'full');
+            model._annotations = annots;
+            model.assign(entity, { reset, silent });
+          }
           if (model.hasChanged()) toMerge.push(model);
         }
       } else {

@@ -40,7 +40,7 @@ export class ODataModel<T> {
   static options: ModelOptions;
   static meta: ODataModelOptions<any>;
   // Parent
-  _parent: [string, ODataModel<any>] | null = null;
+  _parent: [ODataModel<any>, ODataModelField<any>] | null = null;
   _attributes: { [name: string]: any } = {};
   _changes: { [name: string]: any } = {};
   _relations: { [name: string]: ODataModelRelation } = {};
@@ -59,7 +59,7 @@ export class ODataModel<T> {
       annots,
       reset = false,
     }: {
-      parent?: [string, ODataModel<any>];
+      parent?: [ODataModel<any>, ODataModelField<any>];
       resource?: ODataModelResource<T>;
       annots?: ODataEntityAnnotations;
       reset?: boolean;
