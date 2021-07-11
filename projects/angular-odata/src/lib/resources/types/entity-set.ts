@@ -192,7 +192,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       },
       keys(values?: (EntityKey<T> | undefined)[]) {
         return segments.keys(values);
-      }
+      },
     };
   }
 

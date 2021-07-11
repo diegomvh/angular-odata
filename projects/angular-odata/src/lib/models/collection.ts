@@ -89,21 +89,27 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._parent = parent;
     } else {
       // Resource
-      resource = resource || this._model.meta.collectionResourceFactory({ fromSet: true });
+      resource =
+        resource ||
+        this._model.meta.collectionResourceFactory({ fromSet: true });
       if (resource === undefined)
         throw new Error(`Can't create collection without resource`);
       this.attach(resource);
     }
 
     // Annotations
-    this._annotations = annots || new ODataEntitiesAnnotations({ options: resource?.api.options });
+    this._annotations =
+      annots ||
+      new ODataEntitiesAnnotations({ options: resource?.api.options });
 
     entities = entities || [];
     this.assign(entities, { reset });
   }
 
   resource(): ODataCollectionResource<T> | undefined {
-    return ODataModelOptions.resource<T>(this) as ODataCollectionResource<T> | undefined;
+    return ODataModelOptions.resource<T>(this) as
+      | ODataCollectionResource<T>
+      | undefined;
   }
 
   attach(resource: ODataCollectionResource<T>) {
@@ -140,9 +146,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   attachToEntitySet() {
     const resource = this._model.meta.collectionResourceFactory({
-        baseResource: this._resource,
-        fromSet: true,
-      });
+      baseResource: this._resource,
+      fromSet: true,
+    });
     if (resource !== undefined) {
       this.attach(resource);
     }
@@ -276,7 +282,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this.events$.emit({ name: 'request', collection: this, value: obs$ });
     return obs$.pipe(
       map((entities) => {
-        this._annotations = new ODataEntitiesAnnotations({ options: resource?.api.options });
+        this._annotations = new ODataEntitiesAnnotations({
+          options: resource?.api.options,
+        });
         this.assign(entities || [], { reset: true });
         this.events$.emit({ name: 'sync', collection: this });
         return this;
@@ -644,7 +652,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
         if (model !== obj) {
           // Get entity from model
           if (isModel) {
-            const entity = (obj as M).toEntity({ client_id: true, ...INCLUDE_ALL });
+            const entity = (obj as M).toEntity({
+              client_id: true,
+              ...INCLUDE_ALL,
+            });
             model.assign(entity, { reset, silent });
           } else {
             const annots = new ODataEntityAnnotations({

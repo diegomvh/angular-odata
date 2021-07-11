@@ -95,9 +95,12 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   keys(values: any[]) {
     const property = this.clone();
-    const types = this.pathSegments.types({key: true});
+    const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
-      ODataResource.resolveKey(value, this.api.findStructuredTypeForType<T>(types[index]))
+      ODataResource.resolveKey(
+        value,
+        this.api.findStructuredTypeForType<T>(types[index])
+      )
     );
     property.segment.keys(keys);
     return property;
@@ -222,7 +225,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       },
       keys(values?: (EntityKey<any> | undefined)[]) {
         return segments.keys(values);
-      }
+      },
     };
   }
 

@@ -224,7 +224,10 @@ export abstract class ODataResource<T> {
     };
   }
 
-  static resolveKey<T>(value: any, schema?: ODataStructuredType<T> | ODataCallable<T>): EntityKey<T> | undefined {
+  static resolveKey<T>(
+    value: any,
+    schema?: ODataStructuredType<T> | ODataCallable<T>
+  ): EntityKey<T> | undefined {
     if (isQueryCustomType(value)) {
       return value;
     } else if (Types.isObject(value)) {

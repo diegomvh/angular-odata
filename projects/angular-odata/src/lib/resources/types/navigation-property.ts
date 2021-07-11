@@ -92,9 +92,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   keys(values: any[]) {
     const navigation = this.clone();
-    const types = this.pathSegments.types({key: true});
+    const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
-      ODataResource.resolveKey(value, this.api.findStructuredTypeForType<T>(types[index]))
+      ODataResource.resolveKey(
+        value,
+        this.api.findStructuredTypeForType<T>(types[index])
+      )
     );
     navigation.segment.keys(keys);
     return navigation;
@@ -246,7 +249,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       },
       keys(values?: (EntityKey<T> | undefined)[]) {
         return segments.keys(values);
-      }
+      },
     };
   }
 

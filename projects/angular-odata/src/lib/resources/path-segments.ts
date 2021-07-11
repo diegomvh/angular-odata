@@ -76,13 +76,13 @@ export class ODataPathSegments {
   }
 
   types({ key = false }: { key?: boolean } = {}): string[] {
-    return this.segments({key})
+    return this.segments({ key })
       .map((s) => s.type())
       .filter((t) => t !== undefined) as string[];
   }
 
   keys(values?: (EntityKey<any> | undefined)[]) {
-    const segments = this.segments({key: true});
+    const segments = this.segments({ key: true });
     if (values !== undefined) {
       segments.forEach((segment, index) => {
         const key = values[index];
@@ -93,7 +93,7 @@ export class ODataPathSegments {
         }
       });
     }
-    return segments.map(s => s.key() as EntityKey<any> | undefined);
+    return segments.map((s) => s.key() as EntityKey<any> | undefined);
   }
 
   toString(): string {
@@ -143,11 +143,11 @@ export class ODataPathSegments {
             PathSegmentNames.property,
           ].indexOf(s.name) !== -1
       );
-    return segments.map(s => new SegmentHandler(s));
+    return segments.map((s) => new SegmentHandler(s));
   }
 
   last({ key = false }: { key?: boolean } = {}) {
-    const segments = this.segments({key});
+    const segments = this.segments({ key });
     return segments.length > 0 ? segments[segments.length - 1] : undefined;
   }
 

@@ -87,8 +87,8 @@ describe('ODataPathSegments', () => {
   it('test set key to last segment', () => {
     const pathSegments: ODataPathSegments = new ODataPathSegments();
     pathSegments.add(PathSegmentNames.entitySet, ENTITY_SET);
-    pathSegments.last({key: true})?.key('russellwhyte');
-    expect(pathSegments.last({key: true})?.hasKey()).toBeTruthy();
+    pathSegments.last({ key: true })?.key('russellwhyte');
+    expect(pathSegments.last({ key: true })?.hasKey()).toBeTruthy();
     expect(pathSegments.toString()).toEqual("People('russellwhyte')");
   });
 
@@ -98,7 +98,9 @@ describe('ODataPathSegments', () => {
     pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
     pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
     pathSegments.keys(['foo', 'bar']);
-    expect(pathSegments.toString()).toEqual("People('foo')/Friends('bar')/Friends");
+    expect(pathSegments.toString()).toEqual(
+      "People('foo')/Friends('bar')/Friends"
+    );
   });
 
   it('test unset keys', () => {
@@ -107,7 +109,7 @@ describe('ODataPathSegments', () => {
     pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
     pathSegments.keys(['foo', 'bar']);
     expect(pathSegments.toString()).toEqual("People('foo')/Friends('bar')");
-    pathSegments.keys([ undefined, 'bar']);
+    pathSegments.keys([undefined, 'bar']);
     expect(pathSegments.toString()).toEqual("People/Friends('bar')");
     pathSegments.keys(['foo']);
     expect(pathSegments.toString()).toEqual("People('foo')/Friends");
@@ -119,7 +121,7 @@ describe('ODataPathSegments', () => {
     pathSegments.add(PathSegmentNames.navigationProperty, NAVIGATION_PROPERTY);
     pathSegments.keys(['foo', 'bar']);
     expect(pathSegments.keys()).toEqual(['foo', 'bar']);
-    pathSegments.keys([ undefined, 'bar']);
+    pathSegments.keys([undefined, 'bar']);
     expect(pathSegments.keys()).toEqual([undefined, 'bar']);
     pathSegments.keys(['foo', undefined, 'FooBar']);
     expect(pathSegments.keys()).toEqual(['foo', undefined]);
