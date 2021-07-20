@@ -948,13 +948,6 @@ export class ODataModelOptions<T> {
       }).find((p) => (self._resetting && p.field === key) || p.name === key);
       const name = field?.name || key;
 
-      value = this.isModel(value)
-        ? (value as ODataModel<any>).toEntity(INCLUDE_ALL)
-        : this.isCollection(value)
-        ? (value as ODataCollection<any, ODataModel<any>>).toEntities(
-            INCLUDE_ALL
-          )
-        : value;
       const current = model[name];
       if (this.isCollection(current) && Types.isArray(value)) {
         current._annotations = field?.annotationsFactory(self.annots());
@@ -966,7 +959,7 @@ export class ODataModelOptions<T> {
         if (current.hasChanged()) changes.push(name);
       } else {
         model[name] = value;
-        if (!Types.isEqual(current, value)) changes.push(name);
+        if (current !== value) changes.push(name);
       }
     });
 
@@ -1024,68 +1017,45 @@ export class ODataModelOptions<T> {
         };
       }
       const relation = self._relations[field.name];
-      const data = (
-        this.isModel(value)
-          ? (value as ODataModel<F>).toEntity(INCLUDE_ALL)
-          : this.isCollection(value)
-          ? (value as ODataCollection<F, ODataModel<F>>).toEntities(INCLUDE_ALL)
-          : value
-      ) as F | F[] | null;
-      if (data === null && relation.subscription !== null) {
+      if (relation.subscription !== null) {
         relation.subscription.unsubscribe();
         relation.subscription = null;
       }
+
       const currentModel = relation.model as
         | ODataModel<any>
         | ODataCollection<any, ODataModel<any>>
         | null;
-      if (data !== null) {
-        if (this.isCollection(currentModel) && Types.isArray(data)) {
-          // Current is collection
-          (currentModel as ODataCollection<F, ODataModel<F>>)._annotations =
-            field.annotationsFactory(self.annots()) as ODataEntitiesAnnotations;
-          (currentModel as ODataCollection<F, ODataModel<F>>).assign(
-            data as F[],
-            { reset: self._resetting, silent: self._silent }
-          );
-          if ((currentModel as ODataCollection<F, ODataModel<F>>).hasChanged())
-            relation.state = self._resetting
-              ? ODataModelState.Unchanged
-              : ODataModelState.Changed;
-        } else if (this.isModel(currentModel) && Types.isObject(data)) {
-          // Current is model
-          (currentModel as ODataModel<F>)._annotations =
-            field.annotationsFactory(self.annots()) as ODataEntityAnnotations;
-          (currentModel as ODataModel<F>).assign(data as F, {
-            reset: self._resetting,
-            silent: self._silent,
-          });
-          if ((currentModel as ODataModel<F>).hasChanged())
-            relation.state = self._resetting
-              ? ODataModelState.Unchanged
-              : ODataModelState.Changed;
-        } else if (
-          currentModel === null &&
-          (Types.isArray(data) || Types.isObject(data))
-        ) {
-          relation.model = field.modelCollectionFactory<T, F>({
-            parent: self,
-            value: data,
-            reset: self._resetting,
-          });
-          relation.state = self._resetting
+      if (value === null) {
+        relation.state =
+          self._resetting || currentModel === null
             ? ODataModelState.Unchanged
             : ODataModelState.Changed;
-          relation.subscription = this._subscribe(
-            self,
-            field,
-            relation.model as ODataModel<F> | ODataCollection<F, ODataModel<F>>
-          );
-          if (this.isModel(relation.model)) {
-            var ref = (relation.model as ODataModel<F>).referential(field);
-            if (ref !== undefined) {
-              Object.assign(self, ref);
-            }
+      } else {
+        if (Types.isArray(value) || Types.isObject(value)) {
+          relation.model = field.modelCollectionFactory<T, F>({
+            parent: self,
+            value: value,
+            reset: self._resetting,
+          });
+        } else if (this.isCollection(value) || this.isModel(value)) {
+          relation.model = value as
+            | ODataModel<F>
+            | ODataCollection<F, ODataModel<F>>
+            | null;
+        }
+        relation.state = self._resetting
+          ? ODataModelState.Unchanged
+          : ODataModelState.Changed;
+        relation.subscription = this._subscribe(
+          self,
+          field,
+          relation.model as ODataModel<F> | ODataCollection<F, ODataModel<F>>
+        );
+        if (this.isModel(relation.model)) {
+          var ref = (relation.model as ODataModel<F>).referential(field);
+          if (ref !== undefined) {
+            Object.assign(self, ref);
           }
         }
       }
