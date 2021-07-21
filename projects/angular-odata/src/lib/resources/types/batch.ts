@@ -384,7 +384,7 @@ export class ODataBatchResource extends ODataResource<any> {
       const statusParts = chunk[0].split(' ');
       req.onLoad(chunk.slice(1), {
         code: Number(statusParts[1]),
-        text: statusParts[2],
+        text: statusParts.slice(2).join(' '),
       });
     });
   }

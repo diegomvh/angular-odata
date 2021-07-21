@@ -49,5 +49,11 @@ export class ODataMediaResource<T> extends ODataResource<T> {
   fetchBlob(options: HttpOptions = {}): Observable<Blob> {
     return this.fetch({ responseType: 'blob', ...options });
   }
+
+  upload(
+    data: ArrayBuffer | Blob,
+    options: HttpOptions & { etag?: string } = {}): Observable<any> {
+    return super.put(data, options);
+  }
   //#endregion
 }

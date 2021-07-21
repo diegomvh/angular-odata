@@ -336,11 +336,10 @@ export abstract class ODataResource<T> {
       withCount?: boolean;
     }
   ): Observable<any> {
-    //let api = options.apiName ? this.client.apiByName(options.apiName) : this.api;
-    const copts = this.api.options;
+    const apiOptions = this.api.options;
     let params = options.params || {};
     if (options.withCount) {
-      params = Http.mergeHttpParams(params, copts.helper.countParam());
+      params = Http.mergeHttpParams(params, apiOptions.helper.countParam());
     }
 
     let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' =
@@ -356,7 +355,7 @@ export abstract class ODataResource<T> {
 
     let etag = options.etag;
     if (etag === undefined && options.attrs != null) {
-      etag = copts.helper.etag(options.attrs);
+      etag = apiOptions.helper.etag(options.attrs);
     }
 
     const request = new ODataRequest({
