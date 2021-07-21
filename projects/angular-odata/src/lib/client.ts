@@ -149,11 +149,19 @@ export class ODataClient {
   }
 
   //#region API Resource Proxy Methods
+  fromJSON<E>(
+    json: { segments: ODataSegment[]; options: { [name: string]: any } },
+    apiNameOrType?: string
+  ):
+    | ODataEntityResource<E>
+    | ODataEntitySetResource<E>
+    | ODataNavigationPropertyResource<E>
+    | ODataSingletonResource<E>
   fromJSON(
     json: { segments: ODataSegment[]; options: { [name: string]: any } },
     apiNameOrType?: string
   ) {
-    return this.apiFor(apiNameOrType).fromJSON(json);
+    return this.apiFor(apiNameOrType).fromJSON<any>(json);
   }
 
   // Requests
