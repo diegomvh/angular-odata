@@ -12,7 +12,23 @@ import {
   ODataStructuredType,
 } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
-import { ODataRequest, ODataResponse } from './resources/index';
+import {
+  ODataResource,
+  ODataBatchResource,
+  ODataMetadataResource,
+  ODataEntitySetResource,
+  ODataSingletonResource,
+  ODataFunctionResource,
+  ODataActionResource,
+  ODataEntityResource,
+  PathSegmentNames,
+  ODataPathSegments,
+  ODataSegment,
+  ODataQueryOptions,
+  ODataResponse,
+  ODataNavigationPropertyResource,
+  ODataRequest,
+} from './resources/index';
 import { ODataCache, ODataInMemoryCache } from './cache/index';
 import { ODataApiOptions } from './options';
 import { DEFAULT_VERSION } from './constants';
@@ -76,6 +92,117 @@ export class ODataApi {
       });
     });
   }
+  //#region Resource Build Methods
+  fromJSON<P, R>(json: {
+    segments: ODataSegment[];
+    options: { [name: string]: any };
+  }): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
+  fromJSON<E>(json: {
+    segments: ODataSegment[];
+    options: { [name: string]: any };
+  }):
+    | ODataEntityResource<E>
+    | ODataEntitySetResource<E>
+    | ODataNavigationPropertyResource<E>
+    | ODataSingletonResource<E>;
+  fromJSON(json: {
+    segments: ODataSegment[];
+    options: { [name: string]: any };
+  }) {
+    const segments = new ODataPathSegments(json.segments);
+    const query = new ODataQueryOptions(json.options);
+    switch (segments.last()?.name as PathSegmentNames) {
+      case PathSegmentNames.entitySet:
+        if (segments.last()?.hasKey()) {
+          return new ODataEntityResource(this, segments, query);
+        } else {
+          return new ODataEntitySetResource(this, segments, query);
+        }
+      case PathSegmentNames.navigationProperty:
+        return new ODataNavigationPropertyResource(this, segments, query);
+      case PathSegmentNames.singleton:
+        return new ODataSingletonResource(this, segments, query);
+      case PathSegmentNames.action:
+        return new ODataActionResource(this, segments, query);
+      case PathSegmentNames.function:
+        return new ODataFunctionResource(this, segments, query);
+    }
+    throw new Error('No Resource for json');
+  }
+
+  // Requests
+  metadata(): ODataMetadataResource {
+    return ODataMetadataResource.factory(this);
+  }
+
+  batch(): ODataBatchResource {
+    return ODataBatchResource.factory(this);
+  }
+
+  singleton<T>(path: string) {
+    const type = this.findEntitySetByName(path)?.entityType;
+    return ODataSingletonResource.factory<T>(
+      this,
+      path,
+      type,
+      new ODataPathSegments(),
+      new ODataQueryOptions()
+    );
+  }
+
+  entitySet<T>(path: string): ODataEntitySetResource<T> {
+    const type = this.findEntitySetByName(path)?.entityType;
+    return ODataEntitySetResource.factory<T>(
+      this,
+      path,
+      type,
+      new ODataPathSegments(),
+      new ODataQueryOptions()
+    );
+  }
+
+  /**
+   * Unbound Action
+   * @param  {string} path?
+   * @returns ODataActionResource
+   */
+  action<P, R>(path: string): ODataActionResource<P, R> {
+    let type;
+    const callable = this.findCallableForType(path);
+    if (callable !== undefined) {
+      path = callable.path();
+      type = callable.type();
+    }
+    return ODataActionResource.factory<P, R>(
+      this,
+      path,
+      type,
+      new ODataPathSegments(),
+      new ODataQueryOptions()
+    );
+  }
+
+  /**
+   * Unbound Function
+   * @param  {string} path?
+   * @returns ODataFunctionResource
+   */
+  function<P, R>(path: string): ODataFunctionResource<P, R> {
+    let type;
+    const callable = this.findCallableForType(path);
+    if (callable !== undefined) {
+      path = callable.path();
+      type = callable.type();
+    }
+    return ODataFunctionResource.factory<P, R>(
+      this,
+      path,
+      type,
+      new ODataPathSegments(),
+      new ODataQueryOptions()
+    );
+  }
+  //#endregion
 
   request(req: ODataRequest<any>): Observable<any> {
     let res$ = this.requester !== undefined ? this.requester(req) : NEVER;

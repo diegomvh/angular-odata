@@ -148,80 +148,32 @@ export class ODataClient {
     return this.injector.get(this.settings.serviceByName(name));
   }
 
-  fromJSON<P, R>(
-    json: { segments: ODataSegment[]; options: { [name: string]: any } },
-    apiName?: string
-  ): ODataActionResource<P, R> | ODataFunctionResource<P, R>;
-  fromJSON<E>(
-    json: { segments: ODataSegment[]; options: { [name: string]: any } },
-    apiName?: string
-  ):
-    | ODataEntityResource<E>
-    | ODataEntitySetResource<E>
-    | ODataNavigationPropertyResource<E>
-    | ODataSingletonResource<E>;
+  //#region API Resource Proxy Methods
   fromJSON(
     json: { segments: ODataSegment[]; options: { [name: string]: any } },
-    apiName?: string
+    apiNameOrType?: string
   ) {
-    const segments = new ODataPathSegments(json.segments);
-    const query = new ODataQueryOptions(json.options);
-    const api = this.apiFor(apiName || segments.last()?.type());
-    switch (segments.last()?.name as PathSegmentNames) {
-      case PathSegmentNames.entitySet:
-        if (segments.last()?.hasKey()) {
-          return new ODataEntityResource(api, segments, query);
-        } else {
-          return new ODataEntitySetResource(api, segments, query);
-        }
-      case PathSegmentNames.navigationProperty:
-        return new ODataNavigationPropertyResource(api, segments, query);
-      case PathSegmentNames.singleton:
-        return new ODataSingletonResource(api, segments, query);
-      case PathSegmentNames.action:
-        return new ODataActionResource(api, segments, query);
-      case PathSegmentNames.function:
-        return new ODataFunctionResource(api, segments, query);
-    }
-    throw new Error('No Resource for json');
+    return this.apiFor(apiNameOrType).fromJSON(json);
   }
 
   // Requests
   metadata(apiNameOrType?: string): ODataMetadataResource {
-    const api = this.apiFor(apiNameOrType);
-    return ODataMetadataResource.factory(api);
+    return this.apiFor(apiNameOrType).metadata();
   }
 
   batch(apiNameOrType?: string): ODataBatchResource {
-    const api = this.apiFor(apiNameOrType);
-    return ODataBatchResource.factory(api);
+    return this.apiFor(apiNameOrType).batch();
   }
 
   singleton<T>(path: string, apiNameOrType?: string) {
-    const api = this.apiFor(apiNameOrType);
-    const type = api.findEntitySetByName(path)?.entityType;
-    return ODataSingletonResource.factory<T>(
-      api,
-      path,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+    return this.apiFor(apiNameOrType).singleton<T>(path);
   }
 
   entitySet<T>(
     path: string,
     apiNameOrType?: string
   ): ODataEntitySetResource<T> {
-    const api = this.apiFor(apiNameOrType);
-    const type = api.findEntitySetByName(path)?.entityType;
-    return ODataEntitySetResource.factory<T>(
-      api,
-      path,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+    return this.apiFor(apiNameOrType).entitySet<T>(path);
   }
 
   /**
@@ -233,20 +185,7 @@ export class ODataClient {
     path: string,
     apiNameOrType?: string
   ): ODataActionResource<P, R> {
-    const api = this.apiFor(apiNameOrType);
-    let type;
-    const callable = api.findCallableForType(path);
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-    }
-    return ODataActionResource.factory<P, R>(
-      api,
-      path,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+    return this.apiFor(apiNameOrType).action<P, R>(path);
   }
 
   /**
@@ -258,21 +197,9 @@ export class ODataClient {
     path: string,
     apiNameOrType?: string
   ): ODataFunctionResource<P, R> {
-    const api = this.apiFor(apiNameOrType);
-    let type;
-    const callable = api.findCallableForType(path);
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-    }
-    return ODataFunctionResource.factory<P, R>(
-      api,
-      path,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+    return this.apiFor(apiNameOrType).function<P, R>(path);
   }
+  //#endregion
 
   // Request headers, get, post, put, patch... etc
   request(
