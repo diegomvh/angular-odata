@@ -364,7 +364,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         )
         .pipe(map(() => model));
     }
-    return throwError("addReference: Can't add reference");
+    return of(model);
   }
 
   private _addModel(
@@ -434,11 +434,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       server = true,
     }: { silent?: boolean; server?: boolean } = {}
   ): Observable<this> {
-    if (
-      server &&
-      !model.isNew() &&
-      this.resource() instanceof ODataNavigationPropertyResource
-    ) {
+    if (server) {
       return this.addReference(model).pipe(
         map((model) => {
           this.addModel(model, { silent, reset: true });
@@ -462,7 +458,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         )
         .pipe(map(() => model));
     }
-    return throwError("removeReference: Can't remove reference");
+    return of(model);
   }
 
   private _removeModel(
@@ -520,11 +516,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       server = true,
     }: { silent?: boolean; server?: boolean } = {}
   ): Observable<this> {
-    if (
-      server &&
-      !model.isNew() &&
-      this.resource() instanceof ODataNavigationPropertyResource
-    ) {
+    if (server) {
       return this.removeReference(model).pipe(
         map((model) => {
           this.removeModel(model, { silent, reset: true });
