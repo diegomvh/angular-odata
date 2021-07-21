@@ -28,7 +28,7 @@ import { ODataReferenceResource } from './reference';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
-import { ODataValueResource } from './value';
+import { ODataMediaResource } from './media';
 
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
@@ -103,8 +103,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return navigation;
   }
 
-  value() {
-    return ODataValueResource.factory<T>(
+  media() {
+    return ODataMediaResource.factory<T>(
       this.api,
       this.type(),
       this.cloneSegments(),

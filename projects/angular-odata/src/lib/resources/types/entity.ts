@@ -10,7 +10,7 @@ import { ODataQueryOptions, QueryOptionNames } from '../query-options';
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
 import { EntityKey, ODataResource } from '../resource';
 import { HttpOptions } from './options';
-import { ODataValueResource } from './value';
+import { ODataMediaResource } from './media';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
@@ -76,8 +76,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return entity;
   }
 
-  value() {
-    return ODataValueResource.factory<T>(
+  media() {
+    return ODataMediaResource.factory<T>(
       this.api,
       this.type(),
       this.cloneSegments(),

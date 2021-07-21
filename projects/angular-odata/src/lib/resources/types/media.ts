@@ -7,7 +7,7 @@ import { HttpOptions } from './options';
 import { $VALUE } from '../../constants';
 import { ODataApi } from '../../api';
 
-export class ODataValueResource<T> extends ODataResource<T> {
+export class ODataMediaResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<V>(
     api: ODataApi,
@@ -18,12 +18,12 @@ export class ODataValueResource<T> extends ODataResource<T> {
     const segment = segments.add(PathSegmentNames.value, $VALUE);
     if (type) segment.type(type);
     options.clear();
-    return new ODataValueResource<V>(api, segments, options);
+    return new ODataMediaResource<V>(api, segments, options);
   }
   //#endregion
 
   clone() {
-    return new ODataValueResource<T>(
+    return new ODataMediaResource<T>(
       this.api,
       this.cloneSegments(),
       this.cloneQuery()
@@ -35,11 +35,19 @@ export class ODataValueResource<T> extends ODataResource<T> {
   }
 
   //#region Shortcuts
-  fetch(options?: HttpOptions): Observable<number> {
-    return super.get({ responseType: 'value', ...options });
+  fetch(
+    options?: { responseType: 'arraybuffer' } & HttpOptions
+  ): Observable<ArrayBuffer>;
+  fetch(options?: { responseType: 'blob' } & HttpOptions): Observable<Blob>;
+  fetch(options: { responseType: any } & HttpOptions): Observable<any> {
+    return super.get(options);
   }
-  fetchValue(options?: HttpOptions): Observable<number> {
-    return this.fetch(options);
+  fetchArraybuffer(options: HttpOptions = {}): Observable<ArrayBuffer> {
+    return this.fetch({ responseType: 'arraybuffer', ...options });
+  }
+
+  fetchBlob(options: HttpOptions = {}): Observable<Blob> {
+    return this.fetch({ responseType: 'blob', ...options });
   }
   //#endregion
 }
