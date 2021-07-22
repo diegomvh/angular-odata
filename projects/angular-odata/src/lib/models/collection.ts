@@ -33,6 +33,7 @@ import {
   ODataModelEvent,
   ODataModelField,
   ODataModelState,
+  ODataModelEntry,
   INCLUDE_ALL,
 } from './options';
 
@@ -43,12 +44,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   _parent: [ODataModel<any>, ODataModelField<any>] | null = null;
   _resource?: ODataCollectionResource<T>;
   _annotations!: ODataEntitiesAnnotations;
-  _entries: {
-    state: ODataModelState;
-    model: M;
-    key?: EntityKey<T> | { [name: string]: any };
-    subscription: Subscription;
-  }[] = [];
+  _entries: ODataModelEntry<T, M>[] = [];
   _model: typeof ODataModel;
 
   models() {
@@ -169,7 +165,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
 
     if (annots?.type !== undefined && Model.meta !== null) {
-      let schema = Model.meta.find((o) =>
+      let schema = Model.meta.findChildOptions((o) =>
         o.isTypeOf(annots.type as string)
       )?.schema;
       if (schema !== undefined && schema.model !== undefined)
@@ -486,7 +482,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       } else {
         entry.state = ODataModelState.Removed;
       }
-      entry.subscription.unsubscribe();
+      this._unsubscribe(entry);
       return entry.model;
     }
     return undefined;
@@ -614,7 +610,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   assign(
-    objects: Array<Partial<T> | { [name: string]: any } | M>,
+    objects: Partial<T>[] | { [name: string]: any }[] | M[],
     {
       reset = false,
       silent = false,
@@ -787,7 +783,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     return throwError(`Can't action without ODataEntitySetResource`);
   }
-
+  private _unsubscribe(entry: ODataModelEntry<T, M>) {
+    if (entry.subscription !== null) {
+      console.log("_set: Unsubscribe old model");
+      entry.subscription.unsubscribe();
+      entry.subscription = null;
+    }
+  }
   private _subscribe(model: M) {
     const cr = this.resource();
     const mr = model.resource();
