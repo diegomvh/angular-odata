@@ -119,7 +119,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     value: any,
     options: ODataResponseOptions
   ): any {
-    const type = Types.isObject(value) ? options.helper.type(value) : undefined;
+    const type = Types.isPlainObject(value) ? options.helper.type(value) : undefined;
     if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
       parser = parser.childParser((c) => c.isTypeOf(type));
     }
@@ -154,7 +154,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
     const data = payload ? annots.data(payload) : null;
     let entity = (
-      data !== null && Types.isObject(data)
+      data !== null && Types.isPlainObject(data)
         ? options.helper.attributes(data, this.api.options.stripMetadata)
         : data
     ) as T | null;
@@ -205,7 +205,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
     const data = payload ? (annots.data(payload) as T) : null;
     let property = (
-      data !== null && Types.isObject(data)
+      data !== null && Types.isPlainObject(data)
         ? options.helper.attributes(data, this.api.options.stripMetadata)
         : data
     ) as T | null;
@@ -224,7 +224,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const options = this.options;
     const data = this.body && options.version === '2.0' ? this.body : this.body;
     let value = (
-      data !== null && Types.isObject(data)
+      data !== null && Types.isPlainObject(data)
         ? options.helper.attributes(data, this.api.options.stripMetadata)
         : data
     ) as T | null;

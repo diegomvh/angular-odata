@@ -15,7 +15,7 @@ export const Http = {
             headers
           );
         });
-      } else if (Types.isObject(value)) {
+      } else if (Types.isPlainObject(value)) {
         Object.entries(value).forEach(([key, value]) => {
           headers = (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) => acc.append(key, v),
@@ -40,7 +40,7 @@ export const Http = {
             params
           );
         });
-      } else if (Types.isObject(value)) {
+      } else if (Types.isPlainObject(value)) {
         Object.entries(value).forEach(([key, value]) => {
           params = (Array.isArray(value) ? value : [value]).reduce(
             (acc, v) => acc.append(key, v),
@@ -57,7 +57,7 @@ export const Http = {
   ): string | undefined {
     if (headers instanceof HttpHeaders) {
       return headers.keys().find((k) => options.indexOf(k) !== -1);
-    } else if (Types.isObject(headers)) {
+    } else if (Types.isPlainObject(headers)) {
       return Object.keys(headers).find((k) => options.indexOf(k) !== -1);
     }
     return undefined;

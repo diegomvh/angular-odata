@@ -192,9 +192,8 @@ export class ODataModel<T> {
   }
 
   protected defaults() {
-    return this._meta.defaults(this);
+    return this._meta.defaults() || {};
   }
-
   toEntity({
     client_id = false,
     include_navigation = false,

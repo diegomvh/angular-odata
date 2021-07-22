@@ -50,7 +50,7 @@ export const Objects = {
     const merge = (target: any, source: { [attr: string]: any }) => {
       for (let attr in source) {
         let value = source[attr];
-        if (value !== null && Types.isObject(value) && attr in target) {
+        if (value !== null && Types.isPlainObject(value) && attr in target) {
           merge(target[attr], value);
         } else if (target[attr] !== value) {
           target[attr] = value;
@@ -72,7 +72,7 @@ export const Objects = {
     for (const key of keys1) {
       const val1 = object1[key];
       const val2 = object2[key];
-      const areObjects = Types.isObject(val1) && Types.isObject(val2);
+      const areObjects = Types.isPlainObject(val1) && Types.isPlainObject(val2);
       if (
         (areObjects && !Objects.equal(val1, val2)) ||
         (!areObjects && val1 !== val2)
@@ -87,7 +87,7 @@ export const Objects = {
     object1: { [attr: string]: any },
     object2: { [attr: string]: any }
   ) {
-    if (!object2 || !Types.isObject(object2)) {
+    if (!object2 || !Types.isPlainObject(object2)) {
       return object1;
     }
     var diffs: { [name: string]: any } = {};
@@ -113,7 +113,7 @@ export const Objects = {
         return;
       }
 
-      if (Types.isObject(item1)) {
+      if (Types.isPlainObject(item1)) {
         var objDiff = Objects.difference(item1, item2);
         if (Object.keys(objDiff).length > 0) {
           diffs[key] = objDiff;
@@ -155,7 +155,7 @@ export const Objects = {
   )(0),
   resolveKey(key: any, { single = true }: { single?: boolean } = {}) {
     if (['number', 'string'].indexOf(typeof key) !== -1) return key;
-    if (Types.isObject(key)) {
+    if (Types.isPlainObject(key)) {
       const values = Object.values(key);
       if (values.length === 1 && single) {
         // Single primitive key value

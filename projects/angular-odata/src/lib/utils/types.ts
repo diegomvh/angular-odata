@@ -4,6 +4,15 @@ export const Types = {
     return value != null && (type === 'object' || type === 'function');
   },
 
+  isPlainObject(value: any) {
+    if (Object.prototype.toString.call(value) !== '[object Object]') {
+      return false;
+    }
+
+    const prototype = Object.getPrototypeOf(value);
+    return prototype === null || prototype === Object.prototype;
+  },
+
   isFunction(value: any): boolean {
     return typeof value === 'function';
   },
@@ -22,6 +31,8 @@ export const Types = {
       (Types.isArray(value) &&
         (value as any[]).every((v) => Types.isEmpty(v))) ||
       (Types.isObject(value) &&
+        !Object.keys(value).filter((k) => value.hasOwnProperty(k)).length) ||
+      (Types.isPlainObject(value) &&
         !Object.keys(value).filter((k) => value.hasOwnProperty(k)).length)
     );
   },

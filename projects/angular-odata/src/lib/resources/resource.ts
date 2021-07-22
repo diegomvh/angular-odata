@@ -230,7 +230,7 @@ export abstract class ODataResource<T> {
   ): EntityKey<T> | undefined {
     if (isQueryCustomType(value)) {
       return value;
-    } else if (Types.isObject(value)) {
+    } else if (Types.isPlainObject(value)) {
       return schema instanceof ODataStructuredType
         ? schema.resolveKey(value)
         : Objects.resolveKey(value);

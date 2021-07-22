@@ -271,9 +271,15 @@ export class ODataModelField<F> {
       return !Types.isEmpty(errors) ? errors : undefined;
     }
   }
+
+  defaults(): any {
+    return (this.isStructuredType() && this.meta !== undefined)? this.meta.defaults() : this.default;
+  }
+
   encode(value: any): any {
     return this.parser.encode(value, this.optionsHelper);
   }
+
   resourceFactory<T, F>(
     resource: ODataModelResource<T>
   ): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> {
@@ -619,7 +625,7 @@ export class ODataModelOptions<T> {
           .fields({ include_parents: true })
           .find((p: any) => p.field === name);
         if (prop !== undefined) {
-          v = Types.isObject(v) || v instanceof ODataModel ? v[prop.name] : v;
+          v = Types.isPlainObject(v) || v instanceof ODataModel ? v[prop.name] : v;
           options = prop.meta as ODataModelOptions<any>;
         }
       }
@@ -696,17 +702,28 @@ export class ODataModelOptions<T> {
       navigation?: boolean;
     } = {}
   ): { [name: string]: string[] } | undefined {
-    let errors = this.fields({
+    const errors = this.fields({
       include_parents: true,
       include_navigation: navigation,
-    }).reduce((acc, prop) => {
-      let value = (self as any)[prop.name];
-      let errs = prop.validate(value, { method });
+    }).reduce((acc, field) => {
+      let value = (self as any)[field.name];
+      let errs = field.validate(value, { method });
       return errs !== undefined
-        ? Object.assign(acc, { [prop.name]: errs })
+        ? Object.assign(acc, { [field.name]: errs })
         : acc;
     }, {});
     return !Types.isEmpty(errors) ? errors : undefined;
+  }
+
+  defaults(): T | { [name: string]: any } | undefined {
+    const defs = this.fields()
+    .reduce((acc, field) => {
+      let value = field.defaults();
+      return value !== undefined
+        ? Object.assign(acc, { [field.name]: value })
+        : acc;
+    }, {});
+    return !Types.isEmpty(defs) ? defs : undefined;
   }
 
   hasChanged(
@@ -724,18 +741,6 @@ export class ODataModelOptions<T> {
               (model !== null && model.hasChanged({ include_navigation })))
         )
     );
-  }
-
-  defaults(self: ODataModel<T>) {
-    return this.fields({
-      include_navigation: true,
-      include_parents: true,
-    }).reduce((acc, prop) => {
-      let value = prop.default;
-      return value !== undefined
-        ? Object.assign(acc, { [prop.name]: value })
-        : acc;
-    }, {});
   }
 
   toEntity(
@@ -953,7 +958,7 @@ export class ODataModelOptions<T> {
         current._annotations = field?.annotationsFactory(self.annots());
         current.assign(value, { reset: self._resetting, silent: self._silent });
         if (current.hasChanged()) changes.push(name);
-      } else if (this.isModel(current) && Types.isObject(value)) {
+      } else if (this.isModel(current) && Types.isPlainObject(value)) {
         current._annotations = field?.annotationsFactory(self.annots());
         current.assign(value, { reset: self._resetting, silent: self._silent });
         if (current.hasChanged()) changes.push(name);
@@ -1032,7 +1037,7 @@ export class ODataModelOptions<T> {
             ? ODataModelState.Unchanged
             : ODataModelState.Changed;
       } else {
-        if (Types.isArray(value) || Types.isObject(value)) {
+        if (Types.isArray(value) || Types.isPlainObject(value)) {
           relation.model = field.modelCollectionFactory<T, F>({
             parent: self,
             value: value,
