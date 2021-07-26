@@ -1078,7 +1078,6 @@ export class ODataModelOptions<T> {
       } else if (this.isModel(currentModel)) {
         changed = this.updateModel<F>(self, field, currentModel as ODataModel<F>, value as ODataModel<F> | F | { [name: string]: any });
       } else if (Types.isArray(value) || Types.isPlainObject(value)) {
-        console.log('_set: Build model', self._resetting);
         relation.model = field.modelCollectionFactory<T, F>({
           parent: self,
           value: value,
@@ -1087,7 +1086,6 @@ export class ODataModelOptions<T> {
         changed = true;
         this._subscribe(self, relation);
       } else if (this.isCollection(value) || this.isModel(value)) {
-        console.log('_set: Set model', self._resetting);
         relation.model = value as
           | ODataModel<F>
           | ODataCollection<F, ODataModel<F>>
@@ -1147,11 +1145,7 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     relation: ODataModelRelation<F>
   ) {
-    if (relation.model !== null) {
-      throw new Error('Model already exists');
-    }
     if (relation.subscription !== null) {
-      console.log('_set: Unsubscribe old model');
       relation.subscription.unsubscribe();
       relation.subscription = null;
     }

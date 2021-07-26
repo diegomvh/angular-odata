@@ -787,14 +787,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
     return throwError(`Can't action without ODataEntitySetResource`);
   }
+
   private _unsubscribe(entry: ODataModelEntry<T, M>) {
     if (entry.subscription !== null) {
-      console.log("_set: Unsubscribe old model");
       entry.subscription.unsubscribe();
       entry.subscription = null;
     }
   }
+
   private _subscribe(entry: ODataModelEntry<T, M>) {
+    if (entry.subscription !== null) {
+      throw new Error('Subscription already exists');
+    }
     if (entry.model !== null && this._parent !== null && entry.model.isParentOf(this._parent[0])) {
       entry.subscription = entry.model.events$.subscribe((event: ODataModelEvent<T>) => {
         if (BUBBLING.indexOf(event.name) !== -1) {

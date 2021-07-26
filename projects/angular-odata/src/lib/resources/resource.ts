@@ -322,7 +322,7 @@ export abstract class ODataResource<T> {
   protected request(
     method: string,
     options: HttpOptions & {
-      attrs?: any;
+      data?: any;
       etag?: string;
       responseType?:
         | 'arraybuffer'
@@ -350,12 +350,13 @@ export abstract class ODataResource<T> {
         ? 'text'
         : <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
-    let body =
-      options.attrs !== undefined ? this.serialize(options.attrs) : null;
+    let body = options.data;
+    if (Types.isPlainObject(body))
+      body = this.serialize(body);
 
     let etag = options.etag;
-    if (etag === undefined && options.attrs != null) {
-      etag = apiOptions.helper.etag(options.attrs);
+    if (etag === undefined && options.data != null) {
+      etag = apiOptions.helper.etag(options.data);
     }
 
     const request = new ODataRequest({
@@ -408,7 +409,7 @@ export abstract class ODataResource<T> {
   }
 
   protected post(
-    attrs: any,
+    data: any,
     options: HttpOptions & {
       responseType?:
         | 'arraybuffer'
@@ -422,11 +423,11 @@ export abstract class ODataResource<T> {
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('POST', { attrs, ...options });
+    return this.request('POST', { data, ...options });
   }
 
   protected put(
-    attrs: any,
+    data: any,
     options: HttpOptions & {
       etag?: string;
       responseType?:
@@ -441,11 +442,11 @@ export abstract class ODataResource<T> {
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('PUT', { attrs, ...options });
+    return this.request('PUT', { data, ...options });
   }
 
   protected patch(
-    attrs: any,
+    data: any,
     options: HttpOptions & {
       etag?: string;
       responseType?:
@@ -460,7 +461,7 @@ export abstract class ODataResource<T> {
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('PATCH', { attrs, ...options });
+    return this.request('PATCH', { data, ...options });
   }
 
   protected delete(
