@@ -108,6 +108,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       | undefined;
   }
 
+  isParentOf(child: ODataModel<any>) {
+    return ODataModelOptions.chain(child).some(p => this._parent !== null && p[0] === this._parent[0]);
+  }
   attach(resource: ODataCollectionResource<T>) {
     if (
       this._resource !== undefined &&
@@ -393,8 +396,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
         state: reset ? ODataModelState.Unchanged : ODataModelState.Added,
         model,
         key: model.key(),
-        subscription: this._subscribe(model),
+        subscription: null
       };
+      this._subscribe(entry),
 
       this._entries.push(entry);
 
@@ -790,27 +794,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
       entry.subscription = null;
     }
   }
-  private _subscribe(model: M) {
-    const cr = this.resource();
-    const mr = model.resource();
-    const bubbling = mr === undefined || cr === undefined || !mr.isParentOf(cr);
-    return model.events$.subscribe((event: ODataModelEvent<T>) => {
-      if (bubbling && BUBBLING.indexOf(event.name) !== -1) {
-        if (event.model === model) {
-          if (event.name === 'destroy') {
-            this.removeModel(model, { reset: true });
-          } else if (event.name === 'change' && event.options?.key) {
-            let entry = this._findEntry({ model });
-            if (entry !== undefined) entry.key = model.key();
+  private _subscribe(entry: ODataModelEntry<T, M>) {
+    if (entry.model !== null && this._parent !== null && entry.model.isParentOf(this._parent[0])) {
+      entry.subscription = entry.model.events$.subscribe((event: ODataModelEvent<T>) => {
+        if (BUBBLING.indexOf(event.name) !== -1) {
+          if (event.model === entry.model) {
+            if (event.name === 'destroy') {
+              this.removeModel(entry.model, { reset: true });
+            } else if (event.name === 'change' && event.options?.key) {
+              entry.key = entry.model.key();
+            }
           }
-        }
 
-        const index = this.models().indexOf(model);
-        let path = `[${index}]`;
-        if (event.path) path = `${path}.${event.path}`;
-        this.events$.emit({ ...event, path });
-      }
-    });
+          const index = this.models().indexOf(entry.model);
+          let path = `[${index}]`;
+          if (event.path) path = `${path}.${event.path}`;
+          this.events$.emit({ ...event, path });
+        }
+      });
+    }
   }
 
   private _findEntry({
