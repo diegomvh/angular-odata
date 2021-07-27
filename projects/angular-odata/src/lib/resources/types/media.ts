@@ -60,7 +60,9 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     contentType: string,
     options: HttpOptions & { etag?: string } = {}
   ): Observable<any> {
-    options.headers = Http.mergeHttpHeaders(options.headers || {}, { 'Content-Type': contentType });
+    options.headers = Http.mergeHttpHeaders(options.headers || {}, {
+      'Content-Type': contentType,
+    });
     return this.upload(data, options);
   }
 

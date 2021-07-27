@@ -497,9 +497,7 @@ describe('ODataResource', () => {
     const photo: ODataMediaResource<Photo> = entity
       .navigationProperty<Photo>('Photo')
       .media();
-    expect(photo.toString()).toEqual(
-      "People('russellwhyte')/Photo/$value"
-    );
+    expect(photo.toString()).toEqual("People('russellwhyte')/Photo/$value");
   });
 
   it('should create entity recursive navigation', () => {

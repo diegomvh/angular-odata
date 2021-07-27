@@ -351,8 +351,7 @@ export abstract class ODataResource<T> {
         : <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
     let body = options.data;
-    if (Types.isPlainObject(body))
-      body = this.serialize(body);
+    if (Types.isPlainObject(body)) body = this.serialize(body);
 
     let etag = options.etag;
     if (etag === undefined && options.data != null) {

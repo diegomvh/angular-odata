@@ -119,7 +119,9 @@ export class ODataResponse<T> extends HttpResponse<T> {
     value: any,
     options: ODataResponseOptions
   ): any {
-    const type = Types.isPlainObject(value) ? options.helper.type(value) : undefined;
+    const type = Types.isPlainObject(value)
+      ? options.helper.type(value)
+      : undefined;
     if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
       parser = parser.childParser((c) => c.isTypeOf(type));
     }

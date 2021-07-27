@@ -156,7 +156,7 @@ export class ODataClient {
     | ODataEntityResource<E>
     | ODataEntitySetResource<E>
     | ODataNavigationPropertyResource<E>
-    | ODataSingletonResource<E>
+    | ODataSingletonResource<E>;
   fromJSON(
     json: { segments: ODataSegment[]; options: { [name: string]: any } },
     apiNameOrType?: string

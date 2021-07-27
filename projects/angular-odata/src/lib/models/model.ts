@@ -137,7 +137,7 @@ export class ODataModel<T> {
   }
 
   isParentOf(child: ODataModel<any>) {
-    return ODataModelOptions.chain(child).some(p => p[0] === this);
+    return ODataModelOptions.chain(child).some((p) => p[0] === this);
   }
 
   referential(
