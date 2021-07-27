@@ -3162,9 +3162,9 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   public attach&lt;C extends ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;&gt;(value: C): void;
   public attach(value: any): void {
     if (value instanceof ODataModel) {
-      value.resource(this.entities().entity());
+      value.attach(this.entities().entity());
     } else if (value instanceof ODataCollection) {
-      value.resource(this.entities());
+      value.attach(this.entities());
     }
   }
 

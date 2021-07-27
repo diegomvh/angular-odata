@@ -347,8 +347,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="129"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:129</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="131"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:131</a></div>
                 </td>
             </tr>
 
@@ -441,8 +441,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="172"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:172</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="174"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:174</a></div>
                 </td>
             </tr>
 
@@ -487,8 +487,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="144"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:144</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="146"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:146</a></div>
                 </td>
             </tr>
 
@@ -813,8 +813,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="195"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:195</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="197"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:197</a></div>
                 </td>
             </tr>
 
@@ -898,8 +898,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="223"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:223</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="225"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:225</a></div>
                 </td>
             </tr>
 
@@ -1080,7 +1080,9 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     value: any,
     options: ODataResponseOptions
   ): any {
-    const type &#x3D; Types.isObject(value) ? options.helper.type(value) : undefined;
+    const type &#x3D; Types.isPlainObject(value)
+      ? options.helper.type(value)
+      : undefined;
     if (type !&#x3D;&#x3D; undefined &amp;&amp; parser instanceof ODataStructuredTypeParser) {
       parser &#x3D; parser.childParser((c) &#x3D;&gt; c.isTypeOf(type));
     }
@@ -1115,7 +1117,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     });
     const data &#x3D; payload ? annots.data(payload) : null;
     let entity &#x3D; (
-      data !&#x3D;&#x3D; null &amp;&amp; Types.isObject(data)
+      data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
         ? options.helper.attributes(data, this.api.options.stripMetadata)
         : data
     ) as T | null;
@@ -1166,7 +1168,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     });
     const data &#x3D; payload ? (annots.data(payload) as T) : null;
     let property &#x3D; (
-      data !&#x3D;&#x3D; null &amp;&amp; Types.isObject(data)
+      data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
         ? options.helper.attributes(data, this.api.options.stripMetadata)
         : data
     ) as T | null;
@@ -1185,7 +1187,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     const options &#x3D; this.options;
     const data &#x3D; this.body &amp;&amp; options.version &#x3D;&#x3D;&#x3D; &#x27;2.0&#x27; ? this.body : this.body;
     let value &#x3D; (
-      data !&#x3D;&#x3D; null &amp;&amp; Types.isObject(data)
+      data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
         ? options.helper.attributes(data, this.api.options.stripMetadata)
         : data
     ) as T | null;

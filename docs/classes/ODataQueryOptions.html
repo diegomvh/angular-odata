@@ -878,11 +878,11 @@ export class OptionHandler&lt;T&gt; {
 
   //#region HashMap Value
   private assertObject(create: boolean): { [name: string]: any } {
-    if (!Types.isArray(this.o[this.n]) &amp;&amp; Types.isObject(this.o[this.n])) {
+    if (!Types.isArray(this.o[this.n]) &amp;&amp; Types.isPlainObject(this.o[this.n])) {
       return this.o[this.n];
     }
     let arr &#x3D; this.assertArray();
-    let obj &#x3D; arr.find((v) &#x3D;&gt; Types.isObject(v));
+    let obj &#x3D; arr.find((v) &#x3D;&gt; Types.isPlainObject(v));
     if (!obj &amp;&amp; create) {
       obj &#x3D; {};
       arr.push(obj);

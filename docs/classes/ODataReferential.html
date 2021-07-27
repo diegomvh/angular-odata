@@ -374,7 +374,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
     value: any,
     options?: OptionsHelper
   ): any {
-    const type &#x3D; Types.isObject(value)
+    const type &#x3D; Types.isPlainObject(value)
       ? options?.helper.type(value)
       : undefined;
     if (type !&#x3D;&#x3D; undefined) {
@@ -406,7 +406,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
     value: any,
     options?: OptionsHelper
   ): any {
-    const type &#x3D; Types.isObject(value)
+    const type &#x3D; Types.isPlainObject(value)
       ? options?.helper.type(value)
       : undefined;
     if (type !&#x3D;&#x3D; undefined) {
@@ -688,7 +688,7 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
           if (structured &#x3D;&#x3D;&#x3D; undefined) break;
           field &#x3D; structured.fields.find((f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; name);
           if (field !&#x3D;&#x3D; undefined) {
-            v &#x3D; Types.isObject(v) ? v[field.name] : v;
+            v &#x3D; Types.isPlainObject(v) ? v[field.name] : v;
             structured &#x3D; field.isStructuredType()
               ? field.structured()
               : undefined;

@@ -269,6 +269,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataInStorageCache.html" data-type="entity-link">ODataInStorageCache</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataMediaResource.html" data-type="entity-link">ODataMediaResource</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataMetadata.html" data-type="entity-link">ODataMetadata</a>
                             </li>
                             <li class="link">

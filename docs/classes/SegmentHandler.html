@@ -141,7 +141,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="150" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:150</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="168" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:168</a></div>
                             </td>
                         </tr>
 
@@ -207,8 +207,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="170"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:170</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="188"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:188</a></div>
                 </td>
             </tr>
 
@@ -246,8 +246,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="180"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:180</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="198"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:198</a></div>
                 </td>
             </tr>
 
@@ -285,8 +285,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="167"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:167</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:185</a></div>
                 </td>
             </tr>
 
@@ -324,8 +324,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="177"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:177</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="195"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:195</a></div>
                 </td>
             </tr>
 
@@ -363,8 +363,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="163"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:163</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="181"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:181</a></div>
                 </td>
             </tr>
 
@@ -441,8 +441,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="173"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:173</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="191"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:191</a></div>
                 </td>
             </tr>
 
@@ -519,8 +519,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="159"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:159</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="177"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:177</a></div>
                 </td>
             </tr>
 
@@ -589,8 +589,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="155"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:155</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="173"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:173</a></div>
                 </td>
             </tr>
 
@@ -663,7 +663,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="152" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:152</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="170" class="link-to-prism">projects/angular-odata/src/lib/resources/path-segments.ts:170</a></div>
                                 </td>
                             </tr>
 
@@ -732,14 +732,14 @@ function pathSegmentsBuilder(
 }
 
 export class ODataPathSegments {
-  protected segments: ODataSegment[];
+  private _segments: ODataSegment[];
 
   constructor(segments?: ODataSegment[]) {
-    this.segments &#x3D; segments || [];
+    this._segments &#x3D; segments || [];
   }
 
   pathAndParams(): [string, { [name: string]: any }] {
-    const result &#x3D; this.segments.reduce(
+    const result &#x3D; this._segments.reduce(
       (acc, segment) &#x3D;&gt; {
         const [path, params] &#x3D; pathSegmentsBuilder(segment);
         acc.paths.push(path);
@@ -751,10 +751,25 @@ export class ODataPathSegments {
     return [result.paths.join(PATH_SEPARATOR), result.params];
   }
 
-  types(): string[] {
-    return this.segments
-      .map((s) &#x3D;&gt; s.type)
+  types({ key &#x3D; false }: { key?: boolean } &#x3D; {}): string[] {
+    return this.segments({ key })
+      .map((s) &#x3D;&gt; s.type())
       .filter((t) &#x3D;&gt; t !&#x3D;&#x3D; undefined) as string[];
+  }
+
+  keys(values?: (EntityKey&lt;any&gt; | undefined)[]) {
+    const segments &#x3D; this.segments({ key: true });
+    if (values !&#x3D;&#x3D; undefined) {
+      segments.forEach((segment, index) &#x3D;&gt; {
+        const key &#x3D; values[index];
+        if (key &#x3D;&#x3D;&#x3D; undefined) {
+          segment.clearKey();
+        } else {
+          segment.key(key);
+        }
+      });
+    }
+    return segments.map((s) &#x3D;&gt; s.key() as EntityKey&lt;any&gt; | undefined);
   }
 
   toString(): string {
@@ -769,7 +784,7 @@ export class ODataPathSegments {
   }
 
   toJSON() {
-    return this.segments.map((segment) &#x3D;&gt; {
+    return this._segments.map((segment) &#x3D;&gt; {
       let json &#x3D; &lt;any&gt;{ name: segment.name, path: segment.path };
       if (segment.type !&#x3D;&#x3D; undefined) json.type &#x3D; segment.type;
       if (segment.key !&#x3D;&#x3D; undefined)
@@ -790,11 +805,11 @@ export class ODataPathSegments {
 
   find(predicate: (segment: ODataSegment) &#x3D;&gt; boolean) {
     //Backward Find
-    return [...this.segments].reverse().find(predicate);
+    return [...this._segments].reverse().find(predicate);
   }
 
-  last({ key &#x3D; false }: { key?: boolean } &#x3D; {}) {
-    let segments &#x3D; [...this.segments];
+  segments({ key &#x3D; false }: { key?: boolean } &#x3D; {}) {
+    let segments &#x3D; [...this._segments];
     if (key)
       segments &#x3D; segments.filter(
         (s) &#x3D;&gt;
@@ -804,14 +819,17 @@ export class ODataPathSegments {
             PathSegmentNames.property,
           ].indexOf(s.name) !&#x3D;&#x3D; -1
       );
-    return segments.length &gt; 0
-      ? new SegmentHandler(segments[segments.length - 1])
-      : undefined;
+    return segments.map((s) &#x3D;&gt; new SegmentHandler(s));
+  }
+
+  last({ key &#x3D; false }: { key?: boolean } &#x3D; {}) {
+    const segments &#x3D; this.segments({ key });
+    return segments.length &gt; 0 ? segments[segments.length - 1] : undefined;
   }
 
   add(name: string, path: string) {
     const segment &#x3D; { name, path } as ODataSegment;
-    this.segments.push(segment);
+    this._segments.push(segment);
     return new SegmentHandler(segment);
   }
 
