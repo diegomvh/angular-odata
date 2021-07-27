@@ -6,18 +6,16 @@ import { ODataQueryOptions } from '../query-options';
 import { HttpOptions } from './options';
 import { $VALUE } from '../../constants';
 import { ODataApi } from '../../api';
+import { Http } from '../../utils';
 
 export class ODataMediaResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<V>(
     api: ODataApi,
-    type: string | undefined,
     segments: ODataPathSegments,
     options: ODataQueryOptions
   ) {
     const segment = segments.add(PathSegmentNames.value, $VALUE);
-    if (type) segment.type(type);
-    options.clear();
     return new ODataMediaResource<V>(api, segments, options);
   }
   //#endregion
@@ -52,8 +50,25 @@ export class ODataMediaResource<T> extends ODataResource<T> {
 
   upload(
     data: ArrayBuffer | Blob,
-    options: HttpOptions & { etag?: string } = {}): Observable<any> {
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<any> {
     return super.put(data, options);
+  }
+
+  uploadArrayBuffer(
+    data: ArrayBuffer,
+    contentType: string,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<any> {
+    options.headers = Http.mergeHttpHeaders(options.headers || {}, { 'Content-Type': contentType });
+    return this.upload(data, options);
+  }
+
+  uploadBlob(
+    data: Blob,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<any> {
+    return this.upload(data, options);
   }
   //#endregion
 }

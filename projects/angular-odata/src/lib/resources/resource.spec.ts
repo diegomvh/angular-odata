@@ -7,6 +7,7 @@ import {
   ODataBatchResource,
   ODataActionResource,
   ODataCountResource,
+  ODataMediaResource,
   ODataNavigationPropertyResource,
 } from './types';
 import { ODataPathSegments } from './path-segments';
@@ -480,6 +481,24 @@ describe('ODataResource', () => {
     const photo = mirsking.navigationProperty<Photo>('Photo');
     expect(photo.toString()).toEqual(
       "People('russellwhyte')/Friends('mirsking')/Photo"
+    );
+  });
+
+  it('should create entity navigation media', () => {
+    const set: ODataEntitySetResource<Person> =
+      ODataEntitySetResource.factory<Person>(
+        settings.defaultApi(),
+        'People',
+        undefined,
+        segments,
+        options
+      );
+    const entity = set.entity('russellwhyte');
+    const photo: ODataMediaResource<Photo> = entity
+      .navigationProperty<Photo>('Photo')
+      .media();
+    expect(photo.toString()).toEqual(
+      "People('russellwhyte')/Photo/value"
     );
   });
 

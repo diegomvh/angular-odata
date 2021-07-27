@@ -79,7 +79,6 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   media() {
     return ODataMediaResource.factory<T>(
       this.api,
-      this.type(),
       this.cloneSegments(),
       this.cloneQuery()
     );

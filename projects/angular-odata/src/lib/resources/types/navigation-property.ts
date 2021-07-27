@@ -106,7 +106,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   media() {
     return ODataMediaResource.factory<T>(
       this.api,
-      this.type(),
       this.cloneSegments(),
       this.cloneQuery()
     );
