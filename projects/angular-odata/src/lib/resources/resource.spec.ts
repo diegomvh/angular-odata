@@ -498,7 +498,7 @@ describe('ODataResource', () => {
       .navigationProperty<Photo>('Photo')
       .media();
     expect(photo.toString()).toEqual(
-      "People('russellwhyte')/Photo/value"
+      "People('russellwhyte')/Photo/$value"
     );
   });
 
