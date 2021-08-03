@@ -78,9 +78,9 @@ export class ODataSettings {
     return values[0] as ODataStructuredType<T>;
   }
 
-  public callableForType<T>(type: string) {
+  public callableForType<T>(type: string, bindingType?: string) {
     let values = this.apis
-      .map((api) => api.findCallableForType<T>(type))
+      .map((api) => api.findCallableForType<T>(type, bindingType))
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No Callable for type ${type} was found`);
@@ -174,9 +174,9 @@ export class ODataSettings {
     return values[0] as ODataStructuredType<T>;
   }
 
-  public callableByName<T>(name: string) {
+  public callableByName<T>(name: string, bindingType?: string) {
     let values = this.apis
-      .map((api) => api.findCallableByName<T>(name))
+      .map((api) => api.findCallableByName<T>(name, bindingType))
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No Callable for name ${name} was found`);

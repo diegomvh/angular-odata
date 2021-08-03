@@ -80,10 +80,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return new ODataEntitySetResource<C>(this.api, segments, this.cloneQuery());
   }
 
-  action<P, R>(name: string) {
+  action<P, R>(path: string, bindingType?: string) {
     let type;
-    let path = name;
-    const callable = this.api.findCallableForType(name);
+    const callable = this.api.findCallableForType(path, bindingType);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
@@ -97,10 +96,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     );
   }
 
-  function<P, R>(name: string) {
+  function<P, R>(path: string, bindingType?: string) {
     let type;
-    let path = name;
-    const callable = this.api.findCallableForType(name);
+    const callable = this.api.findCallableForType(path, bindingType);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();

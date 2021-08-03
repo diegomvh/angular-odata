@@ -66,4 +66,7 @@ export class ODataCallable<R> {
   encode(value: any): any {
     return this.parser.encode(value, this.api.options);
   }
+  binding() {
+    return this.parser.binding();
+  }
 }

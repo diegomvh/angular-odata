@@ -166,9 +166,9 @@ export class ODataApi {
    * @param  {string} path?
    * @returns ODataActionResource
    */
-  action<P, R>(path: string): ODataActionResource<P, R> {
+  action<P, R>(path: string, bindingType?: string): ODataActionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(path);
+    const callable = this.findCallableForType(path, bindingType);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
@@ -187,9 +187,9 @@ export class ODataApi {
    * @param  {string} path?
    * @returns ODataFunctionResource
    */
-  function<P, R>(path: string): ODataFunctionResource<P, R> {
+  function<P, R>(path: string, bindingType?: string): ODataFunctionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(path);
+    const callable = this.findCallableForType(path, bindingType);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
@@ -241,8 +241,8 @@ export class ODataApi {
     return this.findSchemaForType(type)?.findStructuredTypeForType<T>(type);
   }
 
-  public findCallableForType<T>(type: string) {
-    return this.findSchemaForType(type)?.findCallableForType<T>(type);
+  public findCallableForType<T>(type: string, bindingType?: string) {
+    return this.findSchemaForType(type)?.findCallableForType<T>(type, bindingType);
   }
 
   public findEntitySetForType(type: string) {
@@ -310,13 +310,13 @@ export class ODataApi {
       .find((e) => e.name === name);
   }
 
-  public findCallableByName<T>(name: string) {
+  public findCallableByName<T>(name: string, bindingType?: string) {
     return this.schemas
       .reduce(
         (acc, schema) => [...acc, ...schema.callables],
         <ODataCallable<T>[]>[]
       )
-      .find((e) => e.name === name);
+      .find((c) => c.name === name && (bindingType === undefined || c.binding()?.type === bindingType));
   }
 
   public findEntitySetByName(name: string) {
@@ -357,8 +357,7 @@ export class ODataApi {
     if (!type.startsWith('Edm.')) {
       let value =
         this.findEnumTypeForType<T>(type) ||
-        this.findStructuredTypeForType<T>(type) ||
-        this.findCallableForType<T>(type);
+        this.findStructuredTypeForType<T>(type);
       return value?.parser as Parser<T>;
     }
 

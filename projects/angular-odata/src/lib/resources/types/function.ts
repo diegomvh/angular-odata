@@ -53,6 +53,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   schema() {
+    //TODO: Binding Type
     let type = this.type();
     return type !== undefined
       ? this.api.findCallableForType<R>(type)

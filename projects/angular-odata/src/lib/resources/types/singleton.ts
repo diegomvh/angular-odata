@@ -115,10 +115,9 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     );
   }
 
-  action<P, R>(name: string) {
+  action<P, R>(path: string, bindingType?: string) {
     let type;
-    let path = name;
-    const callable = this.api.findCallableForType(name);
+    const callable = this.api.findCallableForType(path, bindingType);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
@@ -132,10 +131,9 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     );
   }
 
-  function<P, R>(name: string) {
+  function<P, R>(path: string, bindingType?: string) {
     let type;
-    let path = name;
-    const callable = this.api.findCallableForType(name);
+    const callable = this.api.findCallableForType(path, bindingType);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
