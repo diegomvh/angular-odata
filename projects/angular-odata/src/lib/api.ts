@@ -166,9 +166,9 @@ export class ODataApi {
    * @param  {string} path?
    * @returns ODataActionResource
    */
-  action<P, R>(path: string, bindingType?: string): ODataActionResource<P, R> {
+  action<P, R>(path: string): ODataActionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(path, bindingType);
+    const callable = this.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
@@ -187,9 +187,9 @@ export class ODataApi {
    * @param  {string} path?
    * @returns ODataFunctionResource
    */
-  function<P, R>(path: string, bindingType?: string): ODataFunctionResource<P, R> {
+  function<P, R>(path: string): ODataFunctionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(path, bindingType);
+    const callable = this.findCallableForType(path);
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
@@ -316,7 +316,7 @@ export class ODataApi {
         (acc, schema) => [...acc, ...schema.callables],
         <ODataCallable<T>[]>[]
       )
-      .find((c) => c.name === name && (bindingType === undefined || c.binding()?.type === bindingType));
+      .find((c) => c.name === name && c.binding()?.type === bindingType);
   }
 
   public findEntitySetByName(name: string) {

@@ -120,9 +120,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     );
   }
 
-  action<P, R>(path: string, bindingType?: string) {
+  action<P, R>(path: string) {
     let type;
-    const callable = this.api.findCallableForType(path, bindingType);
+    const callable = this.api.findCallableForType(path, this.type());
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
@@ -136,9 +136,9 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     );
   }
 
-  function<P, R>(path: string, bindingType?: string) {
+  function<P, R>(path: string) {
     let type;
-    const callable = this.api.findCallableForType(path, bindingType);
+    const callable = this.api.findCallableForType(path, this.type());
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
