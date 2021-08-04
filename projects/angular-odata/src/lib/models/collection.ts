@@ -556,7 +556,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       const model = this._entries[Number(pathArray[0])].model;
       return model.set(pathArray.slice(1), value);
     }
-    if (pathArray.length === 1 && Model.meta.isModel(value)) {
+    if (pathArray.length === 1 && ODataModelOptions.isModel(value)) {
       let toAdd: M[] = [];
       let toMerge: M[] = [];
       let toRemove: M[] = [];
@@ -589,7 +589,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     ) as any[];
     if (pathArray.length === 0) return undefined;
     const value = this.models()[Number(pathArray[0])];
-    if (pathArray.length > 1 && Model.meta.isModel(value)) {
+    if (pathArray.length > 1 && ODataModelOptions.isModel(value)) {
       return value.get(pathArray.slice(1));
     }
     return value;
@@ -607,7 +607,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         Types.isArray(path) ? path : `${path}`.match(/([^[.\]])+/g)
       ) as any[];
       const value = this.models()[Number(pathArray[0])];
-      if (Model.meta.isModel(value)) {
+      if (ODataModelOptions.isModel(value)) {
         value.reset({ path: pathArray.slice(1), silent });
       }
     }
@@ -627,7 +627,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let toRemove: M[] = [];
     let modelMap: string[] = [];
     objects.forEach((obj) => {
-      const isModel = Model.meta.isModel(obj);
+      const isModel = ODataModelOptions.isModel(obj);
       const key =
         Model !== null && Model.meta ? Model.meta.resolveKey(obj) : undefined;
       const cid =
@@ -847,6 +847,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   //#region Collection functions
+  get [Symbol.toStringTag]() { return "Collection"; }
   // Iterable
   public [Symbol.iterator]() {
     let pointer = 0;

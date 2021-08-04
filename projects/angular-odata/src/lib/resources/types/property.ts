@@ -30,7 +30,7 @@ import {
   Select,
   Transform,
 } from '../builder';
-import { ODataNavigationPropertyResource } from './navigation-property';
+//import { ODataNavigationPropertyResource } from './navigation-property';
 import { Objects, Types } from '../../utils';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
@@ -114,6 +114,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.cloneQuery()
     );
   }
+  /*
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {
@@ -131,6 +132,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.cloneQuery()
     );
   }
+  */
   property<P>(path: string) {
     let type = this.type();
     if (type !== undefined) {

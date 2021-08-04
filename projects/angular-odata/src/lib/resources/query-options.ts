@@ -80,6 +80,20 @@ export class ODataQueryOptions {
     return Dates.isoStringToDate(JSON.parse(JSON.stringify(this.options)));
   }
 
+  toQueryArguments<T>(): QueryArguments<T> {
+    return {
+      select: this.options[QueryOptionNames.select],
+      expand: this.options[QueryOptionNames.expand],
+      transform: this.options[QueryOptionNames.transform],
+      search: this.options[QueryOptionNames.search],
+      filter: this.options[QueryOptionNames.filter],
+      orderBy: this.options[QueryOptionNames.orderBy],
+      top: this.options[QueryOptionNames.top],
+      skip: this.options[QueryOptionNames.skip],
+      skiptoken: this.options[QueryOptionNames.skiptoken],
+    } as QueryArguments<T>;
+  }
+
   clone() {
     return new ODataQueryOptions(this.toJSON());
   }

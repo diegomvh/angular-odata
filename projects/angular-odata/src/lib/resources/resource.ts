@@ -279,6 +279,7 @@ export abstract class ODataResource<T> {
       skiptoken(opts?: string) {
         return options.option<string>(QueryOptionNames.skiptoken, opts);
       },
+
       paging({
         skip,
         skiptoken,
@@ -288,11 +289,13 @@ export abstract class ODataResource<T> {
         else if (skip !== undefined) this.skip(skip);
         if (top !== undefined) this.top(top);
       },
+
       clearPaging() {
         this.skip().clear();
         this.top().clear();
         this.skiptoken().clear();
       },
+
       apply(query: QueryArguments<T>) {
         if (query.select !== undefined) {
           this.select(query.select);

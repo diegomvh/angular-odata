@@ -69,13 +69,8 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     const Model = this.api.modelForType(type);
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(
-        this.api,
-        path,
-        type,
-        new ODataPathSegments(),
-        this.cloneQuery()
-      ).entity(entity as Partial<R>);
+      resource = this.api.entitySet<R>(path).entity(entity as Partial<R>);
+      resource.query.apply(this.queryOptions.toQueryArguments());
     }
     return new Model(entity, { resource, annots, reset }) as M;
   }
@@ -92,13 +87,8 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     const Collection = this.api.collectionForType(type);
     let path = annots?.context.entitySet;
     if (path !== undefined) {
-      resource = ODataEntitySetResource.factory<R>(
-        this.api,
-        path,
-        type,
-        new ODataPathSegments(),
-        this.cloneQuery()
-      );
+      resource = this.api.entitySet<R>(path);
+      resource.query.apply(this.queryOptions.toQueryArguments());
     }
     return new Collection(entities, { resource, annots, reset }) as C;
   }

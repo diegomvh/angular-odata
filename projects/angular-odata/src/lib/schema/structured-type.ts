@@ -35,16 +35,16 @@ export class ODataStructuredType<T> {
     this.annotations = (config.annotations || []).map(
       (annot) => new ODataAnnotation(annot)
     );
-    if (config.model !== undefined) {
       this.model = config.model as typeof ODataModel;
+    this.collection = config.collection as typeof ODataCollection;
+    if (this.model !== undefined) {
       const options = this.model.hasOwnProperty('options')
         ? this.model.options
         : { fields: {} };
-      this.model.meta = new ODataModelOptions<T>(options, this);
-      if (config.collection !== undefined) {
-        this.collection = config.collection as typeof ODataCollection;
+      this.model.buildMeta<T>(options, this);
+    }
+    if (this.collection !== undefined) {
         this.collection.model = this.model;
-      }
     }
   }
 
@@ -56,8 +56,8 @@ export class ODataStructuredType<T> {
     parserForType,
     findOptionsForType,
   }: {
-    parserForType: (type: string) => Parser<any>;
-    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
+    parserForType: (type: string) => any;
+    findOptionsForType: (type: string) => any;
   }) {
     if (this.base) {
       const parent = this.api.findStructuredTypeForType(

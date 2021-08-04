@@ -1,3 +1,4 @@
+import { EventEmitter } from '@angular/core';
 import { Observable, throwError, forkJoin, NEVER } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -23,7 +24,7 @@ import {
 
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
-import { EventEmitter } from '@angular/core';
+import { ODataStructuredType } from '../schema';
 import {
   ModelOptions,
   ODataModelEvent,
@@ -39,6 +40,9 @@ export class ODataModel<T> {
   // Properties
   static options: ModelOptions;
   static meta: ODataModelOptions<any>;
+  static buildMeta<T>(options: ModelOptions, schema: ODataStructuredType<T>) {
+    this.meta = new ODataModelOptions<T>(options, schema);
+  }
   // Parent
   _parent: [ODataModel<any>, ODataModelField<any>] | null = null;
   _attributes: { [name: string]: any } = {};
@@ -80,6 +84,8 @@ export class ODataModel<T> {
 
     this.assign(Objects.merge(defaults, attrs), { reset });
   }
+
+  get [Symbol.toStringTag]() { return "Model"; }
 
   equals(other: ODataModel<T>) {
     const thisKey = this.key();
@@ -294,7 +300,7 @@ export class ODataModel<T> {
     ) as any[];
     const name = pathArray[0];
     const value = name !== undefined ? (<any>this)[name] : undefined;
-    if (this._meta.isModel(value) || this._meta.isCollection(value)) {
+    if (ODataModelOptions.isModel(value) || ODataModelOptions.isCollection(value)) {
       value.reset({ path: pathArray.slice(1), silent });
     } else {
       this._meta.reset(this, { name: pathArray[0], silent });

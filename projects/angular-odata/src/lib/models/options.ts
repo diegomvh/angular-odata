@@ -21,8 +21,8 @@ import {
 import { ODataEntitySet, ODataStructuredType } from '../schema';
 import { OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
-import { ODataCollection } from './collection';
-import { ODataModel } from './model';
+import type { ODataCollection } from './collection';
+import type { ODataModel } from './model';
 
 export const CID = '_cid';
 export type ODataModelResource<T> =
@@ -98,7 +98,7 @@ export type ModelFieldOptions = {
 
 export function Model({ cid = CID }: { cid?: string } = {}) {
   return <T extends { new (...args: any[]): {} }>(constructor: T) => {
-    const Klass = (<any>constructor) as typeof ODataModel;
+    const Klass = (<any>constructor);
     if (!Klass.hasOwnProperty('options'))
       Klass.options = { fields: {} } as ModelOptions;
     Klass.options.cid = cid;
@@ -111,7 +111,7 @@ export function ModelField({
   ...options
 }: { name?: string } & ModelFieldOptions = {}) {
   return (target: any, key: string): void => {
-    const Klass = target.constructor as typeof ODataModel;
+    const Klass = target.constructor;
     if (!Klass.hasOwnProperty('options'))
       Klass.options = { fields: {} } as ModelOptions;
     options.field = name || key;
@@ -219,11 +219,16 @@ export class ODataModelField<F> {
       navigation?: boolean;
     } = {}
   ) {
-    if (value instanceof ODataModel) {
+    /*
+    if ('isValid' in value && typeof value.isValid === 'function') {
       return !value.isValid({ method, navigation }) ? value._errors : undefined;
-    } else if (value instanceof ODataCollection) {
-      return value.models().some((m) => !m.isValid({ method, navigation }))
-        ? value.models().map((m) => m._errors)
+    } else if ('models' in value && typeof value.models === 'function') {
+      */
+    if (ODataModelOptions.isModel(value)) {
+      return !value.isValid({ method, navigation }) ? value._errors : undefined;
+    } else if (ODataModelOptions.isCollection(value)) {
+      return value.models().some((m: ODataModel<any>) => !m.isValid({ method, navigation }))
+        ? value.models().map((m: ODataModel<any>) => m._errors)
         : undefined;
     } else {
       let errors = this.parser?.validate(value, { method, navigation }) || [];
@@ -294,8 +299,8 @@ export class ODataModelField<F> {
     )
       throw new Error("Can't build resource for non compatible base type");
     return this.navigation
-      ? resource.navigationProperty<F>(this.parser.name)
-      : resource.property<F>(this.parser.name);
+      ? (resource as ODataEntityResource<T>).navigationProperty<F>(this.parser.name)
+      : (resource as ODataEntityResource<T>).property<F>(this.parser.name);
   }
 
   annotationsFactory(
@@ -330,8 +335,9 @@ export class ODataModelField<F> {
     const schema = this.schemaFactory<T, F>(parent.schema());
     const annots = this.annotationsFactory(parent.annots());
 
-    const Model = schema?.model || ODataModel;
-    const Collection = schema?.collection || ODataCollection;
+    const Model = schema?.model;
+    const Collection = schema?.collection;
+    if (Model === undefined || Collection === undefined) throw Error(`No model for ${this.name}`);
     return this.parser.collection
       ? (new Collection((value || []) as (F | { [name: string]: any })[], {
           annots: annots as ODataEntitiesAnnotations,
@@ -521,7 +527,7 @@ export class ODataModelOptions<T> {
 
   static resource<T>(child: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
     const meta: ODataModelOptions<T> =
-      child instanceof ODataModel
+      ODataModelOptions.isModel(child)
         ? (child as ODataModel<T>)._meta
         : (child as ODataCollection<T, ODataModel<T>>)._model.meta;
     let resource:
@@ -530,7 +536,7 @@ export class ODataModelOptions<T> {
       | undefined = undefined;
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource = resource || model._resource;
-      if (model instanceof ODataModel) {
+      if (ODataModelOptions.isModel(model)) {
         let key = (model as ODataModel<any>).key({
           field_mapping: true,
         }) as EntityKey<any>;
@@ -656,10 +662,7 @@ export class ODataModelOptions<T> {
           .fields({ include_parents: true })
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
-          v =
-            Types.isPlainObject(v) || v instanceof ODataModel
-              ? v[field.name]
-              : v;
+          v = Types.isPlainObject(v) || ODataModelOptions.isModel(v) ? v[field.name] : v;
           options = field.meta as ODataModelOptions<any>;
         }
       }
@@ -833,7 +836,7 @@ export class ODataModelOptions<T> {
           state !== ODataModelState.Changed &&
           !!field.navigation;
         let includeKey = include_key && !!field.navigation;
-        if (this.isModel(model)) {
+        if (ODataModelOptions.isModel(model)) {
           return [
             k,
             (model as ODataModel<any>).toEntity({
@@ -846,7 +849,7 @@ export class ODataModelOptions<T> {
               include_key: includeKey,
             }),
           ];
-        } else if (this.isCollection(model)) {
+        } else if (ODataModelOptions.isCollection(model)) {
           return [
             k,
             (model as ODataCollection<any, ODataModel<any>>).toEntities({
@@ -1017,12 +1020,12 @@ export class ODataModelOptions<T> {
     self._silent = false;
   }
 
-  isModel(obj: any) {
-    return obj instanceof ODataModel;
+  static isModel(obj: any) {
+    return {}.toString.call(obj) === "[object Model]";
   }
 
-  isCollection(obj: any) {
-    return obj instanceof ODataCollection;
+  static isCollection(obj: any) {
+    return {}.toString.call(obj) === "[object Collection]";
   }
 
   private updateCollection<F>(
@@ -1031,7 +1034,7 @@ export class ODataModelOptions<T> {
     collection: ODataCollection<F, ODataModel<F>>,
     value: ODataCollection<F, ODataModel<F>> | T[] | { [name: string]: any }[]
   ) {
-    if (value instanceof ODataCollection) {
+    if (ODataModelOptions.isCollection(value)) {
       value = (value as ODataCollection<any, ODataModel<any>>).toEntities(
         INCLUDE_ALL
       );
@@ -1051,7 +1054,7 @@ export class ODataModelOptions<T> {
     model: ODataModel<F>,
     value: ODataModel<F> | F | { [name: string]: any }
   ) {
-    if (value instanceof ODataModel) {
+    if (ODataModelOptions.isModel(value)) {
       value = (value as ODataModel<F>).toEntity(INCLUDE_ALL);
     }
     model._annotations = field.annotationsFactory(
@@ -1112,7 +1115,7 @@ export class ODataModelOptions<T> {
         relation.model = value as null;
         changed = currentModel !== value;
         this._unsubscribe(self, relation);
-      } else if (this.isCollection(currentModel)) {
+      } else if (ODataModelOptions.isCollection(currentModel)) {
         changed = this.updateCollection<F>(
           self,
           field,
@@ -1122,7 +1125,7 @@ export class ODataModelOptions<T> {
             | T[]
             | { [name: string]: any }[]
         );
-      } else if (this.isModel(currentModel)) {
+      } else if (ODataModelOptions.isModel(currentModel)) {
         changed = this.updateModel<F>(
           self,
           field,
@@ -1137,7 +1140,7 @@ export class ODataModelOptions<T> {
         });
         changed = true;
         this._subscribe(self, relation);
-      } else if (this.isCollection(value) || this.isModel(value)) {
+      } else if (ODataModelOptions.isCollection(value) || ODataModelOptions.isModel(value)) {
         relation.model = value as
           | ODataModel<F>
           | ODataCollection<F, ODataModel<F>>
@@ -1145,7 +1148,7 @@ export class ODataModelOptions<T> {
         changed = true;
         this._subscribe(self, relation);
       }
-      if (this.isModel(relation.model)) {
+      if (ODataModelOptions.isModel(relation.model)) {
         var ref = (relation.model as ODataModel<F>).referential(field);
         if (ref !== undefined) {
           Object.assign(self, ref);
@@ -1224,9 +1227,9 @@ export class ODataModelOptions<T> {
             }
 
             let path = relation.field.name;
-            if (this.isModel(relation.model) && event.path)
+            if (ODataModelOptions.isModel(relation.model) && event.path)
               path = `${path}.${event.path}`;
-            else if (this.isCollection(relation.model) && event.path) {
+            else if (ODataModelOptions.isCollection(relation.model) && event.path) {
               path = `${path}${event.path}`;
             }
             self.events$.emit({ ...event, path });
