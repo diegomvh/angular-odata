@@ -20,7 +20,7 @@ import {
   QueryArguments,
 } from '../resources/index';
 
-import { HttpActionOptions, HttpFunctionOptions } from '../services/index';
+import type { HttpActionOptions, HttpFunctionOptions } from '../services/index';
 
 import { EventEmitter } from '@angular/core';
 import { Types } from '../utils/types';

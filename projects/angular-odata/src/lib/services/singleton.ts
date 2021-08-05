@@ -1,5 +1,5 @@
-import { ODataModel } from '../models/model';
-import { ODataSingletonResource } from '../resources';
+import type { ODataModel } from '../models/model';
+import type { ODataSingletonResource } from '../resources';
 import { ODataEntityService } from './entity';
 
 export class ODataSingletonService<T> extends ODataEntityService<T> {

@@ -1,4 +1,4 @@
-import { QueryArguments, HttpOptions } from '../resources/index';
+import type { QueryArguments, HttpOptions } from '../resources/index';
 
 export type HttpActionOptions<T> = QueryArguments<T> & HttpOptions;
 export type HttpFunctionOptions<T> = QueryArguments<T> & {
