@@ -114,30 +114,6 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return this._options;
   }
 
-  private parse(
-    parser: Parser<T>,
-    value: any,
-    options: ODataResponseOptions
-  ): any {
-    const type = Types.isPlainObject(value)
-      ? options.helper.type(value)
-      : undefined;
-    if (type !== undefined && parser instanceof ODataStructuredTypeParser) {
-      parser = parser.childParser((c) => c.isTypeOf(type));
-    }
-    return parser.deserialize(value, options);
-  }
-
-  private deserialize(
-    type: string,
-    value: any,
-    options: ODataResponseOptions
-  ): any {
-    const parser = this.api.parserForType<T>(type);
-    return Array.isArray(value)
-      ? value.map((v) => this.parse(parser, v, options))
-      : this.parse(parser, value, options);
-  }
 
   /**
    * Handle the response body as an entity
@@ -161,9 +137,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
         : data
     ) as T | null;
 
-    const type = this.resource.type();
-    if (entity !== null && type !== undefined)
-      entity = this.deserialize(type, entity, options) as T;
+    if (entity !== null) entity = this.resource.deserialize(entity, options) as T;
     return { entity, annots };
   }
 
@@ -184,9 +158,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
     let entities = payload ? annots.data(payload) : null;
 
-    const type = this.resource.type();
-    if (entities !== null && type !== undefined)
-      entities = this.deserialize(type, entities, options) as T[];
+    if (entities !== null) entities = this.resource.deserialize(entities, options) as T[];
     return { entities, annots };
   }
 
@@ -212,9 +184,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
         : data
     ) as T | null;
 
-    const type = this.resource.type();
-    if (property !== null && type !== undefined)
-      property = this.deserialize(type, property, options) as T;
+    if (property !== null) property = this.resource.deserialize(property, options) as T;
     return { property, annots };
   }
 
@@ -231,9 +201,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
         : data
     ) as T | null;
 
-    const type = this.resource.type();
-    if (value !== null && type !== undefined)
-      value = this.deserialize(type, value, options) as T;
+    if (value !== null) value = this.resource.deserialize(value, options) as T;
     return value;
   }
 }

@@ -316,7 +316,7 @@ export class ODataApi {
         (acc, schema) => [...acc, ...schema.callables],
         <ODataCallable<T>[]>[]
       )
-      .find((c) => c.name === name && c.binding()?.type === bindingType);
+      .find((c) => c.name === name && (bindingType === undefined || c.binding()?.type === bindingType));
   }
 
   public findEntitySetByName(name: string) {
@@ -348,12 +348,12 @@ export class ODataApi {
   //#endregion
 
   public parserForType<T>(type: string) {
-    // Base Parsers
+    // Edm, Base Parsers
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
     }
 
-    // Enum, Strucutred and Callable Parsers
+    // EnumType, ComplexType and EntityType Parsers
     if (!type.startsWith('Edm.')) {
       let value =
         this.findEnumTypeForType<T>(type) ||

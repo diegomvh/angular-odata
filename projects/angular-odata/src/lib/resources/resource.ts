@@ -6,7 +6,7 @@ import {
   PARAM_SEPARATOR,
   QUERY_SEPARATOR,
 } from '../constants';
-import { Objects, Http, Types, Urls } from '../utils/index';
+import { Objects, Http, Types } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
 import {
@@ -17,7 +17,7 @@ import {
 import { HttpOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
-import { Parser } from '../types';
+import { Parser, OptionsHelper } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
 import {
@@ -91,12 +91,8 @@ export abstract class ODataResource<T> {
     const selfType = this.type();
     const otherType = other.type();
     if (selfType !== undefined && otherType !== undefined) {
-      const otherParser = api.parserForType<T>(
-        otherType
-      ) as ODataStructuredTypeParser<T>;
-      return (
-        otherParser.findChildParser((c) => c.isTypeOf(selfType)) !== undefined
-      );
+      const otherParser = other.schema()?.parser as ODataStructuredTypeParser<T> | undefined;
+      return (otherParser !== undefined && otherParser.findChildParser((c) => c.isTypeOf(selfType)) !== undefined);
     }
     return false;
   }
@@ -148,31 +144,35 @@ export abstract class ODataResource<T> {
 
   abstract clone(): ODataResource<T>;
   abstract schema(): ODataStructuredType<T> | ODataCallable<T> | undefined;
+  abstract serializer<E>(): Parser<E> | undefined;
+  abstract deserializer<E>(): Parser<E> | undefined;
+  abstract encoder<E>(): Parser<E> | undefined;
 
-  serialize(value: any): any {
-    let api = this.api;
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = api.parserForType<T>(type);
-      if (parser !== undefined && 'serialize' in parser) {
-        return Array.isArray(value)
-          ? value.map((e) => (parser as Parser<T>).serialize(e, api.options))
-          : parser.serialize(value, api.options);
-      }
+  serialize(value: any, options?: OptionsHelper): any {
+    let serializer = this.serializer();
+    if (serializer !== undefined && 'serialize' in serializer) {
+      return Array.isArray(value)
+        ? value.map((e) => (serializer as Parser<T>).serialize(e, options || this.api.options))
+        : serializer.serialize(value, options || this.api.options);
     }
     return value;
   }
 
-  encode(value: any): any {
-    let api = this.api;
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = api.parserForType<T>(type);
-      if (parser !== undefined && 'encode' in parser) {
-        return Array.isArray(value)
-          ? value.map((e) => (parser as Parser<T>).encode(e, api.options))
-          : parser.encode(value, api.options);
-      }
+  deserialize(value: any, options?: OptionsHelper): any {
+    let deserializer = this.deserializer();
+    if (deserializer !== undefined && 'deserialize' in deserializer) {
+      return Array.isArray(value)
+        ? value.map((e) => (deserializer as Parser<T>).deserialize(e, options || this.api.options))
+        : deserializer.deserialize(value, options || this.api.options);
+    }
+    return value;
+  }
+  encode(value: any, options?: OptionsHelper): any {
+    let encoder = this.encoder();
+    if (encoder !== undefined && 'encode' in encoder) {
+      return Array.isArray(value)
+        ? value.map((e) => (encoder as Parser<T>).encode(e, options || this.api.options))
+        : encoder.encode(value, options || this.api.options);
     }
     return value;
   }
@@ -325,7 +325,7 @@ export abstract class ODataResource<T> {
   protected request(
     method: string,
     options: HttpOptions & {
-      data?: any;
+      body?: any;
       etag?: string;
       responseType?:
         | 'arraybuffer'
@@ -353,18 +353,15 @@ export abstract class ODataResource<T> {
         ? 'text'
         : <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
 
-    let body = options.data;
-    if (Types.isPlainObject(body)) body = this.serialize(body);
-
     let etag = options.etag;
-    if (etag === undefined && options.data != null) {
-      etag = apiOptions.helper.etag(options.data);
+    if (etag === undefined && Types.isPlainObject(options.body)) {
+      etag = apiOptions.helper.etag(options.body);
     }
 
     const request = new ODataRequest({
       method,
-      body,
       etag,
+      body: options.body,
       api: this.api,
       resource: this,
       observe: 'response',
@@ -411,7 +408,7 @@ export abstract class ODataResource<T> {
   }
 
   protected post(
-    data: any,
+    body: any,
     options: HttpOptions & {
       responseType?:
         | 'arraybuffer'
@@ -425,11 +422,11 @@ export abstract class ODataResource<T> {
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('POST', { data, ...options });
+    return this.request('POST', { body, ...options });
   }
 
   protected put(
-    data: any,
+    body: any,
     options: HttpOptions & {
       etag?: string;
       responseType?:
@@ -444,11 +441,11 @@ export abstract class ODataResource<T> {
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('PUT', { data, ...options });
+    return this.request('PUT', { body, ...options });
   }
 
   protected patch(
-    data: any,
+    body: any,
     options: HttpOptions & {
       etag?: string;
       responseType?:
@@ -463,7 +460,7 @@ export abstract class ODataResource<T> {
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('PATCH', { data, ...options });
+    return this.request('PATCH', { body, ...options });
   }
 
   protected delete(

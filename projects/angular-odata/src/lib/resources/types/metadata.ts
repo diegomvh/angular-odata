@@ -20,6 +20,17 @@ export class ODataMetadataResource extends ODataResource<any> {
   schema() {
     return undefined;
   }
+  serializer<E>() {
+    return undefined;
+  }
+
+  deserializer<E>() {
+    return undefined;
+  }
+
+  encoder<E>() {
+    return undefined;
+  }
 
   //#region Factory
   static factory(api: ODataApi) {

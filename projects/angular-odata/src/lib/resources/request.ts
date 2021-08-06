@@ -12,7 +12,7 @@ import { ODataResource } from './resource';
 export class ODataRequest<T> {
   readonly method: string;
   readonly api: ODataApi;
-  readonly body: T | null;
+  readonly body: any | null;
   readonly observe: 'events' | 'response';
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
@@ -32,7 +32,7 @@ export class ODataRequest<T> {
     method: string;
     api: ODataApi;
     resource: ODataResource<T>;
-    body: T | null;
+    body: any;
     observe: 'events' | 'response';
     etag?: string;
     headers?: HttpHeaders | { [header: string]: string | string[] };
@@ -51,10 +51,13 @@ export class ODataRequest<T> {
     this.resource = init.resource;
 
     this.api = init.api;
-    this.body = init.body;
     this.reportProgress = init.reportProgress;
     this.responseType = init.responseType;
     this.observe = init.observe;
+
+    // The Body
+    this.body = init.body !== undefined ? init.body : null;
+    if (this.body !== null) this.body = this.resource.serialize(this.body);
 
     this.withCredentials =
       init.withCredentials === undefined
@@ -63,7 +66,7 @@ export class ODataRequest<T> {
     this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
 
     // The Path and Params from resource
-    const [resourcePath, resourceParams] = init.resource.pathAndParams();
+    const [resourcePath, resourceParams] = this.resource.pathAndParams();
     this.path = resourcePath;
 
     //#region Headers

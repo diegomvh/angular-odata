@@ -90,7 +90,7 @@ export class ODataSchema {
   }
 
   public findCallableForType<T>(type: string, bindingType?: string) {
-    return this.callables.find((c) => c.isTypeOf(type) && bindingType === c.binding()?.type) as
+    return this.callables.find((c) => c.isTypeOf(type) && (bindingType === undefined || bindingType === c.binding()?.type)) as
       | ODataCallable<T>
       | undefined;
   }

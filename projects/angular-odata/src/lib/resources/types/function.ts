@@ -44,6 +44,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
+  returnType() {
+    return this.schema()?.parser.return?.type;
+  }
   clone() {
     return new ODataFunctionResource<P, R>(
       this.api,
@@ -60,8 +63,25 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       : undefined;
   }
 
-  returnType() {
-    return this.schema()?.parser.return?.type;
+  serializer<E>() {
+    const type = this.type();
+    return type !== undefined
+      ? this.api.findCallableForType<E>(type)?.parser
+      : undefined;
+  }
+
+  deserializer<E>() {
+    const type = this.returnType();
+    return type !== undefined
+      ? this.api.findCallableForType<E>(type)?.parser
+      : undefined;
+  }
+
+  encoder<E>() {
+    const type = this.type();
+    return type !== undefined
+      ? this.api.findCallableForType<E>(type)?.parser
+      : undefined;
   }
 
   asModel<M extends ODataModel<R>>(

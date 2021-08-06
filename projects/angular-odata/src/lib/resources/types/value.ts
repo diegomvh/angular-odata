@@ -33,6 +33,26 @@ export class ODataValueResource<T> extends ODataResource<T> {
   schema() {
     return undefined;
   }
+  serializer<E>() {
+    const type = this.type();
+    return type !== undefined
+      ? this.api.parserForType<E>(type)
+      : undefined;
+  }
+
+  deserializer<E>() {
+    const type = this.returnType();
+    return type !== undefined
+      ? this.api.parserForType<E>(type)
+      : undefined;
+  }
+
+  encoder<E>() {
+    const type = this.type();
+    return type !== undefined
+      ? this.api.parserForType<E>(type)
+      : undefined;
+  }
 
   //#region Shortcuts
   fetch(options?: HttpOptions): Observable<number> {
