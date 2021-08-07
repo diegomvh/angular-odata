@@ -75,15 +75,15 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     // Type -> string
     options = options || this.optionsHelper;
     if (this.flags) {
-      let names = Enums.toNames(this.members, value);
-      if (!options?.stringAsEnum)
-        names = names.map((name) => `${this.namespace}.${this.name}'${name}'`);
-      return names.join(', ');
+      const names = Enums.toNames(this.members, value);
+      return (!options?.stringAsEnum) ?
+        `${this.namespace}.${this.name}'${names.join(', ')}'` :
+        names.join(', ');
     } else {
-      let name = Enums.toName(this.members, (<any>value) as number);
-      if (!options?.stringAsEnum)
-        name = `${this.namespace}.${this.name}'${name}'`;
-      return name;
+      const name = Enums.toName(this.members, (<any>value) as number);
+      return (!options?.stringAsEnum) ?
+        `${this.namespace}.${this.name}'${name}'` :
+        name;
     }
   }
 
