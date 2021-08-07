@@ -1,6 +1,7 @@
-import { Parser, CallableConfig, OptionsHelper } from '../types';
+import { Parser, CallableConfig, OptionsHelper, Options } from '../types';
 import { ODataSchema } from './schema';
 import { ODataCallableParser } from '../parsers';
+import { ODataParserOptions } from '../options';
 
 export class ODataCallable<R> {
   schema: ODataSchema;
@@ -55,16 +56,19 @@ export class ODataCallable<R> {
     this.parser.configure({ options: this.api.options, parserForType });
   }
 
-  deserialize(value: any): any {
-    return this.parser.deserialize(value, this.api.options);
+  deserialize(value: any, options?: Options): any {
+    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    return this.parser.deserialize(value, parserOptions);
   }
 
-  serialize(value: any): any {
-    return this.parser.serialize(value, this.api.options);
+  serialize(value: any, options?: Options): any {
+    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    return this.parser.serialize(value, parserOptions);
   }
 
-  encode(value: any): any {
-    return this.parser.encode(value, this.api.options);
+  encode(value: any, options?: Options): any {
+    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    return this.parser.encode(value, parserOptions);
   }
   binding() {
     return this.parser.binding();

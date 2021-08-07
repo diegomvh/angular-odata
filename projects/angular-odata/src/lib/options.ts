@@ -9,6 +9,7 @@ import {
   FetchPolicy,
   ODataMetadataType,
   ODataVersion,
+  Options,
   OptionsHelper,
 } from './types';
 
@@ -54,6 +55,20 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.accept = config.accept;
     this.prefer = config.prefer;
     Object.assign(this.etag, config.etag || {});
+  }
+
+  get helper() {
+    return ODataHelper[this.version];
+  }
+}
+
+export class ODataParserOptions implements OptionsHelper {
+  version: ODataVersion;
+  stringAsEnum?: boolean;
+
+  constructor(config: Options) {
+    this.version = config.version || DEFAULT_VERSION;
+    this.stringAsEnum = config.stringAsEnum;
   }
 
   get helper() {

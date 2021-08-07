@@ -1,12 +1,13 @@
 import { ODataCollection, ODataModelOptions } from '../models';
 import { ODataModel } from '../models/model';
+import { ODataParserOptions } from '../options';
 import {
   JsonSchemaOptions,
   ODataEntityTypeKey,
   ODataStructuredTypeFieldParser,
   ODataStructuredTypeParser,
 } from '../parsers';
-import { Parser, StructuredTypeConfig } from '../types';
+import { Options, OptionsHelper, Parser, StructuredTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 
@@ -150,16 +151,19 @@ export class ODataStructuredType<T> {
     return attrs;
   }
 
-  deserialize(value: any): T {
-    return this.parser.deserialize(value, this.api.options);
+  deserialize(value: any, options?: Options): T {
+    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    return this.parser.deserialize(value, parserOptions);
   }
 
-  serialize(value: T): any {
-    return this.parser.serialize(value, this.api.options);
+  serialize(value: T, options?: Options): any {
+    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    return this.parser.serialize(value, parserOptions);
   }
 
-  encode(value: T): any {
-    return this.parser.encode(value, this.api.options);
+  encode(value: T, options?: Options): any {
+    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    return this.parser.encode(value, parserOptions);
   }
 
   resolveKey(attrs: T | { [name: string]: any }) {
