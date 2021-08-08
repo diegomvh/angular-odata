@@ -1,5 +1,6 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { FetchPolicy } from '../../types';
+import { QueryArguments } from '../query-options';
 
 export type HttpOptions = {
   //apiName?: string,
@@ -17,3 +18,4 @@ export type HttpEntitiesOptions = HttpOptions & {
 };
 export type HttpPropertyOptions = HttpOptions & { responseType?: 'property' };
 export type HttpNoneOptions = HttpOptions & { responseType?: 'none' };
+export type HttpQueryOptions<T> = QueryArguments<T> & { alias?: boolean; } & HttpOptions;

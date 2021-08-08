@@ -5,12 +5,9 @@ import {
   ODataEntity,
   ODataEntities,
   ODataProperty,
+  HttpQueryOptions,
 } from '../resources';
-import {
-  HttpActionOptions,
-  HttpFunctionOptions,
-  HttpNavigationPropertyOptions,
-} from './options';
+
 import { ODataClient } from '../client';
 import { Observable } from 'rxjs';
 
@@ -30,31 +27,31 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'entity',
-    options?: HttpFunctionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<ODataEntity<R>>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'entities',
-    options?: HttpFunctionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<ODataEntities<R>>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'property',
-    options?: HttpFunctionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<ODataProperty<R>>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'none',
-    options?: HttpFunctionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<null>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'property' | 'entity' | 'entities' | 'none',
-    options: HttpFunctionOptions<R> = {}
+    options: HttpQueryOptions<R> = {}
   ): Observable<any> {
     resource.query.apply(options);
     return resource.call(params, {
@@ -67,31 +64,31 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'entity',
-    options?: HttpActionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<ODataEntity<R>>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'entities',
-    options?: HttpActionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<ODataEntities<R>>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'property',
-    options?: HttpActionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<ODataProperty<R>>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'none',
-    options?: HttpActionOptions<R>
+    options?: HttpQueryOptions<R>
   ): Observable<null>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'property' | 'entity' | 'entities' | 'none',
-    options: HttpActionOptions<R> = {}
+    options: HttpQueryOptions<R> = {}
   ): Observable<any> {
     resource.query.apply(options);
     return resource.call(params, {
@@ -103,17 +100,17 @@ export abstract class ODataBaseService {
   protected fetchNavigationProperty<S>(
     resource: ODataNavigationPropertyResource<S>,
     responseType: 'entity',
-    options?: HttpNavigationPropertyOptions<S>
+    options?: HttpQueryOptions<S>
   ): Observable<ODataEntity<S>>;
   protected fetchNavigationProperty<S>(
     resource: ODataNavigationPropertyResource<S>,
     responseType: 'entities',
-    options?: HttpNavigationPropertyOptions<S>
+    options?: HttpQueryOptions<S>
   ): Observable<ODataEntities<S>>;
   protected fetchNavigationProperty<S>(
     resource: ODataNavigationPropertyResource<S>,
     responseType: 'entity' | 'entities',
-    options: HttpNavigationPropertyOptions<S> = {}
+    options: HttpQueryOptions<S> = {}
   ): Observable<any> {
     resource.query.apply(options);
     return resource.fetch({ responseType: responseType as any, ...options });

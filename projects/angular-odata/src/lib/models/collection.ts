@@ -18,9 +18,8 @@ import {
   OrderBy,
   EntityKey,
   QueryArguments,
+  HttpQueryOptions,
 } from '../resources/index';
-
-import type { HttpActionOptions, HttpFunctionOptions } from '../services/index';
 
 import { EventEmitter } from '@angular/core';
 import { Types } from '../utils/types';
@@ -733,7 +732,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       ...options
     }: {
       asEntitySet?: boolean;
-    } & HttpFunctionOptions<R> = {}
+    } & HttpQueryOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._model.meta.collectionResourceFactory({
       baseResource: this._resource,
@@ -765,7 +764,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       ...options
     }: {
       asEntitySet?: boolean;
-    } & HttpActionOptions<R> = {}
+    } & HttpQueryOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this._model.meta.collectionResourceFactory({
       baseResource: this._resource,

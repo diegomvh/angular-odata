@@ -284,26 +284,26 @@
                                         <tbody>
                                                 <tr>
                                                         <td>data</td>
-                                                  
+
                                                         <td>
                                                                     <code>Partial&lt;T&gt; | literal type</code>
                                                         </td>
-                                                  
+
                                                     <td>
                                                             No
                                                     </td>
-                                                    
+
                                                 </tr>
                                                 <tr>
-                                                  
+
                                                         <td>
                                                                     <code>literal type</code>
                                                         </td>
-                                                  
+
                                                     <td>
                                                             No
                                                     </td>
-                                                    
+
                                                 </tr>
                                         </tbody>
                                     </table>
@@ -315,7 +315,7 @@
 </section>
 
             <section>
-    
+
         <h3 id="inputs">
             Properties
         </h3>
@@ -706,7 +706,7 @@
 </section>
 
             <section>
-    
+
     <h3 id="methods">
         Methods
     </h3>
@@ -776,7 +776,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -895,7 +895,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -982,7 +982,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1052,7 +1052,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1164,7 +1164,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1289,7 +1289,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1414,7 +1414,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1563,7 +1563,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1633,7 +1633,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1702,7 +1702,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1812,7 +1812,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1882,7 +1882,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -1978,7 +1978,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2051,7 +2051,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2160,7 +2160,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2233,7 +2233,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2306,7 +2306,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2376,7 +2376,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2463,7 +2463,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2550,7 +2550,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2623,7 +2623,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2731,7 +2731,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2852,7 +2852,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -2962,7 +2962,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -3035,7 +3035,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -3110,7 +3110,7 @@
 
                     </div>
                     <div class="io-description">
-                        
+
                     </div>
                 </td>
             </tr>
@@ -3144,9 +3144,7 @@ import {
 } from &#x27;../resources/index&#x27;;
 
 import {
-  HttpActionOptions,
-  HttpFunctionOptions,
-  HttpNavigationPropertyOptions,
+  HttpQueryOptions,
 } from &#x27;../services/index&#x27;;
 
 import { ODataCollection } from &#x27;./collection&#x27;;
@@ -3596,7 +3594,7 @@ export class ODataModel&lt;T&gt; {
       ...options
     }: {
       asEntity?: boolean;
-    } &amp; HttpFunctionOptions&lt;R&gt; &#x3D; {}
+    } &amp; HttpQueryOptions&lt;R&gt; &#x3D; {}
   ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
     const resource &#x3D; asEntity
       ? this._meta.entityResource(this)
@@ -3629,7 +3627,7 @@ export class ODataModel&lt;T&gt; {
       ...options
     }: {
       asEntity?: boolean;
-    } &amp; HttpActionOptions&lt;R&gt; &#x3D; {}
+    } &amp; HttpQueryOptions&lt;R&gt; &#x3D; {}
   ): Observable&lt;R | ODataModel&lt;R&gt; | ODataCollection&lt;R, ODataModel&lt;R&gt;&gt; | null&gt; {
     const resource &#x3D; asEntity
       ? this._meta.entityResource(this)
@@ -3670,7 +3668,7 @@ export class ODataModel&lt;T&gt; {
       ...options
     }: {
       asEntity?: boolean;
-    } &amp; HttpNavigationPropertyOptions&lt;S&gt; &#x3D; {}
+    } &amp; HttpQueryOptions&lt;S&gt; &#x3D; {}
   ): Observable&lt;ODataModel&lt;S&gt; | ODataCollection&lt;S, ODataModel&lt;S&gt;&gt; | null&gt; {
     const resource &#x3D; asEntity
       ? this._meta.entityResource(this)
@@ -3798,7 +3796,7 @@ export class ODataModel&lt;T&gt; {
 
 
 
-                   
+
 
 
 

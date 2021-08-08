@@ -14,13 +14,8 @@ import {
   EntityKey,
   OptionHandler,
   QueryArguments,
+  HttpQueryOptions,
 } from '../resources/index';
-
-import {
-  HttpActionOptions,
-  HttpFunctionOptions,
-  HttpNavigationPropertyOptions,
-} from '../services/index';
 
 import { ODataCollection } from './collection';
 import { Objects, Types } from '../utils';
@@ -474,7 +469,7 @@ export class ODataModel<T> {
       ...options
     }: {
       asEntity?: boolean;
-    } & HttpFunctionOptions<R> = {}
+    } & HttpQueryOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = asEntity
       ? this._meta.entityResource(this)
@@ -507,7 +502,7 @@ export class ODataModel<T> {
       ...options
     }: {
       asEntity?: boolean;
-    } & HttpActionOptions<R> = {}
+    } & HttpQueryOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = asEntity
       ? this._meta.entityResource(this)
@@ -548,7 +543,7 @@ export class ODataModel<T> {
       ...options
     }: {
       asEntity?: boolean;
-    } & HttpNavigationPropertyOptions<S> = {}
+    } & HttpQueryOptions<S> = {}
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
     const resource = asEntity
       ? this._meta.entityResource(this)
@@ -634,7 +629,7 @@ export class ODataModel<T> {
       ...options
     }: {
       asEntity?: boolean;
-    } & HttpOptions = {}
+    } & HttpQueryOptions<P> = {}
   ): Observable<ODataModel<P>> | Observable<ODataCollection<P, ODataModel<P>>> {
     const field = this._meta
       .fields({ include_navigation: true })
@@ -665,6 +660,7 @@ export class ODataModel<T> {
     }
     if (model !== undefined) {
       this.assign({ [field.name]: model });
+      model.query(q => q.apply(options));
       return model.fetch(options);
     }
     return throwError("Can't get reference without ODataEntityResource");
