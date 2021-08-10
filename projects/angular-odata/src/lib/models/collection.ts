@@ -108,9 +108,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   isParentOf(child: ODataModel<any>) {
-    return ODataModelOptions.chain(child).some(
-      (p) => this._parent !== null && p[0] === this._parent[0]
-    );
+    if (this._parent === null) return false;
+    const parent = this._parent[0];
+    return child !== parent && ODataModelOptions.chain(child).some((p) => p[0] === parent);
   }
   attach(resource: ODataCollectionResource<T>) {
     if (
