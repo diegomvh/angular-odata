@@ -8,7 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-	      <link rel="stylesheet" href="./styles/style.css">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css" media="(prefers-color-scheme: dark)">
     </head>
     <body>
 
@@ -53,7 +54,9 @@ OData service for Angular.</p>
 <h2 id="installation">Installation</h2>
 <p>Install from npm:</p>
 <div><pre class="line-numbers"><code class="language-bash">npm i angular-odata</code></pre></div><h2 id="usage">Usage</h2>
-<p>1) Add module to your project</p>
+<ol>
+<li>Add module to your project</li>
+</ol>
 <div><pre class="line-numbers"><code class="language-typescript">import { NgModule } from &#39;&#64;angular/core&#39;;
 import { ODataModule } from &#39;angular-odata&#39;;
 
@@ -66,7 +69,9 @@ import { ODataModule } from &#39;angular-odata&#39;;
     ...
   ]
 })
-export class AppModule {}</code></pre></div><p>2) Inject and use the ODataServiceFactory</p>
+export class AppModule {}</code></pre></div><ol start="2">
+<li>Inject and use the ODataServiceFactory</li>
+</ol>
 <div><pre class="line-numbers"><code class="language-typescript">import { Component } from &#39;&#64;angular/core&#39;;
 import { ODataClient, ODATA_ETAG } from &#39;angular-odata&#39;;
 
@@ -216,9 +221,9 @@ export class AppModule {}</code></pre></div><h2 id="odata-version">OData Version
 
        <script src="./js/libs/custom-elements.min.js"></script>
        <script src="./js/libs/lit-html.js"></script>
-       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-       <script src="./js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
-       <script src="./js/menu-wc.js" defer></script>
+       
+       <script type="module" src="./js/menu-wc.js" defer></script>
+       <script nomodule src="./js/menu-wc_es5.js" defer></script>
 
        <script src="./js/libs/bootstrap-native.js"></script>
 

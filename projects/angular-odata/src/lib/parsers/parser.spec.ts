@@ -206,9 +206,9 @@ describe('ODataClient', () => {
     const options = schema.api.options;
     options.stringAsEnum = false;
     expect(
-      schema.parser.validate(<Person>{
+      schema.parser.validate({
         Gender: 4,
-      })
+      } as any)
     ).toEqual({
       UserName: ['required'],
       FirstName: ['required'],

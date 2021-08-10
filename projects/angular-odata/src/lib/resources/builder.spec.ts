@@ -1042,16 +1042,16 @@ describe('orderBy', () => {
 
   it('should support passing an object', () => {
     type Bar = { foo: { bar: any } };
-    const orderBy = { foo: ['bar'] } as OrderBy<Bar>;
+    const orderBy = ['foo/bar'] as OrderBy<Bar>;
     const expected = '?$orderby=foo/bar';
     const actual = buildQuery({ orderBy });
     expect(actual).toEqual(expected);
   });
 
   it('should support passing an object of [fields, order]', () => {
-    type Bar = { foo: { bar: any } };
-    const orderBy = { foo: [['bar', 'asc']] } as OrderBy<Bar>;
-    const expected = '?$orderby=foo/bar asc';
+    type Bar = { bar: any };
+    const orderBy = [['bar', 'asc']] as OrderBy<Bar>;
+    const expected = '?$orderby=bar asc';
     const actual = buildQuery({ orderBy });
     expect(actual).toEqual(expected);
   });

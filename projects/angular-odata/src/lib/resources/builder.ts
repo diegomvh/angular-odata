@@ -35,11 +35,9 @@ export type Aggregate =
 // OrderBy
 export type OrderBy<T> = OrderByType<T> | OrderByType<T>[];
 export type OrderByType<T> = string | OrderByObject<T>;
-export type OrderByObject<T> =
-  | keyof T
-  | [keyof T, 'asc' | 'desc']
-  | { [P in keyof T]?: OrderBy<T[P]> };
-
+export type OrderByObject<T> = keyof T | [keyof T, 'asc' | 'desc'];
+//TODO: support angular 12 recursive type:
+// | { [P in keyof T]?: OrderBy<T[P]> };
 // Expand
 export type Expand<T> = ExpandType<T> | ExpandType<T>[];
 export type ExpandType<T> = string | ExpandObject<T>;

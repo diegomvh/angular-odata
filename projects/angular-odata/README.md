@@ -1,177 +1,24 @@
-# Angular OData
+# AngularOdata
 
-[![build](https://github.com/diegomvh/angular-odata/workflows/Node.js%20CI/badge.svg)](https://github.com/diegomvh/angular-odata/actions?query=workflow%3A%22Node.js+CI%22)
-[![npm version](https://badge.fury.io/js/angular-odata.svg)](http://badge.fury.io/js/angular-odata)
+This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.0.
 
-A fluent API for querying, creating, updating and deleting OData resources in Angular.
-OData service for Angular.
+## Code scaffolding
 
-Please check also my other related project, [OData Angular Generator](https://github.com/diegomvh/ODataApiGen)
+Run `ng generate component component-name --project angular-odata` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project angular-odata`.
+> Note: Don't forget to add `--project angular-odata` or else it will be added to the default project in your `angular.json` file. 
 
-## Demo:
+## Build
 
-Full examples of the library:
+Run `ng build angular-odata` to build the project. The build artifacts will be stored in the `dist/` directory.
 
- - [AngularODataEntity](https://github.com/diegomvh/AngularODataEntity)
+## Publishing
 
-## Table of contents
+After building your library with `ng build angular-odata`, go to the dist folder `cd dist/angular-odata` and run `npm publish`.
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Generator](#generator)
-- [OData Version](#odata-version)
-- [Query Builder](#query-builder)
-- [Documentation](#documentation)
+## Running unit tests
 
-## Installation
+Run `ng test angular-odata` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-Install from npm:
+## Further help
 
-```bash
-npm i angular-odata
-```
-
-## Usage
-
-1) Add module to your project
-
-```typescript
-import { NgModule } from '@angular/core';
-import { ODataModule } from 'angular-odata';
-
-@NgModule({
-  imports: [
-    ...
-    ODataModule.forRoot({
-      serviceRootUrl: 'https://services.odata.org/V4/(S(4m0tuxtnhcfctl4gzem3gr10))/TripPinServiceRW/'
-    })
-    ...
-  ]
-})
-export class AppModule {}
-```
-
-2) Inject and use the ODataServiceFactory
-
-```typescript
-import { Component } from '@angular/core';
-import { ODataClient, ODATA_ETAG } from 'angular-odata';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent {
-  title = 'TripPin';
-  constructor(private factory: ODataServiceFactory) {
-    this.queries();
-  }
-
-  queries() {
-    // Use OData Service Factory
-    let airportsService = this.factory.entity<Airport>("Airports");
-    let peopleService = this.factory.entity<Person>("People");
-
-    let airports = airportsService.entities();
-
-    // Fetch airports with count
-    airports
-    .get({withCount: true})
-    .subscribe(({entities, annots}) => console.log("Airports: ", entities, "Annotations: ", annots));
-
-    // Fetch all airports
-    airports
-    .fetchAll()
-    .subscribe(aports => console.log("All: ", aports));
-
-    // Fetch airport with key
-    airports
-    .entity("CYYZ")
-    .get()
-    .pipe(
-      switchMap(() => airports.entity("CYYZ").get({fetchPolicy: 'cache-first'}))) // From Cache!
-    .subscribe(({entity, annots}) => console.log("Airport: ", entity, "Annotations: ", annots));
-
-    // Filter airports (inmutable resource)
-    airports
-    .filter({Location: {City: {CountryRegion: "United States"}}})
-    .get()
-    .subscribe(({entities, annots}) => console.log("Airports of United States: ", entities, "Annotations: ", annots));
-
-    // Add filter (mutable resource)
-    airports.query.filter().push({Location: {City: {Region: "California"}}});
-    airports
-    .get()
-    .subscribe(({entities, annots}) => console.log("Airports in California: ", entities, "Annotations: ", annots));
-
-    // Resource to JSON
-    const json = airports.toJSON();
-    console.log(json);
-    // JSON to Resource
-    const query = this.odata.fromJSON(json);
-    console.log(query);
-
-    // Remove filter (mutable resource)
-    airports.query.filter().clear();
-    airports
-    .get()
-    .subscribe(({entities, annots}) => console.log("Airports: ", entities, "Annotations: ", annots));
-
-    let people = peopleService.entities();
-
-    // Expand (inmutable resource)
-    people.expand({
-      Friends: {
-        expand: { Friends: { select: ['AddressInfo']}}
-      },
-      Trips: { select: ['Name', 'Tags'] },
-    })
-    .get({withCount: true})
-    .subscribe(({entities, annots}) => console.log("People with Friends and Trips: ", entities, "Annotations: ", annots));
-
-    this.odata.batch("TripPin").post(batch => {
-      airports.get().subscribe(console.log);
-      airport.get().subscribe(console.log);
-      people.get({withCount: true}).subscribe(console.log);
-    }).subscribe();
-  }
-}
-```
-
-## Generator 
-
-If you use [OData Angular Generator](https://github.com/diegomvh/ODataApiGen), import the config and the module from generated source.
-
-```typescript
-import { NgModule } from '@angular/core';
-
-import { ODataModule } from 'angular-odata';
-import { TripPinConfig, TripPinModule } from './trippin';
-
-@NgModule({
-  imports: [
-    ...
-    ODataModule.forRoot(TripPinConfig),
-    TripPinModule
-  ]
-  ...
-})
-export class AppModule {}
-```
-
-## OData Version
-
-The library works mainly with OData Version 4, however, it incorporates basic support for versions 3 and 2.
-
-## Query Builder
-
-For a deep query customizations the library use `odata-query` as a builder.
-
-- [OData v4 query builder](https://github.com/techniq/odata-query)
-
-## Documentation
-
-The api documentation is generated using compodoc and can be viewed here: https://diegomvh.github.io/angular-odata/docs/
-
-Library documentation can be viewed on the wiki here: https://github.com/diegomvh/angular-odata/wiki
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
