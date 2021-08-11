@@ -989,7 +989,9 @@ export class ODataModelOptions<T> {
 
     // Apply entity
     const model = self as any;
-    Object.entries(entity).forEach(([key, value]) => {
+    Object.entries(entity)
+    .filter(([, value]) => value !== undefined) // Filter undefined
+    .forEach(([key, value]) => {
       const field = this.fields({
         include_parents: true,
         include_navigation: true,
