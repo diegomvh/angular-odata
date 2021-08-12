@@ -28,6 +28,7 @@ import {
   ODataModelResource,
   ODataModelField,
   INCLUDE_ALL,
+  ODataCollectionResource,
 } from './options';
 
 // @dynamic
@@ -637,32 +638,14 @@ export class ODataModel<T> {
     if (field === undefined || !field.navigation)
       return throwError(`Can't find navigation property ${name}`);
 
-    let model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | undefined;
-    if (!field.collection && asEntity) {
-      var ref = this.referenced(field);
-      if (ref !== undefined) {
-        const resource = field.meta?.modelResourceFactory({
-          fromSet: asEntity,
-        }) as ODataModelResource<P>;
-        model = field.modelCollectionFactory<T, P>({
-          parent: this,
-          value: ref,
-        }) as ODataModel<P>;
-        if (resource !== undefined) {
-          model.attach(resource);
-        }
-      }
-    } else {
-      model = field.modelCollectionFactory<T, P>({ parent: this }) as
-        | ODataModel<P>
-        | ODataCollection<P, ODataModel<P>>
-        | undefined;
-    }
-    if (model !== undefined) {
-      this.assign({ [field.name]: model });
-      model.query(q => q.apply(options));
-      return model.fetch(options);
-    }
-    return throwError("Can't get reference without ODataEntityResource");
+    const resource = field.collection ?
+      field.meta?.collectionResourceFactory({ fromSet: asEntity }) as ODataCollectionResource<P> :
+      field.meta?.modelResourceFactory({ fromSet: asEntity }) as ODataModelResource<P>;
+    let value = field.collection ? [] : this.referenced(field);
+    let model = field.modelCollectionFactory<T, P>({ parent: this, value });
+    (model as any).attach(resource);
+    this.assign({ [field.name]: model });
+    model.query(q => q.apply(options));
+    return model.fetch(options);
   }
 }
