@@ -1215,6 +1215,7 @@ export class ODataModelOptions<T> {
       relation.subscription = relation.model.events$.subscribe(
         (event: ODataModelEvent<any>) => {
           if (BUBBLING.indexOf(event.name) !== -1) {
+
             if (event.model === relation.model) {
               if (
                 event.name === 'change' &&
@@ -1234,6 +1235,7 @@ export class ODataModelOptions<T> {
             else if (ODataModelOptions.isCollection(relation.model) && event.path) {
               path = `${path}${event.path}`;
             }
+
             self.events$.emit({ ...event, path });
           }
         }

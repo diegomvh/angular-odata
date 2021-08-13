@@ -802,6 +802,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       entry.subscription = entry.model.events$.subscribe(
         (event: ODataModelEvent<T>) => {
           if (BUBBLING.indexOf(event.name) !== -1) {
+
             if (event.model === entry.model) {
               if (event.name === 'destroy') {
                 this.removeModel(entry.model, { reset: true });
@@ -813,6 +814,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             const index = this.models().indexOf(entry.model);
             let path = `[${index}]`;
             if (event.path) path = `${path}.${event.path}`;
+
             this.events$.emit({ ...event, path });
           }
         }
