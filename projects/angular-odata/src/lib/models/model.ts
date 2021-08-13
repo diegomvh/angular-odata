@@ -475,23 +475,21 @@ export class ODataModel<T> {
     const resource = asEntity
       ? this._meta.entityResource(this)
       : this.resource();
-    if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      const func = resource.function<P, R>(name);
-      func.query.apply(options);
-      switch (responseType) {
-        case 'property':
-          return func.callProperty(params, options);
-        case 'model':
-          return func.callModel(params, options);
-        case 'collection':
-          return func.callCollection(params, options);
-        default:
-          return func.call(params, { responseType, ...options });
-      }
+    if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
+      return throwError("Can't call function without ODataEntityResource with key");
+
+    const func = resource.function<P, R>(name);
+    func.query.apply(options);
+    switch (responseType) {
+      case 'property':
+        return func.callProperty(params, options);
+      case 'model':
+        return func.callModel(params, options);
+      case 'collection':
+        return func.callCollection(params, options);
+      default:
+        return func.call(params, { responseType, ...options });
     }
-    return throwError(
-      "Can't call function without ODataEntityResource with key"
-    );
   }
 
   protected callAction<P, R>(
@@ -508,32 +506,32 @@ export class ODataModel<T> {
     const resource = asEntity
       ? this._meta.entityResource(this)
       : this.resource();
-    if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      const action = resource.action<P, R>(name);
-      action.query.apply(options);
-      switch (responseType) {
-        case 'property':
-          return action.callProperty(params, options);
-        case 'model':
-          return action.callModel(params, options);
-        case 'collection':
-          return action.callCollection(params, options);
-        default:
-          return action.call(params, { responseType, ...options });
-      }
+    if (!(resource instanceof ODataEntityResource) || !(resource.hasKey()))
+      return throwError("Can't call action without ODataEntityResource with key");
+
+    const action = resource.action<P, R>(name);
+    action.query.apply(options);
+    switch (responseType) {
+      case 'property':
+        return action.callProperty(params, options);
+      case 'model':
+        return action.callModel(params, options);
+      case 'collection':
+        return action.callCollection(params, options);
+      default:
+        return action.call(params, { responseType, ...options });
     }
-    return throwError("Can't call action without ODataEntityResource with key");
   }
 
   // As Derived
   protected asDerived<S>(type: string): ODataModel<S> {
     const resource = this.resource();
-    if (resource instanceof ODataEntityResource) {
-      return resource
-        .cast<S>(type)
-        .asModel(this.toEntity(INCLUDE_ALL), { annots: this.annots() });
-    }
-    throw new Error(`Can't cast to derived model without ODataEntityResource`);
+    if (!(resource instanceof ODataEntityResource))
+      throw new Error(`Can't cast to derived model without ODataEntityResource`);
+
+    return resource
+      .cast<S>(type)
+      .asModel(this.toEntity(INCLUDE_ALL), { annots: this.annots() });
   }
 
   protected fetchNavigationProperty<S>(
@@ -549,17 +547,17 @@ export class ODataModel<T> {
     const resource = asEntity
       ? this._meta.entityResource(this)
       : this.resource();
-    if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      const nav = resource.navigationProperty<S>(name);
-      nav.query.apply(options);
-      switch (responseType) {
-        case 'model':
-          return nav.fetchModel(options);
-        case 'collection':
-          return nav.fetchCollection(options);
-      }
+    if (!(resource instanceof ODataEntityResource) || !(resource.hasKey()))
+      return throwError("Can't binding without ODataEntityResource with key");
+
+    const nav = resource.navigationProperty<S>(name);
+    nav.query.apply(options);
+    switch (responseType) {
+      case 'model':
+        return nav.fetchModel(options);
+      case 'collection':
+        return nav.fetchCollection(options);
     }
-    return throwError("Can't binding without ODataEntityResource with key");
   }
 
   // Set Reference
@@ -582,44 +580,42 @@ export class ODataModel<T> {
     const resource = asEntity
       ? this._meta.entityResource(this)
       : this.resource();
-    if (resource instanceof ODataEntityResource && resource.hasKey()) {
-      let reference = (
-        field.resourceFactory<T, any>(
-          resource
-        ) as ODataNavigationPropertyResource<any>
-      ).reference();
-      const etag = this.annots().etag;
-      let obs$ = NEVER as Observable<any>;
-      if (model instanceof ODataModel) {
-        obs$ = reference.set(
-          model._meta.entityResource(model) as ODataEntityResource<P>,
-          { etag, ...options }
-        );
-      } else if (model instanceof ODataCollection) {
-        obs$ = forkJoin(
-          model
-            .models()
-            .map((m) =>
-              reference.add(
-                m._meta.entityResource(m) as ODataEntityResource<P>,
-                options
-              )
-            )
-        );
-      } else if (model === null) {
-        obs$ = reference.unset({ etag, ...options });
-      }
-      this.events$.emit({ name: 'request', model: this, value: obs$ });
-      return obs$.pipe(
-        map(() => {
-          this.assign({ [field.name]: model });
-          this.events$.emit({ name: 'sync', model: this });
-          return this;
-        })
+    if (!(resource instanceof ODataEntityResource) || !(resource.hasKey()))
+      return throwError("Can't set reference without ODataEntityResource with key");
+
+    let reference = (
+      field.resourceFactory<T, any>(
+        resource
+      ) as ODataNavigationPropertyResource<any>
+    ).reference();
+    const etag = this.annots().etag;
+    let obs$ = NEVER as Observable<any>;
+    if (model instanceof ODataModel) {
+      obs$ = reference.set(
+        model._meta.entityResource(model) as ODataEntityResource<P>,
+        { etag, ...options }
       );
+    } else if (model instanceof ODataCollection) {
+      obs$ = forkJoin(
+        model
+          .models()
+          .map((m) =>
+            reference.add(
+              m._meta.entityResource(m) as ODataEntityResource<P>,
+              options
+            )
+          )
+      );
+    } else if (model === null) {
+      obs$ = reference.unset({ etag, ...options });
     }
-    return throwError(
-      "Can't set reference without ODataEntityResource with key"
+    this.events$.emit({ name: 'request', model: this, value: obs$ });
+    return obs$.pipe(
+      map(m => {
+        this.assign({ [field.name]: m });
+        this.events$.emit({ name: 'sync', model: this });
+        return this;
+      })
     );
   }
 
@@ -638,14 +634,22 @@ export class ODataModel<T> {
     if (field === undefined || !field.navigation)
       return throwError(`Can't find navigation property ${name}`);
 
-    const resource = field.collection ?
-      field.meta?.collectionResourceFactory({ fromSet: asEntity }) as ODataCollectionResource<P> :
-      field.meta?.modelResourceFactory({ fromSet: asEntity }) as ODataModelResource<P>;
-    let value = field.collection ? [] : this.referenced(field);
-    let model = field.modelCollectionFactory<T, P>({ parent: this, value });
-    (model as any).attach(resource);
-    this.assign({ [field.name]: model });
+    if (field.collection && asEntity)
+      return throwError(`Can't get a collection as an entity set`);
+
+    const value = field.collection ? [] : this.referenced(field);
+    if (!field.collection && Types.isEmpty(value) && asEntity)
+      return throwError(`Can't get a model as an entity`);
+
+    const model = field.modelCollectionFactory<T, P>({ parent: this, value });
+    if (asEntity) {
+      const resource = field.meta?.modelResourceFactory({ fromSet: asEntity }) as ODataModelResource<P>;
+      (model as ODataModel<P>).attach(resource);
+    }
+
     model.query(q => q.apply(options));
-    return model.fetch(options);
+    return (model as ODataModel<P>).fetch(options).pipe(
+      tap(m => this.assign({ [field.name]: m }, {silent: true}))
+    );
   }
 }
