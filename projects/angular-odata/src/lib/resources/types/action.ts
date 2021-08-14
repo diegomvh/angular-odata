@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataQueryOptions, QueryOptionNames } from '../query-options';
+import { ODataQueryOptions } from '../query-options';
 import {
   HttpEntityOptions,
   HttpEntitiesOptions,
@@ -22,7 +22,6 @@ import { ODataCollection, ODataModel } from '../../models';
 import { ODataEntityResource } from './entity';
 import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataEntitySetResource } from './entity-set';
-import { ODataStructuredType } from '../../schema/structured-type';
 import { ODataResource } from '../resource';
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -65,7 +64,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   deserializer<E>() {
     const type = this.returnType();
     return type !== undefined
-      ? this.api.findCallableForType<E>(type)?.parser
+      ? this.api.findStructuredTypeForType<E>(type)?.parser
       : undefined;
   }
 

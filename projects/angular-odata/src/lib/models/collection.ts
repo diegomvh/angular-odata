@@ -100,18 +100,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entities = entities || [];
     this.assign(entities, { reset });
   }
-
+  isParentOf(child: ODataModel<any>) {
+    if (this._parent === null) return false;
+    const parent = this._parent[0];
+    return child !== parent && ODataModelOptions.chain(child).some((p) => p[0] === parent);
+  }
   resource(): ODataCollectionResource<T> | undefined {
     return ODataModelOptions.resource<T>(this) as
       | ODataCollectionResource<T>
       | undefined;
   }
 
-  isParentOf(child: ODataModel<any>) {
-    if (this._parent === null) return false;
-    const parent = this._parent[0];
-    return child !== parent && ODataModelOptions.chain(child).some((p) => p[0] === parent);
-  }
   attach(resource: ODataCollectionResource<T>) {
     if (
       this._resource !== undefined &&
@@ -393,13 +392,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
         this._entries.splice(index, 1);
       }
 
+      // Create Entry
       entry = {
         state: reset ? ODataModelState.Unchanged : ODataModelState.Added,
         model,
         key: model.key(),
         subscription: null,
       };
-      this._subscribe(entry), this._entries.push(entry);
+      // Subscribe
+      this._subscribe(entry);
+      // Push
+      this._entries.push(entry);
 
       if (!silent) {
         model.events$.emit({ name: 'add', model, collection: this });
@@ -789,6 +792,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _unsubscribe(entry: ODataModelEntry<T, M>) {
     if (entry.subscription !== null) {
+      entry.model._parent = null;
       entry.subscription.unsubscribe();
       entry.subscription = null;
     }
@@ -799,6 +803,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       throw new Error('Subscription already exists');
     }
     if (this._parent === null || !entry.model.isParentOf(this._parent[0])) {
+      // Set Parent
+      entry.model._parent = this._parent;
       entry.subscription = entry.model.events$.subscribe(
         (event: ODataModelEvent<T>) => {
           if (BUBBLING.indexOf(event.name) !== -1) {

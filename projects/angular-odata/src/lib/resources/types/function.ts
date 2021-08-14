@@ -73,7 +73,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   deserializer<E>() {
     const type = this.returnType();
     return type !== undefined
-      ? this.api.findCallableForType<E>(type)?.parser
+      ? this.api.findStructuredTypeForType<E>(type)?.parser
       : undefined;
   }
 

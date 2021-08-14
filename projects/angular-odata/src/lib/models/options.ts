@@ -526,10 +526,6 @@ export class ODataModelOptions<T> {
   }
 
   static resource<T>(child: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
-    const meta: ODataModelOptions<T> =
-      ODataModelOptions.isModel(child)
-        ? (child as ODataModel<T>)._meta
-        : (child as ODataCollection<T, ODataModel<T>>)._model.meta;
     let resource:
       | ODataModelResource<any>
       | ODataCollectionResource<any>
@@ -1203,6 +1199,7 @@ export class ODataModelOptions<T> {
     relation: ODataModelRelation<F>
   ) {
     if (relation.subscription !== null) {
+      if (relation.model !== null) relation.model._parent = null;
       relation.subscription.unsubscribe();
       relation.subscription = null;
     }
@@ -1212,6 +1209,10 @@ export class ODataModelOptions<T> {
       throw new Error('Subscription already exists');
     }
     if (relation.model !== null && !relation.model.isParentOf(self)) {
+      relation.model._parent = [self, relation.field];
+      if (ODataModelOptions.isCollection(relation.model)) {
+        (relation.model as ODataCollection<F, ODataModel<F>>)._entries.forEach(({model}) => model._parent = [self, relation.field]);
+      }
       relation.subscription = relation.model.events$.subscribe(
         (event: ODataModelEvent<any>) => {
           if (BUBBLING.indexOf(event.name) !== -1) {
