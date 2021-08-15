@@ -62,28 +62,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       ? this.api.findCallableForType<R>(type)
       : undefined;
   }
-
-  serializer<E>() {
-    const type = this.type();
-    return type !== undefined
-      ? this.api.findCallableForType<E>(type)?.parser
-      : undefined;
-  }
-
-  deserializer<E>() {
-    const type = this.returnType();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<E>(type)?.parser
-      : undefined;
-  }
-
-  encoder<E>() {
-    const type = this.type();
-    return type !== undefined
-      ? this.api.findCallableForType<E>(type)?.parser
-      : undefined;
-  }
-
   asModel<M extends ODataModel<R>>(
     entity: Partial<R> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}

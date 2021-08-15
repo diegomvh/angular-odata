@@ -60,27 +60,6 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       ? this.api.findStructuredTypeForType<T>(type)
       : undefined;
   }
-  serializer<E>() {
-    const type = this.type();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<E>(type)?.parser
-      : undefined;
-  }
-
-  deserializer<E>() {
-    const type = this.returnType();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<E>(type)?.parser
-      : undefined;
-  }
-
-  encoder<E>() {
-    const type = this.type();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<E>(type)?.parser
-      : undefined;
-  }
-
   asModel<M extends ODataModel<T>>(
     entity: Partial<T> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}

@@ -31,18 +31,6 @@ export class ODataMediaResource<T> extends ODataResource<T> {
   schema() {
     return undefined;
   }
-  serializer<E>() {
-    return undefined;
-  }
-
-  deserializer<E>() {
-    return undefined;
-  }
-
-  encoder<E>() {
-    return undefined;
-  }
-
 
   //#region Shortcuts
   fetch(

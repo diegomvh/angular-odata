@@ -30,18 +30,6 @@ export class ODataCountResource extends ODataResource<any> {
   schema() {
     return undefined;
   }
-  serializer<E>() {
-    return this.api.parserForType("Edm.Int32");
-  }
-
-  deserializer<E>() {
-    return this.api.parserForType("Edm.Int32");
-  }
-
-  encoder<E>() {
-    return this.api.parserForType("Edm.Int32");
-  }
-
   get segment() {
     const segments = this.pathSegments;
     return {

@@ -347,7 +347,7 @@ export class ODataApi {
   //#endregion
   //#endregion
 
-  public parserForType<T>(type: string) {
+  public parserForType<T>(type: string, bindingType?: string) {
     // Edm, Base Parsers
     if (type in this.parsers) {
       return this.parsers[type] as Parser<T>;
@@ -356,6 +356,7 @@ export class ODataApi {
     // EnumType, ComplexType and EntityType Parsers
     if (!type.startsWith('Edm.')) {
       let value =
+        this.findCallableForType<T>(type, bindingType) ||
         this.findEnumTypeForType<T>(type) ||
         this.findStructuredTypeForType<T>(type);
       return value?.parser as Parser<T>;

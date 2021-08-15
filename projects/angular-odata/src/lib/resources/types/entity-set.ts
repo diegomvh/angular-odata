@@ -49,26 +49,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       : undefined;
   }
 
-  serializer<E>() {
-    const type = this.type();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<E>(type)?.parser
-      : undefined;
-  }
-
-  deserializer<E>() {
-    const type = this.returnType();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<E>(type)?.parser
-      : undefined;
-  }
-
-  encoder<E>() {
-    const type = this.type();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<E>(type)?.parser
-      : undefined;
-  }
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     entities: Partial<T>[] | { [name: string]: any }[],
     {
