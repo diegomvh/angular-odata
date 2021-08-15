@@ -215,12 +215,11 @@ export class ODataModel<T> {
   } = {}): boolean {
     this._errors = this.validate({ method, navigation });
     if (this._errors !== undefined)
-      this.events$.emit({
-        name: 'invalid',
+      this.events$.emit(new ODataModelEvent('invalid', {
         model: this,
         value: this._errors,
         options: { method },
-      });
+      }));
     return this._errors === undefined;
   }
 
@@ -348,14 +347,14 @@ export class ODataModel<T> {
   }
 
   private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
-    this.events$.emit({ name: 'request', model: this, value: obs$ });
+    this.events$.emit(new ODataModelEvent('request', {model: this, options: {observable: obs$} }));
     return obs$.pipe(
       map(({ entity, annots }) => {
         this._annotations = annots;
         this.assign(annots.attributes<T>(entity || {}, 'full'), {
           reset: true,
         });
-        this.events$.emit({ name: 'sync', model: this });
+        this.events$.emit(new ODataModelEvent('sync', {model: this, options: {entity, annots} }));
         return this;
       })
     );
@@ -465,7 +464,7 @@ export class ODataModel<T> {
         map(({ entity, annots }) => ({ entity: entity || _entity, annots }))
       );
     return this._request(obs$).pipe(
-      tap(() => this.events$.emit({ name: 'destroy', model: this }))
+      tap(() => this.events$.emit(new ODataModelEvent('destroy', { model: this })))
     );
   }
 
@@ -611,11 +610,11 @@ export class ODataModel<T> {
     } else if (model === null) {
       obs$ = reference.unset({ etag, ...options });
     }
-    this.events$.emit({ name: 'request', model: this, value: obs$ });
+    this.events$.emit(new ODataModelEvent('request', { model: this, options: {observable: obs$ }}));
     return obs$.pipe(
       map(m => {
         this.assign({ [name]: m });
-        this.events$.emit({ name: 'sync', model: this });
+        this.events$.emit(new ODataModelEvent('sync', { model: this }));
         return this;
       })
     );
