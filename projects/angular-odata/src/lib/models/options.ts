@@ -100,6 +100,9 @@ export class ODataModelEvent<T> {
     this.chain.splice(0, 0, [model, track]);
   }
 
+  visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
+    return this.chain.some(c => c[0] === model);
+  }
   get path() {
     return this.chain
       .map(([, track], index) =>
@@ -596,7 +599,9 @@ export class ODataModelOptions<T> {
       | ODataCollectionResource<any>
       | undefined = undefined;
     for (let [model, field] of ODataModelOptions.chain(child)) {
-      resource = resource || model._resource;
+      resource = resource || model._resource || (ODataModelOptions.isModel(model) ?
+        (model as ODataModel<any>).resource({asEntity: true}) :
+        (model as ODataCollection<any, ODataModel<any>>).resource({asEntitySet: true}));
       if (ODataModelOptions.isModel(model)) {
         let key = (model as ODataModel<any>).key({
           field_mapping: true,
@@ -612,13 +617,10 @@ export class ODataModelOptions<T> {
     }
     return resource;
   }
-  collectionResourceFactory({
-    fromSet = false,
-    baseResource,
-  }: { fromSet?: boolean; baseResource?: ODataResource<T> } = {}):
+  collectionResourceFactory({ baseResource }: { baseResource?: ODataResource<T> } = {}):
     | ODataCollectionResource<T>
     | undefined {
-    if (fromSet && this.entitySet !== undefined)
+    if (this.entitySet !== undefined)
       return ODataEntitySetResource.factory<T>(
         this.api,
         this.entitySet.name,
@@ -630,12 +632,11 @@ export class ODataModelOptions<T> {
   }
 
   modelResourceFactory({
-    fromSet = false,
     baseResource,
   }: { fromSet?: boolean; baseResource?: ODataResource<T> } = {}):
     | ODataModelResource<T>
     | undefined {
-    const resource = this.collectionResourceFactory({ baseResource, fromSet });
+    const resource = this.collectionResourceFactory({ baseResource });
     if (resource instanceof ODataEntitySetResource) return resource.entity();
     return resource as ODataModelResource<T> | undefined;
   }
@@ -1304,7 +1305,7 @@ export class ODataModelOptions<T> {
     }
     relation.subscription = relation.model.events$.subscribe(
       (event: ODataModelEvent<any>) => {
-        if (BUBBLING.indexOf(event.name) !== -1 && event.bubbling) {
+        if (BUBBLING.indexOf(event.name) !== -1 && event.bubbling && !event.visited(self)) {
           if (event.model === relation.model) {
             if (
               event.name === 'change' &&

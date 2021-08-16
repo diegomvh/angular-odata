@@ -86,7 +86,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       // Resource
       resource =
         resource ||
-        this._model.meta.collectionResourceFactory({ fromSet: true });
+        this._model.meta.collectionResourceFactory();
       if (resource === undefined)
         throw new Error(`Can't create collection without resource`);
       this.attach(resource);
@@ -105,8 +105,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const parent = this._parent[0];
     return child !== parent && ODataModelOptions.chain(child).some((p) => p[0] === parent);
   }
-  resource(): ODataCollectionResource<T> | undefined {
-    return ODataModelOptions.resource<T>(this) as
+  resource({asEntitySet = false}: {asEntitySet?: boolean} = {}): ODataCollectionResource<T> | undefined {
+    return asEntitySet
+      ? this._model.meta.collectionResourceFactory({baseResource: this._resource})
+      : ODataModelOptions.resource<T>(this) as
       | ODataCollectionResource<T>
       | undefined;
   }
@@ -143,10 +145,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   attachToEntitySet() {
-    const resource = this._model.meta.collectionResourceFactory({
-      baseResource: this._resource,
-      fromSet: true,
-    });
+    const resource = this._model.meta.collectionResourceFactory({ baseResource: this._resource });
     if (resource !== undefined) {
       this.attach(resource);
     }
@@ -735,10 +734,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       asEntitySet?: boolean;
     } & HttpQueryOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    const resource = this._model.meta.collectionResourceFactory({
-      baseResource: this._resource,
-      fromSet: asEntitySet,
-    });
+    const resource = this.resource({asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
       const func = resource.function<P, R>(name);
       func.query.apply(options);
@@ -767,10 +763,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       asEntitySet?: boolean;
     } & HttpQueryOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
-    const resource = this._model.meta.collectionResourceFactory({
-      baseResource: this._resource,
-      fromSet: asEntitySet,
-    });
+    const resource = this.resource({asEntitySet});
     if (resource instanceof ODataEntitySetResource) {
       const action = resource.action<P, R>(name);
       action.query.apply(options);
@@ -804,7 +797,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entry.model._parent = this._parent;
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
-        if (BUBBLING.indexOf(event.name) !== -1 && event.bubbling) {
+        if (BUBBLING.indexOf(event.name) !== -1 && event.bubbling && !event.visited(this)) {
 
           if (event.model === entry.model) {
             if (event.name === 'destroy') {
