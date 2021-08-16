@@ -197,6 +197,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     include_non_field = false,
     changes_only = false,
     field_mapping = false,
+    chain = []
   }: {
     client_id?: boolean;
     include_navigation?: boolean;
@@ -206,12 +207,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     include_non_field?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
+    chain?: (ODataModel<any> | ODataCollection<any, ODataModel<any>>)[];
   } = {}): (T | { [name: string]: any })[] {
     return this._entries
-      .filter((e) => e.state !== ODataModelState.Removed)
-      .map((entry) => {
-        var changesOnly = changes_only && entry.state !== ODataModelState.Added;
-        return entry.model.toEntity({
+      .filter(({model, state}) => state !== ODataModelState.Removed && chain.every(c => c !== model))
+      .map(({model, state}) => {
+        var changesOnly = changes_only && state !== ODataModelState.Added;
+        return model.toEntity({
           client_id,
           include_navigation,
           include_concurrency,
@@ -220,6 +222,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           include_non_field,
           field_mapping,
           changes_only: changesOnly,
+          chain: [this, ...chain]
         });
       });
   }
@@ -797,33 +800,26 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (entry.subscription !== null) {
       throw new Error('Subscription already exists');
     }
-    if (this._parent === null || !entry.model.isParentOf(this._parent[0])) {
-      // Set Parent
-      entry.model._parent = this._parent;
-      entry.subscription = entry.model.events$.subscribe(
-        (event: ODataModelEvent<T>) => {
-          if (BUBBLING.indexOf(event.name) !== -1) {
+    // Set Parent
+    entry.model._parent = this._parent;
+    entry.subscription = entry.model.events$.subscribe(
+      (event: ODataModelEvent<T>) => {
+        if (BUBBLING.indexOf(event.name) !== -1 && event.bubbling) {
 
-            if (event.model === entry.model) {
-              if (event.name === 'destroy') {
-                this.removeModel(entry.model, { reset: true });
-              } else if (event.name === 'change' && event.options?.key) {
-                entry.key = entry.model.key();
-              }
+          if (event.model === entry.model) {
+            if (event.name === 'destroy') {
+              this.removeModel(entry.model, { reset: true });
+            } else if (event.name === 'change' && event.options?.key) {
+              entry.key = entry.model.key();
             }
-
-            /*
-            const index = this.models().indexOf(entry.model);
-            let path = `[${index}]`;
-            if (event.path) path = `${path}.${event.path}`;
-
-            this.events$.emit(new ODataModelEvent('{ ...event, path });
-                              */
-            this.events$.emit(event);
           }
+
+          const index = this.models().indexOf(entry.model);
+          event.push(this, index);
+          this.events$.emit(event);
         }
-      );
-    }
+      }
+    );
   }
 
   private _findEntry({

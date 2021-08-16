@@ -235,6 +235,7 @@ export class ODataModel<T> {
     include_non_field = false,
     changes_only = false,
     field_mapping = false,
+    chain = []
   }: {
     client_id?: boolean;
     include_navigation?: boolean;
@@ -244,6 +245,7 @@ export class ODataModel<T> {
     include_non_field?: boolean;
     changes_only?: boolean;
     field_mapping?: boolean;
+    chain?: (ODataModel<any> | ODataCollection<any, ODataModel<any>>)[];
   } = {}): T | { [name: string]: any } {
     return this._meta.toEntity(this, {
       client_id,
@@ -254,6 +256,7 @@ export class ODataModel<T> {
       include_non_field,
       changes_only,
       field_mapping,
+      chain
     });
   }
 
@@ -613,7 +616,7 @@ export class ODataModel<T> {
     this.events$.emit(new ODataModelEvent('request', { model: this, options: {observable: obs$ }}));
     return obs$.pipe(
       map(m => {
-        this.assign({ [name]: m });
+        //this.assign({ [name]: m });
         this.events$.emit(new ODataModelEvent('sync', { model: this }));
         return this;
       })
@@ -647,8 +650,11 @@ export class ODataModel<T> {
     }
 
     model.query(q => q.apply(options));
+    return (model as ODataModel<P>).fetch(options);
+    /*
     return (model as ODataModel<P>).fetch(options).pipe(
       tap(m => this.assign({ [field.name]: m }, {silent: true}))
     );
+    */
   }
 }
