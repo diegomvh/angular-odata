@@ -590,7 +590,7 @@ export class ODataModel<T> {
       asEntity?: boolean;
     } & HttpOptions = {}
   ): Observable<this> {
-    const reference = this.navigationProperty<P>(name).reference();
+    const reference = this.navigationProperty<P>(name, {asEntity}).reference();
 
     const etag = this.annots().etag;
     let obs$ = NEVER as Observable<any>;
@@ -615,8 +615,8 @@ export class ODataModel<T> {
     }
     this.events$.emit(new ODataModelEvent('request', { model: this, options: {observable: obs$ }}));
     return obs$.pipe(
-      map(m => {
-        //this.assign({ [name]: m });
+      map(model => {
+        this.assign({ [name]: model });
         this.events$.emit(new ODataModelEvent('sync', { model: this }));
         return this;
       })
@@ -650,11 +650,8 @@ export class ODataModel<T> {
     }
 
     model.query(q => q.apply(options));
-    return (model as ODataModel<P>).fetch(options);
-    /*
     return (model as ODataModel<P>).fetch(options).pipe(
-      tap(m => this.assign({ [field.name]: m }, {silent: true}))
+      tap(model => this.assign({ [field.name]: model }, {silent: true}))
     );
-    */
   }
 }
