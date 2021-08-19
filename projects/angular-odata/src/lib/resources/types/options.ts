@@ -18,4 +18,6 @@ export type HttpEntitiesOptions = HttpOptions & {
 };
 export type HttpPropertyOptions = HttpOptions & { responseType?: 'property' };
 export type HttpNoneOptions = HttpOptions & { responseType?: 'none' };
-export type HttpQueryOptions<T> = QueryArguments<T> & { alias?: boolean; } & HttpOptions;
+export type HttpQueryOptions<T> = QueryArguments<T> & {
+  alias?: boolean;
+} & HttpOptions;

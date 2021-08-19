@@ -61,17 +61,26 @@ export class ODataEnumType<E> {
   }
 
   deserialize(value: any, options?: Options): E {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: E, options?: Options): any {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: E, options?: Options): any {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.encode(value, parserOptions);
   }
 }

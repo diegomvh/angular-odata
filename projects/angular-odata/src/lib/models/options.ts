@@ -51,7 +51,10 @@ export class ODataModelEvent<T> {
   bubbling: boolean = true;
   model?: ODataModel<T>;
   collection?: ODataCollection<T, ODataModel<T>>;
-  chain: [ODataModel<any> | ODataCollection<any, ODataModel<any>>, string | number | null][];
+  chain: [
+    ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+    string | number | null
+  ][];
   value?: any;
   previous?: any;
   options?: any;
@@ -101,7 +104,7 @@ export class ODataModelEvent<T> {
   }
 
   visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
-    return this.chain.some(c => c[0] === model);
+    return this.chain.some((c) => c[0] === model);
   }
   get path() {
     return this.chain
@@ -585,9 +588,8 @@ export class ODataModelOptions<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null
       ];
-      if (chain.some(p => p[0] === parent[0]))
-        break;
-      chain.splice( 0, 0, parent);
+      if (chain.some((p) => p[0] === parent[0])) break;
+      chain.splice(0, 0, parent);
       tuple = tuple[0]._parent;
     }
     return chain;
@@ -599,9 +601,14 @@ export class ODataModelOptions<T> {
       | ODataCollectionResource<any>
       | undefined = undefined;
     for (let [model, field] of ODataModelOptions.chain(child)) {
-      resource = resource || model._resource || (ODataModelOptions.isModel(model) ?
-        (model as ODataModel<any>).resource({asEntity: true}) :
-        (model as ODataCollection<any, ODataModel<any>>).resource({asEntitySet: true}));
+      resource =
+        resource ||
+        model._resource ||
+        (ODataModelOptions.isModel(model)
+          ? (model as ODataModel<any>).resource({ asEntity: true })
+          : (model as ODataCollection<any, ODataModel<any>>).resource({
+              asEntitySet: true,
+            }));
       if (ODataModelOptions.isModel(model)) {
         let key = (model as ODataModel<any>).key({
           field_mapping: true,
@@ -617,7 +624,9 @@ export class ODataModelOptions<T> {
     }
     return resource;
   }
-  collectionResourceFactory({ baseResource }: { baseResource?: ODataResource<T> } = {}):
+  collectionResourceFactory({
+    baseResource,
+  }: { baseResource?: ODataResource<T> } = {}):
     | ODataCollectionResource<T>
     | undefined {
     if (this.entitySet !== undefined)
@@ -858,7 +867,7 @@ export class ODataModelOptions<T> {
       include_non_field = false,
       changes_only = false,
       field_mapping = false,
-      chain = []
+      chain = [],
     }: {
       client_id?: boolean;
       include_navigation?: boolean;
@@ -868,7 +877,7 @@ export class ODataModelOptions<T> {
       include_non_field?: boolean;
       changes_only?: boolean;
       field_mapping?: boolean;
-      chain?: (ODataModel<any> | ODataCollection<any, ODataModel<any>>)[]
+      chain?: (ODataModel<any> | ODataCollection<any, ODataModel<any>>)[];
     } = {}
   ): T | { [name: string]: any } {
     let attrs = self.attributes({
@@ -882,8 +891,8 @@ export class ODataModelOptions<T> {
     let relations = Object.entries(self._relations)
       .filter(
         // Chain
-        ([, { model }]) => chain.every(c => c !== model)
-        )
+        ([, { model }]) => chain.every((c) => c !== model)
+      )
       .filter(
         // Changes only
         ([, { model, state }]) =>
@@ -895,9 +904,7 @@ export class ODataModelOptions<T> {
       .filter(
         ([, { field, model }]) =>
           // Navigation
-          (include_navigation &&
-            field.navigation &&
-            model !== null) ||
+          (include_navigation && field.navigation && model !== null) ||
           !field.navigation
       )
       .map(([k, { model, field, state }]) => {
@@ -917,7 +924,7 @@ export class ODataModelOptions<T> {
               field_mapping,
               changes_only: changesOnly,
               include_key: includeKey,
-              chain: [self, ...chain]
+              chain: [self, ...chain],
             }),
           ];
         } else if (ODataModelOptions.isCollection(model)) {
@@ -931,7 +938,7 @@ export class ODataModelOptions<T> {
               field_mapping,
               changes_only: changesOnly,
               include_key: includeKey,
-              chain: [self, ...chain]
+              chain: [self, ...chain],
             }),
           ];
         }
@@ -1295,7 +1302,10 @@ export class ODataModelOptions<T> {
     if (relation.model === null) {
       throw new Error('Subscription model is null');
     }
-    if (relation.model._parent === null && relation.model.resource() === undefined) {
+    if (
+      relation.model._parent === null &&
+      relation.model.resource() === undefined
+    ) {
       relation.model._parent = [self, relation.field];
       if (ODataModelOptions.isCollection(relation.model)) {
         (relation.model as ODataCollection<F, ODataModel<F>>)._entries.forEach(
@@ -1305,7 +1315,11 @@ export class ODataModelOptions<T> {
     }
     relation.subscription = relation.model.events$.subscribe(
       (event: ODataModelEvent<any>) => {
-        if (BUBBLING.indexOf(event.name) !== -1 && event.bubbling && !event.visited(self)) {
+        if (
+          BUBBLING.indexOf(event.name) !== -1 &&
+          event.bubbling &&
+          !event.visited(self)
+        ) {
           if (event.model === relation.model) {
             if (
               event.name === 'change' &&

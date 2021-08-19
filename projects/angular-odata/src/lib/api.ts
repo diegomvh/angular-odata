@@ -242,7 +242,10 @@ export class ODataApi {
   }
 
   public findCallableForType<T>(type: string, bindingType?: string) {
-    return this.findSchemaForType(type)?.findCallableForType<T>(type, bindingType);
+    return this.findSchemaForType(type)?.findCallableForType<T>(
+      type,
+      bindingType
+    );
   }
 
   public findEntitySetForType(type: string) {
@@ -316,7 +319,11 @@ export class ODataApi {
         (acc, schema) => [...acc, ...schema.callables],
         <ODataCallable<T>[]>[]
       )
-      .find((c) => c.name === name && (bindingType === undefined || c.binding()?.type === bindingType));
+      .find(
+        (c) =>
+          c.name === name &&
+          (bindingType === undefined || c.binding()?.type === bindingType)
+      );
   }
 
   public findEntitySetByName(name: string) {

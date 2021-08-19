@@ -36,7 +36,7 @@ export class ODataStructuredType<T> {
     this.annotations = (config.annotations || []).map(
       (annot) => new ODataAnnotation(annot)
     );
-      this.model = config.model as typeof ODataModel;
+    this.model = config.model as typeof ODataModel;
     this.collection = config.collection as typeof ODataCollection;
     if (this.model !== undefined) {
       const options = this.model.hasOwnProperty('options')
@@ -45,7 +45,7 @@ export class ODataStructuredType<T> {
       this.model.buildMeta<T>(options, this);
     }
     if (this.collection !== undefined) {
-        this.collection.model = this.model;
+      this.collection.model = this.model;
     }
   }
 
@@ -152,17 +152,26 @@ export class ODataStructuredType<T> {
   }
 
   deserialize(value: any, options?: Options): T {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: T, options?: Options): any {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: T, options?: Options): any {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.encode(value, parserOptions);
   }
 

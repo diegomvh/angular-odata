@@ -114,7 +114,6 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return this._options;
   }
 
-
   /**
    * Handle the response body as an entity
    * @returns
@@ -137,7 +136,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
         : data
     ) as T | null;
 
-    if (entity !== null) entity = this.resource.deserialize(entity, options) as T;
+    if (entity !== null)
+      entity = this.resource.deserialize(entity, options) as T;
     return { entity, annots };
   }
 
@@ -158,7 +158,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
     });
     let entities = payload ? annots.data(payload) : null;
 
-    if (entities !== null) entities = this.resource.deserialize(entities, options) as T[];
+    if (entities !== null)
+      entities = this.resource.deserialize(entities, options) as T[];
     return { entities, annots };
   }
 
@@ -184,7 +185,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
         : data
     ) as T | null;
 
-    if (property !== null) property = this.resource.deserialize(property, options) as T;
+    if (property !== null)
+      property = this.resource.deserialize(property, options) as T;
     return { property, annots };
   }
 

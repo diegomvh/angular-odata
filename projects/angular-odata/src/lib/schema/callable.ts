@@ -57,17 +57,26 @@ export class ODataCallable<R> {
   }
 
   deserialize(value: any, options?: Options): any {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: any, options?: Options): any {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: any, options?: Options): any {
-    const parserOptions = options !== undefined ? new ODataParserOptions(options) : this.api.options;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
     return this.parser.encode(value, parserOptions);
   }
   binding() {
