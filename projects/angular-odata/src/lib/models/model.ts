@@ -675,7 +675,7 @@ export class ODataModel<T> {
     }: {
       asEntity?: boolean;
     } & HttpQueryOptions<P> = {}
-  ): Observable<ODataModel<P>> | Observable<ODataCollection<P, ODataModel<P>>> {
+  ): Observable<ODataModel<P> | ODataCollection<P, ODataModel<P>>> {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)
       return throwError(`Can't find navigation property ${name}`);
