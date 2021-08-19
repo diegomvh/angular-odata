@@ -21,7 +21,7 @@ import {
   HttpQueryOptions,
 } from '../resources/index';
 
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, TRANSLATIONS_FORMAT } from '@angular/core';
 import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
@@ -372,7 +372,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       reset = false,
-    }: { silent?: boolean; reset?: boolean } = {}
+      position = -1
+    }: { silent?: boolean; reset?: boolean, position?: number } = {}
   ): M | undefined {
     const key = model.key();
     let entry = this._findEntry({
@@ -402,8 +403,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       };
       // Subscribe
       this._subscribe(entry);
-      // Push
-      this._entries.push(entry);
+      // Now add
+      if (position >= 0)
+        this._entries.splice(position, 0, entry);
+      else
+        this._entries.push(entry);
 
       if (!silent) {
         model.events$.emit(new ODataModelEvent('add', {model, collection: this }));
@@ -482,11 +486,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
         model.events$.emit(new ODataModelEvent('remove', {model, collection: this }));
 
       // Now remove
-      if (reset || entry.state === ODataModelState.Added) {
-        const index = this._entries.indexOf(entry);
-        this._entries.splice(index, 1);
-      } else {
+      const index = this._entries.indexOf(entry);
+      this._entries.splice(index, 1);
+      if (!(reset || entry.state === ODataModelState.Added)) {
+        // Move to end of array and mark as removed
         entry.state = ODataModelState.Removed;
+        this._entries.push(entry);
       }
       this._unsubscribe(entry);
       return entry.model;
@@ -625,8 +630,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     let toAdd: M[] = [];
     let toMerge: M[] = [];
     let toRemove: M[] = [];
+    let toSort: [M, number][] = [];
     let modelMap: string[] = [];
-    objects.forEach((obj) => {
+    objects.forEach((obj, index) => {
       const isModel = ODataModelOptions.isModel(obj);
       const key =
         Model !== null && Model.meta ? Model.meta.resolveKey(obj) : undefined;
@@ -658,7 +664,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
             model._annotations = annots;
             model.assign(entity, { reset, silent });
           }
+          // Model Change?
           if (model.hasChanged()) toMerge.push(model);
+        }
+        // Has Sort or Index Change?
+        if (toSort.length > 0 || index !== this.models().indexOf(model)) {
+          toSort.push([model, index]);
         }
       } else {
         // Add
@@ -677,16 +688,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
         toRemove.push(entry.model);
       });
 
-    toRemove.forEach((m) => this._removeModel(m, { silent, reset }));
-    toAdd.forEach((m) => this._addModel(m, { silent, reset }));
+    toRemove.forEach((m) => this._removeModel(m, { silent: silent, reset }));
+    toAdd.forEach((m) => this._addModel(m, { silent: silent, reset }));
+    toSort.forEach((m) => {
+      this._removeModel(m[0], { silent: true, reset });
+      this._addModel(m[0], { silent: true, reset, position: m[1] });
+    });
 
     if (
       !silent &&
-      (toAdd.length > 0 || toRemove.length > 0 || toMerge.length > 0)
+      (toAdd.length > 0 || toRemove.length > 0 || toMerge.length > 0 || toSort.length > 0)
     ) {
       this.events$.emit(new ODataModelEvent(reset ? 'reset' : 'update', {
         collection: this,
-        options: { added: toAdd, removed: toRemove, merged: toMerge },
+        options: { added: toAdd, removed: toRemove, merged: toMerge, sorted: toSort },
       }));
     }
   }
