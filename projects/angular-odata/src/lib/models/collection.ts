@@ -98,6 +98,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     entities = entities || [];
     this.assign(entities, { reset });
   }
+
   isParentOf(child: ODataModel<any>) {
     if (this._parent === null) return false;
     const parent = this._parent[0];
@@ -106,6 +107,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       ODataModelOptions.chain(child).some((p) => p[0] === parent)
     );
   }
+
   resource({ asEntitySet = false }: { asEntitySet?: boolean } = {}):
     | ODataCollectionResource<T>
     | undefined {
@@ -901,11 +903,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
   }
 
-  //#region Collection functions
+  // Collection functions
   get [Symbol.toStringTag]() {
     return 'Collection';
   }
-  // Iterable
+
   public [Symbol.iterator]() {
     let pointer = 0;
     let models = this.models();
@@ -925,6 +927,42 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   filter(predicate: (m: M) => boolean): M[] {
     return this.models().filter(predicate);
+  }
+
+  //#region Sort
+  private _sort(
+    e1: ODataModelEntry<T, M>,
+    e2: ODataModelEntry<T, M>,
+    by: { field: string | keyof T; order?: 1 | -1 }[],
+    index: number
+  ): number {
+    let value1 = e1.model.get(by[index].field as string);
+    let value2 = e2.model.get(by[index].field as string);
+    let result: number = 0;
+
+    if (value1 == null && value2 != null) result = -1;
+    else if (value1 != null && value2 == null) result = 1;
+    else if (value1 == null && value2 == null) result = 0;
+    else if (typeof value1 == 'string' || value1 instanceof String) {
+      if (value1.localeCompare && value1 != value2) {
+        return (by[index].order || 1) * value1.localeCompare(value2);
+      }
+    } else {
+      result = value1 < value2 ? -1 : 1;
+    }
+
+    if (value1 == value2) {
+      return by.length - 1 > index ? this._sort(e1, e2, by, index + 1) : 0;
+    }
+
+    return (by[index].order || 1) * result;
+  }
+
+  sort(by: { field: string | keyof T; order?: 1 | -1 }[]) {
+    return this._entries.sort(
+      (e1: ODataModelEntry<T, M>, e2: ODataModelEntry<T, M>) =>
+        this._sort(e1, e2, by, 0)
+    );
   }
   //#endregion
 }

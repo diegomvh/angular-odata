@@ -156,7 +156,7 @@ export const PersonConfig = {
     Concurrency: {
       type: 'Edm.Int64',
       nullable: false,
-      annotations: [{ type: 'Org.OData.Core.V1.Computed', bool: true }],
+      annotations: [{ term: 'Org.OData.Core.V1.Computed', bool: true }],
     },
     Friends: {
       type: `${NAMESPACE}.Person`,
