@@ -241,7 +241,7 @@ export class ODataModelField<F> {
 
   get computed() {
     return Boolean(
-      this.parser.findAnnotation((a) => a.type === COMPUTED)?.bool
+      this.parser.findAnnotation((a) => a.term === COMPUTED)?.bool
     );
   }
 
@@ -506,7 +506,7 @@ export class ODataModelOptions<T> {
     let concurrencyFields: string[] = [];
     if (this.entitySet !== undefined) {
       concurrencyFields =
-        this.entitySet.findAnnotation((a) => a.type === OPTIMISTIC_CONCURRENCY)
+        this.entitySet.findAnnotation((a) => a.term === OPTIMISTIC_CONCURRENCY)
           ?.properties || [];
     }
     this._fields.forEach((field) => {

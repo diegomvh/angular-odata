@@ -93,7 +93,7 @@ export type ApiConfig = {
   schemas?: SchemaConfig[];
 };
 export type AnnotationConfig = {
-  type: string;
+  term: string;
   string?: string;
   bool?: boolean;
   int?: number;

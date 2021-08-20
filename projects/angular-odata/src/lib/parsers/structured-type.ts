@@ -129,7 +129,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
       errors = this.enum().validate(value, { method, navigation });
     } else {
       // IsEdmType
-      const computed = this.findAnnotation((a) => a.type === COMPUTED);
+      const computed = this.findAnnotation((a) => a.term === COMPUTED);
       errors = [];
       if (
         !this.nullable &&
