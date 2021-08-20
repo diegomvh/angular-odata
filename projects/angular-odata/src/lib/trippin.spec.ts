@@ -32,14 +32,14 @@ export interface Photo {
 }
 export const PhotoConfig = {
   name: 'Photo',
-  annotations: [{ type: 'Org.OData.Core.V1.AcceptableMediaTypes' }],
+  annotations: [{ term: 'Org.OData.Core.V1.AcceptableMediaTypes' }],
   fields: {
     Id: {
       type: 'Edm.Int64',
       nullable: false,
       annotations: [
         {
-          type: 'Org.OData.Core.V1.Permissions',
+          term: 'Org.OData.Core.V1.Permissions',
           permissions: ['Org.OData.Core.V1.Permission/Read'],
         },
       ],
@@ -64,7 +64,7 @@ export const PlanItemConfig = {
       nullable: false,
       annotations: [
         {
-          type: 'Org.OData.Core.V1.Permissions',
+          term: 'Org.OData.Core.V1.Permissions',
           permissions: ['Org.OData.Core.V1.Permission/Read'],
         },
       ],
@@ -97,7 +97,7 @@ export const TripConfig = {
       nullable: false,
       annotations: [
         {
-          type: 'Org.OData.Core.V1.Permissions',
+          term: 'Org.OData.Core.V1.Permissions',
           permissions: ['Org.OData.Core.V1.Permission/Read'],
         },
       ],
@@ -109,8 +109,8 @@ export const TripConfig = {
       type: 'Edm.Int64',
       nullable: false,
       annotations: [
-        { type: 'Org.OData.Measures.V1.ISOCurrency', string: 'USD' },
-        { type: 'Org.OData.Measures.V1.Scale', int: 2 },
+        { term: 'Org.OData.Measures.V1.ISOCurrency', string: 'USD' },
+        { term: 'Org.OData.Measures.V1.Scale', int: 2 },
       ],
     },
     StartsAt: { type: 'Edm.Date', nullable: false },
@@ -144,7 +144,7 @@ export const PersonConfig = {
       nullable: false,
       annotations: [
         {
-          type: 'Org.OData.Core.V1.Permissions',
+          term: 'Org.OData.Core.V1.Permissions',
           permissions: ['Org.OData.Core.V1.Permission/Read'],
         },
       ],
