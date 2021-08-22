@@ -33,11 +33,17 @@ export type Aggregate =
   | { [propertyName: string]: { with: StandardAggregateMethods; as: string } };
 
 // OrderBy
+
 export type OrderBy<T> = OrderByType<T> | OrderByType<T>[];
 export type OrderByType<T> = string | OrderByObject<T>;
 export type OrderByObject<T> = keyof T | [keyof T | string, 'asc' | 'desc'];
 //TODO: support angular 12 recursive type:
-// | { [P in keyof T]?: OrderBy<T[P]> };
+/*
+export type OrderByOptions<T> = keyof T | [ keyof T | string, 'asc' | 'desc' ];
+export type NestedOrderBy<T> = { [P in keyof T]?: T[P] extends Array<infer E> ? OrderBy<E> : OrderBy<T[P]> }
+export type OrderBy<T> = string | OrderByOptions<T> | Array<OrderByOptions<T>> | NestedOrderBy<T>;
+*/
+
 // Expand
 export type Expand<T> = ExpandType<T> | ExpandType<T>[];
 export type ExpandType<T> = string | ExpandObject<T>;
