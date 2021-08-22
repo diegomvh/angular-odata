@@ -18,7 +18,6 @@ export abstract class ODataBaseService {
     protected apiNameOrEntityType?: string
   ) {}
 
-  // Api Config
   get api() {
     return this.client.apiFor(this.apiNameOrEntityType);
   }

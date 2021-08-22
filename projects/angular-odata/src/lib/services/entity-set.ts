@@ -14,40 +14,64 @@ import { catchError } from 'rxjs/operators';
 import { ODataEntityService } from './entity';
 
 export class ODataEntitySetService<T> extends ODataEntityService<T> {
+  /**
+   * Get the entity set resource for this service.
+   */
   public entities(): ODataEntitySetResource<T> {
     return this.client.entitySet<T>(this.name, this.apiNameOrEntityType);
   }
 
+  /**
+   * Get the entity resource for this service.
+   * @param key The entity key.
+   */
   public entity(key?: EntityKey<T>): ODataEntityResource<T> {
     return this.entities().entity(key);
   }
 
-  // Models
-  public attach<M extends ODataModel<T>>(value: M): void;
-  public attach<C extends ODataCollection<T, ODataModel<T>>>(value: C): void;
-  public attach(value: any): void {
-    if (value instanceof ODataModel) {
-      value.attach(this.entities().entity());
-    } else if (value instanceof ODataCollection) {
-      value.attach(this.entities());
+  /**
+   * Attach an existing model to this service.
+   * @param model The model to attach.
+   */
+  public attach<M extends ODataModel<T>>(model: M): void;
+  public attach<C extends ODataCollection<T, ODataModel<T>>>(model: C): void;
+  public attach(model: any): void {
+    if (model instanceof ODataModel) {
+      model.attach(this.entities().entity());
+    } else if (model instanceof ODataCollection) {
+      model.attach(this.entities());
     }
   }
 
-  // Service Config
   get entitySetSchema() {
     return this.api.findEntitySetByName(this.name);
   }
 
+  /**
+   * Get all entities from the entity set.
+   * @param options The options for the request.
+   */
   public fetchAll(options?: HttpOptions): Observable<T[]> {
     return this.entities().fetchAll(options);
   }
 
+  /**
+   * Get entities from the entity set.
+   * @param withCount Get the count of the entities.
+   * @param options The options for the request.
+   */
   public fetchMany(
     options?: HttpOptions & { withCount?: boolean }
   ): Observable<ODataEntities<T>> {
     return this.entities().fetch(options);
   }
 
+  /**
+   * Get an entity from the entity set.
+   * @param key The entity key.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
   public fetchOne(
     key: EntityKey<T>,
     options?: HttpOptions & { etag?: string }
@@ -55,6 +79,11 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return this.entity(key).fetch(options);
   }
 
+  /**
+   * Create an entity in the entity set.
+   * @param attrs The attributes for the entity.
+   * @param options The options for the request.
+   */
   public create(
     attrs: Partial<T>,
     options?: HttpOptions
@@ -62,6 +91,13 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return this.entities().post(attrs, options);
   }
 
+  /**
+   * Update an entity in the entity set.
+   * @param key The entity key.
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
   public update(
     key: EntityKey<T>,
     attrs: Partial<T>,
@@ -72,6 +108,13 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return res.put(attrs, options);
   }
 
+  /**
+   * Patch an entity in the entity set.
+   * @param key The entity key.
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
   public patch(
     key: EntityKey<T>,
     attrs: Partial<T>,
@@ -82,13 +125,26 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     return res.patch(attrs, options);
   }
 
+  /**
+   * Delete an entity in the entity set.
+   * @param key The entity key.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
   public destroy(key: EntityKey<T>, options?: HttpOptions & { etag?: string }) {
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
     return res.delete(options);
   }
 
-  // Shortcuts
+  //#region Shortcuts
+  /**
+   * Get or create an entity in the entity set.
+   * @param key The entity key.
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
   public fetchOrCreate(
     key: EntityKey<T>,
     attrs: Partial<T>,
@@ -102,6 +158,13 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     );
   }
 
+  /**
+   * Save an entity in the entity set.
+   * @param attrs The attributes for the entity.
+   * @param method The method to use.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
   public save(
     attrs: Partial<T>,
     {
@@ -128,4 +191,5 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
       ? this.patch(key, attrs, { etag, ...options })
       : this.update(key, attrs, { etag, ...options });
   }
+  //#endregion
 }

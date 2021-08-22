@@ -7,24 +7,33 @@ import { ODataSingletonService } from './singleton';
 export class ODataServiceFactory {
   constructor(protected client: ODataClient) {}
 
+  /**
+   * Factory method to create an entity set service.
+   * @param entitySetName Name of the entity set.
+   * @param apiNameOrEntityType Name of the API or the type of the entity.
+   */
   entitySet<T>(
-    path: string,
+    entitySetName: string,
     apiNameOrEntityType?: string
   ): ODataEntitySetService<T> {
     return new (class extends ODataEntitySetService<T> {})(
       this.client,
-      path,
+      entitySetName,
       apiNameOrEntityType
     );
   }
 
+  /** Factory method to create a singleton service.
+   * @param singletonName Name of the singleton.
+   * @param apiNameOrEntityType Name of the API or the type of the entity.
+   */
   singleton<T>(
-    path: string,
+    singletonName: string,
     apiNameOrEntityType?: string
   ): ODataSingletonService<T> {
     return new (class extends ODataSingletonService<T> {})(
       this.client,
-      path,
+      singletonName,
       apiNameOrEntityType
     );
   }
