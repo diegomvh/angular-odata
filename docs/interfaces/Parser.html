@@ -8,8 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+	      <link rel="stylesheet" href="../styles/style.css">
     </head>
     <body>
 
@@ -44,9 +43,7 @@
 
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li
-  >
-  Parser</li>
+  <li>Parser</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -69,7 +66,6 @@
 
 
 
-
         <section>
             <h3 id="index">Index</h3>
             <table class="table table-sm table-bordered index-table">
@@ -83,22 +79,13 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#deserialize" 
->
-                                        deserialize
-                                    </a>
+                                    <a href="#deserialize">deserialize</a>
                                 </li>
                                 <li>
-                                    <a href="#encode" 
->
-                                        encode
-                                    </a>
+                                    <a href="#encode">encode</a>
                                 </li>
                                 <li>
-                                    <a href="#serialize" 
->
-                                        serialize
-                                    </a>
+                                    <a href="#serialize">serialize</a>
                                 </li>
                             </ul>
                         </td>
@@ -118,14 +105,16 @@
                 <td class="col-md-4">
                     <a name="deserialize"></a>
                     <span class="name">
-                        <span ><b>deserialize</b></span>
+                        <b>
+                            deserialize
+                        </b>
                         <a href="#deserialize"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -198,14 +187,16 @@
                 <td class="col-md-4">
                     <a name="encode"></a>
                     <span class="name">
-                        <span ><b>encode</b></span>
+                        <b>
+                            encode
+                        </b>
                         <a href="#encode"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: T, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>encode(value: T, options?: <a href="../classes/Field.html">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -278,14 +269,16 @@
                 <td class="col-md-4">
                     <a name="serialize"></a>
                     <span class="name">
-                        <span ><b>serialize</b></span>
+                        <b>
+                            serialize
+                        </b>
                         <a href="#serialize"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: T, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>serialize(value: T, options?: <a href="../classes/Field.html">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
@@ -453,7 +446,7 @@ export type ApiConfig &#x3D; {
   schemas?: SchemaConfig[];
 };
 export type AnnotationConfig &#x3D; {
-  type: string;
+  term: string;
   string?: string;
   bool?: boolean;
   int?: number;
@@ -570,9 +563,9 @@ export type EntitySetConfig &#x3D; {
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>
-       
-       <script type="module" src="../js/menu-wc.js" defer></script>
-       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 
