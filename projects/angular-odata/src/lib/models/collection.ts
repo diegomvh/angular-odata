@@ -958,11 +958,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return (by[index].order || 1) * result;
   }
 
-  sort(by: { field: string | keyof T; order?: 1 | -1 }[]) {
-    return this._entries.sort(
+  sort(by: { field: string | keyof T; order?: 1 | -1 }[], {
+    silent
+  }: {silent?: boolean} = {}) {
+    this._entries = this._entries.sort(
       (e1: ODataModelEntry<T, M>, e2: ODataModelEntry<T, M>) =>
         this._sort(e1, e2, by, 0)
     );
+    if (!silent) {
+      this.events$.emit(
+        new ODataModelEvent('update', {
+          collection: this,
+        })
+      );
+    }
   }
   //#endregion
 }
