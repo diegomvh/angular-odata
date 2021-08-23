@@ -109,35 +109,36 @@ export class ODataModel<T> {
 
   navigationProperty<N>(
     name: string,
-    {
-      asEntity = false,
-      toEntity = false,
-    }: { asEntity?: boolean; toEntity?: boolean } = {}
-  ): ODataNavigationPropertyResource<N> | ODataEntityResource<N> {
+    { asEntity = false }: { asEntity?: boolean } = {}
+  ): ODataNavigationPropertyResource<N> {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)
       throw Error(`Can't find navigation property ${name}`);
 
-    if (field.collection && toEntity)
+    const resource = this.resource({ asEntity });
+    if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
+      throw Error(
+        "Can't get navigation without ODataEntityResource with key"
+      );
+
+    return field.resourceFactory<T, N>(
+      resource
+    ) as ODataNavigationPropertyResource<N>;
+  }
+
+  navigationPropertyToEntity<N>(name: string): ODataEntityResource<N> {
+    const field = this._meta.field(name);
+    if (field === undefined || !field.navigation)
+      throw Error(`Can't find navigation property ${name}`);
+
+    if (field.collection)
       throw Error(`Can't get a collection as an entity set`);
 
-    if (!field.collection && toEntity) {
-      const key = this.referenced(field);
-      if (Types.isEmpty(key)) throw Error(`Can't get a key for entity`);
-      const resource = field.meta?.modelResourceFactory({ fromSet: true }) as ODataEntityResource<N>;
-      resource.key(key);
-      return resource;
-    } else {
-      const resource = this.resource({ asEntity });
-      if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
-        throw Error(
-          "Can't get navigation without ODataEntityResource with key"
-        );
-
-      return field.resourceFactory<T, N>(
-        resource
-      ) as ODataNavigationPropertyResource<N>;
-    }
+    const key = this.referenced(field);
+    if (Types.isEmpty(key)) throw Error(`Can't get a key for entity`);
+    const resource = field.meta?.modelResourceFactory({ fromSet: true }) as ODataEntityResource<N>;
+    resource.key(key);
+    return resource;
   }
 
   property<N>(
@@ -153,6 +154,25 @@ export class ODataModel<T> {
       throw Error("Can't get property without ODataEntityResource with key");
 
     return field.resourceFactory<T, N>(resource) as ODataPropertyResource<N>;
+  }
+
+  propertyToEntity<N>(name: string): ODataEntityResource<N> {
+    const field = this._meta.field(name);
+    if (field === undefined || !field.navigation)
+      throw Error(`Can't find property ${name}`);
+
+    if (field.collection)
+      throw Error(`Can't get a collection as an entity set`);
+
+    //TODO: Is Entity?
+    if (!field.isStructuredType())
+      throw Error(`Can't build a entity`);
+
+    const key = this.referenced(field);
+    if (Types.isEmpty(key)) throw Error(`Can't get a key for entity`);
+    const resource = field.meta?.modelResourceFactory({ fromSet: true }) as ODataEntityResource<N>;
+    resource.key(key);
+    return resource;
   }
 
   attach(resource: ODataModelResource<T>) {
