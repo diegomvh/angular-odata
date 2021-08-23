@@ -156,25 +156,6 @@ export class ODataModel<T> {
     return field.resourceFactory<T, N>(resource) as ODataPropertyResource<N>;
   }
 
-  propertyToEntity<N>(name: string): ODataEntityResource<N> {
-    const field = this._meta.field(name);
-    if (field === undefined || !field.navigation)
-      throw Error(`Can't find property ${name}`);
-
-    if (field.collection)
-      throw Error(`Can't get a collection as an entity set`);
-
-    //TODO: Is Entity?
-    if (!field.isStructuredType())
-      throw Error(`Can't build a entity`);
-
-    const key = this.referenced(field);
-    if (Types.isEmpty(key)) throw Error(`Can't get a key for entity`);
-    const resource = field.meta?.modelResourceFactory({ fromSet: true }) as ODataEntityResource<N>;
-    resource.key(key);
-    return resource;
-  }
-
   attach(resource: ODataModelResource<T>) {
     return this._meta.attach(this, resource);
   }
