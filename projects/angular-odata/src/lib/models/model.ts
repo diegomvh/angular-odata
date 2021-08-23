@@ -109,19 +109,35 @@ export class ODataModel<T> {
 
   navigationProperty<N>(
     name: string,
-    { asEntity = false }: { asEntity?: boolean } = {}
-  ): ODataNavigationPropertyResource<N> {
+    {
+      asEntity = false,
+      toEntity = false,
+    }: { asEntity?: boolean; toEntity?: boolean } = {}
+  ): ODataNavigationPropertyResource<N> | ODataEntityResource<N> {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)
       throw Error(`Can't find navigation property ${name}`);
 
-    const resource = this.resource({ asEntity });
-    if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
-      throw Error("Can't get navigation without ODataEntityResource with key");
+    if (field.collection && toEntity)
+      throw Error(`Can't get a collection as an entity set`);
 
-    return field.resourceFactory<T, N>(
-      resource
-    ) as ODataNavigationPropertyResource<N>;
+    if (!field.collection && toEntity) {
+      const key = this.referenced(field);
+      if (Types.isEmpty(key)) throw Error(`Can't get a key for entity`);
+      const resource = field.meta?.modelResourceFactory({ fromSet: true }) as ODataEntityResource<N>;
+      resource.key(key);
+      return resource;
+    } else {
+      const resource = this.resource({ asEntity });
+      if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
+        throw Error(
+          "Can't get navigation without ODataEntityResource with key"
+        );
+
+      return field.resourceFactory<T, N>(
+        resource
+      ) as ODataNavigationPropertyResource<N>;
+    }
   }
 
   property<N>(
@@ -606,7 +622,7 @@ export class ODataModel<T> {
       asEntity?: boolean;
     } & HttpQueryOptions<S> = {}
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
-    const nav = this.navigationProperty<S>(name);
+    const nav = this.navigationProperty<S>(name) as ODataNavigationPropertyResource<S>;
     nav.query.apply(options);
     switch (responseType) {
       case 'model':
@@ -627,9 +643,9 @@ export class ODataModel<T> {
       asEntity?: boolean;
     } & HttpOptions = {}
   ): Observable<this> {
-    const reference = this.navigationProperty<P>(name, {
+    const reference = (this.navigationProperty<P>(name, {
       asEntity,
-    }).reference();
+    }) as ODataNavigationPropertyResource<P>).reference();
 
     const etag = this.annots().etag;
     let obs$ = NEVER as Observable<any>;
@@ -689,9 +705,7 @@ export class ODataModel<T> {
 
     const model = field.modelCollectionFactory<T, P>({ parent: this, value });
     if (asEntity) {
-      const resource = field.meta?.modelResourceFactory({
-        fromSet: asEntity,
-      }) as ODataModelResource<P>;
+      const resource = field.meta?.modelResourceFactory({ fromSet: true }) as ODataModelResource<P>;
       (model as ODataModel<P>).attach(resource);
     }
 
