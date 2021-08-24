@@ -137,8 +137,7 @@ export class ODataModel<T> {
     const key = this.referenced(field);
     if (Types.isEmpty(key)) throw Error(`Can't get a key for entity`);
     const resource = field.meta?.modelResourceFactory({ fromSet: true }) as ODataEntityResource<N>;
-    resource.key(key);
-    return resource;
+    return resource.key(key);
   }
 
   property<N>(

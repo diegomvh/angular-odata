@@ -70,7 +70,6 @@ export class ODataStructuredType<T> {
     this.parser.configure({ options: this.api.options, parserForType });
     if (this.model !== undefined && this.model.options !== null) {
       this.model.meta.configure({
-        options: this.api.options,
         findOptionsForType,
       });
     }

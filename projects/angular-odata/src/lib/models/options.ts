@@ -1,5 +1,6 @@
 import { Subscription } from 'rxjs';
 import { COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
+import { ODataParserOptions } from '../options';
 import { ODataStructuredTypeFieldParser } from '../parsers';
 import {
   Expand,
@@ -19,7 +20,7 @@ import {
   Select,
 } from '../resources';
 import { ODataEntitySet, ODataStructuredType } from '../schema';
-import { OptionsHelper } from '../types';
+import { Options, OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
@@ -207,7 +208,6 @@ export class ODataModelField<F> {
     max?: number;
     pattern?: RegExp;
   };
-  optionsHelper?: OptionsHelper;
   constructor(
     modelOptions: ODataModelOptions<any>,
     { name, field, parser, ...options }: ODataModelFieldOptions<F>
@@ -219,6 +219,9 @@ export class ODataModelField<F> {
     this.options = options;
   }
 
+  get api() {
+    return this.modelOptions.api;
+  }
   get type() {
     return this.parser.type;
   }
@@ -247,16 +250,13 @@ export class ODataModelField<F> {
 
   configure({
     findOptionsForType,
-    concurrency,
-    options,
+    concurrency
   }: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
     concurrency: boolean;
-    options: OptionsHelper;
   }) {
     this.meta = findOptionsForType(this.parser.type);
     if (concurrency) this.options.concurrency = concurrency;
-    this.optionsHelper = options;
   }
 
   isKey() {
@@ -351,8 +351,28 @@ export class ODataModelField<F> {
       : this.default;
   }
 
-  encode(value: any): any {
-    return this.parser.encode(value, this.optionsHelper);
+  deserialize(value: any, options?: Options): F {
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
+    return this.parser.deserialize(value, parserOptions);
+  }
+
+  serialize(value: F, options?: Options): any {
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
+    return this.parser.serialize(value, parserOptions);
+  }
+
+  encode(value: F, options?: Options): any {
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.api.options;
+    return this.parser.encode(value, parserOptions);
   }
 
   resourceFactory<T, F>(
@@ -492,10 +512,8 @@ export class ODataModelOptions<T> {
 
   configure({
     findOptionsForType,
-    options,
   }: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
-    options: OptionsHelper;
   }) {
     if (this.base) {
       const parent = findOptionsForType(this.base) as ODataModelOptions<any>;
@@ -513,8 +531,7 @@ export class ODataModelOptions<T> {
       let concurrency = concurrencyFields.indexOf(field.field) !== -1;
       field.configure({
         findOptionsForType,
-        concurrency,
-        options,
+        concurrency
       });
     });
   }
@@ -789,7 +806,7 @@ export class ODataModelOptions<T> {
       let from = this.fields({ include_parents: true }).find(
         (field: ODataModelField<any>) => field.field === ref.property
       );
-      let to = field.modelOptions
+      let to = (field.meta as ODataModelOptions<any>)
         .fields({ include_parents: true })
         .find(
           (field: ODataModelField<any>) =>
