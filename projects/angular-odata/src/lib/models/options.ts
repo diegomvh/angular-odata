@@ -633,8 +633,13 @@ export class ODataModelOptions<T> {
         if (key !== undefined)
           resource = (resource as ODataModelResource<any>).key(key);
       }
-      if (field === null) continue;
       if (resource === undefined) break;
+      if (field === null) {
+        const query = model._resource?.cloneQuery().toQueryArguments();
+        if (query !== undefined)
+          resource.query.apply(query);
+        continue;
+      };
       resource = (field as ODataModelField<any>).resourceFactory<any, any>(
         resource as ODataModelResource<any>
       );
