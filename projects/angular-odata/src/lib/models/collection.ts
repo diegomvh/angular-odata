@@ -318,12 +318,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
+  /**
+   * Save all models in the collection
+   * @param relModel The model is relationship
+   * @param method The method to use
+   * @param options HttpOptions
+   */
   save({
-    asModel = false,
+    relModel = false,
     method,
     ...options
   }: HttpOptions & {
-    asModel?: boolean;
+    relModel?: boolean;
     method?: 'update' | 'patch';
   } = {}): Observable<this> {
     const resource = this.resource();
@@ -350,18 +356,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (toDestroy.length > 0 || toCreate.length > 0 || toUpdate.length > 0) {
       const obs$ = forkJoin([
         ...toDestroy.map((m) =>
-          asModel
+          relModel
             ? m.destroy({ asEntity: true, ...options })
             : this.removeReference(m, options)
         ),
         ...toCreate.map((m) =>
-          asModel
+          relModel
             ? m.save({ asEntity: true, method: 'create', ...options })
-            : this.addReference(m, options)
+            : m
+                .save({ asEntity: true, method: 'create', ...options })
+                .pipe(switchMap((r) => this.addReference(r, options)))
         ),
-        ...toUpdate.map((m) =>
-          asModel ? m.save({ asEntity: true, method, ...options }) : of(m)
-        ),
+        ...toUpdate.map((m) => m.save({ asEntity: true, method, ...options })),
       ]);
       this.events$.emit(
         new ODataModelEvent('request', {
@@ -575,14 +581,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
   create(
     attrs: T = {} as T,
     {
-      asModel = false,
       silent = false,
       server = true,
-    }: { asModel?: boolean; silent?: boolean; server?: boolean } = {}
+    }: { silent?: boolean; server?: boolean } = {}
   ) {
     const model = this.modelFactory(attrs);
     return (
-      model.isValid() && server ? model.save({ asEntity: asModel }) : of(model)
+      model.isValid() && server ? model.save({ asEntity: true }) : of(model)
     ).pipe(
       switchMap((model) => this.add(model, { silent, server })),
       map(() => model)
@@ -958,9 +963,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return (by[index].order || 1) * result;
   }
 
-  sort(by: { field: string | keyof T; order?: 1 | -1 }[], {
-    silent
-  }: {silent?: boolean} = {}) {
+  sort(
+    by: { field: string | keyof T; order?: 1 | -1 }[],
+    { silent }: { silent?: boolean } = {}
+  ) {
     this._entries = this._entries.sort(
       (e1: ODataModelEntry<T, M>, e2: ODataModelEntry<T, M>) =>
         this._sort(e1, e2, by, 0)
