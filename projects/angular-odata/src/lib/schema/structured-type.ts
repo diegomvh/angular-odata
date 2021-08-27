@@ -95,6 +95,10 @@ export class ODataStructuredType<T> {
     return this.annotations.find(predicate);
   }
 
+  field(name: keyof T) {
+    return this.fields().find((f) => f.name === name);
+  }
+
   fields({
     include_navigation = false,
     include_parents = true,

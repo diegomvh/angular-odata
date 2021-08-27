@@ -250,7 +250,7 @@ export class ODataModelField<F> {
 
   configure({
     findOptionsForType,
-    concurrency
+    concurrency,
   }: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
     concurrency: boolean;
@@ -531,7 +531,7 @@ export class ODataModelOptions<T> {
       let concurrency = concurrencyFields.indexOf(field.field) !== -1;
       field.configure({
         findOptionsForType,
-        concurrency
+        concurrency,
       });
     });
   }
@@ -553,11 +553,14 @@ export class ODataModelOptions<T> {
     ];
   }
 
-  field(name: string) {
+  field(name: keyof T | string) {
     return this.fields({
       include_parents: true,
       include_navigation: true,
-    }).find((field: ODataModelField<any>) => field.name === name);
+    }).find(
+      (modelField: ODataModelField<any>) =>
+        modelField.name === name || modelField.field === name
+    );
   }
 
   attach(self: ODataModel<T>, resource: ODataModelResource<T>) {
@@ -636,10 +639,9 @@ export class ODataModelOptions<T> {
       if (resource === undefined) break;
       if (field === null) {
         const query = model._resource?.cloneQuery().toQueryArguments();
-        if (query !== undefined)
-          resource.query.apply(query);
+        if (query !== undefined) resource.query.apply(query);
         continue;
-      };
+      }
       resource = (field as ODataModelField<any>).resourceFactory<any, any>(
         resource as ODataModelResource<any>
       );
