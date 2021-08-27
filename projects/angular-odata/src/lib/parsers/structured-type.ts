@@ -21,10 +21,12 @@ type JsonSchemaCustom<T> = {
   ) => any;
 };
 type JsonSchemaExpand<T> = { [P in keyof T]?: JsonSchemaOptions<T[P]> };
+type JsonSchemaRequired<T> = { [P in keyof T]?: boolean };
 export type JsonSchemaOptions<T> = {
   select?: JsonSchemaSelect<T>;
   custom?: JsonSchemaCustom<T>;
   expand?: JsonSchemaExpand<T>;
+  required?: JsonSchemaRequired<T>;
 };
 
 export class ODataEntityTypeKey {
@@ -540,7 +542,13 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     );
     schema.required = [
       ...schema.required,
-      ...fields.filter((f) => !f.nullable).map((f) => f.name),
+      ...fields
+        .filter((f) =>
+          options.required && f.name in options.required
+            ? options.required[f.name as keyof T]
+            : !f.nullable
+        )
+        .map((f) => f.name),
     ];
     return schema;
   }
