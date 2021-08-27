@@ -364,7 +364,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           relModel
             ? m.save({ asEntity: true, method: 'create', ...options })
             : m
-                .save({ asEntity: true, method: 'create', ...options })
+                .save({ asEntity: true, method, ...options })
                 .pipe(switchMap((r) => this.addReference(r, options)))
         ),
         ...toUpdate.map((m) => m.save({ asEntity: true, method, ...options })),
