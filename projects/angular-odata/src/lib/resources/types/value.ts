@@ -34,10 +34,10 @@ export class ODataValueResource<T> extends ODataResource<T> {
     return undefined;
   }
   //#region Shortcuts
-  fetch(options?: HttpOptions): Observable<number> {
+  fetch(options?: HttpOptions): Observable<T> {
     return super.get({ responseType: 'value', ...options });
   }
-  fetchValue(options?: HttpOptions): Observable<number> {
+  fetchValue(options?: HttpOptions): Observable<T> {
     return this.fetch(options);
   }
   //#endregion

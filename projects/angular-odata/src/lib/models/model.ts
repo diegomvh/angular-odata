@@ -1,5 +1,5 @@
 import { EventEmitter } from '@angular/core';
-import { Observable, throwError, forkJoin, NEVER } from 'rxjs';
+import { Observable, throwError, forkJoin, NEVER, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import {
@@ -600,11 +600,43 @@ export class ODataModel<T> {
     }
   }
 
+  // Get Value
+  protected getValue<P>(
+    name: string,
+    options?: HttpOptions
+  ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
+    const field = this._meta.field(name);
+    if (field === undefined || field.navigation)
+      throw Error(`Can't find property ${name}`);
+
+    let value = (this as any)[name] as
+      | P
+      | ODataModel<P>
+      | ODataCollection<P, ODataModel<P>>;
+    if (value === undefined) {
+      const prop = field.resourceFactory(
+        this.resource()
+      ) as ODataPropertyResource<P>;
+      return field.collection
+        ? prop
+            .fetchCollection(options)
+            .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
+        : field.isStructuredType()
+        ? prop
+            .fetchModel(options)
+            .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })))
+        : prop
+            .fetchProperty(options)
+            .pipe(tap((c) => this.assign({ [name]: c }, { silent: true })));
+    }
+    return of(value as P);
+  }
+
   // Set Reference
   protected setReference<P>(
     name: string,
     model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | null,
-    { ...options }: {} & HttpOptions = {}
+    options?: HttpOptions
   ): Observable<this> {
     const reference = (
       this.navigationProperty<P>(name) as ODataNavigationPropertyResource<P>
@@ -659,6 +691,7 @@ export class ODataModel<T> {
     if (model === undefined) {
       const value = field.collection ? [] : this.referenced(field);
       model = field.modelCollectionFactory<T, P>({ parent: this, value });
+      (this as any)[name] = model;
     }
     return model;
   }
