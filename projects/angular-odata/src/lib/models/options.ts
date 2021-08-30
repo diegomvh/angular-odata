@@ -1,4 +1,4 @@
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
 import { ODataParserOptions } from '../options';
 import { ODataStructuredTypeFieldParser } from '../parsers';
@@ -20,7 +20,7 @@ import {
   Select,
 } from '../resources';
 import { ODataEntitySet, ODataStructuredType } from '../schema';
-import { Options, OptionsHelper } from '../types';
+import { Options } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
@@ -615,7 +615,9 @@ export class ODataModelOptions<T> {
     return chain;
   }
 
-  static resource<T>(child: ODataModel<T> | ODataCollection<T, ODataModel<T>>) {
+  static resource<T>(
+    child: ODataModel<T> | ODataCollection<T, ODataModel<T>>
+  ): ODataModelResource<T> | ODataCollectionResource<T> {
     let resource:
       | ODataModelResource<any>
       | ODataCollectionResource<any>
@@ -623,20 +625,22 @@ export class ODataModelOptions<T> {
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource =
         resource ||
-        model._resource ||
         (ODataModelOptions.isModel(model)
-          ? (model as ODataModel<any>).resource({ asEntity: true })
-          : (model as ODataCollection<any, ODataModel<any>>).resource({
-              asEntitySet: true,
-            }));
+          ? (model as ODataModel<any>)._meta.modelResourceFactory()
+          : (
+              model as ODataCollection<any, ODataModel<any>>
+            )._model.meta.collectionResourceFactory());
+      if (resource === undefined) break;
       if (ODataModelOptions.isModel(model)) {
         let key = (model as ODataModel<any>).key({
           field_mapping: true,
         }) as EntityKey<any>;
         if (key !== undefined)
-          resource = (resource as ODataModelResource<any>).key(key);
+          resource =
+            resource instanceof ODataEntitySetResource
+              ? resource.entity(key)
+              : resource.key(key);
       }
-      if (resource === undefined) break;
       if (field === null) {
         const query = model._resource?.cloneQuery().toQueryArguments();
         if (query !== undefined) resource.query.apply(query);
@@ -646,13 +650,14 @@ export class ODataModelOptions<T> {
         resource as ODataModelResource<any>
       );
     }
+    if (resource === undefined)
+      throw new Error(`resource: Can't build resource for ${child}`);
     return resource;
   }
+
   collectionResourceFactory({
     baseResource,
-  }: { baseResource?: ODataResource<T> } = {}):
-    | ODataCollectionResource<T>
-    | undefined {
+  }: { baseResource?: ODataResource<T> } = {}): ODataCollectionResource<T> {
     if (this.entitySet !== undefined)
       return ODataEntitySetResource.factory<T>(
         this.api,
@@ -661,27 +666,29 @@ export class ODataModelOptions<T> {
         new ODataPathSegments(),
         baseResource?.cloneQuery() || new ODataQueryOptions()
       );
-    return baseResource?.clone() as ODataCollectionResource<T> | undefined;
+    if (baseResource === undefined)
+      throw new Error("collectionResourceFactory: Can't build resource");
+    return baseResource.clone() as ODataCollectionResource<T>;
   }
 
   modelResourceFactory({
     baseResource,
-  }: { fromSet?: boolean; baseResource?: ODataResource<T> } = {}):
-    | ODataModelResource<T>
-    | undefined {
+  }: {
+    fromSet?: boolean;
+    baseResource?: ODataResource<T>;
+  } = {}): ODataModelResource<T> {
     const resource = this.collectionResourceFactory({ baseResource });
     if (resource instanceof ODataEntitySetResource) return resource.entity();
-    return resource as ODataModelResource<T> | undefined;
+    return resource as ODataModelResource<T>;
   }
 
   entityResource(self: ODataModel<T>): ODataModelResource<T> {
-    let resource = self._resource?.clone();
-    resource = this.modelResourceFactory({
-      baseResource: resource,
+    let resource = this.modelResourceFactory({
+      baseResource: self._resource,
       fromSet: true,
     });
     const key = self.key({ field_mapping: true }) as EntityKey<T>;
-    if (resource !== undefined && key !== undefined) return resource.key(key);
+    if (key !== undefined) return resource.key(key);
     return resource as ODataModelResource<T>;
   }
   //#endregion
@@ -693,7 +700,10 @@ export class ODataModelOptions<T> {
       resource,
       annots,
     }: {
-      parent?: [ODataModel<any>, ODataModelField<any>];
+      parent?: [
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null
+      ];
       resource?: ODataModelResource<T>;
       annots?: ODataEntityAnnotations;
     } = {}
@@ -701,10 +711,9 @@ export class ODataModelOptions<T> {
     // Parent
     if (parent !== undefined) {
       self._parent = parent;
-    } else {
+    } else if (resource !== undefined) {
       // Resource
-      resource = resource || this.modelResourceFactory({ fromSet: true });
-      if (resource !== undefined) this.attach(self, resource);
+      this.attach(self, resource);
     }
 
     // Annotations
@@ -878,6 +887,17 @@ export class ODataModelOptions<T> {
               (model !== null && model.hasChanged({ include_navigation })))
         )
     );
+  }
+
+  asEntity<R, M extends ODataModel<T>>(
+    self: M,
+    func: (model: M) => Observable<R>
+  ): Observable<R> {
+    const parent = self._parent;
+    self._parent = null;
+    const ret = func(self);
+    self._parent = parent;
+    return ret;
   }
 
   toEntity(
@@ -1326,10 +1346,7 @@ export class ODataModelOptions<T> {
     if (relation.model === null) {
       throw new Error('Subscription model is null');
     }
-    if (
-      relation.model._parent === null &&
-      relation.model.resource() === undefined
-    ) {
+    if (relation.model._parent === null) {
       relation.model._parent = [self, relation.field];
       if (ODataModelOptions.isCollection(relation.model)) {
         (relation.model as ODataCollection<F, ODataModel<F>>)._entries.forEach(
