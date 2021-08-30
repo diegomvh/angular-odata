@@ -496,6 +496,10 @@ export class ODataModel<T> {
     );
   }
 
+  /**
+   * Create an execution context for change the internal query of a resource
+   * @param func Function to execute
+   */
   query(
     func: (q: {
       select(opts?: Select<T>): OptionHandler<Select<T>>;
@@ -508,12 +512,22 @@ export class ODataModel<T> {
     if (resource !== undefined) return this._meta.query(this, resource, func);
   }
 
+  /**
+   * Perform a check on the internal state of the model and return true if the model is changed.
+   * @param include_navigation Check in navigation properties
+   * @returns true if the model has changed, false otherwise
+   */
   hasChanged({
     include_navigation = false,
   }: { include_navigation?: boolean } = {}) {
     return this._meta.hasChanged(this, { include_navigation });
   }
 
+  /**
+   * Create an execution context for a given function, where the model is bound to its entity endpoint
+   * @param func Context function
+   * @returns Observable of R
+   */
   asEntity<R>(func: (model: this) => Observable<R>): Observable<R> {
     return this._meta.asEntity(this, func);
   }
