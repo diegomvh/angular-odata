@@ -1,4 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
 import { ODataParserOptions } from '../options';
 import { ODataStructuredTypeFieldParser } from '../parsers';
@@ -895,9 +896,7 @@ export class ODataModelOptions<T> {
   ): Observable<R> {
     const parent = self._parent;
     self._parent = null;
-    const ret = func(self);
-    self._parent = parent;
-    return ret;
+    return func(self).pipe(tap(() => (self._parent = parent)));
   }
 
   toEntity(
