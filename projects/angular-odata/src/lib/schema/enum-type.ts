@@ -56,6 +56,26 @@ export class ODataEnumType<E> {
     return this.fields().find((f) => f.value === value);
   }
 
+  fieldTitle(value: number | string, pattern?: RegExp) {
+    const resolveTitle = (field?: ODataEnumTypeFieldParser) => {
+      if (field !== undefined) {
+        if (pattern !== undefined) {
+          const annotation = field.findAnnotation((a) => pattern.test(a.term));
+          if (annotation !== undefined && annotation.string !== undefined) {
+            return annotation.string;
+          }
+          return field.name;
+        }
+      }
+      return '';
+    };
+    if (typeof value === 'number') {
+      return resolveTitle(this.findFieldByValue(value));
+    } else {
+      return resolveTitle(this.findFieldByName(value));
+    }
+  }
+
   mapFields<T>(mapper: (field: ODataEnumTypeFieldParser) => T) {
     return this.fields().map(mapper);
   }

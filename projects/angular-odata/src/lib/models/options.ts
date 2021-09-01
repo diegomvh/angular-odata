@@ -576,9 +576,6 @@ export class ODataModelOptions<T> {
 
     const current = self._resource;
     if (current === undefined || !current.isEqualTo(resource)) {
-      if (resource instanceof ODataEntityResource) {
-        self._parent = null;
-      }
       self._resource = resource;
       self.events$.emit(
         new ODataModelEvent('attach', {
@@ -626,7 +623,7 @@ export class ODataModelOptions<T> {
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource =
         resource ||
-        model._resource ||
+        //model._resource ||
         (ODataModelOptions.isModel(model)
           ? (model as ODataModel<any>)._meta.modelResourceFactory()
           : (
@@ -1334,7 +1331,6 @@ export class ODataModelOptions<T> {
     relation: ODataModelRelation<F>
   ) {
     if (relation.subscription !== null) {
-      if (relation.model !== null) relation.model._parent = null;
       relation.subscription.unsubscribe();
       relation.subscription = null;
     }
@@ -1345,14 +1341,6 @@ export class ODataModelOptions<T> {
     }
     if (relation.model === null) {
       throw new Error('Subscription model is null');
-    }
-    if (relation.model._parent === null) {
-      relation.model._parent = [self, relation.field];
-      if (ODataModelOptions.isCollection(relation.model)) {
-        (relation.model as ODataCollection<F, ODataModel<F>>)._entries.forEach(
-          ({ model }) => (model._parent = [self, relation.field])
-        );
-      }
     }
     relation.subscription = relation.model.events$.subscribe(
       (event: ODataModelEvent<any>) => {

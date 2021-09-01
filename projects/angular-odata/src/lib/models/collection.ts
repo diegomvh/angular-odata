@@ -136,9 +136,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     const current = this._resource;
     if (current === undefined || !current.isEqualTo(resource)) {
-      if (resource instanceof ODataEntitySetResource) {
-        this._parent = null;
-      }
       this._resource = resource;
       this.events$.emit(
         new ODataModelEvent('attach', {
@@ -324,10 +321,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
    */
   save({
     relModel = false,
+    refOnly = false,
     method,
     ...options
   }: HttpOptions & {
     relModel?: boolean;
+    refOnly?: boolean;
     method?: 'update' | 'patch';
   } = {}): Observable<this> {
     const resource = this.resource();
@@ -361,6 +360,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
         ...toCreate.map((m) =>
           relModel
             ? m.asEntity((e) => e.save({ method: 'create', ...options }))
+            : refOnly
+            ? this.addReference(m, options)
             : m
                 .asEntity((e) =>
                   e.save({ method: m.isNew() ? 'create' : method, ...options })
@@ -837,7 +838,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _unsubscribe(entry: ODataModelEntry<T, M>) {
     if (entry.subscription !== null) {
-      entry.model._parent = null;
       entry.subscription.unsubscribe();
       entry.subscription = null;
     }
@@ -848,7 +848,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
       throw new Error('Subscription already exists');
     }
     // Set Parent
-    entry.model._parent = [this, null];
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
         if (
