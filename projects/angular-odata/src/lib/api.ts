@@ -34,6 +34,9 @@ import { ODataApiOptions } from './options';
 import { DEFAULT_VERSION } from './constants';
 import { ODataEntityService } from './services/entity';
 
+/**
+ * Api abstraction for consuming OData services.
+ */
 export class ODataApi {
   requester?: (request: ODataRequest<any>) => Observable<any>;
   serviceRootUrl: string;
@@ -92,7 +95,7 @@ export class ODataApi {
       });
     });
   }
-  //#region Resource Build Methods
+
   fromJSON<P, R>(json: {
     segments: ODataSegment[];
     options: { [name: string]: any };
@@ -130,31 +133,48 @@ export class ODataApi {
     throw new Error('No Resource for json');
   }
 
-  // Requests
+  /**
+   * Build a metadata resource.
+   * @returns ODataMetadataResource
+   */
   metadata(): ODataMetadataResource {
     return ODataMetadataResource.factory(this);
   }
 
+  /**
+   * Build a batch resource.
+   * @returns ODataBatchResource
+   */
   batch(): ODataBatchResource {
     return ODataBatchResource.factory(this);
   }
 
-  singleton<T>(path: string) {
-    const type = this.findEntitySetByName(path)?.entityType;
+  /**
+   * Build a singleton resource.
+   * @param name Name of the singleton
+   * @returns
+   */
+  singleton<T>(name: string) {
+    const type = this.findEntitySetByName(name)?.entityType;
     return ODataSingletonResource.factory<T>(
       this,
-      path,
+      name,
       type,
       new ODataPathSegments(),
       new ODataQueryOptions()
     );
   }
 
-  entitySet<T>(path: string): ODataEntitySetResource<T> {
-    const type = this.findEntitySetByName(path)?.entityType;
+  /**
+   * Build an entity set resource.
+   * @param name Name of the entity set
+   * @returns
+   */
+  entitySet<T>(name: string): ODataEntitySetResource<T> {
+    const type = this.findEntitySetByName(name)?.entityType;
     return ODataEntitySetResource.factory<T>(
       this,
-      path,
+      name,
       type,
       new ODataPathSegments(),
       new ODataQueryOptions()
@@ -163,19 +183,19 @@ export class ODataApi {
 
   /**
    * Unbound Action
-   * @param  {string} path?
+   * @param  {string} name?
    * @returns ODataActionResource
    */
-  action<P, R>(path: string): ODataActionResource<P, R> {
+  action<P, R>(name: string): ODataActionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(path);
+    const callable = this.findCallableForType(name);
     if (callable !== undefined) {
-      path = callable.path();
+      name = callable.path();
       type = callable.type();
     }
     return ODataActionResource.factory<P, R>(
       this,
-      path,
+      name,
       type,
       new ODataPathSegments(),
       new ODataQueryOptions()
@@ -184,25 +204,24 @@ export class ODataApi {
 
   /**
    * Unbound Function
-   * @param  {string} path?
+   * @param  {string} name?
    * @returns ODataFunctionResource
    */
-  function<P, R>(path: string): ODataFunctionResource<P, R> {
+  function<P, R>(name: string): ODataFunctionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(path);
+    const callable = this.findCallableForType(name);
     if (callable !== undefined) {
-      path = callable.path();
+      name = callable.path();
       type = callable.type();
     }
     return ODataFunctionResource.factory<P, R>(
       this,
-      path,
+      name,
       type,
       new ODataPathSegments(),
       new ODataQueryOptions()
     );
   }
-  //#endregion
 
   request(req: ODataRequest<any>): Observable<any> {
     let res$ = this.requester !== undefined ? this.requester(req) : NEVER;
@@ -222,7 +241,6 @@ export class ODataApi {
       : res$;
   }
 
-  //#region Find Schema for Type
   private findSchemaForType(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length > 1)
@@ -251,20 +269,22 @@ export class ODataApi {
   public findEntitySetForType(type: string) {
     return this.findSchemaForType(type)?.findEntitySetForType(type);
   }
-  //#region Model and Collection for type
   public findModelForType(type: string) {
     return this.findStructuredTypeForType<any>(type)?.model as
       | typeof ODataModel
       | undefined;
   }
+
   public modelForType(type?: string) {
     return (type && this.findModelForType(type)) || ODataModel;
   }
+
   public findCollectionForType(type: string) {
     return this.findStructuredTypeForType<any>(type)?.collection as
       | typeof ODataCollection
       | undefined;
   }
+
   public collectionForType(type?: string) {
     return (type && this.findCollectionForType(type)) || ODataCollection;
   }
@@ -273,9 +293,7 @@ export class ODataApi {
       | typeof ODataEntityService
       | undefined;
   }
-  //#endregion
 
-  //#region find Schema for Entity Type
   public findEntitySetForEntityType(entityType: string) {
     return this.schemas
       .reduce(
@@ -290,11 +308,7 @@ export class ODataApi {
       | typeof ODataEntityService
       | undefined;
   }
-  //#endregion
 
-  //#endregion
-
-  //#region Find Config for Name
   public findEnumTypeByName<T>(name: string) {
     return this.schemas
       .reduce(
@@ -335,7 +349,6 @@ export class ODataApi {
       .find((e) => e.name === name);
   }
 
-  //#region Model and Collection for type
   public findModelByName(name: string) {
     return this.findStructuredTypeByName<any>(name)?.model as
       | typeof ODataModel
@@ -351,8 +364,6 @@ export class ODataApi {
       | typeof ODataEntityService
       | undefined;
   }
-  //#endregion
-  //#endregion
 
   public parserForType<T>(type: string, bindingType?: string) {
     // Edm, Base Parsers
