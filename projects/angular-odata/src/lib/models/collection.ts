@@ -147,16 +147,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  /*
-  attachToEntitySet() {
-    this.attach(
-      this._model.meta.collectionResourceFactory({
-        baseResource: this._resource,
-      })
-    );
-  }
-  */
-
   asEntitySet<R>(func: (collection: this) => Observable<R>): Observable<R> {
     const parent = this._parent;
     this._parent = null;
@@ -242,12 +232,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  clone() {
+  clone<C extends ODataCollection<T, M>>() {
     let Ctor = <typeof ODataCollection>this.constructor;
     return new Ctor(this.toEntities(INCLUDE_ALL), {
       resource: this.resource() as ODataCollectionResource<T>,
       annots: this.annots(),
-    });
+    }) as C;
   }
 
   fetch({

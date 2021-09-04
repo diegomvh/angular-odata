@@ -138,17 +138,6 @@ export class ODataModel<T> {
   attach(resource: ODataModelResource<T>) {
     return this._meta.attach(this, resource);
   }
-
-  /*
-  attachToEntity() {
-    this.attach(
-      this._meta.modelResourceFactory({
-        baseResource: this._resource,
-        fromSet: true,
-      })
-    );
-  }
-  */
   //#endregion
 
   schema() {
@@ -360,12 +349,12 @@ export class ODataModel<T> {
     return this._meta.assign(this, entity, { reset, silent });
   }
 
-  clone() {
+  clone<M extends ODataModel<T>>() {
     let Ctor = <typeof ODataModel>this.constructor;
     return new Ctor(this.toEntity(INCLUDE_ALL), {
       resource: this.resource() as ODataModelResource<T>,
       annots: this.annots(),
-    });
+    }) as M;
   }
 
   private _request(obs$: Observable<ODataEntity<any>>): Observable<this> {
