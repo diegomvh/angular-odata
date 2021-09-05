@@ -447,7 +447,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset = false,
     }: { silent?: boolean; reset?: boolean } = {}
   ) {
-    const added = this._addModel(model, { silent, reset });
+    const position = this.bisect(model);
+    const added = this._addModel(model, { silent, reset, position });
     if (!silent && added !== undefined) {
       this.events$.emit(
         new ODataModelEvent('update', {
@@ -726,23 +727,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
 
     if (
-      !silent &&
-      (toAdd.length > 0 ||
-        toRemove.length > 0 ||
-        toMerge.length > 0 ||
-        toSort.length > 0)
+      toAdd.length > 0 ||
+      toRemove.length > 0 ||
+      toMerge.length > 0 ||
+      toSort.length > 0
     ) {
-      this.events$.emit(
-        new ODataModelEvent(reset ? 'reset' : 'update', {
-          collection: this,
-          options: {
-            added: toAdd,
-            removed: toRemove,
-            merged: toMerge,
-            sorted: toSort,
-          },
-        })
-      );
+      this._sortBy = null;
+      if (!silent) {
+        this.events$.emit(
+          new ODataModelEvent(reset ? 'reset' : 'update', {
+            collection: this,
+            options: {
+              added: toAdd,
+              removed: toRemove,
+              merged: toMerge,
+              sorted: toSort,
+            },
+          })
+        );
+      }
     }
   }
 
@@ -909,14 +912,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   //#region Sort
-  private _sort(
-    e1: ODataModelEntry<T, M>,
-    e2: ODataModelEntry<T, M>,
+  private _compare(
+    e1: ODataModelEntry<T, M> | M,
+    e2: ODataModelEntry<T, M> | M,
     by: { field: string | keyof T; order?: 1 | -1 }[],
     index: number
   ): number {
-    let value1 = e1.model.get(by[index].field as string);
-    let value2 = e2.model.get(by[index].field as string);
+    let m1 = ODataModelOptions.isModel(e1)
+      ? (e1 as M)
+      : (e1 as ODataModelEntry<T, M>).model;
+    let m2 = ODataModelOptions.isModel(e2)
+      ? (e2 as M)
+      : (e2 as ODataModelEntry<T, M>).model;
+    let value1 = m1.get(by[index].field as string);
+    let value2 = m2.get(by[index].field as string);
     let result: number = 0;
 
     if (value1 == null && value2 != null) result = -1;
@@ -931,19 +940,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
 
     if (value1 == value2) {
-      return by.length - 1 > index ? this._sort(e1, e2, by, index + 1) : 0;
+      return by.length - 1 > index ? this._compare(e1, e2, by, index + 1) : 0;
     }
 
     return (by[index].order || 1) * result;
+  }
+
+  _sortBy: { field: string | keyof T; order?: 1 | -1 }[] | null = null;
+  isSorted() {
+    return this._sortBy !== null;
   }
 
   sort(
     by: { field: string | keyof T; order?: 1 | -1 }[],
     { silent }: { silent?: boolean } = {}
   ) {
+    this._sortBy = by;
     this._entries = this._entries.sort(
       (e1: ODataModelEntry<T, M>, e2: ODataModelEntry<T, M>) =>
-        this._sort(e1, e2, by, 0)
+        this._compare(e1, e2, by, 0)
     );
     if (!silent) {
       this.events$.emit(
@@ -953,5 +968,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
     }
   }
+
+  bisect(model: M) {
+    let index = -1;
+    if (this._sortBy !== null) {
+      for (index = 0; index < this.length; index++) {
+        if (this._compare(model, this._entries[index], this._sortBy, 0) < 0) {
+          return index;
+        }
+      }
+    }
+    return index;
+  }
+
   //#endregion
 }
