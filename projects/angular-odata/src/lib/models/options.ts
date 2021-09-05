@@ -276,6 +276,18 @@ export class ODataModelField<F> {
     return this.parser.isStructuredType();
   }
 
+  structured() {
+    return this.parser.structured();
+  }
+
+  isEnumType() {
+    return this.parser.isEnumType();
+  }
+
+  enum() {
+    return this.parser.enum();
+  }
+
   validate(
     value: any,
     {
