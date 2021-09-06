@@ -1354,6 +1354,8 @@ export class ODataModelOptions<T> {
     if (relation.model === null) {
       throw new Error('Subscription model is null');
     }
+    // TODO: Set Parent only if model is not part of a parent chain
+    relation.model._parent = [self, null];
     relation.subscription = relation.model.events$.subscribe(
       (event: ODataModelEvent<any>) => {
         if (
