@@ -840,8 +840,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (entry.subscription !== null) {
       throw new Error('Subscription already exists');
     }
-    // TODO: Set Parent only if model is not part of a parent chain
-    entry.model._parent = [this, null];
+    if (!entry.model.isParentOf(this)) {
+      entry.model._parent = [this, null];
+    }
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
         if (
