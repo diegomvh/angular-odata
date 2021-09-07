@@ -7,7 +7,7 @@ import {
   ODataStructuredTypeFieldParser,
   ODataStructuredTypeParser,
 } from '../parsers';
-import { Options, OptionsHelper, Parser, StructuredTypeConfig } from '../types';
+import { Options, StructuredTypeConfig } from '../types';
 import { ODataAnnotation } from './annotation';
 import { ODataSchema } from './schema';
 

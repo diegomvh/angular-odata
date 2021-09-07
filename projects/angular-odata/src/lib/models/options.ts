@@ -199,16 +199,14 @@ export class ODataModelField<F> {
   parser: ODataStructuredTypeFieldParser<F>;
   modelOptions: ODataModelOptions<any>;
   meta?: ODataModelOptions<any>;
-  options: {
-    default?: any;
-    required?: boolean;
-    concurrency?: boolean;
-    maxLength?: number;
-    minLength?: number;
-    min?: number;
-    max?: number;
-    pattern?: RegExp;
-  };
+  default?: any;
+  required: boolean;
+  concurrency: boolean;
+  maxLength?: number;
+  minLength?: number;
+  min?: number;
+  max?: number;
+  pattern?: RegExp;
   constructor(
     modelOptions: ODataModelOptions<any>,
     { name, field, parser, ...options }: ODataModelFieldOptions<F>
@@ -217,18 +215,22 @@ export class ODataModelField<F> {
     this.name = name;
     this.field = field;
     this.parser = parser;
-    this.options = options;
+    this.default = options.default || this.parser.default;
+    this.required = Boolean(options.required);
+    this.concurrency = Boolean(options.concurrency);
+    this.maxLength = options.maxLength;
+    this.minLength = options.minLength;
+    this.min = options.min;
+    this.max = options.max;
+    this.pattern = options.pattern;
   }
 
   get api() {
     return this.modelOptions.api;
   }
+
   get type() {
     return this.parser.type;
-  }
-
-  get default() {
-    return this.options.default || this.parser.default;
   }
 
   get navigation() {
@@ -237,10 +239,6 @@ export class ODataModelField<F> {
 
   get collection() {
     return Boolean(this.parser.collection);
-  }
-
-  get concurrency() {
-    return Boolean(this.options.concurrency);
   }
 
   get computed() {
@@ -257,7 +255,7 @@ export class ODataModelField<F> {
     concurrency: boolean;
   }) {
     this.meta = findOptionsForType(this.parser.type);
-    if (concurrency) this.options.concurrency = concurrency;
+    if (concurrency) this.concurrency = concurrency;
   }
 
   isKey() {
@@ -277,7 +275,7 @@ export class ODataModelField<F> {
   }
 
   structured() {
-    return this.parser.structured();
+    return this.api.findStructuredTypeForType<F>(this.parser.type);
   }
 
   isEnumType() {
@@ -285,7 +283,7 @@ export class ODataModelField<F> {
   }
 
   enum() {
-    return this.parser.enum();
+    return this.api.findEnumTypeForType<F>(this.parser.type);
   }
 
   validate(
@@ -314,43 +312,43 @@ export class ODataModelField<F> {
     } else {
       let errors = this.parser?.validate(value, { method, navigation }) || [];
       if (
-        this.options.required &&
+        this.required &&
         (value === null || (value === undefined && method !== 'patch')) // Is null or undefined without patch?
       ) {
         errors.push(`required`);
       }
       if (
-        this.options.maxLength !== undefined &&
+        this.maxLength !== undefined &&
         typeof value === 'string' &&
-        value.length > this.options.maxLength
+        value.length > this.maxLength
       ) {
         errors.push(`maxlength`);
       }
       if (
-        this.options.minLength !== undefined &&
+        this.minLength !== undefined &&
         typeof value === 'string' &&
-        value.length < this.options.minLength
+        value.length < this.minLength
       ) {
         errors.push(`minlength`);
       }
       if (
-        this.options.min !== undefined &&
+        this.min !== undefined &&
         typeof value === 'number' &&
-        value < this.options.min
+        value < this.min
       ) {
         errors.push(`min`);
       }
       if (
-        this.options.max !== undefined &&
+        this.max !== undefined &&
         typeof value === 'number' &&
-        value > this.options.max
+        value > this.max
       ) {
         errors.push(`max`);
       }
       if (
-        this.options.pattern !== undefined &&
+        this.pattern !== undefined &&
         typeof value === 'string' &&
-        !this.options.pattern.test(value)
+        !this.pattern.test(value)
       ) {
         errors.push(`pattern`);
       }
