@@ -4,8 +4,6 @@ import { expand, concatMap, toArray, map } from 'rxjs/operators';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
-import { Types } from '../../utils/types';
-import { Objects } from '../../utils';
 import { EntityKey, ODataResource } from '../resource';
 import {
   Expand,
@@ -13,7 +11,6 @@ import {
   Transform,
   Filter,
   OrderBy,
-  isQueryCustomType,
 } from '../builder';
 import {
   ODataEntities,
@@ -60,6 +57,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       ? this.api.findStructuredTypeForType<T>(type)
       : undefined;
   }
+
   asModel<M extends ODataModel<T>>(
     entity: Partial<T> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
@@ -117,6 +115,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       this.cloneQuery()
     );
   }
+
   navigationProperty<N>(path: string) {
     let type = this.type();
     if (type !== undefined) {

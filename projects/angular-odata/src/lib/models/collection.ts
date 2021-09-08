@@ -447,7 +447,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset = false,
     }: { silent?: boolean; reset?: boolean } = {}
   ) {
-    const position = this.bisect(model);
+    const position = this._bisect(model);
     const added = this._addModel(model, { silent, reset, position });
     if (!silent && added !== undefined) {
       this.events$.emit(
@@ -914,6 +914,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   //#region Sort
+  private _bisect(model: M) {
+    let index = -1;
+    if (this._sortBy !== null) {
+      for (index = 0; index < this._entries.length; index++) {
+        if (this._compare(model, this._entries[index], this._sortBy, 0) < 0) {
+          return index;
+        }
+      }
+    }
+    return index;
+  }
+
   private _compare(
     e1: ODataModelEntry<T, M> | M,
     e2: ODataModelEntry<T, M> | M,
@@ -970,18 +982,5 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
     }
   }
-
-  bisect(model: M) {
-    let index = -1;
-    if (this._sortBy !== null) {
-      for (index = 0; index < this.length; index++) {
-        if (this._compare(model, this._entries[index], this._sortBy, 0) < 0) {
-          return index;
-        }
-      }
-    }
-    return index;
-  }
-
   //#endregion
 }

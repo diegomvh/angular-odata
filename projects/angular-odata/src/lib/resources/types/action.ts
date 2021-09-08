@@ -23,6 +23,7 @@ import { ODataEntityResource } from './entity';
 import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataResource } from '../resource';
+
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
   static factory<P, R>(
@@ -54,6 +55,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       ? this.api.findCallableForType<R>(type)
       : undefined;
   }
+
   returnType() {
     return this.schema()?.parser.return?.type;
   }
