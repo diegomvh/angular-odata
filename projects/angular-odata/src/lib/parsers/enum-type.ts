@@ -58,7 +58,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
 
   // Deserialize
   deserialize(value: string, options?: OptionsHelper): T {
-    // string -> Type
+    // string -> number
     options = options || this.optionsHelper;
     if (this.flags) {
       return Enums.toValues(this.members, value).reduce(
@@ -72,15 +72,22 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
 
   // Serialize
   serialize(value: T, options?: OptionsHelper): string {
-    // Type -> string
+    // Enum are string | number
+    // string | number -> string
     options = options || this.optionsHelper;
     if (this.flags) {
-      const names = Enums.toNames(this.members, value);
+      const names =
+        typeof value === 'number'
+          ? Enums.toNames(this.members, value)
+          : [(<any>value) as string];
       return !options?.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
-      const name = Enums.toName(this.members, (<any>value) as number);
+      const name =
+        typeof value === 'number'
+          ? Enums.toName(this.members, value)
+          : ((<any>value) as string);
       return !options?.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
         : name;
