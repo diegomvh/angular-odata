@@ -205,7 +205,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   patch(
     attrs: Partial<T>,
     options: HttpOptions & { etag?: string } = {}
-  ): Observable<T> {
+  ): Observable<ODataEntity<T>> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
