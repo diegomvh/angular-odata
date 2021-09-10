@@ -21,6 +21,8 @@ export class ODataResponseOptions implements ResponseOptions {
   metadata?: ODataMetadataType;
   stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
+  // Location
+  location?: string;
   // Cache
   cacheability?: 'public' | 'private' | 'no-cache' | 'no-store';
   maxAge?: number;
@@ -59,6 +61,11 @@ export class ODataResponseOptions implements ResponseOptions {
     const value = version.replace(/\;/g, '').trim();
     if ([VERSION_2_0, VERSION_3_0, VERSION_4_0].indexOf(value) !== -1)
       this.version = value as ODataVersion;
+  }
+
+  setLocation(location: string) {
+    // TODO: resolve location?
+    this.location = location;
   }
 
   setCache(cacheControl: string) {

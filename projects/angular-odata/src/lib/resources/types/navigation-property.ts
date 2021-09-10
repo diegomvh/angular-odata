@@ -5,13 +5,7 @@ import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
 import { EntityKey, ODataResource } from '../resource';
-import {
-  Expand,
-  Select,
-  Transform,
-  Filter,
-  OrderBy,
-} from '../builder';
+import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
 import {
   ODataEntities,
   ODataEntitiesAnnotations,
@@ -27,6 +21,11 @@ import { ODataPropertyResource } from './property';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
 import { ODataMediaResource } from './media';
 
+/**
+ * OData Navigation Property Resource
+ * https://www.odata.org/getting-started/advanced-tutorial/#containment
+ * https://www.odata.org/getting-started/advanced-tutorial/#derived
+ */
 export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(
@@ -264,6 +263,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   get(options: HttpEntitiesOptions): Observable<ODataEntities<T>>;
   get(options: HttpEntityOptions & HttpEntitiesOptions): Observable<any> {
     return super.get(options);
+  }
+
+  post(
+    attrs: Partial<T>,
+    options: HttpOptions = {}
+  ): Observable<ODataEntity<T>> {
+    return super.post(attrs, { responseType: 'entity', ...options });
   }
   //#endregion
 

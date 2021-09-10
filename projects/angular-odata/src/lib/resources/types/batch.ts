@@ -182,6 +182,10 @@ export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
   }
 }
 
+/**
+ * OData Batch Resource
+ * https://www.odata.org/getting-started/advanced-tutorial/#batch
+ */
 export class ODataBatchResource extends ODataResource<any> {
   // VARIABLES
   private requests: ODataBatchRequest<any>[] = [];

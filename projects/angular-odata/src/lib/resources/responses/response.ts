@@ -14,6 +14,7 @@ import {
   ODATA_VERSION_HEADERS,
   CONTENT_TYPE,
   CACHE_CONTROL,
+  LOCATION_HEADER,
 } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
@@ -106,6 +107,12 @@ export class ODataResponse<T> extends HttpResponse<T> {
           | '4.0';
         this._options.setVersion(version);
       }
+
+      const location = this.headers.get(LOCATION_HEADER);
+      if (location) {
+        this._options.setLocation(location);
+      }
+
       const cacheControl = this.headers.get(CACHE_CONTROL);
       if (cacheControl) {
         this._options.setCache(cacheControl);
