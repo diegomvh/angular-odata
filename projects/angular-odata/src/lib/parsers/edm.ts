@@ -47,6 +47,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       value: string | string[],
       options: StructuredTypeFieldOptions
     ): Date | Date[] {
+      //TODO: Check valid input for date
       const _deserialize = (v: string) => new Date(`${v}T00:00:00.000Z`);
       return Array.isArray(value)
         ? value.map(_deserialize)
@@ -71,6 +72,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
       value: string | string[],
       options: StructuredTypeFieldOptions
     ): Date | Date[] {
+      //TODO: Check valid input for time of day
       const _deserialize = (v: string) => new Date(`1970-01-01T${v}Z`);
       return Array.isArray(value)
         ? value.map(_deserialize)

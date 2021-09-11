@@ -113,8 +113,8 @@ export const TripConfig = {
         { term: 'Org.OData.Measures.V1.Scale', int: 2 },
       ],
     },
-    StartsAt: { type: 'Edm.Date', nullable: false },
-    EndsAt: { type: 'Edm.Date', nullable: false },
+    StartsAt: { type: 'Edm.DateTimeOffset', nullable: false },
+    EndsAt: { type: 'Edm.DateTimeOffset', nullable: false },
     Tags: { type: 'Edm.String', nullable: false, collection: true },
     Photos: { type: `${NAMESPACE}.Photo`, collection: true, navigation: true },
     PlanItems: {
@@ -187,7 +187,7 @@ export const TripPinConfig = {
   serviceRootUrl: SERVICE_ROOT,
   options: {
     stringAsEnum: true,
-    stripMetadata: 'minimal',
+    stripMetadata: 'full',
     fetchPolicy: 'no-cache',
   },
   schemas: [

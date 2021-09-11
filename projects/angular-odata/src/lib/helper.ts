@@ -247,7 +247,7 @@ export const ODataHelper = {
         } else if (parts[0].indexOf('.') !== -1) {
           ctx.type = parts[0];
         } else {
-          const prop = parts[0].match(/([\w\d\-_]+)\(([\(\)\w\d\-_]+)\)/);
+          const prop = parts[0].match(/([\w\d\-_]+)\(([\(\)\'\w\d\-_]+)\)/);
           if (prop) {
             ctx.entitySet = prop[1];
             ctx.key = prop[2];
