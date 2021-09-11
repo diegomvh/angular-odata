@@ -17,7 +17,14 @@ import {
 import { ODataModule } from './module';
 import { ODataStructuredTypeParser } from './parsers';
 import { HttpHeaders } from '@angular/common/http';
-import { TripPinConfig, Person, NAMESPACE, SERVICE_ROOT } from './trippin.spec';
+import {
+  TripPinConfig,
+  Person,
+  NAMESPACE,
+  SERVICE_ROOT,
+  PlanItem,
+  Trip,
+} from './trippin.spec';
 import { ODataStructuredType } from './schema';
 import { Http } from './utils';
 
@@ -255,17 +262,62 @@ describe('ODataClient', () => {
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
       .entity('russellwhyte');
 
-    const entityPerson = Object.assign({}, person, entityMetadata);
     entity.get().subscribe(({ entity, annots }) => {
       expect(annots.context.entitySet).toEqual('People');
       expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
-      expect(entity).toEqual(entityPerson);
+      expect(entity).toEqual(person);
     });
 
     const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);
     expect(req.request.method).toBe('GET');
 
     const data = Object.assign({}, person, entityMetadata, entityFunctions);
+    req.flush(data);
+  });
+
+  it('should create trip', () => {
+    const trip: Trip = {
+      TripId: 3,
+      ShareId: '00000000-0000-0000-0000-000000000000',
+      Description: 'Create Containment',
+      Name: 'Test Trip',
+      Budget: 1000,
+      StartsAt: new Date(Date.parse('2014-01-01T00:00:00+08:00')),
+      EndsAt: new Date(Date.parse('2014-02-01T00:00:00+08:00')),
+      Tags: ['Test Tag 1', 'Test Tag 2'],
+    };
+    const data = {
+      '@odata.context':
+        "serviceRoot/$metadata#People('russellwhyte')/Trips/$entity",
+      ...trip,
+      StartsAt: '2014-01-01T00:00:00+08:00',
+      EndsAt: '2014-02-01T00:00:00+08:00',
+    };
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Trip>('Trips')
+      .post({
+        //'@odata.type': 'Microsoft.OData.SampleService.Models.TripPin.Trip',
+        TripId: 3,
+        ShareId: '00000000-0000-0000-0000-000000000000',
+        Description: 'Create Containment',
+        Name: 'Test Trip',
+        StartsAt: new Date(Date.parse('2014-01-01T00:00:00+08:00')),
+        EndsAt: new Date(Date.parse('2014-02-01T00:00:00+08:00')),
+        Budget: 1000,
+        Tags: ['Test Tag 1', 'Test Tag 2'],
+      })
+      .subscribe(({ entity, annots: meta }) => {
+        expect(entity !== null).toBeTrue();
+        expect(meta.context.entitySet).toEqual('People');
+        expect(entity).toEqual(trip);
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Trips`
+    );
+    expect(req.request.method).toBe('POST');
     req.flush(data);
   });
 
