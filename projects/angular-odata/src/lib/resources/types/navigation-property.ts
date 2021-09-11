@@ -271,6 +271,24 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
+
+  put(
+    attrs: Partial<T>,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.put(attrs, { responseType: 'entity', ...options });
+  }
+
+  patch(
+    attrs: Partial<T>,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.patch(attrs, { responseType: 'entity', ...options });
+  }
+
+  delete(options: HttpOptions & { etag?: string } = {}): Observable<any> {
+    return super.delete({ responseType: 'entity', ...options });
+  }
   //#endregion
 
   //#region Shortcuts
