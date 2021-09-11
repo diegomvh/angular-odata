@@ -370,6 +370,24 @@ describe('ODataClient', () => {
     req.flush(data);
   });
 
+  it('should delete trip', () => {
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Trip>('Trips')
+      .key(1001)
+      .delete()
+      .subscribe(({ entity, annots: meta }) => {
+        expect(entity).toBeNull();
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Trips(1001)`
+    );
+    expect(req.request.method).toBe('DELETE');
+    req.flush('');
+  });
+
   it('should execute batch', () => {
     const payload = {
       '@odata.context':
