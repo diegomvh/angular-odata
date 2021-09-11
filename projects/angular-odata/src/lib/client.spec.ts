@@ -321,6 +321,55 @@ describe('ODataClient', () => {
     req.flush(data);
   });
 
+  it('should create planItem', () => {
+    const item: PlanItem = {
+      //"@odata.type": "#Microsoft.OData.SampleService.Models.TripPin.Event",
+      ConfirmationCode: '4372899DD',
+      Description: 'Client Meeting',
+      Duration: 'PT3H',
+      EndsAt: new Date('2014-06-01T23:11:17.5479185-07:00'),
+      OccursAt: {
+        '@odata.type':
+          '#Microsoft.OData.SampleService.Models.TripPin.EventLocation',
+        Address: '100 Church Street, 8th Floor, Manhattan, 10007',
+        BuildingInfo: 'Regus Business Center',
+        City: {
+          '@odata.type': '#Microsoft.OData.SampleService.Models.TripPin.City',
+          CountryRegion: 'United States',
+          Name: 'New York City',
+          Region: 'New York',
+        },
+      },
+      PlanItemId: 33,
+      StartsAt: new Date('2014-05-25T23:11:17.5459178-07:00'),
+    };
+    const data = {
+      '@odata.context':
+        "serviceRoot/$metadata#People('russellwhyte')/Trips(1003)/PlanItems/$entity",
+      ...item,
+      StartsAt: '2014-05-25T23:11:17.5459178-07:00',
+      EndsAt: '2014-06-01T23:11:17.5479185-07:00',
+    };
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Trip>('Trips')
+      .key(1003)
+      .navigationProperty<PlanItem>('PlanItems')
+      .post(item)
+      .subscribe(({ entity, annots: meta }) => {
+        expect(entity !== null).toBeTrue();
+        expect(meta.context.entitySet).toEqual('People');
+        expect(entity).toEqual(item);
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Trips(1003)/PlanItems`
+    );
+    expect(req.request.method).toBe('POST');
+    req.flush(data);
+  });
+
   it('should execute batch', () => {
     const payload = {
       '@odata.context':

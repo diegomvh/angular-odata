@@ -51,7 +51,9 @@ export const PhotoConfig = {
 export interface PlanItem {
   PlanItemId: number;
   ConfirmationCode?: string;
+  Description?: string;
   StartsAt?: Date;
+  OccursAt?: any;
   EndsAt?: Date;
   Duration?: string;
 }
@@ -70,8 +72,8 @@ export const PlanItemConfig = {
       ],
     },
     ConfirmationCode: { type: 'Edm.String' },
-    StartsAt: { type: 'Edm.Date' },
-    EndsAt: { type: 'Edm.Date' },
+    StartsAt: { type: 'Edm.DateTimeOffset' },
+    EndsAt: { type: 'Edm.DateTimeOffset' },
     Duration: { type: 'Edm.String' },
   },
 } as StructuredTypeConfig<PlanItem>;
