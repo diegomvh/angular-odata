@@ -119,6 +119,9 @@
                                 <a href="#fields">fields</a>
                             </li>
                             <li>
+                                <a href="#fieldTitle">fieldTitle</a>
+                            </li>
+                            <li>
                                 <a href="#findAnnotation">findAnnotation</a>
                             </li>
                             <li>
@@ -434,8 +437,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="63"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:63</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:83</a></div>
                 </td>
             </tr>
 
@@ -516,8 +519,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="79"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:79</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:99</a></div>
                 </td>
             </tr>
 
@@ -610,6 +613,88 @@
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEnumTypeFieldParser[]</a></code>
 
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fieldTitle"></a>
+                    <span class="name">
+                        <b>
+                            fieldTitle
+                        </b>
+                        <a href="#fieldTitle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fieldTitle(value: number | string, pattern?: RegExp)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                            <code>number | string</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>pattern</td>
+                                    <td>
+                                            <code>RegExp</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -917,8 +1002,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="59"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:59</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:79</a></div>
                 </td>
             </tr>
 
@@ -995,8 +1080,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:91</a></div>
                 </td>
             </tr>
 
@@ -1221,6 +1306,26 @@ export class ODataEnumType&lt;E&gt; {
 
   findFieldByValue(value: number) {
     return this.fields().find((f) &#x3D;&gt; f.value &#x3D;&#x3D;&#x3D; value);
+  }
+
+  fieldTitle(value: number | string, pattern?: RegExp) {
+    const resolveTitle &#x3D; (field?: ODataEnumTypeFieldParser) &#x3D;&gt; {
+      if (field !&#x3D;&#x3D; undefined) {
+        if (pattern !&#x3D;&#x3D; undefined) {
+          const annotation &#x3D; field.findAnnotation((a) &#x3D;&gt; pattern.test(a.term));
+          if (annotation !&#x3D;&#x3D; undefined &amp;&amp; annotation.string !&#x3D;&#x3D; undefined) {
+            return annotation.string;
+          }
+          return field.name;
+        }
+      }
+      return &#x27;&#x27;;
+    };
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+      return resolveTitle(this.findFieldByValue(value));
+    } else {
+      return resolveTitle(this.findFieldByName(value));
+    }
   }
 
   mapFields&lt;T&gt;(mapper: (field: ODataEnumTypeFieldParser) &#x3D;&gt; T) {

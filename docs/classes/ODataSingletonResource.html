@@ -1618,7 +1618,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -4336,7 +4336,7 @@ export class ODataSingletonResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   patch(
     attrs: Partial&lt;T&gt;,
     options: HttpOptions &amp; { etag?: string } &#x3D; {}
-  ): Observable&lt;T&gt; {
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return super.patch(attrs, { responseType: &#x27;entity&#x27;, ...options });
   }
 

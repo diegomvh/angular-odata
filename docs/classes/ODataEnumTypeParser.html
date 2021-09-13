@@ -604,8 +604,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="91"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:91</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:92</a></div>
                 </td>
             </tr>
 
@@ -838,8 +838,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="98"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:98</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:99</a></div>
                 </td>
             </tr>
 
@@ -877,8 +877,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:108</a></div>
                 </td>
             </tr>
 
@@ -1012,7 +1012,7 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
 
   // Deserialize
   deserialize(value: string, options?: OptionsHelper): T {
-    // string -&gt; Type
+    // string -&gt; number
     options &#x3D; options || this.optionsHelper;
     if (this.flags) {
       return Enums.toValues(this.members, value).reduce(
@@ -1026,7 +1026,8 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
 
   // Serialize
   serialize(value: T, options?: OptionsHelper): string {
-    // Type -&gt; string
+    // Enum are string | number
+    // string | number -&gt; string
     options &#x3D; options || this.optionsHelper;
     if (this.flags) {
       const names &#x3D; Enums.toNames(this.members, value);
@@ -1034,7 +1035,7 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
         ? &#x60;${this.namespace}.${this.name}&#x27;${names.join(&#x27;, &#x27;)}&#x27;&#x60;
         : names.join(&#x27;, &#x27;);
     } else {
-      const name &#x3D; Enums.toName(this.members, (&lt;any&gt;value) as number);
+      const name &#x3D; Enums.toName(this.members, value);
       return !options?.stringAsEnum
         ? &#x60;${this.namespace}.${this.name}&#x27;${name}&#x27;&#x60;
         : name;

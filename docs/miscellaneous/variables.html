@@ -2382,6 +2382,7 @@
       value: string | string[],
       options: StructuredTypeFieldOptions
     ): Date | Date[] {
+      //TODO: Check valid input for date
       const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(&#x60;${v}T00:00:00.000Z&#x60;);
       return Array.isArray(value)
         ? value.map(_deserialize)
@@ -2406,6 +2407,7 @@
       value: string | string[],
       options: StructuredTypeFieldOptions
     ): Date | Date[] {
+      //TODO: Check valid input for time of day
       const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(&#x60;1970-01-01T${v}Z&#x60;);
       return Array.isArray(value)
         ? value.map(_deserialize)
@@ -2848,7 +2850,7 @@
         } else if (parts[0].indexOf(&#x27;.&#x27;) !&#x3D;&#x3D; -1) {
           ctx.type &#x3D; parts[0];
         } else {
-          const prop &#x3D; parts[0].match(/([\w\d\-_]+)\(([\(\)\w\d\-_]+)\)/);
+          const prop &#x3D; parts[0].match(/([\w\d\-_]+)\(([\(\)\&#x27;\w\d\-_]+)\)/);
           if (prop) {
             ctx.entitySet &#x3D; prop[1];
             ctx.key &#x3D; prop[2];
@@ -3164,49 +3166,49 @@
                         <td class="col-md-4">
                             <i>Default value : </i><code>{
   names&lt;E&gt;(Enum: E): string[] {
-    return Object.keys(Enum).filter(
-      (k) &#x3D;&gt; typeof (Enum as any)[k] &#x3D;&#x3D;&#x3D; &#x27;number&#x27;
-    );
+    return Object.values(Enum).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;);
   },
 
   values&lt;E&gt;(Enum: E): number[] {
     return Object.values(Enum).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
   },
 
-  toValue&lt;E&gt;(Enum: E, value: string): number {
-    return (Enum as any)[value] as number;
+  toValue&lt;E&gt;(Enum: E, value: any): number {
+    if (value in Enum)
+      return typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? (Enum as any)[value] : value;
+    return NaN;
   },
 
   toValues&lt;E&gt;(Enum: E, value: any): number[] {
-    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
-      return value
-        .split(&#x27;,&#x27;)
-        .map((opcion) &#x3D;&gt; this.toValue(Enum, opcion.trim()));
-    } else if (
-      Array.isArray(value) &amp;&amp;
-      value.every((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;)
-    ) {
-      return value.map((opcion) &#x3D;&gt; this.toValue(Enum, opcion.trim()));
-    } else if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
       return this.values(Enum).filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v);
+    }
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+      value &#x3D; value.split(&#x27;,&#x27;).map((o) &#x3D;&gt; o.trim());
+    }
+    if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in Enum)) {
+      return value.map((o) &#x3D;&gt; this.toValue(Enum, o));
     }
     return [];
   },
 
-  toName&lt;E&gt;(Enum: E, value: number): string {
-    return (Enum as any)[value] as string;
+  toName&lt;E&gt;(Enum: E, value: any): string {
+    if (value in Enum)
+      return typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? (Enum as any)[value] : value;
+    return &#x27;&#x27;;
   },
 
   toNames&lt;E&gt;(Enum: E, value: any): string[] {
     if (typeof value &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
-      return this.names(Enum).filter(
-        (k) &#x3D;&gt; (value &amp; (Enum as any)[k]) &#x3D;&#x3D;&#x3D; (Enum as any)[k]
-      );
-    } else if (
-      Array.isArray(value) &amp;&amp;
-      value.every((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;)
-    ) {
-      return value.map((v) &#x3D;&gt; this.toName(Enum, v));
+      return this.values(Enum)
+        .filter((v) &#x3D;&gt; (value &amp; v) &#x3D;&#x3D;&#x3D; v)
+        .map((v) &#x3D;&gt; this.toName(Enum, v));
+    }
+    if (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
+      value &#x3D; value.split(&#x27;,&#x27;).map((o) &#x3D;&gt; o.trim());
+    }
+    if (Array.isArray(value) &amp;&amp; value.every((v) &#x3D;&gt; v in Enum)) {
+      return value.map((o) &#x3D;&gt; this.toName(Enum, o) as string);
     }
     return [];
   },

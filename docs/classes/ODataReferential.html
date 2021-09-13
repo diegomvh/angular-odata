@@ -109,7 +109,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:43</a></div>
                             </td>
                         </tr>
 
@@ -171,7 +171,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:40</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:42</a></div>
                             </td>
                         </tr>
 
@@ -198,7 +198,7 @@
                     </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:41</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:43</a></div>
                             </td>
                         </tr>
 
@@ -240,10 +240,12 @@ type JsonSchemaCustom&lt;T&gt; &#x3D; {
   ) &#x3D;&gt; any;
 };
 type JsonSchemaExpand&lt;T&gt; &#x3D; { [P in keyof T]?: JsonSchemaOptions&lt;T[P]&gt; };
+type JsonSchemaRequired&lt;T&gt; &#x3D; { [P in keyof T]?: boolean };
 export type JsonSchemaOptions&lt;T&gt; &#x3D; {
   select?: JsonSchemaSelect&lt;T&gt;;
   custom?: JsonSchemaCustom&lt;T&gt;;
   expand?: JsonSchemaExpand&lt;T&gt;;
+  required?: JsonSchemaRequired&lt;T&gt;;
 };
 
 export class ODataEntityTypeKey {
@@ -759,7 +761,13 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     );
     schema.required &#x3D; [
       ...schema.required,
-      ...fields.filter((f) &#x3D;&gt; !f.nullable).map((f) &#x3D;&gt; f.name),
+      ...fields
+        .filter((f) &#x3D;&gt;
+          options.required &amp;&amp; f.name in options.required
+            ? options.required[f.name as keyof T]
+            : !f.nullable
+        )
+        .map((f) &#x3D;&gt; f.name),
     ];
     return schema;
   }

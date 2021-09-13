@@ -63,6 +63,14 @@
             <code>projects/angular-odata/src/lib/services/singleton.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>OData Singleton Service
+<a href="http://www.odata.org/getting-started/advanced-tutorial/#singleton">www.odata.org/getting-started/advanced-tutorial/#singleton</a></p>
+
+            </p>
 
             <p class="comment">
                 <h3>Extends</h3>
@@ -93,6 +101,14 @@
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#entity">entity</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#patch">patch</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#update">update</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -265,8 +281,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="27"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:27</a></div>
                 </td>
             </tr>
 
@@ -352,8 +368,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="10"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:10</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:19</a></div>
                 </td>
             </tr>
 
@@ -366,6 +382,194 @@
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../classes/ODataSingletonResource.html" target="_self" >ODataSingletonResource&lt;T&gt;</a></code>
 
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="patch"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            patch
+                        </b>
+                        <a href="#patch"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>patch(attrs: Partial<T>, options?)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:56</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Patch the singleton entity</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>attrs</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>The attributes for the entity.</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                    <td>
+                                        <p>The options for the request.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                        <b>
+                            <span class="modifier">Public</span>
+                            update
+                        </b>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(attrs: Partial<T>, options?)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="42"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:42</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Update the singleton entity</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>attrs</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>The attributes for the entity.</p>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                    <td>
+                                        <p>The options for the request.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -3719,7 +3923,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:23</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/services/singleton.ts:32</a></div>
                                 </td>
                             </tr>
 
@@ -3730,10 +3934,19 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { ODataModel } from &#x27;../models/model&#x27;;
-import type { ODataSingletonResource } from &#x27;../resources&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
+import type { ODataModel } from &#x27;../models/model&#x27;;
+import type {
+  HttpOptions,
+  ODataEntity,
+  ODataSingletonResource,
+} from &#x27;../resources&#x27;;
 import { ODataEntityService } from &#x27;./entity&#x27;;
 
+/**
+ * OData Singleton Service
+ * www.odata.org/getting-started/advanced-tutorial/#singleton
+ */
 export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; {
   /**
    * Get the entity resource for this service.
@@ -3754,6 +3967,34 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   // Service Config
   get singletonSchema() {
     return this.api.findEntitySetByName(this.name);
+  }
+
+  /**
+   * Update the singleton entity
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public update(
+    attrs: Partial&lt;T&gt;,
+    options?: HttpOptions &amp; { etag?: string }
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+    const res &#x3D; this.entity();
+    return res.put(attrs, options);
+  }
+
+  /**
+   * Patch the singleton entity
+   * @param attrs The attributes for the entity.
+   * @param etag The etag for the entity.
+   * @param options The options for the request.
+   */
+  public patch(
+    attrs: Partial&lt;T&gt;,
+    options?: HttpOptions &amp; { etag?: string }
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+    const res &#x3D; this.entity();
+    return res.patch(attrs, options);
   }
 }
 </code></pre>

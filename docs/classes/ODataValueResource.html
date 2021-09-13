@@ -575,7 +575,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;number&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -645,7 +645,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;number&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;T&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -2820,10 +2820,10 @@ export class ODataValueResource&lt;T&gt; extends ODataResource&lt;T&gt; {
     return undefined;
   }
   //#region Shortcuts
-  fetch(options?: HttpOptions): Observable&lt;number&gt; {
+  fetch(options?: HttpOptions): Observable&lt;T&gt; {
     return super.get({ responseType: &#x27;value&#x27;, ...options });
   }
-  fetchValue(options?: HttpOptions): Observable&lt;number&gt; {
+  fetchValue(options?: HttpOptions): Observable&lt;T&gt; {
     return this.fetch(options);
   }
   //#endregion

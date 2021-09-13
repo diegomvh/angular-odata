@@ -2262,7 +2262,7 @@ export const ODataHelper &#x3D; {
         } else if (parts[0].indexOf(&#x27;.&#x27;) !&#x3D;&#x3D; -1) {
           ctx.type &#x3D; parts[0];
         } else {
-          const prop &#x3D; parts[0].match(/([\w\d\-_]+)\(([\(\)\w\d\-_]+)\)/);
+          const prop &#x3D; parts[0].match(/([\w\d\-_]+)\(([\(\)\&#x27;\w\d\-_]+)\)/);
           if (prop) {
             ctx.entitySet &#x3D; prop[1];
             ctx.key &#x3D; prop[2];

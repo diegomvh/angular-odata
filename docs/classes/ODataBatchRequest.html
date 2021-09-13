@@ -429,8 +429,8 @@
   HttpErrorResponse,
   HttpResponse,
 } from &#x27;@angular/common/http&#x27;;
-import { Observable, Subject } from &#x27;rxjs&#x27;;
-import { map } from &#x27;rxjs/operators&#x27;;
+import { BehaviorSubject, defer, from, Observable, of, Subject } from &#x27;rxjs&#x27;;
+import { finalize, map, switchMap, takeWhile, toArray } from &#x27;rxjs/operators&#x27;;
 
 import { ODataPathSegments, PathSegmentNames } from &#x27;../path-segments&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
@@ -608,16 +608,13 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
   }
 }
 
+/**
+ * OData Batch Resource
+ * https://www.odata.org/getting-started/advanced-tutorial/#batch
+ */
 export class ODataBatchResource extends ODataResource&lt;any&gt; {
   // VARIABLES
-  private requests: ODataBatchRequest&lt;any&gt;[];
-  batchBoundary: string;
-
-  constructor(api: ODataApi, segments?: ODataPathSegments) {
-    super(api, segments);
-    this.batchBoundary &#x3D; uniqid(BATCH_PREFIX);
-    this.requests &#x3D; [];
-  }
+  private requests: ODataBatchRequest&lt;any&gt;[] &#x3D; [];
 
   clone() {
     //TODO: Clone
@@ -649,43 +646,69 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       this.requests.push(new ODataBatchRequest&lt;any&gt;(req));
       return this.requests[this.requests.length - 1];
     };
-    try {
-      func(this);
-    } finally {
-      this.api.request &#x3D; current;
-    }
 
-    const headers &#x3D; Http.mergeHttpHeaders((options &amp;&amp; options.headers) || {}, {
-      [ODATA_VERSION]: VERSION_4_0,
-      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + this.batchBoundary,
-      [ACCEPT]: MULTIPART_MIXED,
-    });
-    const request &#x3D; new ODataRequest({
-      method: &#x27;POST&#x27;,
-      body: this.body(),
-      api: this.api,
-      resource: this,
-      observe: &#x27;response&#x27;,
-      responseType: &#x27;text&#x27;,
-      headers: headers,
-      params: options ? options.params : undefined,
-      withCredentials: options ? options.withCredentials : undefined,
+    func(this);
+
+    const sub$ &#x3D; new BehaviorSubject&lt;{
+      bound: string;
+      requests: ODataBatchRequest&lt;any&gt;[];
+    }&gt;({
+      bound: uniqid(BATCH_PREFIX),
+      requests: this.requests,
     });
 
-    return this.api.request(request).pipe(
-      map((resp: ODataResponse&lt;any&gt;) &#x3D;&gt; {
-        this.handleResponse(resp);
-        return resp;
+    return sub$.pipe(
+      switchMap(({ bound, requests }) &#x3D;&gt; {
+        const headers &#x3D; Http.mergeHttpHeaders(
+          (options &amp;&amp; options.headers) || {},
+          {
+            [ODATA_VERSION]: VERSION_4_0,
+            [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
+            [ACCEPT]: MULTIPART_MIXED,
+          }
+        );
+        const request &#x3D; new ODataRequest({
+          method: &#x27;POST&#x27;,
+          body: ODataBatchResource.buildBody(bound, requests),
+          api: this.api,
+          resource: this,
+          observe: &#x27;response&#x27;,
+          responseType: &#x27;text&#x27;,
+          headers: headers,
+          params: options ? options.params : undefined,
+          withCredentials: options ? options.withCredentials : undefined,
+        });
+        return current
+          .call(this.api, request)
+          .pipe(map((response) &#x3D;&gt; ({ requests, response })));
+      }),
+      map(({ requests, response }) &#x3D;&gt; {
+        this.requests &#x3D; [];
+        ODataBatchResource.handleResponse(requests, response);
+        if (this.requests.length &gt; 0) {
+          sub$.next({ bound: uniqid(BATCH_PREFIX), requests: this.requests });
+        } else sub$.complete();
+        return response;
+      }),
+      finalize(() &#x3D;&gt; {
+        this.api.request &#x3D; current;
       })
     );
   }
 
-  body(): string {
+  body() {
+    return ODataBatchResource.buildBody(uniqid(BATCH_PREFIX), this.requests);
+  }
+
+  static buildBody(
+    batchBoundary: string,
+    requests: ODataBatchRequest&lt;any&gt;[]
+  ): string {
     let res &#x3D; [];
     let changesetBoundary: string | null &#x3D; null;
     let changesetId &#x3D; 1;
 
-    for (const batch of this.requests) {
+    for (const batch of requests) {
       // if method is GET and there is a changeset boundary open then close it
       if (batch.request.method &#x3D;&#x3D;&#x3D; &#x27;GET&#x27; &amp;&amp; changesetBoundary !&#x3D;&#x3D; null) {
         res.push(
@@ -696,7 +719,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
 
       // if there is no changeset boundary open then open a batch boundary
       if (changesetBoundary &#x3D;&#x3D;&#x3D; null) {
-        res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}&#x60;);
+        res.push(&#x60;${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}&#x60;);
       }
 
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
@@ -736,13 +759,16 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
         changesetBoundary &#x3D; null;
       }
       res.push(
-        &#x60;${BOUNDARY_PREFIX_SUFFIX}${this.batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
+        &#x60;${BOUNDARY_PREFIX_SUFFIX}${batchBoundary}${BOUNDARY_PREFIX_SUFFIX}&#x60;
       );
     }
     return res.join(NEWLINE);
   }
 
-  handleResponse(response: ODataResponse&lt;any&gt;) {
+  static handleResponse(
+    requests: ODataBatchRequest&lt;any&gt;[],
+    response: ODataResponse&lt;any&gt;
+  ) {
     let chunks: string[][] &#x3D; [];
     const contentType: string &#x3D; response.headers.get(CONTENT_TYPE) || &#x27;&#x27;;
     const batchBoundary: string &#x3D; getBoundaryDelimiter(contentType);
@@ -806,7 +832,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       }
     }
     chunks.forEach((chunk, index) &#x3D;&gt; {
-      const req &#x3D; this.requests[index];
+      const req &#x3D; requests[index];
       const statusParts &#x3D; chunk[0].split(&#x27; &#x27;);
       req.onLoad(chunk.slice(1), {
         code: Number(statusParts[1]),
