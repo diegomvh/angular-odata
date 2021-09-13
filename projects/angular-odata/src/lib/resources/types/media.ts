@@ -32,14 +32,32 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     return undefined;
   }
 
+  //#region Requests
+  get(
+    options?: { responseType: 'arraybuffer' } & HttpOptions
+  ): Observable<ArrayBuffer>;
+  get(options?: { responseType: 'blob' } & HttpOptions): Observable<Blob>;
+  get(options: { responseType: any } & HttpOptions): Observable<any> {
+    return super.get(options);
+  }
+
+  put(
+    data: ArrayBuffer | Blob,
+    options: HttpOptions & { etag?: string } = {}
+  ): Observable<any> {
+    return super.put(data, options);
+  }
+  //#endregion
+
   //#region Shortcuts
   fetch(
     options?: { responseType: 'arraybuffer' } & HttpOptions
   ): Observable<ArrayBuffer>;
   fetch(options?: { responseType: 'blob' } & HttpOptions): Observable<Blob>;
   fetch(options: { responseType: any } & HttpOptions): Observable<any> {
-    return super.get(options);
+    return this.get(options);
   }
+
   fetchArraybuffer(options: HttpOptions = {}): Observable<ArrayBuffer> {
     return this.fetch({ responseType: 'arraybuffer', ...options });
   }
@@ -52,7 +70,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     data: ArrayBuffer | Blob,
     options: HttpOptions & { etag?: string } = {}
   ): Observable<any> {
-    return super.put(data, options);
+    return this.put(data, options);
   }
 
   uploadArrayBuffer(

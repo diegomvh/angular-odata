@@ -33,12 +33,16 @@ export class ODataValueResource<T> extends ODataResource<T> {
   schema() {
     return undefined;
   }
-  //#region Shortcuts
-  fetch(options?: HttpOptions): Observable<T> {
+
+  //#region Requests
+  get(options?: HttpOptions): Observable<T> {
     return super.get({ responseType: 'value', ...options });
   }
-  fetchValue(options?: HttpOptions): Observable<T> {
-    return this.fetch(options);
+  //#endregion
+
+  //#region Shortcuts
+  fetch(options?: HttpOptions): Observable<T> {
+    return this.get(options);
   }
   //#endregion
 }

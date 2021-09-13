@@ -32,6 +32,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   schema() {
     return undefined;
   }
+
   //#region Requests
   post(
     target: ODataEntityResource<any>,

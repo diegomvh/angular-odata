@@ -30,6 +30,7 @@ export class ODataCountResource extends ODataResource<any> {
   schema() {
     return undefined;
   }
+
   get segment() {
     const segments = this.pathSegments;
     return {
@@ -42,13 +43,15 @@ export class ODataCountResource extends ODataResource<any> {
     };
   }
 
-  //#region Shortcuts
-  fetch(options?: HttpOptions): Observable<number> {
+  //#region Requests
+  get(options?: HttpOptions): Observable<number> {
     return super.get({ responseType: 'value', ...options });
   }
+  //#endregion
 
-  fetchValue(options?: HttpOptions): Observable<number> {
-    return this.fetch(options);
+  //#region Shortcuts
+  fetch(options?: HttpOptions): Observable<number> {
+    return this.get(options);
   }
   //#endregion
 }
