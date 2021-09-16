@@ -183,7 +183,10 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   //#region Requests
   get(
-    options: HttpOptions & { etag?: string } = {}
+    options: HttpOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    } = {}
   ): Observable<ODataEntity<T>> {
     return super.get({ responseType: 'entity', ...options });
   }
@@ -215,16 +218,29 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
-  fetch(options?: HttpOptions & { etag?: string }): Observable<ODataEntity<T>> {
+  fetch(
+    options?: HttpOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntity<T>> {
     return this.get(options);
   }
 
-  fetchEntity(options?: HttpOptions & { etag?: string }): Observable<T | null> {
+  fetchEntity(
+    options?: HttpOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    }
+  ): Observable<T | null> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
   }
 
   fetchModel(
-    options?: HttpOptions & { etag?: string }
+    options?: HttpOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    }
   ): Observable<ODataModel<T> | null> {
     return this.fetch(options).pipe(
       map(({ entity, annots }) =>

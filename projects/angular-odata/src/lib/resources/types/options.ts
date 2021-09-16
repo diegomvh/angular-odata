@@ -1,5 +1,5 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { FetchPolicy } from '../../types';
+import { FetchPolicy, QueryOptionNames } from '../../types';
 import { QueryArguments } from '../query-options';
 
 export type HttpOptions = {

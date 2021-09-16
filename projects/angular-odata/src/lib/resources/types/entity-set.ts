@@ -18,7 +18,7 @@ import {
 } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
-import { PathSegmentNames } from '../../types';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -209,7 +209,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   get(
-    options: HttpOptions & { withCount?: boolean } = {}
+    options: HttpOptions & {
+      withCount?: boolean;
+      queryBody?: QueryOptionNames[];
+    } = {}
   ): Observable<ODataEntities<T>> {
     return super.get({ responseType: 'entities', ...options });
   }
@@ -217,19 +220,28 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   //#region Shortcuts
   fetch(
-    options?: HttpOptions & { withCount?: boolean }
+    options?: HttpOptions & {
+      withCount?: boolean;
+      queryBody?: QueryOptionNames[];
+    }
   ): Observable<ODataEntities<T>> {
     return this.get(options);
   }
 
   fetchEntities(
-    options?: HttpOptions & { withCount?: boolean }
+    options?: HttpOptions & {
+      withCount?: boolean;
+      queryBody?: QueryOptionNames[];
+    }
   ): Observable<T[] | null> {
     return this.fetch(options).pipe(map(({ entities }) => entities));
   }
 
   fetchCollection(
-    options?: HttpOptions & { withCount?: boolean }
+    options?: HttpOptions & {
+      withCount?: boolean;
+      queryBody?: QueryOptionNames[];
+    }
   ): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.fetch(options).pipe(
       map(({ entities, annots }) =>
@@ -238,7 +250,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     );
   }
 
-  fetchAll(options?: HttpOptions): Observable<T[]> {
+  fetchAll(
+    options?: HttpOptions & {
+      queryBody?: QueryOptionNames[];
+    }
+  ): Observable<T[]> {
     let res = this.clone();
     // Clean Paging
     res.query.clearPaging();

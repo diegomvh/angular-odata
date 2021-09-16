@@ -259,9 +259,25 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpEntityOptions): Observable<ODataEntity<T>>;
-  get(options: HttpEntitiesOptions): Observable<ODataEntities<T>>;
-  get(options: HttpEntityOptions & HttpEntitiesOptions): Observable<any> {
+  get(
+    options: HttpEntityOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntity<T>>;
+  get(
+    options: HttpEntitiesOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntities<T>>;
+  get(
+    options: HttpEntityOptions &
+      HttpEntitiesOptions & {
+        etag?: string;
+        queryBody?: QueryOptionNames[];
+      }
+  ): Observable<any> {
     return super.get(options);
   }
 
@@ -292,16 +308,33 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
-  fetch(options?: HttpEntityOptions): Observable<ODataEntity<T>>;
-  fetch(options?: HttpEntitiesOptions): Observable<ODataEntities<T>>;
   fetch(
-    options: HttpEntityOptions & HttpEntitiesOptions & { etag?: string } = {}
+    options?: HttpEntityOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntity<T>>;
+  fetch(
+    options?: HttpEntitiesOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntities<T>>;
+  fetch(
+    options: HttpEntityOptions &
+      HttpEntitiesOptions & {
+        etag?: string;
+        queryBody?: QueryOptionNames[];
+      } = {}
   ): Observable<any> {
     return this.get(options);
   }
 
   fetchEntity(
-    options: HttpOptions & { etag?: string } = {}
+    options: HttpOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    } = {}
   ): Observable<T | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity }) => entity)
@@ -309,7 +342,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchModel(
-    options: HttpOptions & { etag?: string } = {}
+    options: HttpOptions & {
+      etag?: string;
+      queryBody?: QueryOptionNames[];
+    } = {}
   ): Observable<ODataModel<T> | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
@@ -318,14 +354,21 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
-  fetchEntities(options: HttpOptions = {}): Observable<T[] | null> {
+  fetchEntities(
+    options: HttpOptions & {
+      queryBody?: QueryOptionNames[];
+    } = {}
+  ): Observable<T[] | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities }) => entities)
     );
   }
 
   fetchCollection(
-    options: HttpOptions & { withCount?: boolean } = {}
+    options: HttpOptions & {
+      withCount?: boolean;
+      queryBody?: QueryOptionNames[];
+    } = {}
   ): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
@@ -334,7 +377,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
-  fetchAll(options: HttpOptions = {}): Observable<T[]> {
+  fetchAll(
+    options: HttpOptions & {
+      queryBody?: QueryOptionNames[];
+    } = {}
+  ): Observable<T[]> {
     let res = this.clone();
     // Clean Paging
     res.query.clearPaging();

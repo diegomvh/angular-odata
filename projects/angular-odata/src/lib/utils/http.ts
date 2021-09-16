@@ -51,6 +51,25 @@ export const Http = {
     });
     return params;
   },
+
+  // Split Params
+  splitHttpParams(
+    params: HttpParams,
+    keys: string[]
+  ): [HttpParams, HttpParams] {
+    let other = new HttpParams();
+    params.keys().forEach((key) => {
+      if (keys.includes(key)) {
+        other = (params.getAll(key) || []).reduce(
+          (acc, v) => acc.append(key, v),
+          other
+        );
+        params = params.delete(key);
+      }
+    });
+    return [params, other];
+  },
+
   resolveHeaderKey(
     headers: HttpHeaders | { [param: string]: string | string[] },
     options: string[]

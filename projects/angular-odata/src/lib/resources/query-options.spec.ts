@@ -1,4 +1,5 @@
-import { ODataQueryOptions, QueryOptionNames } from './query-options';
+import { QueryOptionNames } from '../types';
+import { ODataQueryOptions } from './query-options';
 
 describe('ODataQueryOptions', () => {
   it('test select', () => {

@@ -19,6 +19,7 @@ export class ODataRequest<T> {
   readonly observe: 'events' | 'response';
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
+  readonly queryBody: QueryOptionNames[];
   readonly responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   readonly fetchPolicy:
     | 'cache-first'
@@ -68,6 +69,7 @@ export class ODataRequest<T> {
         ? this.api.options.withCredentials
         : init.withCredentials;
     this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
+    this.queryBody = init.queryBody || this.api.options.queryBody;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = this.resource.pathAndParams();
@@ -150,31 +152,32 @@ export class ODataRequest<T> {
       customParams['$expand'] = resourceParams['$expand'];
     }
     if (['GET'].indexOf(this.method) !== -1) {
-      const queryBody = init.queryBody || this.api.options.queryBody;
-      if (
-        queryBody !== undefined &&
-        queryBody.some((n) => `$${n}` in resourceParams)
-      ) {
-        // Query Options in Request Body
-        const bodyParams = new HttpParams();
-        queryBody.forEach((name) => {
-          const key = `$${name}`;
-          bodyParams.set(key, resourceParams[key]);
-          delete resourceParams[key];
-        });
-        this.method = 'POST';
-        this.body = bodyParams.toString();
-        this.path = `${this.path}/$query`;
-        this.headers.set(CONTENT_TYPE, TEXT_PLAIN);
-      }
       Object.assign(customParams, resourceParams);
     }
 
-    this.params = Http.mergeHttpParams(
+    const allParams = Http.mergeHttpParams(
       this.api.options.params,
       customParams,
       init.params || {}
     );
+
+    if (
+      ['GET'].indexOf(this.method) !== -1 &&
+      this.queryBody.some((name) => allParams.has(`$${name}`))
+    ) {
+      let [queryParams, bodyParams] = Http.splitHttpParams(
+        allParams,
+        this.queryBody.map((name) => `$${name}`)
+      );
+      this.params = queryParams;
+      this.method = 'POST';
+      this.body = bodyParams.toString();
+      this.path = `${this.path}/$query`;
+      this.headers.set(CONTENT_TYPE, TEXT_PLAIN);
+    } else {
+      this.params = allParams;
+    }
+
     //#endregion
   }
 

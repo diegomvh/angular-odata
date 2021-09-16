@@ -24,6 +24,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   params: { [param: string]: string | string[] };
   headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
+  queryBody: QueryOptionNames[];
   accept?: {
     metadata?: ODataMetadataType;
     ieee754Compatible?: boolean;
@@ -44,7 +45,6 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398237
     includeAnnotations?: string;
   };
-  queryBody?: QueryOptionNames[];
 
   constructor(config: ApiOptions) {
     this.version = config.version || DEFAULT_VERSION;
@@ -54,10 +54,10 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.withCredentials = config.withCredentials;
     this.stripMetadata = config.stripMetadata || DEFAULT_STRIP_METADATA;
     this.fetchPolicy = config.fetchPolicy || DEFAULT_FETCH_POLICY;
+    this.queryBody = config.queryBody || [];
     this.accept = config.accept;
-    this.prefer = config.prefer;
-    this.queryBody = config.queryBody;
     Object.assign(this.etag, config.etag || {});
+    this.prefer = config.prefer;
   }
 
   get helper() {

@@ -38,6 +38,7 @@ export enum QueryOptionNames {
   skip = 'skip',
   skiptoken = 'skiptoken',
   format = 'format',
+  count = 'count',
 }
 
 export interface Options {
