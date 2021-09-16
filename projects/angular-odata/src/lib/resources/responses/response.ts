@@ -4,10 +4,8 @@ import {
   ODataEntitiesAnnotations,
   ODataPropertyAnnotations,
 } from './annotations';
-import { Parser } from '../../types';
 import { Types } from '../../utils/types';
 import { ODataResource } from '../resource';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntities, ODataEntity, ODataProperty } from './types';
 import {
   APPLICATION_JSON,

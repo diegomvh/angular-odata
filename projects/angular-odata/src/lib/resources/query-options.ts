@@ -8,6 +8,7 @@ import {
 } from './builder';
 
 import { Dates, Types, Urls, Objects } from '../utils';
+import { QueryOptionNames } from '../types';
 
 export type QueryArguments<T> = {
   select?: Select<T>;
@@ -20,20 +21,6 @@ export type QueryArguments<T> = {
   skip?: number;
   skiptoken?: string;
 };
-
-export enum QueryOptionNames {
-  // System options
-  select = 'select',
-  expand = 'expand',
-  filter = 'filter',
-  search = 'search',
-  transform = 'transform',
-  orderBy = 'orderBy',
-  top = 'top',
-  skip = 'skip',
-  skiptoken = 'skiptoken',
-  format = 'format',
-}
 
 export class ODataQueryOptions {
   options: { [name: string]: any };

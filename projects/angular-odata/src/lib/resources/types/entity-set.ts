@@ -2,7 +2,7 @@ import { Observable, EMPTY } from 'rxjs';
 import { expand, concatMap, toArray, map } from 'rxjs/operators';
 
 import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataPathSegments } from '../path-segments';
 
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
@@ -18,6 +18,7 @@ import {
 } from '../responses';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
+import { PathSegmentNames } from '../../types';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory

@@ -3,10 +3,10 @@ import {
   HttpErrorResponse,
   HttpResponse,
 } from '@angular/common/http';
-import { BehaviorSubject, defer, from, Observable, of, Subject } from 'rxjs';
-import { finalize, map, switchMap, takeWhile, toArray } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { finalize, map, switchMap } from 'rxjs/operators';
 
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataPathSegments } from '../path-segments';
 import { ODataResource } from '../resource';
 import {
   BOUNDARY_PREFIX_SUFFIX,
@@ -33,6 +33,7 @@ import { ODataApi } from '../../api';
 import { ODataResponse } from '../responses';
 import { HttpOptions } from './options';
 import { Http } from '../../utils/http';
+import { PathSegmentNames } from '../../types';
 
 const XSSI_PREFIX = /^\)\]\}',?\n/;
 

@@ -19,10 +19,7 @@ import {
   ODataFunctionResource,
   ODataActionResource,
   ODataEntityResource,
-  PathSegmentNames,
-  ODataPathSegments,
   ODataSegment,
-  ODataQueryOptions,
   ODataResponse,
   ODataNavigationPropertyResource,
 } from './resources/index';

@@ -6,8 +6,8 @@ import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
 import { Expand, Select } from '../builder';
-import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
+import { ODataPathSegments } from '../path-segments';
 import { EntityKey, ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { ODataMediaResource } from './media';
@@ -15,6 +15,7 @@ import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
 export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(

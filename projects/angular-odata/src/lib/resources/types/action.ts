@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import {
   HttpEntityOptions,
@@ -23,6 +23,7 @@ import { ODataEntityResource } from './entity';
 import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataResource } from '../resource';
+import { PathSegmentNames } from '../../types';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory

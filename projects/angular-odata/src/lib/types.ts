@@ -11,6 +11,35 @@ export type FetchPolicy =
 export type ODataMetadataType = 'minimal' | 'full' | 'none';
 export type CacheCacheability = 'public' | 'private' | 'no-cache' | 'no-store';
 
+export enum PathSegmentNames {
+  batch = 'batch',
+  metadata = 'metadata',
+  entitySet = 'entitySet',
+  singleton = 'singleton',
+  type = 'type',
+  property = 'property',
+  navigationProperty = 'navigationProperty',
+  reference = 'reference',
+  value = 'value',
+  count = 'count',
+  function = 'function',
+  action = 'action',
+}
+
+export enum QueryOptionNames {
+  select = 'select',
+  expand = 'expand',
+  compute = 'compute',
+  filter = 'filter',
+  search = 'search',
+  transform = 'transform',
+  orderBy = 'orderBy',
+  top = 'top',
+  skip = 'skip',
+  skiptoken = 'skiptoken',
+  format = 'format',
+}
+
 export interface Options {
   version?: ODataVersion;
   stringAsEnum?: boolean;
@@ -37,6 +66,7 @@ export interface ApiOptions extends Options {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
+  queryBody?: QueryOptionNames[];
 }
 
 export interface OptionsHelper extends Options {

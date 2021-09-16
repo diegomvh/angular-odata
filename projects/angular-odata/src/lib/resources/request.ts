@@ -2,10 +2,13 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ODataApi } from '../api';
 import {
   ACCEPT,
+  CONTENT_TYPE,
   IF_MATCH_HEADER,
   IF_NONE_MATCH_HEADER,
   PREFER,
+  TEXT_PLAIN,
 } from '../constants';
+import { QueryOptionNames } from '../types';
 import { Http } from '../utils';
 import { ODataResource } from './resource';
 
@@ -46,6 +49,7 @@ export class ODataRequest<T> {
       | 'no-cache'
       | 'cache-only';
     withCredentials?: boolean;
+    queryBody?: QueryOptionNames[];
   }) {
     this.method = init.method;
     this.resource = init.resource;
@@ -146,6 +150,23 @@ export class ODataRequest<T> {
       customParams['$expand'] = resourceParams['$expand'];
     }
     if (['GET'].indexOf(this.method) !== -1) {
+      const queryBody = init.queryBody || this.api.options.queryBody;
+      if (
+        queryBody !== undefined &&
+        queryBody.some((n) => `$${n}` in resourceParams)
+      ) {
+        // Query Options in Request Body
+        const bodyParams = new HttpParams();
+        queryBody.forEach((name) => {
+          const key = `$${name}`;
+          bodyParams.set(key, resourceParams[key]);
+          delete resourceParams[key];
+        });
+        this.method = 'POST';
+        this.body = bodyParams.toString();
+        this.path = `${this.path}/$query`;
+        this.headers.set(CONTENT_TYPE, TEXT_PLAIN);
+      }
       Object.assign(customParams, resourceParams);
     }
 

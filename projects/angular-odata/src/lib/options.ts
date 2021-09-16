@@ -11,6 +11,7 @@ import {
   ODataVersion,
   Options,
   OptionsHelper,
+  QueryOptionNames,
 } from './types';
 
 export class ODataApiOptions implements ApiOptions, OptionsHelper {
@@ -43,6 +44,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398237
     includeAnnotations?: string;
   };
+  queryBody?: QueryOptionNames[];
 
   constructor(config: ApiOptions) {
     this.version = config.version || DEFAULT_VERSION;
@@ -54,6 +56,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.fetchPolicy = config.fetchPolicy || DEFAULT_FETCH_POLICY;
     this.accept = config.accept;
     this.prefer = config.prefer;
+    this.queryBody = config.queryBody;
     Object.assign(this.etag, config.etag || {});
   }
 

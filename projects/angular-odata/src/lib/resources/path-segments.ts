@@ -4,21 +4,7 @@ import { Types, Dates } from '../utils';
 
 import { PATH_SEPARATOR } from '../constants';
 import { EntityKey } from './resource';
-
-export enum PathSegmentNames {
-  batch = 'batch',
-  metadata = 'metadata',
-  entitySet = 'entitySet',
-  singleton = 'singleton',
-  type = 'type',
-  property = 'property',
-  navigationProperty = 'navigationProperty',
-  reference = 'reference',
-  value = 'value',
-  count = 'count',
-  function = 'function',
-  action = 'action',
-}
+import { PathSegmentNames } from '../types';
 
 export type ODataSegment = {
   name: PathSegmentNames;

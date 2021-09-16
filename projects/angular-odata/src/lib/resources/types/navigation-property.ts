@@ -13,13 +13,13 @@ import {
   ODataEntityAnnotations,
 } from '../responses';
 import { ODataQueryOptions } from '../query-options';
-import { QueryOptionNames } from '../query-options';
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataPathSegments } from '../path-segments';
 import { ODataReferenceResource } from './reference';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
 import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
 import { ODataMediaResource } from './media';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
 
 /**
  * OData Navigation Property Resource

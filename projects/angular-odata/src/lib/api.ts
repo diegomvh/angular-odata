@@ -2,7 +2,13 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { ApiConfig, ApiOptions, NONE_PARSER, Parser } from './types';
+import {
+  ApiConfig,
+  ApiOptions,
+  NONE_PARSER,
+  Parser,
+  PathSegmentNames,
+} from './types';
 import { EDM_PARSERS } from './parsers/index';
 import {
   ODataSchema,
@@ -13,7 +19,6 @@ import {
 } from './schema/index';
 import { ODataModel, ODataCollection } from './models/index';
 import {
-  ODataResource,
   ODataBatchResource,
   ODataMetadataResource,
   ODataEntitySetResource,
@@ -21,7 +26,6 @@ import {
   ODataFunctionResource,
   ODataActionResource,
   ODataEntityResource,
-  PathSegmentNames,
   ODataPathSegments,
   ODataSegment,
   ODataQueryOptions,

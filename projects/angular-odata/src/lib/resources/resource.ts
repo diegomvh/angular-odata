@@ -9,15 +9,11 @@ import {
 import { Objects, Http, Types } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
-import {
-  QueryArguments,
-  ODataQueryOptions,
-  QueryOptionNames,
-} from './query-options';
+import { QueryArguments, ODataQueryOptions } from './query-options';
 import { HttpOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
-import { Parser, OptionsHelper } from '../types';
+import { Parser, OptionsHelper, QueryOptionNames } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
 import {
@@ -223,6 +219,9 @@ export abstract class ODataResource<T> {
       expand(opts?: Expand<T>) {
         return options.option<Expand<T>>(QueryOptionNames.expand, opts);
       },
+      compute(opts?: string) {
+        return options.option<string>(QueryOptionNames.compute, opts);
+      },
       format(opts?: string) {
         return options.option<string>(QueryOptionNames.format, opts);
       },
@@ -267,6 +266,9 @@ export abstract class ODataResource<T> {
       },
       expand(opts?: Expand<T>) {
         return options.option<Expand<T>>(QueryOptionNames.expand, opts);
+      },
+      compute(opts?: string) {
+        return options.option<string>(QueryOptionNames.compute, opts);
       },
       transform(opts?: Transform<T>) {
         return options.option<Transform<T>>(QueryOptionNames.transform, opts);

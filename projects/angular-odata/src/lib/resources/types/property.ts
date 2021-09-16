@@ -4,8 +4,8 @@ import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataValueResource } from './value';
 
 import { EntityKey, ODataResource } from '../resource';
-import { ODataQueryOptions, QueryOptionNames } from '../query-options';
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
+import { ODataPathSegments } from '../path-segments';
 import {
   HttpPropertyOptions,
   HttpEntitiesOptions,
@@ -32,6 +32,7 @@ import {
 } from '../builder';
 //import { ODataNavigationPropertyResource } from './navigation-property';
 import { Objects, Types } from '../../utils';
+import { PathSegmentNames } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import {
   HttpEntityOptions,
@@ -27,6 +27,7 @@ import { ODataEntityResource } from './entity';
 import { ODataStructuredType } from '../../schema';
 import { ODataResource } from '../resource';
 import { alias as functionAlias } from '../builder';
+import { PathSegmentNames } from '../../types';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory

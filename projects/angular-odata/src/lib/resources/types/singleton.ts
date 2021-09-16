@@ -2,8 +2,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Expand, Select } from '../builder';
-import { QueryOptionNames } from '../query-options';
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
+import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { EntityKey, ODataResource } from '../resource';
 
@@ -16,6 +15,7 @@ import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { ODataModel } from '../../models';
 import { ODataApi } from '../../api';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory

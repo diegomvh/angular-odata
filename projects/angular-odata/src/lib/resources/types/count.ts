@@ -1,11 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { ODataPathSegments, PathSegmentNames } from '../path-segments';
-import { ODataQueryOptions, QueryOptionNames } from '../query-options';
+import { ODataPathSegments } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
 import { HttpOptions } from './options';
 import { $COUNT } from '../../constants';
 import { ODataApi } from '../../api';
+import { Filter } from '../builder';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
 
 export class ODataCountResource extends ODataResource<any> {
   //#region Factory
@@ -39,6 +41,18 @@ export class ODataCountResource extends ODataResource<any> {
       },
       navigationProperty() {
         return segments.get(PathSegmentNames.navigationProperty);
+      },
+    };
+  }
+
+  get query() {
+    const options = this.queryOptions;
+    return {
+      search(opts?: string) {
+        return options.option<string>(QueryOptionNames.search, opts);
+      },
+      filter(opts?: Filter) {
+        return options.option<Filter>(QueryOptionNames.filter, opts);
       },
     };
   }
