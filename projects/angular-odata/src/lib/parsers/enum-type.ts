@@ -6,7 +6,9 @@ import {
   Parser,
   OptionsHelper,
   EnumTypeFieldConfig,
+  Options,
 } from '../types';
+import { ODataParserOptions } from '../options';
 
 export class ODataEnumTypeFieldParser {
   name: string;
@@ -57,9 +59,12 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   // Deserialize
-  deserialize(value: string, options?: OptionsHelper): T {
+  deserialize(value: string, options?: Options): T {
     // string -> number
-    options = options || this.optionsHelper;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.optionsHelper;
     if (this.flags) {
       return Enums.toValues(this.members, value).reduce(
         (acc, v) => acc | v,
@@ -71,28 +76,36 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   }
 
   // Serialize
-  serialize(value: T, options?: OptionsHelper): string {
+  serialize(value: T, options?: Options): string {
     // Enum are string | number
     // string | number -> string
-    options = options || this.optionsHelper;
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.optionsHelper;
     if (this.flags) {
       const names = Enums.toNames(this.members, value);
-      return !options?.stringAsEnum
+      return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
       const name = Enums.toName(this.members, value);
-      return !options?.stringAsEnum
+      return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
         : name;
     }
   }
 
   //Encode
-  encode(value: T, options?: OptionsHelper): any {
-    options = options || this.optionsHelper;
-    const serialized = this.serialize(value, options);
-    return options?.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
+  encode(value: T, options?: Options): any {
+    const parserOptions =
+      options !== undefined
+        ? new ODataParserOptions(options)
+        : this.optionsHelper;
+    const serialized = this.serialize(value, parserOptions);
+    return parserOptions?.stringAsEnum
+      ? raw(`'${serialized}'`)
+      : raw(serialized);
   }
 
   // Json Schema

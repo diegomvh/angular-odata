@@ -1,8 +1,7 @@
 import { ODataSchema } from './schema';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from '../parsers';
-import { EnumTypeConfig, Options, OptionsHelper } from '../types';
+import { EnumTypeConfig, Options } from '../types';
 import { ODataAnnotation } from './annotation';
-import { ODataParserOptions } from '../options';
 
 export class ODataEnumType<E> {
   schema: ODataSchema;
@@ -81,26 +80,14 @@ export class ODataEnumType<E> {
   }
 
   deserialize(value: any, options?: Options): E {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
-    return this.parser.deserialize(value, parserOptions);
+    return this.parser.deserialize(value, options);
   }
 
   serialize(value: E, options?: Options): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
-    return this.parser.serialize(value, parserOptions);
+    return this.parser.serialize(value, options);
   }
 
   encode(value: E, options?: Options): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
-    return this.parser.encode(value, parserOptions);
+    return this.parser.encode(value, options);
   }
 }

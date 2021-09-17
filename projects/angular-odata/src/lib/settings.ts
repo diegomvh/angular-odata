@@ -106,7 +106,7 @@ export class ODataSettings {
       .filter((e) => e);
     if (values.length === 0)
       throw Error(`No Parser for type ${type} was found`);
-    if (values.length > 1)
+    if (!type.startsWith('Edm.') && values.length > 1)
       throw Error('Multiple APIs: More than one value was found');
     return values[0] as Parser<T>;
   }
