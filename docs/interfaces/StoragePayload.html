@@ -8,7 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	      <link rel="stylesheet" href="../styles/style.css">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
     </head>
     <body>
 
@@ -43,7 +44,9 @@
 
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li>StoragePayload</li>
+  <li
+  >
+  StoragePayload</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -66,6 +69,7 @@
 
 
 
+
         <section>
             <h3 id="index">Index</h3>
             <table class="table table-sm table-bordered index-table">
@@ -79,19 +83,34 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                        <a href="#body">body</a>
+                                        <a href="#body" 
+>
+                                            body
+                                        </a>
                                 </li>
                                 <li>
-                                        <a href="#headers">headers</a>
+                                        <a href="#headers" 
+>
+                                            headers
+                                        </a>
                                 </li>
                                 <li>
-                                        <a href="#status">status</a>
+                                        <a href="#status" 
+>
+                                            status
+                                        </a>
                                 </li>
                                 <li>
-                                        <a href="#statusText">statusText</a>
+                                        <a href="#statusText" 
+>
+                                            statusText
+                                        </a>
                                 </li>
                                 <li>
-                                        <a href="#url">url</a>
+                                        <a href="#url" 
+>
+                                            url
+                                        </a>
                                 </li>
                             </ul>
                         </td>
@@ -109,7 +128,11 @@
                                 <tr>
                                     <td class="col-md-4">
                                         <a name="body"></a>
-                                        <span class="name"><b>body</b><a href="#body"><span class="icon ion-ios-link"></span></a></span>
+                                        <span class="name "><b>body</b>
+                                            <a href="#body">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -138,7 +161,11 @@
                                 <tr>
                                     <td class="col-md-4">
                                         <a name="headers"></a>
-                                        <span class="name"><b>headers</b><a href="#headers"><span class="icon ion-ios-link"></span></a></span>
+                                        <span class="name "><b>headers</b>
+                                            <a href="#headers">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -167,7 +194,11 @@
                                 <tr>
                                     <td class="col-md-4">
                                         <a name="status"></a>
-                                        <span class="name"><b>status</b><a href="#status"><span class="icon ion-ios-link"></span></a></span>
+                                        <span class="name "><b>status</b>
+                                            <a href="#status">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -196,7 +227,11 @@
                                 <tr>
                                     <td class="col-md-4">
                                         <a name="statusText"></a>
-                                        <span class="name"><b>statusText</b><a href="#statusText"><span class="icon ion-ios-link"></span></a></span>
+                                        <span class="name "><b>statusText</b>
+                                            <a href="#statusText">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -225,7 +260,11 @@
                                 <tr>
                                     <td class="col-md-4">
                                         <a name="url"></a>
-                                        <span class="name"><b>url</b><a href="#url"><span class="icon ion-ios-link"></span></a></span>
+                                        <span class="name "><b>url</b>
+                                            <a href="#url">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -306,14 +345,14 @@ export class ODataInStorageCache extends ODataCache&lt;StoragePayload&gt; {
 </div>
 
 
-                   
+
 
 
 
 
                    </div><div class="search-results">
     <div class="has-results">
-        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
         <ul class="search-results-list"></ul>
     </div>
     <div class="no-results">
@@ -334,9 +373,9 @@ export class ODataInStorageCache extends ODataCache&lt;StoragePayload&gt; {
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>
-       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+
        <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

@@ -8,7 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	      <link rel="stylesheet" href="../styles/style.css">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
     </head>
     <body>
 
@@ -42,7 +43,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li>ODataEntitySetService</li>
+  <li >ODataEntitySetService</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -62,6 +63,7 @@
         <p class="comment">
             <code>projects/angular-odata/src/lib/services/entity-set.ts</code>
         </p>
+
 
 
             <p class="comment">
@@ -88,121 +90,71 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#attach">attach</a>
+                                <a href="#attach" >attach</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#attach">attach</a>
+                                <a href="#attach" >attach</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#attach">attach</a>
+                                <a href="#attach" >attach</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#create">create</a>
+                                <a href="#create" >create</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#destroy">destroy</a>
+                                <a href="#destroy" >destroy</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#entities">entities</a>
+                                <a href="#entities" >entities</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#entity">entity</a>
+                                <a href="#entity" >entity</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#fetchAll">fetchAll</a>
+                                <a href="#fetchAll" >fetchAll</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#fetchMany">fetchMany</a>
+                                <a href="#fetchMany" >fetchMany</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#fetchOne">fetchOne</a>
+                                <a href="#fetchOne" >fetchOne</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#fetchOrCreate">fetchOrCreate</a>
+                                <a href="#fetchOrCreate" >fetchOrCreate</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#patch">patch</a>
+                                <a href="#patch" >patch</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#save">save</a>
+                                <a href="#save" >save</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#update">update</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Abstract</span>
-                                <a href="#attach">attach</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Abstract</span>
-                                <a href="#entity">entity</a>
+                                <a href="#update" >update</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
-                                <a href="#callAction">callAction</a>
+                                <a href="#callAction" >callAction</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
-                                <a href="#callAction">callAction</a>
+                                <a href="#callFunction" >callFunction</a>
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
-                                <a href="#callAction">callAction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#callAction">callAction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#callAction">callAction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#callFunction">callFunction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#callFunction">callFunction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#callFunction">callFunction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#callFunction">callFunction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#callFunction">callFunction</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#fetchNavigationProperty">fetchNavigationProperty</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#fetchNavigationProperty">fetchNavigationProperty</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#fetchNavigationProperty">fetchNavigationProperty</a>
+                                <a href="#fetchNavigationProperty" >fetchNavigationProperty</a>
                             </li>
                         </ul>
                     </td>
@@ -221,7 +173,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#entitySetSchema">entitySetSchema</a>
+                                    <a href="#entitySetSchema" >entitySetSchema</a>
                                 </li>
                             </ul>
                         </td>
@@ -243,10 +195,8 @@
                 <td class="col-md-4">
                     <a name="attach"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            attach
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>attach</b></span>
                         <a href="#attach"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -261,8 +211,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="36"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:36</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:36</a></code>
+</div>
                 </td>
             </tr>
 
@@ -282,6 +238,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -330,10 +287,8 @@
                 <td class="col-md-4">
                     <a name="attach"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            attach
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>attach</b></span>
                         <a href="#attach"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -367,6 +322,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -410,10 +366,8 @@
                 <td class="col-md-4">
                     <a name="attach"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            attach
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>attach</b></span>
                         <a href="#attach"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -439,6 +393,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -482,10 +437,8 @@
                 <td class="col-md-4">
                     <a name="create"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            create
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>create</b></span>
                         <a href="#create"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -493,7 +446,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>create(attrs: Partial<T>, options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                    <code>create(attrs: Partial<T>, options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
                 </td>
             </tr>
 
@@ -513,6 +466,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -577,10 +531,8 @@
                 <td class="col-md-4">
                     <a name="destroy"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            destroy
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>destroy</b></span>
                         <a href="#destroy"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -588,7 +540,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>destroy(key: <a href="../undefineds/EntityKey.html">EntityKey<T></a>, options?)</code>
+                    <code>destroy(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, options?)</code>
                 </td>
             </tr>
 
@@ -608,6 +560,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -671,10 +624,8 @@
                 <td class="col-md-4">
                     <a name="entities"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            entities
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>entities</b></span>
                         <a href="#entities"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -714,10 +665,8 @@
                 <td class="col-md-4">
                     <a name="entity"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            entity
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>entity</b></span>
                         <a href="#entity"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -725,15 +674,21 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entity(key?: <a href="../undefineds/EntityKey.html">EntityKey<T></a>)</code>
+                    <code>entity(key?: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:28</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:28</a></code>
+</div>
                 </td>
             </tr>
 
@@ -745,6 +700,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -793,10 +749,8 @@
                 <td class="col-md-4">
                     <a name="fetchAll"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            fetchAll
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>fetchAll</b></span>
                         <a href="#fetchAll"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -804,7 +758,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchAll(options?: <a href="../interfaces/Options.html">HttpOptions</a>)</code>
+                    <code>fetchAll(options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
                 </td>
             </tr>
 
@@ -824,6 +778,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -872,10 +827,8 @@
                 <td class="col-md-4">
                     <a name="fetchMany"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            fetchMany
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>fetchMany</b></span>
                         <a href="#fetchMany"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -903,6 +856,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -947,10 +901,8 @@
                 <td class="col-md-4">
                     <a name="fetchOne"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            fetchOne
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>fetchOne</b></span>
                         <a href="#fetchOne"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -958,7 +910,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchOne(key: <a href="../undefineds/EntityKey.html">EntityKey<T></a>, options?)</code>
+                    <code>fetchOne(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, options?)</code>
                 </td>
             </tr>
 
@@ -978,6 +930,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -1041,10 +994,8 @@
                 <td class="col-md-4">
                     <a name="fetchOrCreate"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            fetchOrCreate
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>fetchOrCreate</b></span>
                         <a href="#fetchOrCreate"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -1052,7 +1003,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchOrCreate(key: <a href="../undefineds/EntityKey.html">EntityKey<T></a>, attrs: Partial<T>, undefined)</code>
+                    <code>fetchOrCreate(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, undefined)</code>
                 </td>
             </tr>
 
@@ -1072,6 +1023,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -1156,10 +1108,8 @@
                 <td class="col-md-4">
                     <a name="patch"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            patch
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>patch</b></span>
                         <a href="#patch"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -1167,7 +1117,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>patch(key: <a href="../undefineds/EntityKey.html">EntityKey<T></a>, attrs: Partial<T>, options?)</code>
+                    <code>patch(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
                 </td>
             </tr>
 
@@ -1187,6 +1137,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -1266,10 +1217,8 @@
                 <td class="col-md-4">
                     <a name="save"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            save
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>save</b></span>
                         <a href="#save"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -1297,6 +1246,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -1363,10 +1313,8 @@
                 <td class="col-md-4">
                     <a name="update"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            update
-                        </b>
+                        <span class="modifier">Public</span>
+                        <span ><b>update</b></span>
                         <a href="#update"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -1374,7 +1322,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(key: <a href="../undefineds/EntityKey.html">EntityKey<T></a>, attrs: Partial<T>, options?)</code>
+                    <code>update(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
                 </td>
             </tr>
 
@@ -1394,6 +1342,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -1471,178 +1420,10 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="attach"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            <span class="modifier">Abstract</span>
-                            attach
-                        </b>
-                        <a href="#attach"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>attach(value: M)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:7</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>M</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>value</td>
-                                    <td>
-                                            <code>M</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="entity"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Public</span>
-                            <span class="modifier">Abstract</span>
-                            entity
-                        </b>
-                        <a href="#entity"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entity(key?: <a href="../undefineds/EntityKey.html">EntityKey<T></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataEntityService.html" target="_self" >ODataEntityService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataEntityService.html#source" target="_self" >ODataEntityService:6</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>key</td>
-                                    <td>
-                                                <code><a href="../miscellaneous/typealiases.html#EntityKey" target="_self" >EntityKey&lt;T&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResource.html" target="_self" >ODataResource&lt;T&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="callAction"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callAction
-                        </b>
+                        <span class="modifier">Protected</span>
+                        <span ><b>callAction</b></span>
                         <a href="#callAction"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -1650,7 +1431,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html">ODataActionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
+                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1683,6 +1464,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -1759,511 +1541,10 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="callAction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callAction
-                        </b>
-                        <a href="#callAction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html">ODataActionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:68</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataActionResource.html" target="_self" >ODataActionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntities" target="_self" >Observable&lt;ODataEntities&lt;R&gt;&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callAction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callAction
-                        </b>
-                        <a href="#callAction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html">ODataActionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:74</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataActionResource.html" target="_self" >ODataActionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataProperty" target="_self" >Observable&lt;ODataProperty&lt;R&gt;&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callAction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callAction
-                        </b>
-                        <a href="#callAction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html">ODataActionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:80</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataActionResource.html" target="_self" >ODataActionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;null&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callAction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callAction
-                        </b>
-                        <a href="#callAction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html">ODataActionResource<P | R></a>, responseType: "property" | "entity" | "entities" | "none", options: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:86</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataActionResource.html" target="_self" >ODataActionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                            <code>&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="callFunction"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callFunction
-                        </b>
+                        <span class="modifier">Protected</span>
+                        <span ><b>callFunction</b></span>
                         <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -2271,7 +1552,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html">ODataFunctionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
+                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2304,6 +1585,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -2380,511 +1662,10 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="callFunction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callFunction
-                        </b>
-                        <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html">ODataFunctionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:31</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataFunctionResource.html" target="_self" >ODataFunctionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntities" target="_self" >Observable&lt;ODataEntities&lt;R&gt;&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callFunction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callFunction
-                        </b>
-                        <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html">ODataFunctionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:37</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataFunctionResource.html" target="_self" >ODataFunctionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataProperty" target="_self" >Observable&lt;ODataProperty&lt;R&gt;&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callFunction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callFunction
-                        </b>
-                        <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html">ODataFunctionResource<P | R></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:43</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataFunctionResource.html" target="_self" >ODataFunctionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;null&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="callFunction"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            callFunction
-                        </b>
-                        <a href="#callFunction"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html">ODataFunctionResource<P | R></a>, responseType: "property" | "entity" | "entities" | "none", options: <a href="../interfaces/Options.html">HttpQueryOptions<R></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:49</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>P</li>
-                        <li>R</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>params</td>
-                                    <td>
-                                            <code>P | null</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataFunctionResource.html" target="_self" >ODataFunctionResource&lt;P | R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                            <code>&quot;property&quot; | &quot;entity&quot; | &quot;entities&quot; | &quot;none&quot;</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="fetchNavigationProperty"></a>
                     <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            fetchNavigationProperty
-                        </b>
+                        <span class="modifier">Protected</span>
+                        <span ><b>fetchNavigationProperty</b></span>
                         <a href="#fetchNavigationProperty"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -2892,7 +1673,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html">ODataNavigationPropertyResource<S></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<S></a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2924,6 +1705,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -2975,233 +1757,6 @@
                     </div>
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;S&gt;&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="fetchNavigationProperty"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            fetchNavigationProperty
-                        </b>
-                        <a href="#fetchNavigationProperty"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html">ODataNavigationPropertyResource<S></a>, responseType, options?: <a href="../interfaces/Options.html">HttpQueryOptions<S></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:104</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>S</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataNavigationPropertyResource.html" target="_self" >ODataNavigationPropertyResource&lt;S&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;S&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntities" target="_self" >Observable&lt;ODataEntities&lt;S&gt;&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="fetchNavigationProperty"></a>
-                    <span class="name">
-                        <b>
-                            <span class="modifier">Protected</span>
-                            fetchNavigationProperty
-                        </b>
-                        <a href="#fetchNavigationProperty"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html">ODataNavigationPropertyResource<S></a>, responseType: "entity" | "entities", options: <a href="../interfaces/Options.html">HttpQueryOptions<S></a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataBaseService.html" target="_self" >ODataBaseService</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:109</a></code>
-</div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>S</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Default value</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>resource</td>
-                                    <td>
-                                                <code><a href="../classes/ODataNavigationPropertyResource.html" target="_self" >ODataNavigationPropertyResource&lt;S&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>responseType</td>
-                                    <td>
-                                            <code>&quot;entity&quot; | &quot;entities&quot;</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;S&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -3449,14 +2004,14 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
 
 
 
-                   
+
 
 
 
 
                    </div><div class="search-results">
     <div class="has-results">
-        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
         <ul class="search-results-list"></ul>
     </div>
     <div class="no-results">
@@ -3477,9 +2032,9 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>
-       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+
        <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

@@ -8,7 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	      <link rel="stylesheet" href="../styles/style.css">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
     </head>
     <body>
 
@@ -43,7 +44,9 @@
 
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li>Cache</li>
+  <li
+  >
+  Cache</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -66,6 +69,7 @@
 
 
 
+
         <section>
             <h3 id="index">Index</h3>
             <table class="table table-sm table-bordered index-table">
@@ -79,10 +83,16 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                    <a href="#get">get</a>
+                                    <a href="#get" 
+>
+                                        get
+                                    </a>
                                 </li>
                                 <li>
-                                    <a href="#put">put</a>
+                                    <a href="#put" 
+>
+                                        put
+                                    </a>
                                 </li>
                             </ul>
                         </td>
@@ -102,9 +112,7 @@
                 <td class="col-md-4">
                     <a name="get"></a>
                     <span class="name">
-                        <b>
-                            get
-                        </b>
+                        <span ><b>get</b></span>
                         <a href="#get"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -118,8 +126,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="79"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:79</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:110</a></div>
                 </td>
             </tr>
 
@@ -129,6 +137,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -172,9 +181,7 @@
                 <td class="col-md-4">
                     <a name="put"></a>
                     <span class="name">
-                        <b>
-                            put
-                        </b>
+                        <span ><b>put</b></span>
                         <a href="#put"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
@@ -188,8 +195,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="78"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:78</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="109"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:109</a></div>
                 </td>
             </tr>
 
@@ -199,6 +206,7 @@
 
                     <div class="io-description">
                         <b>Parameters :</b>
+                        
                         <table class="params">
                             <thead>
                                 <tr>
@@ -279,6 +287,36 @@ export type FetchPolicy &#x3D;
 export type ODataMetadataType &#x3D; &#x27;minimal&#x27; | &#x27;full&#x27; | &#x27;none&#x27;;
 export type CacheCacheability &#x3D; &#x27;public&#x27; | &#x27;private&#x27; | &#x27;no-cache&#x27; | &#x27;no-store&#x27;;
 
+export enum PathSegmentNames {
+  batch &#x3D; &#x27;batch&#x27;,
+  metadata &#x3D; &#x27;metadata&#x27;,
+  entitySet &#x3D; &#x27;entitySet&#x27;,
+  singleton &#x3D; &#x27;singleton&#x27;,
+  type &#x3D; &#x27;type&#x27;,
+  property &#x3D; &#x27;property&#x27;,
+  navigationProperty &#x3D; &#x27;navigationProperty&#x27;,
+  reference &#x3D; &#x27;reference&#x27;,
+  value &#x3D; &#x27;value&#x27;,
+  count &#x3D; &#x27;count&#x27;,
+  function &#x3D; &#x27;function&#x27;,
+  action &#x3D; &#x27;action&#x27;,
+}
+
+export enum QueryOptionNames {
+  select &#x3D; &#x27;select&#x27;,
+  expand &#x3D; &#x27;expand&#x27;,
+  compute &#x3D; &#x27;compute&#x27;,
+  filter &#x3D; &#x27;filter&#x27;,
+  search &#x3D; &#x27;search&#x27;,
+  transform &#x3D; &#x27;transform&#x27;,
+  orderBy &#x3D; &#x27;orderBy&#x27;,
+  top &#x3D; &#x27;top&#x27;,
+  skip &#x3D; &#x27;skip&#x27;,
+  skiptoken &#x3D; &#x27;skiptoken&#x27;,
+  format &#x3D; &#x27;format&#x27;,
+  count &#x3D; &#x27;count&#x27;,
+}
+
 export interface Options {
   version?: ODataVersion;
   stringAsEnum?: boolean;
@@ -305,6 +343,7 @@ export interface ApiOptions extends Options {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
+  queryBody?: QueryOptionNames[];
 }
 
 export interface OptionsHelper extends Options {
@@ -450,14 +489,14 @@ export type EntitySetConfig &#x3D; {
 </div>
 
 
-                   
+
 
 
 
 
                    </div><div class="search-results">
     <div class="has-results">
-        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
         <ul class="search-results-list"></ul>
     </div>
     <div class="no-results">
@@ -478,9 +517,9 @@ export type EntitySetConfig &#x3D; {
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>
-       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+
        <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 

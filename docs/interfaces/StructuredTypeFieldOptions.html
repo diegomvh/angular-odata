@@ -8,7 +8,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
-	      <link rel="stylesheet" href="../styles/style.css">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
     </head>
     <body>
 
@@ -43,7 +44,9 @@
 
 <ol class="breadcrumb">
   <li>Interfaces</li>
-  <li>StructuredTypeFieldOptions</li>
+  <li
+  >
+  StructuredTypeFieldOptions</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -63,6 +66,7 @@
         <p class="comment">
             <code>projects/angular-odata/src/lib/types.ts</code>
         </p>
+
 
 
             <p class="comment">
@@ -85,7 +89,10 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                        <a href="#field">field</a>
+                                        <a href="#field" 
+>
+                                            field
+                                        </a>
                                 </li>
                             </ul>
                         </td>
@@ -103,7 +110,11 @@
                                 <tr>
                                     <td class="col-md-4">
                                         <a name="field"></a>
-                                        <span class="name"><b>field</b><a href="#field"><span class="icon ion-ios-link"></span></a></span>
+                                        <span class="name "><b>field</b>
+                                            <a href="#field">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -145,6 +156,36 @@ export type FetchPolicy &#x3D;
 export type ODataMetadataType &#x3D; &#x27;minimal&#x27; | &#x27;full&#x27; | &#x27;none&#x27;;
 export type CacheCacheability &#x3D; &#x27;public&#x27; | &#x27;private&#x27; | &#x27;no-cache&#x27; | &#x27;no-store&#x27;;
 
+export enum PathSegmentNames {
+  batch &#x3D; &#x27;batch&#x27;,
+  metadata &#x3D; &#x27;metadata&#x27;,
+  entitySet &#x3D; &#x27;entitySet&#x27;,
+  singleton &#x3D; &#x27;singleton&#x27;,
+  type &#x3D; &#x27;type&#x27;,
+  property &#x3D; &#x27;property&#x27;,
+  navigationProperty &#x3D; &#x27;navigationProperty&#x27;,
+  reference &#x3D; &#x27;reference&#x27;,
+  value &#x3D; &#x27;value&#x27;,
+  count &#x3D; &#x27;count&#x27;,
+  function &#x3D; &#x27;function&#x27;,
+  action &#x3D; &#x27;action&#x27;,
+}
+
+export enum QueryOptionNames {
+  select &#x3D; &#x27;select&#x27;,
+  expand &#x3D; &#x27;expand&#x27;,
+  compute &#x3D; &#x27;compute&#x27;,
+  filter &#x3D; &#x27;filter&#x27;,
+  search &#x3D; &#x27;search&#x27;,
+  transform &#x3D; &#x27;transform&#x27;,
+  orderBy &#x3D; &#x27;orderBy&#x27;,
+  top &#x3D; &#x27;top&#x27;,
+  skip &#x3D; &#x27;skip&#x27;,
+  skiptoken &#x3D; &#x27;skiptoken&#x27;,
+  format &#x3D; &#x27;format&#x27;,
+  count &#x3D; &#x27;count&#x27;,
+}
+
 export interface Options {
   version?: ODataVersion;
   stringAsEnum?: boolean;
@@ -171,6 +212,7 @@ export interface ApiOptions extends Options {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
+  queryBody?: QueryOptionNames[];
 }
 
 export interface OptionsHelper extends Options {
@@ -316,14 +358,14 @@ export type EntitySetConfig &#x3D; {
 </div>
 
 
-                   
+
 
 
 
 
                    </div><div class="search-results">
     <div class="has-results">
-        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
         <ul class="search-results-list"></ul>
     </div>
     <div class="no-results">
@@ -344,9 +386,9 @@ export type EntitySetConfig &#x3D; {
 
        <script src="../js/libs/custom-elements.min.js"></script>
        <script src="../js/libs/lit-html.js"></script>
-       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
-       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+
        <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
 
        <script src="../js/libs/bootstrap-native.js"></script>
 
