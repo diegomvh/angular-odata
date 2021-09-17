@@ -64,8 +64,8 @@ export class ODataEnumType<E> {
           if (annotation !== undefined && annotation.string !== undefined) {
             return annotation.string;
           }
-          return field.name;
         }
+        return field.name;
       }
       return '';
     };
