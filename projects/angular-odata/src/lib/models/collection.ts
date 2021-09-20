@@ -445,9 +445,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       reset = false,
-    }: { silent?: boolean; reset?: boolean } = {}
+      position = -1,
+    }: { silent?: boolean; reset?: boolean; position?: number } = {}
   ) {
-    const position = this._bisect(model);
+    if (position < 0) position = this._bisect(model);
     const added = this._addModel(model, { silent, reset, position });
     if (!silent && added !== undefined) {
       this.events$.emit(
@@ -464,17 +465,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       server = true,
-    }: { silent?: boolean; server?: boolean } = {}
+      position = -1,
+    }: { silent?: boolean; server?: boolean; position?: number } = {}
   ): Observable<this> {
     if (server) {
       return this.addReference(model).pipe(
         map((model) => {
-          this.addModel(model, { silent, reset: true });
+          this.addModel(model, { silent, position, reset: true });
           return this;
         })
       );
     } else {
-      this.addModel(model, { silent });
+      this.addModel(model, { silent, position });
       return of(this);
     }
   }
