@@ -1,6 +1,7 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ODataApi } from '../api';
 import {
+  $QUERY,
   ACCEPT,
   CONTENT_TYPE,
   IF_MATCH_HEADER,
@@ -13,13 +14,13 @@ import { Http } from '../utils';
 import { ODataResource } from './resource';
 
 export class ODataRequest<T> {
-  readonly method: string;
+  private readonly _method: string;
   readonly api: ODataApi;
-  readonly body: any | null;
+  private readonly _body: any | null;
   readonly observe: 'events' | 'response';
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
-  readonly queryBody: QueryOptionNames[];
+  readonly queryOptionsBody: QueryOptionNames[];
   readonly responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   readonly fetchPolicy:
     | 'cache-first'
@@ -27,9 +28,9 @@ export class ODataRequest<T> {
     | 'network-only'
     | 'no-cache'
     | 'cache-only';
-  readonly headers: HttpHeaders;
-  readonly params: HttpParams;
-  readonly path: string;
+  private readonly _headers: HttpHeaders;
+  private readonly _params: HttpParams;
+  private readonly _path: string;
   readonly resource: ODataResource<T>;
 
   constructor(init: {
@@ -50,9 +51,9 @@ export class ODataRequest<T> {
       | 'no-cache'
       | 'cache-only';
     withCredentials?: boolean;
-    queryBody?: QueryOptionNames[];
+    queryOptionsBody?: QueryOptionNames[];
   }) {
-    this.method = init.method;
+    this._method = init.method;
     this.resource = init.resource;
 
     this.api = init.api;
@@ -61,31 +62,32 @@ export class ODataRequest<T> {
     this.observe = init.observe;
 
     // The Body
-    this.body = init.body !== undefined ? init.body : null;
-    if (this.body !== null) this.body = this.resource.serialize(this.body);
+    this._body = init.body !== undefined ? init.body : null;
+    if (this._body !== null) this._body = this.resource.serialize(this._body);
 
     this.withCredentials =
       init.withCredentials === undefined
         ? this.api.options.withCredentials
         : init.withCredentials;
     this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
-    this.queryBody = init.queryBody || this.api.options.queryBody;
+    this.queryOptionsBody =
+      init.queryOptionsBody || this.api.options.queryOptionsBody;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = this.resource.pathAndParams();
-    this.path = resourcePath;
+    this._path = resourcePath;
 
     //#region Headers
     const customHeaders: { [name: string]: string | string[] } = {};
     if (typeof init.etag === 'string') {
       if (
         this.api.options.etag.ifMatch &&
-        ['PUT', 'PATCH', 'DELETE'].indexOf(this.method) !== -1
+        ['PUT', 'PATCH', 'DELETE'].indexOf(this._method) !== -1
       )
         customHeaders[IF_MATCH_HEADER] = init.etag;
       else if (
         this.api.options.etag.ifNoneMatch &&
-        ['GET'].indexOf(this.method) !== -1
+        ['GET'].indexOf(this._method) !== -1
       )
         customHeaders[IF_NONE_MATCH_HEADER] = init.etag;
     }
@@ -110,30 +112,30 @@ export class ODataRequest<T> {
     // Return
     if (
       this.api.options.prefer?.return !== undefined &&
-      ['POST', 'PUT', 'PATCH'].indexOf(this.method) !== -1
+      ['POST', 'PUT', 'PATCH'].indexOf(this._method) !== -1
     )
       prefer.push(`return=${this.api.options.prefer?.return}`);
     // MaxPageSize
     if (
       this.api.options.prefer?.maxPageSize !== undefined &&
-      ['GET'].indexOf(this.method) !== -1
+      ['GET'].indexOf(this._method) !== -1
     )
       prefer.push(`odata.maxpagesize=${this.api.options.prefer?.maxPageSize}`);
     // Annotations
     if (
       this.api.options.prefer?.includeAnnotations !== undefined &&
-      ['GET'].indexOf(this.method) !== -1
+      ['GET'].indexOf(this._method) !== -1
     )
       prefer.push(
         `odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`
       );
     if (
       this.api.options.prefer?.continueOnError === true &&
-      ['POST'].indexOf(this.method) !== -1
+      ['POST'].indexOf(this._method) !== -1
     )
       prefer.push(`odata.continue-on-error`);
     if (prefer.length > 0) customHeaders[PREFER] = prefer;
-    this.headers = Http.mergeHttpHeaders(
+    this._headers = Http.mergeHttpHeaders(
       this.api.options.headers,
       customHeaders,
       init.headers || {}
@@ -143,57 +145,104 @@ export class ODataRequest<T> {
     //#region Params
     const customParams: { [name: string]: string | string[] } = {};
     if (
-      ['POST', 'PUT', 'PATCH'].indexOf(this.method) !== -1 &&
+      ['POST', 'PUT', 'PATCH'].indexOf(this._method) !== -1 &&
       '$select' in resourceParams
     ) {
       customParams['$select'] = resourceParams['$select'];
     }
-    if (['POST'].indexOf(this.method) !== -1 && '$expand' in resourceParams) {
+    if (['POST'].indexOf(this._method) !== -1 && '$expand' in resourceParams) {
       customParams['$expand'] = resourceParams['$expand'];
     }
-    if (['GET'].indexOf(this.method) !== -1) {
+    if (['GET'].indexOf(this._method) !== -1) {
       Object.assign(customParams, resourceParams);
     }
 
-    const allParams = Http.mergeHttpParams(
+    this._params = Http.mergeHttpParams(
       this.api.options.params,
       customParams,
       init.params || {}
     );
-
-    if (
-      ['GET'].indexOf(this.method) !== -1 &&
-      this.queryBody.some((name) => allParams.has(`$${name}`))
-    ) {
-      let [queryParams, bodyParams] = Http.splitHttpParams(
-        allParams,
-        this.queryBody.map((name) => `$${name}`)
-      );
-      this.params = queryParams;
-      this.method = 'POST';
-      this.body = bodyParams.toString();
-      this.path = `${this.path}/$query`;
-      this.headers.set(CONTENT_TYPE, TEXT_PLAIN);
-    } else {
-      this.params = allParams;
-    }
-
     //#endregion
   }
 
+  get path() {
+    return this.isQueryOptionsRequestBody()
+      ? `${this._path}/${$QUERY}`
+      : this._path;
+  }
+
+  get method() {
+    return this.isQueryOptionsRequestBody() ? 'POST' : this._method;
+  }
+
+  get body() {
+    if (this.isQueryOptionsRequestBody()) {
+      let [, bodyParams] = Http.splitHttpParams(
+        this._params,
+        this.queryOptionsBody.map((name) => `$${name}`)
+      );
+      return bodyParams.toString();
+    } else {
+      return this._body;
+    }
+  }
+
+  get params() {
+    if (this.isQueryOptionsRequestBody()) {
+      let [queryParams] = Http.splitHttpParams(
+        this._params,
+        this.queryOptionsBody.map((name) => `$${name}`)
+      );
+      return queryParams;
+    } else {
+      return this._params;
+    }
+  }
+
+  get headers() {
+    if (this.isQueryOptionsRequestBody()) {
+      return Http.mergeHttpHeaders(this._headers, { CONTENT_TYPE: TEXT_PLAIN });
+    } else {
+      return this._headers;
+    }
+  }
+
   get pathWithParams() {
-    let path = this.path;
-    if (this.params.keys().length > 0) {
-      path = `${path}?${this.params}`;
+    let path = this._path;
+    if (this._params.keys().length > 0) {
+      path = `${path}?${this._params}`;
     }
     return path;
   }
 
   get url() {
-    return `${this.api.serviceRootUrl}${this.path}`;
+    return `${this.api.serviceRootUrl}${this._path}`;
   }
 
   get urlWithParams() {
     return `${this.api.serviceRootUrl}${this.pathWithParams}`;
+  }
+
+  isQueryOptionsRequestBody() {
+    return (
+      this.queryOptionsBody.length > 0 &&
+      this.queryOptionsBody.some((name) => this._params.has(`$${name}`))
+    );
+  }
+
+  isFetch() {
+    return ['GET'].indexOf(this._method) !== -1;
+  }
+
+  isMutate() {
+    return ['PUT', 'PATCH', 'POST', 'DELETE'].indexOf(this._method) !== -1;
+  }
+
+  cacheKey() {
+    return this.pathWithParams;
+  }
+
+  cachePattern() {
+    return `^${this._path}`;
   }
 }

@@ -1,6 +1,6 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { NEVER, Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { NEVER, Observable, of, throwError } from 'rxjs';
+import { catchError, map, startWith, tap } from 'rxjs/operators';
 
 import {
   ApiConfig,
@@ -240,8 +240,17 @@ export class ODataApi {
     if (this.errorHandler !== undefined)
       res$ = res$.pipe(catchError(this.errorHandler));
 
-    return this.cache.isCacheable(req)
-      ? this.cache.handleRequest(req, res$)
+    return req.observe === 'response' ? this.handleRequest(req, res$) : res$;
+  }
+
+  handleRequest(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>
+  ): Observable<ODataResponse<any>> {
+    return req.isFetch()
+      ? this.cache.handleFetch(req, res$)
+      : req.isMutate()
+      ? this.cache.handleMutate(req, res$)
       : res$;
   }
 

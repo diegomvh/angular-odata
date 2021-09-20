@@ -24,7 +24,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   params: { [param: string]: string | string[] };
   headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
-  queryBody: QueryOptionNames[];
+  queryOptionsBody: QueryOptionNames[];
   accept?: {
     metadata?: ODataMetadataType;
     ieee754Compatible?: boolean;
@@ -54,7 +54,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.withCredentials = config.withCredentials;
     this.stripMetadata = config.stripMetadata || DEFAULT_STRIP_METADATA;
     this.fetchPolicy = config.fetchPolicy || DEFAULT_FETCH_POLICY;
-    this.queryBody = config.queryBody || [];
+    this.queryOptionsBody = config.queryOptionsBody || [];
     this.accept = config.accept;
     Object.assign(this.etag, config.etag || {});
     this.prefer = config.prefer;

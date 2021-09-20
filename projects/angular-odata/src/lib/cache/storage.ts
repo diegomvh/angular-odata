@@ -33,14 +33,14 @@ export class ODataInStorageCache extends ODataCache<StoragePayload> {
   }
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    this.put(req.pathWithParams, res.toJSON(), {
+    this.put(req.cacheKey(), res.toJSON(), {
       timeout: res.options.maxAge,
-      pattern: `^${req.path}`,
+      pattern: req.cachePattern(),
     });
   }
 
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
-    const data = this.get(req.pathWithParams);
+    const data = this.get(req.cacheKey());
 
     return data !== undefined ? ODataResponse.fromJSON(req, data) : undefined;
   }

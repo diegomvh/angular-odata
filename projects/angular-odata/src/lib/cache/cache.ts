@@ -1,8 +1,8 @@
-import { Observable, of, throwError } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
 import { DEFAULT_TIMEOUT } from '../constants';
 import { Cache } from '../types';
 import { ODataRequest, ODataResponse } from '../resources';
+import { Observable, of, throwError } from 'rxjs';
+import { startWith, tap } from 'rxjs/operators';
 
 //TODO: User cache? Tags cache?
 export interface ODataCacheEntry<T> {
@@ -76,19 +76,7 @@ export abstract class ODataCache<T> implements Cache<T> {
     return entry.pattern !== undefined && value.match(entry.pattern);
   }
 
-  isCacheable(req: ODataRequest<any>) {
-    return req.observe === 'response';
-  }
-
-  isFetch(req: ODataRequest<any>) {
-    return ['GET'].indexOf(req.method) !== -1;
-  }
-
-  isMutate(req: ODataRequest<any>) {
-    return ['PUT', 'PATCH', 'POST', 'DELETE'].indexOf(req.method) !== -1;
-  }
-
-  private handleFetch(
+  handleFetch(
     req: ODataRequest<any>,
     res$: Observable<ODataResponse<any>>
   ): Observable<ODataResponse<any>> {
@@ -123,22 +111,11 @@ export abstract class ODataCache<T> implements Cache<T> {
       : res$;
   }
 
-  private handleMutate(
+  handleMutate(
     req: ODataRequest<any>,
     res$: Observable<ODataResponse<any>>
   ): Observable<ODataResponse<any>> {
     this.forget({ name: req.path });
     return res$;
-  }
-
-  handleRequest(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>
-  ): Observable<ODataResponse<any>> {
-    return this.isFetch(req)
-      ? this.handleFetch(req, res$)
-      : this.isMutate(req)
-      ? this.handleMutate(req, res$)
-      : res$;
   }
 }

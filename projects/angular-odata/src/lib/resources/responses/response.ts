@@ -119,16 +119,20 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return this._options;
   }
 
+  get payload() {
+    const options = this.options;
+    return this.body && options.version === '2.0'
+      ? (<any>this.body)['d']
+      : this.body;
+  }
+
   /**
    * Handle the response body as an entity
    * @returns
    */
   entity(): ODataEntity<T> {
     const options = this.options;
-    const payload =
-      this.body && options.version === '2.0'
-        ? (<any>this.body)['d']
-        : this.body;
+    const payload = this.payload;
     const annots = new ODataEntityAnnotations({
       data: payload || {},
       options: options,
@@ -152,10 +156,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
    */
   entities(): ODataEntities<T> {
     const options = this.options;
-    const payload =
-      this.body && options.version === '2.0'
-        ? (<any>this.body)['d']
-        : this.body;
+    const payload = this.payload;
     const annots = new ODataEntitiesAnnotations({
       data: payload || {},
       options: options,
@@ -174,10 +175,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
    */
   property(): ODataProperty<T> {
     const options = this.options;
-    const payload =
-      this.body && options.version === '2.0'
-        ? (<any>this.body)['d']
-        : this.body;
+    const payload = this.payload;
     const annots = new ODataPropertyAnnotations({
       data: payload || {},
       options: options,
@@ -201,11 +199,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
    */
   value(): T | null {
     const options = this.options;
-    const data = this.body && options.version === '2.0' ? this.body : this.body;
+    const payload = this.payload;
     let value = (
-      data !== null && Types.isPlainObject(data)
-        ? options.helper.attributes(data, this.api.options.stripMetadata)
-        : data
+      payload !== null && Types.isPlainObject(payload)
+        ? options.helper.attributes(payload, this.api.options.stripMetadata)
+        : payload
     ) as T | null;
 
     if (value !== null) value = this.resource.deserialize(value, options) as T;

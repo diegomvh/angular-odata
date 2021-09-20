@@ -7,6 +7,7 @@ export const $BATCH = '$batch';
 export const $REF = '$ref';
 export const $VALUE = '$value';
 export const $COUNT = '$count';
+export const $QUERY = '$query';
 export const $INLINECOUNT = '$inlinecount';
 
 // HTTP HEADERS
