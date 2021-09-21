@@ -240,17 +240,8 @@ export class ODataApi {
     if (this.errorHandler !== undefined)
       res$ = res$.pipe(catchError(this.errorHandler));
 
-    return req.observe === 'response' ? this.handleRequest(req, res$) : res$;
-  }
-
-  handleRequest(
-    req: ODataRequest<any>,
-    res$: Observable<ODataResponse<any>>
-  ): Observable<ODataResponse<any>> {
-    return req.isFetch()
-      ? this.cache.handleFetch(req, res$)
-      : req.isMutate()
-      ? this.cache.handleMutate(req, res$)
+    return req.observe === 'response'
+      ? this.cache.handleRequest(req, res$)
       : res$;
   }
 

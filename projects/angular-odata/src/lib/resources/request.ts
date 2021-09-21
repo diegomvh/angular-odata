@@ -3,7 +3,6 @@ import { ODataApi } from '../api';
 import {
   $QUERY,
   ACCEPT,
-  CONTENT_TYPE,
   IF_MATCH_HEADER,
   IF_NONE_MATCH_HEADER,
   PREFER,
@@ -20,7 +19,7 @@ export class ODataRequest<T> {
   readonly observe: 'events' | 'response';
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
-  readonly queryOptionsBody: QueryOptionNames[];
+  readonly bodyQueryOptions: QueryOptionNames[];
   readonly responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   readonly fetchPolicy:
     | 'cache-first'
@@ -51,7 +50,7 @@ export class ODataRequest<T> {
       | 'no-cache'
       | 'cache-only';
     withCredentials?: boolean;
-    queryOptionsBody?: QueryOptionNames[];
+    bodyQueryOptions?: QueryOptionNames[];
   }) {
     this._method = init.method;
     this.resource = init.resource;
@@ -70,8 +69,8 @@ export class ODataRequest<T> {
         ? this.api.options.withCredentials
         : init.withCredentials;
     this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
-    this.queryOptionsBody =
-      init.queryOptionsBody || this.api.options.queryOptionsBody;
+    this.bodyQueryOptions =
+      init.bodyQueryOptions || this.api.options.bodyQueryOptions;
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = this.resource.pathAndParams();
@@ -166,20 +165,18 @@ export class ODataRequest<T> {
   }
 
   get path() {
-    return this.isQueryOptionsRequestBody()
-      ? `${this._path}/${$QUERY}`
-      : this._path;
+    return this.isBodyQueryOptions() ? `${this._path}/${$QUERY}` : this._path;
   }
 
   get method() {
-    return this.isQueryOptionsRequestBody() ? 'POST' : this._method;
+    return this.isBodyQueryOptions() ? 'POST' : this._method;
   }
 
   get body() {
-    if (this.isQueryOptionsRequestBody()) {
+    if (this.isBodyQueryOptions()) {
       let [, bodyParams] = Http.splitHttpParams(
         this._params,
-        this.queryOptionsBody.map((name) => `$${name}`)
+        this.bodyQueryOptions.map((name) => `$${name}`)
       );
       return bodyParams.toString();
     } else {
@@ -188,10 +185,10 @@ export class ODataRequest<T> {
   }
 
   get params() {
-    if (this.isQueryOptionsRequestBody()) {
+    if (this.isBodyQueryOptions()) {
       let [queryParams] = Http.splitHttpParams(
         this._params,
-        this.queryOptionsBody.map((name) => `$${name}`)
+        this.bodyQueryOptions.map((name) => `$${name}`)
       );
       return queryParams;
     } else {
@@ -200,7 +197,7 @@ export class ODataRequest<T> {
   }
 
   get headers() {
-    if (this.isQueryOptionsRequestBody()) {
+    if (this.isBodyQueryOptions()) {
       return Http.mergeHttpHeaders(this._headers, { CONTENT_TYPE: TEXT_PLAIN });
     } else {
       return this._headers;
@@ -223,10 +220,11 @@ export class ODataRequest<T> {
     return `${this.api.serviceRootUrl}${this.pathWithParams}`;
   }
 
-  isQueryOptionsRequestBody() {
+  isBodyQueryOptions() {
     return (
-      this.queryOptionsBody.length > 0 &&
-      this.queryOptionsBody.some((name) => this._params.has(`$${name}`))
+      this._method === 'GET' &&
+      this.bodyQueryOptions.length > 0 &&
+      this.bodyQueryOptions.some((name) => this._params.has(`$${name}`))
     );
   }
 
@@ -236,13 +234,5 @@ export class ODataRequest<T> {
 
   isMutate() {
     return ['PUT', 'PATCH', 'POST', 'DELETE'].indexOf(this._method) !== -1;
-  }
-
-  cacheKey() {
-    return this.pathWithParams;
-  }
-
-  cachePattern() {
-    return `^${this._path}`;
   }
 }

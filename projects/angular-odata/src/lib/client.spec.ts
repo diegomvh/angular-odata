@@ -189,10 +189,10 @@ describe('ODataClient', () => {
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
       .top(2)
       .get()
-      .subscribe(({ entities, annots: meta }) => {
+      .subscribe(({ entities, annots }) => {
         expect(entities !== null).toBeTrue();
         expect((entities as any[]).length).toBe(2);
-        expect(meta.context.entitySet).toEqual('People');
+        expect(annots.entitySet).toEqual('People');
         expect(entities).toEqual(dummyPeople);
       });
 
@@ -228,7 +228,7 @@ describe('ODataClient', () => {
       .entity('russellwhyte');
 
     entity.get().subscribe(({ entity, annots }) => {
-      expect(annots.context.entitySet).toEqual('People');
+      expect(annots.entitySet).toEqual('People');
       expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
       expect(entity).toEqual(person);
     });
@@ -275,7 +275,7 @@ describe('ODataClient', () => {
       })
       .subscribe(({ entity, annots: meta }) => {
         expect(entity !== null).toBeTrue();
-        expect(meta.context.entitySet).toEqual('People');
+        expect(meta.entitySet).toEqual('People');
         expect(entity).toEqual(trip);
       });
 
@@ -324,7 +324,7 @@ describe('ODataClient', () => {
       .post(item)
       .subscribe(({ entity, annots: meta }) => {
         expect(entity !== null).toBeTrue();
-        expect(meta.context.entitySet).toEqual('People');
+        expect(meta.entitySet).toEqual('People');
         expect(entity).toEqual(item);
       });
 
@@ -383,7 +383,7 @@ ${JSON.stringify(payload)}
       .post((batch) => {
         expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
         entity.get().subscribe(({ annots: meta }) => {
-          expect(meta.context.entitySet).toEqual('People');
+          expect(meta.entitySet).toEqual('People');
           expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
         });
       })

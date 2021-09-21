@@ -28,9 +28,9 @@ export interface ODataVersionHelper {
   ODATA_ETAG: string;
   ODATA_CONTEXT: string;
   ODATA_MEDIA_ETAG: string;
-  entity(value: { [name: string]: any }, context: ODataContext): any;
-  entities(value: { [name: string]: any }, context: ODataContext): any;
-  property(value: { [name: string]: any }, context: ODataContext): any;
+  entity(value: { [name: string]: any }): any;
+  entities(value: { [name: string]: any }): any;
+  property(value: { [name: string]: any }): any;
   annotations(value: { [name: string]: any }): { [name: string]: any };
   attributes(value: { [name: string]: any }, metadata: ODataMetadataType): any;
   //Get or Set Id
@@ -55,13 +55,13 @@ export interface ODataVersionHelper {
 }
 
 const ODataVersionBaseHelper = <any>{
-  entity(data: { [name: string]: any }, context: ODataContext) {
+  entity(data: { [name: string]: any }) {
     return data;
   },
-  entities(data: { [name: string]: any }, context: ODataContext) {
+  entities(data: { [name: string]: any }) {
     return data[this.VALUE];
   },
-  property(data: { [name: string]: any }, context: ODataContext) {
+  property(data: { [name: string]: any }) {
     return this.VALUE in data ? data[this.VALUE] : data;
   },
   functions(value: { [name: string]: any }) {

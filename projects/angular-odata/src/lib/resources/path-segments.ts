@@ -132,6 +132,11 @@ export class ODataPathSegments {
     return segments.map((s) => new SegmentHandler(s));
   }
 
+  first({ key = false }: { key?: boolean } = {}) {
+    const segments = this.segments({ key });
+    return segments.length > 0 ? segments[0] : undefined;
+  }
+
   last({ key = false }: { key?: boolean } = {}) {
     const segments = this.segments({ key });
     return segments.length > 0 ? segments[segments.length - 1] : undefined;

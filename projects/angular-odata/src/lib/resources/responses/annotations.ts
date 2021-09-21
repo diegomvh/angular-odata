@@ -1,55 +1,23 @@
-import { HttpHeaders } from '@angular/common/http';
-import {
-  DEFAULT_VERSION,
-  ETAG_HEADERS,
-  ODATA_ENTITYID_HEADERS,
-} from '../../constants';
-import { ODataContext, ODataHelper } from '../../helper';
-import { OptionsHelper, ODataMetadataType } from '../../types';
-import { Http } from '../../utils/http';
+import { ODataContext, ODataVersionHelper } from '../../helper';
+import { ODataMetadataType } from '../../types';
 
 export abstract class ODataAnnotations {
-  annotations: { [annot: string]: any };
-  options?: OptionsHelper;
-  protected get helper() {
-    return this.options?.helper || ODataHelper[DEFAULT_VERSION];
-  }
-  constructor({
-    data = {},
-    options,
-    headers,
-  }: {
-    data?: { [name: string]: any };
-    options?: OptionsHelper;
-    headers?: HttpHeaders;
-  } = {}) {
-    this.options = options;
-    this.annotations = this.options ? this.helper.annotations(data) : data;
-    if (headers) {
-      let header = Http.resolveHeaderKey(headers, ETAG_HEADERS);
-      if (header) {
-        const etag = headers.get(header);
-        if (etag) this.helper.etag(this.annotations, etag);
-      }
-      header = Http.resolveHeaderKey(headers, ODATA_ENTITYID_HEADERS);
-      if (header) {
-        const entityId = headers.get(header);
-        if (entityId) this.helper.id(this.annotations, entityId);
-      }
-    }
-  }
-
-  // Context
-  private _context?: ODataContext;
-  get context(): ODataContext {
-    if (this._context === undefined) {
-      this._context = this.helper.context(this.annotations);
-    }
-    return this._context;
-  }
+  constructor(
+    public helper: ODataVersionHelper,
+    protected annotations: { [annot: string]: any } = {},
+    protected context?: ODataContext
+  ) {}
 
   attributes<T>(data: { [name: string]: any }, metadata: ODataMetadataType): T {
     return this.helper.attributes(data, metadata) as T;
+  }
+
+  get entitySet() {
+    return this.context?.entitySet;
+  }
+
+  get type() {
+    return this.helper.type(this.annotations) || this.context?.type;
   }
 
   // Method
@@ -59,35 +27,29 @@ export abstract class ODataAnnotations {
 
 export class ODataPropertyAnnotations extends ODataAnnotations {
   clone(): ODataPropertyAnnotations {
-    return new ODataPropertyAnnotations({
-      data: Object.assign({}, this.annotations),
-      options: this.options,
-    });
+    return new ODataPropertyAnnotations(
+      this.helper,
+      { ...this.annotations },
+      this.context
+    );
   }
 
   data(data: { [name: string]: any }) {
-    return this.helper.property(data, this.context);
-  }
-
-  get type() {
-    return this.helper.type(this.annotations) || this.context.type;
+    return this.helper.property(data);
   }
 }
 
 export class ODataEntityAnnotations extends ODataAnnotations {
   clone(): ODataEntityAnnotations {
-    return new ODataEntityAnnotations({
-      data: Object.assign({}, this.annotations),
-      options: this.options,
-    });
+    return new ODataEntityAnnotations(
+      this.helper,
+      { ...this.annotations },
+      this.context
+    );
   }
 
   data(data: { [name: string]: any }) {
-    return this.helper.entity(data, this.context);
-  }
-
-  get type() {
-    return this.helper.type(this.annotations) || this.context.type;
+    return this.helper.entity(data);
   }
 
   get id() {
@@ -153,17 +115,15 @@ export class ODataEntityAnnotations extends ODataAnnotations {
 
 export class ODataEntitiesAnnotations extends ODataAnnotations {
   clone(): ODataEntitiesAnnotations {
-    return new ODataEntitiesAnnotations({
-      data: Object.assign({}, this.annotations),
-      options: this.options,
-    });
+    return new ODataEntitiesAnnotations(
+      this.helper,
+      { ...this.annotations },
+      this.context
+    );
   }
 
   data(data: { [name: string]: any }) {
-    return this.helper.entities(data, this.context);
-  }
-  get type() {
-    return this.context.type;
+    return this.helper.entities(data);
   }
 
   get readLink() {

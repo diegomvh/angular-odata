@@ -13,11 +13,14 @@ import {
   CONTENT_TYPE,
   CACHE_CONTROL,
   LOCATION_HEADER,
+  ETAG_HEADERS,
+  ODATA_ENTITYID_HEADERS,
 } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
 import { ODataResponseOptions } from './options';
 import { Http } from '../../utils/http';
+import { ODataContext } from '../../helper';
 
 /**
  * OData Response
@@ -86,9 +89,9 @@ export class ODataResponse<T> extends HttpResponse<T> {
     };
   }
 
-  private _options: ODataResponseOptions | null = null;
+  private _options?: ODataResponseOptions;
   get options(): ODataResponseOptions {
-    if (this._options === null) {
+    if (this._options === undefined) {
       this._options = new ODataResponseOptions(this.api.options);
       const contentType = this.headers.get(CONTENT_TYPE);
       if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
@@ -119,11 +122,46 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return this._options;
   }
 
+  private _payload?: any;
   get payload() {
-    const options = this.options;
-    return this.body && options.version === '2.0'
-      ? (<any>this.body)['d']
-      : this.body;
+    if (this._payload === undefined) {
+      const options = this.options;
+      this._payload =
+        this.body && options.version === '2.0'
+          ? (<any>this.body)['d']
+          : this.body;
+    }
+    return this._payload;
+  }
+
+  private _context?: any;
+  get context(): ODataContext {
+    if (this._context === undefined) {
+      const payload = this.payload;
+      const options = this.options;
+      this._context = options.helper.context(payload);
+    }
+    return this._context;
+  }
+
+  private _annotations?: any;
+  get annotations(): { [name: string]: any } {
+    if (this._annotations === undefined) {
+      const payload = this.payload;
+      const options = this.options;
+      this._annotations = options.helper.annotations(payload);
+      let key = Http.resolveHeaderKey(this.headers, ETAG_HEADERS);
+      if (key) {
+        const etag = this.headers.get(key);
+        if (etag) options.helper.etag(this._annotations, etag);
+      }
+      key = Http.resolveHeaderKey(this.headers, ODATA_ENTITYID_HEADERS);
+      if (key) {
+        const entityId = this.headers.get(key);
+        if (entityId) options.helper.id(this._annotations, entityId);
+      }
+    }
+    return this._annotations;
   }
 
   /**
@@ -133,11 +171,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
   entity(): ODataEntity<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataEntityAnnotations({
-      data: payload || {},
-      options: options,
-      headers: this.headers,
-    });
+    const annots = new ODataEntityAnnotations(
+      options.helper,
+      this.annotations,
+      this.context
+    );
     const data = payload ? annots.data(payload) : null;
     let entity = (
       data !== null && Types.isPlainObject(data)
@@ -157,11 +195,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
   entities(): ODataEntities<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataEntitiesAnnotations({
-      data: payload || {},
-      options: options,
-      headers: this.headers,
-    });
+    const annots = new ODataEntitiesAnnotations(
+      options.helper,
+      this.annotations,
+      this.context
+    );
     let entities = payload ? annots.data(payload) : null;
 
     if (entities !== null)
@@ -176,11 +214,11 @@ export class ODataResponse<T> extends HttpResponse<T> {
   property(): ODataProperty<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataPropertyAnnotations({
-      data: payload || {},
-      options: options,
-      headers: this.headers,
-    });
+    const annots = new ODataPropertyAnnotations(
+      options.helper,
+      this.annotations,
+      this.context
+    );
     const data = payload ? (annots.data(payload) as T) : null;
     let property = (
       data !== null && Types.isPlainObject(data)

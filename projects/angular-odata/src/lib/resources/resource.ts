@@ -352,7 +352,7 @@ export abstract class ODataResource<T> {
         | 'entity'
         | 'entities';
       withCount?: boolean;
-      queryOptionsBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<any> {
     const apiOptions = this.api.options;
@@ -387,7 +387,7 @@ export abstract class ODataResource<T> {
       responseType: responseType,
       fetchPolicy: options.fetchPolicy,
       withCredentials: options.withCredentials,
-      queryOptionsBody: options.queryOptionsBody,
+      bodyQueryOptions: options.bodyQueryOptions,
     });
 
     const res$ = this.api.request(request);
@@ -419,7 +419,7 @@ export abstract class ODataResource<T> {
         | 'entity'
         | 'entities';
       withCount?: boolean;
-      queryOptionsBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } = {}
   ): Observable<any> {
     return this.request('GET', options);

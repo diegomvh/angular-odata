@@ -8,7 +8,7 @@ import { startWith, tap } from 'rxjs/operators';
 export interface ODataCacheEntry<T> {
   payload: T;
   lastRead: number;
-  pattern?: string;
+  tags?: string[];
   timeout?: number;
 }
 
@@ -25,22 +25,23 @@ export abstract class ODataCache<T> implements Cache<T> {
 
   buildEntry(
     payload: T,
-    { timeout, pattern }: { timeout?: number; pattern?: string }
+    { timeout, tags }: { timeout?: number; tags?: string[] }
   ): ODataCacheEntry<T> {
     return {
       payload,
       lastRead: Date.now(),
-      pattern,
-      timeout,
+      tags,
+      timeout: timeout || this.timeout,
     };
   }
 
   put(
     key: string,
     payload: T,
-    { timeout, pattern }: { timeout?: number; pattern?: string }
+    { timeout, tags }: { timeout?: number; tags?: string[] }
   ) {
-    const entry = this.buildEntry(payload, { timeout, pattern });
+    const entry = this.buildEntry(payload, { timeout, tags });
+    console.log('Caching', entry);
     this.entries.set(key, entry);
     this.forget();
   }
@@ -52,14 +53,17 @@ export abstract class ODataCache<T> implements Cache<T> {
       : undefined;
   }
 
-  forget({ name }: { name?: string } = {}) {
+  forget({ key, tags }: { key?: string, tags?: string[] } = {}) {
     // Remove expired cache entries
-    this.entries.forEach((entry, key) => {
+    this.entries.forEach((e, k) => {
       if (
-        this.isExpired(entry) || // Expired
-        (name && this.isMatch(entry, name)) // Match
-      )
-        this.entries.delete(key);
+        key !== undefined && k === key ||
+        this.isExpired(e) || // Expired
+        (tags !== undefined && this.isMatch(e, tags)) // Match
+      ) {
+        console.log('Forgetting', e);
+        this.entries.delete(k);
+      }
     });
   }
 
@@ -72,11 +76,22 @@ export abstract class ODataCache<T> implements Cache<T> {
     return entry.lastRead < Date.now() - (entry.timeout || this.timeout) * 1000;
   }
 
-  isMatch(entry: ODataCacheEntry<any>, value: string) {
-    return entry.pattern !== undefined && value.match(entry.pattern);
+  isMatch(entry: ODataCacheEntry<any>, tags: string[]) {
+    return entry.tags !== undefined && entry.tags.every((t) => t in tags);
   }
 
-  handleFetch(
+  handleRequest(
+    req: ODataRequest<any>,
+    res$: Observable<ODataResponse<any>>
+  ): Observable<ODataResponse<any>> {
+    return req.isFetch()
+      ? this.handleFetch(req, res$)
+      : req.isMutate()
+      ? this.handleMutate(req, res$)
+      : res$;
+  }
+
+  private handleFetch(
     req: ODataRequest<any>,
     res$: Observable<ODataResponse<any>>
   ): Observable<ODataResponse<any>> {
@@ -111,11 +126,17 @@ export abstract class ODataCache<T> implements Cache<T> {
       : res$;
   }
 
-  handleMutate(
+  private handleMutate(
     req: ODataRequest<any>,
     res$: Observable<ODataResponse<any>>
   ): Observable<ODataResponse<any>> {
-    this.forget({ name: req.path });
+    var segments = req.resource.cloneSegments();
+    var path = segments.first()?.path();
+    var tags = ['response'];
+    if (path !== undefined) {
+      tags.push(path);
+    }
+    this.forget({ tags });
     return res$;
   }
 }

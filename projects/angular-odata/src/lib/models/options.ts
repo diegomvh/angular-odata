@@ -1,6 +1,11 @@
 import { Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { COMPUTED, OPTIMISTIC_CONCURRENCY } from '../constants';
+import {
+  COMPUTED,
+  DEFAULT_VERSION,
+  OPTIMISTIC_CONCURRENCY,
+} from '../constants';
+import { ODataHelper } from '../helper';
 import { ODataParserOptions } from '../options';
 import { ODataStructuredTypeFieldParser } from '../parsers';
 import {
@@ -408,14 +413,14 @@ export class ODataModelField<F> {
     annots: ODataEntityAnnotations
   ): ODataEntityAnnotations | ODataEntitiesAnnotations {
     return this.parser.collection
-      ? new ODataEntitiesAnnotations({
-          data: annots.property(this.parser.name) || {},
-          options: annots.options,
-        })
-      : new ODataEntityAnnotations({
-          data: annots.property(this.parser.name) || {},
-          options: annots.options,
-        });
+      ? new ODataEntitiesAnnotations(
+          annots.helper,
+          annots.property(this.parser.name) || {}
+        )
+      : new ODataEntityAnnotations(
+          annots.helper,
+          annots.property(this.parser.name) || {}
+        );
   }
 
   schemaFactory<T, F>(
@@ -726,7 +731,8 @@ export class ODataModelOptions<T> {
     }
 
     // Annotations
-    self._annotations = annots || new ODataEntityAnnotations();
+    self._annotations =
+      annots || new ODataEntityAnnotations(ODataHelper[DEFAULT_VERSION]);
 
     const fields = this.fields({
       include_navigation: true,

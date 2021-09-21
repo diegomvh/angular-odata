@@ -67,7 +67,7 @@ export interface ApiOptions extends Options {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
-  queryOptionsBody?: QueryOptionNames[];
+  bodyQueryOptions?: QueryOptionNames[];
 }
 
 export interface OptionsHelper extends Options {

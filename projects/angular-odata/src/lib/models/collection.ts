@@ -35,6 +35,8 @@ import {
   ODataModelEntry,
   INCLUDE_ALL,
 } from './options';
+import { ODataHelper } from '../helper';
+import { DEFAULT_VERSION } from '../constants';
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M>
@@ -98,7 +100,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     // Annotations
     this._annotations =
       annots ||
-      new ODataEntitiesAnnotations({ options: resource?.api.options });
+      new ODataEntitiesAnnotations(
+        resource?.api.options.helper || ODataHelper[DEFAULT_VERSION]
+      );
 
     entities = entities || [];
     this.assign(entities, { reset });
@@ -162,10 +166,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
     { reset = false }: { reset?: boolean } = {}
   ): M {
     let Model = this._model;
-    const annots = new ODataEntityAnnotations({
-      data,
-      options: this._annotations.options,
-    });
+    const helper = this._annotations.helper;
+    const annots = new ODataEntityAnnotations(
+      helper,
+      helper.annotations(data) || {}
+    );
 
     if (annots?.type !== undefined && Model.meta !== null) {
       let schema = Model.meta.findChildOptions((o) =>
@@ -288,9 +293,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
     return obs$.pipe(
       map((entities) => {
-        this._annotations = new ODataEntitiesAnnotations({
-          options: resource?.api.options,
-        });
+        this._annotations = new ODataEntitiesAnnotations(
+          resource?.api.options.helper
+        );
         this.assign(entities || [], { reset: true });
         this.events$.emit(
           new ODataModelEvent('sync', {
@@ -689,10 +694,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
             });
             model.assign(entity, { reset, silent });
           } else {
-            const annots = new ODataEntityAnnotations({
-              data: obj,
-              options: this._annotations.options,
-            });
+            const helper = this._annotations.helper;
+            const annots = new ODataEntityAnnotations(
+              helper,
+              helper.annotations(obj) || {}
+            );
             const entity = annots.attributes<T>(obj, 'full');
             model._annotations = annots;
             model.assign(entity, { reset, silent });
