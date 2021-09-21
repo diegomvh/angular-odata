@@ -1,6 +1,6 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { NEVER, Observable, of, throwError } from 'rxjs';
-import { catchError, map, startWith, tap } from 'rxjs/operators';
+import { NEVER, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import {
   ApiConfig,
@@ -52,7 +52,7 @@ export class ODataApi {
   // Options
   options: ODataApiOptions;
   // Cache
-  cache!: ODataCache<any>;
+  cache!: ODataCache;
   // Error Handler
   errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;
   // Base Parsers
@@ -76,7 +76,7 @@ export class ODataApi {
       Object.assign(<ApiOptions>{ version: this.version }, config.options || {})
     );
 
-    this.cache = (config.cache as ODataCache<any>) || new ODataInMemoryCache();
+    this.cache = (config.cache as ODataCache) || new ODataInMemoryCache();
     this.errorHandler = config.errorHandler;
 
     this.parsers = config.parsers || EDM_PARSERS;

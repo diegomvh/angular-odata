@@ -1,23 +1,21 @@
 import type { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache } from './cache';
 
-export class ODataInMemoryCache extends ODataCache<ODataResponse<any>> {
+export class ODataInMemoryCache extends ODataCache {
   constructor({ timeout }: { timeout?: number } = {}) {
     super({ timeout });
   }
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    var tags = ['response'];
-    if (res.context.entitySet) {
-      tags.push(res.context.entitySet);
-    }
+    var scope = this.scope(req);
     this.put(req.pathWithParams, res, {
       timeout: res.options.maxAge,
-      tags,
+      scope,
     });
   }
 
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
-    return this.get(req.pathWithParams);
+    var scope = this.scope(req);
+    return this.get(req.pathWithParams, { scope });
   }
 }

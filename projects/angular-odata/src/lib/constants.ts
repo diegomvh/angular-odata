@@ -79,6 +79,7 @@ export const ODATA_ALIAS_PREFIX = '@';
 
 export const NEWLINE = '\r\n';
 export const NEWLINE_REGEXP = /\r?\n/;
+export const CACHE_KEY_SEPARATOR = ':';
 
 // Standard vocabularies for annotating OData services
 

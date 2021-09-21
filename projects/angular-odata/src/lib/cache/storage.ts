@@ -1,7 +1,7 @@
 import { ODataRequest, ODataResponse } from '../resources';
 import { ODataCache, ODataCacheEntry } from './cache';
 
-interface StoragePayload {
+interface ResponseJson {
   body: any | null;
   headers: { [name: string]: string | string[] };
   status: number;
@@ -9,7 +9,9 @@ interface StoragePayload {
   url: string | null;
 }
 
-export class ODataInStorageCache extends ODataCache<StoragePayload> {
+export class ODataInStorageCache extends ODataCache {
+  name: string;
+  storage: Storage;
   constructor({
     name,
     storage = sessionStorage,
@@ -20,31 +22,41 @@ export class ODataInStorageCache extends ODataCache<StoragePayload> {
     storage?: Storage;
   }) {
     super({ timeout });
-    this.entries = new Map<string, ODataCacheEntry<StoragePayload>>(
-      JSON.parse(storage.getItem(name) || '[]')
-    );
-    window.addEventListener(
-      'beforeunload',
-      ((backend, key, responses) =>
-        function () {
-          backend.setItem(key, JSON.stringify(Array.from(responses.entries())));
-        })(storage, name, this.entries)
+    this.name = name;
+    this.storage = storage;
+    this.restore();
+    window.addEventListener('beforeunload', () => this.store());
+  }
+
+  store() {
+    this.storage.setItem(
+      this.name,
+      JSON.stringify(Array.from(this.entries.entries()))
     );
   }
 
+  restore() {
+    this.entries = new Map<string, ODataCacheEntry<any>>(
+      JSON.parse(this.storage.getItem(this.name) || '[]')
+    );
+  }
+
+  flush() {
+    super.flush();
+    this.store();
+  }
+
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
-    var tags = ['response'];
-    if (res.context.entitySet) {
-      tags.push(res.context.entitySet);
-    }
-    this.put(req.pathWithParams, res.toJSON(), {
+    var scope = this.scope(req);
+    this.put<ResponseJson>(req.pathWithParams, res.toJSON(), {
       timeout: res.options.maxAge,
-      tags,
+      scope,
     });
   }
 
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
-    const data = this.get(req.pathWithParams);
+    const scope = this.scope(req);
+    const data = this.get<ResponseJson>(req.pathWithParams, { scope });
 
     return data !== undefined ? ODataResponse.fromJSON(req, data) : undefined;
   }

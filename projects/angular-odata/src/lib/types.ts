@@ -105,9 +105,9 @@ export const NONE_PARSER = {
   encode: (value: any) => value,
 } as Parser<any>;
 
-export interface Cache<T> {
-  put(key: string, payload: T, ...opts: any[]): void;
-  get(key: string): T | undefined;
+export interface Cache {
+  put<T>(key: string, payload: T, ...opts: any[]): void;
+  get<T>(key: string, ...opts: any[]): T | undefined;
 }
 
 //#region Configs
@@ -117,7 +117,7 @@ export type ApiConfig = {
   version?: ODataVersion;
   default?: boolean;
   creation?: Date;
-  cache?: Cache<any>;
+  cache?: Cache;
   errorHandler?: (error: any, caught: Observable<any>) => Observable<never>;
   options?: ApiOptions;
   parsers?: { [type: string]: Parser<any> };
