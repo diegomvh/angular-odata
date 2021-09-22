@@ -125,9 +125,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
   private _payload?: any;
   get payload() {
     if (this._payload === undefined) {
-      const options = this.options;
       this._payload =
-        this.body && options.version === '2.0'
+        this.body && this.options.version === '2.0'
           ? (<any>this.body)['d']
           : this.body;
     }
@@ -137,9 +136,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   private _context?: any;
   get context(): ODataContext {
     if (this._context === undefined) {
-      const payload = this.payload;
-      const options = this.options;
-      this._context = options.helper.context(payload);
+      this._context = this.options.helper.context(this.payload || {});
     }
     return this._context;
   }
@@ -147,9 +144,8 @@ export class ODataResponse<T> extends HttpResponse<T> {
   private _annotations?: any;
   get annotations(): { [name: string]: any } {
     if (this._annotations === undefined) {
-      const payload = this.payload;
       const options = this.options;
-      this._annotations = options.helper.annotations(payload);
+      this._annotations = options.helper.annotations(this.payload || {});
       let key = Http.resolveHeaderKey(this.headers, ETAG_HEADERS);
       if (key) {
         const etag = this.headers.get(key);
