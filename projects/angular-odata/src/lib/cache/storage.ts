@@ -48,6 +48,7 @@ export class ODataInStorageCache extends ODataCache {
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     var scope = this.scope(req);
+    console.log(res.context);
     this.put<ResponseJson>(req.pathWithParams, res.toJSON(), {
       timeout: res.options.maxAge,
       scope,
