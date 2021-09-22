@@ -8,15 +8,18 @@ import {
 import { ODataMetadataType } from './types';
 
 export const COLLECTION = /Collection\(([\w\.]+)\)/;
+export const PROPERTY = /([\w\d\-_]+)\(([\'\w\d\-_=]+)\)/;
+export const EXPAND = /([\w\d\-_]+)\(([\w\d\,\(\)]+)\)/;
 
 export type ODataContext = {
   serviceRootUrl?: string;
   metadataUrl?: string;
   entitySet?: string;
   key?: string;
+  expand?: string;
   type?: string;
   property?: string;
-  //entity?: boolean;
+  entity?: boolean;
 };
 
 export interface ODataVersionHelper {
@@ -247,14 +250,18 @@ export const ODataHelper = {
         } else if (parts[0].indexOf('.') !== -1) {
           ctx.type = parts[0];
         } else {
-          const prop = parts[0].match(/([\w\d\-_]+)\(([\(\)\'\w\d\-_]+)\)/);
-          if (prop) {
-            ctx.entitySet = prop[1];
-            ctx.key = prop[2];
+          const property = parts[0].match(PROPERTY);
+          const expand = parts[0].match(EXPAND);
+          ctx.entity = parts[1] === '$entity';
+          if (property) {
+            ctx.entitySet = property[1];
+            ctx.key = property[2];
             ctx.property = parts[1];
+          } else if (expand) {
+            ctx.entitySet = expand[1];
+            ctx.expand = expand[2];
           } else {
             ctx.entitySet = parts[0];
-            if (parts[1] && parts[1] !== '$entity') ctx.type = parts[1];
           }
         }
       }

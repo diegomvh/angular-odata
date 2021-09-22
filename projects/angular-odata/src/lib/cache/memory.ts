@@ -8,9 +8,11 @@ export class ODataInMemoryCache extends ODataCache {
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     var scope = this.scope(req);
+    var tags = this.tags(req, res);
     this.put(req.pathWithParams, res, {
       timeout: res.options.maxAge,
       scope,
+      tags,
     });
   }
 

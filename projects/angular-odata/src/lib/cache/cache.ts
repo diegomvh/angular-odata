@@ -21,6 +21,7 @@ export abstract class ODataCache implements Cache {
 
   abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
   abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
+
   scope(req: ODataRequest<any>): string[] {
     const segments = req.resource.cloneSegments();
     return segments.segments({ key: true }).reduce(
@@ -31,6 +32,18 @@ export abstract class ODataCache implements Cache {
       },
       ['request']
     );
+  }
+
+  tags(req: ODataRequest<any>, res: ODataResponse<any>): string[] {
+    const tags = [];
+    const context = res.context;
+    if (context.entitySet) {
+      tags.push(
+        context.key ? `${context.entitySet}(${context.key})` : context.entitySet
+      );
+    }
+    if (context.type) tags.push(context.type);
+    return tags;
   }
 
   buildEntry<T>(
@@ -45,9 +58,8 @@ export abstract class ODataCache implements Cache {
     };
   }
 
-  buildKey(name: string, scope?: string[]): string {
-    scope = (scope || []).sort((a, b) => a.localeCompare(b));
-    return [name, ...scope].join(CACHE_KEY_SEPARATOR);
+  buildKey(names: string[]): string {
+    return names.join(CACHE_KEY_SEPARATOR);
   }
 
   put<T>(
@@ -60,14 +72,13 @@ export abstract class ODataCache implements Cache {
     }: { timeout?: number; scope?: string[]; tags?: string[] } = {}
   ) {
     const entry = this.buildEntry<T>(payload, { timeout, tags });
-    const key = this.buildKey(name, scope);
-    console.log('Caching', entry);
+    const key = this.buildKey([...(scope || []), name]);
     this.entries.set(key, entry);
     this.forget();
   }
 
   get<T>(name: string, { scope }: { scope?: string[] } = {}): T {
-    const key = this.buildKey(name, scope);
+    const key = this.buildKey([...(scope || []), name]);
     const entry = this.entries.get(key);
     return entry !== undefined && !this.isExpired(entry)
       ? entry.payload
@@ -76,21 +87,18 @@ export abstract class ODataCache implements Cache {
 
   forget({
     name,
-    scope,
-    tags,
+    scope = [],
+    tags = [],
   }: { name?: string; scope?: string[]; tags?: string[] } = {}) {
     // Remove expired cache entries
-    const key = name !== undefined ? this.buildKey(name, scope) : undefined;
-    const selector = (scope || []).map((s) => `${CACHE_KEY_SEPARATOR}${s}`);
-    const tgs = tags || [];
+    if (name !== undefined) scope.push(name);
+    const key = scope.length > 0 ? this.buildKey(scope) : undefined;
     this.entries.forEach((entry, k) => {
       if (
         this.isExpired(entry) || // Expired
-        (key !== undefined && key === k) || // Key
-        (selector.length > 0 && selector.every((s) => k.indexOf(s) !== -1)) || //Scope
-        (tgs.length > 0 && tgs.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
+        (key !== undefined && k.startsWith(key)) || // Key
+        (tags.length > 0 && tags.some((t) => entry.tags.indexOf(t) !== -1)) // Tags
       ) {
-        console.log('Forgetting', name, tags, entry);
         this.entries.delete(k);
       }
     });
