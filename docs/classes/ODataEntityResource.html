@@ -3764,7 +3764,7 @@ export class ODataEntityResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   get(
     options: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return super.get({ responseType: &#x27;entity&#x27;, ...options });
@@ -3800,7 +3800,7 @@ export class ODataEntityResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetch(
     options?: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     if (!this.hasKey()) return throwError(&#x27;Entity resource without key&#x27;);
@@ -3810,7 +3810,7 @@ export class ODataEntityResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetchEntity(
     options?: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;T | null&gt; {
     return this.fetch(options).pipe(map(({ entity }) &#x3D;&gt; entity));
@@ -3819,7 +3819,7 @@ export class ODataEntityResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetchModel(
     options?: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataModel&lt;T&gt; | null&gt; {
     return this.fetch(options).pipe(

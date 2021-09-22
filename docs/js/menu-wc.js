@@ -400,10 +400,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/Parser.html" data-type="entity-link" >Parser</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/ResponseOptions.html" data-type="entity-link" >ResponseOptions</a>
+                                <a href="interfaces/ResponseJson.html" data-type="entity-link" >ResponseJson</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/StoragePayload.html" data-type="entity-link" >StoragePayload</a>
+                                <a href="interfaces/ResponseOptions.html" data-type="entity-link" >ResponseOptions</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/StructuredTypeFieldOptions.html" data-type="entity-link" >StructuredTypeFieldOptions</a>

@@ -263,7 +263,7 @@ export interface ApiOptions extends Options {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
-  queryBody?: QueryOptionNames[];
+  bodyQueryOptions?: QueryOptionNames[];
 }
 
 export interface OptionsHelper extends Options {
@@ -301,9 +301,9 @@ export const NONE_PARSER &#x3D; {
   encode: (value: any) &#x3D;&gt; value,
 } as Parser&lt;any&gt;;
 
-export interface Cache&lt;T&gt; {
-  put(key: string, payload: T, ...opts: any[]): void;
-  get(key: string): T | undefined;
+export interface Cache {
+  put&lt;T&gt;(key: string, payload: T, ...opts: any[]): void;
+  get&lt;T&gt;(key: string, ...opts: any[]): T | undefined;
 }
 
 //#region Configs
@@ -313,7 +313,7 @@ export type ApiConfig &#x3D; {
   version?: ODataVersion;
   default?: boolean;
   creation?: Date;
-  cache?: Cache&lt;any&gt;;
+  cache?: Cache;
   errorHandler?: (error: any, caught: Observable&lt;any&gt;) &#x3D;&gt; Observable&lt;never&gt;;
   options?: ApiOptions;
   parsers?: { [type: string]: Parser&lt;any&gt; };

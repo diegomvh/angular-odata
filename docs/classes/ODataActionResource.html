@@ -4600,7 +4600,7 @@ export class ODataActionResource&lt;P, R&gt; extends ODataResource&lt;R&gt; {
     let resource: ODataEntityResource&lt;R&gt; | undefined;
     const type &#x3D; annots?.type || this.returnType();
     const Model &#x3D; this.api.modelForType(type);
-    let path &#x3D; annots?.context.entitySet;
+    let path &#x3D; annots?.entitySet;
     if (path !&#x3D;&#x3D; undefined) {
       resource &#x3D; this.api.entitySet&lt;R&gt;(path).entity(entity as Partial&lt;R&gt;);
       resource.query.apply(this.queryOptions.toQueryArguments());
@@ -4618,7 +4618,7 @@ export class ODataActionResource&lt;P, R&gt; extends ODataResource&lt;R&gt; {
     let resource: ODataEntitySetResource&lt;R&gt; | undefined;
     const type &#x3D; annots?.type || this.returnType();
     const Collection &#x3D; this.api.collectionForType(type);
-    let path &#x3D; annots?.context.entitySet;
+    let path &#x3D; annots?.entitySet;
     if (path !&#x3D;&#x3D; undefined) {
       resource &#x3D; this.api.entitySet&lt;R&gt;(path);
       resource.query.apply(this.queryOptions.toQueryArguments());

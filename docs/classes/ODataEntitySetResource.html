@@ -4149,7 +4149,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   get(
     options: HttpOptions &amp; {
       withCount?: boolean;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;ODataEntities&lt;T&gt;&gt; {
     return super.get({ responseType: &#x27;entities&#x27;, ...options });
@@ -4160,7 +4160,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetch(
     options?: HttpOptions &amp; {
       withCount?: boolean;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntities&lt;T&gt;&gt; {
     return this.get(options);
@@ -4169,7 +4169,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetchEntities(
     options?: HttpOptions &amp; {
       withCount?: boolean;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;T[] | null&gt; {
     return this.fetch(options).pipe(map(({ entities }) &#x3D;&gt; entities));
@@ -4178,7 +4178,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetchCollection(
     options?: HttpOptions &amp; {
       withCount?: boolean;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; | null&gt; {
     return this.fetch(options).pipe(
@@ -4190,7 +4190,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
 
   fetchAll(
     options?: HttpOptions &amp; {
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;T[]&gt; {
     let res &#x3D; this.clone();

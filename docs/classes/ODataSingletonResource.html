@@ -3653,7 +3653,7 @@ export class ODataSingletonResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   get(
     options: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return super.get({ responseType: &#x27;entity&#x27;, ...options });
@@ -3689,7 +3689,7 @@ export class ODataSingletonResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetch(
     options?: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return this.get(options);
@@ -3698,7 +3698,7 @@ export class ODataSingletonResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetchEntity(
     options?: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;T | null&gt; {
     return this.fetch(options).pipe(map(({ entity }) &#x3D;&gt; entity));
@@ -3707,7 +3707,7 @@ export class ODataSingletonResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   fetchModel(
     options?: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataModel&lt;T&gt; | null&gt; {
     return this.fetch(options).pipe(
