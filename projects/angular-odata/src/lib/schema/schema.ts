@@ -6,6 +6,9 @@ import { ODataApi } from '../api';
 import { SchemaConfig, Parser, CallableConfig } from '../types';
 import { ODataEntitySet } from './entity-set';
 import { ODataAnnotation } from './annotation';
+import { CALLABLE_BINDING_PARAMETER } from '../constants';
+import { Objects } from '../utils';
+import { OData } from '../utils/odata';
 
 export class ODataSchema {
   api: ODataApi;
@@ -27,34 +30,14 @@ export class ODataSchema {
     this.entities = (config.entities || []).map(
       (config) => new ODataStructuredType(config, this)
     );
-    // Merge callables
-    let callableConfigs = config.callables || [];
-    callableConfigs = callableConfigs.reduce(
-      (acc: CallableConfig[], config) => {
-        if (acc.every((c) => c.name !== config.name)) {
-          config = callableConfigs
-            .filter((c) => c.name === config.name)
-            .reduce((acc, c) => {
-              acc.parameters = Object.assign(
-                acc.parameters || {},
-                c.parameters || {}
-              );
-              return acc;
-            }, config);
-          return [...acc, config];
-        }
-        return acc;
-      },
-      [] as CallableConfig[]
-    );
-    this.callables = callableConfigs.map(
+    this.callables = OData.mergeCallableParameters(config.callables || []).map(
       (config) => new ODataCallable(config, this)
     );
     this.containers = (config.containers || []).map(
-      (container) => new ODataEntityContainer(container, this)
+      (config) => new ODataEntityContainer(config, this)
     );
     this.annotations = (config.annotations || []).map(
-      (annot) => new ODataAnnotation(annot)
+      (config) => new ODataAnnotation(config)
     );
   }
 
