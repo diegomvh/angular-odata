@@ -128,7 +128,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:16</a></div>
                             </td>
                         </tr>
 
@@ -202,7 +202,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:14</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -228,7 +228,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:14</a></div>
                         </td>
                     </tr>
 
@@ -254,7 +254,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:15</a></div>
                         </td>
                     </tr>
 
@@ -288,8 +288,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="24"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:24</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="26"
+                            class="link-to-prism">projects/angular-odata/src/lib/parsers/enum-type.ts:26</a></div>
                 </td>
             </tr>
 
@@ -355,7 +355,9 @@ import {
   Parser,
   OptionsHelper,
   EnumTypeFieldConfig,
+  Options,
 } from &#x27;../types&#x27;;
+import { ODataParserOptions } from &#x27;../options&#x27;;
 
 export class ODataEnumTypeFieldParser {
   name: string;
@@ -406,9 +408,12 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
   }
 
   // Deserialize
-  deserialize(value: string, options?: OptionsHelper): T {
+  deserialize(value: string, options?: Options): T {
     // string -&gt; number
-    options &#x3D; options || this.optionsHelper;
+    const parserOptions &#x3D;
+      options !&#x3D;&#x3D; undefined
+        ? new ODataParserOptions(options)
+        : this.optionsHelper;
     if (this.flags) {
       return Enums.toValues(this.members, value).reduce(
         (acc, v) &#x3D;&gt; acc | v,
@@ -420,28 +425,36 @@ export class ODataEnumTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
   }
 
   // Serialize
-  serialize(value: T, options?: OptionsHelper): string {
+  serialize(value: T, options?: Options): string {
     // Enum are string | number
     // string | number -&gt; string
-    options &#x3D; options || this.optionsHelper;
+    const parserOptions &#x3D;
+      options !&#x3D;&#x3D; undefined
+        ? new ODataParserOptions(options)
+        : this.optionsHelper;
     if (this.flags) {
       const names &#x3D; Enums.toNames(this.members, value);
-      return !options?.stringAsEnum
+      return !parserOptions?.stringAsEnum
         ? &#x60;${this.namespace}.${this.name}&#x27;${names.join(&#x27;, &#x27;)}&#x27;&#x60;
         : names.join(&#x27;, &#x27;);
     } else {
       const name &#x3D; Enums.toName(this.members, value);
-      return !options?.stringAsEnum
+      return !parserOptions?.stringAsEnum
         ? &#x60;${this.namespace}.${this.name}&#x27;${name}&#x27;&#x60;
         : name;
     }
   }
 
   //Encode
-  encode(value: T, options?: OptionsHelper): any {
-    options &#x3D; options || this.optionsHelper;
-    const serialized &#x3D; this.serialize(value, options);
-    return options?.stringAsEnum ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;) : raw(serialized);
+  encode(value: T, options?: Options): any {
+    const parserOptions &#x3D;
+      options !&#x3D;&#x3D; undefined
+        ? new ODataParserOptions(options)
+        : this.optionsHelper;
+    const serialized &#x3D; this.serialize(value, parserOptions);
+    return parserOptions?.stringAsEnum
+      ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;)
+      : raw(serialized);
   }
 
   // Json Schema

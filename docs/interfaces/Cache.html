@@ -119,7 +119,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>get(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, ...opts: any[])</code>
                 </td>
             </tr>
 
@@ -131,6 +131,14 @@
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -151,6 +159,18 @@
                                     <td>key</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                            <code>any[]</code>
                                     </td>
 
                                     <td>
@@ -200,6 +220,14 @@
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -343,7 +371,7 @@ export interface ApiOptions extends Options {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
-  queryBody?: QueryOptionNames[];
+  bodyQueryOptions?: QueryOptionNames[];
 }
 
 export interface OptionsHelper extends Options {
@@ -381,9 +409,9 @@ export const NONE_PARSER &#x3D; {
   encode: (value: any) &#x3D;&gt; value,
 } as Parser&lt;any&gt;;
 
-export interface Cache&lt;T&gt; {
-  put(key: string, payload: T, ...opts: any[]): void;
-  get(key: string): T | undefined;
+export interface Cache {
+  put&lt;T&gt;(key: string, payload: T, ...opts: any[]): void;
+  get&lt;T&gt;(key: string, ...opts: any[]): T | undefined;
 }
 
 //#region Configs
@@ -393,7 +421,7 @@ export type ApiConfig &#x3D; {
   version?: ODataVersion;
   default?: boolean;
   creation?: Date;
-  cache?: Cache&lt;any&gt;;
+  cache?: Cache;
   errorHandler?: (error: any, caught: Observable&lt;any&gt;) &#x3D;&gt; Observable&lt;never&gt;;
   options?: ApiOptions;
   parsers?: { [type: string]: Parser&lt;any&gt; };

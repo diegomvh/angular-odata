@@ -1124,7 +1124,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1189,7 +1189,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntities" target="_self" >Observable&lt;ODataEntities&lt;T&gt;&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntities&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1812,7 +1812,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1877,7 +1877,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntities" target="_self" >Observable&lt;ODataEntities&lt;T&gt;&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntities&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -2355,7 +2355,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -2448,7 +2448,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -2617,7 +2617,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#ODataEntity" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -4150,7 +4150,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>resolveKey(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, schema?: ODataStructuredType<T> | ODataCallable<T>)</code>
+                    <code>resolveKey(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, schema?: <a href="../objects/OData.html" target="_self">ODataStructuredType&lt;T&gt; | ODataCallable&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -4207,7 +4207,7 @@
                                 <tr>
                                     <td>schema</td>
                                     <td>
-                                            <code>ODataStructuredType&lt;T&gt; | ODataCallable&lt;T&gt;</code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataStructuredType&lt;T&gt; | ODataCallable&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -4884,20 +4884,20 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
   get(
     options: HttpEntityOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt;;
   get(
     options: HttpEntitiesOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntities&lt;T&gt;&gt;;
   get(
     options: HttpEntityOptions &amp;
       HttpEntitiesOptions &amp; {
         etag?: string;
-        queryBody?: QueryOptionNames[];
+        bodyQueryOptions?: QueryOptionNames[];
       }
   ): Observable&lt;any&gt; {
     return super.get(options);
@@ -4933,20 +4933,20 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
   fetch(
     options?: HttpEntityOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt;;
   fetch(
     options?: HttpEntitiesOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntities&lt;T&gt;&gt;;
   fetch(
     options: HttpEntityOptions &amp;
       HttpEntitiesOptions &amp; {
         etag?: string;
-        queryBody?: QueryOptionNames[];
+        bodyQueryOptions?: QueryOptionNames[];
       } &#x3D; {}
   ): Observable&lt;any&gt; {
     return this.get(options);
@@ -4955,7 +4955,7 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
   fetchEntity(
     options: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;T | null&gt; {
     return this.fetch({ responseType: &#x27;entity&#x27;, ...options }).pipe(
@@ -4966,7 +4966,7 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
   fetchModel(
     options: HttpOptions &amp; {
       etag?: string;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;ODataModel&lt;T&gt; | null&gt; {
     return this.fetch({ responseType: &#x27;entity&#x27;, ...options }).pipe(
@@ -4978,7 +4978,7 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
 
   fetchEntities(
     options: HttpOptions &amp; {
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;T[] | null&gt; {
     return this.fetch({ responseType: &#x27;entities&#x27;, ...options }).pipe(
@@ -4989,7 +4989,7 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
   fetchCollection(
     options: HttpOptions &amp; {
       withCount?: boolean;
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;ODataCollection&lt;T, ODataModel&lt;T&gt;&gt; | null&gt; {
     return this.fetch({ responseType: &#x27;entities&#x27;, ...options }).pipe(
@@ -5001,7 +5001,7 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
 
   fetchAll(
     options: HttpOptions &amp; {
-      queryBody?: QueryOptionNames[];
+      bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
   ): Observable&lt;T[]&gt; {
     let res &#x3D; this.clone();

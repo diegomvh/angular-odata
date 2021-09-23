@@ -46,7 +46,7 @@
   <li>Interfaces</li>
   <li
   >
-  ODataCacheEntry</li>
+  ResponseJson</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -64,7 +64,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/cache/cache.ts</code>
+            <code>projects/angular-odata/src/lib/cache/storage.ts</code>
         </p>
 
 
@@ -83,27 +83,33 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
-                                        <a href="#lastRead" 
+                                        <a href="#body" 
 >
-                                            lastRead
+                                            body
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#payload" 
+                                        <a href="#headers" 
 >
-                                            payload
+                                            headers
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#tags" 
+                                        <a href="#status" 
 >
-                                            tags
+                                            status
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#timeout" 
+                                        <a href="#statusText" 
 >
-                                            timeout
+                                            statusText
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#url" 
+>
+                                            url
                                         </a>
                                 </li>
                             </ul>
@@ -121,9 +127,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="lastRead"></a>
-                                        <span class="name "><b>lastRead</b>
-                                            <a href="#lastRead">
+                                        <a name="body"></a>
+                                        <span class="name "><b>body</b>
+                                            <a href="#body">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -131,7 +137,73 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>lastRead:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                        <code>body:     <code>any | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>any | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="headers"></a>
+                                        <span class="name "><b>headers</b>
+                                            <a href="#headers">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>headers:     <code>literal type</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>literal type</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="status"></a>
+                                        <span class="name "><b>status</b>
+                                            <a href="#status">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>status:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -154,9 +226,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="payload"></a>
-                                        <span class="name "><b>payload</b>
-                                            <a href="#payload">
+                                        <a name="statusText"></a>
+                                        <span class="name "><b>statusText</b>
+                                            <a href="#statusText">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -164,7 +236,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>payload:     <code>T</code>
+                                        <code>statusText:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -172,7 +244,7 @@
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>T</code>
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 
                                         </td>
                                     </tr>
@@ -187,9 +259,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="tags"></a>
-                                        <span class="name "><b>tags</b>
-                                            <a href="#tags">
+                                        <a name="url"></a>
+                                        <span class="name "><b>url</b>
+                                            <a href="#url">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -197,7 +269,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>tags:     <code>string[]</code>
+                                        <code>url:     <code>string | null</code>
 </code>
                                     </td>
                                 </tr>
@@ -205,40 +277,7 @@
 
                                     <tr>
                                         <td class="col-md-4">
-                                            <i>Type : </i>    <code>string[]</code>
-
-                                        </td>
-                                    </tr>
-
-
-
-
-
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <a name="timeout"></a>
-                                        <span class="name "><b>timeout</b>
-                                            <a href="#timeout">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>timeout:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            <i>Type : </i>    <code>string | null</code>
 
                                         </td>
                                     </tr>
@@ -254,174 +293,69 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { DEFAULT_TIMEOUT, CACHE_KEY_SEPARATOR } from &#x27;../constants&#x27;;
-import { Cache, PathSegmentNames } from &#x27;../types&#x27;;
-import { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
-import { Observable, of, throwError } from &#x27;rxjs&#x27;;
-import { startWith, tap } from &#x27;rxjs/operators&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
+import { ODataCache, ODataCacheEntry } from &#x27;./cache&#x27;;
 
-export interface ODataCacheEntry&lt;T&gt; {
-  payload: T;
-  lastRead: number;
-  timeout: number;
-  tags: string[];
+interface ResponseJson {
+  body: any | null;
+  headers: { [name: string]: string | string[] };
+  status: number;
+  statusText: string;
+  url: string | null;
 }
 
-export abstract class ODataCache implements Cache {
-  timeout: number;
-  entries: Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;;
-  constructor({ timeout &#x3D; DEFAULT_TIMEOUT }: { timeout?: number }) {
-    this.timeout &#x3D; timeout;
-    this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;();
+export class ODataInStorageCache extends ODataCache {
+  name: string;
+  storage: Storage;
+  constructor({
+    name,
+    storage &#x3D; sessionStorage,
+    timeout,
+  }: {
+    timeout?: number;
+    name: string;
+    storage?: Storage;
+  }) {
+    super({ timeout });
+    this.name &#x3D; name;
+    this.storage &#x3D; storage;
+    this.restore();
+    window.addEventListener(&#x27;beforeunload&#x27;, () &#x3D;&gt; this.store());
   }
 
-  abstract getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined;
-  abstract putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): void;
-
-  scope(req: ODataRequest&lt;any&gt;): string[] {
-    const segments &#x3D; req.resource.cloneSegments();
-    return segments.segments({ key: true }).reduce(
-      (acc, s) &#x3D;&gt; {
-        if (s.name &#x3D;&#x3D;&#x3D; PathSegmentNames.entitySet)
-          acc &#x3D; [...acc, s.path() as string];
-        return acc;
-      },
-      [&#x27;request&#x27;]
+  store() {
+    this.storage.setItem(
+      this.name,
+      JSON.stringify(Array.from(this.entries.entries()))
     );
   }
 
-  tags(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): string[] {
-    const tags &#x3D; [];
-    const context &#x3D; res.context;
-    if (context.entitySet) {
-      tags.push(
-        context.key ? &#x60;${context.entitySet}(${context.key})&#x60; : context.entitySet
-      );
-    }
-    if (context.type) tags.push(context.type);
-    return tags;
-  }
-
-  buildEntry&lt;T&gt;(
-    payload: T,
-    { timeout, tags }: { timeout?: number; tags?: string[] }
-  ): ODataCacheEntry&lt;T&gt; {
-    return {
-      payload,
-      lastRead: Date.now(),
-      timeout: timeout || this.timeout,
-      tags: tags || [],
-    };
-  }
-
-  buildKey(names: string[]): string {
-    return names.join(CACHE_KEY_SEPARATOR);
-  }
-
-  put&lt;T&gt;(
-    name: string,
-    payload: T,
-    {
-      timeout,
-      scope,
-      tags,
-    }: { timeout?: number; scope?: string[]; tags?: string[] } &#x3D; {}
-  ) {
-    const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { timeout, tags });
-    const key &#x3D; this.buildKey([...(scope || []), name]);
-    this.entries.set(key, entry);
-    this.forget();
-  }
-
-  get&lt;T&gt;(name: string, { scope }: { scope?: string[] } &#x3D; {}): T {
-    const key &#x3D; this.buildKey([...(scope || []), name]);
-    const entry &#x3D; this.entries.get(key);
-    return entry !&#x3D;&#x3D; undefined &amp;&amp; !this.isExpired(entry)
-      ? entry.payload
-      : undefined;
-  }
-
-  forget({
-    name,
-    scope &#x3D; [],
-    tags &#x3D; [],
-  }: { name?: string; scope?: string[]; tags?: string[] } &#x3D; {}) {
-    // Remove expired cache entries
-    if (name !&#x3D;&#x3D; undefined) scope.push(name);
-    const key &#x3D; scope.length &gt; 0 ? this.buildKey(scope) : undefined;
-    this.entries.forEach((entry, k) &#x3D;&gt; {
-      if (
-        this.isExpired(entry) || // Expired
-        (key !&#x3D;&#x3D; undefined &amp;&amp; k.startsWith(key)) || // Key
-        (tags.length &gt; 0 &amp;&amp; tags.some((t) &#x3D;&gt; entry.tags.indexOf(t) !&#x3D;&#x3D; -1)) // Tags
-      ) {
-        this.entries.delete(k);
-      }
-    });
+  restore() {
+    this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;(
+      JSON.parse(this.storage.getItem(this.name) || &#x27;[]&#x27;)
+    );
   }
 
   flush() {
-    // Remove all cache entries
-    this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;();
+    super.flush();
+    this.store();
   }
 
-  isExpired(entry: ODataCacheEntry&lt;any&gt;) {
-    return entry.lastRead &lt; Date.now() - (entry.timeout || this.timeout) * 1000;
-  }
-
-  handleRequest(
-    req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
-  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    return req.isFetch()
-      ? this.handleFetch(req, res$)
-      : req.isMutate()
-      ? this.handleMutate(req, res$)
-      : res$;
-  }
-
-  private handleFetch(
-    req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
-  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    const policy &#x3D; req.fetchPolicy;
-    const cached &#x3D; this.getResponse(req);
-    if (policy &#x3D;&#x3D;&#x3D; &#x27;no-cache&#x27;) {
-      return res$;
-    }
-    if (policy &#x3D;&#x3D;&#x3D; &#x27;cache-only&#x27;) {
-      if (cached) {
-        return of(cached);
-      } else {
-        return throwError(&#x27;No Cached&#x27;);
-      }
-    }
-    if (
-      policy &#x3D;&#x3D;&#x3D; &#x27;cache-first&#x27; ||
-      policy &#x3D;&#x3D;&#x3D; &#x27;cache-and-network&#x27; ||
-      policy &#x3D;&#x3D;&#x3D; &#x27;network-only&#x27;
-    ) {
-      res$ &#x3D; res$.pipe(
-        tap((res: ODataResponse&lt;any&gt;) &#x3D;&gt; {
-          if (res.options.cacheability !&#x3D;&#x3D; &#x27;no-store&#x27;)
-            this.putResponse(req, res);
-        })
-      );
-    }
-    return cached !&#x3D;&#x3D; undefined &amp;&amp; policy !&#x3D;&#x3D; &#x27;network-only&#x27;
-      ? policy &#x3D;&#x3D;&#x3D; &#x27;cache-and-network&#x27;
-        ? res$.pipe(startWith(cached))
-        : of(cached)
-      : res$;
-  }
-
-  private handleMutate(
-    req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
-  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
+  putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
     const scope &#x3D; this.scope(req);
-    this.forget({ scope });
-    return res$;
+    const tags &#x3D; this.tags(req, res);
+    this.put&lt;ResponseJson&gt;(req.pathWithParams, res.toJSON(), {
+      timeout: res.options.maxAge,
+      scope,
+      tags,
+    });
+  }
+
+  getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
+    const scope &#x3D; this.scope(req);
+    const data &#x3D; this.get&lt;ResponseJson&gt;(req.pathWithParams, { scope });
+
+    return data !&#x3D;&#x3D; undefined ? ODataResponse.fromJSON(req, data) : undefined;
   }
 }
 </code></pre>
@@ -451,7 +385,7 @@ export abstract class ODataCache implements Cache {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
-            var COMPODOC_CURRENT_PAGE_URL = 'ODataCacheEntry.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ResponseJson.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

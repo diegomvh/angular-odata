@@ -2083,7 +2083,7 @@ export class ODataSettings {
       .filter((e) &#x3D;&gt; e);
     if (values.length &#x3D;&#x3D;&#x3D; 0)
       throw Error(&#x60;No Parser for type ${type} was found&#x60;);
-    if (values.length &gt; 1)
+    if (!type.startsWith(&#x27;Edm.&#x27;) &amp;&amp; values.length &gt; 1)
       throw Error(&#x27;Multiple APIs: More than one value was found&#x27;);
     return values[0] as Parser&lt;T&gt;;
   }

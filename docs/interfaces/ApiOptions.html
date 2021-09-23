@@ -97,6 +97,13 @@
                                 </li>
                                 <li>
                                             <span class="modifier">Optional</span>
+                                        <a href="#bodyQueryOptions" 
+>
+                                            bodyQueryOptions
+                                        </a>
+                                </li>
+                                <li>
+                                            <span class="modifier">Optional</span>
                                         <a href="#etag" 
 >
                                             etag
@@ -128,13 +135,6 @@
                                         <a href="#prefer" 
 >
                                             prefer
-                                        </a>
-                                </li>
-                                <li>
-                                            <span class="modifier">Optional</span>
-                                        <a href="#queryBody" 
->
-                                            queryBody
                                         </a>
                                 </li>
                                 <li>
@@ -185,6 +185,44 @@
                                     <tr>
                                         <td class="col-md-4">
                                             <i>Type : </i>    <code>literal type</code>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="bodyQueryOptions"></a>
+                                        <span class="name "><b>bodyQueryOptions</b>
+                                            <a href="#bodyQueryOptions">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>bodyQueryOptions:         <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
 
                                         </td>
                                     </tr>
@@ -394,44 +432,6 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="queryBody"></a>
-                                        <span class="name "><b>queryBody</b>
-                                            <a href="#queryBody">
-                                                <span class="icon ion-ios-link"></span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-md-4">
-                                        <code>queryBody:         <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
-</code>
-                                    </td>
-                                </tr>
-
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="col-md-4">
-                                            <i>Optional</i>
-                                        </td>
-                                    </tr>
-
-
-
-
-                        </tbody>
-                    </table>
-                    <table class="table table-sm table-bordered">
-                        <tbody>
-                                <tr>
-                                    <td class="col-md-4">
                                         <a name="stripMetadata"></a>
                                         <span class="name "><b>stripMetadata</b>
                                             <a href="#stripMetadata">
@@ -578,7 +578,7 @@ export interface ApiOptions extends Options {
   };
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
-  queryBody?: QueryOptionNames[];
+  bodyQueryOptions?: QueryOptionNames[];
 }
 
 export interface OptionsHelper extends Options {
@@ -616,9 +616,9 @@ export const NONE_PARSER &#x3D; {
   encode: (value: any) &#x3D;&gt; value,
 } as Parser&lt;any&gt;;
 
-export interface Cache&lt;T&gt; {
-  put(key: string, payload: T, ...opts: any[]): void;
-  get(key: string): T | undefined;
+export interface Cache {
+  put&lt;T&gt;(key: string, payload: T, ...opts: any[]): void;
+  get&lt;T&gt;(key: string, ...opts: any[]): T | undefined;
 }
 
 //#region Configs
@@ -628,7 +628,7 @@ export type ApiConfig &#x3D; {
   version?: ODataVersion;
   default?: boolean;
   creation?: Date;
-  cache?: Cache&lt;any&gt;;
+  cache?: Cache;
   errorHandler?: (error: any, caught: Observable&lt;any&gt;) &#x3D;&gt; Observable&lt;never&gt;;
   options?: ApiOptions;
   parsers?: { [type: string]: Parser&lt;any&gt; };

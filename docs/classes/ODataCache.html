@@ -109,6 +109,9 @@
                                 <a href="#buildEntry" >buildEntry</a>
                             </li>
                             <li>
+                                <a href="#buildKey" >buildKey</a>
+                            </li>
+                            <li>
                                 <a href="#flush" >flush</a>
                             </li>
                             <li>
@@ -133,19 +136,7 @@
                                 <a href="#handleRequest" >handleRequest</a>
                             </li>
                             <li>
-                                <a href="#isCacheable" >isCacheable</a>
-                            </li>
-                            <li>
                                 <a href="#isExpired" >isExpired</a>
-                            </li>
-                            <li>
-                                <a href="#isFetch" >isFetch</a>
-                            </li>
-                            <li>
-                                <a href="#isMatch" >isMatch</a>
-                            </li>
-                            <li>
-                                <a href="#isMutate" >isMutate</a>
                             </li>
                             <li>
                                 <a href="#put" >put</a>
@@ -153,6 +144,12 @@
                             <li>
                                     <span class="modifier">Abstract</span>
                                 <a href="#putResponse" >putResponse</a>
+                            </li>
+                            <li>
+                                <a href="#scope" >scope</a>
+                            </li>
+                            <li>
+                                <a href="#tags" >tags</a>
                             </li>
                         </ul>
                     </td>
@@ -177,7 +174,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:16</a></div>
                             </td>
                         </tr>
 
@@ -232,13 +229,13 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/ODataCache.html" target="_self" >Map&lt;string | ODataCacheEntry&lt;T&gt;&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../classes/ODataCache.html" target="_self" >Map&lt;string | ODataCacheEntry&lt;any&gt;&gt;</a></code>
 
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:16</a></div>
                         </td>
                     </tr>
 
@@ -264,7 +261,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:15</a></div>
                         </td>
                     </tr>
 
@@ -298,11 +295,19 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="26"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:26</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="49"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:49</a></div>
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -362,6 +367,75 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="buildKey"></a>
+                    <span class="name">
+                        <span ><b>buildKey</b></span>
+                        <a href="#buildKey"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildKey(names: string[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="61"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:61</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>names</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="flush"></a>
                     <span class="name">
                         <span ><b>flush</b></span>
@@ -378,8 +452,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="66"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:66</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:107</a></div>
                 </td>
             </tr>
 
@@ -415,8 +489,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="55"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:55</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="88"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:88</a></div>
                 </td>
             </tr>
 
@@ -480,18 +554,26 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>get(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, undefined: literal type)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="48"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:48</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="80"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:80</a></div>
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -505,11 +587,12 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>key</td>
+                                    <td>name</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -518,6 +601,22 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -526,7 +625,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>    <code>T</code>
 
                     </div>
                     <div class="io-description">
@@ -558,8 +657,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="23"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:23</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="22"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:22</a></div>
                 </td>
             </tr>
 
@@ -629,8 +728,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="91"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:91</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="127"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:127</a></div>
                 </td>
             </tr>
 
@@ -712,8 +811,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="126"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:126</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="162"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:162</a></div>
                 </td>
             </tr>
 
@@ -793,8 +892,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="134"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:134</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="116"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:116</a></div>
                 </td>
             </tr>
 
@@ -858,75 +957,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="isCacheable"></a>
-                    <span class="name">
-                        <span ><b>isCacheable</b></span>
-                        <a href="#isCacheable"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>isCacheable(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="79"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:79</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="isExpired"></a>
                     <span class="name">
                         <span ><b>isExpired</b></span>
@@ -943,8 +973,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="112"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:112</a></div>
                 </td>
             </tr>
 
@@ -968,225 +998,6 @@
                                     <td>entry</td>
                                     <td>
                                                 <code><a href="../classes/ODataCache.html" target="_self" >ODataCacheEntry&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="isFetch"></a>
-                    <span class="name">
-                        <span ><b>isFetch</b></span>
-                        <a href="#isFetch"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>isFetch(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:83</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="isMatch"></a>
-                    <span class="name">
-                        <span ><b>isMatch</b></span>
-                        <a href="#isMatch"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>isMatch(entry: <a href="../classes/ODataCache.html" target="_self">ODataCacheEntry&lt;any&gt;</a>, value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="75"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:75</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>entry</td>
-                                    <td>
-                                                <code><a href="../classes/ODataCache.html" target="_self" >ODataCacheEntry&lt;any&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>value</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="isMutate"></a>
-                    <span class="name">
-                        <span ><b>isMutate</b></span>
-                        <a href="#isMutate"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>isMutate(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="87"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:87</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>req</td>
-                                    <td>
-                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -1224,18 +1035,26 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>put(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payload: T, undefined: literal type)</code>
+<code>put(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, payload: T, undefined: literal type)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="38"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:38</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="65"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:65</a></div>
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -1249,11 +1068,12 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>key</td>
+                                    <td>name</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                     </td>
@@ -1262,6 +1082,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1274,6 +1096,8 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1285,6 +1109,9 @@
                                         No
                                     </td>
 
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -1325,8 +1152,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="24"
-                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:24</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="23"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:23</a></div>
                 </td>
             </tr>
 
@@ -1386,6 +1213,156 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="scope"></a>
+                    <span class="name">
+                        <span ><b>scope</b></span>
+                        <a href="#scope"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>scope(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:25</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>string[]</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="tags"></a>
+                    <span class="name">
+                        <span ><b>tags</b></span>
+                        <a href="#tags"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>tags(req: <a href="../classes/ODataRequest.html" target="_self">ODataRequest&lt;any&gt;</a>, res: <a href="../classes/ODataResponse.html" target="_self">ODataResponse&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">projects/angular-odata/src/lib/cache/cache.ts:37</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>req</td>
+                                    <td>
+                                                <code><a href="../classes/ODataRequest.html" target="_self" >ODataRequest&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>res</td>
+                                    <td>
+                                                <code><a href="../classes/ODataResponse.html" target="_self" >ODataResponse&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>string[]</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
 
@@ -1396,94 +1373,130 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, of, throwError } from &#x27;rxjs&#x27;;
-import { startWith, tap } from &#x27;rxjs/operators&#x27;;
-import { DEFAULT_TIMEOUT } from &#x27;../constants&#x27;;
-import { Cache } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { DEFAULT_TIMEOUT, CACHE_KEY_SEPARATOR } from &#x27;../constants&#x27;;
+import { Cache, PathSegmentNames } from &#x27;../types&#x27;;
 import { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
+import { Observable, of, throwError } from &#x27;rxjs&#x27;;
+import { startWith, tap } from &#x27;rxjs/operators&#x27;;
 
-//TODO: User cache? Tags cache?
 export interface ODataCacheEntry&lt;T&gt; {
   payload: T;
   lastRead: number;
-  pattern?: string;
-  timeout?: number;
+  timeout: number;
+  tags: string[];
 }
 
-export abstract class ODataCache&lt;T&gt; implements Cache&lt;T&gt; {
+export abstract class ODataCache implements Cache {
   timeout: number;
-  entries: Map&lt;string, ODataCacheEntry&lt;T&gt;&gt;;
+  entries: Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;;
   constructor({ timeout &#x3D; DEFAULT_TIMEOUT }: { timeout?: number }) {
     this.timeout &#x3D; timeout;
-    this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;T&gt;&gt;();
+    this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;();
   }
 
   abstract getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined;
   abstract putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): void;
 
-  buildEntry(
+  scope(req: ODataRequest&lt;any&gt;): string[] {
+    const segments &#x3D; req.resource.cloneSegments();
+    return segments.segments({ key: true }).reduce(
+      (acc, s) &#x3D;&gt; {
+        if (s.name &#x3D;&#x3D;&#x3D; PathSegmentNames.entitySet)
+          acc &#x3D; [...acc, s.path() as string];
+        return acc;
+      },
+      [&#x27;request&#x27;]
+    );
+  }
+
+  tags(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;): string[] {
+    const tags &#x3D; [];
+    const context &#x3D; res.context;
+    if (context.entitySet) {
+      tags.push(
+        context.key ? &#x60;${context.entitySet}(${context.key})&#x60; : context.entitySet
+      );
+    }
+    if (context.type) tags.push(context.type);
+    return tags;
+  }
+
+  buildEntry&lt;T&gt;(
     payload: T,
-    { timeout, pattern }: { timeout?: number; pattern?: string }
+    { timeout, tags }: { timeout?: number; tags?: string[] }
   ): ODataCacheEntry&lt;T&gt; {
     return {
       payload,
       lastRead: Date.now(),
-      pattern,
-      timeout,
+      timeout: timeout || this.timeout,
+      tags: tags || [],
     };
   }
 
-  put(
-    key: string,
+  buildKey(names: string[]): string {
+    return names.join(CACHE_KEY_SEPARATOR);
+  }
+
+  put&lt;T&gt;(
+    name: string,
     payload: T,
-    { timeout, pattern }: { timeout?: number; pattern?: string }
+    {
+      timeout,
+      scope,
+      tags,
+    }: { timeout?: number; scope?: string[]; tags?: string[] } &#x3D; {}
   ) {
-    const entry &#x3D; this.buildEntry(payload, { timeout, pattern });
+    const entry &#x3D; this.buildEntry&lt;T&gt;(payload, { timeout, tags });
+    const key &#x3D; this.buildKey([...(scope || []), name]);
     this.entries.set(key, entry);
     this.forget();
   }
 
-  get(key: string) {
+  get&lt;T&gt;(name: string, { scope }: { scope?: string[] } &#x3D; {}): T {
+    const key &#x3D; this.buildKey([...(scope || []), name]);
     const entry &#x3D; this.entries.get(key);
     return entry !&#x3D;&#x3D; undefined &amp;&amp; !this.isExpired(entry)
       ? entry.payload
       : undefined;
   }
 
-  forget({ name }: { name?: string } &#x3D; {}) {
+  forget({
+    name,
+    scope &#x3D; [],
+    tags &#x3D; [],
+  }: { name?: string; scope?: string[]; tags?: string[] } &#x3D; {}) {
     // Remove expired cache entries
-    this.entries.forEach((entry, key) &#x3D;&gt; {
+    if (name !&#x3D;&#x3D; undefined) scope.push(name);
+    const key &#x3D; scope.length &gt; 0 ? this.buildKey(scope) : undefined;
+    this.entries.forEach((entry, k) &#x3D;&gt; {
       if (
         this.isExpired(entry) || // Expired
-        (name &amp;&amp; this.isMatch(entry, name)) // Match
-      )
-        this.entries.delete(key);
+        (key !&#x3D;&#x3D; undefined &amp;&amp; k.startsWith(key)) || // Key
+        (tags.length &gt; 0 &amp;&amp; tags.some((t) &#x3D;&gt; entry.tags.indexOf(t) !&#x3D;&#x3D; -1)) // Tags
+      ) {
+        this.entries.delete(k);
+      }
     });
   }
 
   flush() {
     // Remove all cache entries
-    this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;T&gt;&gt;();
+    this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;();
   }
 
   isExpired(entry: ODataCacheEntry&lt;any&gt;) {
     return entry.lastRead &lt; Date.now() - (entry.timeout || this.timeout) * 1000;
   }
 
-  isMatch(entry: ODataCacheEntry&lt;any&gt;, value: string) {
-    return entry.pattern !&#x3D;&#x3D; undefined &amp;&amp; value.match(entry.pattern);
-  }
-
-  isCacheable(req: ODataRequest&lt;any&gt;) {
-    return req.observe &#x3D;&#x3D;&#x3D; &#x27;response&#x27;;
-  }
-
-  isFetch(req: ODataRequest&lt;any&gt;) {
-    return [&#x27;GET&#x27;].indexOf(req.method) !&#x3D;&#x3D; -1;
-  }
-
-  isMutate(req: ODataRequest&lt;any&gt;) {
-    return [&#x27;PUT&#x27;, &#x27;PATCH&#x27;, &#x27;POST&#x27;, &#x27;DELETE&#x27;].indexOf(req.method) !&#x3D;&#x3D; -1;
+  handleRequest(
+    req: ODataRequest&lt;any&gt;,
+    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
+  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
+    return req.isFetch()
+      ? this.handleFetch(req, res$)
+      : req.isMutate()
+      ? this.handleMutate(req, res$)
+      : res$;
   }
 
   private handleFetch(
@@ -1525,19 +1538,9 @@ export abstract class ODataCache&lt;T&gt; implements Cache&lt;T&gt; {
     req: ODataRequest&lt;any&gt;,
     res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
   ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    this.forget({ name: req.path });
+    const scope &#x3D; this.scope(req);
+    this.forget({ scope });
     return res$;
-  }
-
-  handleRequest(
-    req: ODataRequest&lt;any&gt;,
-    res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
-  ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    return this.isFetch(req)
-      ? this.handleFetch(req, res$)
-      : this.isMutate(req)
-      ? this.handleMutate(req, res$)
-      : res$;
   }
 }
 </code></pre>
