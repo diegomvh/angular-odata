@@ -12,8 +12,8 @@ export const OData = {
             (c) =>
               c.name === config.name &&
               Objects.equal(
-                (c.parameters || {})[CALLABLE_BINDING_PARAMETER],
-                (config.parameters || {})[CALLABLE_BINDING_PARAMETER]
+                (c.parameters || {})[CALLABLE_BINDING_PARAMETER] || {},
+                (config.parameters || {})[CALLABLE_BINDING_PARAMETER] || {}
               )
           )
           .reduce((acc, c) => {
