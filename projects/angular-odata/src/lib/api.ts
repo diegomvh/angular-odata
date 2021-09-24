@@ -245,6 +245,33 @@ export class ODataApi {
       : res$;
   }
 
+  //# region Find by Type
+  // Memoize
+  private memo: {
+    forType: {
+      enum: { [type: string]: ODataEnumType<any> | undefined };
+      structured: { [type: string]: ODataStructuredType<any> | undefined };
+      callable: {
+        [binding: string]: {
+          [type: string]: ODataCallable<any> | undefined;
+        };
+      };
+      entitySet: { [type: string]: ODataEntitySet | undefined };
+    };
+    byName: {
+      enum: { [type: string]: ODataEnumType<any> | undefined };
+      structured: { [type: string]: ODataStructuredType<any> | undefined };
+      callable: {
+        [binding: string]: {
+          [type: string]: ODataCallable<any> | undefined;
+        };
+      };
+      entitySet: { [type: string]: ODataEntitySet | undefined };
+    };
+  } = {
+    forType: { enum: {}, structured: {}, callable: {}, entitySet: {} },
+    byName: { enum: {}, structured: {}, callable: {}, entitySet: {} },
+  };
   private findSchemaForType(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length > 1)
@@ -256,23 +283,36 @@ export class ODataApi {
   }
 
   public findEnumTypeForType<T>(type: string) {
-    return this.findSchemaForType(type)?.findEnumTypeForType<T>(type);
+    if (!(type in this.memo.forType.enum))
+      this.memo.forType.enum[type] =
+        this.findSchemaForType(type)?.findEnumTypeForType<T>(type);
+    return this.memo.forType.enum[type];
   }
 
   public findStructuredTypeForType<T>(type: string) {
-    return this.findSchemaForType(type)?.findStructuredTypeForType<T>(type);
+    if (!(type in this.memo.forType.structured))
+      this.memo.forType.structured[type] =
+        this.findSchemaForType(type)?.findStructuredTypeForType<T>(type);
+    return this.memo.forType.structured[type];
   }
 
   public findCallableForType<T>(type: string, bindingType?: string) {
-    return this.findSchemaForType(type)?.findCallableForType<T>(
-      type,
-      bindingType
-    );
+    if (
+      !(type in this.memo.forType.callable) ||
+      !((bindingType || '') in this.memo.forType.callable[type])
+    )
+      this.memo.forType.callable[bindingType || ''][type] =
+        this.findSchemaForType(type)?.findCallableForType<T>(type, bindingType);
+    return this.memo.forType.callable[bindingType || ''][type];
   }
 
   public findEntitySetForType(type: string) {
-    return this.findSchemaForType(type)?.findEntitySetForType(type);
+    if (!(type in this.memo.forType.entitySet))
+      this.memo.forType.entitySet[type] =
+        this.findSchemaForType(type)?.findEntitySetForType(type);
+    return this.memo.forType.entitySet[type];
   }
+
   public findModelForType(type: string) {
     return this.findStructuredTypeForType<any>(type)?.model as
       | typeof ODataModel
@@ -292,6 +332,7 @@ export class ODataApi {
   public collectionForType(type?: string) {
     return (type && this.findCollectionForType(type)) || ODataCollection;
   }
+
   public findServiceForType(type: string) {
     return this.findEntitySetForType(type)?.service as
       | typeof ODataEntityService
