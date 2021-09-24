@@ -1,6 +1,7 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ODataApi } from '../api';
 import {
+  $BATCH,
   $QUERY,
   ACCEPT,
   IF_MATCH_HEADER,
@@ -11,7 +12,6 @@ import {
 import { QueryOptionNames } from '../types';
 import { Http } from '../utils';
 import { ODataResource } from './resource';
-import { ODataBatchResource } from './types';
 
 export class ODataRequest<T> {
   readonly api: ODataApi;
@@ -228,7 +228,7 @@ export class ODataRequest<T> {
   }
 
   isBatch() {
-    return this.resource instanceof ODataBatchResource;
+    return this._path.endsWith($BATCH);
   }
 
   isFetch() {
