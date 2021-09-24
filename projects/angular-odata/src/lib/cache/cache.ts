@@ -1,6 +1,11 @@
 import { DEFAULT_TIMEOUT, CACHE_KEY_SEPARATOR } from '../constants';
 import { Cache, PathSegmentNames } from '../types';
-import { ODataRequest, ODataResponse } from '../resources';
+import {
+  ODataBatchRequest,
+  ODataBatchResource,
+  ODataRequest,
+  ODataResponse,
+} from '../resources';
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 
@@ -163,8 +168,15 @@ export abstract class ODataCache implements Cache {
     req: ODataRequest<any>,
     res$: Observable<ODataResponse<any>>
   ): Observable<ODataResponse<any>> {
-    const scope = this.scope(req);
-    this.forget({ scope });
+    const requests = req.isBatch()
+      ? (req.resource as ODataBatchResource)
+          .requests()
+          .filter((r) => r.isMutate())
+      : [req];
+    for (var r of requests) {
+      const scope = this.scope(r);
+      this.forget({ scope });
+    }
     return res$;
   }
 }

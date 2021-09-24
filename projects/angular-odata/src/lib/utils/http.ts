@@ -1,4 +1,5 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { BOUNDARY_PREFIX_SUFFIX } from '../constants';
 import { Types } from './types';
 
 export const Http = {
@@ -80,5 +81,42 @@ export const Http = {
       return Object.keys(headers).find((k) => options.indexOf(k) !== -1);
     }
     return undefined;
+  },
+
+  headerValue(header: string): string {
+    let res: string = header.split(';')[0].trim();
+    res = res.split(':')[1].trim();
+    return res;
+  },
+
+  parseResponseStatus(statusLine: string): {
+    status: string;
+    code: number;
+    message: string;
+  } {
+    const status = statusLine.split(' ')[0];
+    const code = parseInt(statusLine.split(' ')[1], 10);
+    const message = statusLine.split(' ')[2];
+    return { status, code, message };
+  },
+
+  boundaryDelimiter(contentType: string): string {
+    const contentTypeParts: string[] = contentType.split(';');
+    if (contentTypeParts.length === 2) {
+      const boundary: string = contentType.split(';')[1].trim();
+      const boundaryDelimiter: string =
+        BOUNDARY_PREFIX_SUFFIX + boundary.split('=')[1];
+      return boundaryDelimiter;
+    } else {
+      return '';
+    }
+  },
+
+  boundaryEnd(boundaryDelimiter: string): string {
+    if (!boundaryDelimiter.length) {
+      return '';
+    }
+    const boundaryEnd: string = boundaryDelimiter + BOUNDARY_PREFIX_SUFFIX;
+    return boundaryEnd;
   },
 };

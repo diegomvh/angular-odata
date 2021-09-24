@@ -11,11 +11,10 @@ import {
 import { QueryOptionNames } from '../types';
 import { Http } from '../utils';
 import { ODataResource } from './resource';
+import { ODataBatchResource } from './types';
 
 export class ODataRequest<T> {
-  private readonly _method: string;
   readonly api: ODataApi;
-  private readonly _body: any | null;
   readonly observe: 'events' | 'response';
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
@@ -27,10 +26,13 @@ export class ODataRequest<T> {
     | 'network-only'
     | 'no-cache'
     | 'cache-only';
+  readonly resource: ODataResource<T>;
+  private readonly _method: string;
+  private readonly _body: any | null;
   private readonly _headers: HttpHeaders;
   private readonly _params: HttpParams;
   private readonly _path: string;
-  readonly resource: ODataResource<T>;
+  private readonly _queryBody: boolean;
 
   constructor(init: {
     method: string;
@@ -162,18 +164,23 @@ export class ODataRequest<T> {
       init.params || {}
     );
     //#endregion
+
+    this._queryBody =
+      this._method === 'GET' &&
+      this.bodyQueryOptions.length > 0 &&
+      this.bodyQueryOptions.some((name) => this._params.has(`$${name}`));
   }
 
   get path() {
-    return this.isBodyQueryOptions() ? `${this._path}/${$QUERY}` : this._path;
+    return this._queryBody ? `${this._path}/${$QUERY}` : this._path;
   }
 
   get method() {
-    return this.isBodyQueryOptions() ? 'POST' : this._method;
+    return this._queryBody ? 'POST' : this._method;
   }
 
   get body() {
-    if (this.isBodyQueryOptions()) {
+    if (this._queryBody) {
       let [, bodyParams] = Http.splitHttpParams(
         this._params,
         this.bodyQueryOptions.map((name) => `$${name}`)
@@ -185,7 +192,7 @@ export class ODataRequest<T> {
   }
 
   get params() {
-    if (this.isBodyQueryOptions()) {
+    if (this._queryBody) {
       let [queryParams] = Http.splitHttpParams(
         this._params,
         this.bodyQueryOptions.map((name) => `$${name}`)
@@ -197,7 +204,7 @@ export class ODataRequest<T> {
   }
 
   get headers() {
-    if (this.isBodyQueryOptions()) {
+    if (this._queryBody) {
       return Http.mergeHttpHeaders(this._headers, { CONTENT_TYPE: TEXT_PLAIN });
     } else {
       return this._headers;
@@ -220,12 +227,8 @@ export class ODataRequest<T> {
     return `${this.api.serviceRootUrl}${this.pathWithParams}`;
   }
 
-  isBodyQueryOptions() {
-    return (
-      this._method === 'GET' &&
-      this.bodyQueryOptions.length > 0 &&
-      this.bodyQueryOptions.some((name) => this._params.has(`$${name}`))
-    );
+  isBatch() {
+    return this.resource instanceof ODataBatchResource;
   }
 
   isFetch() {
