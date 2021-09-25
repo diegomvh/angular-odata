@@ -395,7 +395,7 @@ export class ODataApi {
           <ODataEntitySet[]>[]
         )
         .find((e) => e.name === name);
-    return this.memo.byName.structured[name] as ODataEntitySet | undefined;
+    return this.memo.byName.entitySet[name] as ODataEntitySet | undefined;
   }
 
   public findModelByName(name: string) {
