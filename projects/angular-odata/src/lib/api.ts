@@ -264,6 +264,7 @@ export class ODataApi {
     forType: { enum: {}, structured: {}, callable: {}, entitySet: {} },
     byName: { enum: {}, structured: {}, callable: {}, entitySet: {} },
   };
+
   private findSchemaForType(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
     if (schemas.length > 1)
@@ -333,12 +334,16 @@ export class ODataApi {
   }
 
   public findEntitySetForEntityType(entityType: string) {
-    return this.schemas
-      .reduce(
-        (acc, schema) => [...acc, ...schema.entitySets],
-        <ODataEntitySet[]>[]
-      )
-      .find((e) => e.entityType === entityType);
+    if (!(entityType in this.memo.forType.entitySet))
+      this.memo.forType.entitySet[entityType] = this.schemas
+        .reduce(
+          (acc, schema) => [...acc, ...schema.entitySets],
+          <ODataEntitySet[]>[]
+        )
+        .find((e) => e.entityType === entityType);
+    return this.memo.forType.entitySet[entityType] as
+      | ODataEntitySet
+      | undefined;
   }
 
   public findServiceForEntityType(entityType: string) {
