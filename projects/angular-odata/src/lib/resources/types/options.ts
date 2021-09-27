@@ -1,8 +1,8 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { FetchPolicy, QueryOptionNames } from '../../types';
-import { QueryArguments } from '../query-options';
+import { FetchPolicy } from '../../types';
+import { ODataQueryArguments } from '../query-options';
 
-export type HttpOptions = {
+export type ODataOptions = {
   //apiName?: string,
   headers?: HttpHeaders | { [header: string]: string | string[] };
   params?: HttpParams | { [param: string]: string | string[] };
@@ -11,13 +11,13 @@ export type HttpOptions = {
   fetchPolicy?: FetchPolicy;
 };
 
-export type HttpEntityOptions = HttpOptions & { responseType?: 'entity' };
-export type HttpEntitiesOptions = HttpOptions & {
+export type ODataEntityOptions = ODataOptions & { responseType?: 'entity' };
+export type ODataEntitiesOptions = ODataOptions & {
   responseType?: 'entities';
   withCount?: boolean;
 };
-export type HttpPropertyOptions = HttpOptions & { responseType?: 'property' };
-export type HttpNoneOptions = HttpOptions & { responseType?: 'none' };
-export type HttpQueryOptions<T> = QueryArguments<T> & {
+export type ODataPropertyOptions = ODataOptions & { responseType?: 'property' };
+export type ODataNoneOptions = ODataOptions & { responseType?: 'none' };
+export type ODataQueryArgumentsOptions<T> = ODataQueryArguments<T> & {
   alias?: boolean;
-} & HttpOptions;
+} & ODataOptions;

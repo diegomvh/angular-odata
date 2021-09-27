@@ -31,7 +31,7 @@ import {
 import { ODataRequest } from '../request';
 import { ODataApi } from '../../api';
 import { ODataResponse } from '../responses';
-import { HttpOptions } from './options';
+import { ODataOptions } from './options';
 import { Http } from '../../utils/http';
 import { PathSegmentNames } from '../../types';
 
@@ -186,7 +186,7 @@ export class ODataBatchResource extends ODataResource<any> {
 
   post(
     func: (batch: ODataBatchResource) => void,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable<ODataResponse<any>> {
     const current = this.api.request;
     this.api.request = (req: ODataRequest<any>): Observable<any> => {

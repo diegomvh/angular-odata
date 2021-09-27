@@ -7,10 +7,10 @@ import { EntityKey, ODataResource } from '../resource';
 import { ODataQueryOptions } from '../query-options';
 import { ODataPathSegments } from '../path-segments';
 import {
-  HttpPropertyOptions,
-  HttpEntitiesOptions,
-  HttpEntityOptions,
-  HttpOptions,
+  ODataPropertyOptions,
+  ODataEntitiesOptions,
+  ODataEntityOptions,
+  ODataOptions,
 } from './options';
 import {
   ODataProperty,
@@ -238,11 +238,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: HttpEntityOptions): Observable<ODataEntity<T>>;
-  get(options: HttpEntitiesOptions): Observable<ODataEntities<T>>;
-  get(options: HttpPropertyOptions): Observable<ODataProperty<T>>;
+  get(options: ODataEntityOptions): Observable<ODataEntity<T>>;
+  get(options: ODataEntitiesOptions): Observable<ODataEntities<T>>;
+  get(options: ODataPropertyOptions): Observable<ODataProperty<T>>;
   get(
-    options: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions
+    options: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.get(options);
   }
@@ -250,20 +250,20 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   //#region Shortcuts
   fetch(
-    options?: HttpEntityOptions & { etag?: string }
+    options?: ODataEntityOptions & { etag?: string }
   ): Observable<ODataEntity<T>>;
-  fetch(options?: HttpEntitiesOptions): Observable<ODataEntities<T>>;
-  fetch(options?: HttpPropertyOptions): Observable<ODataProperty<T>>;
+  fetch(options?: ODataEntitiesOptions): Observable<ODataEntities<T>>;
+  fetch(options?: ODataPropertyOptions): Observable<ODataProperty<T>>;
   fetch(
-    options: HttpEntityOptions &
-      HttpEntitiesOptions &
-      HttpPropertyOptions & { etag?: string } = {}
+    options: ODataEntityOptions &
+      ODataEntitiesOptions &
+      ODataPropertyOptions & { etag?: string } = {}
   ): Observable<any> {
     return this.get(options);
   }
 
   fetchProperty(
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<T | null> {
     return this.fetch({ responseType: 'property', ...options }).pipe(
       map(({ property }) => property)
@@ -271,7 +271,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchEntity(
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<T | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity }) => entity)
@@ -279,7 +279,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchModel(
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataModel<T> | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
@@ -289,7 +289,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchEntities(
-    options: HttpOptions & { withCount?: boolean } = {}
+    options: ODataOptions & { withCount?: boolean } = {}
   ): Observable<T[] | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities }) => entities)
@@ -297,7 +297,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchCollection(
-    options: HttpOptions & { withCount?: boolean } = {}
+    options: ODataOptions & { withCount?: boolean } = {}
   ): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
@@ -306,7 +306,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
 
-  fetchAll(options: HttpOptions = {}): Observable<T[]> {
+  fetchAll(options: ODataOptions = {}): Observable<T[]> {
     let res = this.clone();
     // Clean Paging
     res.query.clearPaging();

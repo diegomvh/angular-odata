@@ -17,7 +17,7 @@ import { ODataPathSegments } from '../path-segments';
 import { ODataReferenceResource } from './reference';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { HttpEntityOptions, HttpEntitiesOptions, HttpOptions } from './options';
+import { ODataEntityOptions, ODataEntitiesOptions, ODataOptions } from './options';
 import { ODataMediaResource } from './media';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 
@@ -260,20 +260,20 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   //#region Requests
   get(
-    options: HttpEntityOptions & {
+    options: ODataEntityOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntity<T>>;
   get(
-    options: HttpEntitiesOptions & {
+    options: ODataEntitiesOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntities<T>>;
   get(
-    options: HttpEntityOptions &
-      HttpEntitiesOptions & {
+    options: ODataEntityOptions &
+      ODataEntitiesOptions & {
         etag?: string;
         bodyQueryOptions?: QueryOptionNames[];
       }
@@ -283,46 +283,46 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
   post(
     attrs: Partial<T>,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   put(
     attrs: Partial<T>,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
   patch(
     attrs: Partial<T>,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
-  delete(options: HttpOptions & { etag?: string } = {}): Observable<any> {
+  delete(options: ODataOptions & { etag?: string } = {}): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
   //#endregion
 
   //#region Shortcuts
   fetch(
-    options?: HttpEntityOptions & {
+    options?: ODataEntityOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntity<T>>;
   fetch(
-    options?: HttpEntitiesOptions & {
+    options?: ODataEntitiesOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntities<T>>;
   fetch(
-    options: HttpEntityOptions &
-      HttpEntitiesOptions & {
+    options: ODataEntityOptions &
+      ODataEntitiesOptions & {
         etag?: string;
         bodyQueryOptions?: QueryOptionNames[];
       } = {}
@@ -331,7 +331,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchEntity(
-    options: HttpOptions & {
+    options: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
@@ -342,7 +342,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchModel(
-    options: HttpOptions & {
+    options: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
@@ -355,7 +355,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchEntities(
-    options: HttpOptions & {
+    options: ODataOptions & {
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
   ): Observable<T[] | null> {
@@ -365,7 +365,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchCollection(
-    options: HttpOptions & {
+    options: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
@@ -378,7 +378,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   fetchAll(
-    options: HttpOptions & {
+    options: ODataOptions & {
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
   ): Observable<T[]> {

@@ -9,8 +9,8 @@ import {
 import { Objects, Http, Types } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
-import { QueryArguments, ODataQueryOptions } from './query-options';
-import { HttpOptions } from './types';
+import { ODataQueryArguments, ODataQueryOptions } from './query-options';
+import { ODataOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
 import { Parser, OptionsHelper, QueryOptionNames } from '../types';
@@ -225,7 +225,7 @@ export abstract class ODataResource<T> {
       format(opts?: string) {
         return options.option<string>(QueryOptionNames.format, opts);
       },
-      apply(query: QueryArguments<T>) {
+      apply(query: ODataQueryArguments<T>) {
         if (query.select !== undefined) {
           this.select(query.select);
         }
@@ -311,7 +311,7 @@ export abstract class ODataResource<T> {
         this.skiptoken().clear();
       },
 
-      apply(query: QueryArguments<T>) {
+      apply(query: ODataQueryArguments<T>) {
         if (query.select !== undefined) {
           this.select(query.select);
         }
@@ -339,7 +339,7 @@ export abstract class ODataResource<T> {
   // Base Requests
   protected request(
     method: string,
-    options: HttpOptions & {
+    options: ODataOptions & {
       body?: any;
       etag?: string;
       responseType?:
@@ -407,7 +407,7 @@ export abstract class ODataResource<T> {
   }
 
   protected get(
-    options: HttpOptions & {
+    options: ODataOptions & {
       etag?: string;
       responseType?:
         | 'arraybuffer'
@@ -427,7 +427,7 @@ export abstract class ODataResource<T> {
 
   protected post(
     body: any,
-    options: HttpOptions & {
+    options: ODataOptions & {
       responseType?:
         | 'arraybuffer'
         | 'blob'
@@ -445,7 +445,7 @@ export abstract class ODataResource<T> {
 
   protected put(
     body: any,
-    options: HttpOptions & {
+    options: ODataOptions & {
       etag?: string;
       responseType?:
         | 'arraybuffer'
@@ -464,7 +464,7 @@ export abstract class ODataResource<T> {
 
   protected patch(
     body: any,
-    options: HttpOptions & {
+    options: ODataOptions & {
       etag?: string;
       responseType?:
         | 'arraybuffer'
@@ -482,7 +482,7 @@ export abstract class ODataResource<T> {
   }
 
   protected delete(
-    options: HttpOptions & {
+    options: ODataOptions & {
       etag?: string;
       responseType?:
         | 'arraybuffer'

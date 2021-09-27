@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ODataResource } from '../resource';
 import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
-import { HttpOptions } from './options';
+import { ODataOptions } from './options';
 import { $VALUE } from '../../constants';
 import { ODataApi } from '../../api';
 import { Http } from '../../utils';
@@ -35,16 +35,16 @@ export class ODataMediaResource<T> extends ODataResource<T> {
 
   //#region Requests
   get(
-    options?: { responseType: 'arraybuffer' } & HttpOptions
+    options?: { responseType: 'arraybuffer' } & ODataOptions
   ): Observable<ArrayBuffer>;
-  get(options?: { responseType: 'blob' } & HttpOptions): Observable<Blob>;
-  get(options: { responseType: any } & HttpOptions): Observable<any> {
+  get(options?: { responseType: 'blob' } & ODataOptions): Observable<Blob>;
+  get(options: { responseType: any } & ODataOptions): Observable<any> {
     return super.get(options);
   }
 
   put(
     data: ArrayBuffer | Blob,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<any> {
     return super.put(data, options);
   }
@@ -52,24 +52,24 @@ export class ODataMediaResource<T> extends ODataResource<T> {
 
   //#region Shortcuts
   fetch(
-    options?: { responseType: 'arraybuffer' } & HttpOptions
+    options?: { responseType: 'arraybuffer' } & ODataOptions
   ): Observable<ArrayBuffer>;
-  fetch(options?: { responseType: 'blob' } & HttpOptions): Observable<Blob>;
-  fetch(options: { responseType: any } & HttpOptions): Observable<any> {
+  fetch(options?: { responseType: 'blob' } & ODataOptions): Observable<Blob>;
+  fetch(options: { responseType: any } & ODataOptions): Observable<any> {
     return this.get(options);
   }
 
-  fetchArraybuffer(options: HttpOptions = {}): Observable<ArrayBuffer> {
+  fetchArraybuffer(options: ODataOptions = {}): Observable<ArrayBuffer> {
     return this.fetch({ responseType: 'arraybuffer', ...options });
   }
 
-  fetchBlob(options: HttpOptions = {}): Observable<Blob> {
+  fetchBlob(options: ODataOptions = {}): Observable<Blob> {
     return this.fetch({ responseType: 'blob', ...options });
   }
 
   upload(
     data: ArrayBuffer | Blob,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<any> {
     return this.put(data, options);
   }
@@ -77,7 +77,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
   uploadArrayBuffer(
     data: ArrayBuffer,
     contentType: string,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<any> {
     options.headers = Http.mergeHttpHeaders(options.headers || {}, {
       'Content-Type': contentType,
@@ -87,7 +87,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
 
   uploadBlob(
     data: Blob,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<any> {
     return this.upload(data, options);
   }

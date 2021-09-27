@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import type { ODataModel } from '../models/model';
 import type {
-  HttpOptions,
+  ODataOptions,
   ODataEntity,
   ODataSingletonResource,
 } from '../resources';
@@ -41,7 +41,7 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
    */
   public update(
     attrs: Partial<T>,
-    options?: HttpOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string }
   ): Observable<ODataEntity<T>> {
     const res = this.entity();
     return res.put(attrs, options);
@@ -55,7 +55,7 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
    */
   public patch(
     attrs: Partial<T>,
-    options?: HttpOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string }
   ): Observable<ODataEntity<T>> {
     const res = this.entity();
     return res.patch(attrs, options);

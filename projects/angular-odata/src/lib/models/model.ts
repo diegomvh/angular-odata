@@ -6,15 +6,15 @@ import {
   ODataEntityResource,
   ODataNavigationPropertyResource,
   ODataPropertyResource,
-  HttpOptions,
+  ODataOptions,
   ODataEntityAnnotations,
   ODataEntity,
   Select,
   Expand,
   EntityKey,
   OptionHandler,
-  QueryArguments,
-  HttpQueryOptions,
+  ODataQueryArguments,
+  ODataQueryArgumentsOptions,
 } from '../resources/index';
 
 import { ODataCollection } from './collection';
@@ -383,8 +383,8 @@ export class ODataModel<T> {
 
   fetch({
     ...options
-  }: HttpOptions & {
-    options?: HttpOptions;
+  }: ODataOptions & {
+    options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
     if (resource === undefined)
@@ -411,11 +411,11 @@ export class ODataModel<T> {
     navigation = false,
     validate = true,
     ...options
-  }: HttpOptions & {
+  }: ODataOptions & {
     method?: 'create' | 'update' | 'patch';
     navigation?: boolean;
     validate?: boolean;
-    options?: HttpOptions;
+    options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
     if (resource === undefined)
@@ -461,8 +461,8 @@ export class ODataModel<T> {
 
   destroy({
     ...options
-  }: HttpOptions & {
-    options?: HttpOptions;
+  }: ODataOptions & {
+    options?: ODataOptions;
   } = {}): Observable<this> {
     let resource = this.resource();
     if (resource === undefined)
@@ -494,7 +494,7 @@ export class ODataModel<T> {
       select(opts?: Select<T>): OptionHandler<Select<T>>;
       expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
       format(opts?: string): OptionHandler<string>;
-      apply(query: QueryArguments<T>): void;
+      apply(query: ODataQueryArguments<T>): void;
     }) => void
   ) {
     const resource = this.resource() as ODataModelResource<T> | undefined;
@@ -525,7 +525,7 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & HttpQueryOptions<R> = {}
+    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
@@ -551,7 +551,7 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & HttpQueryOptions<R> = {}
+    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
@@ -589,7 +589,7 @@ export class ODataModel<T> {
   protected fetchNavigationProperty<S>(
     name: string,
     responseType: 'model' | 'collection',
-    { ...options }: {} & HttpQueryOptions<S> = {}
+    { ...options }: {} & ODataQueryArgumentsOptions<S> = {}
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
     const nav = this.navigationProperty<S>(
       name
@@ -606,7 +606,7 @@ export class ODataModel<T> {
   // Get Value
   protected getValue<P>(
     name: string,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.field(name);
     if (field === undefined || field.navigation)
@@ -639,7 +639,7 @@ export class ODataModel<T> {
   protected setReference<P>(
     name: string,
     model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | null,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable<this> {
     const reference = (
       this.navigationProperty<P>(name) as ODataNavigationPropertyResource<P>

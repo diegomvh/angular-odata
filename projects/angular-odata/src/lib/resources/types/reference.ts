@@ -4,7 +4,7 @@ import { ODataResource } from '../resource';
 import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataEntityResource } from './entity';
-import { HttpOptions } from './options';
+import { ODataOptions } from './options';
 import { $REF, $ID, ODATA_ID } from '../../constants';
 import { ODataApi } from '../../api';
 import { PathSegmentNames } from '../../types';
@@ -37,14 +37,14 @@ export class ODataReferenceResource extends ODataResource<any> {
   //#region Requests
   post(
     target: ODataEntityResource<any>,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable<any> {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
   put(
     target: ODataEntityResource<any>,
-    options?: HttpOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string }
   ): Observable<any> {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
@@ -56,7 +56,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   }: {
     etag?: string;
     target?: ODataEntityResource<any>;
-  } & HttpOptions = {}): Observable<any> {
+  } & ODataOptions = {}): Observable<any> {
     if (target) {
       options.params = { [$ID]: target.endpointUrl(false) };
     }
@@ -67,14 +67,14 @@ export class ODataReferenceResource extends ODataResource<any> {
   //#region Shortcuts for collections
   add(
     target: ODataEntityResource<any>,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable<any> {
     return this.post(target, options);
   }
 
   remove(
     target?: ODataEntityResource<any>,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable<any> {
     return this.delete({ target, ...options });
   }
@@ -83,12 +83,12 @@ export class ODataReferenceResource extends ODataResource<any> {
   //#region Shortcuts for single
   set(
     target: ODataEntityResource<any>,
-    options?: HttpOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string }
   ): Observable<any> {
     return this.put(target, options);
   }
 
-  unset(options?: HttpOptions & { etag?: string }): Observable<any> {
+  unset(options?: ODataOptions & { etag?: string }): Observable<any> {
     return this.delete(options);
   }
   //#region

@@ -7,10 +7,10 @@ import {
   Transform,
 } from './builder';
 
-import { Dates, Types, Urls, Objects } from '../utils';
+import { Dates, Types, Objects } from '../utils';
 import { QueryOptionNames } from '../types';
 
-export type QueryArguments<T> = {
+export type ODataQueryArguments<T> = {
   select?: Select<T>;
   expand?: Expand<T>;
   transform?: Transform<T>;
@@ -67,7 +67,7 @@ export class ODataQueryOptions {
     return Dates.isoStringToDate(JSON.parse(JSON.stringify(this.options)));
   }
 
-  toQueryArguments<T>(): QueryArguments<T> {
+  toQueryArguments<T>(): ODataQueryArguments<T> {
     return {
       select: this.options[QueryOptionNames.select],
       expand: this.options[QueryOptionNames.expand],
@@ -78,7 +78,7 @@ export class ODataQueryOptions {
       top: this.options[QueryOptionNames.top],
       skip: this.options[QueryOptionNames.skip],
       skiptoken: this.options[QueryOptionNames.skiptoken],
-    } as QueryArguments<T>;
+    } as ODataQueryArguments<T>;
   }
 
   clone() {

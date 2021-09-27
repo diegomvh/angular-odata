@@ -10,7 +10,7 @@ import { ODataQueryOptions } from '../query-options';
 import { ODataEntityResource } from './entity';
 import { ODataCountResource } from './count';
 import { EntityKey, ODataResource } from '../resource';
-import { HttpOptions } from './options';
+import { ODataOptions } from './options';
 import {
   ODataEntity,
   ODataEntities,
@@ -203,13 +203,13 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Requests
   post(
     attrs: Partial<T>,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   get(
-    options: HttpOptions & {
+    options: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
@@ -220,7 +220,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
 
   //#region Shortcuts
   fetch(
-    options?: HttpOptions & {
+    options?: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -229,7 +229,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   fetchEntities(
-    options?: HttpOptions & {
+    options?: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -238,7 +238,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   fetchCollection(
-    options?: HttpOptions & {
+    options?: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -251,7 +251,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   fetchAll(
-    options?: HttpOptions & {
+    options?: ODataOptions & {
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<T[]> {

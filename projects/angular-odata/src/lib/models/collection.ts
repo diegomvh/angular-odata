@@ -6,7 +6,7 @@ import {
   ODataEntityResource,
   ODataNavigationPropertyResource,
   ODataEntitiesAnnotations,
-  HttpOptions,
+  ODataOptions,
   ODataEntities,
   ODataPropertyResource,
   ODataEntityAnnotations,
@@ -17,8 +17,8 @@ import {
   Filter,
   OrderBy,
   EntityKey,
-  QueryArguments,
-  HttpQueryOptions,
+  ODataQueryArguments,
+  ODataQueryArgumentsOptions,
 } from '../resources/index';
 
 import { EventEmitter } from '@angular/core';
@@ -248,7 +248,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   fetch({
     withCount,
     ...options
-  }: HttpOptions & {
+  }: ODataOptions & {
     withCount?: boolean;
   } = {}): Observable<this> {
     const resource = this.resource();
@@ -276,7 +276,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  fetchAll(options?: HttpOptions): Observable<this> {
+  fetchAll(options?: ODataOptions): Observable<this> {
     const resource = this.resource() as ODataCollectionResource<T> | undefined;
     if (resource === undefined)
       return throwError('fetchAll: Resource is undefined');
@@ -319,7 +319,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     refOnly = false,
     method,
     ...options
-  }: HttpOptions & {
+  }: ODataOptions & {
     relModel?: boolean;
     refOnly?: boolean;
     method?: 'update' | 'patch';
@@ -388,7 +388,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return of(this);
   }
 
-  private addReference(model: M, options?: HttpOptions): Observable<M> {
+  private addReference(model: M, options?: ODataOptions): Observable<M> {
     const resource = this.resource();
     if (!model.isNew() && resource instanceof ODataNavigationPropertyResource) {
       return resource
@@ -486,7 +486,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  private removeReference(model: M, options?: HttpOptions): Observable<M> {
+  private removeReference(model: M, options?: ODataOptions): Observable<M> {
     const resource = this.resource();
     if (!model.isNew() && resource instanceof ODataNavigationPropertyResource) {
       return resource
@@ -779,7 +779,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         top?: number;
       }): void;
       clearPaging(): void;
-      apply(query: QueryArguments<T>): void;
+      apply(query: ODataQueryArguments<T>): void;
     }) => void
   ) {
     const resource = this.resource() as ODataCollectionResource<T> | undefined;
@@ -793,7 +793,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & HttpQueryOptions<R> = {}
+    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
@@ -817,7 +817,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & HttpQueryOptions<R> = {}
+    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {

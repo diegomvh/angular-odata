@@ -2,7 +2,6 @@ import { binary, duration, raw } from '../resources/builder';
 import { Parser, StructuredTypeFieldOptions } from '../types';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
-
 export type Duration = {
   sign?: 1 | -1;
   years?: number;

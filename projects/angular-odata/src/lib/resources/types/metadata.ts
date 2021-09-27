@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 
 import { ODataResource } from '../resource';
 import { ODataPathSegments } from '../path-segments';
-import { HttpOptions } from './options';
+import { ODataOptions } from './options';
 import { ODataMetadata } from '../responses';
 import { $METADATA } from '../../constants';
 import { ODataApi } from '../../api';
@@ -30,7 +30,7 @@ export class ODataMetadataResource extends ODataResource<any> {
   //#endregion
 
   //#region Requests
-  get(options?: HttpOptions): Observable<ODataMetadata> {
+  get(options?: ODataOptions): Observable<ODataMetadata> {
     return super
       .get({ responseType: 'text', ...options })
       .pipe(map((body: any) => new ODataMetadata(body)));
@@ -38,7 +38,7 @@ export class ODataMetadataResource extends ODataResource<any> {
   //#endregion
 
   //#region Shortcuts
-  fetch(options?: HttpOptions): Observable<ODataMetadata> {
+  fetch(options?: ODataOptions): Observable<ODataMetadata> {
     return this.get(options);
   }
   //#endregion

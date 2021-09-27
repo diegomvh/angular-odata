@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
-import { HttpOptions } from './options';
+import { ODataOptions } from './options';
 import { $COUNT } from '../../constants';
 import { ODataApi } from '../../api';
 import { Filter } from '../builder';
@@ -58,13 +58,13 @@ export class ODataCountResource extends ODataResource<any> {
   }
 
   //#region Requests
-  get(options?: HttpOptions): Observable<number> {
+  get(options?: ODataOptions): Observable<number> {
     return super.get({ responseType: 'value', ...options });
   }
   //#endregion
 
   //#region Shortcuts
-  fetch(options?: HttpOptions): Observable<number> {
+  fetch(options?: ODataOptions): Observable<number> {
     return this.get(options);
   }
   //#endregion

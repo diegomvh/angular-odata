@@ -10,7 +10,7 @@ import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataPropertyResource } from './property';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
-import { HttpOptions } from './options';
+import { ODataOptions } from './options';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { ODataModel } from '../../models';
@@ -183,7 +183,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   //#region Requests
   get(
-    options: HttpOptions & {
+    options: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
@@ -193,33 +193,33 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   post(
     attrs: Partial<T>,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   put(
     attrs: Partial<T>,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
   patch(
     attrs: Partial<T>,
-    options: HttpOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
-  delete(options: HttpOptions & { etag?: string } = {}): Observable<any> {
+  delete(options: ODataOptions & { etag?: string } = {}): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
   //#endregion
 
   //#region Shortcuts
   fetch(
-    options?: HttpOptions & {
+    options?: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -228,7 +228,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   fetchEntity(
-    options?: HttpOptions & {
+    options?: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -237,7 +237,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   fetchModel(
-    options?: HttpOptions & {
+    options?: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }

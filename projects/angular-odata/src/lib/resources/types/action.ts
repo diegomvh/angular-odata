@@ -4,11 +4,11 @@ import { map } from 'rxjs/operators';
 import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import {
-  HttpEntityOptions,
-  HttpEntitiesOptions,
-  HttpPropertyOptions,
-  HttpOptions,
-  HttpNoneOptions,
+  ODataEntityOptions,
+  ODataEntitiesOptions,
+  ODataPropertyOptions,
+  ODataOptions,
+  ODataNoneOptions,
 } from './options';
 import {
   ODataProperty,
@@ -185,19 +185,19 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Requests
   post(
     params: P | null,
-    options?: HttpEntityOptions
+    options?: ODataEntityOptions
   ): Observable<ODataEntity<R>>;
   post(
     params: P | null,
-    options?: HttpEntitiesOptions
+    options?: ODataEntitiesOptions
   ): Observable<ODataEntities<R>>;
   post(
     params: P | null,
-    options?: HttpPropertyOptions
+    options?: ODataPropertyOptions
   ): Observable<ODataProperty<R>>;
   post(
     params: P | null,
-    options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions
+    options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.post(params, options);
   }
@@ -206,34 +206,34 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Shortcuts
   call(
     params: P | null,
-    options?: HttpEntityOptions & HttpOptions
+    options?: ODataEntityOptions & ODataOptions
   ): Observable<ODataEntity<R>>;
   call(
     params: P | null,
-    options?: HttpEntitiesOptions & HttpOptions
+    options?: ODataEntitiesOptions & ODataOptions
   ): Observable<ODataEntities<R>>;
   call(
     params: P | null,
-    options?: HttpPropertyOptions & HttpOptions
+    options?: ODataPropertyOptions & ODataOptions
   ): Observable<ODataProperty<R>>;
   call(
     params: P | null,
-    options?: HttpNoneOptions & HttpOptions
+    options?: ODataNoneOptions & ODataOptions
   ): Observable<null>;
   call(
     params: P | null,
-    options: HttpEntityOptions &
-      HttpEntitiesOptions &
-      HttpPropertyOptions &
-      HttpNoneOptions &
-      HttpOptions = {}
+    options: ODataEntityOptions &
+      ODataEntitiesOptions &
+      ODataPropertyOptions &
+      ODataNoneOptions &
+      ODataOptions = {}
   ): Observable<any> {
     return this.clone().post(params, options);
   }
 
   callProperty(
     params: P | null,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<R | null> {
     return this.call(params, { responseType: 'property', ...options }).pipe(
       map(({ property }) => property)
@@ -242,7 +242,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
   callEntity(
     params: P | null,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<R | null> {
     return this.call(params, { responseType: 'entity', ...options }).pipe(
       map(({ entity }) => entity)
@@ -251,7 +251,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
   callModel(
     params: P | null,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<ODataModel<R> | null> {
     return this.call(params, { responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
@@ -262,7 +262,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
   callEntities(
     params: P | null,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<R[] | null> {
     return this.call(params, { responseType: 'entities', ...options }).pipe(
       map(({ entities }) => entities)
@@ -271,7 +271,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
   callCollection(
     params: P | null,
-    options: HttpOptions = {}
+    options: ODataOptions = {}
   ): Observable<ODataCollection<R, ODataModel<R>> | null> {
     return this.call(params, { responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>

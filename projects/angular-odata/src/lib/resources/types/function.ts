@@ -4,11 +4,11 @@ import { map } from 'rxjs/operators';
 import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
 import {
-  HttpEntityOptions,
-  HttpEntitiesOptions,
-  HttpPropertyOptions,
-  HttpOptions,
-  HttpNoneOptions,
+  ODataEntityOptions,
+  ODataEntitiesOptions,
+  ODataPropertyOptions,
+  ODataOptions,
+  ODataNoneOptions,
 } from './options';
 
 import {
@@ -201,11 +201,11 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Requests
-  get(options?: HttpEntityOptions): Observable<ODataEntity<R>>;
-  get(options?: HttpEntitiesOptions): Observable<ODataEntities<R>>;
-  get(options?: HttpPropertyOptions): Observable<ODataProperty<R>>;
+  get(options?: ODataEntityOptions): Observable<ODataEntity<R>>;
+  get(options?: ODataEntitiesOptions): Observable<ODataEntities<R>>;
+  get(options?: ODataPropertyOptions): Observable<ODataProperty<R>>;
   get(
-    options?: HttpEntityOptions & HttpEntitiesOptions & HttpPropertyOptions
+    options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.get(options);
   }
@@ -214,36 +214,36 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Shortcuts
   call(
     params: P | null,
-    options?: { alias?: boolean } & HttpEntityOptions
+    options?: { alias?: boolean } & ODataEntityOptions
   ): Observable<ODataEntity<R>>;
   call(
     params: P | null,
-    options?: { alias?: boolean } & HttpEntitiesOptions
+    options?: { alias?: boolean } & ODataEntitiesOptions
   ): Observable<ODataEntities<R>>;
   call(
     params: P | null,
-    options?: { alias?: boolean } & HttpPropertyOptions
+    options?: { alias?: boolean } & ODataPropertyOptions
   ): Observable<ODataProperty<R>>;
   call(
     params: P | null,
-    options?: { alias?: boolean } & HttpNoneOptions
+    options?: { alias?: boolean } & ODataNoneOptions
   ): Observable<null>;
   call(
     params: P | null,
     {
       alias,
       ...options
-    }: { alias?: boolean } & HttpEntityOptions &
-      HttpEntitiesOptions &
-      HttpPropertyOptions &
-      HttpNoneOptions = {}
+    }: { alias?: boolean } & ODataEntityOptions &
+      ODataEntitiesOptions &
+      ODataPropertyOptions &
+      ODataNoneOptions = {}
   ): Observable<any> {
     return this.parameters(params, { alias }).get(options);
   }
 
   callProperty(
     params: P | null,
-    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+    { alias, ...options }: { alias?: boolean } & ODataOptions = {}
   ): Observable<R | null> {
     return this.call(params, {
       responseType: 'property',
@@ -254,7 +254,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
   callEntity(
     params: P | null,
-    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+    { alias, ...options }: { alias?: boolean } & ODataOptions = {}
   ): Observable<R | null> {
     return this.call(params, {
       responseType: 'entity',
@@ -265,7 +265,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
   callModel(
     params: P | null,
-    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+    { alias, ...options }: { alias?: boolean } & ODataOptions = {}
   ): Observable<ODataModel<R> | null> {
     return this.call(params, {
       responseType: 'entity',
@@ -280,7 +280,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
   callEntities(
     params: P | null,
-    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+    { alias, ...options }: { alias?: boolean } & ODataOptions = {}
   ): Observable<R[] | null> {
     return this.call(params, {
       responseType: 'entities',
@@ -291,7 +291,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
   callCollection(
     params: P | null,
-    { alias, ...options }: { alias?: boolean } & HttpOptions = {}
+    { alias, ...options }: { alias?: boolean } & ODataOptions = {}
   ): Observable<ODataCollection<R, ODataModel<R>> | null> {
     return this.call(params, {
       responseType: 'entities',
