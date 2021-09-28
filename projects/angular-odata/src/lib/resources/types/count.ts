@@ -58,7 +58,7 @@ export class ODataCountResource extends ODataResource<any> {
   }
 
   //#region Requests
-  get(options?: ODataOptions): Observable<number> {
+  protected get(options?: ODataOptions): Observable<number> {
     return super.get({ responseType: 'value', ...options });
   }
   //#endregion

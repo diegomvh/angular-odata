@@ -183,19 +183,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Requests
-  post(
-    params: P | null,
-    options?: ODataEntityOptions
-  ): Observable<ODataEntity<R>>;
-  post(
-    params: P | null,
-    options?: ODataEntitiesOptions
-  ): Observable<ODataEntities<R>>;
-  post(
-    params: P | null,
-    options?: ODataPropertyOptions
-  ): Observable<ODataProperty<R>>;
-  post(
+  protected post(
     params: P | null,
     options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
@@ -206,27 +194,23 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Shortcuts
   call(
     params: P | null,
-    options?: ODataEntityOptions & ODataOptions
+    options?: ODataEntityOptions
   ): Observable<ODataEntity<R>>;
   call(
     params: P | null,
-    options?: ODataEntitiesOptions & ODataOptions
+    options?: ODataEntitiesOptions
   ): Observable<ODataEntities<R>>;
   call(
     params: P | null,
-    options?: ODataPropertyOptions & ODataOptions
+    options?: ODataPropertyOptions
   ): Observable<ODataProperty<R>>;
-  call(
-    params: P | null,
-    options?: ODataNoneOptions & ODataOptions
-  ): Observable<null>;
+  call(params: P | null, options?: ODataNoneOptions): Observable<null>;
   call(
     params: P | null,
     options: ODataEntityOptions &
       ODataEntitiesOptions &
       ODataPropertyOptions &
-      ODataNoneOptions &
-      ODataOptions = {}
+      ODataNoneOptions = {}
   ): Observable<any> {
     return this.clone().post(params, options);
   }

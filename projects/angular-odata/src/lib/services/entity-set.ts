@@ -88,7 +88,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     attrs: Partial<T>,
     options?: ODataOptions
   ): Observable<ODataEntity<T>> {
-    return this.entities().post(attrs, options);
+    return this.entities().create(attrs, options);
   }
 
   /**
@@ -105,7 +105,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res.put(attrs, options);
+    return res.update(attrs, options);
   }
 
   /**
@@ -115,14 +115,14 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public patch(
+  public modify(
     key: EntityKey<T>,
     attrs: Partial<T>,
     options?: ODataOptions & { etag?: string }
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res.patch(attrs, options);
+    return res.modify(attrs, options);
   }
 
   /**
@@ -131,10 +131,13 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public destroy(key: EntityKey<T>, options?: ODataOptions & { etag?: string }) {
+  public destroy(
+    key: EntityKey<T>,
+    options?: ODataOptions & { etag?: string }
+  ) {
     const res = this.entity(key);
     if (!res.hasKey()) return throwError('Resource without key');
-    return res.delete(options);
+    return res.destroy(options);
   }
 
   //#region Shortcuts
@@ -173,7 +176,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
       ...options
     }: {
       etag?: string;
-      method?: 'create' | 'update' | 'patch';
+      method?: 'create' | 'update' | 'modify';
     } & ODataOptions = {}
   ) {
     let schema = this.structuredTypeSchema;
@@ -183,12 +186,12 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
       );
     let key = schema && schema.resolveKey(attrs);
     if (method === undefined) method = key !== undefined ? 'update' : 'create';
-    if ((method === 'update' || method === 'patch') && key === undefined)
+    if ((method === 'update' || method === 'modify') && key === undefined)
       return throwError("Can't update/patch entity without key");
     return method === 'create'
       ? this.create(attrs, options)
-      : method === 'patch'
-      ? this.patch(key, attrs, { etag, ...options })
+      : method === 'modify'
+      ? this.modify(key, attrs, { etag, ...options })
       : this.update(key, attrs, { etag, ...options });
   }
   //#endregion

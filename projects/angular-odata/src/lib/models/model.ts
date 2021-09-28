@@ -203,7 +203,7 @@ export class ODataModel<T> {
     method,
     navigation = false,
   }: {
-    method?: 'create' | 'update' | 'patch';
+    method?: 'create' | 'update' | 'modify';
     navigation?: boolean;
   } = {}) {
     return this._meta.validate(this, { method, navigation });
@@ -213,7 +213,7 @@ export class ODataModel<T> {
     method,
     navigation = false,
   }: {
-    method?: 'create' | 'update' | 'patch';
+    method?: 'create' | 'update' | 'modify';
     navigation?: boolean;
   } = {}): boolean {
     this._errors = this.validate({ method, navigation });
@@ -394,11 +394,11 @@ export class ODataModel<T> {
     if (resource instanceof ODataEntityResource) {
       if (!resource.hasKey())
         return throwError("fetch: Can't fetch model without key");
-      obs$ = resource.get(options);
+      obs$ = resource.fetch(options);
     } else if (resource instanceof ODataNavigationPropertyResource) {
-      obs$ = resource.get({ responseType: 'entity', ...options });
+      obs$ = resource.fetch({ responseType: 'entity', ...options });
     } else {
-      obs$ = (resource as ODataPropertyResource<T>).get({
+      obs$ = (resource as ODataPropertyResource<T>).fetch({
         responseType: 'entity',
         ...options,
       });
@@ -412,7 +412,7 @@ export class ODataModel<T> {
     validate = true,
     ...options
   }: ODataOptions & {
-    method?: 'create' | 'update' | 'patch';
+    method?: 'create' | 'update' | 'modify';
     navigation?: boolean;
     validate?: boolean;
     options?: ODataOptions;
@@ -427,11 +427,11 @@ export class ODataModel<T> {
     if (method === undefined) {
       if (this.schema().isCompoundKey())
         return throwError(
-          'save: Composite key require a specific method, use create/update/patch'
+          'save: Composite key require a specific method, use create/update/modify'
         );
       method = !resource.hasKey() ? 'create' : 'update';
     } else {
-      if ((method === 'update' || method === 'patch') && !resource.hasKey())
+      if ((method === 'update' || method === 'modify') && !resource.hasKey())
         return throwError('save: Update/Patch require entity key');
       if (method === 'create') resource.clearKey();
     }
@@ -439,17 +439,17 @@ export class ODataModel<T> {
     let obs$: Observable<ODataEntity<any>>;
     if (!validate || this.isValid({ method, navigation })) {
       const _entity = this.toEntity({
-        changes_only: method === 'patch',
+        changes_only: method === 'modify',
         field_mapping: true,
         include_concurrency: true,
         include_navigation: navigation,
       }) as T;
       obs$ = (
         method === 'create'
-          ? resource.post(_entity, options)
-          : method === 'patch'
-          ? resource.patch(_entity, { etag: this.annots().etag, ...options })
-          : resource.put(_entity, { etag: this.annots().etag, ...options })
+          ? resource.create(_entity, options)
+          : method === 'modify'
+          ? resource.modify(_entity, { etag: this.annots().etag, ...options })
+          : resource.update(_entity, { etag: this.annots().etag, ...options })
       ).pipe(
         map(({ entity, annots }) => ({ entity: entity || _entity, annots }))
       );
@@ -474,7 +474,7 @@ export class ODataModel<T> {
 
     const _entity = this.toEntity({ field_mapping: true }) as T;
     const obs$ = resource
-      .delete({ etag: this.annots().etag, ...options })
+      .destroy({ etag: this.annots().etag, ...options })
       .pipe(
         map(({ entity, annots }) => ({ entity: entity || _entity, annots }))
       );

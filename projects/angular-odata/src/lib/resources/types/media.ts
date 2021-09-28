@@ -16,7 +16,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     segments: ODataPathSegments,
     options: ODataQueryOptions
   ) {
-    const segment = segments.add(PathSegmentNames.value, $VALUE);
+    segments.add(PathSegmentNames.value, $VALUE);
     return new ODataMediaResource<V>(api, segments, options);
   }
   //#endregion
@@ -34,15 +34,13 @@ export class ODataMediaResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  get(
-    options?: { responseType: 'arraybuffer' } & ODataOptions
-  ): Observable<ArrayBuffer>;
-  get(options?: { responseType: 'blob' } & ODataOptions): Observable<Blob>;
-  get(options: { responseType: any } & ODataOptions): Observable<any> {
+  protected get(
+    options: { responseType: any } & ODataOptions
+  ): Observable<any> {
     return super.get(options);
   }
 
-  put(
+  protected put(
     data: ArrayBuffer | Blob,
     options: ODataOptions & { etag?: string } = {}
   ): Observable<any> {

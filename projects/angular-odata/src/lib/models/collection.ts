@@ -257,11 +257,19 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
     let obs$: Observable<ODataEntities<any>>;
     if (resource instanceof ODataEntitySetResource) {
-      obs$ = resource.get({ withCount, ...options });
+      obs$ = resource.fetch({ withCount, ...options });
     } else if (resource instanceof ODataNavigationPropertyResource) {
-      obs$ = resource.get({ responseType: 'entities', withCount, ...options });
+      obs$ = resource.fetch({
+        responseType: 'entities',
+        withCount,
+        ...options,
+      });
     } else {
-      obs$ = resource.get({ responseType: 'entities', withCount, ...options });
+      obs$ = resource.fetch({
+        responseType: 'entities',
+        withCount,
+        ...options,
+      });
     }
     this.events$.emit(
       new ODataModelEvent('request', { collection: this, value: obs$ })
@@ -322,7 +330,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }: ODataOptions & {
     relModel?: boolean;
     refOnly?: boolean;
-    method?: 'update' | 'patch';
+    method?: 'update' | 'modify';
   } = {}): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)

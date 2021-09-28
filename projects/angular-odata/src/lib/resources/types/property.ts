@@ -238,10 +238,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(options: ODataEntityOptions): Observable<ODataEntity<T>>;
-  get(options: ODataEntitiesOptions): Observable<ODataEntities<T>>;
-  get(options: ODataPropertyOptions): Observable<ODataProperty<T>>;
-  get(
+  protected get(
     options: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.get(options);
@@ -318,7 +315,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       if (opts) {
         res.query.paging(opts);
       }
-      return res.get({ responseType: 'entities', ...options });
+      return res.fetch({ responseType: 'entities', ...options });
     };
     return fetch().pipe(
       expand(({ annots: meta }) =>

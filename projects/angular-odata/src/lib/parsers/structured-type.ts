@@ -104,7 +104,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'patch';
+      method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
     } = {}
   ):
@@ -137,7 +137,7 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
       errors = [];
       if (
         !this.nullable &&
-        (value === null || (value === undefined && method !== 'patch')) && // Is null or undefined without patch?
+        (value === null || (value === undefined && method !== 'modify')) && // Is null or undefined without patch?
         !(computed?.bool && method === 'create') // Not (Is Computed field and create) ?
       ) {
         errors.push(`required`);
@@ -580,7 +580,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
       navigation = false,
     }: {
       create?: boolean;
-      method?: 'create' | 'update' | 'patch';
+      method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
     } = {}
   ): { [name: string]: any } | undefined {

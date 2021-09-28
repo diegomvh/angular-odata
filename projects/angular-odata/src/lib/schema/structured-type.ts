@@ -183,7 +183,7 @@ export class ODataStructuredType<T> {
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'patch';
+      method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
     } = {}
   ) {

@@ -17,7 +17,11 @@ import { ODataPathSegments } from '../path-segments';
 import { ODataReferenceResource } from './reference';
 import { ODataCountResource } from './count';
 import { ODataPropertyResource } from './property';
-import { ODataEntityOptions, ODataEntitiesOptions, ODataOptions } from './options';
+import {
+  ODataEntityOptions,
+  ODataEntitiesOptions,
+  ODataOptions,
+} from './options';
 import { ODataMediaResource } from './media';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 
@@ -259,55 +263,71 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(
-    options: ODataEntityOptions & {
-      etag?: string;
-      bodyQueryOptions?: QueryOptionNames[];
-    }
-  ): Observable<ODataEntity<T>>;
-  get(
-    options: ODataEntitiesOptions & {
-      etag?: string;
-      bodyQueryOptions?: QueryOptionNames[];
-    }
-  ): Observable<ODataEntities<T>>;
-  get(
-    options: ODataEntityOptions &
-      ODataEntitiesOptions & {
-        etag?: string;
-        bodyQueryOptions?: QueryOptionNames[];
-      }
-  ): Observable<any> {
-    return super.get(options);
-  }
-
-  post(
+  protected post(
     attrs: Partial<T>,
     options: ODataOptions = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  put(
+  protected put(
     attrs: Partial<T>,
     options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
-  patch(
+  protected patch(
     attrs: Partial<T>,
     options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
-  delete(options: ODataOptions & { etag?: string } = {}): Observable<any> {
+  protected delete(
+    options: ODataOptions & { etag?: string } = {}
+  ): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
+
+  protected get(
+    options: ODataEntityOptions &
+      ODataEntitiesOptions & {
+        etag?: string;
+        bodyQueryOptions?: QueryOptionNames[];
+      } = {}
+  ): Observable<any> {
+    return super.get(options);
+  }
+
   //#endregion
 
   //#region Shortcuts
+  create(
+    attrs: Partial<T>,
+    options?: ODataOptions
+  ): Observable<ODataEntity<T>> {
+    return this.post(attrs, options);
+  }
+
+  update(
+    attrs: Partial<T>,
+    options?: ODataOptions & { etag?: string }
+  ): Observable<ODataEntity<T>> {
+    return this.put(attrs, options);
+  }
+
+  modify(
+    attrs: Partial<T>,
+    options?: ODataOptions & { etag?: string }
+  ): Observable<ODataEntity<T>> {
+    return this.patch(attrs, options);
+  }
+
+  destroy(options?: ODataOptions & { etag?: string }): Observable<any> {
+    return this.delete(options);
+  }
+
   fetch(
     options?: ODataEntityOptions & {
       etag?: string;
@@ -393,7 +413,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       if (opts) {
         res.query.paging(opts);
       }
-      return res.get({ responseType: 'entities', ...options });
+      return res.fetch({ responseType: 'entities', ...options });
     };
     return fetch().pipe(
       expand(({ annots: meta }) =>

@@ -313,7 +313,7 @@ describe('ODataClient', () => {
           FirstName: 'FirstName',
           Gender: PersonGender.Male,
         },
-        { method: 'patch' }
+        { method: 'modify' }
       )
     ).toBeUndefined();
   });

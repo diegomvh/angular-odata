@@ -197,7 +197,34 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  get(
+  protected post(
+    attrs: Partial<T>,
+    options: ODataOptions = {}
+  ): Observable<ODataEntity<T>> {
+    return super.post(attrs, { responseType: 'entity', ...options });
+  }
+
+  protected put(
+    attrs: Partial<T>,
+    options: ODataOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.put(attrs, { responseType: 'entity', ...options });
+  }
+
+  protected patch(
+    attrs: Partial<T>,
+    options: ODataOptions & { etag?: string } = {}
+  ): Observable<ODataEntity<T>> {
+    return super.patch(attrs, { responseType: 'entity', ...options });
+  }
+
+  protected delete(
+    options: ODataOptions & { etag?: string } = {}
+  ): Observable<any> {
+    return super.delete({ responseType: 'entity', ...options });
+  }
+
+  protected get(
     options: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
@@ -205,34 +232,34 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   ): Observable<ODataEntity<T>> {
     return super.get({ responseType: 'entity', ...options });
   }
-
-  post(
-    attrs: Partial<T>,
-    options: ODataOptions = {}
-  ): Observable<ODataEntity<T>> {
-    return super.post(attrs, { responseType: 'entity', ...options });
-  }
-
-  put(
-    attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
-  ): Observable<ODataEntity<T>> {
-    return super.put(attrs, { responseType: 'entity', ...options });
-  }
-
-  patch(
-    attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
-  ): Observable<ODataEntity<T>> {
-    return super.patch(attrs, { responseType: 'entity', ...options });
-  }
-
-  delete(options: ODataOptions & { etag?: string } = {}): Observable<any> {
-    return super.delete({ responseType: 'entity', ...options });
-  }
   //#endregion
 
   //#region Shortcuts
+  create(
+    attrs: Partial<T>,
+    options?: ODataOptions
+  ): Observable<ODataEntity<T>> {
+    return this.post(attrs, options);
+  }
+
+  update(
+    attrs: Partial<T>,
+    options?: ODataOptions & { etag?: string }
+  ): Observable<ODataEntity<T>> {
+    return this.put(attrs, options);
+  }
+
+  modify(
+    attrs: Partial<T>,
+    options?: ODataOptions & { etag?: string }
+  ): Observable<ODataEntity<T>> {
+    return this.patch(attrs, options);
+  }
+
+  destroy(options?: ODataOptions & { etag?: string }): Observable<any> {
+    return this.delete(options);
+  }
+
   fetch(
     options?: ODataOptions & {
       etag?: string;

@@ -201,10 +201,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Requests
-  get(options?: ODataEntityOptions): Observable<ODataEntity<R>>;
-  get(options?: ODataEntitiesOptions): Observable<ODataEntities<R>>;
-  get(options?: ODataPropertyOptions): Observable<ODataProperty<R>>;
-  get(
+  protected get(
     options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.get(options);

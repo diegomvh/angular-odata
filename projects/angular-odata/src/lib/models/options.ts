@@ -297,7 +297,7 @@ export class ODataModelField<F> {
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'patch';
+      method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
     } = {}
   ) {
@@ -318,7 +318,7 @@ export class ODataModelField<F> {
       let errors = this.parser?.validate(value, { method, navigation }) || [];
       if (
         this.required &&
-        (value === null || (value === undefined && method !== 'patch')) // Is null or undefined without patch?
+        (value === null || (value === undefined && method !== 'modify')) // Is null or undefined without patch?
       ) {
         errors.push(`required`);
       }
@@ -860,7 +860,7 @@ export class ODataModelOptions<T> {
       method,
       navigation = false,
     }: {
-      method?: 'create' | 'update' | 'patch';
+      method?: 'create' | 'update' | 'modify';
       navigation?: boolean;
     } = {}
   ): { [name: string]: string[] } | undefined {

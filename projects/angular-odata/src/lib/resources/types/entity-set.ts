@@ -201,14 +201,14 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  post(
+  protected post(
     attrs: Partial<T>,
     options: ODataOptions = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  get(
+  protected get(
     options: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
@@ -219,6 +219,13 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+  create(
+    attrs: Partial<T>,
+    options?: ODataOptions
+  ): Observable<ODataEntity<T>> {
+    return this.post(attrs, options);
+  }
+
   fetch(
     options?: ODataOptions & {
       withCount?: boolean;
@@ -266,7 +273,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       if (opts) {
         res.query.paging(opts);
       }
-      return res.get(options);
+      return res.fetch(options);
     };
     return fetch().pipe(
       expand(({ annots: meta }) =>
