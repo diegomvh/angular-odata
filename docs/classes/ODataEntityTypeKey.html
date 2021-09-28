@@ -325,7 +325,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
       method,
       navigation &#x3D; false,
     }: {
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;patch&#x27;;
+      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
     } &#x3D; {}
   ):
@@ -358,7 +358,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
       errors &#x3D; [];
       if (
         !this.nullable &amp;&amp;
-        (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;patch&#x27;)) &amp;&amp; // Is null or undefined without patch?
+        (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;modify&#x27;)) &amp;&amp; // Is null or undefined without patch?
         !(computed?.bool &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
       ) {
         errors.push(&#x60;required&#x60;);
@@ -801,7 +801,7 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
       navigation &#x3D; false,
     }: {
       create?: boolean;
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;patch&#x27;;
+      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
     } &#x3D; {}
   ): { [name: string]: any } | undefined {

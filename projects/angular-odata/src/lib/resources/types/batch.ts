@@ -27,26 +27,15 @@ import {
   BINARY,
   CHANGESET_PREFIX,
   NEWLINE_REGEXP,
+  XSSI_PREFIX,
 } from '../../constants';
 import { ODataRequest } from '../request';
 import { ODataApi } from '../../api';
 import { ODataResponse } from '../responses';
 import { ODataOptions } from './options';
 import { Http } from '../../utils/http';
+import { Strings } from '../../utils/strings';
 import { PathSegmentNames } from '../../types';
-
-const XSSI_PREFIX = /^\)\]\}',?\n/;
-
-// From https://github.com/adamhalasz/uniqid
-var glast: number;
-function now() {
-  let time = Date.now();
-  let last = glast || time;
-  return (glast = time > last ? time : last + 1);
-}
-function uniqid(prefix?: string, suffix?: string): string {
-  return (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : '');
-}
 
 export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
   constructor(public request: ODataRequest<any>) {
@@ -184,7 +173,7 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   //#endregion
 
-  post(
+  exec(
     func: (batch: ODataBatchResource) => void,
     options?: ODataOptions
   ): Observable<ODataResponse<any>> {
@@ -204,7 +193,7 @@ export class ODataBatchResource extends ODataResource<any> {
       bound: string;
       requests: ODataBatchRequest<any>[];
     }>({
-      bound: uniqid(BATCH_PREFIX),
+      bound: Strings.uniqueId(BATCH_PREFIX),
       requests: this._requests,
     });
 
@@ -237,7 +226,10 @@ export class ODataBatchResource extends ODataResource<any> {
         this._requests = [];
         ODataBatchResource.handleResponse(requests, response);
         if (this._requests.length > 0) {
-          sub$.next({ bound: uniqid(BATCH_PREFIX), requests: this._requests });
+          sub$.next({
+            bound: Strings.uniqueId(BATCH_PREFIX),
+            requests: this._requests,
+          });
         } else sub$.complete();
         return response;
       }),
@@ -248,7 +240,10 @@ export class ODataBatchResource extends ODataResource<any> {
   }
 
   body() {
-    return ODataBatchResource.buildBody(uniqid(BATCH_PREFIX), this._requests);
+    return ODataBatchResource.buildBody(
+      Strings.uniqueId(BATCH_PREFIX),
+      this._requests
+    );
   }
 
   static buildBody(
@@ -276,7 +271,7 @@ export class ODataBatchResource extends ODataResource<any> {
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (batch.request.method !== 'GET') {
         if (changesetBoundary === null) {
-          changesetBoundary = uniqid(CHANGESET_PREFIX);
+          changesetBoundary = Strings.uniqueId(CHANGESET_PREFIX);
           res.push(
             `${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}`
           );

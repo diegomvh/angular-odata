@@ -122,6 +122,7 @@
                                 <a href="#fetch" >fetch</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
                                 <a href="#get" >get</a>
                             </li>
                             <li>
@@ -514,7 +515,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fetch(options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+<code>fetch(options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -545,7 +546,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -576,6 +577,7 @@
                 <td class="col-md-4">
                     <a name="get"></a>
                     <span class="name">
+                        <span class="modifier">Protected</span>
                         <span ><b>get</b></span>
                         <a href="#get"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -583,7 +585,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>get(options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -620,7 +623,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -2493,7 +2496,7 @@
 import { ODataResource } from &#x27;../resource&#x27;;
 import { ODataPathSegments } from &#x27;../path-segments&#x27;;
 import { ODataQueryOptions } from &#x27;../query-options&#x27;;
-import { HttpOptions } from &#x27;./options&#x27;;
+import { ODataOptions } from &#x27;./options&#x27;;
 import { $VALUE } from &#x27;../../constants&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import { PathSegmentNames } from &#x27;../../types&#x27;;
@@ -2526,13 +2529,13 @@ export class ODataValueResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   }
 
   //#region Requests
-  get(options?: HttpOptions): Observable&lt;T&gt; {
+  protected get(options?: ODataOptions): Observable&lt;T&gt; {
     return super.get({ responseType: &#x27;value&#x27;, ...options });
   }
   //#endregion
 
   //#region Shortcuts
-  fetch(options?: HttpOptions): Observable&lt;T&gt; {
+  fetch(options?: ODataOptions): Observable&lt;T&gt; {
     return this.get(options);
   }
   //#endregion

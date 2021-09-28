@@ -134,7 +134,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#patch" >patch</a>
+                                <a href="#modify" >modify</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -446,7 +446,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>create(attrs: Partial<T>, options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+                    <code>create(attrs: Partial<T>, options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -496,7 +496,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -758,7 +758,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchAll(options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+                    <code>fetchAll(options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -792,7 +792,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -1010,8 +1010,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="148"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:148</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="151"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:151</a></div>
                 </td>
             </tr>
 
@@ -1106,18 +1106,18 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="patch"></a>
+                    <a name="modify"></a>
                     <span class="name">
                         <span class="modifier">Public</span>
-                        <span ><b>patch</b></span>
-                        <a href="#patch"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>modify</b></span>
+                        <a href="#modify"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>patch(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
+                    <code>modify(key: <a href="../undefineds/EntityKey.html" target="_self">EntityKey&lt;T&gt;</a>, attrs: Partial<T>, options?)</code>
                 </td>
             </tr>
 
@@ -1233,8 +1233,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="168"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:168</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="171"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:171</a></div>
                 </td>
             </tr>
 
@@ -1431,7 +1431,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1512,7 +1512,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryArgumentsOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -1552,7 +1552,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1633,7 +1633,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryArgumentsOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -1673,7 +1673,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1741,7 +1741,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;S&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryArgumentsOptions&lt;S&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -1807,7 +1807,7 @@
   EntityKey,
   ODataEntitySetResource,
   ODataEntityResource,
-  HttpOptions,
+  ODataOptions,
   ODataEntity,
   ODataEntities,
 } from &#x27;../resources&#x27;;
@@ -1856,7 +1856,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * Get all entities from the entity set.
    * @param options The options for the request.
    */
-  public fetchAll(options?: HttpOptions): Observable&lt;T[]&gt; {
+  public fetchAll(options?: ODataOptions): Observable&lt;T[]&gt; {
     return this.entities().fetchAll(options);
   }
 
@@ -1866,7 +1866,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * @param options The options for the request.
    */
   public fetchMany(
-    options?: HttpOptions &amp; { withCount?: boolean }
+    options?: ODataOptions &amp; { withCount?: boolean }
   ): Observable&lt;ODataEntities&lt;T&gt;&gt; {
     return this.entities().fetch(options);
   }
@@ -1879,7 +1879,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public fetchOne(
     key: EntityKey&lt;T&gt;,
-    options?: HttpOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return this.entity(key).fetch(options);
   }
@@ -1891,9 +1891,9 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public create(
     attrs: Partial&lt;T&gt;,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
-    return this.entities().post(attrs, options);
+    return this.entities().create(attrs, options);
   }
 
   /**
@@ -1906,11 +1906,11 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   public update(
     key: EntityKey&lt;T&gt;,
     attrs: Partial&lt;T&gt;,
-    options?: HttpOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
     if (!res.hasKey()) return throwError(&#x27;Resource without key&#x27;);
-    return res.put(attrs, options);
+    return res.update(attrs, options);
   }
 
   /**
@@ -1920,14 +1920,14 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public patch(
+  public modify(
     key: EntityKey&lt;T&gt;,
     attrs: Partial&lt;T&gt;,
-    options?: HttpOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
     if (!res.hasKey()) return throwError(&#x27;Resource without key&#x27;);
-    return res.patch(attrs, options);
+    return res.modify(attrs, options);
   }
 
   /**
@@ -1936,10 +1936,13 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public destroy(key: EntityKey&lt;T&gt;, options?: HttpOptions &amp; { etag?: string }) {
+  public destroy(
+    key: EntityKey&lt;T&gt;,
+    options?: ODataOptions &amp; { etag?: string }
+  ) {
     const res &#x3D; this.entity(key);
     if (!res.hasKey()) return throwError(&#x27;Resource without key&#x27;);
-    return res.delete(options);
+    return res.destroy(options);
   }
 
   //#region Shortcuts
@@ -1953,7 +1956,7 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
   public fetchOrCreate(
     key: EntityKey&lt;T&gt;,
     attrs: Partial&lt;T&gt;,
-    { etag, ...options }: { etag?: string } &amp; HttpOptions &#x3D; {}
+    { etag, ...options }: { etag?: string } &amp; ODataOptions &#x3D; {}
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return this.fetchOne(key, { etag, ...options }).pipe(
       catchError((error: HttpErrorResponse) &#x3D;&gt; {
@@ -1978,8 +1981,8 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
       ...options
     }: {
       etag?: string;
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;patch&#x27;;
-    } &amp; HttpOptions &#x3D; {}
+      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
+    } &amp; ODataOptions &#x3D; {}
   ) {
     let schema &#x3D; this.structuredTypeSchema;
     if (method &#x3D;&#x3D;&#x3D; undefined &amp;&amp; schema !&#x3D;&#x3D; undefined &amp;&amp; schema.isCompoundKey())
@@ -1988,12 +1991,12 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
       );
     let key &#x3D; schema &amp;&amp; schema.resolveKey(attrs);
     if (method &#x3D;&#x3D;&#x3D; undefined) method &#x3D; key !&#x3D;&#x3D; undefined ? &#x27;update&#x27; : &#x27;create&#x27;;
-    if ((method &#x3D;&#x3D;&#x3D; &#x27;update&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;patch&#x27;) &amp;&amp; key &#x3D;&#x3D;&#x3D; undefined)
+    if ((method &#x3D;&#x3D;&#x3D; &#x27;update&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;) &amp;&amp; key &#x3D;&#x3D;&#x3D; undefined)
       return throwError(&quot;Can&#x27;t update/patch entity without key&quot;);
     return method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;
       ? this.create(attrs, options)
-      : method &#x3D;&#x3D;&#x3D; &#x27;patch&#x27;
-      ? this.patch(key, attrs, { etag, ...options })
+      : method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;
+      ? this.modify(key, attrs, { etag, ...options })
       : this.update(key, attrs, { etag, ...options });
   }
   //#endregion

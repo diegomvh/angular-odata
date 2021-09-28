@@ -188,7 +188,7 @@ describe('ODataClient', () => {
     client
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
       .top(2)
-      .get()
+      .fetch()
       .subscribe(({ entities, annots }) => {
         expect(entities !== null).toBeTrue();
         expect((entities as any[]).length).toBe(2);
@@ -227,7 +227,7 @@ describe('ODataClient', () => {
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
       .entity('russellwhyte');
 
-    entity.get().subscribe(({ entity, annots }) => {
+    entity.fetch().subscribe(({ entity, annots }) => {
       expect(annots.entitySet).toEqual('People');
       expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
       expect(entity).toEqual(person);
@@ -262,7 +262,7 @@ describe('ODataClient', () => {
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
       .entity('russellwhyte')
       .navigationProperty<Trip>('Trips')
-      .post({
+      .create({
         //'@odata.type': 'Microsoft.OData.SampleService.Models.TripPin.Trip',
         TripId: 3,
         ShareId: '00000000-0000-0000-0000-000000000000',
@@ -321,7 +321,7 @@ describe('ODataClient', () => {
       .navigationProperty<Trip>('Trips')
       .key(1003)
       .navigationProperty<PlanItem>('PlanItems')
-      .post(item)
+      .create(item)
       .subscribe(({ entity, annots: meta }) => {
         expect(entity !== null).toBeTrue();
         expect(meta.entitySet).toEqual('People');
@@ -341,7 +341,7 @@ describe('ODataClient', () => {
       .entity('russellwhyte')
       .navigationProperty<Trip>('Trips')
       .key(1001)
-      .delete()
+      .destroy()
       .subscribe(({ entity, annots: meta }) => {
         expect(entity).toBeNull();
       });
@@ -380,9 +380,9 @@ ${JSON.stringify(payload)}
       .entity('russellwhyte');
     client
       .batch()
-      .post((batch) => {
+      .exec((batch) => {
         expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
-        entity.get().subscribe(({ annots: meta }) => {
+        entity.fetch().subscribe(({ annots: meta }) => {
           expect(meta.entitySet).toEqual('People');
           expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
         });

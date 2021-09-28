@@ -68,6 +68,7 @@ export const DEFAULT_STRIP_METADATA = 'full';
 export const DEFAULT_FETCH_POLICY = 'network-only';
 export const DEFAULT_TIMEOUT = 60; // Time in seconds
 export const CALLABLE_BINDING_PARAMETER = 'bindingParameter';
+export const XSSI_PREFIX = /^\)\]\}',?\n/;
 
 // URL PARTS
 export const QUERY_SEPARATOR = '?';

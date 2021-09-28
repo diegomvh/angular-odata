@@ -283,16 +283,18 @@ export interface StructuredTypeFieldOptions extends OptionsHelper {
 }
 
 export interface Parser&lt;T&gt; {
+  // Deserialize value/s from request body.
   deserialize(
     value: any,
     options?: OptionsHelper | StructuredTypeFieldOptions
   ): T;
+  // Serialize value/s for request body.
   serialize(
-    value: T,
+    value: any,
     options?: OptionsHelper | StructuredTypeFieldOptions
   ): any;
-  //Encodes the value/s of a URL parameter or query-string.
-  encode(value: T, options?: OptionsHelper | StructuredTypeFieldOptions): any;
+  //Encode value/s for URL parameter or query-string.
+  encode(value: any, options?: OptionsHelper | StructuredTypeFieldOptions): any;
 }
 
 export const NONE_PARSER &#x3D; {

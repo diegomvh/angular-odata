@@ -173,6 +173,9 @@
                             <a href="#EDM_PARSERS" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>EDM_PARSERS</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
+                            <a href="#EdmParser" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>EdmParser</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                        </li>
+                        <li>
                             <a href="#Enums" title="projects/angular-odata/src/lib/utils/enums.ts" ><b>Enums</b>&nbsp;&nbsp;&nbsp;(projects/.../enums.ts)</a>
                         </li>
                         <li>
@@ -188,13 +191,16 @@
                             <a href="#FUNCTION_REGEX" title="projects/angular-odata/src/lib/resources/builder.ts" ><b>FUNCTION_REGEX</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
-                            <a href="#glast" title="projects/angular-odata/src/lib/resources/types/batch.ts" ><b>glast</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
+                            <a href="#glast" title="projects/angular-odata/src/lib/utils/strings.ts" ><b>glast</b>&nbsp;&nbsp;&nbsp;(projects/.../strings.ts)</a>
                         </li>
                         <li>
                             <a href="#Http" title="projects/angular-odata/src/lib/utils/http.ts" ><b>Http</b>&nbsp;&nbsp;&nbsp;(projects/.../http.ts)</a>
                         </li>
                         <li>
                             <a href="#HTTP11" title="projects/angular-odata/src/lib/constants.ts" ><b>HTTP11</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#Identity" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>Identity</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
                             <a href="#IF_MATCH_HEADER" title="projects/angular-odata/src/lib/constants.ts" ><b>IF_MATCH_HEADER</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
@@ -317,10 +323,25 @@
                             <a href="#RETRY_AFTER_HEADERS" title="projects/angular-odata/src/lib/constants.ts" ><b>RETRY_AFTER_HEADERS</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#Strings" title="projects/angular-odata/src/lib/utils/strings.ts" ><b>Strings</b>&nbsp;&nbsp;&nbsp;(projects/.../strings.ts)</a>
+                        </li>
+                        <li>
                             <a href="#SUPPORTED_EXPAND_PROPERTIES" title="projects/angular-odata/src/lib/resources/builder.ts" ><b>SUPPORTED_EXPAND_PROPERTIES</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
                             <a href="#TEXT_PLAIN" title="projects/angular-odata/src/lib/constants.ts" ><b>TEXT_PLAIN</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#toBoolean" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toBoolean</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#toDate" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toDate</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#toNumber" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toNumber</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#toString" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toString</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
                             <a href="#Types" title="projects/angular-odata/src/lib/utils/types.ts" ><b>Types</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -341,7 +362,7 @@
                             <a href="#VERSION_4_0" title="projects/angular-odata/src/lib/constants.ts" ><b>VERSION_4_0</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
-                            <a href="#XSSI_PREFIX" title="projects/angular-odata/src/lib/resources/types/batch.ts" ><b>XSSI_PREFIX</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
+                            <a href="#XSSI_PREFIX" title="projects/angular-odata/src/lib/constants.ts" ><b>XSSI_PREFIX</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                     </ul>
                 </td>
@@ -1887,6 +1908,26 @@
 
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="XSSI_PREFIX"></a>
+                    <span class="name">
+                        <span ><b>XSSI_PREFIX</b></span>
+                        <a href="#XSSI_PREFIX"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>/^\)\]\}&#x27;,?\n/</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
 </section>
     <h3>projects/angular-odata/src/lib/resources/builder.ts</h3>
     <section>
@@ -2353,364 +2394,269 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
-  &#x27;Edm.Guid&#x27;: &lt;Parser&lt;string | string[]&gt;&gt;{
-    deserialize(
-      value: string | string[],
-      options: StructuredTypeFieldOptions
-    ): string | string[] {
-      return value;
+  //Edm.Guid 16-byte (128-bit) unique identifier
+  &#x27;Edm.Guid&#x27;: EdmParser&lt;string&gt;(Identity, Identity, (v: string) &#x3D;&gt; raw(v)),
+  //Edm.Int16 Signed 16-bit integer
+  &#x27;Edm.Int16&#x27;: EdmParser&lt;number&gt;(toNumber, toNumber, toNumber),
+  //Edm.String Sequence of UTF-8 characters
+  &#x27;Edm.String&#x27;: EdmParser&lt;string&gt;(toString, toString, toString),
+  //Edm.Boolean Binary-valued logic
+  &#x27;Edm.Boolean&#x27;: EdmParser&lt;boolean&gt;(toBoolean, toBoolean, toBoolean),
+  //Edm.Byte Unsigned 8-bit integer
+  &#x27;Edm.Byte&#x27;: EdmParser&lt;number&gt;(toNumber, toNumber, toNumber),
+  //Edm.SByte Signed 8-bit integer
+  &#x27;Edm.SByte&#x27;: EdmParser&lt;number&gt;(toNumber, toNumber, toNumber),
+  //Edm.Int32 Signed 16-bit integer
+  &#x27;Edm.Int32&#x27;: EdmParser&lt;number&gt;(toNumber, toNumber, toNumber),
+  //Edm.Int64 Signed 16-bit integer
+  &#x27;Edm.Int64&#x27;: EdmParser&lt;number&gt;(toNumber, toNumber, toNumber),
+  //Edm.Date Date without a time-zone offset
+  &#x27;Edm.Date&#x27;: EdmParser&lt;Date&gt;(
+    (v: any) &#x3D;&gt; new Date(&#x60;${v}T00:00:00.000Z&#x60;),
+    (v: any) &#x3D;&gt; toDate(v).toISOString().substring(0, 10),
+    (v: any) &#x3D;&gt; toDate(v).toISOString().substring(0, 10)
+  ),
+  //Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
+  &#x27;Edm.TimeOfDay&#x27;: EdmParser&lt;Date&gt;(
+    (v: any) &#x3D;&gt; new Date(&#x60;1970-01-01T${v}Z&#x60;),
+    (v: any) &#x3D;&gt; toDate(v).toISOString().substring(11, 23),
+    (v: any) &#x3D;&gt; toDate(v).toISOString().substring(11, 23)
+  ),
+  //Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
+  &#x27;Edm.DateTimeOffset&#x27;: EdmParser&lt;Date&gt;(
+    toDate,
+    (v: any) &#x3D;&gt; toDate(v).toISOString(),
+    (v: any) &#x3D;&gt; toDate(v).toISOString()
+  ),
+  //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
+  &#x27;Edm.Duration&#x27;: EdmParser&lt;Duration&gt;(
+    (v: any) &#x3D;&gt; {
+      const matches &#x3D;
+        /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(
+          v
+        );
+      if (!matches || v.length &lt; 3) {
+        throw new TypeError(
+          &#x60;duration invalid: &quot;${v}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;
+        );
+      }
+      let duration: Duration &#x3D; {};
+      duration.sign &#x3D; matches[1] &#x3D;&#x3D;&#x3D; &#x27;-&#x27; ? -1 : 1;
+      return [
+        &#x27;years&#x27;,
+        &#x27;months&#x27;,
+        &#x27;weeks&#x27;,
+        &#x27;days&#x27;,
+        &#x27;hours&#x27;,
+        &#x27;minutes&#x27;,
+        &#x27;seconds&#x27;,
+      ].reduce((acc: any, name, index) &#x3D;&gt; {
+        const v &#x3D; parseFloat(matches[index + 2]);
+        if (!Number.isNaN(v)) acc[name] &#x3D; v;
+        return acc;
+      }, duration) as Duration;
     },
-    serialize(
-      value: string | string[],
-      options: StructuredTypeFieldOptions
-    ): string | string[] {
-      return value;
+    (v: Duration) &#x3D;&gt;
+      [
+        v.sign &#x3D;&#x3D;&#x3D; -1 ? &#x27;-&#x27; : &#x27;&#x27;,
+        &#x27;P&#x27;,
+        v.years ? v.years + &#x27;Y&#x27; : &#x27;&#x27;,
+        v.months ? v.months + &#x27;M&#x27; : &#x27;&#x27;,
+        v.weeks ? v.weeks + &#x27;W&#x27; : &#x27;&#x27;,
+        v.days ? v.days + &#x27;D&#x27; : &#x27;&#x27;,
+        &#x27;T&#x27;,
+        v.hours ? v.hours + &#x27;H&#x27; : &#x27;&#x27;,
+        v.minutes ? v.minutes + &#x27;M&#x27; : &#x27;&#x27;,
+        v.seconds ? v.seconds + &#x27;S&#x27; : &#x27;&#x27;,
+      ].join(&#x27;&#x27;),
+    (v: Duration) &#x3D;&gt;
+      [
+        v.sign &#x3D;&#x3D;&#x3D; -1 ? &#x27;-&#x27; : &#x27;&#x27;,
+        &#x27;P&#x27;,
+        v.years ? v.years + &#x27;Y&#x27; : &#x27;&#x27;,
+        v.months ? v.months + &#x27;M&#x27; : &#x27;&#x27;,
+        v.weeks ? v.weeks + &#x27;W&#x27; : &#x27;&#x27;,
+        v.days ? v.days + &#x27;D&#x27; : &#x27;&#x27;,
+        &#x27;T&#x27;,
+        v.hours ? v.hours + &#x27;H&#x27; : &#x27;&#x27;,
+        v.minutes ? v.minutes + &#x27;M&#x27; : &#x27;&#x27;,
+        v.seconds ? v.seconds + &#x27;S&#x27; : &#x27;&#x27;,
+      ].join(&#x27;&#x27;)
+  ),
+  //Edm.Decimal Numeric values with fixed precision and scale
+  &#x27;Edm.Decimal&#x27;: EdmParser&lt;number&gt;(
+    (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; {
+      if (typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; o.ieee754Compatible) {
+        return parseFloat(v);
+      }
+      return v;
     },
-    encode(value: string | string[], options: StructuredTypeFieldOptions): any {
-      return Array.isArray(value) ? value.map((v) &#x3D;&gt; raw(v)) : raw(value);
+    (v: number, o: StructuredTypeFieldOptions) &#x3D;&gt; {
+      if (o.ieee754Compatible) {
+        return parseFloat(v.toPrecision(o.field.precision)).toFixed(
+          o.field.scale
+        );
+      }
+      return v;
     },
-  },
-  &#x27;Edm.Date&#x27;: &lt;Parser&lt;Date | Date[]&gt;&gt;{
-    deserialize(
-      value: string | string[],
-      options: StructuredTypeFieldOptions
-    ): Date | Date[] {
-      //TODO: Check valid input for date
-      const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(&#x60;${v}T00:00:00.000Z&#x60;);
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
-    },
-    serialize(
-      value: Date | Date[],
-      options: StructuredTypeFieldOptions
-    ): string | string[] {
-      const _serialize &#x3D; (v: Date) &#x3D;&gt; v.toISOString().substring(0, 10);
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
-    },
-    encode(value: Date | Date[], options: StructuredTypeFieldOptions): any {
-      const _encode &#x3D; (v: Date) &#x3D;&gt; v.toISOString().substring(0, 10);
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; raw(_encode(v)))
-        : raw(_encode(value));
-    },
-  },
-  &#x27;Edm.TimeOfDay&#x27;: &lt;Parser&lt;Date | Date[]&gt;&gt;{
-    deserialize(
-      value: string | string[],
-      options: StructuredTypeFieldOptions
-    ): Date | Date[] {
-      //TODO: Check valid input for time of day
-      const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(&#x60;1970-01-01T${v}Z&#x60;);
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
-    },
-    serialize(
-      value: Date | Date[],
-      options: StructuredTypeFieldOptions
-    ): string | string[] {
-      const _serialize &#x3D; (v: Date) &#x3D;&gt; v.toISOString().substring(11, 23);
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
-    },
-    encode(value: Date | Date[], options: StructuredTypeFieldOptions): any {
-      const _encode &#x3D; (v: Date) &#x3D;&gt; v.toISOString().substring(11, 23);
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; raw(_encode(v)))
-        : raw(_encode(value));
-    },
-  },
-  &#x27;Edm.DateTimeOffset&#x27;: &lt;Parser&lt;Date&gt;&gt;{
-    deserialize(
-      value: string | string[],
-      options: StructuredTypeFieldOptions
-    ): Date | Date[] {
-      const _deserialize &#x3D; (v: string) &#x3D;&gt; new Date(v);
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
-    },
-    serialize(
-      value: Date | Date[],
-      options: StructuredTypeFieldOptions
-    ): string | string[] {
-      const _serialize &#x3D; (v: Date) &#x3D;&gt; v.toISOString();
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
-    },
-    encode(value: Date | Date[], options: StructuredTypeFieldOptions): any {
-      const _encode &#x3D; (v: Date) &#x3D;&gt; v.toISOString();
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; raw(_encode(v)))
-        : raw(_encode(value));
-    },
-  },
-  &#x27;Edm.Duration&#x27;: &lt;Parser&lt;Duration&gt;&gt;{
-    deserialize(
-      value: string,
-      options: StructuredTypeFieldOptions
-    ): Duration | Duration[] {
-      const _deserialize &#x3D; (v: string) &#x3D;&gt; {
-        const matches &#x3D;
-          /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(
-            v
-          );
-        if (!matches || value.length &lt; 3) {
-          throw new TypeError(
-            &#x60;duration invalid: &quot;${value}&quot;. Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations&#x60;
-          );
-        }
-        let duration: Duration &#x3D; {};
-        duration.sign &#x3D; matches[1] &#x3D;&#x3D;&#x3D; &#x27;-&#x27; ? -1 : 1;
-        return [
-          &#x27;years&#x27;,
-          &#x27;months&#x27;,
-          &#x27;weeks&#x27;,
-          &#x27;days&#x27;,
-          &#x27;hours&#x27;,
-          &#x27;minutes&#x27;,
-          &#x27;seconds&#x27;,
-        ].reduce((acc: any, name, index) &#x3D;&gt; {
-          const v &#x3D; parseFloat(matches[index + 2]);
-          if (!Number.isNaN(v)) acc[name] &#x3D; v;
-          return acc;
-        }, duration) as Duration;
-      };
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
-    },
-    serialize(
-      value: Duration | Duration[],
-      options: StructuredTypeFieldOptions
-    ): string | string[] {
-      const _serialize &#x3D; (v: Duration) &#x3D;&gt;
-        [
-          v.sign &#x3D;&#x3D;&#x3D; -1 ? &#x27;-&#x27; : &#x27;&#x27;,
-          &#x27;P&#x27;,
-          v.years ? v.years + &#x27;Y&#x27; : &#x27;&#x27;,
-          v.months ? v.months + &#x27;M&#x27; : &#x27;&#x27;,
-          v.weeks ? v.weeks + &#x27;W&#x27; : &#x27;&#x27;,
-          v.days ? v.days + &#x27;D&#x27; : &#x27;&#x27;,
-          &#x27;T&#x27;,
-          v.hours ? v.hours + &#x27;H&#x27; : &#x27;&#x27;,
-          v.minutes ? v.minutes + &#x27;M&#x27; : &#x27;&#x27;,
-          v.seconds ? v.seconds + &#x27;S&#x27; : &#x27;&#x27;,
-        ].join(&#x27;&#x27;);
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
-    },
-    encode(
-      value: Duration | Duration[],
-      options: StructuredTypeFieldOptions
-    ): any {
-      const _encode &#x3D; (v: Duration) &#x3D;&gt;
-        [
-          v.sign &#x3D;&#x3D;&#x3D; -1 ? &#x27;-&#x27; : &#x27;&#x27;,
-          &#x27;P&#x27;,
-          v.years ? v.years + &#x27;Y&#x27; : &#x27;&#x27;,
-          v.months ? v.months + &#x27;M&#x27; : &#x27;&#x27;,
-          v.weeks ? v.weeks + &#x27;W&#x27; : &#x27;&#x27;,
-          v.days ? v.days + &#x27;D&#x27; : &#x27;&#x27;,
-          &#x27;T&#x27;,
-          v.hours ? v.hours + &#x27;H&#x27; : &#x27;&#x27;,
-          v.minutes ? v.minutes + &#x27;M&#x27; : &#x27;&#x27;,
-          v.seconds ? v.seconds + &#x27;S&#x27; : &#x27;&#x27;,
-        ].join(&#x27;&#x27;);
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; duration(_encode(v)))
-        : duration(_encode(value));
-    },
-  },
-  &#x27;Edm.Decimal&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(
-      value: string | number | (string | number)[],
-      options: StructuredTypeFieldOptions
-    ): string | number | (string | number)[] {
-      const _deserialize &#x3D; (v: string | number) &#x3D;&gt; {
-        if (typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; options.ieee754Compatible) {
-          return parseFloat(v);
-        }
-        return v;
-      };
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
-    },
-    serialize(
-      value: number | number[],
-      options: StructuredTypeFieldOptions
-    ): any {
-      const _serialize &#x3D; (v: number) &#x3D;&gt; {
-        if (options.ieee754Compatible) {
-          return parseFloat(v.toPrecision(options.field.precision)).toFixed(
-            options.field.scale
-          );
-        }
-        return v;
-      };
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
-    },
-    encode(value: number | number[], options: StructuredTypeFieldOptions): any {
-      const _encode &#x3D; (v: number) &#x3D;&gt; {
-        if (options.ieee754Compatible) {
-          return parseFloat(v.toPrecision(options.field.precision)).toFixed(
-            options.field.scale
-          );
-        }
-        return v;
-      };
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; raw(&#x60;${_encode(v)}&#x60;))
-        : raw(&#x60;${_encode(value)}&#x60;);
-    },
-  },
-  &#x27;Edm.Double&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(
-      value: string | number | (string | number)[],
-      options: StructuredTypeFieldOptions
-    ): number | number[] {
-      const _deserialize &#x3D; (v: string | number) &#x3D;&gt;
-        v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number);
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
-    },
-    serialize(
-      value: number | number[],
-      options: StructuredTypeFieldOptions
-    ): string | number | (string | number)[] {
-      const _serialize &#x3D; (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v);
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
-    },
-    encode(value: number | number[], options: StructuredTypeFieldOptions): any {
-      const _encode &#x3D; (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v);
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; raw(&#x60;${_encode(v)}&#x60;))
-        : raw(&#x60;${_encode(value)}&#x60;);
-    },
-  },
-  &#x27;Edm.Single&#x27;: &lt;Parser&lt;number&gt;&gt;{
-    deserialize(
-      value: string | number | (string | number)[],
-      options: StructuredTypeFieldOptions
-    ): number | number[] {
-      const _deserialize &#x3D; (v: string | number) &#x3D;&gt;
-        v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number);
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
-    },
-    serialize(
-      value: number | number[],
-      options: StructuredTypeFieldOptions
-    ): string | number | (string | number)[] {
-      const _serialize &#x3D; (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v);
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
-    },
-    encode(value: number | number[], options: StructuredTypeFieldOptions): any {
-      const _encode &#x3D; (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v);
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; raw(&#x60;${_encode(v)}&#x60;))
-        : raw(&#x60;${_encode(value)}&#x60;);
-    },
-  },
-  &#x27;Edm.Binary&#x27;: &lt;Parser&lt;ArrayBuffer&gt;&gt;{
-    deserialize(
-      value: string | string[],
-      options: StructuredTypeFieldOptions
-    ): ArrayBuffer | ArrayBuffer[] {
-      const _deserialize &#x3D; (v: string) &#x3D;&gt; {
-        var bufferLength &#x3D; v.length * 0.75,
-          len &#x3D; v.length,
-          i,
-          p &#x3D; 0,
-          encoded1,
-          encoded2,
-          encoded3,
-          encoded4;
+    (v: number, o: StructuredTypeFieldOptions) &#x3D;&gt; {
+      if (o.ieee754Compatible) {
+        return parseFloat(v.toPrecision(o.field.precision)).toFixed(
+          o.field.scale
+        );
+      }
+      return v;
+    }
+  ),
+  //Edm.Double IEEE 754 binary64 floating-point number (15-17 decimal digits)
+  &#x27;Edm.Double&#x27;: EdmParser&lt;number&gt;(
+    (v: any) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number)),
+    (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v),
+    (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v)
+  ),
+  //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
+  &#x27;Edm.Single&#x27;: EdmParser&lt;number&gt;(
+    (v: any) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number)),
+    (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v),
+    (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v)
+  ),
+  //Edm.Binary Binary data
+  &#x27;Edm.Binary&#x27;: EdmParser&lt;ArrayBuffer&gt;(
+    (v: string) &#x3D;&gt; {
+      var bufferLength &#x3D; v.length * 0.75,
+        len &#x3D; v.length,
+        i,
+        p &#x3D; 0,
+        encoded1,
+        encoded2,
+        encoded3,
+        encoded4;
 
-        if (v[v.length - 1] &#x3D;&#x3D;&#x3D; &#x27;&#x3D;&#x27;) {
+      if (v[v.length - 1] &#x3D;&#x3D;&#x3D; &#x27;&#x3D;&#x27;) {
+        bufferLength--;
+        if (v[v.length - 2] &#x3D;&#x3D;&#x3D; &#x27;&#x3D;&#x27;) {
           bufferLength--;
-          if (v[v.length - 2] &#x3D;&#x3D;&#x3D; &#x27;&#x3D;&#x27;) {
-            bufferLength--;
-          }
         }
+      }
 
-        var arraybuffer &#x3D; new ArrayBuffer(bufferLength),
-          bytes &#x3D; new Uint8Array(arraybuffer);
+      var arraybuffer &#x3D; new ArrayBuffer(bufferLength),
+        bytes &#x3D; new Uint8Array(arraybuffer);
 
-        for (i &#x3D; 0; i &lt; len; i +&#x3D; 4) {
-          encoded1 &#x3D; lookup[v.charCodeAt(i)];
-          encoded2 &#x3D; lookup[v.charCodeAt(i + 1)];
-          encoded3 &#x3D; lookup[v.charCodeAt(i + 2)];
-          encoded4 &#x3D; lookup[v.charCodeAt(i + 3)];
+      for (i &#x3D; 0; i &lt; len; i +&#x3D; 4) {
+        encoded1 &#x3D; lookup[v.charCodeAt(i)];
+        encoded2 &#x3D; lookup[v.charCodeAt(i + 1)];
+        encoded3 &#x3D; lookup[v.charCodeAt(i + 2)];
+        encoded4 &#x3D; lookup[v.charCodeAt(i + 3)];
 
-          bytes[p++] &#x3D; (encoded1 &lt;&lt; 2) | (encoded2 &gt;&gt; 4);
-          bytes[p++] &#x3D; ((encoded2 &amp; 15) &lt;&lt; 4) | (encoded3 &gt;&gt; 2);
-          bytes[p++] &#x3D; ((encoded3 &amp; 3) &lt;&lt; 6) | (encoded4 &amp; 63);
-        }
+        bytes[p++] &#x3D; (encoded1 &lt;&lt; 2) | (encoded2 &gt;&gt; 4);
+        bytes[p++] &#x3D; ((encoded2 &amp; 15) &lt;&lt; 4) | (encoded3 &gt;&gt; 2);
+        bytes[p++] &#x3D; ((encoded3 &amp; 3) &lt;&lt; 6) | (encoded4 &amp; 63);
+      }
 
-        return arraybuffer;
-      };
-      return Array.isArray(value)
-        ? value.map(_deserialize)
-        : _deserialize(value);
+      return arraybuffer;
     },
-    serialize(
-      value: ArrayBuffer | ArrayBuffer[],
-      options: StructuredTypeFieldOptions
-    ): string | string[] {
-      const _serialize &#x3D; (v: ArrayBuffer) &#x3D;&gt; {
-        var bytes &#x3D; new Uint8Array(v),
-          i,
-          len &#x3D; bytes.length,
-          base64 &#x3D; &#x27;&#x27;;
+    (v: ArrayBuffer) &#x3D;&gt; {
+      var bytes &#x3D; new Uint8Array(v),
+        i,
+        len &#x3D; bytes.length,
+        base64 &#x3D; &#x27;&#x27;;
 
-        for (i &#x3D; 0; i &lt; len; i +&#x3D; 3) {
-          base64 +&#x3D; chars[bytes[i] &gt;&gt; 2];
-          base64 +&#x3D; chars[((bytes[i] &amp; 3) &lt;&lt; 4) | (bytes[i + 1] &gt;&gt; 4)];
-          base64 +&#x3D; chars[((bytes[i + 1] &amp; 15) &lt;&lt; 2) | (bytes[i + 2] &gt;&gt; 6)];
-          base64 +&#x3D; chars[bytes[i + 2] &amp; 63];
-        }
+      for (i &#x3D; 0; i &lt; len; i +&#x3D; 3) {
+        base64 +&#x3D; chars[bytes[i] &gt;&gt; 2];
+        base64 +&#x3D; chars[((bytes[i] &amp; 3) &lt;&lt; 4) | (bytes[i + 1] &gt;&gt; 4)];
+        base64 +&#x3D; chars[((bytes[i + 1] &amp; 15) &lt;&lt; 2) | (bytes[i + 2] &gt;&gt; 6)];
+        base64 +&#x3D; chars[bytes[i + 2] &amp; 63];
+      }
 
-        if (len % 3 &#x3D;&#x3D;&#x3D; 2) {
-          base64 &#x3D; base64.substring(0, base64.length - 1) + &#x27;&#x3D;&#x27;;
-        } else if (len % 3 &#x3D;&#x3D;&#x3D; 1) {
-          base64 &#x3D; base64.substring(0, base64.length - 2) + &#x27;&#x3D;&#x3D;&#x27;;
-        }
-        return base64;
-      };
-      return Array.isArray(value) ? value.map(_serialize) : _serialize(value);
+      if (len % 3 &#x3D;&#x3D;&#x3D; 2) {
+        base64 &#x3D; base64.substring(0, base64.length - 1) + &#x27;&#x3D;&#x27;;
+      } else if (len % 3 &#x3D;&#x3D;&#x3D; 1) {
+        base64 &#x3D; base64.substring(0, base64.length - 2) + &#x27;&#x3D;&#x3D;&#x27;;
+      }
+      return base64;
     },
-    encode(
-      value: ArrayBuffer | ArrayBuffer[],
-      options: StructuredTypeFieldOptions
-    ): any {
-      const _encode &#x3D; (v: ArrayBuffer) &#x3D;&gt; {
-        var bytes &#x3D; new Uint8Array(v),
-          i,
-          len &#x3D; bytes.length,
-          base64 &#x3D; &#x27;&#x27;;
+    (v: ArrayBuffer) &#x3D;&gt; {
+      var bytes &#x3D; new Uint8Array(v),
+        i,
+        len &#x3D; bytes.length,
+        base64 &#x3D; &#x27;&#x27;;
 
-        for (i &#x3D; 0; i &lt; len; i +&#x3D; 3) {
-          base64 +&#x3D; chars[bytes[i] &gt;&gt; 2];
-          base64 +&#x3D; chars[((bytes[i] &amp; 3) &lt;&lt; 4) | (bytes[i + 1] &gt;&gt; 4)];
-          base64 +&#x3D; chars[((bytes[i + 1] &amp; 15) &lt;&lt; 2) | (bytes[i + 2] &gt;&gt; 6)];
-          base64 +&#x3D; chars[bytes[i + 2] &amp; 63];
-        }
+      for (i &#x3D; 0; i &lt; len; i +&#x3D; 3) {
+        base64 +&#x3D; chars[bytes[i] &gt;&gt; 2];
+        base64 +&#x3D; chars[((bytes[i] &amp; 3) &lt;&lt; 4) | (bytes[i + 1] &gt;&gt; 4)];
+        base64 +&#x3D; chars[((bytes[i + 1] &amp; 15) &lt;&lt; 2) | (bytes[i + 2] &gt;&gt; 6)];
+        base64 +&#x3D; chars[bytes[i + 2] &amp; 63];
+      }
 
-        if (len % 3 &#x3D;&#x3D;&#x3D; 2) {
-          base64 &#x3D; base64.substring(0, base64.length - 1) + &#x27;&#x3D;&#x27;;
-        } else if (len % 3 &#x3D;&#x3D;&#x3D; 1) {
-          base64 &#x3D; base64.substring(0, base64.length - 2) + &#x27;&#x3D;&#x3D;&#x27;;
-        }
-        return base64;
-      };
-      return Array.isArray(value)
-        ? value.map((v) &#x3D;&gt; binary(_encode(v)))
-        : binary(_encode(value));
-    },
-  },
+      if (len % 3 &#x3D;&#x3D;&#x3D; 2) {
+        base64 &#x3D; base64.substring(0, base64.length - 1) + &#x27;&#x3D;&#x27;;
+      } else if (len % 3 &#x3D;&#x3D;&#x3D; 1) {
+        base64 &#x3D; base64.substring(0, base64.length - 2) + &#x27;&#x3D;&#x3D;&#x27;;
+      }
+      return base64;
+    }
+  ),
 }</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="EdmParser"></a>
+                    <span class="name">
+                        <span ><b>EdmParser</b></span>
+                        <a href="#EdmParser"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>&lt;T&gt;(
+  _d: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; T,
+  _s: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; any,
+  _e: (v: any, o: StructuredTypeFieldOptions) &#x3D;&gt; any
+): Parser&lt;T | T[]&gt; &#x3D;&gt; ({
+  deserialize(value: any, options: StructuredTypeFieldOptions): T | T[] {
+    return Array.isArray(value)
+      ? value.map((v) &#x3D;&gt; _d(v, options))
+      : _d(value, options);
+  },
+  serialize(value: any, options: StructuredTypeFieldOptions): any {
+    return Array.isArray(value)
+      ? value.map((v) &#x3D;&gt; _s(v, options))
+      : _s(value, options);
+  },
+  encode(value: any, options: StructuredTypeFieldOptions): any {
+    return Array.isArray(value)
+      ? value.map((v) &#x3D;&gt; _e(v, options))
+      : _e(value, options);
+  },
+})</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="Identity"></a>
+                    <span class="name">
+                        <span ><b>Identity</b></span>
+                        <a href="#Identity"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; v</code>
                     </td>
                 </tr>
 
@@ -2731,6 +2677,86 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>new Uint8Array(256)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toBoolean"></a>
+                    <span class="name">
+                        <span ><b>toBoolean</b></span>
+                        <a href="#toBoolean"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; Boolean(v)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toDate"></a>
+                    <span class="name">
+                        <span ><b>toDate</b></span>
+                        <a href="#toDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; new Date(v)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toNumber"></a>
+                    <span class="name">
+                        <span ><b>toNumber</b></span>
+                        <a href="#toNumber"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; Number(v)</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toString"></a>
+                    <span class="name">
+                        <span ><b>toString</b></span>
+                        <a href="#toString"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(v: any) &#x3D;&gt; v.toString()</code>
                     </td>
                 </tr>
 
@@ -3250,7 +3276,7 @@
         </tbody>
     </table>
 </section>
-    <h3>projects/angular-odata/src/lib/resources/types/batch.ts</h3>
+    <h3>projects/angular-odata/src/lib/utils/strings.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -3277,16 +3303,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="XSSI_PREFIX"></a>
+                    <a name="Strings"></a>
                     <span class="name">
-                        <span ><b>XSSI_PREFIX</b></span>
-                        <a href="#XSSI_PREFIX"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>Strings</b></span>
+                        <a href="#Strings"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>/^\)\]\}&#x27;,?\n/</code>
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  uniqueId(prefix?: string, suffix?: string): string {
+    return (prefix ? prefix : &#x27;&#x27;) + now().toString(36) + (suffix ? suffix : &#x27;&#x27;);
+  },
+}</code>
                     </td>
                 </tr>
 
@@ -3394,6 +3430,43 @@
       return Object.keys(headers).find((k) &#x3D;&gt; options.indexOf(k) !&#x3D;&#x3D; -1);
     }
     return undefined;
+  },
+
+  headerValue(header: string): string {
+    let res: string &#x3D; header.split(&#x27;;&#x27;)[0].trim();
+    res &#x3D; res.split(&#x27;:&#x27;)[1].trim();
+    return res;
+  },
+
+  parseResponseStatus(statusLine: string): {
+    status: string;
+    code: number;
+    message: string;
+  } {
+    const status &#x3D; statusLine.split(&#x27; &#x27;)[0];
+    const code &#x3D; parseInt(statusLine.split(&#x27; &#x27;)[1], 10);
+    const message &#x3D; statusLine.split(&#x27; &#x27;)[2];
+    return { status, code, message };
+  },
+
+  boundaryDelimiter(contentType: string): string {
+    const contentTypeParts: string[] &#x3D; contentType.split(&#x27;;&#x27;);
+    if (contentTypeParts.length &#x3D;&#x3D;&#x3D; 2) {
+      const boundary: string &#x3D; contentType.split(&#x27;;&#x27;)[1].trim();
+      const boundaryDelimiter: string &#x3D;
+        BOUNDARY_PREFIX_SUFFIX + boundary.split(&#x27;&#x3D;&#x27;)[1];
+      return boundaryDelimiter;
+    } else {
+      return &#x27;&#x27;;
+    }
+  },
+
+  boundaryEnd(boundaryDelimiter: string): string {
+    if (!boundaryDelimiter.length) {
+      return &#x27;&#x27;;
+    }
+    const boundaryEnd: string &#x3D; boundaryDelimiter + BOUNDARY_PREFIX_SUFFIX;
+    return boundaryEnd;
   },
 }</code>
                     </td>
@@ -3599,11 +3672,6 @@
     }
     return diffs;
   },
-  uniqueId: (
-    (counter) &#x3D;&gt;
-    (str &#x3D; &#x27;&#x27;) &#x3D;&gt;
-      &#x60;${str}${++counter}&#x60;
-  )(0),
   resolveKey(key: any, { single &#x3D; true }: { single?: boolean } &#x3D; {}) {
     if ([&#x27;number&#x27;, &#x27;string&#x27;].indexOf(typeof key) !&#x3D;&#x3D; -1) return key;
     if (Types.isPlainObject(key)) {

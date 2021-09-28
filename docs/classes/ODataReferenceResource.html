@@ -118,6 +118,7 @@
                                 <a href="#clone" >clone</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
                                 <a href="#delete" >delete</a>
                             </li>
                             <li>
@@ -125,9 +126,11 @@
                                 <a href="#factory" >factory</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
                                 <a href="#post" >post</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
                                 <a href="#put" >put</a>
                             </li>
                             <li>
@@ -363,7 +366,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>add(target: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+<code>add(target: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -406,7 +409,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -480,6 +483,7 @@
                 <td class="col-md-4">
                     <a name="delete"></a>
                     <span class="name">
+                        <span class="modifier">Protected</span>
                         <span ><b>delete</b></span>
                         <a href="#delete"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -487,7 +491,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>delete(undefined)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>delete(undefined)</code>
                 </td>
             </tr>
 
@@ -657,6 +662,7 @@
                 <td class="col-md-4">
                     <a name="post"></a>
                     <span class="name">
+                        <span class="modifier">Protected</span>
                         <span ><b>post</b></span>
                         <a href="#post"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -664,7 +670,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>post(target: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>post(target: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -713,7 +720,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -744,6 +751,7 @@
                 <td class="col-md-4">
                     <a name="put"></a>
                     <span class="name">
+                        <span class="modifier">Protected</span>
                         <span ><b>put</b></span>
                         <a href="#put"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -751,7 +759,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>put(target: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>put(target: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?)</code>
                 </td>
             </tr>
 
@@ -837,7 +846,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>remove(target?: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+<code>remove(target?: <a href="../classes/ODataEntityResource.html" target="_self">ODataEntityResource&lt;any&gt;</a>, options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -880,7 +889,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -2711,7 +2720,7 @@ import { ODataResource } from &#x27;../resource&#x27;;
 import { ODataPathSegments } from &#x27;../path-segments&#x27;;
 import { ODataQueryOptions } from &#x27;../query-options&#x27;;
 import { ODataEntityResource } from &#x27;./entity&#x27;;
-import { HttpOptions } from &#x27;./options&#x27;;
+import { ODataOptions } from &#x27;./options&#x27;;
 import { $REF, $ID, ODATA_ID } from &#x27;../../constants&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import { PathSegmentNames } from &#x27;../../types&#x27;;
@@ -2742,28 +2751,28 @@ export class ODataReferenceResource extends ODataResource&lt;any&gt; {
   }
 
   //#region Requests
-  post(
+  protected post(
     target: ODataEntityResource&lt;any&gt;,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable&lt;any&gt; {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
-  put(
+  protected put(
     target: ODataEntityResource&lt;any&gt;,
-    options?: HttpOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;any&gt; {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
-  delete({
+  protected delete({
     etag,
     target,
     ...options
   }: {
     etag?: string;
     target?: ODataEntityResource&lt;any&gt;;
-  } &amp; HttpOptions &#x3D; {}): Observable&lt;any&gt; {
+  } &amp; ODataOptions &#x3D; {}): Observable&lt;any&gt; {
     if (target) {
       options.params &#x3D; { [$ID]: target.endpointUrl(false) };
     }
@@ -2774,14 +2783,14 @@ export class ODataReferenceResource extends ODataResource&lt;any&gt; {
   //#region Shortcuts for collections
   add(
     target: ODataEntityResource&lt;any&gt;,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable&lt;any&gt; {
     return this.post(target, options);
   }
 
   remove(
     target?: ODataEntityResource&lt;any&gt;,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable&lt;any&gt; {
     return this.delete({ target, ...options });
   }
@@ -2790,12 +2799,12 @@ export class ODataReferenceResource extends ODataResource&lt;any&gt; {
   //#region Shortcuts for single
   set(
     target: ODataEntityResource&lt;any&gt;,
-    options?: HttpOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;any&gt; {
     return this.put(target, options);
   }
 
-  unset(options?: HttpOptions &amp; { etag?: string }): Observable&lt;any&gt; {
+  unset(options?: ODataOptions &amp; { etag?: string }): Observable&lt;any&gt; {
     return this.delete(options);
   }
   //#region

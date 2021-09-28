@@ -22,16 +22,8 @@ import {
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataModel, ODataCollection } from '../../models';
 import { ODataApi } from '../../api';
-import {
-  Expand,
-  Filter,
-  isQueryCustomType,
-  OrderBy,
-  Select,
-  Transform,
-} from '../builder';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 //import { ODataNavigationPropertyResource } from './navigation-property';
-import { Objects, Types } from '../../utils';
 import { PathSegmentNames } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {

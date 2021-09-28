@@ -256,7 +256,12 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { DEFAULT_TIMEOUT, CACHE_KEY_SEPARATOR } from &#x27;../constants&#x27;;
 import { Cache, PathSegmentNames } from &#x27;../types&#x27;;
-import { ODataRequest, ODataResponse } from &#x27;../resources&#x27;;
+import {
+  ODataBatchRequest,
+  ODataBatchResource,
+  ODataRequest,
+  ODataResponse,
+} from &#x27;../resources&#x27;;
 import { Observable, of, throwError } from &#x27;rxjs&#x27;;
 import { startWith, tap } from &#x27;rxjs/operators&#x27;;
 
@@ -419,8 +424,15 @@ export abstract class ODataCache implements Cache {
     req: ODataRequest&lt;any&gt;,
     res$: Observable&lt;ODataResponse&lt;any&gt;&gt;
   ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
-    const scope &#x3D; this.scope(req);
-    this.forget({ scope });
+    const requests &#x3D; req.isBatch()
+      ? (req.resource as ODataBatchResource)
+          .requests()
+          .filter((r) &#x3D;&gt; r.isMutate())
+      : [req];
+    for (var r of requests) {
+      const scope &#x3D; this.scope(r);
+      this.forget({ scope });
+    }
     return res$;
   }
 }

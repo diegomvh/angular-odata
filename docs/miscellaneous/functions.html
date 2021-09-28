@@ -92,15 +92,6 @@
                             <a href="#escapeIllegalChars" title="projects/angular-odata/src/lib/resources/builder.ts" ><b>escapeIllegalChars</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
-                            <a href="#getBoundaryDelimiter" title="projects/angular-odata/src/lib/resources/types/batch.ts" ><b>getBoundaryDelimiter</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#getBoundaryEnd" title="projects/angular-odata/src/lib/resources/types/batch.ts" ><b>getBoundaryEnd</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#getHeaderValue" title="projects/angular-odata/src/lib/resources/types/batch.ts" ><b>getHeaderValue</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
-                        </li>
-                        <li>
                             <a href="#getStringCollectionClause" title="projects/angular-odata/src/lib/resources/builder.ts" ><b>getStringCollectionClause</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -113,7 +104,7 @@
                             <a href="#ModelField" title="projects/angular-odata/src/lib/models/options.ts" ><b>ModelField</b>&nbsp;&nbsp;&nbsp;(projects/.../options.ts)</a>
                         </li>
                         <li>
-                            <a href="#now" title="projects/angular-odata/src/lib/resources/types/batch.ts" ><b>now</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
+                            <a href="#now" title="projects/angular-odata/src/lib/utils/strings.ts" ><b>now</b>&nbsp;&nbsp;&nbsp;(projects/.../strings.ts)</a>
                         </li>
                         <li>
                             <a href="#parseNot" title="projects/angular-odata/src/lib/resources/builder.ts" ><b>parseNot</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -123,9 +114,6 @@
                         </li>
                         <li>
                             <a href="#renderPrimitiveValue" title="projects/angular-odata/src/lib/resources/builder.ts" ><b>renderPrimitiveValue</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#uniqid" title="projects/angular-odata/src/lib/resources/types/batch.ts" ><b>uniqid</b>&nbsp;&nbsp;&nbsp;(projects/.../batch.ts)</a>
                         </li>
                         <li>
                             <a href="#Unnamed function" title="projects/angular-odata/src/lib/resources/builder.ts" ><b>Unnamed function</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
@@ -1503,294 +1491,6 @@
             </tr>
         </tbody>
     </table>
-</section>    <h3>projects/angular-odata/src/lib/resources/types/batch.ts</h3>
-    <section>
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getBoundaryDelimiter"></a>
-                    <span class="name">
-                        <span ><b>getBoundaryDelimiter</b></span>
-                        <a href="#getBoundaryDelimiter"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getBoundaryDelimiter(contentType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>contentType</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getBoundaryEnd"></a>
-                    <span class="name">
-                        <span ><b>getBoundaryEnd</b></span>
-                        <a href="#getBoundaryEnd"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getBoundaryEnd(boundaryDelimiter: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>boundaryDelimiter</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="getHeaderValue"></a>
-                    <span class="name">
-                        <span ><b>getHeaderValue</b></span>
-                        <a href="#getHeaderValue"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>getHeaderValue(header: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>header</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="now"></a>
-                    <span class="name">
-                        <span ><b>now</b></span>
-                        <a href="#now"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>now()</code>
-                </td>
-            </tr>
-
-
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="uniqid"></a>
-                    <span class="name">
-                        <span ><b>uniqid</b></span>
-                        <a href="#uniqid"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>uniqid(prefix?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, suffix?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>prefix</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>suffix</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </section>    <h3>projects/angular-odata/src/lib/models/options.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -1918,6 +1618,30 @@
                     </div>
                 </td>
             </tr>
+        </tbody>
+    </table>
+</section>    <h3>projects/angular-odata/src/lib/utils/strings.ts</h3>
+    <section>
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="now"></a>
+                    <span class="name">
+                        <span ><b>now</b></span>
+                        <a href="#now"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>now()</code>
+                </td>
+            </tr>
+
+
+
+
         </tbody>
     </table>
 </section>    <h3>projects/angular-odata/src/lib/resources/path-segments.ts</h3>

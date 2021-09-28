@@ -497,7 +497,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;R&gt;</a>)</code>
+                    <code>callAction(params: P | null, resource: <a href="../classes/ODataActionResource.html" target="_self">ODataActionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -578,7 +578,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryArgumentsOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -618,7 +618,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -699,7 +699,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;R&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryArgumentsOptions&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -739,7 +739,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">HttpQueryOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -807,7 +807,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpQueryOptions&lt;S&gt;</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryArgumentsOptions&lt;S&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -872,7 +872,7 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
 import type { ODataModel } from &#x27;../models/model&#x27;;
 import type {
-  HttpOptions,
+  ODataOptions,
   ODataEntity,
   ODataSingletonResource,
 } from &#x27;../resources&#x27;;
@@ -912,10 +912,10 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public update(
     attrs: Partial&lt;T&gt;,
-    options?: HttpOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity();
-    return res.put(attrs, options);
+    return res.update(attrs, options);
   }
 
   /**
@@ -926,10 +926,10 @@ export class ODataSingletonService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
    */
   public patch(
     attrs: Partial&lt;T&gt;,
-    options?: HttpOptions &amp; { etag?: string }
+    options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity();
-    return res.patch(attrs, options);
+    return res.modify(attrs, options);
   }
 }
 </code></pre>

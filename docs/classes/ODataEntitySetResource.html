@@ -127,6 +127,9 @@
                                 <a href="#count" >count</a>
                             </li>
                             <li>
+                                <a href="#create" >create</a>
+                            </li>
+                            <li>
                                 <a href="#entity" >entity</a>
                             </li>
                             <li>
@@ -158,12 +161,14 @@
                                 <a href="#function" >function</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
                                 <a href="#get" >get</a>
                             </li>
                             <li>
                                 <a href="#orderBy" >orderBy</a>
                             </li>
                             <li>
+                                    <span class="modifier">Protected</span>
                                 <a href="#post" >post</a>
                             </li>
                             <li>
@@ -750,6 +755,87 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="create"></a>
+                    <span class="name">
+                        <span ><b>create</b></span>
+                        <a href="#create"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>create(attrs: Partial<T>, options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="222"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:222</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>attrs</td>
+                                    <td>
+                                            <code>Partial&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >Observable&lt;ODataEntity&lt;T&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="entity"></a>
                     <span class="name">
                         <span ><b>entity</b></span>
@@ -1031,8 +1117,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="222"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:222</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="229"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:229</a></div>
                 </td>
             </tr>
 
@@ -1096,8 +1182,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="253"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:253</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="260"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:260</a></div>
                 </td>
             </tr>
 
@@ -1161,8 +1247,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="240"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:240</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="247"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:247</a></div>
                 </td>
             </tr>
 
@@ -1226,8 +1312,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="231"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:231</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="238"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity-set.ts:238</a></div>
                 </td>
             </tr>
 
@@ -1493,6 +1579,7 @@
                 <td class="col-md-4">
                     <a name="get"></a>
                     <span class="name">
+                        <span class="modifier">Protected</span>
                         <span ><b>get</b></span>
                         <a href="#get"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -1500,7 +1587,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>get(options)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>get(options)</code>
                 </td>
             </tr>
 
@@ -1637,6 +1725,7 @@
                 <td class="col-md-4">
                     <a name="post"></a>
                     <span class="name">
+                        <span class="modifier">Protected</span>
                         <span ><b>post</b></span>
                         <a href="#post"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -1644,7 +1733,8 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>post(attrs: Partial<T>, options: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>post(attrs: Partial<T>, options: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
                 </td>
             </tr>
 
@@ -1696,7 +1786,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
                                     </td>
 
                                     <td>
@@ -3948,7 +4038,7 @@ import { ODataQueryOptions } from &#x27;../query-options&#x27;;
 import { ODataEntityResource } from &#x27;./entity&#x27;;
 import { ODataCountResource } from &#x27;./count&#x27;;
 import { EntityKey, ODataResource } from &#x27;../resource&#x27;;
-import { HttpOptions } from &#x27;./options&#x27;;
+import { ODataOptions } from &#x27;./options&#x27;;
 import {
   ODataEntity,
   ODataEntities,
@@ -4139,15 +4229,15 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   //#endregion
 
   //#region Requests
-  post(
+  protected post(
     attrs: Partial&lt;T&gt;,
-    options: HttpOptions &#x3D; {}
+    options: ODataOptions &#x3D; {}
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     return super.post(attrs, { responseType: &#x27;entity&#x27;, ...options });
   }
 
-  get(
-    options: HttpOptions &amp; {
+  protected get(
+    options: ODataOptions &amp; {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } &#x3D; {}
@@ -4157,8 +4247,15 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   //#endregion
 
   //#region Shortcuts
+  create(
+    attrs: Partial&lt;T&gt;,
+    options?: ODataOptions
+  ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
+    return this.post(attrs, options);
+  }
+
   fetch(
-    options?: HttpOptions &amp; {
+    options?: ODataOptions &amp; {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -4167,7 +4264,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   }
 
   fetchEntities(
-    options?: HttpOptions &amp; {
+    options?: ODataOptions &amp; {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -4176,7 +4273,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   }
 
   fetchCollection(
-    options?: HttpOptions &amp; {
+    options?: ODataOptions &amp; {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -4189,7 +4286,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   }
 
   fetchAll(
-    options?: HttpOptions &amp; {
+    options?: ODataOptions &amp; {
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;T[]&gt; {
@@ -4204,7 +4301,7 @@ export class ODataEntitySetResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       if (opts) {
         res.query.paging(opts);
       }
-      return res.get(options);
+      return res.fetch(options);
     };
     return fetch().pipe(
       expand(({ annots: meta }) &#x3D;&gt;

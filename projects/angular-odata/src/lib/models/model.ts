@@ -18,7 +18,7 @@ import {
 } from '../resources/index';
 
 import { ODataCollection } from './collection';
-import { Objects, Types } from '../utils';
+import { Objects, Types, Strings } from '../utils';
 import { ODataStructuredType } from '../schema';
 import {
   ModelOptions,
@@ -80,7 +80,8 @@ export class ODataModel<T> {
 
     // Client Id
     (<any>this)[this._meta.cid] =
-      (<any>data)[this._meta.cid] || Objects.uniqueId('c');
+      (<any>data)[this._meta.cid] ||
+      Strings.uniqueId(Klass.meta.schema.name.toLowerCase());
 
     let attrs = this.annots().attributes<T>(data, 'full');
     let defaults = this.defaults();

@@ -97,7 +97,7 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#requests" >requests</a>
+                                <a href="#_requests" >_requests</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -134,6 +134,9 @@
                                 <a href="#clone" >clone</a>
                             </li>
                             <li>
+                                <a href="#exec" >exec</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Static</span>
                                 <a href="#factory" >factory</a>
                             </li>
@@ -142,7 +145,7 @@
                                 <a href="#handleResponse" >handleResponse</a>
                             </li>
                             <li>
-                                <a href="#post" >post</a>
+                                <a href="#requests" >requests</a>
                             </li>
                             <li>
                                 <a href="#schema" >schema</a>
@@ -208,6 +211,10 @@
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
+                                <a href="#post" >post</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
                                 <a href="#put" >put</a>
                             </li>
                             <li>
@@ -258,11 +265,11 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="requests"></a>
+                    <a name="_requests"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>requests</b></span>
-                        <a href="#requests"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>_requests</b></span>
+                        <a href="#_requests"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -279,7 +286,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="192" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:192</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="155" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:155</a></div>
                         </td>
                     </tr>
 
@@ -415,8 +422,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="274"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:274</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="242"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:242</a></div>
                 </td>
             </tr>
 
@@ -454,8 +461,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="278"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:278</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="249"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:249</a></div>
                 </td>
             </tr>
 
@@ -541,7 +548,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:194</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:160</a></code>
 </div>
                 </td>
             </tr>
@@ -553,6 +560,87 @@
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="../classes/ODataBatchResource.html" target="_self" >ODataBatchResource</a></code>
 
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="exec"></a>
+                    <span class="name">
+                        <span ><b>exec</b></span>
+                        <a href="#exec"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>exec(func: (batch: <a href="../classes/ODataBatchResource.html">ODataBatchResource</a>) => void, options?: <a href="../interfaces/Options.html" target="_self">ODataOptions</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="176"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:176</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>func</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                                <code><a href="../interfaces/Options.html" target="_self" >ODataOptions</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -580,8 +668,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="204"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:204</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="169"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:169</a></div>
                 </td>
             </tr>
 
@@ -651,8 +739,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="343"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:343</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="314"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:314</a></div>
                 </td>
             </tr>
 
@@ -716,30 +804,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="post"></a>
+                    <a name="requests"></a>
                     <span class="name">
-                        <span ><b>post</b></span>
-                        <a href="#post"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>requests</b></span>
+                        <a href="#requests"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>post(func: (batch: <a href="../classes/ODataBatchResource.html">ODataBatchResource</a>) => void, options?: <a href="../interfaces/Options.html" target="_self">HttpOptions</a>)</code>
+<code>requests()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:211</a></code>
-</div>
+                    <div class="io-line">Defined in <a href="" data-line="156"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:156</a></div>
                 </td>
             </tr>
 
@@ -748,52 +830,8 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>func</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
-                                    </td>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>options</td>
-                                    <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >HttpOptions</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataResponse.html" target="_self" >Observable&lt;ODataResponse&lt;any&gt;&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
                     </div>
                 </td>
             </tr>
@@ -825,7 +863,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:199</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:164</a></code>
 </div>
                 </td>
             </tr>
@@ -2020,6 +2058,100 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="post"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>post</b></span>
+                        <a href="#post"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>post(body: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:428</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>body</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>options</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="put"></a>
                     <span class="name">
                         <span class="modifier">Protected</span>
@@ -2654,52 +2786,15 @@ import {
   BINARY,
   CHANGESET_PREFIX,
   NEWLINE_REGEXP,
+  XSSI_PREFIX,
 } from &#x27;../../constants&#x27;;
 import { ODataRequest } from &#x27;../request&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import { ODataResponse } from &#x27;../responses&#x27;;
-import { HttpOptions } from &#x27;./options&#x27;;
+import { ODataOptions } from &#x27;./options&#x27;;
 import { Http } from &#x27;../../utils/http&#x27;;
+import { Strings } from &#x27;../../utils/strings&#x27;;
 import { PathSegmentNames } from &#x27;../../types&#x27;;
-
-const XSSI_PREFIX &#x3D; /^\)\]\}&#x27;,?\n/;
-
-// From https://github.com/adamhalasz/uniqid
-var glast: number;
-function now() {
-  let time &#x3D; Date.now();
-  let last &#x3D; glast || time;
-  return (glast &#x3D; time &gt; last ? time : last + 1);
-}
-function uniqid(prefix?: string, suffix?: string): string {
-  return (prefix ? prefix : &#x27;&#x27;) + now().toString(36) + (suffix ? suffix : &#x27;&#x27;);
-}
-
-function getHeaderValue(header: string): string {
-  let res: string &#x3D; header.split(&#x27;;&#x27;)[0].trim();
-  res &#x3D; res.split(&#x27;:&#x27;)[1].trim();
-  return res;
-}
-
-function getBoundaryDelimiter(contentType: string): string {
-  const contentTypeParts: string[] &#x3D; contentType.split(&#x27;;&#x27;);
-  if (contentTypeParts.length &#x3D;&#x3D;&#x3D; 2) {
-    const boundary: string &#x3D; contentType.split(&#x27;;&#x27;)[1].trim();
-    const boundaryDelimiter: string &#x3D;
-      BOUNDARY_PREFIX_SUFFIX + boundary.split(&#x27;&#x3D;&#x27;)[1];
-    return boundaryDelimiter;
-  } else {
-    return &#x27;&#x27;;
-  }
-}
-
-function getBoundaryEnd(boundaryDelimiter: string): string {
-  if (!boundaryDelimiter.length) {
-    return &#x27;&#x27;;
-  }
-  const boundaryEnd: string &#x3D; boundaryDelimiter + BOUNDARY_PREFIX_SUFFIX;
-  return boundaryEnd;
-}
 
 export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt;&gt; {
   constructor(public request: ODataRequest&lt;any&gt;) {
@@ -2732,7 +2827,7 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
     return res.join(NEWLINE);
   }
 
-  onLoad(content: string[], status: { code: number; text: string }) {
+  onLoad(content: string[], status: { code: number; message: string }) {
     let headers: HttpHeaders &#x3D; new HttpHeaders();
     var index &#x3D; 1;
     for (; index &lt; content.length; index++) {
@@ -2779,7 +2874,7 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
         body,
         headers,
         status: status.code,
-        statusText: status.text,
+        statusText: status.message,
         url: this.request.urlWithParams,
       });
       this.next(ODataResponse.fromHttpResponse(this.request, res));
@@ -2792,7 +2887,7 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
           error: body,
           headers,
           status: status.code,
-          statusText: status.text,
+          statusText: status.message,
           url: this.request.urlWithParams,
         })
       );
@@ -2816,10 +2911,12 @@ export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt
  */
 export class ODataBatchResource extends ODataResource&lt;any&gt; {
   // VARIABLES
-  private requests: ODataBatchRequest&lt;any&gt;[] &#x3D; [];
+  private _requests: ODataBatchRequest&lt;any&gt;[] &#x3D; [];
+  requests() {
+    return this._requests.map((r) &#x3D;&gt; r.request);
+  }
 
   clone() {
-    //TODO: Clone
     return new ODataBatchResource(this.api, this.cloneSegments());
   }
 
@@ -2835,9 +2932,9 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   }
   //#endregion
 
-  post(
+  exec(
     func: (batch: ODataBatchResource) &#x3D;&gt; void,
-    options?: HttpOptions
+    options?: ODataOptions
   ): Observable&lt;ODataResponse&lt;any&gt;&gt; {
     const current &#x3D; this.api.request;
     this.api.request &#x3D; (req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; &#x3D;&gt; {
@@ -2845,8 +2942,8 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
         throw new Error(&#x27;Batch Request are for the same api.&#x27;);
       if (req.observe &#x3D;&#x3D;&#x3D; &#x27;events&#x27;)
         throw new Error(&quot;Batch Request does not allows observe &#x3D;&#x3D; &#x27;events&#x27;.&quot;);
-      this.requests.push(new ODataBatchRequest&lt;any&gt;(req));
-      return this.requests[this.requests.length - 1];
+      this._requests.push(new ODataBatchRequest&lt;any&gt;(req));
+      return this._requests[this._requests.length - 1];
     };
 
     func(this);
@@ -2855,8 +2952,8 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       bound: string;
       requests: ODataBatchRequest&lt;any&gt;[];
     }&gt;({
-      bound: uniqid(BATCH_PREFIX),
-      requests: this.requests,
+      bound: Strings.uniqueId(BATCH_PREFIX),
+      requests: this._requests,
     });
 
     return sub$.pipe(
@@ -2885,10 +2982,13 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
           .pipe(map((response) &#x3D;&gt; ({ requests, response })));
       }),
       map(({ requests, response }) &#x3D;&gt; {
-        this.requests &#x3D; [];
+        this._requests &#x3D; [];
         ODataBatchResource.handleResponse(requests, response);
-        if (this.requests.length &gt; 0) {
-          sub$.next({ bound: uniqid(BATCH_PREFIX), requests: this.requests });
+        if (this._requests.length &gt; 0) {
+          sub$.next({
+            bound: Strings.uniqueId(BATCH_PREFIX),
+            requests: this._requests,
+          });
         } else sub$.complete();
         return response;
       }),
@@ -2899,7 +2999,10 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   }
 
   body() {
-    return ODataBatchResource.buildBody(uniqid(BATCH_PREFIX), this.requests);
+    return ODataBatchResource.buildBody(
+      Strings.uniqueId(BATCH_PREFIX),
+      this._requests
+    );
   }
 
   static buildBody(
@@ -2927,7 +3030,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       // if method is not GET and there is no changeset boundary open then open a changeset boundary
       if (batch.request.method !&#x3D;&#x3D; &#x27;GET&#x27;) {
         if (changesetBoundary &#x3D;&#x3D;&#x3D; null) {
-          changesetBoundary &#x3D; uniqid(CHANGESET_PREFIX);
+          changesetBoundary &#x3D; Strings.uniqueId(CHANGESET_PREFIX);
           res.push(
             &#x60;${CONTENT_TYPE}: ${MULTIPART_MIXED_BOUNDARY}${changesetBoundary}&#x60;
           );
@@ -2973,8 +3076,8 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   ) {
     let chunks: string[][] &#x3D; [];
     const contentType: string &#x3D; response.headers.get(CONTENT_TYPE) || &#x27;&#x27;;
-    const batchBoundary: string &#x3D; getBoundaryDelimiter(contentType);
-    const endLine: string &#x3D; getBoundaryEnd(batchBoundary);
+    const batchBoundary: string &#x3D; Http.boundaryDelimiter(contentType);
+    const endLine: string &#x3D; Http.boundaryEnd(batchBoundary);
 
     const lines: string[] &#x3D; response.body.split(NEWLINE_REGEXP);
 
@@ -2987,17 +3090,17 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       const line &#x3D; lines[index];
 
       if (line.startsWith(CONTENT_TYPE)) {
-        const contentTypeValue: string &#x3D; getHeaderValue(line);
+        const contentTypeValue: string &#x3D; Http.headerValue(line);
         if (contentTypeValue &#x3D;&#x3D;&#x3D; MULTIPART_MIXED) {
           changesetResponses &#x3D; [];
           contentId &#x3D; null;
-          changesetBoundary &#x3D; getBoundaryDelimiter(line);
-          changesetEndLine &#x3D; getBoundaryEnd(changesetBoundary);
+          changesetBoundary &#x3D; Http.boundaryDelimiter(line);
+          changesetEndLine &#x3D; Http.boundaryEnd(changesetBoundary);
           startIndex &#x3D; null;
         }
         continue;
       } else if (changesetResponses !&#x3D;&#x3D; null &amp;&amp; line.startsWith(CONTENT_ID)) {
-        contentId &#x3D; Number(getHeaderValue(line));
+        contentId &#x3D; Number(Http.headerValue(line));
       } else if (line.startsWith(HTTP11)) {
         startIndex &#x3D; index;
       } else if (
@@ -3035,11 +3138,8 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     }
     chunks.forEach((chunk, index) &#x3D;&gt; {
       const req &#x3D; requests[index];
-      const statusParts &#x3D; chunk[0].split(&#x27; &#x27;);
-      req.onLoad(chunk.slice(1), {
-        code: Number(statusParts[1]),
-        text: statusParts.slice(2).join(&#x27; &#x27;),
-      });
+      const { status, code, message } &#x3D; Http.parseResponseStatus(chunk[0]);
+      req.onLoad(chunk.slice(1), { code, message });
     });
   }
 }

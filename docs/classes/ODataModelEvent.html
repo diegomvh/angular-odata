@@ -695,7 +695,7 @@ import {
   ODataResource,
   ODataSingletonResource,
   OptionHandler,
-  QueryArguments,
+  ODataQueryArguments,
   Select,
 } from &#x27;../resources&#x27;;
 import { ODataEntitySet, ODataStructuredType } from &#x27;../schema&#x27;;
@@ -970,7 +970,7 @@ export class ODataModelField&lt;F&gt; {
       method,
       navigation &#x3D; false,
     }: {
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;patch&#x27;;
+      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
     } &#x3D; {}
   ) {
@@ -991,7 +991,7 @@ export class ODataModelField&lt;F&gt; {
       let errors &#x3D; this.parser?.validate(value, { method, navigation }) || [];
       if (
         this.required &amp;&amp;
-        (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;patch&#x27;)) // Is null or undefined without patch?
+        (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;modify&#x27;)) // Is null or undefined without patch?
       ) {
         errors.push(&#x60;required&#x60;);
       }
@@ -1428,7 +1428,7 @@ export class ODataModelOptions&lt;T&gt; {
       select(opts?: Select&lt;T&gt;): OptionHandler&lt;Select&lt;T&gt;&gt;;
       expand(opts?: Expand&lt;T&gt;): OptionHandler&lt;Expand&lt;T&gt;&gt;;
       format(opts?: string): OptionHandler&lt;string&gt;;
-      apply(query: QueryArguments&lt;T&gt;): void;
+      apply(query: ODataQueryArguments&lt;T&gt;): void;
     }) &#x3D;&gt; void
   ) {
     func(resource.query);
@@ -1533,7 +1533,7 @@ export class ODataModelOptions&lt;T&gt; {
       method,
       navigation &#x3D; false,
     }: {
-      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;patch&#x27;;
+      method?: &#x27;create&#x27; | &#x27;update&#x27; | &#x27;modify&#x27;;
       navigation?: boolean;
     } &#x3D; {}
   ): { [name: string]: string[] } | undefined {

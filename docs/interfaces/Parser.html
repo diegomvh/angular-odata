@@ -132,8 +132,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="90"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:90</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:91</a></div>
                 </td>
             </tr>
 
@@ -206,15 +206,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: T, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="99"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:99</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="101"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:101</a></div>
                 </td>
             </tr>
 
@@ -237,7 +237,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                            <code>T</code>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -287,15 +287,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: T, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="94"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:94</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="96"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:96</a></div>
                 </td>
             </tr>
 
@@ -318,7 +318,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                            <code>T</code>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -450,16 +450,18 @@ export interface StructuredTypeFieldOptions extends OptionsHelper {
 }
 
 export interface Parser&lt;T&gt; {
+  // Deserialize value/s from request body.
   deserialize(
     value: any,
     options?: OptionsHelper | StructuredTypeFieldOptions
   ): T;
+  // Serialize value/s for request body.
   serialize(
-    value: T,
+    value: any,
     options?: OptionsHelper | StructuredTypeFieldOptions
   ): any;
-  //Encodes the value/s of a URL parameter or query-string.
-  encode(value: T, options?: OptionsHelper | StructuredTypeFieldOptions): any;
+  //Encode value/s for URL parameter or query-string.
+  encode(value: any, options?: OptionsHelper | StructuredTypeFieldOptions): any;
 }
 
 export const NONE_PARSER &#x3D; {

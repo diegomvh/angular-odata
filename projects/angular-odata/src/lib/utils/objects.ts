@@ -148,11 +148,6 @@ export const Objects = {
     }
     return diffs;
   },
-  uniqueId: (
-    (counter) =>
-    (str = '') =>
-      `${str}${++counter}`
-  )(0),
   resolveKey(key: any, { single = true }: { single?: boolean } = {}) {
     if (['number', 'string'].indexOf(typeof key) !== -1) return key;
     if (Types.isPlainObject(key)) {

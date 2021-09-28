@@ -2257,8 +2257,8 @@ import {
 import { Objects, Http, Types } from &#x27;../utils/index&#x27;;
 
 import { ODataPathSegments } from &#x27;./path-segments&#x27;;
-import { QueryArguments, ODataQueryOptions } from &#x27;./query-options&#x27;;
-import { HttpOptions } from &#x27;./types&#x27;;
+import { ODataQueryArguments, ODataQueryOptions } from &#x27;./query-options&#x27;;
+import { ODataOptions } from &#x27;./types&#x27;;
 import { ODataResponse } from &#x27;./responses/index&#x27;;
 import { ODataApi } from &#x27;../api&#x27;;
 import { Parser, OptionsHelper, QueryOptionNames } from &#x27;../types&#x27;;
@@ -2473,7 +2473,7 @@ export abstract class ODataResource&lt;T&gt; {
       format(opts?: string) {
         return options.option&lt;string&gt;(QueryOptionNames.format, opts);
       },
-      apply(query: QueryArguments&lt;T&gt;) {
+      apply(query: ODataQueryArguments&lt;T&gt;) {
         if (query.select !&#x3D;&#x3D; undefined) {
           this.select(query.select);
         }
@@ -2559,7 +2559,7 @@ export abstract class ODataResource&lt;T&gt; {
         this.skiptoken().clear();
       },
 
-      apply(query: QueryArguments&lt;T&gt;) {
+      apply(query: ODataQueryArguments&lt;T&gt;) {
         if (query.select !&#x3D;&#x3D; undefined) {
           this.select(query.select);
         }
@@ -2587,7 +2587,7 @@ export abstract class ODataResource&lt;T&gt; {
   // Base Requests
   protected request(
     method: string,
-    options: HttpOptions &amp; {
+    options: ODataOptions &amp; {
       body?: any;
       etag?: string;
       responseType?:
@@ -2655,7 +2655,7 @@ export abstract class ODataResource&lt;T&gt; {
   }
 
   protected get(
-    options: HttpOptions &amp; {
+    options: ODataOptions &amp; {
       etag?: string;
       responseType?:
         | &#x27;arraybuffer&#x27;
@@ -2675,7 +2675,7 @@ export abstract class ODataResource&lt;T&gt; {
 
   protected post(
     body: any,
-    options: HttpOptions &amp; {
+    options: ODataOptions &amp; {
       responseType?:
         | &#x27;arraybuffer&#x27;
         | &#x27;blob&#x27;
@@ -2693,7 +2693,7 @@ export abstract class ODataResource&lt;T&gt; {
 
   protected put(
     body: any,
-    options: HttpOptions &amp; {
+    options: ODataOptions &amp; {
       etag?: string;
       responseType?:
         | &#x27;arraybuffer&#x27;
@@ -2712,7 +2712,7 @@ export abstract class ODataResource&lt;T&gt; {
 
   protected patch(
     body: any,
-    options: HttpOptions &amp; {
+    options: ODataOptions &amp; {
       etag?: string;
       responseType?:
         | &#x27;arraybuffer&#x27;
@@ -2730,7 +2730,7 @@ export abstract class ODataResource&lt;T&gt; {
   }
 
   protected delete(
-    options: HttpOptions &amp; {
+    options: ODataOptions &amp; {
       etag?: string;
       responseType?:
         | &#x27;arraybuffer&#x27;
