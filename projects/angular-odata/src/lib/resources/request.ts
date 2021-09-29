@@ -94,13 +94,21 @@ export class ODataRequest<T> {
     }
 
     const accept = [];
-    // Metadata ?
+    // Metadata
     if (this.api.options.accept?.metadata !== undefined)
       accept.push(`odata.metadata=${this.api.options.accept?.metadata}`);
     // IEEE754
     if (this.api.options.accept?.ieee754Compatible !== undefined)
       accept.push(
         `IEEE754Compatible=${this.api.options.accept?.ieee754Compatible}`
+      );
+    // streaming
+    if (this.api.options.accept?.streaming !== undefined)
+      accept.push(`streaming=${this.api.options.accept?.streaming}`);
+    // ExponentialDecimals
+    if (this.api.options.accept?.exponentialDecimals !== undefined)
+      accept.push(
+        `ExponentialDecimals=${this.api.options.accept?.exponentialDecimals}`
       );
     if (accept.length > 0)
       customHeaders[ACCEPT] = [

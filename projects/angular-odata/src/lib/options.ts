@@ -19,15 +19,17 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   stringAsEnum?: boolean;
   stripMetadata: ODataMetadataType;
   fetchPolicy: FetchPolicy;
-  streaming?: boolean;
   // Http
   params: { [param: string]: string | string[] };
   headers: { [param: string]: string | string[] };
   withCredentials?: boolean;
   bodyQueryOptions: QueryOptionNames[];
   accept?: {
-    metadata?: ODataMetadataType;
+    //http://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat
+    exponentialDecimals?: boolean;
     ieee754Compatible?: boolean;
+    metadata?: ODataMetadataType;
+    streaming?: boolean;
   };
   etag: {
     //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398229
