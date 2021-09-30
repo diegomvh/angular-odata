@@ -136,7 +136,9 @@ export class ODataResponse<T> extends HttpResponse<T> {
   private _context?: any;
   get context(): ODataContext {
     if (this._context === undefined) {
-      this._context = this.options.helper.context(this.payload || {});
+      this._context = this.options.helper.context(
+        Types.isPlainObject(this.payload) ? this.payload : {}
+      );
     }
     return this._context;
   }
