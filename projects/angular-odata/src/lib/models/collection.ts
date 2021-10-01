@@ -365,11 +365,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             ? m.asEntity((e) => e.save({ method: 'create', ...options }))
             : refOnly
             ? this.addReference(m, options)
-            : m
-                .asEntity((e) =>
-                  e.save({ method: m.isNew() ? 'create' : method, ...options })
-                )
-                .pipe(switchMap((r) => this.addReference(r, options)))
+            : m.save({ method: 'create', ...options })
         ),
         ...toUpdate.map((m) =>
           m.asEntity((e) => e.save({ method, ...options }))
@@ -588,9 +584,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }: { silent?: boolean; server?: boolean } = {}
   ) {
     const model = this.modelFactory(attrs);
-    return (
-      model.isValid() && server ? model.asEntity((m) => m.save()) : of(model)
-    ).pipe(
+    return (model.isValid() && server ? model.save() : of(model)).pipe(
       switchMap((model) => this.add(model, { silent, server })),
       map(() => model)
     );

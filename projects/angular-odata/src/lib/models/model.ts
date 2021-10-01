@@ -81,7 +81,7 @@ export class ODataModel<T> {
     // Client Id
     (<any>this)[this._meta.cid] =
       (<any>data)[this._meta.cid] ||
-      Strings.uniqueId(Klass.meta.schema.name.toLowerCase());
+      Strings.uniqueId(`${Klass.meta.schema.name.toLowerCase()}-`);
 
     let attrs = this.annots().attributes<T>(data, 'full');
     let defaults = this.defaults();
@@ -421,21 +421,33 @@ export class ODataModel<T> {
     let resource = this.resource();
     if (resource === undefined)
       return throwError('save: Resource is undefined');
-    if (!(resource instanceof ODataEntityResource))
-      return throwError('save: Resource type ODataEntityResource needed');
+    if (
+      !(
+        resource instanceof ODataEntityResource ||
+        resource instanceof ODataNavigationPropertyResource
+      )
+    )
+      return throwError(
+        'save: Resource type ODataEntityResource/ODataNavigationPropertyResource needed'
+      );
 
     // Resolve method and resource key
-    if (method === undefined) {
-      if (this.schema().isCompoundKey())
-        return throwError(
-          'save: Composite key require a specific method, use create/update/modify'
-        );
-      method = !resource.hasKey() ? 'create' : 'update';
-    } else {
-      if ((method === 'update' || method === 'modify') && !resource.hasKey())
-        return throwError('save: Update/Patch require entity key');
-      if (method === 'create') resource.clearKey();
-    }
+    if (method === undefined && this.schema().isCompoundKey())
+      return throwError(
+        'save: Composite key require a specific method, use create/update/modify'
+      );
+    method = method || (!resource.hasKey() ? 'create' : 'update');
+    if (
+      resource instanceof ODataEntityResource &&
+      (method === 'update' || method === 'modify') &&
+      !resource.hasKey()
+    )
+      return throwError('save: Update/Patch require entity key');
+    if (
+      resource instanceof ODataNavigationPropertyResource ||
+      method === 'create'
+    )
+      resource.clearKey();
 
     let obs$: Observable<ODataEntity<any>>;
     if (!validate || this.isValid({ method, navigation })) {
@@ -468,8 +480,15 @@ export class ODataModel<T> {
     let resource = this.resource();
     if (resource === undefined)
       return throwError('destroy: Resource is undefined');
-    if (!(resource instanceof ODataEntityResource))
-      return throwError('destroy: Resource type ODataEntityResource needed');
+    if (
+      !(
+        resource instanceof ODataEntityResource ||
+        resource instanceof ODataNavigationPropertyResource
+      )
+    )
+      return throwError(
+        'destroy: Resource type ODataEntityResource/ODataNavigationPropertyResource needed'
+      );
     if (!resource.hasKey())
       return throwError("destroy: Can't destroy model without key");
 
