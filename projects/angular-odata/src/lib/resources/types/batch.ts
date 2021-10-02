@@ -193,6 +193,8 @@ export class ODataBatchResource extends ODataResource<any> {
     // Restore original requester
     this.api.request = current;
 
+    if (this._requests.length === 0) return obs$;
+
     const bound = Strings.uniqueId(BATCH_PREFIX);
     const requests = this._requests;
     const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
@@ -215,72 +217,6 @@ export class ODataBatchResource extends ODataResource<any> {
       switchMap((response) => {
         ODataBatchResource.handleResponse(requests, response);
         return obs$;
-      })
-    );
-  }
-
-  _exec(
-    func: (batch: ODataBatchResource) => void,
-    options?: ODataOptions
-  ): Observable<ODataResponse<any>> {
-    const current = this.api.request;
-    this.api.request = (req: ODataRequest<any>): Observable<any> => {
-      if (req.api !== this.api)
-        throw new Error('Batch Request are for the same api.');
-      if (req.observe === 'events')
-        throw new Error("Batch Request does not allows observe == 'events'.");
-      this._requests.push(new ODataBatchRequest<any>(req));
-      return this._requests[this._requests.length - 1];
-    };
-
-    func(this);
-
-    const sub$ = new BehaviorSubject<{
-      bound: string;
-      requests: ODataBatchRequest<any>[];
-    }>({
-      bound: Strings.uniqueId(BATCH_PREFIX),
-      requests: this._requests,
-    });
-
-    return sub$.pipe(
-      switchMap(({ bound, requests }) => {
-        const headers = Http.mergeHttpHeaders(
-          (options && options.headers) || {},
-          {
-            [ODATA_VERSION]: VERSION_4_0,
-            [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
-            [ACCEPT]: MULTIPART_MIXED,
-          }
-        );
-        const request = new ODataRequest({
-          method: 'POST',
-          body: ODataBatchResource.buildBody(bound, requests),
-          api: this.api,
-          resource: this,
-          observe: 'response',
-          responseType: 'text',
-          headers: headers,
-          params: options ? options.params : undefined,
-          withCredentials: options ? options.withCredentials : undefined,
-        });
-        return current
-          .call(this.api, request)
-          .pipe(map((response) => ({ requests, response })));
-      }),
-      map(({ requests, response }) => {
-        this._requests = [];
-        ODataBatchResource.handleResponse(requests, response);
-        if (this._requests.length > 0) {
-          sub$.next({
-            bound: Strings.uniqueId(BATCH_PREFIX),
-            requests: this._requests,
-          });
-        } else sub$.complete();
-        return response;
-      }),
-      finalize(() => {
-        this.api.request = current;
       })
     );
   }
