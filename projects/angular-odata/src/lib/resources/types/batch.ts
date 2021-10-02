@@ -173,7 +173,53 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   //#endregion
 
-  exec(
+  exec<R>(
+    ctx: (batch: this) => Observable<R>,
+    options?: ODataOptions
+  ): Observable<R> {
+    // Store original requester
+    const current = this.api.request;
+    // Switch to the batch requester
+    this.api.request = (req: ODataRequest<any>): Observable<any> => {
+      if (req.api !== this.api)
+        throw new Error('Batch Request are for the same api.');
+      if (req.observe === 'events')
+        throw new Error("Batch Request does not allows observe == 'events'.");
+      this._requests.push(new ODataBatchRequest<any>(req));
+      return this._requests[this._requests.length - 1];
+    };
+    // Execute the context
+    const obs$ = ctx(this);
+    // Restore original requester
+    this.api.request = current;
+
+    const bound = Strings.uniqueId(BATCH_PREFIX);
+    const requests = this._requests;
+    const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
+      [ODATA_VERSION]: VERSION_4_0,
+      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
+      [ACCEPT]: MULTIPART_MIXED,
+    });
+    const request = new ODataRequest({
+      method: 'POST',
+      body: ODataBatchResource.buildBody(bound, requests),
+      api: this.api,
+      resource: this,
+      observe: 'response',
+      responseType: 'text',
+      headers: headers,
+      params: options ? options.params : undefined,
+      withCredentials: options ? options.withCredentials : undefined,
+    });
+    return this.api.request(request).pipe(
+      switchMap((response) => {
+        ODataBatchResource.handleResponse(requests, response);
+        return obs$;
+      })
+    );
+  }
+
+  _exec(
     func: (batch: ODataBatchResource) => void,
     options?: ODataOptions
   ): Observable<ODataResponse<any>> {

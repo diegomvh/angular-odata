@@ -534,11 +534,11 @@ export class ODataModel<T> {
 
   /**
    * Create an execution context for a given function, where the model is bound to its entity endpoint
-   * @param func Context function
+   * @param ctx Context function
    * @returns Observable of R
    */
-  asEntity<R>(func: (model: this) => Observable<R>): Observable<R> {
-    return this._meta.asEntity(this, func);
+  asEntity<R>(ctx: (model: this) => Observable<R>): Observable<R> {
+    return this._meta.asEntity(this, ctx);
   }
 
   protected callFunction<P, R>(

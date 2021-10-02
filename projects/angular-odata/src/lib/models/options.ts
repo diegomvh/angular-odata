@@ -1,5 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 import {
   COMPUTED,
   DEFAULT_VERSION,
@@ -910,7 +910,7 @@ export class ODataModelOptions<T> {
   ): Observable<R> {
     const parent = self._parent;
     self._parent = null;
-    return func(self).pipe(tap(() => (self._parent = parent)));
+    return func(self).pipe(finalize(() => (self._parent = parent)));
   }
 
   toEntity(
