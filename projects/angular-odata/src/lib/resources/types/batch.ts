@@ -193,32 +193,34 @@ export class ODataBatchResource extends ODataResource<any> {
     // Restore original requester
     this.api.request = current;
 
-    if (this._requests.length === 0) return obs$;
-
-    const bound = Strings.uniqueId(BATCH_PREFIX);
-    const requests = this._requests;
-    const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
-      [ODATA_VERSION]: VERSION_4_0,
-      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
-      [ACCEPT]: MULTIPART_MIXED,
-    });
-    const request = new ODataRequest({
-      method: 'POST',
-      body: ODataBatchResource.buildBody(bound, requests),
-      api: this.api,
-      resource: this,
-      observe: 'response',
-      responseType: 'text',
-      headers: headers,
-      params: options ? options.params : undefined,
-      withCredentials: options ? options.withCredentials : undefined,
-    });
-    return this.api.request(request).pipe(
-      switchMap((response) => {
+    if (this._requests.length >= 0) {
+      const bound = Strings.uniqueId(BATCH_PREFIX);
+      const requests = this._requests;
+      const headers = Http.mergeHttpHeaders(
+        (options && options.headers) || {},
+        {
+          [ODATA_VERSION]: VERSION_4_0,
+          [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
+          [ACCEPT]: MULTIPART_MIXED,
+        }
+      );
+      const request = new ODataRequest({
+        method: 'POST',
+        body: ODataBatchResource.buildBody(bound, requests),
+        api: this.api,
+        resource: this,
+        observe: 'response',
+        responseType: 'text',
+        headers: headers,
+        params: options ? options.params : undefined,
+        withCredentials: options ? options.withCredentials : undefined,
+      });
+      this.api.request(request).subscribe((response) => {
         ODataBatchResource.handleResponse(requests, response);
-        return obs$;
-      })
-    );
+      });
+    }
+
+    return obs$;
   }
 
   body() {
