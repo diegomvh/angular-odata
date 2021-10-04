@@ -435,9 +435,10 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
         : this.optionsHelper;
     if (this.parent !== undefined)
       value = this.parent.serialize(value, parserOptions);
+    let type = `#${this.namespace}.${this.name}`;
     return Object.assign(
-      {},
       value,
+      { '@odata.type': type },
       this.fields
         .filter(
           (f) =>

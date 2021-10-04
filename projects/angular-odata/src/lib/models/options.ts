@@ -1175,6 +1175,12 @@ export class ODataModelOptions<T> {
     collection: ODataCollection<F, ODataModel<F>>,
     value: ODataCollection<F, ODataModel<F>> | T[] | { [name: string]: any }[]
   ) {
+    if (
+      ODataModelOptions.isCollection(value) &&
+      collection.equals(value as ODataCollection<F, ODataModel<F>>)
+    ) {
+      return false;
+    }
     if (ODataModelOptions.isCollection(value)) {
       value = (value as ODataCollection<any, ODataModel<any>>).toEntities(
         INCLUDE_ALL
@@ -1195,6 +1201,12 @@ export class ODataModelOptions<T> {
     model: ODataModel<F>,
     value: ODataModel<F> | F | { [name: string]: any }
   ) {
+    if (
+      ODataModelOptions.isModel(value) &&
+      model.equals(value as ODataModel<F>)
+    ) {
+      return false;
+    }
     if (ODataModelOptions.isModel(value)) {
       value = (value as ODataModel<F>).toEntity(INCLUDE_ALL);
     }

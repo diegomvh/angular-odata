@@ -898,6 +898,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   // Collection functions
+  equals(other: ODataCollection<T, ODataModel<T>>) {
+    return this === other;
+  }
+
   get [Symbol.toStringTag]() {
     return 'Collection';
   }
