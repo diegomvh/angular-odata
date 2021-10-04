@@ -407,24 +407,20 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
         : this.optionsHelper;
     if (this.parent !== undefined)
       value = this.parent.deserialize(value, parserOptions);
-    return Object.assign(
-      {},
-      value,
-      this.fields
-        .filter(
-          (f) =>
-            f.name in value &&
-            value[f.name] !== undefined &&
-            value[f.name] !== null
-        )
-        .reduce(
-          (acc, f) =>
-            Object.assign(acc, {
-              [f.name]: f.deserialize(value[f.name], parserOptions),
-            }),
-          {}
-        )
+    const fields = this.fields.filter(
+      (f) =>
+        f.name in value && value[f.name] !== undefined && value[f.name] !== null
     );
+    return {
+      ...value,
+      ...fields.reduce(
+        (acc, f) => ({
+          ...acc,
+          [f.name]: f.deserialize(value[f.name], parserOptions),
+        }),
+        {}
+      ),
+    };
   }
 
   // Serialize
@@ -435,25 +431,22 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
         : this.optionsHelper;
     if (this.parent !== undefined)
       value = this.parent.serialize(value, parserOptions);
-    let type = `#${this.namespace}.${this.name}`;
-    return Object.assign(
-      value,
-      { '@odata.type': type },
-      this.fields
-        .filter(
-          (f) =>
-            f.name in value &&
-            (value as any)[f.name] !== undefined &&
-            (value as any)[f.name] !== null
-        )
-        .reduce(
-          (acc, f) =>
-            Object.assign(acc, {
-              [f.name]: f.serialize((value as any)[f.name], parserOptions),
-            }),
-          {}
-        )
+    const fields = this.fields.filter(
+      (f) =>
+        f.name in value &&
+        (value as any)[f.name] !== undefined &&
+        (value as any)[f.name] !== null
     );
+    return {
+      ...value,
+      ...fields.reduce(
+        (acc, f) => ({
+          ...acc,
+          [f.name]: f.serialize((value as any)[f.name], parserOptions),
+        }),
+        {}
+      ),
+    };
   }
 
   // Encode
@@ -512,17 +505,15 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     let fields = this.fields.filter(
       (f) => f.default !== undefined || f.isStructuredType()
     );
-    return Object.assign(
-      {},
-      value,
-      fields.reduce((acc, f) => {
+    return {
+      ...value,
+      ...fields.reduce((acc, f) => {
         let value = f.isStructuredType()
           ? f.structured().defaults()
           : f.default;
-        if (!Types.isEmpty(value)) Object.assign(acc, { [f.name]: value });
-        return acc;
-      }, {})
-    );
+        return Types.isEmpty(value) ? acc : { ...acc, [f.name]: value };
+      }, {}),
+    };
   }
 
   // Json Schema

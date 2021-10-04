@@ -40,13 +40,14 @@ export interface ODataVersionHelper {
   id(value: { [name: string]: any }, id?: string): string | undefined;
   //Get or Set Etag
   etag(value: { [name: string]: any }, etag?: string): string | undefined;
+  //Get or Set Type
+  type(value: { [name: string]: any }, type?: string): string | undefined;
   count(value: { [name: string]: any }): number | undefined;
   context(value: { [name: string]: any }): ODataContext;
   functions(value: { [name: string]: any }): { [name: string]: any };
   properties(value: { [name: string]: any }): { [name: string]: any };
   mediaEtag(value: { [name: string]: any }): string | undefined;
   metadataEtag(value: { [name: string]: any }): string | undefined;
-  type(value: { [name: string]: any }): string | undefined;
   nextLink(value: { [name: string]: any }): string | undefined;
   readLink(value: { [name: string]: any }): string | undefined;
   mediaReadLink(value: { [name: string]: any }): string | undefined;
@@ -101,17 +102,8 @@ const ODataVersionBaseHelper = <any>{
       ? (value[this.ODATA_ETAG] as string)
       : undefined;
   },
-  mediaEtag(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_ETAG in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string)
-      : undefined;
-  },
-  metadataEtag(value: { [name: string]: any }) {
-    return this.ODATA_METADATA_ETAG in value
-      ? decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string)
-      : undefined;
-  },
-  type(value: { [name: string]: any }) {
+  type(value: { [name: string]: any }, type?: string) {
+    if (type !== undefined) value[this.ODATA_TYPE] = `#${type}`;
     if (this.ODATA_TYPE in value) {
       const type = value[this.ODATA_TYPE].substr(1) as string;
       const matches = COLLECTION.exec(type);
@@ -122,6 +114,16 @@ const ODataVersionBaseHelper = <any>{
       return type;
     }
     return undefined;
+  },
+  mediaEtag(value: { [name: string]: any }) {
+    return this.ODATA_MEDIA_ETAG in value
+      ? decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string)
+      : undefined;
+  },
+  metadataEtag(value: { [name: string]: any }) {
+    return this.ODATA_METADATA_ETAG in value
+      ? decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string)
+      : undefined;
   },
   count(value: { [name: string]: any }) {
     return this.ODATA_COUNT in value

@@ -202,7 +202,7 @@ export class ODataModelField<F> {
   name: string;
   field: string;
   parser: ODataStructuredTypeFieldParser<F>;
-  modelOptions: ODataModelOptions<any>;
+  options: ODataModelOptions<any>;
   meta?: ODataModelOptions<any>;
   default?: any;
   required: boolean;
@@ -213,25 +213,25 @@ export class ODataModelField<F> {
   max?: number;
   pattern?: RegExp;
   constructor(
-    modelOptions: ODataModelOptions<any>,
-    { name, field, parser, ...options }: ODataModelFieldOptions<F>
+    options: ODataModelOptions<any>,
+    { name, field, parser, ...opts }: ODataModelFieldOptions<F>
   ) {
-    this.modelOptions = modelOptions;
+    this.options = options;
     this.name = name;
     this.field = field;
     this.parser = parser;
-    this.default = options.default || this.parser.default;
-    this.required = Boolean(options.required);
-    this.concurrency = Boolean(options.concurrency);
-    this.maxLength = options.maxLength;
-    this.minLength = options.minLength;
-    this.min = options.min;
-    this.max = options.max;
-    this.pattern = options.pattern;
+    this.default = opts.default || this.parser.default;
+    this.required = Boolean(opts.required);
+    this.concurrency = Boolean(opts.concurrency);
+    this.maxLength = opts.maxLength;
+    this.minLength = opts.minLength;
+    this.min = opts.min;
+    this.max = opts.max;
+    this.pattern = opts.pattern;
   }
 
   get api() {
-    return this.modelOptions.api;
+    return this.options.api;
   }
 
   get type() {
@@ -810,7 +810,7 @@ export class ODataModelOptions<T> {
       let from = this.fields({ include_parents: true }).find(
         (p: any) => p.field === ref.referencedProperty
       );
-      let to = field.modelOptions
+      let to = field.options
         .fields({ include_parents: true })
         .find((field: ODataModelField<any>) => field.field === ref.property);
       if (from !== undefined && to !== undefined) {
@@ -1011,19 +1011,31 @@ export class ODataModelOptions<T> {
       }, {});
 
     // Create entity
-    let entity = Object.assign(attrs, relations);
+    let entity = { ...attrs, ...relations };
 
     // Add client_id
     if (client_id) {
-      entity[this.cid] = (<any>self)[this.cid];
+      (<any>entity)[this.cid] = (<any>self)[this.cid];
     }
 
     // Add key
     if (include_key) {
-      entity = Object.assign(
-        entity,
-        this.resolveKey(self, { field_mapping, resolve: false })
-      );
+      entity = {
+        ...entity,
+        ...(this.resolveKey(self, { field_mapping, resolve: false }) as {}),
+      };
+    }
+
+    // Add type
+    if (
+      self._parent !== null &&
+      ((ODataModelOptions.isModel(self._parent[0]) &&
+        (self._parent[1] as ODataModelField<any>).meta !== self._meta) ||
+        (ODataModelOptions.isCollection(self._parent[0]) &&
+          (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model
+            .meta !== self._meta))
+    ) {
+      this.api.options.helper.type(entity, this.schema.type());
     }
 
     return entity;

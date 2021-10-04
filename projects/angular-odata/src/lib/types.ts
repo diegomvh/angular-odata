@@ -52,8 +52,10 @@ export interface ApiOptions extends Options {
   withCredentials?: boolean;
   //Headers
   accept?: {
+    exponentialDecimals?: boolean;
     metadata?: ODataMetadataType;
     ieee754Compatible?: boolean;
+    streaming?: boolean;
   };
   etag?: {
     ifMatch?: boolean;
@@ -72,6 +74,7 @@ export interface ApiOptions extends Options {
 
 export interface OptionsHelper extends Options {
   helper: ODataVersionHelper;
+  exponentialDecimals?: boolean;
   metadata?: ODataMetadataType;
   ieee754Compatible?: boolean;
   streaming?: boolean;

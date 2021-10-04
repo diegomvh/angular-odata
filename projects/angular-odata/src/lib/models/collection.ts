@@ -627,7 +627,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  get(path: string | string[] | number): any {
+  get(path: number): M;
+  get(path: string | string[]): any;
+  get(path: any): any {
     const Model = this._model;
     const pathArray = (
       Types.isArray(path) ? path : `${path}`.match(/([^[.\]])+/g)

@@ -4,7 +4,6 @@ import {
   Parser,
   Parameter,
   CallableConfig,
-  StructuredTypeFieldOptions,
   NONE_PARSER,
   OptionsHelper,
   Options,
@@ -24,7 +23,8 @@ export class ODataParameterParser<T> {
     this.name = name;
     this.type = parameter.type;
     this.parser = NONE_PARSER;
-    Object.assign(this, parameter);
+    this.nullable = parameter.nullable;
+    this.collection = parameter.collection;
   }
 
   serialize(value: T, options?: Options): any {
@@ -124,18 +124,15 @@ export class ODataCallableParser<R> implements Parser<R> {
       options !== undefined
         ? new ODataParserOptions(options)
         : this.optionsHelper;
-    return Object.assign(
-      {},
-      this.parameters
-        .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
-        .filter((p) => p.name in params && params[p.name] !== undefined)
-        .reduce(
-          (acc, p) =>
-            Object.assign(acc, {
-              [p.name]: p.serialize(params[p.name], parserOptions),
-            }),
-          {}
-        )
+    const parameters = this.parameters
+      .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
+      .filter((p) => p.name in params && params[p.name] !== undefined);
+    return parameters.reduce(
+      (acc, p) => ({
+        ...acc,
+        [p.name]: p.serialize(params[p.name], parserOptions),
+      }),
+      {}
     );
   }
 
@@ -145,18 +142,15 @@ export class ODataCallableParser<R> implements Parser<R> {
       options !== undefined
         ? new ODataParserOptions(options)
         : this.optionsHelper;
-    return Object.assign(
-      {},
-      this.parameters
-        .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
-        .filter((p) => p.name in params && params[p.name] !== undefined)
-        .reduce(
-          (acc, p) =>
-            Object.assign(acc, {
-              [p.name]: p.encode(params[p.name], parserOptions),
-            }),
-          {}
-        )
+    const parameters = this.parameters
+      .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
+      .filter((p) => p.name in params && params[p.name] !== undefined);
+    return parameters.reduce(
+      (acc, p) => ({
+        ...acc,
+        [p.name]: p.encode(params[p.name], parserOptions),
+      }),
+      {}
     );
   }
 
