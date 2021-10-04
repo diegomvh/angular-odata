@@ -146,42 +146,45 @@ export abstract class ODataResource<T> {
   abstract clone(): ODataResource<T>;
   abstract schema(): ODataStructuredType<T> | ODataCallable<T> | undefined;
   serialize(value: any, options?: OptionsHelper): any {
-    const type = this.type();
+    options = options || this.api.options;
+    const type = Types.isPlainObject(value)
+      ? options.helper.type(value)
+      : this.type();
     const parser =
       type !== undefined ? this.api.parserForType<T>(type) : undefined;
     if (parser !== undefined && 'serialize' in parser) {
       return Array.isArray(value)
-        ? value.map((e) =>
-            (parser as Parser<T>).serialize(e, options || this.api.options)
-          )
-        : parser.serialize(value, options || this.api.options);
+        ? value.map((e) => (parser as Parser<T>).serialize(e, options))
+        : parser.serialize(value, options);
     }
     return value;
   }
 
   deserialize(value: any, options?: OptionsHelper): any {
-    const type = this.returnType();
+    options = options || this.api.options;
+    const type = Types.isPlainObject(value)
+      ? options.helper.type(value)
+      : this.returnType();
     const parser =
       type !== undefined ? this.api.parserForType<T>(type) : undefined;
     if (parser !== undefined && 'deserialize' in parser) {
       return Array.isArray(value)
-        ? value.map((e) =>
-            (parser as Parser<T>).deserialize(e, options || this.api.options)
-          )
-        : parser.deserialize(value, options || this.api.options);
+        ? value.map((e) => (parser as Parser<T>).deserialize(e, options))
+        : parser.deserialize(value, options);
     }
     return value;
   }
   encode(value: any, options?: OptionsHelper): any {
-    const type = this.type();
+    options = options || this.api.options;
+    const type = Types.isPlainObject(value)
+      ? options.helper.type(value)
+      : this.type();
     const parser =
       type !== undefined ? this.api.parserForType<T>(type) : undefined;
     if (parser !== undefined && 'encode' in parser) {
       return Array.isArray(value)
-        ? value.map((e) =>
-            (parser as Parser<T>).encode(e, options || this.api.options)
-          )
-        : parser.encode(value, options || this.api.options);
+        ? value.map((e) => (parser as Parser<T>).encode(e, options))
+        : parser.encode(value, options);
     }
     return value;
   }
