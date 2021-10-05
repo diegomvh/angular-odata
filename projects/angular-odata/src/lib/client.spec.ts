@@ -255,8 +255,6 @@ describe('ODataClient', () => {
       '@odata.context':
         "serviceRoot/$metadata#People('russellwhyte')/Trips/$entity",
       ...trip,
-      StartsAt: '2014-01-01T00:00:00+08:00',
-      EndsAt: '2014-02-01T00:00:00+08:00',
     };
     client
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
@@ -312,8 +310,6 @@ describe('ODataClient', () => {
       '@odata.context':
         "serviceRoot/$metadata#People('russellwhyte')/Trips(1003)/PlanItems/$entity",
       ...item,
-      StartsAt: '2014-05-25T23:11:17.5459178-07:00',
-      EndsAt: '2014-06-01T23:11:17.5479185-07:00',
     };
     client
       .entitySet<Person>('People', `${NAMESPACE}.Person`)

@@ -145,48 +145,53 @@ export abstract class ODataResource<T> {
 
   abstract clone(): ODataResource<T>;
   abstract schema(): ODataStructuredType<T> | ODataCallable<T> | undefined;
-  serialize(value: any, options?: OptionsHelper): any {
-    options = options || this.api.options;
-    const type = Types.isPlainObject(value)
-      ? options.helper.type(value)
-      : this.type();
-    const parser =
-      type !== undefined ? this.api.parserForType<T>(type) : undefined;
-    if (parser !== undefined && 'serialize' in parser) {
-      return Array.isArray(value)
-        ? value.map((e) => (parser as Parser<T>).serialize(e, options))
-        : parser.serialize(value, options);
-    }
-    return value;
-  }
 
   deserialize(value: any, options?: OptionsHelper): any {
-    options = options || this.api.options;
-    const type = Types.isPlainObject(value)
-      ? options.helper.type(value)
-      : this.returnType();
-    const parser =
-      type !== undefined ? this.api.parserForType<T>(type) : undefined;
-    if (parser !== undefined && 'deserialize' in parser) {
-      return Array.isArray(value)
-        ? value.map((e) => (parser as Parser<T>).deserialize(e, options))
-        : parser.deserialize(value, options);
-    }
-    return value;
+    const baseType = this.returnType();
+    const _d = (value: any, options: OptionsHelper) => {
+      const type =
+        (Types.isPlainObject(value) && options.helper.type(value)) || baseType;
+      const parser =
+        type !== undefined ? this.api.parserForType<T>(type) : undefined;
+      return parser !== undefined && 'deserialize' in parser
+        ? parser.deserialize(value, options)
+        : value;
+    };
+    return Array.isArray(value)
+      ? value.map((v) => _d(v, options || this.api.options))
+      : _d(value, options || this.api.options);
   }
+
+  serialize(value: any, options?: OptionsHelper): any {
+    const baseType = this.type();
+    const _s = (value: any, options: OptionsHelper) => {
+      const type =
+        (Types.isPlainObject(value) && options.helper.type(value)) || baseType;
+      const parser =
+        type !== undefined ? this.api.parserForType<T>(type) : undefined;
+      return parser !== undefined && 'serialize' in parser
+        ? parser.serialize(value, options)
+        : value;
+    };
+    return Array.isArray(value)
+      ? value.map((v) => _s(v, options || this.api.options))
+      : _s(value, options || this.api.options);
+  }
+
   encode(value: any, options?: OptionsHelper): any {
-    options = options || this.api.options;
-    const type = Types.isPlainObject(value)
-      ? options.helper.type(value)
-      : this.type();
-    const parser =
-      type !== undefined ? this.api.parserForType<T>(type) : undefined;
-    if (parser !== undefined && 'encode' in parser) {
-      return Array.isArray(value)
-        ? value.map((e) => (parser as Parser<T>).encode(e, options))
-        : parser.encode(value, options);
-    }
-    return value;
+    const baseType = this.type();
+    const _e = (value: any, options: OptionsHelper) => {
+      const type =
+        (Types.isPlainObject(value) && options.helper.type(value)) || baseType;
+      const parser =
+        type !== undefined ? this.api.parserForType<T>(type) : undefined;
+      return parser !== undefined && 'encode' in parser
+        ? parser.deserialize(value, options)
+        : value;
+    };
+    return Array.isArray(value)
+      ? value.map((v) => _e(v, options || this.api.options))
+      : _e(value, options || this.api.options);
   }
 
   toJSON() {

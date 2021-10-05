@@ -324,12 +324,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
    */
   save({
     relModel = false,
-    refOnly = false,
     method,
     ...options
   }: ODataOptions & {
     relModel?: boolean;
-    refOnly?: boolean;
     method?: 'update' | 'modify';
   } = {}): Observable<this> {
     const resource = this.resource();
@@ -339,37 +337,61 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (resource instanceof ODataPropertyResource)
       return throwError('fetchAll: Resource is ODataPropertyResource');
 
-    let toDestroy: M[] = [];
-    let toCreate: M[] = [];
-    let toUpdate: M[] = [];
+    let toDestroyEntity: M[] = [];
+    let toRemoveReference: M[] = [];
+    let toDestroyContained: M[] = [];
+    let toCreateEntity: M[] = [];
+    let toAddReference: M[] = [];
+    let toCreateContained: M[] = [];
+    let toUpdateEntity: M[] = [];
+    let toUpdateContained: M[] = [];
 
-    this._entries.forEach((entry) => {
-      const model = entry.model;
-      if (entry.state === ODataModelState.Removed) {
-        toDestroy.push(entry.model);
-      } else if (entry.state === ODataModelState.Added) {
-        toCreate.push(entry.model);
+    this._entries.forEach(({ model, state }) => {
+      if (state === ODataModelState.Removed) {
+        if (relModel) {
+          toDestroyEntity.push(model);
+        } else if (!model.isNew()) {
+          toRemoveReference.push(model);
+        } else {
+          toDestroyContained.push(model);
+        }
+      } else if (state === ODataModelState.Added) {
+        if (relModel) {
+          toCreateEntity.push(model);
+        } else if (!model.isNew()) {
+          toAddReference.push(model);
+        } else {
+          toCreateContained.push(model);
+        }
       } else if (model.hasChanged()) {
-        toUpdate.push(entry.model);
+        toUpdateEntity.push(model);
       }
     });
-    if (toDestroy.length > 0 || toCreate.length > 0 || toUpdate.length > 0) {
+    if (
+      toDestroyEntity.length > 0 ||
+      toRemoveReference.length > 0 ||
+      toDestroyContained.length > 0 ||
+      toCreateEntity.length > 0 ||
+      toAddReference.length > 0 ||
+      toCreateContained.length > 0 ||
+      toUpdateEntity.length > 0 ||
+      toUpdateContained.length > 0
+    ) {
       const obs$ = forkJoin([
-        ...toDestroy.map((m) =>
-          relModel
-            ? m.asEntity((e) => e.destroy(options))
-            : this.removeReference(m, options)
+        ...toDestroyEntity.map((m) => m.asEntity((e) => e.destroy(options))),
+        ...toRemoveReference.map((m) => this.removeReference(m, options)),
+        ...toDestroyContained.map((m) => m.destroy(options)),
+        ...toCreateEntity.map((m) =>
+          m.asEntity((e) => e.save({ method: 'create', ...options }))
         ),
-        ...toCreate.map((m) =>
-          relModel
-            ? m.asEntity((e) => e.save({ method: 'create', ...options }))
-            : refOnly
-            ? this.addReference(m, options)
-            : m.save({ method: 'create', ...options })
+        ...toAddReference.map((m) => this.addReference(m, options)),
+        ...toCreateContained.map((m) =>
+          m.save({ method: 'create', ...options })
         ),
-        ...toUpdate.map((m) =>
+        ...toUpdateEntity.map((m) =>
           m.asEntity((e) => e.save({ method, ...options }))
         ),
+        ...toUpdateContained.map((m) => m.save({ method, ...options })),
       ]);
       this.events$.emit(
         new ODataModelEvent('request', {
@@ -852,9 +874,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (entry.subscription !== null) {
       throw new Error('Subscription already exists');
     }
-    if (!entry.model.isParentOf(this)) {
-      entry.model._parent = [this, null];
-    }
+    //if (!entry.model.isParentOf(this)) {
+    entry.model._parent = [this, null];
+    //}
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
         if (

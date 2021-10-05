@@ -17,7 +17,7 @@ import {
   ODataEntitySet,
   ODataStructuredType,
 } from './schema/index';
-import { ODataModel, ODataCollection } from './models/index';
+import { ODataModel, ODataCollection, ODataModelOptions } from './models/index';
 import {
   ODataBatchResource,
   ODataMetadataResource,
@@ -253,6 +253,8 @@ export class ODataApi {
       structured: { [type: string]: ODataStructuredType<any> | undefined };
       callable: { [key: string]: ODataCallable<any> | undefined };
       entitySet: { [type: string]: ODataEntitySet | undefined };
+      parser: { [type: string]: Parser<any> };
+      options: { [type: string]: ODataModelOptions<any> | undefined };
     };
     byName: {
       enum: { [type: string]: ODataEnumType<any> | undefined };
@@ -261,7 +263,14 @@ export class ODataApi {
       entitySet: { [type: string]: ODataEntitySet | undefined };
     };
   } = {
-    forType: { enum: {}, structured: {}, callable: {}, entitySet: {} },
+    forType: {
+      enum: {},
+      structured: {},
+      callable: {},
+      entitySet: {},
+      parser: {},
+      options: {},
+    },
     byName: { enum: {}, structured: {}, callable: {}, entitySet: {} },
   };
 
@@ -378,7 +387,7 @@ export class ODataApi {
 
   public findCallableByName<T>(name: string, bindingType?: string) {
     const key = bindingType !== undefined ? `${bindingType}/${name}` : name;
-    if (!(key in this.memo.forType.callable))
+    if (!(key in this.memo.byName.callable))
       this.memo.byName.callable[key] = this.schemas
         .reduce(
           (acc, schema) => [...acc, ...schema.callables],
@@ -422,29 +431,35 @@ export class ODataApi {
   }
 
   public parserForType<T>(type: string, bindingType?: string) {
-    // Edm, Base Parsers
-    if (type in this.parsers) {
-      return this.parsers[type] as Parser<T>;
+    const key = bindingType !== undefined ? `${bindingType}/${type}` : type;
+    if (!(key in this.memo.forType.parser)) {
+      if (type in this.parsers) {
+        // Edm, Base Parsers
+        this.memo.forType.parser[key] = this.parsers[type] as Parser<T>;
+      } else if (!type.startsWith('Edm.')) {
+        // EnumType, ComplexType and EntityType Parsers
+        let value =
+          this.findCallableForType<T>(type, bindingType) ||
+          this.findEnumTypeForType<T>(type) ||
+          this.findStructuredTypeForType<T>(type);
+        this.memo.forType.parser[key] = value?.parser as Parser<T>;
+      } else {
+        // None Parser
+        this.memo.forType.parser[key] = NONE_PARSER;
+      }
     }
-
-    // EnumType, ComplexType and EntityType Parsers
-    if (!type.startsWith('Edm.')) {
-      let value =
-        this.findCallableForType<T>(type, bindingType) ||
-        this.findEnumTypeForType<T>(type) ||
-        this.findStructuredTypeForType<T>(type);
-      return value?.parser as Parser<T>;
-    }
-
-    // None Parser
-    return NONE_PARSER;
+    return this.memo.forType.parser[key] as Parser<T>;
   }
 
   public findOptionsForType<T>(type: string) {
     // Strucutred Options
-    let st = this.findStructuredTypeForType(type);
-    return st !== undefined && st.model !== undefined && st.model?.meta !== null
-      ? st.model.meta
-      : undefined;
+    if (!(type in this.memo.forType.options)) {
+      let st = this.findStructuredTypeForType<T>(type);
+      this.memo.forType.options[type] =
+        st !== undefined && st.model !== undefined && st.model?.meta !== null
+          ? st.model.meta
+          : undefined;
+    }
+    return this.memo.forType.options[type] as ODataModelOptions<T> | undefined;
   }
 }

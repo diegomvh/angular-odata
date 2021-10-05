@@ -1382,9 +1382,9 @@ export class ODataModelOptions<T> {
     if (relation.model === null) {
       throw new Error('Subscription model is null');
     }
-    if (!relation.model.isParentOf(self)) {
-      relation.model._parent = [self, relation.field];
-    }
+    //if (!relation.model.isParentOf(self)) {
+    relation.model._parent = [self, relation.field];
+    //}
     relation.subscription = relation.model.events$.subscribe(
       (event: ODataModelEvent<any>) => {
         if (
