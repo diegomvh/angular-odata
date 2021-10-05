@@ -279,15 +279,15 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
   }
 
-  fetchModel(
+  fetchModel<M extends ODataModel<T>>(
     options?: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<ODataModel<T> | null> {
+  ): Observable<M | null> {
     return this.fetch(options).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel(entity, { annots, reset: true }) : null
+        entity ? this.asModel<M>(entity, { annots, reset: true }) : null
       )
     );
   }

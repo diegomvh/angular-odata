@@ -361,15 +361,15 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
-  fetchModel(
+  fetchModel<M extends ODataModel<T>>(
     options: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
-  ): Observable<ODataModel<T> | null> {
+  ): Observable<M | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity, annots }) =>
-        entity ? this.asModel(entity, { annots, reset: true }) : null
+        entity ? this.asModel<M>(entity, { annots, reset: true }) : null
       )
     );
   }
@@ -384,15 +384,17 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
-  fetchCollection(
+  fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     options: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
-  ): Observable<ODataCollection<T, ODataModel<T>> | null> {
+  ): Observable<C | null> {
     return this.fetch({ responseType: 'entities', ...options }).pipe(
       map(({ entities, annots }) =>
-        entities ? this.asCollection(entities, { annots, reset: true }) : null
+        entities
+          ? this.asCollection<M, C>(entities, { annots, reset: true })
+          : null
       )
     );
   }

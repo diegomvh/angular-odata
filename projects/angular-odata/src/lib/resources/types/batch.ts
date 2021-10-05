@@ -3,8 +3,7 @@ import {
   HttpErrorResponse,
   HttpResponse,
 } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { finalize, map, switchMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 
 import { ODataPathSegments } from '../path-segments';
 import { ODataResource } from '../resource';

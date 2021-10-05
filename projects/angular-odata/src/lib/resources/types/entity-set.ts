@@ -244,7 +244,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return this.fetch(options).pipe(map(({ entities }) => entities));
   }
 
-  fetchCollection(
+  fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     options?: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
@@ -252,7 +252,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   ): Observable<ODataCollection<T, ODataModel<T>> | null> {
     return this.fetch(options).pipe(
       map(({ entities, annots }) =>
-        entities ? this.asCollection(entities, { annots, reset: true }) : null
+        entities
+          ? this.asCollection<M, C>(entities, { annots, reset: true })
+          : null
       )
     );
   }
