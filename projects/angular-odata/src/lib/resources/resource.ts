@@ -186,7 +186,7 @@ export abstract class ODataResource<T> {
       const parser =
         type !== undefined ? this.api.parserForType<T>(type) : undefined;
       return parser !== undefined && 'encode' in parser
-        ? parser.deserialize(value, options)
+        ? parser.encode(value, options)
         : value;
     };
     return Array.isArray(value)
