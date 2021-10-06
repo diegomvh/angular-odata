@@ -33,10 +33,11 @@ import {
   ODataModelField,
   ODataModelState,
   ODataModelEntry,
-  INCLUDE_ALL,
+  INCLUDE_DEEP,
 } from './options';
 import { ODataHelper } from '../helper';
 import { DEFAULT_VERSION } from '../constants';
+import { INCLUDE_SHALLOW } from '.';
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M>
@@ -239,7 +240,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   clone<C extends ODataCollection<T, M>>() {
     let Ctor = <typeof ODataCollection>this.constructor;
-    return new Ctor(this.toEntities(INCLUDE_ALL), {
+    return new Ctor(this.toEntities(INCLUDE_SHALLOW), {
       resource: this.resource() as ODataCollectionResource<T>,
       annots: this.annots(),
     }) as C;
@@ -453,7 +454,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
         state: reset ? ODataModelState.Unchanged : ODataModelState.Added,
         model,
         key: model.key(),
-        subscription: null,
       };
       // Subscribe
       this._subscribe(entry);
@@ -632,7 +632,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
       if (entry !== undefined) {
         //TODO: Remove/Add or Merge?
         // Merge
-        entry.model.assign(value.toEntity({ client_id: true, ...INCLUDE_ALL }));
+        entry.model.assign(
+          value.toEntity({ client_id: true, ...INCLUDE_DEEP })
+        );
         if (entry.model.hasChanged()) toMerge.push(model);
       } else {
         // Add
@@ -716,7 +718,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           if (isModel) {
             const entity = (obj as M).toEntity({
               client_id: true,
-              ...INCLUDE_ALL,
+              ...INCLUDE_DEEP,
             });
             model.assign(entity, { reset, silent });
           } else {
@@ -754,7 +756,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
 
     toRemove.forEach((m) => this._removeModel(m, { silent: silent, reset }));
-    toAdd.forEach((m) => this._addModel(m, { silent: silent, reset }));
+    toAdd.forEach((m) => {
+      this._addModel(m, { silent: silent, reset });
+      // Set Parent
+      m._parent = [this, null];
+    });
     toSort.forEach((m) => {
       this._removeModel(m[0], { silent: true, reset });
       this._addModel(m[0], { silent: true, reset, position: m[1] });
@@ -864,19 +870,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   private _unsubscribe(entry: ODataModelEntry<T, M>) {
-    if (entry.subscription !== null) {
+    if (entry.subscription) {
       entry.subscription.unsubscribe();
-      entry.subscription = null;
+      delete entry.subscription;
     }
   }
 
   private _subscribe(entry: ODataModelEntry<T, M>) {
-    if (entry.subscription !== null) {
+    if (entry.subscription) {
       throw new Error('Subscription already exists');
     }
-    //if (!entry.model.isParentOf(this)) {
-    entry.model._parent = [this, null];
-    //}
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
         if (

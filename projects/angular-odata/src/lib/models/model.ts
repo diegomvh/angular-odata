@@ -27,8 +27,9 @@ import {
   ODataModelRelation,
   ODataModelResource,
   ODataModelField,
-  INCLUDE_ALL,
+  INCLUDE_DEEP,
 } from './options';
+import { INCLUDE_SHALLOW } from '.';
 
 // @dynamic
 export class ODataModel<T> {
@@ -352,7 +353,7 @@ export class ODataModel<T> {
 
   clone<M extends ODataModel<T>>() {
     let Ctor = <typeof ODataModel>this.constructor;
-    return new Ctor(this.toEntity(INCLUDE_ALL), {
+    return new Ctor(this.toEntity(INCLUDE_SHALLOW), {
       resource: this.resource() as ODataModelResource<T>,
       annots: this.annots(),
     }) as M;
@@ -603,7 +604,7 @@ export class ODataModel<T> {
 
     return resource
       .cast<S>(type)
-      .asModel(this.toEntity(INCLUDE_ALL), { annots: this.annots() });
+      .asModel(this.toEntity(INCLUDE_DEEP), { annots: this.annots() });
   }
 
   protected fetchNavigationProperty<S>(
