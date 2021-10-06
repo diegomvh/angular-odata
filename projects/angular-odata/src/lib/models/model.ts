@@ -28,8 +28,8 @@ import {
   ODataModelResource,
   ODataModelField,
   INCLUDE_DEEP,
+  INCLUDE_SHALLOW,
 } from './options';
-import { INCLUDE_SHALLOW } from '.';
 
 // @dynamic
 export class ODataModel<T> {

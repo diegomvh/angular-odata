@@ -34,10 +34,10 @@ import {
   ODataModelState,
   ODataModelEntry,
   INCLUDE_DEEP,
+  INCLUDE_SHALLOW,
 } from './options';
 import { ODataHelper } from '../helper';
 import { DEFAULT_VERSION } from '../constants';
-import { INCLUDE_SHALLOW } from '.';
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M>
