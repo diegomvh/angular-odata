@@ -404,9 +404,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         map(() => {
           this._entries = this._entries
             .filter((entry) => entry.state !== ODataModelState.Removed)
-            .map((entry) =>
-              Object.assign(entry, { state: ODataModelState.Unchanged })
-            );
+            .map((entry) => ({ ...entry, state: ODataModelState.Unchanged }));
           this.events$.emit(new ODataModelEvent('sync', { collection: this }));
           return this;
         })

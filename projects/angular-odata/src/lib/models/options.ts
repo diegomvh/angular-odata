@@ -1319,11 +1319,13 @@ export class ODataModelOptions<T> {
     if (!ODataModelOptions.isCollection(relation.model)) {
       var ref = field.meta?.resolveReferential(relation.model, field);
       if (ref !== undefined) {
-        Object.assign(self, ref);
+        Object.entries(ref).forEach(([k, v]) =>
+          this._setValue(self, k, v, false)
+        );
       }
     }
     relation.state =
-      self._resetting || !changed || currentModel === undefined
+      self._resetting || !changed
         ? ODataModelState.Unchanged
         : ODataModelState.Changed;
     if (!self._silent && changed) {
@@ -1339,9 +1341,9 @@ export class ODataModelOptions<T> {
     return changed;
   }
 
-  private _setAttribute<F>(
+  private _setValue<F>(
     self: ODataModel<T>,
-    field: ODataModelField<F>,
+    field: string,
     value:
       | F
       | F[]
@@ -1349,31 +1351,32 @@ export class ODataModelOptions<T> {
       | { [name: string]: any }[]
       | ODataModel<F>
       | ODataCollection<F, ODataModel<F>>
-      | null
+      | null,
+    key?: boolean
   ): boolean {
     let changed = false;
     const attrs = this.attributes(self, {
       include_concurrency: true,
       include_computed: true,
     });
-    const currentValue = attrs[field.name];
+    const currentValue = attrs[field];
     changed = !Types.isEqual(currentValue, value);
     if (self._resetting) {
-      delete self._changes[field.name];
-      self._attributes[field.name] = value;
-    } else if (Types.isEqual(value, self._attributes[field.name])) {
-      delete self._changes[field.name];
+      delete self._changes[field];
+      self._attributes[field] = value;
+    } else if (Types.isEqual(value, self._attributes[field])) {
+      delete self._changes[field];
     } else if (changed) {
-      self._changes[field.name] = value;
+      self._changes[field] = value;
     }
     if (!self._silent && changed) {
       self.events$.emit(
         new ODataModelEvent('change', {
-          track: field.name,
+          track: field,
           model: self,
           value,
           previous: currentValue,
-          options: { key: field.isKey() },
+          options: { key },
         })
       );
     }
@@ -1394,7 +1397,7 @@ export class ODataModelOptions<T> {
   ): boolean {
     return field.isStructuredType()
       ? this._setStructured(self, field, value)
-      : this._setAttribute(self, field, value);
+      : this._setValue(self, field.name, value, field.isKey());
   }
 
   private _unsubscribe<F>(
@@ -1430,7 +1433,9 @@ export class ODataModelOptions<T> {
                 relation.field
               );
               if (ref !== undefined) {
-                Object.assign(self, ref);
+                Object.entries(ref).forEach(([k, v]) =>
+                  this._setValue(self, k, v, false)
+                );
               }
             }
           }
