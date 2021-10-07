@@ -1,12 +1,12 @@
-import { Observable } from 'rxjs';
+import { $ID, $REF, ODATA_ID } from '../../constants';
 
-import { ODataResource } from '../resource';
-import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
 import { ODataOptions } from './options';
-import { $REF, $ID, ODATA_ID } from '../../constants';
-import { ODataApi } from '../../api';
+import { ODataPathSegments } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
+import { ODataResource } from '../resource';
+import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
 
 export class ODataReferenceResource extends ODataResource<any> {

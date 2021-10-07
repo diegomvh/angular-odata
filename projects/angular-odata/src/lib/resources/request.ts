@@ -1,5 +1,3 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { ODataApi } from '../api';
 import {
   $BATCH,
   $QUERY,
@@ -9,9 +7,12 @@ import {
   PREFER,
   TEXT_PLAIN,
 } from '../constants';
-import { QueryOptionNames } from '../types';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
+
 import { Http } from '../utils';
+import { ODataApi } from '../api';
 import { ODataResource } from './resource';
+import { QueryOptionNames } from '../types';
 
 export class ODataRequest<T> {
   readonly api: ODataApi;

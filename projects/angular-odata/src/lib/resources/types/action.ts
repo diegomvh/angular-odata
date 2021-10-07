@@ -1,29 +1,29 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
+import { ODataCollection, ODataModel } from '../../models';
 import {
-  ODataEntityOptions,
-  ODataEntitiesOptions,
-  ODataPropertyOptions,
-  ODataOptions,
-  ODataNoneOptions,
-} from './options';
-import {
-  ODataProperty,
   ODataEntities,
+  ODataEntitiesAnnotations,
   ODataEntity,
   ODataEntityAnnotations,
-  ODataEntitiesAnnotations,
+  ODataProperty,
 } from '../responses';
+import {
+  ODataEntitiesOptions,
+  ODataEntityOptions,
+  ODataNoneOptions,
+  ODataOptions,
+  ODataPropertyOptions,
+} from './options';
+
 import { ODataApi } from '../../api';
-import { ODataCollection, ODataModel } from '../../models';
 import { ODataEntityResource } from './entity';
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataEntitySetResource } from './entity-set';
+import { ODataPathSegments } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
+import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
+import { map } from 'rxjs/operators';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory

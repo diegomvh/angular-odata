@@ -1,12 +1,11 @@
-import { Observable } from 'rxjs';
-
-import { ODataResource } from '../resource';
+import { $VALUE } from '../../constants';
+import { Http } from '../../utils';
+import { ODataApi } from '../../api';
+import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
 import { ODataQueryOptions } from '../query-options';
-import { ODataOptions } from './options';
-import { $VALUE } from '../../constants';
-import { ODataApi } from '../../api';
-import { Http } from '../../utils';
+import { ODataResource } from '../resource';
+import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
 
 export class ODataMediaResource<T> extends ODataResource<T> {

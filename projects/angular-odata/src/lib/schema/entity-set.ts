@@ -1,6 +1,7 @@
-import { ODataSchema } from './schema';
 import { EntitySetConfig } from '../types';
 import { ODataAnnotation } from './annotation';
+import { ODataSchema } from './schema';
+
 export class ODataEntitySet {
   schema: ODataSchema;
   name: string;

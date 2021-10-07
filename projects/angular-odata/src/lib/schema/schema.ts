@@ -1,14 +1,13 @@
-import { ODataStructuredType } from './structured-type';
+import { Parser, SchemaConfig } from '../types';
+
+import { OData } from '../utils/odata';
+import { ODataAnnotation } from './annotation';
+import { ODataApi } from '../api';
 import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';
-import { ODataEnumType } from './enum-type';
-import { ODataApi } from '../api';
-import { SchemaConfig, Parser, CallableConfig } from '../types';
 import { ODataEntitySet } from './entity-set';
-import { ODataAnnotation } from './annotation';
-import { CALLABLE_BINDING_PARAMETER } from '../constants';
-import { Objects } from '../utils';
-import { OData } from '../utils/odata';
+import { ODataEnumType } from './enum-type';
+import { ODataStructuredType } from './structured-type';
 
 export class ODataSchema {
   api: ODataApi;

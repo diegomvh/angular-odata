@@ -1,7 +1,7 @@
-import { ODataSchema } from './schema';
 import { EntityContainerConfig } from '../types';
-import { ODataEntitySet } from './entity-set';
 import { ODataAnnotation } from './annotation';
+import { ODataEntitySet } from './entity-set';
+import { ODataSchema } from './schema';
 
 export class ODataEntityContainer {
   schema: ODataSchema;

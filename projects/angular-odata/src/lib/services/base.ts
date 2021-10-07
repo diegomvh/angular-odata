@@ -1,9 +1,9 @@
 import {
   ODataActionResource,
+  ODataEntities,
+  ODataEntity,
   ODataFunctionResource,
   ODataNavigationPropertyResource,
-  ODataEntity,
-  ODataEntities,
   ODataProperty,
   ODataQueryArgumentsOptions,
 } from '../resources';

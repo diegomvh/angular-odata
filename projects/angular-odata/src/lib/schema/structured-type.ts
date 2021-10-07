@@ -1,5 +1,3 @@
-import { ODataCollection } from '../models';
-import { ODataModel } from '../models/model';
 import {
   JsonSchemaOptions,
   ODataEntityTypeKey,
@@ -7,7 +5,10 @@ import {
   ODataStructuredTypeParser,
 } from '../parsers';
 import { Options, StructuredTypeConfig } from '../types';
+
 import { ODataAnnotation } from './annotation';
+import { ODataCollection } from '../models';
+import { ODataModel } from '../models/model';
 import { ODataSchema } from './schema';
 
 export class ODataStructuredType<T> {

@@ -1,5 +1,6 @@
-import { binary, duration, raw } from '../resources/builder';
 import { Parser, StructuredTypeFieldOptions } from '../types';
+
+import { raw } from '../resources/builder';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
 export type Duration = {

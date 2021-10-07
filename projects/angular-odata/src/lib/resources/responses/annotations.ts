@@ -1,4 +1,5 @@
 import { ODataContext, ODataVersionHelper } from '../../helper';
+
 import { ODataMetadataType } from '../../types';
 
 export abstract class ODataAnnotations {

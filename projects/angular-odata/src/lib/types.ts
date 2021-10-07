@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
 import { ODataVersionHelper } from './helper';
+import { Observable } from 'rxjs';
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
 export type FetchPolicy =

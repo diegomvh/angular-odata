@@ -1,10 +1,4 @@
 import {
-  DEFAULT_FETCH_POLICY,
-  DEFAULT_STRIP_METADATA,
-  DEFAULT_VERSION,
-} from './constants';
-import { ODataHelper } from './helper';
-import {
   ApiOptions,
   FetchPolicy,
   ODataMetadataType,
@@ -13,6 +7,13 @@ import {
   OptionsHelper,
   QueryOptionNames,
 } from './types';
+import {
+  DEFAULT_FETCH_POLICY,
+  DEFAULT_STRIP_METADATA,
+  DEFAULT_VERSION,
+} from './constants';
+
+import { ODataHelper } from './helper';
 
 export class ODataApiOptions implements ApiOptions, OptionsHelper {
   version: ODataVersion;

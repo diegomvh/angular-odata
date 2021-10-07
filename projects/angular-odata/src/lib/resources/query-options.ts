@@ -1,13 +1,13 @@
+import { Dates, Objects, Types } from '../utils';
 import {
-  buildPathAndQuery,
   Expand,
   Filter,
   OrderBy,
   Select,
   Transform,
+  buildPathAndQuery,
 } from './builder';
 
-import { Dates, Types, Objects } from '../utils';
 import { QueryOptionNames } from '../types';
 
 export type ODataQueryArguments<T> = {

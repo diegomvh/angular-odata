@@ -13,7 +13,7 @@ import { ODataQueryArguments, ODataQueryOptions } from './query-options';
 import { ODataOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
-import { Parser, OptionsHelper, QueryOptionNames } from '../types';
+import { OptionsHelper, QueryOptionNames } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
 import {

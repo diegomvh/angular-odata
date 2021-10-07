@@ -1,32 +1,32 @@
-import { Injectable, Injector } from '@angular/core';
 import {
   HttpClient,
+  HttpEvent,
   HttpHeaders,
   HttpParams,
   HttpResponse,
-  HttpEvent,
 } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
+import {
+  ODataActionResource,
+  ODataBatchResource,
+  ODataEntityResource,
+  ODataEntitySetResource,
+  ODataFunctionResource,
+  ODataMetadataResource,
+  ODataNavigationPropertyResource,
+  ODataResource,
+  ODataResponse,
+  ODataSegment,
+  ODataSingletonResource,
+} from './resources/index';
+import { ODataCollection, ODataModel } from './models/index';
+
+import { ODataApi } from './api';
+import { ODataEntityService } from './services/entity';
+import { ODataRequest } from './resources/index';
+import { ODataSettings } from './settings';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { ODataModel, ODataCollection } from './models/index';
-import {
-  ODataResource,
-  ODataBatchResource,
-  ODataMetadataResource,
-  ODataEntitySetResource,
-  ODataSingletonResource,
-  ODataFunctionResource,
-  ODataActionResource,
-  ODataEntityResource,
-  ODataSegment,
-  ODataResponse,
-  ODataNavigationPropertyResource,
-} from './resources/index';
-import { ODataSettings } from './settings';
-import { ODataApi } from './api';
-import { ODataRequest } from './resources/index';
-import { ODataEntityService } from './services/entity';
 
 function addBody<T>(
   options: {

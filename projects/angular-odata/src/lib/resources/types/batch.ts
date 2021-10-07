@@ -1,40 +1,40 @@
 import {
-  HttpHeaders,
+  $BATCH,
+  ACCEPT,
+  APPLICATION_HTTP,
+  APPLICATION_JSON,
+  BATCH_PREFIX,
+  BINARY,
+  BOUNDARY_PREFIX_SUFFIX,
+  CHANGESET_PREFIX,
+  CONTENT_ID,
+  CONTENT_TRANSFER_ENCODING,
+  CONTENT_TYPE,
+  HTTP11,
+  MULTIPART_MIXED,
+  MULTIPART_MIXED_BOUNDARY,
+  NEWLINE,
+  NEWLINE_REGEXP,
+  ODATA_VERSION,
+  VERSION_4_0,
+  XSSI_PREFIX,
+} from '../../constants';
+import {
   HttpErrorResponse,
+  HttpHeaders,
   HttpResponse,
 } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
-import { ODataPathSegments } from '../path-segments';
-import { ODataResource } from '../resource';
-import {
-  BOUNDARY_PREFIX_SUFFIX,
-  APPLICATION_JSON,
-  HTTP11,
-  CONTENT_TYPE,
-  NEWLINE,
-  BATCH_PREFIX,
-  $BATCH,
-  MULTIPART_MIXED_BOUNDARY,
-  VERSION_4_0,
-  MULTIPART_MIXED,
-  ODATA_VERSION,
-  ACCEPT,
-  CONTENT_TRANSFER_ENCODING,
-  APPLICATION_HTTP,
-  CONTENT_ID,
-  BINARY,
-  CHANGESET_PREFIX,
-  NEWLINE_REGEXP,
-  XSSI_PREFIX,
-} from '../../constants';
-import { ODataRequest } from '../request';
-import { ODataApi } from '../../api';
-import { ODataResponse } from '../responses';
-import { ODataOptions } from './options';
 import { Http } from '../../utils/http';
-import { Strings } from '../../utils/strings';
+import { ODataApi } from '../../api';
+import { ODataOptions } from './options';
+import { ODataPathSegments } from '../path-segments';
+import { ODataRequest } from '../request';
+import { ODataResource } from '../resource';
+import { ODataResponse } from '../responses';
 import { PathSegmentNames } from '../../types';
+import { Strings } from '../../utils/strings';
 
 export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
   constructor(public request: ODataRequest<any>) {

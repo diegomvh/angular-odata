@@ -1,7 +1,8 @@
-import { ODataSchema } from './schema';
-import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from '../parsers';
 import { EnumTypeConfig, Options } from '../types';
+import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from '../parsers';
+
 import { ODataAnnotation } from './annotation';
+import { ODataSchema } from './schema';
 
 export class ODataEnumType<E> {
   schema: ODataSchema;

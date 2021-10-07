@@ -1,28 +1,27 @@
 import { EMPTY, Observable } from 'rxjs';
-import { concatMap, expand, map, toArray } from 'rxjs/operators';
-
-import { ODataValueResource } from './value';
-
 import { EntityKey, ODataResource } from '../resource';
-import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments } from '../path-segments';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
+import { ODataCollection, ODataModel } from '../../models';
 import {
-  ODataPropertyOptions,
+  ODataEntities,
+  ODataEntitiesAnnotations,
+  ODataEntity,
+  ODataEntityAnnotations,
+  ODataProperty,
+} from '../responses';
+import {
   ODataEntitiesOptions,
   ODataEntityOptions,
   ODataOptions,
+  ODataPropertyOptions,
 } from './options';
-import {
-  ODataProperty,
-  ODataEntities,
-  ODataEntity,
-  ODataEntityAnnotations,
-  ODataEntitiesAnnotations,
-} from '../responses';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
-import { ODataModel, ODataCollection } from '../../models';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
+
 import { ODataApi } from '../../api';
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
+import { ODataPathSegments } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
+import { ODataValueResource } from './value';
 //import { ODataNavigationPropertyResource } from './navigation-property';
 import { PathSegmentNames } from '../../types';
 

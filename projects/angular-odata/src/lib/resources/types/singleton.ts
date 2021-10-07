@@ -1,21 +1,20 @@
+import { EntityKey, ODataResource } from '../resource';
+import { Expand, Select } from '../builder';
+import { ODataEntity, ODataEntityAnnotations } from '../responses';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
+
+import { ODataActionResource } from './action';
+import { ODataApi } from '../../api';
+import { ODataFunctionResource } from './function';
+import { ODataModel } from '../../models';
+import { ODataNavigationPropertyResource } from './navigation-property';
+import { ODataOptions } from './options';
+import { ODataPathSegments } from '../path-segments';
+import { ODataPropertyResource } from './property';
+import { ODataQueryOptions } from '../query-options';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { Expand, Select } from '../builder';
-import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
-import { EntityKey, ODataResource } from '../resource';
-
-import { ODataNavigationPropertyResource } from './navigation-property';
-import { ODataPropertyResource } from './property';
-import { ODataActionResource } from './action';
-import { ODataFunctionResource } from './function';
-import { ODataOptions } from './options';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
-import { ODataEntity, ODataEntityAnnotations } from '../responses';
-import { ODataModel } from '../../models';
-import { ODataApi } from '../../api';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory

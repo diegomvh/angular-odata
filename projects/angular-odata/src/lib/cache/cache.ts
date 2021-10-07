@@ -1,11 +1,6 @@
-import { DEFAULT_TIMEOUT, CACHE_KEY_SEPARATOR } from '../constants';
+import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
 import { Cache, PathSegmentNames } from '../types';
-import {
-  ODataBatchRequest,
-  ODataBatchResource,
-  ODataRequest,
-  ODataResponse,
-} from '../resources';
+import { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 

@@ -1,33 +1,31 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import {
-  ODataEntityOptions,
+  ODataEntities,
+  ODataEntitiesAnnotations,
+  ODataEntity,
+  ODataEntityAnnotations,
+  ODataProperty,
+} from '../responses';
+import {
   ODataEntitiesOptions,
-  ODataPropertyOptions,
-  ODataOptions,
+  ODataEntityOptions,
   ODataNoneOptions,
+  ODataOptions,
+  ODataPropertyOptions,
 } from './options';
 
-import {
-  ODataEntity,
-  ODataEntities,
-  ODataProperty,
-  ODataEntityAnnotations,
-  ODataEntitiesAnnotations,
-} from '../responses';
 import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
-import { ODataModel } from '../../models/model';
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
-import { ODataEntitySetResource } from './entity-set';
 import { ODataEntityResource } from './entity';
-import { ODataStructuredType } from '../../schema';
+import { ODataEntitySetResource } from './entity-set';
+import { ODataModel } from '../../models/model';
+import { ODataPathSegments } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 import { ODataResource } from '../resource';
-import { alias as functionAlias } from '../builder';
+import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
+import { alias as functionAlias } from '../builder';
+import { map } from 'rxjs/operators';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory

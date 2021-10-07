@@ -1,11 +1,11 @@
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 
-import { ODataSettings } from './settings';
+import { ApiConfig } from './types';
+import { HttpClientModule } from '@angular/common/http';
+import { ODATA_CONFIGURATIONS } from './tokens';
 import { ODataClient } from './client';
 import { ODataServiceFactory } from './services/index';
-import { ApiConfig } from './types';
-import { ODATA_CONFIGURATIONS } from './tokens';
+import { ODataSettings } from './settings';
 
 export function createSettings(configs: ApiConfig[]) {
   return new ODataSettings(...configs);

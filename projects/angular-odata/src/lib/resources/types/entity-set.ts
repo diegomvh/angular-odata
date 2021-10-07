@@ -1,24 +1,23 @@
-import { Observable, EMPTY } from 'rxjs';
-import { expand, concatMap, toArray, map } from 'rxjs/operators';
-
-import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
-import { ODataPathSegments } from '../path-segments';
-
-import { ODataActionResource } from './action';
-import { ODataFunctionResource } from './function';
-import { ODataQueryOptions } from '../query-options';
-import { ODataEntityResource } from './entity';
-import { ODataCountResource } from './count';
+import { EMPTY, Observable } from 'rxjs';
 import { EntityKey, ODataResource } from '../resource';
-import { ODataOptions } from './options';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
+import { ODataCollection, ODataModel } from '../../models';
 import {
-  ODataEntity,
   ODataEntities,
   ODataEntitiesAnnotations,
+  ODataEntity,
 } from '../responses';
-import { ODataModel, ODataCollection } from '../../models';
-import { ODataApi } from '../../api';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
+
+import { ODataActionResource } from './action';
+import { ODataApi } from '../../api';
+import { ODataCountResource } from './count';
+import { ODataEntityResource } from './entity';
+import { ODataFunctionResource } from './function';
+import { ODataOptions } from './options';
+import { ODataPathSegments } from '../path-segments';
+import { ODataQueryOptions } from '../query-options';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory

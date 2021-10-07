@@ -1,29 +1,29 @@
-import { Observable, EMPTY } from 'rxjs';
-import { expand, concatMap, toArray, map } from 'rxjs/operators';
-
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
-import { ODataModel, ODataCollection } from '../../models';
-import { ODataApi } from '../../api';
+import { EMPTY, Observable } from 'rxjs';
 import { EntityKey, ODataResource } from '../resource';
-import { Expand, Select, Transform, Filter, OrderBy } from '../builder';
+import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
+import { ODataCollection, ODataModel } from '../../models';
 import {
   ODataEntities,
   ODataEntitiesAnnotations,
   ODataEntity,
   ODataEntityAnnotations,
 } from '../responses';
-import { ODataQueryOptions } from '../query-options';
-import { ODataPathSegments } from '../path-segments';
-import { ODataReferenceResource } from './reference';
-import { ODataCountResource } from './count';
-import { ODataPropertyResource } from './property';
 import {
-  ODataEntityOptions,
   ODataEntitiesOptions,
+  ODataEntityOptions,
   ODataOptions,
 } from './options';
-import { ODataMediaResource } from './media';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
+
+import { ODataApi } from '../../api';
+import { ODataCountResource } from './count';
+import { ODataMediaResource } from './media';
+import { ODataPathSegments } from '../path-segments';
+import { ODataPropertyResource } from './property';
+import { ODataQueryOptions } from '../query-options';
+import { ODataReferenceResource } from './reference';
+import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 
 /**
  * OData Navigation Property Resource

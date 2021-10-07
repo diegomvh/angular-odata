@@ -1,41 +1,42 @@
-import { CsdlTypeDefinition } from './csdl/csdl-type-definition';
-import { CsdlSchema } from './csdl/csdl-schema';
-import { Types } from '../../utils/types';
-import { CsdlEnumType, CsdlEnumMember } from './csdl/csdl-enum-type';
 import {
-  CsdlEntityType,
-  CsdlPropertyRef,
-  CsdlKey,
-  CsdlComplexType,
-} from './csdl/csdl-structured-type';
-import {
-  CsdlFunction,
-  CsdlParameter,
-  CsdlFunctionImport,
-  CsdlActionImport,
-  CsdlReturnType,
   CsdlAction,
+  CsdlActionImport,
+  CsdlFunction,
+  CsdlFunctionImport,
+  CsdlParameter,
+  CsdlReturnType,
 } from './csdl/csdl-function-action';
 import {
-  CsdlProperty,
-  CsdlNavigationProperty,
-  CsdlReferentialConstraint,
-  CsdlOnDelete,
-} from './csdl/csdl-structural-property';
-import { CsdlEntitySet } from './csdl/csdl-entity-set';
-import { CsdlSingleton } from './csdl/csdl-singleton';
-import { CsdlEntityContainer } from './csdl/csdl-entity-container';
+  CsdlAnnotation,
+  CsdlAnnotations,
+  CsdlTerm,
+} from './csdl/csdl-annotation';
 import {
-  CsdlReference,
+  CsdlComplexType,
+  CsdlEntityType,
+  CsdlKey,
+  CsdlPropertyRef,
+} from './csdl/csdl-structured-type';
+import { CsdlEnumMember, CsdlEnumType } from './csdl/csdl-enum-type';
+import {
   CsdlInclude,
   CsdlIncludeAnnotations,
+  CsdlReference,
 } from './csdl/csdl-reference';
 import {
-  CsdlAnnotation,
-  CsdlTerm,
-  CsdlAnnotations,
-} from './csdl/csdl-annotation';
+  CsdlNavigationProperty,
+  CsdlOnDelete,
+  CsdlProperty,
+  CsdlReferentialConstraint,
+} from './csdl/csdl-structural-property';
+
+import { CsdlEntityContainer } from './csdl/csdl-entity-container';
+import { CsdlEntitySet } from './csdl/csdl-entity-set';
 import { CsdlNavigationPropertyBinding } from './csdl/csdl-navigation-property-binding';
+import { CsdlSchema } from './csdl/csdl-schema';
+import { CsdlSingleton } from './csdl/csdl-singleton';
+import { CsdlTypeDefinition } from './csdl/csdl-type-definition';
+import { Types } from '../../utils/types';
 import { VERSION_4_0 } from '../../constants';
 
 enum FieldType {

@@ -1,6 +1,6 @@
 import {
-  ODataEntityAnnotations,
   ODataEntitiesAnnotations,
+  ODataEntityAnnotations,
   ODataPropertyAnnotations,
 } from './annotations';
 
