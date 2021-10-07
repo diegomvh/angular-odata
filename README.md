@@ -12,7 +12,7 @@ Please check also my other related project, [OData Angular Generator](https://gi
 
 Full examples of the library:
 
- - [AngularODataEntity](https://github.com/diegomvh/AngularODataEntity)
+- [AngularODataEntity](https://github.com/diegomvh/AngularODataEntity)
 
 ## Table of contents
 
@@ -33,7 +33,7 @@ npm i angular-odata
 
 ## Usage
 
-1) Add module to your project
+1. Add module to your project
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -51,19 +51,19 @@ import { ODataModule } from 'angular-odata';
 export class AppModule {}
 ```
 
-2) Inject and use the ODataServiceFactory
+2. Inject and use the ODataServiceFactory
 
 ```typescript
-import { Component } from '@angular/core';
-import { ODataClient, ODATA_ETAG } from 'angular-odata';
+import { Component } from "@angular/core";
+import { ODataClient, ODATA_ETAG } from "angular-odata";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
-  title = 'TripPin';
+  title = "TripPin";
   constructor(private factory: ODataServiceFactory) {
     this.queries();
   }
@@ -77,33 +77,54 @@ export class AppComponent {
 
     // Fetch airports with count
     airports
-    .get({withCount: true})
-    .subscribe(({entities, annots}) => console.log("Airports: ", entities, "Annotations: ", annots));
+      .fetch({ withCount: true })
+      .subscribe(({ entities, annots }) =>
+        console.log("Airports: ", entities, "Annotations: ", annots)
+      );
 
     // Fetch all airports
-    airports
-    .fetchAll()
-    .subscribe(aports => console.log("All: ", aports));
+    airports.fetchAll().subscribe((aports) => console.log("All: ", aports));
 
     // Fetch airport with key
     airports
-    .entity("CYYZ")
-    .get()
-    .pipe(
-      switchMap(() => airports.entity("CYYZ").get({fetchPolicy: 'cache-first'}))) // From Cache!
-    .subscribe(({entity, annots}) => console.log("Airport: ", entity, "Annotations: ", annots));
+      .entity("CYYZ")
+      .fetch()
+      .pipe(
+        switchMap(() =>
+          airports.entity("CYYZ").fetch({ fetchPolicy: "cache-first" })
+        )
+      ) // From Cache!
+      .subscribe(({ entity, annots }) =>
+        console.log("Airport: ", entity, "Annotations: ", annots)
+      );
 
     // Filter airports (inmutable resource)
     airports
-    .filter({Location: {City: {CountryRegion: "United States"}}})
-    .get()
-    .subscribe(({entities, annots}) => console.log("Airports of United States: ", entities, "Annotations: ", annots));
+      .filter({ Location: { City: { CountryRegion: "United States" } } })
+      .fetch()
+      .subscribe(({ entities, annots }) =>
+        console.log(
+          "Airports of United States: ",
+          entities,
+          "Annotations: ",
+          annots
+        )
+      );
 
     // Add filter (mutable resource)
-    airports.query.filter().push({Location: {City: {Region: "California"}}});
+    airports.query
+      .filter()
+      .push({ Location: { City: { Region: "California" } } });
     airports
-    .get()
-    .subscribe(({entities, annots}) => console.log("Airports in California: ", entities, "Annotations: ", annots));
+      .fetch()
+      .subscribe(({ entities, annots }) =>
+        console.log(
+          "Airports in California: ",
+          entities,
+          "Annotations: ",
+          annots
+        )
+      );
 
     // Resource to JSON
     const json = airports.toJSON();
@@ -115,31 +136,46 @@ export class AppComponent {
     // Remove filter (mutable resource)
     airports.query.filter().clear();
     airports
-    .get()
-    .subscribe(({entities, annots}) => console.log("Airports: ", entities, "Annotations: ", annots));
+      .fetch()
+      .subscribe(({ entities, annots }) =>
+        console.log("Airports: ", entities, "Annotations: ", annots)
+      );
 
     let people = peopleService.entities();
 
     // Expand (inmutable resource)
-    people.expand({
-      Friends: {
-        expand: { Friends: { select: ['AddressInfo']}}
-      },
-      Trips: { select: ['Name', 'Tags'] },
-    })
-    .get({withCount: true})
-    .subscribe(({entities, annots}) => console.log("People with Friends and Trips: ", entities, "Annotations: ", annots));
+    people
+      .expand({
+        Friends: {
+          expand: { Friends: { select: ["AddressInfo"] } },
+        },
+        Trips: { select: ["Name", "Tags"] },
+      })
+      .fetch({ withCount: true })
+      .subscribe(({ entities, annots }) =>
+        console.log(
+          "People with Friends and Trips: ",
+          entities,
+          "Annotations: ",
+          annots
+        )
+      );
 
-    this.odata.batch("TripPin").post(batch => {
-      airports.get().subscribe(console.log);
-      airport.get().subscribe(console.log);
-      people.get({withCount: true}).subscribe(console.log);
-    }).subscribe();
+    this.odata
+      .batch("TripPin")
+      .exec((batch) =>
+        forkJoin([
+          airports.fetch(),
+          airport.fetch(),
+          people.fetch({ withCount: true }),
+        ])
+      )
+      .subscribe();
   }
 }
 ```
 
-## Generator 
+## Generator
 
 If you use [OData Angular Generator](https://github.com/diegomvh/ODataApiGen), import the config and the module from generated source.
 
