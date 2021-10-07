@@ -64,6 +64,11 @@ export class ODataCountResource extends ODataResource<any> {
   //#endregion
 
   //#region Shortcuts
+  /**
+   * Fetch the count of the set.
+   * @param options Options for the request
+   * @returns The count of the set
+   */
   fetch(options?: ODataOptions): Observable<number> {
     return this.get(options);
   }

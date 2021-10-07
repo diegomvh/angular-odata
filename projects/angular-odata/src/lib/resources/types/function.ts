@@ -207,6 +207,12 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Shortcuts
+  /**
+   * Execute the function
+   * @param params Parameters to be sent to the function
+   * @param alias If true, the parameters will be send using aliases
+   * @param options Options for the request
+   */
   call(
     params: P | null,
     options?: { alias?: boolean } & ODataEntityOptions
@@ -236,6 +242,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return this.parameters(params, { alias }).get(options);
   }
 
+  /**
+   * Execute the function with the given parameters and return the result as a property
+   * @param params Parameters to be sent to the function
+   * @param alias If true, the parameters will be send using aliases
+   * @param options Options for the request
+   * @returns Observable of the result of the function
+   */
   callProperty(
     params: P | null,
     { alias, ...options }: { alias?: boolean } & ODataOptions = {}
@@ -247,6 +260,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     }).pipe(map(({ property }) => property));
   }
 
+  /**
+   * Execute the function with the given parameters and return the result as a entity
+   * @param params Parameters to be sent to the function
+   * @param alias If true, the parameters will be send using aliases
+   * @param options Options for the request
+   * @returns Observable of the result of the function
+   */
   callEntity(
     params: P | null,
     { alias, ...options }: { alias?: boolean } & ODataOptions = {}
@@ -258,6 +278,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     }).pipe(map(({ entity }) => entity));
   }
 
+  /**
+   * Execute the function with the given parameters and return the result as a model
+   * @param params Parameters to be sent to the function
+   * @param alias If true, the parameters will be send using aliases
+   * @param options Options for the request
+   * @returns Observable of the result of the function
+   */
   callModel<M extends ODataModel<R>>(
     params: P | null,
     { alias, ...options }: { alias?: boolean } & ODataOptions = {}
@@ -273,6 +300,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     );
   }
 
+  /**
+   * Execute the function with the given parameters and return the result as a entities
+   * @param params Parameters to be sent to the function
+   * @param alias If true, the parameters will be send using aliases
+   * @param options Options for the request
+   * @returns Observable of the result of the function
+   */
   callEntities(
     params: P | null,
     { alias, ...options }: { alias?: boolean } & ODataOptions = {}
@@ -284,6 +318,13 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     }).pipe(map(({ entities }) => entities));
   }
 
+  /**
+   * Execute the function with the given parameters and return the result as a collection
+   * @param params Parameters to be sent to the function
+   * @param alias If true, the parameters will be send using aliases
+   * @param options Options for the request
+   * @returns Observable of the result of the function
+   */
   callCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
     params: P | null,
     { alias, ...options }: { alias?: boolean } & ODataOptions = {}

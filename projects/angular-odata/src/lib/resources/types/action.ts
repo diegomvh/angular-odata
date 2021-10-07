@@ -192,6 +192,11 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Shortcuts
+  /**
+   * Execute the action
+   * @param params Parameters to be sent to the action
+   * @param options Options for the request
+   */
   call(
     params: P | null,
     options?: ODataEntityOptions
@@ -215,6 +220,12 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return this.clone().post(params, options);
   }
 
+  /**
+   * Execute the action and return the result as a property
+   * @param params Parameters for the action
+   * @param options Options for the request
+   * @returns Observable of the result of the action
+   */
   callProperty(
     params: P | null,
     options: ODataOptions = {}
@@ -224,6 +235,12 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     );
   }
 
+  /**
+   * Execute the action and return the result as a entity
+   * @param params Parameters for the action
+   * @param options Options for the request
+   * @returns Observable of the result of the action
+   */
   callEntity(
     params: P | null,
     options: ODataOptions = {}
@@ -233,6 +250,12 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     );
   }
 
+  /**
+   * Execute the action and return the result as a model
+   * @param params Parameters for the action
+   * @param options Options for the request
+   * @returns Observable of the result of the action
+   */
   callModel<M extends ODataModel<R>>(
     params: P | null,
     options: ODataOptions = {}
@@ -244,6 +267,12 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     );
   }
 
+  /**
+   * Execute the action and return the result as a entities
+   * @param params Parameters for the action
+   * @param options Options for the request
+   * @returns Observable of the result of the action
+   */
   callEntities(
     params: P | null,
     options: ODataOptions = {}
@@ -253,6 +282,12 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     );
   }
 
+  /**
+   * Execute the action and return the result as a collection
+   * @param params Parameters for the action
+   * @param options Options for the request
+   * @returns Observable of the result of the action
+   */
   callCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
     params: P | null,
     options: ODataOptions = {}
