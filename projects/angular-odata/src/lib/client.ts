@@ -162,18 +162,40 @@ export class ODataClient {
   }
 
   // Requests
-  metadata(apiNameOrType?: string): ODataMetadataResource {
-    return this.apiFor(apiNameOrType).metadata();
+  /**
+   * Build a resource for the metadata.
+   * @param apiName The name of the API.
+   * @returns The metadata resource.
+   */
+  metadata(apiName?: string): ODataMetadataResource {
+    return this.apiFor(apiName).metadata();
   }
 
-  batch(apiNameOrType?: string): ODataBatchResource {
-    return this.apiFor(apiNameOrType).batch();
+  /**
+   * Build a resource for the batch.
+   * @param apiName The name of the API.
+   * @returns The batch resource.
+   */
+  batch(apiName?: string): ODataBatchResource {
+    return this.apiFor(apiName).batch();
   }
 
+  /**
+   * Build a resource for the singleton.
+   * @param path The full path to the singleton.
+   * @param apiNameOrType The name of the API or the type of the singleton.
+   * @returns The singleton resource.
+   */
   singleton<T>(path: string, apiNameOrType?: string) {
     return this.apiFor(apiNameOrType).singleton<T>(path);
   }
 
+  /**
+   * Build a resource for the entity set.
+   * @param path The full path to the entity set.
+   * @param apiNameOrType The name of the API or the type of the entity set.
+   * @returns The entity set resource.
+   */
   entitySet<T>(
     path: string,
     apiNameOrType?: string
@@ -182,9 +204,10 @@ export class ODataClient {
   }
 
   /**
-   * Unbound Action
-   * @param  {string} path?
-   * @returns ODataActionResource
+   * Build a resource for unbound action.
+   * @param path The full path to the action.
+   * @param apiNameOrType The name of the API or the type of the entity.
+   * @returns The unbound action resource.
    */
   action<P, R>(
     path: string,
@@ -194,9 +217,10 @@ export class ODataClient {
   }
 
   /**
-   * Unbound Function
-   * @param  {string} path?
-   * @returns ODataFunctionResource
+   * Build a resource for unbound function.
+   * @param path The full path to the function.
+   * @param apiNameOrType The name of the API or the type of the callable.
+   * @returns The unbound function resource.
    */
   function<P, R>(
     path: string,
