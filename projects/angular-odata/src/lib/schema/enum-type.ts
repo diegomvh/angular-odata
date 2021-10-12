@@ -24,10 +24,20 @@ export class ODataEnumType<E> {
     );
   }
 
+  /**
+   * Returns a full type of the enum type including the namespace/alias.
+   * @param alias Use the alias of the namespace instead of the namespace.
+   * @returns The string representation of the type.
+   */
   type({ alias = false }: { alias?: boolean } = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
 
+  /**
+   * Returns a boolean indicating if the enum type is of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
   isTypeOf(type: string) {
     return this.parser.isTypeOf(type);
   }
@@ -40,6 +50,11 @@ export class ODataEnumType<E> {
     this.parser.configure({ options: this.api.options });
   }
 
+  /**
+   * Find an annotation inside the enum type.
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
@@ -80,14 +95,32 @@ export class ODataEnumType<E> {
     return this.fields().map(mapper);
   }
 
+  /**
+   * Deseialize the given value from the enum type.
+   * @param value Value to deserialize
+   * @param options Options for deserialization
+   * @returns Deserialized value
+   */
   deserialize(value: any, options?: Options): E {
     return this.parser.deserialize(value, options);
   }
 
+  /**
+   * Serialize the given value for the enum type.
+   * @param value Value to serialize
+   * @param options Options for serialization
+   * @returns Serialized value
+   */
   serialize(value: E, options?: Options): any {
     return this.parser.serialize(value, options);
   }
 
+  /**
+   * Encode the given value for the enum type.
+   * @param value Value to encode
+   * @param options Options for encoding
+   * @returns Encoded value
+   */
   encode(value: E, options?: Options): any {
     return this.parser.encode(value, options);
   }

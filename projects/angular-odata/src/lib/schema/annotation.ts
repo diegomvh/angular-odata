@@ -7,6 +7,7 @@ export class ODataAnnotation {
   int?: number;
   permissions?: string[];
   properties?: string[];
+
   constructor(annot: AnnotationConfig) {
     this.term = annot.term;
     Object.assign(this, annot);

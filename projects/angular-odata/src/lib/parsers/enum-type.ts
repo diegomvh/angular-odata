@@ -23,6 +23,11 @@ export class ODataEnumTypeFieldParser {
     );
   }
 
+  /**
+   * Find an annotation inside the enum field.
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }

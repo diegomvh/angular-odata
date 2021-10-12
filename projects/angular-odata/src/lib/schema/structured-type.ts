@@ -75,22 +75,45 @@ export class ODataStructuredType<T> {
     }
   }
 
+  /**
+   * Returns a full type of the structured type including the namespace/alias.
+   * @param alias Use the alias of the namespace instead of the namespace.
+   * @returns The string representation of the type.
+   */
   type({ alias = false }: { alias?: boolean } = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
 
+  /**
+   * Returns a boolean indicating if the structured type is of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
   isTypeOf(type: string) {
     return this.parser.isTypeOf(type);
   }
 
+  /**
+   * Returns a boolean indicating if the structured type has a simple key.
+   * @returns True if the structured type has a simple key
+   */
   isSimpleKey() {
     return this.keys().length === 1;
   }
 
+  /**
+   * Returns a boolean indicating if the structured type has a compound key.
+   * @returns True if the structured type has a compound key.
+   */
   isCompoundKey() {
     return this.keys().length > 1;
   }
 
+  /**
+   * Find an annotation inside the structured type
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
@@ -154,14 +177,32 @@ export class ODataStructuredType<T> {
     return attrs;
   }
 
+  /**
+   * Deseialize the given value from the structured type.
+   * @param value Value to deserialize
+   * @param options Options for deserialization
+   * @returns Deserialized value
+   */
   deserialize(value: any, options?: Options): T {
     return this.parser.deserialize(value, options);
   }
 
+  /**
+   * Serialize the given value for the structured type.
+   * @param value Value to serialize
+   * @param options Options for serialization
+   * @returns Serialized value
+   */
   serialize(value: T, options?: Options): any {
     return this.parser.serialize(value, options);
   }
 
+  /**
+   * Encode the given value for the structured type.
+   * @param value Value to encode
+   * @param options Options for encoding
+   * @returns Encoded value
+   */
   encode(value: T, options?: Options): any {
     return this.parser.encode(value, options);
   }

@@ -94,6 +94,12 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     this.precision = field.precision;
     this.scale = field.scale;
   }
+
+  /**
+   * Find an annotation inside the structured field type.
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }

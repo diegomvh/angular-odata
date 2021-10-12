@@ -54,6 +54,11 @@ export class ODataSchema {
     );
   }
 
+  /**
+   * Find an annotation inside the schema.
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }

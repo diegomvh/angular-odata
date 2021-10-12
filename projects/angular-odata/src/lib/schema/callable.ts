@@ -36,10 +36,20 @@ export class ODataCallable<R> {
     return path;
   }
 
+  /**
+   * Returns a full type of the callable including the namespace/alias.
+   * @param alias Use the alias of the namespace instead of the namespace.
+   * @returns The string representation of the type.
+   */
   type({ alias = false }: { alias?: boolean } = {}) {
     return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
   }
 
+  /**
+   * Returns a boolean indicating if the callable is of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
   isTypeOf(type: string) {
     return this.parser.isTypeOf(type);
   }
@@ -56,17 +66,40 @@ export class ODataCallable<R> {
     this.parser.configure({ options: this.api.options, parserForType });
   }
 
+  /**
+   * Deseialize the given value from the callable.
+   * @param value Value to deserialize
+   * @param options Options for deserialization
+   * @returns Deserialized value
+   */
   deserialize(value: any, options?: Options): any {
     return this.parser.deserialize(value, options);
   }
 
+  /**
+   * Serialize the given value for the callable.
+   * @param value Value to serialize
+   * @param options Options for serialization
+   * @returns Serialized value
+   */
   serialize(value: any, options?: Options): any {
     return this.parser.serialize(value, options);
   }
 
+  /**
+   * Encode the given value for the callable.
+   * @param value Value to encode
+   * @param options Options for encoding
+   * @returns Encoded value
+   */
   encode(value: any, options?: Options): any {
     return this.parser.encode(value, options);
   }
+
+  /**
+   * Returns the binding parameter of the callable.
+   * @returns The binding parameter of the callable.
+   */
   binding() {
     return this.parser.binding();
   }

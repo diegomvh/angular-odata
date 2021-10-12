@@ -8,6 +8,7 @@ export class ODataEntityContainer {
   name: string;
   annotations: ODataAnnotation[];
   entitySets: ODataEntitySet[];
+
   constructor(config: EntityContainerConfig, schema: ODataSchema) {
     this.schema = schema;
     this.name = config.name;
@@ -23,6 +24,11 @@ export class ODataEntityContainer {
     return this.schema.api;
   }
 
+  /**
+   * Find an annotation inside the entity container.
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }

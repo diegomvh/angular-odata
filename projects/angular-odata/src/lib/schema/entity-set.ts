@@ -18,6 +18,11 @@ export class ODataEntitySet {
     );
   }
 
+  /**
+   * Returns a boolean indicating if the entity set is of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
   isTypeOf(type: string) {
     var names = [`${this.schema.namespace}.${this.name}`];
     if (this.schema.alias) names.push(`${this.schema.alias}.${this.name}`);
@@ -28,6 +33,11 @@ export class ODataEntitySet {
     return this.schema.api;
   }
 
+  /**
+   * Find an annotation inside the entity set.
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
   findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
     return this.annotations.find(predicate);
   }
