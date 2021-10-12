@@ -91,7 +91,7 @@ export class AppComponent {
       .fetch()
       .pipe(
         switchMap(() =>
-          airports.entity("CYYZ").get({ fetchPolicy: "cache-first" })
+          airports.entity("CYYZ").fetch({ fetchPolicy: "cache-first" })
         )
       ) // From Cache!
       .subscribe(({ entity, annots }) =>
@@ -163,11 +163,13 @@ export class AppComponent {
 
     this.odata
       .batch("TripPin")
-      .post((batch) => {
-        airports.fetch().subscribe(console.log);
-        airport.fetch().subscribe(console.log);
-        people.fetch({ withCount: true }).subscribe(console.log);
-      })
+      .exec((batch) =>
+        forkJoin([
+          airports.fetch(),
+          airport.fetch(),
+          people.fetch({ withCount: true }),
+        ])
+      )
       .subscribe();
   }
 }
