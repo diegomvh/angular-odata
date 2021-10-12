@@ -12,6 +12,7 @@ interface ResponseJson {
 export class ODataInStorageCache extends ODataCache {
   name: string;
   storage: Storage;
+
   constructor({
     name,
     storage = sessionStorage,
