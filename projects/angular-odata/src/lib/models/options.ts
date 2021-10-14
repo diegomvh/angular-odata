@@ -642,7 +642,7 @@ export class ODataModelOptions<T> {
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource =
         resource ||
-        //model._resource ||
+        model._resource ||
         (ODataModelOptions.isModel(model)
           ? (model as ODataModel<any>)._meta.modelResourceFactory()
           : (
