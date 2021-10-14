@@ -908,13 +908,16 @@ export class ODataModelOptions<T> {
     );
   }
 
-  asEntity<R, M extends ODataModel<T>>(
-    self: M,
-    func: (model: M) => Observable<R>
-  ): Observable<R> {
+  asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {
     const parent = self._parent;
     self._parent = null;
-    return func(self).pipe(finalize(() => (self._parent = parent)));
+    const result = func(self);
+    if (result instanceof Observable) {
+      return (result as any).pipe(finalize(() => (self._parent = parent)));
+    } else {
+      self._parent = parent;
+      return result;
+    }
   }
 
   toEntity(

@@ -1,4 +1,4 @@
-import { map, switchMap, tap } from 'rxjs/operators';
+import { finalize, map, switchMap, tap } from 'rxjs/operators';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 
 import {
@@ -152,10 +152,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  asEntitySet<R>(func: (collection: this) => Observable<R>): Observable<R> {
+  asEntitySet<R>(func: (collection: this) => R): R {
     const parent = this._parent;
     this._parent = null;
-    return func(this).pipe(tap(() => (this._parent = parent)));
+    const result = func(this);
+    if (result instanceof Observable) {
+      return (result as any).pipe(finalize(() => (this._parent = parent)));
+    } else {
+      this._parent = parent;
+      return result;
+    }
   }
 
   annots() {
