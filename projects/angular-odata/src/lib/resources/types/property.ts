@@ -237,6 +237,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+  /**
+   * Fetch the property
+   * @param options Options for the request
+   * @return The entity / entities / property value
+   */
   fetch(
     options?: ODataEntityOptions & { etag?: string }
   ): Observable<ODataEntity<T>>;
@@ -250,6 +255,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return this.get(options);
   }
 
+  /**
+   * Fetch the property value
+   * @param options Options for the request
+   * @returns The property value
+   */
   fetchProperty(
     options: ODataOptions & { etag?: string } = {}
   ): Observable<T | null> {
@@ -258,6 +268,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch the entity
+   * @param options Options for the request
+   * @returns The entity
+   */
   fetchEntity(
     options: ODataOptions & { etag?: string } = {}
   ): Observable<T | null> {
@@ -266,6 +281,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch the entity and return as model
+   * @param options Options for the request
+   * @returns The model
+   */
   fetchModel<M extends ODataModel<T>>(
     options: ODataOptions & { etag?: string } = {}
   ): Observable<M | null> {
@@ -276,6 +296,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch the entities
+   * @param options Options for the request
+   * @returns The entities
+   */
   fetchEntities(
     options: ODataOptions & { withCount?: boolean } = {}
   ): Observable<T[] | null> {
@@ -284,6 +309,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch the entities and return as collection
+   * @param options Options for the request
+   * @returns The collection
+   */
   fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     options: ODataOptions & { withCount?: boolean } = {}
   ): Observable<C | null> {
@@ -296,6 +326,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch all entities
+   * @param options Options for the request
+   * @returns All entities
+   */
   fetchAll(options: ODataOptions = {}): Observable<T[]> {
     let res = this.clone();
     // Clean Paging

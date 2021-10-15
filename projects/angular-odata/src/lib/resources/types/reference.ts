@@ -65,6 +65,12 @@ export class ODataReferenceResource extends ODataResource<any> {
   //#endregion
 
   //#region Shortcuts for collections
+  /**
+   * Add the given target to the collection.
+   * @param target The target resource
+   * @param options Options for the request
+   * @returns Observable of the response
+   */
   add(
     target: ODataEntityResource<any>,
     options?: ODataOptions
@@ -72,6 +78,12 @@ export class ODataReferenceResource extends ODataResource<any> {
     return this.post(target, options);
   }
 
+  /**
+   * Remove the given target from the collection.
+   * @param target The target resource
+   * @param options Options for the request
+   * @returns Observable of the response
+   */
   remove(
     target?: ODataEntityResource<any>,
     options?: ODataOptions
@@ -81,6 +93,12 @@ export class ODataReferenceResource extends ODataResource<any> {
   //#region
 
   //#region Shortcuts for single
+  /**
+   * Set the reference to the given target.
+   * @param target The target resource
+   * @param options Options for the request
+   * @returns Observable of the response
+   */
   set(
     target: ODataEntityResource<any>,
     options?: ODataOptions & { etag?: string }
@@ -88,6 +106,11 @@ export class ODataReferenceResource extends ODataResource<any> {
     return this.put(target, options);
   }
 
+  /**
+   * Unset the reference to the given target.
+   * @param options Options for the request.
+   * @returns Observable of the response
+   */
   unset(options?: ODataOptions & { etag?: string }): Observable<any> {
     return this.delete(options);
   }

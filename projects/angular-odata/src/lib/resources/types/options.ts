@@ -4,7 +4,6 @@ import { FetchPolicy } from '../../types';
 import { ODataQueryArguments } from '../query-options';
 
 export type ODataOptions = {
-  //apiName?: string,
   headers?: HttpHeaders | { [header: string]: string | string[] };
   params?: HttpParams | { [param: string]: string | string[] };
   reportProgress?: boolean;
