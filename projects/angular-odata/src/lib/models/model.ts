@@ -518,8 +518,7 @@ export class ODataModel<T> {
       apply(query: ODataQueryArguments<T>): void;
     }) => void
   ) {
-    const resource = this.resource() as ODataModelResource<T> | undefined;
-    if (resource !== undefined) return this._meta.query(this, resource, func);
+    return this._meta.query(this, this.resource(), func) as this;
   }
 
   /**

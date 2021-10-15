@@ -1,4 +1,5 @@
 export * from './dates';
+export * from './durations';
 export * from './enums';
 export * from './http';
 export * from './objects';

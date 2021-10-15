@@ -91,14 +91,14 @@ export class ODataModelEvent<T> {
     this.options = options;
     this.chain = [
       [
-        this.collection ||
-          (this.model as
-            | ODataModel<any>
-            | ODataCollection<any, ODataModel<any>>),
+        (this.collection || this.model) as
+          | ODataModel<any>
+          | ODataCollection<any, ODataModel<any>>,
         track || null,
       ],
     ];
   }
+
   stopPropagation() {
     this.bubbling = false;
   }
@@ -111,8 +111,12 @@ export class ODataModelEvent<T> {
   }
 
   visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
-    return this.chain.some((c) => c[0] === model);
+    return (
+      this.chain.some((c) => c[0] === model) &&
+      this.chain[this.chain.length - 1][0] !== model
+    );
   }
+
   get path() {
     return this.chain
       .map(([, track], index) =>
@@ -764,6 +768,7 @@ export class ODataModelOptions<T> {
   ) {
     func(resource.query);
     this.attach(self, resource);
+    return self;
   }
 
   resolveKey(

@@ -818,11 +818,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       apply(query: ODataQueryArguments<T>): void;
     }) => void
   ) {
-    const resource = this.resource() as ODataCollectionResource<T> | undefined;
-    if (resource === undefined)
-      throw new Error(`Can't query without ODataResource`);
+    const resource = this.resource();
     func(resource.query);
     this.attach(resource);
+    return this;
   }
 
   protected callFunction<P, R>(

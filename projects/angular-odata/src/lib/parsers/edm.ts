@@ -1,28 +1,8 @@
 import { Parser, StructuredTypeFieldOptions } from '../types';
 
 import { raw } from '../resources/builder';
-
-//https://en.wikipedia.org/wiki/ISO_8601#Durations
-export type Duration = {
-  sign?: 1 | -1;
-  years?: number;
-  months?: number;
-  weeks?: number;
-  days?: number;
-  hours?: number;
-  minutes?: number;
-  seconds?: number;
-};
-
-//https://github.com/niklasvh/base64-arraybuffer
-const chars =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-
-// Use a lookup table to find the index.
-const lookup = new Uint8Array(256);
-for (var i = 0; i < chars.length; i++) {
-  lookup[chars.charCodeAt(i)] = i;
-}
+import { Duration, Durations } from '../utils/durations';
+import { ArrayBuffers } from '../utils/arraybuffers';
 
 // Core EdmTypeParserBuilder
 const EdmParser = <T>(
@@ -90,58 +70,9 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   ),
   //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
   'Edm.Duration': EdmParser<Duration>(
-    (v: any) => {
-      const matches =
-        /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/.exec(
-          v
-        );
-      if (!matches || v.length < 3) {
-        throw new TypeError(
-          `duration invalid: "${v}". Must be a ISO 8601 duration. See https://en.wikipedia.org/wiki/ISO_8601#Durations`
-        );
-      }
-      let duration: Duration = {};
-      duration.sign = matches[1] === '-' ? -1 : 1;
-      return [
-        'years',
-        'months',
-        'weeks',
-        'days',
-        'hours',
-        'minutes',
-        'seconds',
-      ].reduce((acc: any, name, index) => {
-        const v = parseFloat(matches[index + 2]);
-        if (!Number.isNaN(v)) acc[name] = v;
-        return acc;
-      }, duration) as Duration;
-    },
-    (v: Duration) =>
-      [
-        v.sign === -1 ? '-' : '',
-        'P',
-        v.years ? v.years + 'Y' : '',
-        v.months ? v.months + 'M' : '',
-        v.weeks ? v.weeks + 'W' : '',
-        v.days ? v.days + 'D' : '',
-        'T',
-        v.hours ? v.hours + 'H' : '',
-        v.minutes ? v.minutes + 'M' : '',
-        v.seconds ? v.seconds + 'S' : '',
-      ].join(''),
-    (v: Duration) =>
-      [
-        v.sign === -1 ? '-' : '',
-        'P',
-        v.years ? v.years + 'Y' : '',
-        v.months ? v.months + 'M' : '',
-        v.weeks ? v.weeks + 'W' : '',
-        v.days ? v.days + 'D' : '',
-        'T',
-        v.hours ? v.hours + 'H' : '',
-        v.minutes ? v.minutes + 'M' : '',
-        v.seconds ? v.seconds + 'S' : '',
-      ].join('')
+    (v: any) => Durations.toDuration(v),
+    (v: Duration) => Durations.toString(v),
+    (v: Duration) => Durations.toString(v)
   ),
   //Edm.Decimal Numeric values with fixed precision and scale
   'Edm.Decimal': EdmParser<number>(
@@ -182,79 +113,9 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   ),
   //Edm.Binary Binary data
   'Edm.Binary': EdmParser<ArrayBuffer>(
-    (v: string) => {
-      var bufferLength = v.length * 0.75,
-        len = v.length,
-        i,
-        p = 0,
-        encoded1,
-        encoded2,
-        encoded3,
-        encoded4;
-
-      if (v[v.length - 1] === '=') {
-        bufferLength--;
-        if (v[v.length - 2] === '=') {
-          bufferLength--;
-        }
-      }
-
-      var arraybuffer = new ArrayBuffer(bufferLength),
-        bytes = new Uint8Array(arraybuffer);
-
-      for (i = 0; i < len; i += 4) {
-        encoded1 = lookup[v.charCodeAt(i)];
-        encoded2 = lookup[v.charCodeAt(i + 1)];
-        encoded3 = lookup[v.charCodeAt(i + 2)];
-        encoded4 = lookup[v.charCodeAt(i + 3)];
-
-        bytes[p++] = (encoded1 << 2) | (encoded2 >> 4);
-        bytes[p++] = ((encoded2 & 15) << 4) | (encoded3 >> 2);
-        bytes[p++] = ((encoded3 & 3) << 6) | (encoded4 & 63);
-      }
-
-      return arraybuffer;
-    },
-    (v: ArrayBuffer) => {
-      var bytes = new Uint8Array(v),
-        i,
-        len = bytes.length,
-        base64 = '';
-
-      for (i = 0; i < len; i += 3) {
-        base64 += chars[bytes[i] >> 2];
-        base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
-        base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
-        base64 += chars[bytes[i + 2] & 63];
-      }
-
-      if (len % 3 === 2) {
-        base64 = base64.substring(0, base64.length - 1) + '=';
-      } else if (len % 3 === 1) {
-        base64 = base64.substring(0, base64.length - 2) + '==';
-      }
-      return base64;
-    },
-    (v: ArrayBuffer) => {
-      var bytes = new Uint8Array(v),
-        i,
-        len = bytes.length,
-        base64 = '';
-
-      for (i = 0; i < len; i += 3) {
-        base64 += chars[bytes[i] >> 2];
-        base64 += chars[((bytes[i] & 3) << 4) | (bytes[i + 1] >> 4)];
-        base64 += chars[((bytes[i + 1] & 15) << 2) | (bytes[i + 2] >> 6)];
-        base64 += chars[bytes[i + 2] & 63];
-      }
-
-      if (len % 3 === 2) {
-        base64 = base64.substring(0, base64.length - 1) + '=';
-      } else if (len % 3 === 1) {
-        base64 = base64.substring(0, base64.length - 2) + '==';
-      }
-      return base64;
-    }
+    (v: string) => ArrayBuffers.toArrayBuffer(v),
+    (v: ArrayBuffer) => ArrayBuffers.toString(v),
+    (v: ArrayBuffer) => ArrayBuffers.toString(v)
   ),
 };
 
