@@ -854,7 +854,7 @@ export class ODataModelOptions<T> {
         );
       if (from !== undefined && to !== undefined) {
         let name = field_mapping ? to.field : to.name;
-        referenced[name] = value && (self as any)[from.name];
+        referenced[name] = value && (value as any)[from.name];
       }
     }
     if (Types.isEmpty(referenced)) return undefined;
