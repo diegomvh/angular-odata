@@ -118,17 +118,50 @@ export class ODataStructuredType<T> {
     return this.annotations.find(predicate);
   }
 
-  field(name: keyof T) {
-    return this.fields().find((f) => f.name === name);
+  findParentSchema(
+    predicate: (p: ODataStructuredType<any>) => boolean
+  ): ODataStructuredType<any> | undefined {
+    if (predicate(this)) return this;
+    if (this.parent === undefined) return undefined;
+    return this.parent.findParentSchema(predicate);
+  }
+
+  /**
+   * Find the field parser for the given field name.
+   * @param name Name of the field
+   * @returns The field parser
+   */
+  findFieldByName(
+    name: keyof T,
+    {
+      include_navigation,
+      include_parents,
+    }: {
+      include_parents: boolean;
+      include_navigation: boolean;
+    }
+  ) {
+    return this.fields({ include_parents, include_navigation }).find(
+      (f) => f.name === name
+    );
+  }
+
+  findSchemaForField(field: ODataStructuredTypeFieldParser<any>) {
+    return this.findParentSchema(
+      (p) =>
+        p
+          .fields({ include_parents: false, include_navigation: true })
+          .find((f) => f === field) !== undefined
+    );
   }
 
   fields({
-    include_navigation = false,
-    include_parents = true,
+    include_navigation,
+    include_parents,
   }: {
-    include_parents?: boolean;
-    include_navigation?: boolean;
-  } = {}): ODataStructuredTypeFieldParser<any>[] {
+    include_parents: boolean;
+    include_navigation: boolean;
+  }): ODataStructuredTypeFieldParser<any>[] {
     return [
       ...(include_parents && this.parent !== undefined
         ? this.parent.fields({ include_parents, include_navigation })

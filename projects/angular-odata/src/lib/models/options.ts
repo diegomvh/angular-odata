@@ -434,7 +434,7 @@ export class ODataModelField<F> {
   schemaFactory<T, F>(
     schema: ODataStructuredType<T>
   ): ODataStructuredType<F> | undefined {
-    return schema.api.findStructuredTypeForType(this.parser.type);
+    return this.api.findStructuredTypeForType(this.parser.type);
   }
 
   modelCollectionFactory<T, F>({
@@ -498,7 +498,10 @@ export class ODataModelOptions<T> {
     this.open = schema.open;
     this.schema = schema;
     this.cid = options.cid || CID;
-    const schemaFields = this.schema.fields({ include_navigation: true });
+    const schemaFields = this.schema.fields({
+      include_navigation: true,
+      include_parents: true,
+    });
     this._fields = Object.entries(options.fields).map(([name, options]) => {
       const { field, ...opts } = options;
       if (field === undefined || name === undefined)
