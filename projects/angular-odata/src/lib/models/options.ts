@@ -411,9 +411,7 @@ export class ODataModelField<F> {
     )
       throw new Error("Can't build resource for non compatible base type");
     return this.navigation
-      ? (base as ODataEntityResource<T>).navigationProperty<F>(
-          this.parser.name
-        )
+      ? (base as ODataEntityResource<T>).navigationProperty<F>(this.parser.name)
       : (base as ODataEntityResource<T>).property<F>(this.parser.name);
   }
 
@@ -486,7 +484,7 @@ export class ODataModelOptions<T> {
   base?: string;
   open?: boolean;
   private _fields: ODataModelField<any>[];
-  private _schema: ODataStructuredType<T>;
+  schema: ODataStructuredType<T>;
   entitySet?: ODataEntitySet;
   // Hierarchy
   parent?: ODataModelOptions<any>;
@@ -496,9 +494,9 @@ export class ODataModelOptions<T> {
     this.name = schema.name;
     this.base = schema.base;
     this.open = schema.open;
-    this._schema = schema;
+    this.schema = schema;
     this.cid = options.cid || CID;
-    const schemaFields = this._schema.fields({
+    const schemaFields = this.schema.fields({
       include_navigation: true,
       include_parents: true,
     });
@@ -514,19 +512,15 @@ export class ODataModelOptions<T> {
   }
 
   get api() {
-    return this._schema.api;
-  }
-
-  schema() {
-    return this._schema;
+    return this.schema.api;
   }
 
   type() {
-    return this._schema.type();
+    return this.schema.type();
   }
 
   isTypeOf(type: string) {
-    return this._schema.isTypeOf(type);
+    return this.schema.isTypeOf(type);
   }
 
   findChildOptions(
@@ -785,7 +779,7 @@ export class ODataModelOptions<T> {
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): EntityKey<T> | { [name: string]: any } | undefined {
-    const keyTypes = this._schema.keys({ include_parents: true });
+    const keyTypes = this.schema.keys({ include_parents: true });
     const key: any = {};
     for (var kt of keyTypes) {
       let v = value as any;
@@ -1054,7 +1048,7 @@ export class ODataModelOptions<T> {
           (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model
             .meta !== self._meta))
     ) {
-      this.api.options.helper.type(entity, this._schema.type());
+      this.api.options.helper.type(entity, this.schema.type());
     }
 
     return entity;
