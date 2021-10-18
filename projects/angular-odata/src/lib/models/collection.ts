@@ -949,12 +949,39 @@ export class ODataCollection<T, M extends ODataModel<T>>
     };
   }
 
-  contains(model: M) {
-    return this.models().some((m) => m.equals(model));
+  filter(predicate: (m: M, index: number) => boolean): M[] {
+    return this.models().filter(predicate);
   }
 
-  filter(predicate: (m: M) => boolean): M[] {
-    return this.models().filter(predicate);
+  find(predicate: (m: M, index: number) => boolean): M | undefined {
+    return this.models().find(predicate);
+  }
+
+  first(): M | undefined {
+    return this.models()[0];
+  }
+
+  last(): M | undefined {
+    const models = this.models();
+    return models[models.length - 1];
+  }
+
+  every(predicate: (m: M, index: number) => boolean): boolean {
+    return this.models().every(predicate);
+  }
+
+  some(predicate: (m: M, index: number) => boolean): boolean {
+    return this.models().some(predicate);
+  }
+
+  contains(model: M) {
+    return this.some((m) => m.equals(model));
+  }
+
+  indexOf(model: M): number {
+    const models = this.models();
+    const m = models.find((m) => m.equals(model));
+    return m === undefined ? -1 : models.indexOf(m);
   }
 
   //#region Sort
