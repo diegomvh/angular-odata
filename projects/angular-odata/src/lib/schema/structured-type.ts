@@ -123,19 +123,11 @@ export class ODataStructuredType<T> {
    * @param name Name of the field
    * @returns The field parser
    */
-  findFieldByName(
-    name: keyof T,
-    {
-      include_navigation,
-      include_parents,
-    }: {
-      include_parents: boolean;
-      include_navigation: boolean;
-    }
-  ) {
-    return this.fields({ include_parents, include_navigation }).find(
-      (f) => f.name === name
-    );
+  findFieldByName(name: keyof T) {
+    return this.fields({
+      include_parents: true,
+      include_navigation: true,
+    }).find((f) => f.name === name);
   }
 
   findParentSchema(
