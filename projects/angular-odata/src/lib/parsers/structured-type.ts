@@ -497,9 +497,9 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
               : undefined;
           }
         }
-        if (field === undefined) return undefined;
-        let name = k.alias || field.name;
-        key[name] = field.encode(v);
+        if (field !== undefined && v !== undefined) {
+          key[k.alias || field.name] = field.encode(v);
+        }
       }
     }
     if (Types.isEmpty(key)) return undefined;
