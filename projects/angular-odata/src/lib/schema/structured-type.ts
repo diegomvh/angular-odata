@@ -118,14 +118,6 @@ export class ODataStructuredType<T> {
     return this.annotations.find(predicate);
   }
 
-  findParentSchema(
-    predicate: (p: ODataStructuredType<any>) => boolean
-  ): ODataStructuredType<any> | undefined {
-    if (predicate(this)) return this;
-    if (this.parent === undefined) return undefined;
-    return this.parent.findParentSchema(predicate);
-  }
-
   /**
    * Find the field parser for the given field name.
    * @param name Name of the field
@@ -144,6 +136,14 @@ export class ODataStructuredType<T> {
     return this.fields({ include_parents, include_navigation }).find(
       (f) => f.name === name
     );
+  }
+
+  findParentSchema(
+    predicate: (p: ODataStructuredType<any>) => boolean
+  ): ODataStructuredType<any> | undefined {
+    if (predicate(this)) return this;
+    if (this.parent === undefined) return undefined;
+    return this.parent.findParentSchema(predicate);
   }
 
   findSchemaForField(field: ODataStructuredTypeFieldParser<any>) {
@@ -172,6 +172,11 @@ export class ODataStructuredType<T> {
     ];
   }
 
+  /**
+   * Returns the keys of the structured type.
+   * @param include_parents Include the parent fields
+   * @returns The keys of the structured type
+   */
   keys({
     include_parents = true,
   }: {
@@ -185,8 +190,16 @@ export class ODataStructuredType<T> {
     ];
   }
 
+  /**
+   * Picks the fields from attributes.
+   * @param attrs
+   * @param include_parents Include the parent fields
+   * @param include_navigation Include the navigation fields
+   * @param include_etag Include the etag field
+   * @returns The picked fields
+   */
   pick(
-    value: { [name: string]: any },
+    attrs: { [name: string]: any },
     {
       include_parents = true,
       include_navigation = false,
@@ -200,14 +213,14 @@ export class ODataStructuredType<T> {
     const names = this.fields({ include_parents, include_navigation }).map(
       (f) => f.name
     );
-    let attrs = Object.keys(value)
+    let values = Object.keys(attrs)
       .filter((k) => names.indexOf(k) !== -1)
-      .reduce((acc, k) => Object.assign(acc, { [k]: value[k] }), {});
+      .reduce((acc, k) => Object.assign(acc, { [k]: attrs[k] }), {});
     if (include_etag) {
-      const etag = this.api.options.helper.etag(value);
+      const etag = this.api.options.helper.etag(attrs);
       this.api.options.helper.etag(attrs, etag);
     }
-    return attrs;
+    return values;
   }
 
   /**
@@ -240,18 +253,38 @@ export class ODataStructuredType<T> {
     return this.parser.encode(value, options);
   }
 
+  /**
+   * Resolve the key of the structured type for the given value.
+   * @param attrs Attributes of the value
+   * @returns Resolved key
+   */
   resolveKey(attrs: T | { [name: string]: any }) {
     return this.parser.resolveKey(attrs);
   }
 
+  /**
+   * Returns the defaults values for the structured type.
+   * @returns Default values for the structured type
+   */
   defaults() {
     return this.parser.defaults();
   }
 
+  /**
+   * Convert the structured type to json schema
+   * @param options Options for json schema
+   * @returns Json Schema
+   */
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
     return this.parser.toJsonSchema(options);
   }
 
+  /**
+   * Validate the given value against the structured type.
+   * @param attrs Attributes of the value
+   * @param method Method to use for the process validation
+   * @returns Object with the errors
+   */
   validate(
     attrs: Partial<T>,
     {

@@ -400,39 +400,39 @@ export class ODataModelField<F> {
   }
 
   resourceFactory<T, F>(
-    resource: ODataModelResource<T>
+    base: ODataModelResource<T>
   ): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> {
     if (
       !(
-        resource instanceof ODataEntityResource ||
-        resource instanceof ODataNavigationPropertyResource ||
-        resource instanceof ODataPropertyResource
+        base instanceof ODataEntityResource ||
+        base instanceof ODataNavigationPropertyResource ||
+        base instanceof ODataPropertyResource
       )
     )
       throw new Error("Can't build resource for non compatible base type");
     return this.navigation
-      ? (resource as ODataEntityResource<T>).navigationProperty<F>(
+      ? (base as ODataEntityResource<T>).navigationProperty<F>(
           this.parser.name
         )
-      : (resource as ODataEntityResource<T>).property<F>(this.parser.name);
+      : (base as ODataEntityResource<T>).property<F>(this.parser.name);
   }
 
   annotationsFactory(
-    annots: ODataEntityAnnotations
+    base: ODataEntityAnnotations
   ): ODataEntityAnnotations | ODataEntitiesAnnotations {
     return this.parser.collection
       ? new ODataEntitiesAnnotations(
-          annots.helper,
-          annots.property(this.parser.name) || {}
+          base.helper,
+          base.property(this.parser.name) || {}
         )
       : new ODataEntityAnnotations(
-          annots.helper,
-          annots.property(this.parser.name) || {}
+          base.helper,
+          base.property(this.parser.name) || {}
         );
   }
 
   schemaFactory<T, F>(
-    schema: ODataStructuredType<T>
+    base: ODataStructuredType<T>
   ): ODataStructuredType<F> | undefined {
     return this.api.findStructuredTypeForType(this.parser.type);
   }
@@ -486,7 +486,7 @@ export class ODataModelOptions<T> {
   base?: string;
   open?: boolean;
   private _fields: ODataModelField<any>[];
-  schema: ODataStructuredType<T>;
+  private _schema: ODataStructuredType<T>;
   entitySet?: ODataEntitySet;
   // Hierarchy
   parent?: ODataModelOptions<any>;
@@ -496,9 +496,9 @@ export class ODataModelOptions<T> {
     this.name = schema.name;
     this.base = schema.base;
     this.open = schema.open;
-    this.schema = schema;
+    this._schema = schema;
     this.cid = options.cid || CID;
-    const schemaFields = this.schema.fields({
+    const schemaFields = this._schema.fields({
       include_navigation: true,
       include_parents: true,
     });
@@ -514,15 +514,19 @@ export class ODataModelOptions<T> {
   }
 
   get api() {
-    return this.schema.api;
+    return this._schema.api;
+  }
+
+  schema() {
+    return this._schema;
   }
 
   type() {
-    return this.schema.type();
+    return this._schema.type();
   }
 
   isTypeOf(type: string) {
-    return this.schema.isTypeOf(type);
+    return this._schema.isTypeOf(type);
   }
 
   findChildOptions(
@@ -781,7 +785,7 @@ export class ODataModelOptions<T> {
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): EntityKey<T> | { [name: string]: any } | undefined {
-    const keyTypes = this.schema.keys({ include_parents: true });
+    const keyTypes = this._schema.keys({ include_parents: true });
     const key: any = {};
     for (var kt of keyTypes) {
       let v = value as any;
@@ -1050,7 +1054,7 @@ export class ODataModelOptions<T> {
           (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model
             .meta !== self._meta))
     ) {
-      this.api.options.helper.type(entity, this.schema.type());
+      this.api.options.helper.type(entity, this._schema.type());
     }
 
     return entity;

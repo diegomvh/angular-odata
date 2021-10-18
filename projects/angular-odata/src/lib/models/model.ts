@@ -82,7 +82,7 @@ export class ODataModel<T> {
     // Client Id
     (<any>this)[this._meta.cid] =
       (<any>data)[this._meta.cid] ||
-      Strings.uniqueId(`${Klass.meta.schema.name.toLowerCase()}-`);
+      Strings.uniqueId(`${Klass.meta._schema.name.toLowerCase()}-`);
 
     let attrs = this.annots().attributes<T>(data, 'full');
     let defaults = this.defaults();
@@ -143,7 +143,7 @@ export class ODataModel<T> {
   //#endregion
 
   schema() {
-    return this._meta.schema;
+    return this._meta._schema;
   }
 
   annots() {
