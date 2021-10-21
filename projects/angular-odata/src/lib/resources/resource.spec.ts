@@ -11,12 +11,11 @@ import {
   ODataNavigationPropertyResource,
 } from './types';
 import { ODataPathSegments } from './path-segments';
-import { ODataQueryOptions } from './query-options';
+import { ODataQueryOptions, raw } from './query';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataSettings } from '../settings';
 import { Photo } from '../trippin.spec';
-import { raw } from './builder';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';

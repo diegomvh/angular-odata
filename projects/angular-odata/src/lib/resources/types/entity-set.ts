@@ -1,6 +1,5 @@
 import { EMPTY, Observable } from 'rxjs';
 import { EntityKey, ODataResource } from '../resource';
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataCollection, ODataModel } from '../../models';
 import {
   ODataEntities,
@@ -17,7 +16,14 @@ import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import {
+  ODataQueryOptions,
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+} from '../query';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory

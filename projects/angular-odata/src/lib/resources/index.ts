@@ -1,5 +1,4 @@
-export * from './builder';
-export * from './query-options';
+export * from './query';
 export * from './path-segments';
 export * from './request';
 export * from './resource';

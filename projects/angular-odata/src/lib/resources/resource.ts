@@ -9,7 +9,6 @@ import {
 import { Objects, Http, Types } from '../utils/index';
 
 import { ODataPathSegments } from './path-segments';
-import { ODataQueryArguments, ODataQueryOptions } from './query-options';
 import { ODataOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
@@ -24,7 +23,9 @@ import {
   Transform,
   QueryCustomType,
   isQueryCustomType,
-} from './builder';
+  ODataQueryArguments,
+  ODataQueryOptions,
+} from './query';
 import { ODataStructuredType, ODataCallable } from '../schema/index';
 
 export type EntityKey<T> =

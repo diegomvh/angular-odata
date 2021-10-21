@@ -1,5 +1,5 @@
 import { Enums } from '../utils';
-import { raw } from '../resources/builder';
+import { raw } from '../resources/query';
 import { ODataAnnotation } from '../schema/annotation';
 import {
   EnumTypeConfig,

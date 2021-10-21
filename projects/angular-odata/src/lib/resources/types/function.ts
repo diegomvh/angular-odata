@@ -1,4 +1,3 @@
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import {
   ODataEntities,
   ODataEntitiesAnnotations,
@@ -20,11 +19,18 @@ import { ODataEntityResource } from './entity';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataModel } from '../../models/model';
 import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import {
+  ODataQueryOptions,
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+  alias as fAlias,
+} from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
-import { alias as functionAlias } from '../builder';
 import { map } from 'rxjs/operators';
 
 export class ODataFunctionResource<P, R> extends ODataResource<R> {
@@ -101,7 +107,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     let parameters = params !== null ? this.encode(params) : null;
     if (alias && parameters !== null) {
       parameters = Object.entries(parameters).reduce((acc, [name, param]) => {
-        return Object.assign(acc, { [name]: functionAlias(param, name) });
+        return Object.assign(acc, { [name]: fAlias(param, name) });
       }, {});
     }
     segment.parameters(parameters);

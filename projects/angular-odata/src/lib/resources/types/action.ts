@@ -1,4 +1,3 @@
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataCollection, ODataModel } from '../../models';
 import {
   ODataEntities,
@@ -19,7 +18,14 @@ import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import {
+  ODataQueryOptions,
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+} from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';

@@ -1,6 +1,6 @@
 import { Parser, StructuredTypeFieldOptions } from '../types';
 
-import { raw } from '../resources/builder';
+import { raw } from '../resources/query';
 import { Duration, Durations } from '../utils/durations';
 import { ArrayBuffers } from '../utils/arraybuffers';
 
