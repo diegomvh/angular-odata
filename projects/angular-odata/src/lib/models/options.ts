@@ -288,6 +288,7 @@ export class ODataModelField<F> {
   }
 
   structured() {
+    //TODO: Throw error if not found
     return this.api.findStructuredTypeForType<F>(this.parser.type);
   }
 
@@ -296,6 +297,7 @@ export class ODataModelField<F> {
   }
 
   enum() {
+    //TODO: Throw error if not found
     return this.api.findEnumTypeForType<F>(this.parser.type);
   }
 
@@ -578,12 +580,13 @@ export class ODataModelOptions<T> {
     ];
   }
 
-  field(name: keyof T | string) {
+  field<F>(name: keyof T | string) {
+    //TODO: Throw error if not found
     return this.fields({
       include_parents: true,
       include_navigation: true,
     }).find(
-      (modelField: ODataModelField<any>) =>
+      (modelField: ODataModelField<F>) =>
         modelField.name === name || modelField.field === name
     );
   }
