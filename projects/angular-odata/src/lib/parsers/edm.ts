@@ -1,6 +1,6 @@
 import { Parser, StructuredTypeFieldOptions } from '../types';
 
-import { raw } from '../resources/builder';
+import { raw } from '../resources/query';
 
 //https://en.wikipedia.org/wiki/ISO_8601#Durations
 export type Duration = {

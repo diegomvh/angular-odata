@@ -1,7 +1,7 @@
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { FetchPolicy } from '../../types';
-import { ODataQueryArguments } from '../query-options';
+import { ODataQueryArguments } from '../query';
 
 export type ODataOptions = {
   //apiName?: string,

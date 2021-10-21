@@ -1,5 +1,4 @@
 import { EntityKey, ODataResource } from '../resource';
-import { Expand, Select } from '../builder';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 
@@ -11,7 +10,7 @@ import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
 import { ODataPropertyResource } from './property';
-import { ODataQueryOptions } from '../query-options';
+import { ODataQueryOptions, Expand, Select } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

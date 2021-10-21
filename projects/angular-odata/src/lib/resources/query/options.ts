@@ -1,4 +1,4 @@
-import { Dates, Objects, Types } from '../utils';
+import { Dates, Objects, Types } from '../../utils';
 import {
   Expand,
   Filter,
@@ -8,7 +8,7 @@ import {
   buildPathAndQuery,
 } from './builder';
 
-import { QueryOptionNames } from '../types';
+import { QueryOptionNames } from '../../types';
 
 export type ODataQueryArguments<T> = {
   select?: Select<T>;

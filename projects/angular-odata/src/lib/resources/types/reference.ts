@@ -4,7 +4,7 @@ import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';

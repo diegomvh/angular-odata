@@ -1,6 +1,5 @@
 import { EMPTY, Observable } from 'rxjs';
 import { EntityKey, ODataResource } from '../resource';
-import { Expand, Filter, OrderBy, Select, Transform } from '../builder';
 import { ODataCollection, ODataModel } from '../../models';
 import {
   ODataEntities,
@@ -21,7 +20,14 @@ import { ODataCountResource } from './count';
 import { ODataMediaResource } from './media';
 import { ODataPathSegments } from '../path-segments';
 import { ODataPropertyResource } from './property';
-import { ODataQueryOptions } from '../query-options';
+import {
+  ODataQueryOptions,
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+} from '../query';
 import { ODataReferenceResource } from './reference';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 

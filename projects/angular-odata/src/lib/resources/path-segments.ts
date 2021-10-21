@@ -1,4 +1,4 @@
-import { raw, buildPathAndQuery } from './builder';
+import { raw, buildPathAndQuery } from './query';
 
 import { Types, Dates } from '../utils';
 

@@ -1,11 +1,10 @@
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 
 import { $COUNT } from '../../constants';
-import { Filter } from '../builder';
 import { ODataApi } from '../../api';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions } from '../query-options';
+import { ODataQueryOptions, Filter } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 

@@ -11,7 +11,7 @@ import {
 import { ODataEnumTypeParser } from './enum-type';
 import { COMPUTED } from '../constants';
 import { ODataAnnotation } from '../schema/annotation';
-import { raw } from '../resources/builder';
+import { raw } from '../resources/query';
 import { ODataParserOptions } from '../options';
 
 // JSON SCHEMA
