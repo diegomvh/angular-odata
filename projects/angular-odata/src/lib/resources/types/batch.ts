@@ -172,6 +172,12 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   //#endregion
 
+  /**
+   * Execute the batch request
+   * @param ctx The context for the request
+   * @param options The options of the batch request
+   * @returns The result of execute the context
+   */
   exec<R>(
     ctx: (batch: this) => Observable<R>,
     options?: ODataOptions

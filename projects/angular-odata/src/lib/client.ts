@@ -84,7 +84,13 @@ export class ODataClient {
     });
   }
 
-  // Resolve Building Blocks
+  //#region Resolve Building Blocks
+  /**
+   * Resolve the api for the given value.
+   * Where value is: string type or an string name or an instance of resource.
+   * @param value The value to resolve.
+   * @returns The api for the value.
+   */
   apiFor(value?: ODataResource<any> | string): ODataApi {
     let api: ODataApi | undefined = undefined;
     if (value instanceof ODataResource)
@@ -96,54 +102,109 @@ export class ODataClient {
     return api || this.settings.defaultApi();
   }
 
+  /**
+   * Resolve the parser for the given string type.
+   * @param type The string type of the parser.
+   * @returns The parser for the given type.
+   */
   parserForType<T>(type: string) {
     return this.settings.parserForType<T>(type);
   }
+
+  /**
+   * Resolve the enum type for the given string type.
+   * @param type The string type of the enum type.
+   * @returns The enum type for the given type.
+   */
   enumTypeForType<T>(type: string) {
     return this.settings.enumTypeForType<T>(type);
   }
-  enumTypeByName<T>(name: string) {
-    return this.settings.enumTypeByName<T>(name);
-  }
+
+  /**
+   * Resolve the structured type for the given string type.
+   * @param type The string type of the structured type.
+   * @returns The structured type for the given type.
+   */
   structuredTypeForType<T>(type: string) {
     return this.settings.structuredTypeForType<T>(type);
+  }
+
+  /**
+   * Resolve the callable for the given string type.
+   * @param type The string type of the callable.
+   * @returns The callable for the given type.
+   */
+  callableForType<T>(type: string) {
+    return this.settings.callableForType<T>(type);
+  }
+
+  /**
+   * Resolve the entity set for the given string type.
+   * @param type The string type of the entity set.
+   * @returns The entity set for the given type.
+   */
+  entitySetForType(type: string) {
+    return this.settings.entitySetForType(type);
+  }
+
+  /**
+   * Resolve the model for the given string type.
+   * @param type The string type of the model.
+   * @returns The model for the given type.
+   */
+  modelForType(type: string): typeof ODataModel {
+    return this.settings.modelForType(type);
+  }
+
+  /**
+   * Resolve the collection for the given string type.
+   * @param type The string type of the collection.
+   * @returns The collection for the given type.
+   */
+  collectionForType(type: string): typeof ODataCollection {
+    return this.settings.collectionForType(type);
+  }
+
+  /**
+   * Resolve the service for the given string type.
+   * @param type The string type of the service.
+   * @returns The service for the given type.
+   */
+  serviceForType(type: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceForType(type));
+  }
+
+  /**
+   * Resolve the service for the given string entity type.
+   * @param type The string entity type binding to the service.
+   * @returns The service for the given entity type.
+   */
+  serviceForEntityType(type: string): ODataEntityService<any> {
+    return this.injector.get(this.settings.serviceForEntityType(type));
+  }
+
+  enumTypeByName<T>(name: string) {
+    return this.settings.enumTypeByName<T>(name);
   }
   structuredTypeByName<T>(name: string) {
     return this.settings.structuredTypeByName<T>(name);
   }
-  callableForType<T>(type: string) {
-    return this.settings.callableForType<T>(type);
-  }
   callableByName<T>(name: string) {
     return this.settings.callableByName<T>(name);
-  }
-  entitySetForType(type: string) {
-    return this.settings.entitySetForType(type);
   }
   entitySetByName(name: string) {
     return this.settings.entitySetByName(name);
   }
-  modelForType(type: string): typeof ODataModel {
-    return this.settings.modelForType(type);
-  }
   modelByName(name: string): typeof ODataModel {
     return this.settings.modelByName(name);
-  }
-  collectionForType(type: string): typeof ODataCollection {
-    return this.settings.collectionForType(type);
   }
   collectionByName(name: string): typeof ODataCollection {
     return this.settings.collectionByName(name);
   }
-  serviceForType(type: string): ODataEntityService<any> {
-    return this.injector.get(this.settings.serviceForType(type));
-  }
-  serviceForEntityType(type: string): ODataEntityService<any> {
-    return this.injector.get(this.settings.serviceForEntityType(type));
-  }
   serviceByName(name: string): ODataEntityService<any> {
     return this.injector.get(this.settings.serviceByName(name));
   }
+  //#endregion
 
   //#region API Resource Proxy Methods
   fromJSON<E>(

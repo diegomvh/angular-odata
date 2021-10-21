@@ -41,8 +41,15 @@ export class ODataValueResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+
+  /**
+   * Fetch the value of the resource.
+   * @param options OData options.
+   * @returns Observable of the value.
+   */
   fetch(options?: ODataOptions): Observable<T> {
     return this.get(options);
   }
+
   //#endregion
 }

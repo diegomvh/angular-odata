@@ -91,14 +91,14 @@ export class ODataModelEvent<T> {
     this.options = options;
     this.chain = [
       [
-        this.collection ||
-          (this.model as
-            | ODataModel<any>
-            | ODataCollection<any, ODataModel<any>>),
+        (this.collection || this.model) as
+          | ODataModel<any>
+          | ODataCollection<any, ODataModel<any>>,
         track || null,
       ],
     ];
   }
+
   stopPropagation() {
     this.bubbling = false;
   }
@@ -111,8 +111,12 @@ export class ODataModelEvent<T> {
   }
 
   visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
-    return this.chain.some((c) => c[0] === model);
+    return (
+      this.chain.some((c) => c[0] === model) &&
+      this.chain[this.chain.length - 1][0] !== model
+    );
   }
+
   get path() {
     return this.chain
       .map(([, track], index) =>
@@ -396,41 +400,39 @@ export class ODataModelField<F> {
   }
 
   resourceFactory<T, F>(
-    resource: ODataModelResource<T>
+    base: ODataModelResource<T>
   ): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> {
     if (
       !(
-        resource instanceof ODataEntityResource ||
-        resource instanceof ODataNavigationPropertyResource ||
-        resource instanceof ODataPropertyResource
+        base instanceof ODataEntityResource ||
+        base instanceof ODataNavigationPropertyResource ||
+        base instanceof ODataPropertyResource
       )
     )
       throw new Error("Can't build resource for non compatible base type");
     return this.navigation
-      ? (resource as ODataEntityResource<T>).navigationProperty<F>(
-          this.parser.name
-        )
-      : (resource as ODataEntityResource<T>).property<F>(this.parser.name);
+      ? (base as ODataEntityResource<T>).navigationProperty<F>(this.parser.name)
+      : (base as ODataEntityResource<T>).property<F>(this.parser.name);
   }
 
   annotationsFactory(
-    annots: ODataEntityAnnotations
+    base: ODataEntityAnnotations
   ): ODataEntityAnnotations | ODataEntitiesAnnotations {
     return this.parser.collection
       ? new ODataEntitiesAnnotations(
-          annots.helper,
-          annots.property(this.parser.name) || {}
+          base.helper,
+          base.property(this.parser.name) || {}
         )
       : new ODataEntityAnnotations(
-          annots.helper,
-          annots.property(this.parser.name) || {}
+          base.helper,
+          base.property(this.parser.name) || {}
         );
   }
 
   schemaFactory<T, F>(
-    schema: ODataStructuredType<T>
+    base: ODataStructuredType<T>
   ): ODataStructuredType<F> | undefined {
-    return schema.api.findStructuredTypeForType(this.parser.type);
+    return this.api.findStructuredTypeForType(this.parser.type);
   }
 
   modelCollectionFactory<T, F>({
@@ -494,7 +496,10 @@ export class ODataModelOptions<T> {
     this.open = schema.open;
     this.schema = schema;
     this.cid = options.cid || CID;
-    const schemaFields = this.schema.fields({ include_navigation: true });
+    const schemaFields = this.schema.fields({
+      include_navigation: true,
+      include_parents: true,
+    });
     this._fields = Object.entries(options.fields).map(([name, options]) => {
       const { field, ...opts } = options;
       if (field === undefined || name === undefined)
@@ -642,7 +647,7 @@ export class ODataModelOptions<T> {
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource =
         resource ||
-        //model._resource ||
+        model._resource ||
         (ODataModelOptions.isModel(model)
           ? (model as ODataModel<any>)._meta.modelResourceFactory()
           : (
@@ -764,6 +769,7 @@ export class ODataModelOptions<T> {
   ) {
     func(resource.query);
     this.attach(self, resource);
+    return self;
   }
 
   resolveKey(
@@ -849,7 +855,7 @@ export class ODataModelOptions<T> {
         );
       if (from !== undefined && to !== undefined) {
         let name = field_mapping ? to.field : to.name;
-        referenced[name] = value && (self as any)[from.name];
+        referenced[name] = value && (value as any)[from.name];
       }
     }
     if (Types.isEmpty(referenced)) return undefined;
@@ -908,13 +914,16 @@ export class ODataModelOptions<T> {
     );
   }
 
-  asEntity<R, M extends ODataModel<T>>(
-    self: M,
-    func: (model: M) => Observable<R>
-  ): Observable<R> {
+  asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {
     const parent = self._parent;
     self._parent = null;
-    return func(self).pipe(finalize(() => (self._parent = parent)));
+    const result = func(self);
+    if (result instanceof Observable) {
+      return (result as any).pipe(finalize(() => (self._parent = parent)));
+    } else {
+      self._parent = parent;
+      return result;
+    }
   }
 
   toEntity(

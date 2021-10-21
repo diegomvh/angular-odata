@@ -1,4 +1,4 @@
-import { map, switchMap, tap } from 'rxjs/operators';
+import { finalize, map, switchMap, tap } from 'rxjs/operators';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 
 import {
@@ -152,10 +152,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  asEntitySet<R>(func: (collection: this) => Observable<R>): Observable<R> {
+  asEntitySet<R>(func: (collection: this) => R): R {
     const parent = this._parent;
     this._parent = null;
-    return func(this).pipe(tap(() => (this._parent = parent)));
+    const result = func(this);
+    if (result instanceof Observable) {
+      return (result as any).pipe(finalize(() => (this._parent = parent)));
+    } else {
+      this._parent = parent;
+      return result;
+    }
   }
 
   annots() {
@@ -812,11 +818,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       apply(query: ODataQueryArguments<T>): void;
     }) => void
   ) {
-    const resource = this.resource() as ODataCollectionResource<T> | undefined;
-    if (resource === undefined)
-      throw new Error(`Can't query without ODataResource`);
+    const resource = this.resource();
     func(resource.query);
     this.attach(resource);
+    return this;
   }
 
   protected callFunction<P, R>(
@@ -944,12 +949,39 @@ export class ODataCollection<T, M extends ODataModel<T>>
     };
   }
 
-  contains(model: M) {
-    return this.models().some((m) => m.equals(model));
+  filter(predicate: (m: M, index: number) => boolean): M[] {
+    return this.models().filter(predicate);
   }
 
-  filter(predicate: (m: M) => boolean): M[] {
-    return this.models().filter(predicate);
+  find(predicate: (m: M, index: number) => boolean): M | undefined {
+    return this.models().find(predicate);
+  }
+
+  first(): M | undefined {
+    return this.models()[0];
+  }
+
+  last(): M | undefined {
+    const models = this.models();
+    return models[models.length - 1];
+  }
+
+  every(predicate: (m: M, index: number) => boolean): boolean {
+    return this.models().every(predicate);
+  }
+
+  some(predicate: (m: M, index: number) => boolean): boolean {
+    return this.models().some(predicate);
+  }
+
+  contains(model: M) {
+    return this.some((m) => m.equals(model));
+  }
+
+  indexOf(model: M): number {
+    const models = this.models();
+    const m = models.find((m) => m.equals(model));
+    return m === undefined ? -1 : models.indexOf(m);
   }
 
   //#region Sort

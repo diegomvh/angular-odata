@@ -14,6 +14,7 @@ export interface ODataCacheEntry<T> {
 export abstract class ODataCache implements Cache {
   timeout: number;
   entries: Map<string, ODataCacheEntry<any>>;
+
   constructor({ timeout = DEFAULT_TIMEOUT }: { timeout?: number }) {
     this.timeout = timeout;
     this.entries = new Map<string, ODataCacheEntry<any>>();

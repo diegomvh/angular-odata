@@ -309,6 +309,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+  /**
+   * Create a new entity
+   * @param attrs The entity attributes
+   * @param options Options for the request
+   * @returns The created entity with the annotations
+   */
   create(
     attrs: Partial<T>,
     options?: ODataOptions
@@ -316,6 +322,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.post(attrs, options);
   }
 
+  /**
+   * Update an existing entity
+   * @param attrs The entity attributes
+   * @param options Options for the request
+   * @param etag The etag of the entity
+   * @returns The updated entity with the annotations
+   */
   update(
     attrs: Partial<T>,
     options?: ODataOptions & { etag?: string }
@@ -323,6 +336,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.put(attrs, options);
   }
 
+  /**
+   * Modify an existing entity
+   * @param attrs The entity attributes
+   * @param options Options for the request
+   * @param etag The etag of the entity
+   * @returns The modified entity with the annotations
+   */
   modify(
     attrs: Partial<T>,
     options?: ODataOptions & { etag?: string }
@@ -330,10 +350,21 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.patch(attrs, options);
   }
 
+  /**
+   * Delete an existing entity
+   * @param options Options for the request
+   * @param etag The etag of the entity
+   * @returns An observable of the destroy
+   */
   destroy(options?: ODataOptions & { etag?: string }): Observable<any> {
     return this.delete(options);
   }
 
+  /**
+   * Fetch entity / entities
+   * @param options Options for the request
+   * @return An observable of the entity or entities with annotations
+   */
   fetch(
     options?: ODataEntityOptions & {
       etag?: string;
@@ -356,6 +387,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return this.get(options);
   }
 
+  /**
+   * Fetch the entity
+   * @param options Options for the request
+   * @returns The entity
+   */
   fetchEntity(
     options: ODataOptions & {
       etag?: string;
@@ -367,6 +403,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch the entity and return as model
+   * @param options Options for the request
+   * @returns The model
+   */
   fetchModel<M extends ODataModel<T>>(
     options: ODataOptions & {
       etag?: string;
@@ -380,6 +421,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch entities
+   * @param options Options for the request
+   * @returns The entities
+   */
   fetchEntities(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOptionNames[];
@@ -390,6 +436,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch entities and return as collection
+   * @param options Options for the request
+   * @returns The collection
+   */
   fetchCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
     options: ODataOptions & {
       withCount?: boolean;
@@ -405,6 +456,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     );
   }
 
+  /**
+   * Fetch all entities
+   * @param options Options for the request
+   * @returns All entities
+   */
   fetchAll(
     options: ODataOptions & {
       bodyQueryOptions?: QueryOptionNames[];

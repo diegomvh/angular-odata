@@ -518,8 +518,7 @@ export class ODataModel<T> {
       apply(query: ODataQueryArguments<T>): void;
     }) => void
   ) {
-    const resource = this.resource() as ODataModelResource<T> | undefined;
-    if (resource !== undefined) return this._meta.query(this, resource, func);
+    return this._meta.query(this, this.resource(), func) as this;
   }
 
   /**
@@ -536,9 +535,9 @@ export class ODataModel<T> {
   /**
    * Create an execution context for a given function, where the model is bound to its entity endpoint
    * @param ctx Context function
-   * @returns Observable of R
+   * @returns The result of the context
    */
-  asEntity<R>(ctx: (model: this) => Observable<R>): Observable<R> {
+  asEntity<R>(ctx: (model: this) => R): R {
     return this._meta.asEntity(this, ctx);
   }
 

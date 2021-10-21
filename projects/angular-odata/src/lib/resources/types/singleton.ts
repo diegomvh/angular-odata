@@ -218,6 +218,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Shortcuts
+  /**
+   * Creates a new entity.
+   * @param attrs The entity attributes to create.
+   * @param options The options for the request.
+   * @returns The created entity with the annotations.
+   */
   create(
     attrs: Partial<T>,
     options?: ODataOptions
@@ -225,6 +231,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return this.post(attrs, options);
   }
 
+  /**
+   * Updates an existing entity.
+   * @param attrs The entity attributes to update.
+   * @param options The options for the request.
+   * @returns The updated entity with the annotations.
+   */
   update(
     attrs: Partial<T>,
     options?: ODataOptions & { etag?: string }
@@ -232,6 +244,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return this.put(attrs, options);
   }
 
+  /**
+   * Modifies an existing entity.
+   * @param attrs The entity attributes to modify.
+   * @param options The options for the request.
+   * @returns The modified entity with the annotations.
+   */
   modify(
     attrs: Partial<T>,
     options?: ODataOptions & { etag?: string }
@@ -239,9 +257,21 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return this.patch(attrs, options);
   }
 
+  /**
+   * Delete an existing entity.
+   * @param options The options for the request.
+   * @returns Observable of the deleted entity.
+   */
   destroy(options?: ODataOptions & { etag?: string }): Observable<any> {
     return this.delete(options);
   }
+
+  /**
+   * Fetch an existing entity.
+   * @param options The options for the request.
+   * @param etag The etag to use for the request.
+   * @returns Observable of the entity with the annotations.
+   */
   fetch(
     options?: ODataOptions & {
       etag?: string;
@@ -251,6 +281,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return this.get(options);
   }
 
+  /**
+   * Fetch an existing entity.
+   * @param options The options for the request.
+   * @param etag The etag to use for the request.
+   * @returns Observable of the entity.
+   */
   fetchEntity(
     options?: ODataOptions & {
       etag?: string;
@@ -260,6 +296,12 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return this.fetch(options).pipe(map(({ entity }) => entity));
   }
 
+  /**
+   * Fetch an existing entity and return a model.
+   * @param options The options for the request.
+   * @param etag The etag to use for the request.
+   * @returns Observable of the entity.
+   */
   fetchModel<M extends ODataModel<T>>(
     options?: ODataOptions & {
       etag?: string;
