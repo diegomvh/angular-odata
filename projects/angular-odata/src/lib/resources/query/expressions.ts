@@ -117,15 +117,23 @@ export class Expression<T> implements Node {
     return this._add(operators.gt(left, right));
   }
 
-  ge(left: Field<T> | string, right: any) {
+  ge(left: Field<T>, right: any) {
     return this._add(operators.ge(left, right));
   }
 
-  lt(left: Field<T> | string, right: any) {
+  lt(left: Field<T>, right: any) {
     return this._add(operators.lt(left, right));
   }
 
-  le(left: Field<T> | string, right: any) {
+  le(left: Field<T>, right: any) {
     return this._add(operators.le(left, right));
+  }
+
+  has(left: Field<T>, right: any) {
+    return this._add(operators.has(left, right));
+  }
+
+  in(left: Field<T>, right: any) {
+    return this._add(operators.in(left, right));
   }
 }
