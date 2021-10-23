@@ -117,6 +117,154 @@ describe('OData filter builder', () => {
         });
       });
     });
+    describe('multiple compare', () => {
+      describe('base condition f.or().eq(...)', () => {
+        it('and', () => {
+          const compare = f<any>()
+            .eq('Id', 1)
+            .ne('Type/Id', 3)
+            .startsWith('Name', 'a');
+
+          expect(compare.render()).toBe(
+            "Id eq 1 and Type/Id ne 3 and startswith(Name, 'a')"
+          );
+        });
+
+        it('or', () => {
+          const compare = or<any>()
+            .eq('Id', 1)
+            .ne('Type/Id', 3)
+            .endsWith('Name', 'a');
+
+          expect(compare.render()).toBe(
+            "Id eq 1 or Type/Id ne 3 or endswith(Name, 'a')"
+          );
+        });
+      });
+
+      describe('combination f().and(f().eq(...))', () => {
+        it('and', () => {
+          const compare = or<any>()
+            .and(f<any>().eq('Id', 1))
+            .and(f<any>().ne('Type/Id', 3))
+            .and(f<any>().contains('Name', 'a'));
+
+          expect(compare.render()).toBe(
+            "Id eq 1 and Type/Id ne 3 and contains(Name, 'a')"
+          );
+        });
+
+        it('or', () => {
+          const compare = f<any>()
+            .or(f<any>().eq('Id', 1))
+            .or(f<any>().ne('Type/Id', 3))
+            .or(f<any>().contains('Name', 'a'));
+
+          expect(compare.render()).toBe(
+            "Id eq 1 or Type/Id ne 3 or contains(Name, 'a')"
+          );
+        });
+
+        it('not', () => {
+          const compare = f<any>()
+            .not(f<any>().eq('Id', 1))
+            .not(f<any>().ne('Type/Id', 3))
+            .not(f<any>().contains('Name', 'a'));
+
+          expect(compare.render()).toBe(
+            "not (Id eq 1) and not (Type/Id ne 3) and not (contains(Name, 'a'))"
+          );
+        });
+      });
+
+      describe('canonical functions', () => {
+        it('length', () => {
+          const func = f<any>().eq((x) => x.length('CompanyName'), 19);
+
+          expect(func.render()).toBe('length(CompanyName) eq 19');
+        });
+
+        it('toTower', () => {
+          const func = f<any>().eq(
+            (x) => x.toLower('CompanyName'),
+            'alfreds futterkiste'
+          );
+
+          expect(func.render()).toBe(
+            "tolower(CompanyName) eq 'alfreds futterkiste'"
+          );
+        });
+
+        it('toUpper', () => {
+          const func = f<any>().eq(
+            (x) => x.toUpper('CompanyName'),
+            'ALFREDS FUTTERKISTE'
+          );
+
+          expect(func.render()).toBe(
+            "toupper(CompanyName) eq 'ALFREDS FUTTERKISTE'"
+          );
+        });
+
+        it('trim', () => {
+          const func = f<any>().eq(
+            (x) => x.trim('CompanyName'),
+            'CompanyName',
+            false
+          );
+
+          expect(func.render()).toBe('trim(CompanyName) eq CompanyName');
+        });
+
+        it('indexOf', () => {
+          const func1 = f<any>().eq(
+            (x) => x.indexOf('CompanyName', 'lfreds'),
+            1
+          );
+          const expectedString = "indexof(CompanyName, 'lfreds') eq 1";
+
+          expect(func1.render()).toBe(expectedString);
+        });
+
+        it('substring', () => {
+          const func1 = f<any>().eq(
+            (x) => x.subString('CompanyName', 1),
+            'lfreds Futterkiste'
+          );
+          const expectedString1 =
+            "substring(CompanyName, 1) eq 'lfreds Futterkiste'";
+
+          const func3 = f<any>().eq(
+            (x) => x.subString('CompanyName', 1, 2),
+            'lf'
+          );
+          const expectedString2 = "substring(CompanyName, 1, 2) eq 'lf'";
+
+          expect(func1.render()).toBe(expectedString1);
+          expect(func3.render()).toBe(expectedString2);
+        });
+
+        // * // substring(CompanyName, 1) eq 'lfreds Futterkiste'
+        // * f().eq(f.functions.substring('CompanyName', 1), 'lfreds Futterkiste');
+        // * f().eq(x => x.substring('CompanyName', 1), 'lfreds Futterkiste');
+
+        it('concat', () => {
+          const func = f<any>().eq(
+            (x) =>
+              x.concat(
+                ((y: any) => y.concat('City', ', ')) as any,
+                'Country',
+                false
+              ),
+            'Berlin, Germany'
+          );
+
+          expect(func.render()).toBe(
+            "concat(concat(City, ', '), Country) eq 'Berlin, Germany'"
+          );
+        });
+      });
+    });
   });
 
   /*
@@ -129,7 +277,7 @@ describe('OData filter builder', () => {
         .or(not<Persona>(f<Persona>().eq('Apellido', 'hola')))
         .or((x) => not<Persona>(x.eq('Apellido', 'hola').gt('Edad', 32)));
 
-      expect(compare.toString()).toBe(
+      expect(compare.render()).toBe(
         "(date(Edad) eq 'JUAN' and toupper(Nombre) gt 12 and Apellido eq 'hola' and Edad gt 32) or (not (Apellido eq 'hola')) or (not (Apellido eq 'hola' and Edad gt 32))"
       );
     });
@@ -142,7 +290,7 @@ describe('OData filter builder', () => {
         .or((e) => e.eq('Type/Name', 'Search Engine'))
         .and((e) => e.eq('Type/Name', 'Search Engine'));
 
-      expect(filter.toString()).toBe(
+      expect(filter.render()).toBe(
         "contains(tolower(Name), 'google') and Type/Name ne 'Search Engine' and Type/Name eq 'Search Engine'"
       );
     });
@@ -153,7 +301,7 @@ describe('OData filter builder', () => {
         .ne('Type/Name', 'Search Engine')
         .or((x) => x.eq('Type/Name', 'Search Engine'));
 
-      expect(filter.toString()).toBe(
+      expect(filter.render()).toBe(
         "(contains(tolower(Name), 'google') and Type/Name ne 'Search Engine') or Type/Name eq 'Search Engine'"
       );
     });
@@ -168,7 +316,7 @@ describe('OData filter builder', () => {
         .and((x) => x.eq('Type/Name', 'Search Engine'))
         .gt('Type/Rank', 1);
 
-      expect(filter.toString()).toBe(
+      expect(filter.render()).toBe(
         "(contains(tolower(Name), 'google') or contains(tolower(Name), 'yandex')) and Type/Name eq 'Search Engine'"
       );
     });
@@ -181,7 +329,7 @@ describe('OData filter builder', () => {
           .eq('Id', 1)
           .ne('Type/Id', 3);
 
-        expect(compare1.toString()).toBe('(Id eq 1) and (Type/Id ne 3)');
+        expect(compare1.render()).toBe('(Id eq 1) and (Type/Id ne 3)');
       });
 
       it('or', () => {
@@ -189,7 +337,7 @@ describe('OData filter builder', () => {
           .eq('Id', 1)
           .ne('Type/Id', 3);
 
-        expect(compare1.toString()).toBe('(Id eq 1) or (Type/Id ne 3)');
+        expect(compare1.render()).toBe('(Id eq 1) or (Type/Id ne 3)');
       });
     });
 
@@ -199,13 +347,13 @@ describe('OData filter builder', () => {
           .eq('Id', 1)
           .ne('Type/Id', 3);
 
-        expect(compareAnd.toString()).toBe('(Id eq 1) and (Type/Id ne 3)');
+        expect(compareAnd.render()).toBe('(Id eq 1) and (Type/Id ne 3)');
       });
 
       it('or', () => {
         const compareOr = FilterBuilder.or<any>().eq('Id', 1).ne('Type/Id', 3);
 
-        expect(compareOr.toString()).toBe('(Id eq 1) or (Type/Id ne 3)');
+        expect(compareOr.render()).toBe('(Id eq 1) or (Type/Id ne 3)');
       });
     });
   });
@@ -214,32 +362,32 @@ describe('OData filter builder', () => {
     it('string', () => {
       const filter = new FilterBuilder().eq('name', 'test');
 
-      expect(filter.toString()).toBe("name eq 'test'");
+      expect(filter.render()).toBe("name eq 'test'");
     });
 
     it('number', () => {
       const filter = new FilterBuilder().eq('sum', 200.55);
 
-      expect(filter.toString()).toBe('sum eq 200.55');
+      expect(filter.render()).toBe('sum eq 200.55');
     });
 
     it('boolean', () => {
       const filter = new FilterBuilder().eq('isCorrect', true);
 
-      expect(filter.toString()).toBe('isCorrect eq true');
+      expect(filter.render()).toBe('isCorrect eq true');
     });
 
     it('null', () => {
       const filter = new FilterBuilder().eq('editedOn', null);
 
-      expect(filter.toString()).toBe('editedOn eq null');
+      expect(filter.render()).toBe('editedOn eq null');
     });
 
     it('Date', () => {
       const date = '1995-05-22T21:00:00.000Z';
       const filter = new FilterBuilder().gt('createdOn', new Date(date));
 
-      expect(filter.toString()).toBe(`createdOn gt ${date}`);
+      expect(filter.render()).toBe(`createdOn gt ${date}`);
     });
   });
 
@@ -262,13 +410,13 @@ describe('OData filter builder', () => {
             false
           );
 
-          expect(compareNumber.toString()).toBe(`Id ${operator} 1`);
+          expect(compareNumber.render()).toBe(`Id ${operator} 1`);
 
-          expect(compareString.toString()).toBe(
+          expect(compareString.render()).toBe(
             `CompanyName ${operator} 'Google'`
           );
 
-          expect(compareString1.toString()).toBe(
+          expect(compareString1.render()).toBe(
             `CompanyName ${operator} OtherCompanyName`
           );
         });
@@ -281,7 +429,7 @@ describe('OData filter builder', () => {
           const builder = new FilterBuilder() as any;
           const compareNumber = builder[func]('Name', 'a');
 
-          expect(compareNumber.toString()).toBe(
+          expect(compareNumber.render()).toBe(
             `${func.toLowerCase()}(Name, 'a')`
           );
         });
@@ -292,7 +440,7 @@ describe('OData filter builder', () => {
       it('in(field, [1,2,3])', () => {
         const compare = new FilterBuilder().in('Type/Id', [1, 2, '3']);
 
-        expect(compare.toString()).toBe(
+        expect(compare.render()).toBe(
           "Type/Id eq 1 or Type/Id eq 2 or Type/Id eq '3'"
         );
       });
@@ -300,25 +448,25 @@ describe('OData filter builder', () => {
       it('in(field, [])', () => {
         const compare = new FilterBuilder().in('Type/Id', []);
 
-        expect(compare.toString()).toBe('');
+        expect(compare.render()).toBe('');
       });
 
       it('in(field, null)', () => {
         const compare = new FilterBuilder().in('Type/Id', null);
 
-        expect(compare.toString()).toBe('');
+        expect(compare.render()).toBe('');
       });
 
       it("in(field, 'otherField', false)", () => {
         const compare = new FilterBuilder().in('FullName', 'ShortName', false);
 
-        expect(compare.toString()).toBe('FullName eq ShortName');
+        expect(compare.render()).toBe('FullName eq ShortName');
       });
 
       it('notIn(field, [1,2,3])', () => {
         const compare = new FilterBuilder().notIn('Type/Id', [1, 2, '3']);
 
-        expect(compare.toString()).toBe(
+        expect(compare.render()).toBe(
           "not (Type/Id eq 1 or Type/Id eq 2 or Type/Id eq '3')"
         );
       });
@@ -326,19 +474,19 @@ describe('OData filter builder', () => {
       it('notIn(field, [])', () => {
         const compare = new FilterBuilder().notIn('Type/Id', []);
 
-        expect(compare.toString()).toBe('');
+        expect(compare.render()).toBe('');
       });
 
       it('notIn(field, null)', () => {
         const compare = new FilterBuilder().notIn('Type/Id', null);
 
-        expect(compare.toString()).toBe('');
+        expect(compare.render()).toBe('');
       });
 
       it("notIn(field, '1')", () => {
         const compare = new FilterBuilder().notIn('Type/Id', 1);
 
-        expect(compare.toString()).toBe('not (Type/Id eq 1)');
+        expect(compare.render()).toBe('not (Type/Id eq 1)');
       });
     });
 
@@ -350,7 +498,7 @@ describe('OData filter builder', () => {
             .ne('Type/Id', 3)
             .startsWith('Name', 'a');
 
-          expect(compare.toString()).toBe(
+          expect(compare.render()).toBe(
             "(Id eq 1) and (Type/Id ne 3) and (startswith(Name, 'a'))"
           );
         });
@@ -361,7 +509,7 @@ describe('OData filter builder', () => {
             .ne('Type/Id', 3)
             .endsWith('Name', 'a');
 
-          expect(compare.toString()).toBe(
+          expect(compare.render()).toBe(
             "(Id eq 1) or (Type/Id ne 3) or (endswith(Name, 'a'))"
           );
         });
@@ -374,7 +522,7 @@ describe('OData filter builder', () => {
             .and(new FilterBuilder().ne('Type/Id', 3))
             .and(new FilterBuilder().contains('Name', 'a'));
 
-          expect(compare.toString()).toBe(
+          expect(compare.render()).toBe(
             "(Id eq 1) and (Type/Id ne 3) and (contains(Name, 'a'))"
           );
         });
@@ -386,7 +534,7 @@ describe('OData filter builder', () => {
             .or(new FilterBuilder().ne('Type/Id', 3))
             .or(new FilterBuilder().contains('Name', 'a'));
 
-          expect(compare.toString()).toBe(
+          expect(compare.render()).toBe(
             "(Id eq 1) or (Type/Id ne 3) or (contains(Name, 'a'))"
           );
         });
@@ -397,7 +545,7 @@ describe('OData filter builder', () => {
             .not(new FilterBuilder().ne('Type/Id', 3))
             .not(new FilterBuilder().contains('Name', 'a'));
 
-          expect(compare.toString()).toBe(
+          expect(compare.render()).toBe(
             "(not (Id eq 1)) and (not (Type/Id ne 3)) and (not (contains(Name, 'a')))"
           );
         });
@@ -409,7 +557,7 @@ describe('OData filter builder', () => {
             .and((x) => x.eq('Id', 1))
             .and((x) => x.ne('Type/Id', 3));
 
-          expect(compare.toString()).toBe('(Id eq 1) and (Type/Id ne 3)');
+          expect(compare.render()).toBe('(Id eq 1) and (Type/Id ne 3)');
         });
 
         it('or', () => {
@@ -417,7 +565,7 @@ describe('OData filter builder', () => {
             .or((x) => x.eq('Id', 1))
             .or((x) => x.ne('Type/Id', 3));
 
-          expect(compare.toString()).toBe('(Id eq 1) or (Type/Id ne 3)');
+          expect(compare.render()).toBe('(Id eq 1) or (Type/Id ne 3)');
         });
 
         it('not', () => {
@@ -425,7 +573,7 @@ describe('OData filter builder', () => {
             .not((x) => x.eq('Id', 1))
             .not((x) => x.ne('Type/Id', 3));
 
-          expect(compare.toString()).toBe(
+          expect(compare.render()).toBe(
             '(not (Id eq 1)) and (not (Type/Id ne 3))'
           );
         });
@@ -435,7 +583,7 @@ describe('OData filter builder', () => {
             x.in('Type/Id', [1, 2, '3'])
           );
 
-          expect(compare.toString()).toBe(
+          expect(compare.render()).toBe(
             "not (Type/Id eq 1 or Type/Id eq 2 or Type/Id eq '3')"
           );
         });
@@ -447,7 +595,7 @@ describe('OData filter builder', () => {
     it('length', () => {
       const func = new FilterBuilder().eq((x) => x.length('CompanyName'), 19);
 
-      expect(func.toString()).toBe('length(CompanyName) eq 19');
+      expect(func.render()).toBe('length(CompanyName) eq 19');
     });
 
     it('toTower', () => {
@@ -456,7 +604,7 @@ describe('OData filter builder', () => {
         'alfreds futterkiste'
       );
 
-      expect(func.toString()).toBe(
+      expect(func.render()).toBe(
         "tolower(CompanyName) eq 'alfreds futterkiste'"
       );
     });
@@ -467,7 +615,7 @@ describe('OData filter builder', () => {
         'ALFREDS FUTTERKISTE'
       );
 
-      expect(func.toString()).toBe(
+      expect(func.render()).toBe(
         "toupper(CompanyName) eq 'ALFREDS FUTTERKISTE'"
       );
     });
@@ -479,7 +627,7 @@ describe('OData filter builder', () => {
         false
       );
 
-      expect(func.toString()).toBe('trim(CompanyName) eq CompanyName');
+      expect(func.render()).toBe('trim(CompanyName) eq CompanyName');
     });
 
     it('indexOf', () => {
@@ -493,9 +641,9 @@ describe('OData filter builder', () => {
       );
       const expectedString = "indexof(CompanyName, 'lfreds') eq 1";
 
-      expect(func1.toString()).toBe(expectedString);
+      expect(func1.render()).toBe(expectedString);
 
-      expect(func2.toString()).toBe(expectedString);
+      expect(func2.render()).toBe(expectedString);
     });
 
     it('substring', () => {
@@ -520,13 +668,13 @@ describe('OData filter builder', () => {
       );
       const expectedString2 = "substring(CompanyName, 1, 2) eq 'lf'";
 
-      expect(func1.toString()).toBe(expectedString1);
+      expect(func1.render()).toBe(expectedString1);
 
-      expect(func2.toString()).toBe(expectedString1);
+      expect(func2.render()).toBe(expectedString1);
 
-      expect(func3.toString()).toBe(expectedString2);
+      expect(func3.render()).toBe(expectedString2);
 
-      expect(func4.toString()).toBe(expectedString2);
+      expect(func4.render()).toBe(expectedString2);
     });
 
     // * // substring(CompanyName, 1) eq 'lfreds Futterkiste'
@@ -539,7 +687,7 @@ describe('OData filter builder', () => {
         'Berlin, Germany'
       );
 
-      expect(func.toString()).toBe(
+      expect(func.render()).toBe(
         "concat(concat(City, ', '), Country) eq 'Berlin, Germany'"
       );
     });
@@ -551,7 +699,7 @@ describe('OData filter builder', () => {
         .eq('Type/Id', 2)
         .contains((y) => y.toLower('Name'), 'a');
 
-      expect(filter.toString()).toBe(
+      expect(filter.render()).toBe(
         "(Type/Id eq 2) and (contains(tolower(Name), 'a'))"
       );
     });
@@ -564,7 +712,7 @@ describe('OData filter builder', () => {
         )
       );
 
-      expect(filter.toString()).toBe(
+      expect(filter.render()).toBe(
         "not (concat(concat(City, ', '), Country) eq 'Berlin, Germany')"
       );
     });
@@ -575,7 +723,7 @@ describe('OData filter builder', () => {
         .ne('Type/Name', 'Search Engine')
         .or((x) => x.eq('Type/Name', 'Search Engine'));
 
-      expect(filter.toString()).toBe(
+      expect(filter.render()).toBe(
         "((contains(tolower(Name), 'google')) and (Type/Name ne 'Search Engine')) or (Type/Name eq 'Search Engine')"
       );
     });
@@ -586,7 +734,7 @@ describe('OData filter builder', () => {
         .contains((x) => x.toLower('Name'), 'yandex')
         .and((x) => x.eq('Type/Name', 'Search Engine'));
 
-      expect(filter.toString()).toBe(
+      expect(filter.render()).toBe(
         "((contains(tolower(Name), 'google')) or (contains(tolower(Name), 'yandex'))) and (Type/Name eq 'Search Engine')"
       );
     });
@@ -602,7 +750,7 @@ describe('OData filter builder', () => {
         true
       );
 
-      expect(filter.toString()).toBe("substringof('John', Name)");
+      expect(filter.render()).toBe("substringof('John', Name)");
     });
 
     it('substringof + toLower', () => {
@@ -614,7 +762,7 @@ describe('OData filter builder', () => {
         true
       );
 
-      expect(filter.toString()).toBe("substringof('john', tolower(Name))");
+      expect(filter.render()).toBe("substringof('john', tolower(Name))");
     });
   });
 

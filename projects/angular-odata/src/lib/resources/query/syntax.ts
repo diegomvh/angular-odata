@@ -1,6 +1,6 @@
 import { Types } from 'angular-odata';
 import { handleValue } from './builder';
-import { Renderable } from './types';
+import { Field, Renderable } from './types';
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {

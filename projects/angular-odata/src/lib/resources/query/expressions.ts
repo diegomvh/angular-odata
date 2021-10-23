@@ -67,16 +67,26 @@ export class Expression<T> implements Renderable {
 
   private _add(node: Renderable, connector?: Connector): Expression<T> {
     if (connector !== undefined && this._connector !== connector) {
-      let exp2 = new Expression<T>({
-        children: this._children,
-        connector: this._connector,
-        negated: this._negated,
-      });
+      let children = [];
+      if (this._children.length > 0) {
+        children.push(
+          new Expression<T>({
+            children: this._children,
+            connector: this._connector,
+            negated: this._negated,
+          })
+        );
+      }
+      if (
+        node instanceof Expression &&
+        (node.connector() === connector || node.length() === 1)
+      ) {
+        children = [...children, ...node.children()];
+      } else {
+        children.push(syntax.grouping(node));
+      }
       this._connector = connector;
-      this._children = [
-        syntax.grouping(exp2),
-        syntax.grouping(node as Expression<T>),
-      ];
+      this._children = children;
     } else if (
       node instanceof Expression &&
       !node.negated() &&
@@ -85,23 +95,40 @@ export class Expression<T> implements Renderable {
       this._children = [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof Expression ? syntax.grouping(node) : node
+        node instanceof Expression && !node.negated()
+          ? syntax.grouping(node)
+          : node
       );
     }
     return this;
   }
 
-  or(exp: Expression<T> | ((x: Expression<T>) => Expression<T>)) {
+  or(
+    exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
+  ): Expression<T> {
     return this._add(
       typeof exp === 'function' ? exp(new Expression<T>({})) : exp,
       Connector.OR
     );
   }
 
-  and(exp: Expression<T> | ((x: Expression<T>) => Expression<T>)) {
+  and(
+    exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
+  ): Expression<T> {
     return this._add(
       typeof exp === 'function' ? exp(new Expression<T>({})) : exp,
       Connector.AND
+    );
+  }
+
+  not(
+    exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
+  ): Expression<T> {
+    return this._add(
+      Expression.not(
+        typeof exp === 'function' ? exp(new Expression<T>({})) : exp
+      ),
+      this._connector
     );
   }
 
