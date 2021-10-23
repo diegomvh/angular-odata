@@ -530,7 +530,7 @@ function escapeIllegalChars(string: string) {
   return string;
 }
 
-function handleValue(value: Value, aliases?: QueryCustomType[]): any {
+export function handleValue(value: Value, aliases?: QueryCustomType[]): any {
   if (typeof value === 'string') {
     return `'${escapeIllegalChars(value)}'`;
   } else if (value instanceof Date) {

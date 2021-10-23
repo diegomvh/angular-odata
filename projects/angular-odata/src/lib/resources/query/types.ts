@@ -1,19 +1,13 @@
-import { Functions, Function } from './functions';
+import { Function, ODataSyntax, Operator } from './syntax';
 
-export enum Condition {
+export enum Connector {
   AND = 'and',
   OR = 'or',
 }
 
-export interface ToString {
+export interface Node {
   toString(): string;
 }
 
-export class None implements ToString {
-  toString() {
-    return '';
-  }
-}
-
-export type func<T> = (x: Functions<T>) => Function<T>;
-export type Field<T> = keyof T | func<keyof T>;
+export type Funcs<T> = (x: ODataSyntax<T>) => Function<T> | Operator<T>;
+export type Field<T> = keyof T | Funcs<keyof T>;

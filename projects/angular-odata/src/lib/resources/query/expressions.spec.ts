@@ -1,10 +1,77 @@
-import { FilterBuilder } from './filter';
+import { Expression } from './expressions';
+import { StringFunctions } from './syntax';
 
-import { Condition } from './types';
+class Car {
+  Model?: string;
+  Year?: number;
+}
+
+class Persona {
+  Nombre?: string;
+  Apellido?: string;
+  Edad?: number;
+  Car?: Car;
+}
 
 describe('OData filter builder', () => {
-  /*
   describe('base condition', () => {
+    it('not', () => {
+      const f = Expression.f;
+      const not = Expression.not;
+      const compare = f<Persona>()
+        .eq((x) => x.date('Edad'), 'JUAN')
+        .gt((x) => x.toUpper('Nombre'), 12)
+        .eq('Apellido', 'hola')
+        .gt('Edad', 32)
+        .or(not<Persona>(f<Persona>().eq('Apellido', 'hola')))
+        .or((x) => not<Persona>(x.eq('Apellido', 'hola').gt('Edad', 32)));
+
+      expect(compare.toString()).toBe(
+        "(date(Edad) eq 'JUAN' and toupper(Nombre) gt 12 and Apellido eq 'hola' and Edad gt 32) or (not (Apellido eq 'hola')) or (not (Apellido eq 'hola' and Edad gt 32))"
+      );
+    });
+    /*
+    it('default and', () => {
+      const filter = FilterBuilder.f<any>()
+        .contains((x) => x.toLower('Name'), 'google')
+        .ne('Type/Name', 'Search Engine')
+        .and((e) => e.eq((x) => x.toUpper('Type/Name'), 'Search Engine'))
+        .or((e) => e.eq('Type/Name', 'Search Engine'))
+        .and((e) => e.eq('Type/Name', 'Search Engine'));
+
+      expect(filter.toString()).toBe(
+        "contains(tolower(Name), 'google') and Type/Name ne 'Search Engine' and Type/Name eq 'Search Engine'"
+      );
+    });
+
+    it('and + or', () => {
+      const filter = FilterBuilder.f<any>()
+        .contains((x) => x.toLower('Name'), 'google')
+        .ne('Type/Name', 'Search Engine')
+        .or((x) => x.eq('Type/Name', 'Search Engine'));
+
+      expect(filter.toString()).toBe(
+        "(contains(tolower(Name), 'google') and Type/Name ne 'Search Engine') or Type/Name eq 'Search Engine'"
+      );
+    });
+
+    it('or + and', () => {
+      const filter = FilterBuilder.and<any>()
+        .contains((x) => x.toLower('Name'), 'google')
+        .contains((x) => x.toLower('Name'), 'yandex')
+        .or((x) =>
+          x.eq('Type/Name', 'Search Engine').eq('Type/Name', 'Search Engine')
+        )
+        .and((x) => x.eq('Type/Name', 'Search Engine'))
+        .gt('Type/Rank', 1);
+
+      expect(filter.toString()).toBe(
+        "(contains(tolower(Name), 'google') or contains(tolower(Name), 'yandex')) and Type/Name eq 'Search Engine'"
+      );
+    });
+    */
+  });
+  /*
     describe('as constructor parameter', () => {
       it('and', () => {
         const compare1 = new FilterBuilder(Condition.AND)

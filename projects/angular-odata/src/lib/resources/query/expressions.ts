@@ -1,95 +1,131 @@
-import { ToString, None, Field } from './types';
-import { And, Operator, operators, Or } from './operators';
-import { functions } from './functions';
+import { Grouping, operators } from './syntax';
+import { Field, Connector, Node } from './types';
 
-export class Expression<T> {
-  private _condition: typeof And | typeof Or = And;
-  private _root: ToString = new None();
-  constructor(root?: ToString, condition?: typeof And | typeof Or) {
-    if (root) {
-      this._root = root;
-    }
-    if (condition) {
-      this._condition = condition;
-    }
+export class Expression<T> implements Node {
+  private _connector: Connector;
+  private _negated: boolean;
+  private _children: Node[];
+  constructor({
+    children,
+    connector,
+    negated,
+  }: {
+    children?: Node[];
+    connector?: Connector;
+    negated?: boolean;
+  }) {
+    this._children = children || [];
+    this._connector = connector || Connector.AND;
+    this._negated = negated || false;
+  }
+
+  static f<T>() {
+    return new Expression<T>({ connector: Connector.AND });
+  }
+
+  static and<T>() {
+    return new Expression<T>({ connector: Connector.AND });
+  }
+
+  static or<T>() {
+    return new Expression<T>({ connector: Connector.OR });
+  }
+
+  static not<T>(exp: Expression<T>) {
+    return new Expression<T>({
+      children: exp.children(),
+      connector: exp.connector(),
+      negated: true,
+    });
+  }
+
+  children() {
+    return this._children;
+  }
+
+  connector() {
+    return this._connector;
+  }
+
+  negated() {
+    return this._negated;
+  }
+
+  length() {
+    return this._children.length;
   }
 
   toString() {
-    return this._root.toString();
+    let content = this._children
+      .map((n) => n.toString())
+      .join(` ${this._connector} `);
+    if (this._negated) {
+      content = `not (${content})`;
+    }
+    return content;
   }
 
-  private _add(op: ToString): Expression<T> {
-    this._root = new this._condition(this._root, op);
+  private _add(node: Node, connector?: Connector): Expression<T> {
+    if (connector !== undefined && this._connector !== connector) {
+      let exp2 = new Expression<T>({
+        children: this._children,
+        connector: this._connector,
+        negated: this._negated,
+      });
+      this._connector = connector;
+      this._children = [
+        new Grouping(exp2),
+        new Grouping(node as Expression<T>),
+      ];
+    } else if (
+      node instanceof Expression &&
+      !node.negated() &&
+      (node.connector() === connector || node.length() === 1)
+    ) {
+      this._children = [...this._children, ...node.children()];
+    } else {
+      this._children.push(
+        node instanceof Expression ? new Grouping(node) : node
+      );
+    }
     return this;
   }
 
-  or(exp: ToString) {
-    return new Expression<T>(
-      operators.or(this._root, operators.group(exp)),
-      Or
+  or(exp: Expression<T> | ((x: Expression<T>) => Expression<T>)) {
+    return this._add(
+      typeof exp === 'function' ? exp(new Expression<T>({})) : exp,
+      Connector.OR
     );
   }
 
-  and(exp: ToString) {
-    return new Expression<T>(
-      operators.and(this._root, operators.group(exp)),
-      And
+  and(exp: Expression<T> | ((x: Expression<T>) => Expression<T>)) {
+    return this._add(
+      typeof exp === 'function' ? exp(new Expression<T>({})) : exp,
+      Connector.AND
     );
   }
 
-  add(left: Field<T> | string, rigth: any) {
-    return this._add(operators.add(left, rigth));
+  eq(left: Field<T>, right: any) {
+    return this._add(operators.eq(left, right));
   }
 
-  sub(left: Field<T> | string, rigth: any) {
-    return this._add(operators.sub(left, rigth));
+  ne(left: Field<T>, right: any) {
+    return this._add(operators.ne(left, right));
   }
 
-  mul(left: Field<T> | string, rigth: any) {
-    return this._add(operators.mul(left, rigth));
+  gt(left: Field<T>, right: number) {
+    return this._add(operators.gt(left, right));
   }
 
-  div(left: Field<T> | string, rigth: any) {
-    return this._add(operators.div(left, rigth));
+  ge(left: Field<T> | string, right: any) {
+    return this._add(operators.ge(left, right));
   }
 
-  mod(left: Field<T> | string, rigth: any) {
-    return this._add(operators.mod(left, rigth));
+  lt(left: Field<T> | string, right: any) {
+    return this._add(operators.lt(left, right));
   }
 
-  neg(exp: Expression<T>) {
-    return this._add(operators.neg(exp));
-  }
-
-  eq(left: Field<T> | string, rigth: any) {
-    return this._add(operators.eq(left, rigth));
-  }
-
-  ne(left: Field<T> | string, rigth: any) {
-    return this._add(operators.ne(left, rigth));
-  }
-
-  gt(left: Field<T> | string, rigth: any) {
-    return this._add(operators.gt(left, rigth));
-  }
-
-  ge(left: Field<T> | string, rigth: any) {
-    return this._add(operators.ge(left, rigth));
-  }
-
-  lt(left: Field<T> | string, rigth: any) {
-    return this._add(operators.lt(left, rigth));
-  }
-
-  le(left: Field<T> | string, rigth: any) {
-    return this._add(operators.le(left, rigth));
-  }
-
-  in(left: Field<T> | string, rigth: any) {
-    return this._add(operators.in(left, rigth));
-  }
-
-  endsWith(left: Field<T> | string, rigth: any) {
-    return this._add(functions.endsWith(left, rigth));
+  le(left: Field<T> | string, right: any) {
+    return this._add(operators.le(left, right));
   }
 }
