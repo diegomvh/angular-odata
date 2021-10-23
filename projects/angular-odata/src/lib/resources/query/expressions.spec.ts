@@ -1,24 +1,127 @@
 import { Expression } from './expressions';
 import { StringFunctions } from './syntax';
 
-class Car {
-  Model?: string;
-  Year?: number;
-}
-
-class Persona {
-  Nombre?: string;
-  Apellido?: string;
-  Edad?: number;
-  Car?: Car;
-}
-
 describe('OData filter builder', () => {
+  interface Car {
+    Id?: number;
+    Model?: string;
+    Year?: number;
+  }
+
+  interface Person {
+    Id?: number;
+    Name?: string;
+    Age?: number;
+    IsCorrect?: boolean;
+    EditedOn?: boolean;
+    CreatedOn?: boolean;
+    Car?: Car;
+  }
+
+  const f = Expression.f;
+  const and = Expression.and;
+  const or = Expression.or;
+  const not = Expression.not;
+
+  describe('base condition', () => {
+    describe('as factory function', () => {
+      it('and', () => {
+        const compare1 = and<Person>().eq('Id', 1).ne('Car', 3);
+
+        expect(compare1.render()).toBe('Id eq 1 and Car ne 3');
+      });
+
+      it('or', () => {
+        const compare1 = or<Person>().eq('Id', 1).ne('Car', 3);
+
+        expect(compare1.render()).toBe('Id eq 1 or Car ne 3');
+      });
+    });
+
+    describe('value types', () => {
+      it('string', () => {
+        const filter = f<Person>().eq('Name', 'test');
+
+        expect(filter.render()).toBe("Name eq 'test'");
+      });
+
+      it('number', () => {
+        const filter = f<Person>().eq('Age', 200.55);
+
+        expect(filter.render()).toBe('Age eq 200.55');
+      });
+
+      it('boolean', () => {
+        const filter = f<Person>().eq('IsCorrect', true);
+
+        expect(filter.render()).toBe('IsCorrect eq true');
+      });
+
+      it('null', () => {
+        const filter = f<Person>().eq('EditedOn', null);
+
+        expect(filter.render()).toBe('EditedOn eq null');
+      });
+
+      it('Date', () => {
+        const date = '1995-05-22T21:00:00.000Z';
+        const filter = f<Person>().gt('CreatedOn', new Date(date));
+
+        expect(filter.render()).toBe(`CreatedOn gt ${date}`);
+      });
+    });
+
+    describe('logical operators', () => {
+      const comparators = ['eq', 'ne', 'gt', 'ge', 'lt', 'le'];
+      const functions = ['contains', 'startsWith', 'endsWith'];
+
+      describe('simple comparision', () => {
+        comparators.forEach((operator) => {
+          it(operator, () => {
+            const compareNumber = (f<any>() as any)[operator]('Id', 1);
+
+            const compareString = (f<any>() as any)[operator](
+              'CompanyName',
+              'Google'
+            );
+
+            // skip value normalisation
+            const compareString1 = (f<any>() as any)[operator](
+              'CompanyName',
+              'OtherCompanyName',
+              false
+            );
+
+            expect(compareNumber.render()).toBe(`Id ${operator} 1`);
+
+            expect(compareString.render()).toBe(
+              `CompanyName ${operator} 'Google'`
+            );
+
+            expect(compareString1.render()).toBe(
+              `CompanyName ${operator} OtherCompanyName`
+            );
+          });
+        });
+
+        describe('simple comparision functions', () => {
+          functions.forEach((func) => {
+            it(func, () => {
+              const compareNumber = (f<any>() as any)[func]('Name', 'a');
+
+              expect(compareNumber.render()).toBe(
+                `${func.toLowerCase()}(Name, 'a')`
+              );
+            });
+          });
+        });
+      });
+    });
+  });
+
+  /*
   describe('base condition', () => {
     it('not', () => {
-      const f = Expression.f;
-      const not = Expression.not;
-      const compare = f<Persona>()
         .eq((x) => x.date('Edad'), 'JUAN')
         .gt((x) => x.toUpper('Nombre'), 12)
         .eq('Apellido', 'hola')
@@ -70,8 +173,8 @@ describe('OData filter builder', () => {
       );
     });
     */
-  });
-  /*
+});
+/*
     describe('as constructor parameter', () => {
       it('and', () => {
         const compare1 = new FilterBuilder(Condition.AND)
@@ -531,4 +634,3 @@ describe('OData filter builder', () => {
     });
   });
   */
-});

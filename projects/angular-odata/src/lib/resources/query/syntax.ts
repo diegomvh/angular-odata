@@ -1,5 +1,6 @@
+import { Types } from 'angular-odata';
 import { handleValue } from './builder';
-import { Node } from './types';
+import { Renderable } from './types';
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -14,13 +15,17 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
   });
 }
 
-export class Function<T> implements Node {
-  constructor(protected name: string, protected values: any[]) {}
+export class Function<T> implements Renderable {
+  constructor(
+    protected name: string,
+    protected values: any[],
+    protected normalize: boolean = true
+  ) {}
 
-  toString(): string {
+  render(): string {
     var [field, ...values] = this.values;
 
-    if (typeof field === 'function') {
+    if (Types.isFunction(field)) {
       values = [field(syntax), ...values.map((v) => handleValue(v))];
     } else {
       values = [field, ...values.map((v) => handleValue(v))];
@@ -30,34 +35,34 @@ export class Function<T> implements Node {
 }
 
 export class StringAndCollectionFunctions<T> {
-  concat(s1: T | string, s2: any) {
-    return new Function<T>('concat', [s1, s2]);
+  concat(field: T, value: any, normalize?: boolean) {
+    return new Function<T>('concat', [field, value], normalize);
   }
-  contains(s1: T | string, s2: any) {
-    return new Function<T>('contains', [s1, s2]);
+  contains(field: T, value: any, normalize?: boolean) {
+    return new Function<T>('contains', [field, value], normalize);
   }
-  endsWith(s1: T | string, s2: any) {
-    return new Function<T>('endswith', [s1, s2]);
+  endsWith(field: T, value: any, normalize?: boolean) {
+    return new Function<T>('endswith', [field, value], normalize);
   }
-  indexOf(s1: T | string, s2: any) {
-    return new Function<T>('indexof', [s1, s2]);
+  indexOf(field: T, value: any, normalize?: boolean) {
+    return new Function<T>('indexof', [field, value], normalize);
   }
-  length(value: T | string) {
-    return new Function<T>('length', [value]);
+  length(value: T, normalize?: boolean) {
+    return new Function<T>('length', [value], normalize);
   }
-  startsWith(s1: T | string, s2: any) {
-    return new Function<T>('startswith', [s1, s2]);
+  startsWith(field: T, value: any, normalize?: boolean) {
+    return new Function<T>('startswith', [field, value], normalize);
   }
-  subString(value: T | string, start: any, length?: any) {
-    return new Function<T>('substring', [value, start, length]);
+  subString(value: T, start: any, length?: any, normalize?: boolean) {
+    return new Function<T>('substring', [value, start, length], normalize);
   }
 }
 
 export class CollectionFunctions<T> {
-  hasSubset(s1: T | string, s2: any) {
+  hasSubset(s1: T, s2: any) {
     return new Function<T>('hassubset', [s1, s2]);
   }
-  hasSubsequence(s1: T | string, s2: any) {
+  hasSubsequence(s1: T, s2: any) {
     return new Function<T>('hassubsequence', [s1, s2]);
   }
 }
@@ -144,14 +149,14 @@ export class TypeFunctions<T> {
 }
 
 export class GeoFunctions<T> {
-  distance(value: T | string, point: string) {
-    return new Function<T>('distance', [value, point]);
+  distance(value: T, point: string, normalize?: boolean) {
+    return new Function<T>('distance', [value, point], normalize);
   }
-  intersects(value: T | string, polygon: string) {
-    return new Function<T>('intersects', [value, polygon]);
+  intersects(value: T, polygon: string, normalize?: boolean) {
+    return new Function<T>('intersects', [value, polygon], normalize);
   }
-  length(value: T | string) {
-    return new Function<T>('length', [value]);
+  length(value: T, normalize?: boolean) {
+    return new Function<T>('length', [value], normalize);
   }
 }
 
@@ -161,26 +166,29 @@ export class ConditionalFunctions<T> {
   }
 }
 
-export class Operator<T> implements Node {
-  constructor(protected op: string | null, protected values: any[]) {}
+export class Operator<T> implements Renderable {
+  constructor(
+    protected op: string,
+    protected values: any[],
+    protected normalize: boolean = true
+  ) {}
 
-  toString(): string {
+  render(): string {
     let [left, right] = this.values;
 
-    if (typeof left === 'function') {
+    if (Types.isFunction(left)) {
       left = left(syntax);
-    } else if (typeof left === 'object' && 'toString' in left) {
-      left = left.toString();
+    } else if (Types.isObject(left) && 'render' in left) {
+      left = left.render();
     }
-    if (this.op === null) return `(${left})`;
-    if (typeof right === 'function') {
+    if (Types.isFunction(right)) {
       right = right(syntax);
-    } else if (typeof right === 'object' && 'toString' in right) {
-      right = right.toString();
-    } else if (right) {
+    } else if (Types.isObject(right) && 'render' in right) {
+      right = right.render();
+    } else if (right !== undefined && this.normalize) {
       right = handleValue(right);
     }
-    if (right) {
+    if (right !== undefined) {
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -188,74 +196,98 @@ export class Operator<T> implements Node {
 }
 
 export class LogicalOperators<T> {
-  eq(left: any, right: any) {
-    return new Operator('eq', [left, right]);
+  eq(left: any, right: any, normalize?: boolean) {
+    return new Operator('eq', [left, right], normalize);
   }
-  ne(left: any, right: any) {
-    return new Operator('ne', [left, right]);
+  ne(left: any, right: any, normalize?: boolean) {
+    return new Operator('ne', [left, right], normalize);
   }
-  gt(left: any, right: any) {
-    return new Operator('gt', [left, right]);
+  gt(left: any, right: any, normalize?: boolean) {
+    return new Operator('gt', [left, right], normalize);
   }
-  ge(left: any, right: any) {
-    return new Operator('ge', [left, right]);
+  ge(left: any, right: any, normalize?: boolean) {
+    return new Operator('ge', [left, right], normalize);
   }
-  lt(left: any, right: any) {
-    return new Operator('lt', [left, right]);
+  lt(left: any, right: any, normalize?: boolean) {
+    return new Operator('lt', [left, right], normalize);
   }
-  le(left: any, right: any) {
-    return new Operator('le', [left, right]);
+  le(left: any, right: any, normalize?: boolean) {
+    return new Operator('le', [left, right], normalize);
   }
-  and(left: any, right: any) {
-    return new Operator('and', [left, right]);
+  and(left: any, right: any, normalize?: boolean) {
+    return new Operator('and', [left, right], normalize);
   }
-  or(left: any, right: any) {
-    return new Operator('or', [left, right]);
+  or(left: any, right: any, normalize?: boolean) {
+    return new Operator('or', [left, right], normalize);
   }
-  not(value: any) {
-    return new Operator<T>('not', [value]);
+  not(value: any, normalize?: boolean) {
+    return new Operator<T>('not', [value], normalize);
   }
-  has(left: any, right: any) {
-    return new Operator('has', [left, right]);
+  has(left: any, right: any, normalize?: boolean) {
+    return new Operator('has', [left, right], normalize);
   }
-  in(left: any, right: any) {
-    return new Operator('in', [left, right]);
+  in(left: any, right: any, normalize?: boolean) {
+    return new Operator('in', [left, right], normalize);
   }
 }
 
 export class ArithmeticOperators<T> {
-  add(left: any, right: any) {
-    return new Operator<T>('add', [left, right]);
+  add(left: any, right: any, normalize?: boolean) {
+    return new Operator<T>('add', [left, right], normalize);
   }
-  sub(left: any, right: any) {
-    return new Operator('sub', [left, right]);
+  sub(left: any, right: any, normalize?: boolean) {
+    return new Operator('sub', [left, right], normalize);
   }
-  mul(left: any, right: any) {
-    return new Operator('mul', [left, right]);
+  mul(left: any, right: any, normalize?: boolean) {
+    return new Operator('mul', [left, right], normalize);
   }
-  div(left: any, right: any) {
-    return new Operator('div', [left, right]);
+  div(left: any, right: any, normalize?: boolean) {
+    return new Operator('div', [left, right], normalize);
   }
-  mod(left: any, right: any) {
-    return new Operator('mod', [left, right]);
+  mod(left: any, right: any, normalize?: boolean) {
+    return new Operator('mod', [left, right], normalize);
   }
-  neg(value: any) {
-    return new Operator('-', [value]);
+  neg(value: any, normalize?: boolean) {
+    return new Operator('-', [value], normalize);
   }
 }
 
-export class Grouping<T> implements Node {
+export class Grouping<T> implements Renderable {
   constructor(protected group: any) {}
 
-  toString(): string {
+  render(): string {
     let group = this.group;
 
-    if (typeof group === 'function') {
+    if (Types.isFunction(group)) {
       group = group(syntax);
-    } else if (typeof group === 'object' && 'toString' in group) {
-      group = group.toString();
+    } else if (Types.isObject(group) && 'render' in group) {
+      group = group.render();
     }
     return `(${group})`;
+  }
+}
+
+export class Navigation<T> implements Renderable {
+  constructor(protected navigation: any) {}
+
+  render(): string {
+    let navigation = this.navigation;
+
+    if (Types.isFunction(navigation)) {
+      navigation = navigation(syntax);
+    } else if (Types.isObject(navigation) && 'render' in navigation) {
+      navigation = navigation.render();
+    }
+    return `/${navigation}`;
+  }
+}
+
+export class GroupingAndNavigationOperators<T> {
+  grouping(value: any) {
+    return new Grouping(value);
+  }
+  navigation(value: any) {
+    return new Navigation(value);
   }
 }
 
@@ -273,11 +305,13 @@ export class ODataOperators<T> {}
 export interface ODataOperators<T>
   extends LogicalOperators<T>,
     ArithmeticOperators<T>,
+    GroupingAndNavigationOperators<T>,
     LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
   ArithmeticOperators,
+  GroupingAndNavigationOperators,
   LambdaOperators,
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();

@@ -1,16 +1,16 @@
-import { Grouping, operators } from './syntax';
-import { Field, Connector, Node } from './types';
+import { syntax } from './syntax';
+import { Field, Connector, Renderable } from './types';
 
-export class Expression<T> implements Node {
+export class Expression<T> implements Renderable {
   private _connector: Connector;
   private _negated: boolean;
-  private _children: Node[];
+  private _children: Renderable[];
   constructor({
     children,
     connector,
     negated,
   }: {
-    children?: Node[];
+    children?: Renderable[];
     connector?: Connector;
     negated?: boolean;
   }) {
@@ -55,9 +55,9 @@ export class Expression<T> implements Node {
     return this._children.length;
   }
 
-  toString() {
+  render() {
     let content = this._children
-      .map((n) => n.toString())
+      .map((n) => n.render())
       .join(` ${this._connector} `);
     if (this._negated) {
       content = `not (${content})`;
@@ -65,7 +65,7 @@ export class Expression<T> implements Node {
     return content;
   }
 
-  private _add(node: Node, connector?: Connector): Expression<T> {
+  private _add(node: Renderable, connector?: Connector): Expression<T> {
     if (connector !== undefined && this._connector !== connector) {
       let exp2 = new Expression<T>({
         children: this._children,
@@ -74,8 +74,8 @@ export class Expression<T> implements Node {
       });
       this._connector = connector;
       this._children = [
-        new Grouping(exp2),
-        new Grouping(node as Expression<T>),
+        syntax.grouping(exp2),
+        syntax.grouping(node as Expression<T>),
       ];
     } else if (
       node instanceof Expression &&
@@ -85,7 +85,7 @@ export class Expression<T> implements Node {
       this._children = [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof Expression ? new Grouping(node) : node
+        node instanceof Expression ? syntax.grouping(node) : node
       );
     }
     return this;
@@ -105,35 +105,47 @@ export class Expression<T> implements Node {
     );
   }
 
-  eq(left: Field<T>, right: any) {
-    return this._add(operators.eq(left, right));
+  eq(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.eq(left, right, normalize));
   }
 
-  ne(left: Field<T>, right: any) {
-    return this._add(operators.ne(left, right));
+  ne(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.ne(left, right, normalize));
   }
 
-  gt(left: Field<T>, right: number) {
-    return this._add(operators.gt(left, right));
+  gt(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.gt(left, right, normalize));
   }
 
-  ge(left: Field<T>, right: any) {
-    return this._add(operators.ge(left, right));
+  ge(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.ge(left, right, normalize));
   }
 
-  lt(left: Field<T>, right: any) {
-    return this._add(operators.lt(left, right));
+  lt(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.lt(left, right, normalize));
   }
 
-  le(left: Field<T>, right: any) {
-    return this._add(operators.le(left, right));
+  le(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.le(left, right, normalize));
   }
 
-  has(left: Field<T>, right: any) {
-    return this._add(operators.has(left, right));
+  has(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.has(left, right, normalize));
   }
 
-  in(left: Field<T>, right: any) {
-    return this._add(operators.in(left, right));
+  in(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.in(left, right, normalize));
+  }
+
+  contains(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.contains(left, right, normalize));
+  }
+
+  startsWith(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.startsWith(left, right, normalize));
+  }
+
+  endsWith(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.endsWith(left, right, normalize));
   }
 }

@@ -5,8 +5,8 @@ export enum Connector {
   OR = 'or',
 }
 
-export interface Node {
-  toString(): string;
+export interface Renderable {
+  render(): string;
 }
 
 export type Funcs<T> = (x: ODataSyntax<T>) => Function<T> | Operator<T>;
