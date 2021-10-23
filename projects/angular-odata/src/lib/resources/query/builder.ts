@@ -181,7 +181,7 @@ export function buildPathAndQuery<T>({
 
   // key is not (null, undefined)
   if (key != undefined) {
-    path += `(${handleValue(key as Value, aliases)})`;
+    path += `(${normalizeValue(key as Value, aliases)})`;
   }
 
   if (select) {
@@ -244,7 +244,7 @@ export function buildPathAndQuery<T>({
       path += `/${func}`;
     } else if (typeof func === 'object') {
       const [funcName] = Object.keys(func);
-      const funcArgs = handleValue(func[funcName] as Value, aliases);
+      const funcArgs = normalizeValue(func[funcName] as Value, aliases);
 
       path += `/${funcName}`;
       if (funcArgs !== '') {
@@ -258,7 +258,9 @@ export function buildPathAndQuery<T>({
       query,
       aliases.reduce(
         (acc, alias) =>
-          Object.assign(acc, { [`@${alias.name}`]: handleValue(alias.value) }),
+          Object.assign(acc, {
+            [`@${alias.name}`]: normalizeValue(alias.value),
+          }),
         {}
       )
     );
@@ -277,7 +279,7 @@ function renderPrimitiveValue(
   val: any,
   aliases: QueryCustomType[] = []
 ) {
-  return `${key} eq ${handleValue(val, aliases)}`;
+  return `${key} eq ${normalizeValue(val, aliases)}`;
 }
 
 function buildFilter(
@@ -392,7 +394,7 @@ function buildFilter(
               operators.forEach((op) => {
                 if (COMPARISON_OPERATORS.indexOf(op) !== -1) {
                   result.push(
-                    `${propName} ${op} ${handleValue(value[op], aliases)}`
+                    `${propName} ${op} ${normalizeValue(value[op], aliases)}`
                   );
                 } else if (LOGICAL_OPERATORS.indexOf(op) !== -1) {
                   if (Array.isArray(value[op])) {
@@ -421,7 +423,7 @@ function buildFilter(
                   }
                 } else if (op === 'has') {
                   result.push(
-                    `${propName} ${op} ${handleValue(value[op], aliases)}`
+                    `${propName} ${op} ${normalizeValue(value[op], aliases)}`
                   );
                 } else if (op === 'in') {
                   const resultingValues = Array.isArray(value[op])
@@ -435,14 +437,14 @@ function buildFilter(
                     propName +
                       ' in (' +
                       resultingValues
-                        .map((v: any) => handleValue(v, aliases))
+                        .map((v: any) => normalizeValue(v, aliases))
                         .join(',') +
                       ')'
                   );
                 } else if (BOOLEAN_FUNCTIONS.indexOf(op) !== -1) {
                   // Simple boolean functions (startswith, endswith, contains)
                   result.push(
-                    `${op}(${propName},${handleValue(value[op], aliases)})`
+                    `${op}(${propName},${normalizeValue(value[op], aliases)})`
                   );
                 } else {
                   // Nested property
@@ -530,7 +532,7 @@ function escapeIllegalChars(string: string) {
   return string;
 }
 
-export function handleValue(value: Value, aliases?: QueryCustomType[]): any {
+export function normalizeValue(value: Value, aliases?: QueryCustomType[]): any {
   if (typeof value === 'string') {
     return `'${escapeIllegalChars(value)}'`;
   } else if (value instanceof Date) {
@@ -538,7 +540,7 @@ export function handleValue(value: Value, aliases?: QueryCustomType[]): any {
   } else if (typeof value === 'number') {
     return value;
   } else if (Array.isArray(value)) {
-    return `[${value.map((d) => handleValue(d)).join(',')}]`;
+    return `[${value.map((d) => normalizeValue(d)).join(',')}]`;
   } else if (value === null) {
     return value;
   } else if (typeof value === 'object') {
@@ -556,7 +558,7 @@ export function handleValue(value: Value, aliases?: QueryCustomType[]): any {
       default:
         return Object.entries(value)
           .filter(([, v]) => v !== undefined)
-          .map(([k, v]) => `${k}=${handleValue(v as Value, aliases)}`)
+          .map(([k, v]) => `${k}=${normalizeValue(v as Value, aliases)}`)
           .join(',');
     }
   }

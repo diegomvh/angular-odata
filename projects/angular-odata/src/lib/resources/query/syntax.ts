@@ -1,5 +1,5 @@
 import { Types } from 'angular-odata';
-import { handleValue } from './builder';
+import { normalizeValue } from './builder';
 import { Field, Renderable } from './types';
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
@@ -15,6 +15,19 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
   });
 }
 
+function render(
+  value: any,
+  normalize?: boolean
+): string | number | boolean | null {
+  if (Types.isFunction(value)) {
+    return render(value(syntax), normalize);
+  }
+  if (Types.isObject(value) && 'render' in value) {
+    return render(value.render(), normalize);
+  }
+  return normalize ? normalizeValue(value) : value;
+}
+
 export class Function<T> implements Renderable {
   constructor(
     protected name: string,
@@ -23,14 +36,11 @@ export class Function<T> implements Renderable {
   ) {}
 
   render(): string {
-    var [field, ...values] = this.values;
+    let [field, ...values] = this.values;
 
-    if (Types.isFunction(field)) {
-      values = [field(syntax), ...values.map((v) => handleValue(v))];
-    } else {
-      values = [field, ...values.map((v) => handleValue(v))];
-    }
-    return `${this.name}(${values.join(', ')})`;
+    field = render(field);
+    let params = [field, ...values.map((v) => render(v, this.normalize))];
+    return `${this.name}(${params.join(', ')})`;
   }
 }
 
@@ -53,8 +63,12 @@ export class StringAndCollectionFunctions<T> {
   startsWith(field: T, value: any, normalize?: boolean) {
     return new Function<T>('startswith', [field, value], normalize);
   }
-  subString(value: T, start: any, length?: any, normalize?: boolean) {
-    return new Function<T>('substring', [value, start, length], normalize);
+  subString(field: T, start: any, length?: any, normalize?: boolean) {
+    let values = [field, start];
+    if (length !== undefined) {
+      values.push(length);
+    }
+    return new Function<T>('substring', values, normalize);
   }
 }
 
@@ -176,19 +190,9 @@ export class Operator<T> implements Renderable {
   render(): string {
     let [left, right] = this.values;
 
-    if (Types.isFunction(left)) {
-      left = left(syntax);
-    } else if (Types.isObject(left) && 'render' in left) {
-      left = left.render();
-    }
-    if (Types.isFunction(right)) {
-      right = right(syntax);
-    } else if (Types.isObject(right) && 'render' in right) {
-      right = right.render();
-    } else if (right !== undefined && this.normalize) {
-      right = handleValue(right);
-    }
+    left = render(left);
     if (right !== undefined) {
+      right = render(right, this.normalize);
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -256,14 +260,7 @@ export class Grouping<T> implements Renderable {
   constructor(protected group: any) {}
 
   render(): string {
-    let group = this.group;
-
-    if (Types.isFunction(group)) {
-      group = group(syntax);
-    } else if (Types.isObject(group) && 'render' in group) {
-      group = group.render();
-    }
-    return `(${group})`;
+    return `(${render(this.group)})`;
   }
 }
 
@@ -271,14 +268,7 @@ export class Navigation<T> implements Renderable {
   constructor(protected navigation: any) {}
 
   render(): string {
-    let navigation = this.navigation;
-
-    if (Types.isFunction(navigation)) {
-      navigation = navigation(syntax);
-    } else if (Types.isObject(navigation) && 'render' in navigation) {
-      navigation = navigation.render();
-    }
-    return `/${navigation}`;
+    return `/${render(this.navigation)}`;
   }
 }
 
