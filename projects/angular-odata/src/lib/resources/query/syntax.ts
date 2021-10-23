@@ -1,6 +1,6 @@
-import { Types } from 'angular-odata';
+import { Types } from '../../utils/types';
 import { normalizeValue } from './builder';
-import { Field, Renderable } from './types';
+import { Renderable } from './types';
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
