@@ -2,9 +2,13 @@ import { Expression } from './expressions';
 import { StringFunctions } from './syntax';
 
 describe('OData filter builder', () => {
+  interface Model {
+    Id?: number;
+  }
+
   interface Car {
     Id?: number;
-    Model?: string;
+    Model?: Model;
     Year?: number;
   }
 
@@ -71,6 +75,16 @@ describe('OData filter builder', () => {
       });
     });
 
+    describe('navigate', () => {
+      const compare1 = and<Person>().eq(
+        (x) =>
+          x.navigation<Car>('Car', (x) => x.navigation<Model>('Model', 'Id')),
+        1
+      );
+
+      expect(compare1.render()).toBe('Car/Model/Id eq 1');
+    });
+
     describe('logical operators', () => {
       const comparators = ['eq', 'ne', 'gt', 'ge', 'lt', 'le'];
       const functions = ['contains', 'startsWith', 'endsWith'];
@@ -117,6 +131,7 @@ describe('OData filter builder', () => {
         });
       });
     });
+
     describe('multiple compare', () => {
       describe('base condition f.or().eq(...)', () => {
         it('and', () => {

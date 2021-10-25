@@ -1,4 +1,4 @@
-import { syntax } from './syntax';
+import { Navigation, syntax } from './syntax';
 import { Field, Connector, Renderable } from './types';
 
 export class Expression<T> implements Renderable {
@@ -132,7 +132,7 @@ export class Expression<T> implements Renderable {
     );
   }
 
-  eq(left: Field<T>, right: any, normalize?: boolean) {
+  eq(left: Field<T> | Navigation<T>, right: any, normalize?: boolean) {
     return this._add(syntax.eq(left, right, normalize));
   }
 

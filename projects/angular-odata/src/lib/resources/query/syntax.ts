@@ -1,6 +1,6 @@
 import { Types } from '../../utils/types';
 import { normalizeValue } from './builder';
-import { Renderable } from './types';
+import { Field, Renderable } from './types';
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -265,10 +265,10 @@ export class Grouping<T> implements Renderable {
 }
 
 export class Navigation<T> implements Renderable {
-  constructor(protected navigation: any) {}
+  constructor(protected field: any, protected value: any) {}
 
   render(): string {
-    return `/${render(this.navigation)}`;
+    return `${render(this.field)}/${render(this.value)}`;
   }
 }
 
@@ -276,8 +276,9 @@ export class GroupingAndNavigationOperators<T> {
   grouping(value: any) {
     return new Grouping(value);
   }
-  navigation(value: any) {
-    return new Navigation(value);
+
+  navigation<N>(field: T, value: Field<N>) {
+    return new Navigation<N>(field, value);
   }
 }
 
