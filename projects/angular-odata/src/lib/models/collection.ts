@@ -19,6 +19,7 @@ import {
   EntityKey,
   ODataQueryArguments,
   ODataQueryArgumentsOptions,
+  EntitiesQueryHandler,
 } from '../resources/index';
 
 import { EventEmitter } from '@angular/core';
@@ -793,33 +794,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  query(
-    func: (q: {
-      select(opts?: Select<T>): OptionHandler<Select<T>>;
-      expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
-      transform(opts?: Transform<T>): OptionHandler<Transform<T>>;
-      search(opts?: string): OptionHandler<string>;
-      filter(opts?: Filter): OptionHandler<Filter>;
-      orderBy(opts?: OrderBy<T>): OptionHandler<OrderBy<T>>;
-      format(opts?: string): OptionHandler<string>;
-      top(opts?: number): OptionHandler<number>;
-      skip(opts?: number): OptionHandler<number>;
-      skiptoken(opts?: string): OptionHandler<string>;
-      paging({
-        skip,
-        skiptoken,
-        top,
-      }: {
-        skip?: number;
-        skiptoken?: string;
-        top?: number;
-      }): void;
-      clearPaging(): void;
-      apply(query: ODataQueryArguments<T>): void;
-    }) => void
-  ) {
+  query(func: (q: EntitiesQueryHandler<T>) => void) {
     const resource = this.resource();
-    func(resource.query);
+    resource.query(func);
     this.attach(resource);
     return this;
   }
@@ -833,7 +810,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
       const func = resource.function<P, R>(name);
-      func.query.apply(options);
+      func.query((q) => q.apply(options));
       switch (responseType) {
         case 'property':
           return func.callProperty(params, options);
@@ -857,7 +834,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
       const action = resource.action<P, R>(name);
-      action.query.apply(options);
+      action.query((q) => q.apply(options));
       switch (responseType) {
         case 'property':
           return action.callProperty(params, options);

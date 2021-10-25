@@ -1,6 +1,5 @@
-import { Types } from '../../utils/types';
-import { normalizeValue } from './builder';
-import { Field, Renderable } from './types';
+import { normalizeValue, QueryCustomType } from './builder';
+import { Field, Renderable } from './builder';
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -17,15 +16,16 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
 
 function render(
   value: any,
+  aliases?: QueryCustomType[],
   normalize?: boolean
 ): string | number | boolean | null {
-  if (Types.isFunction(value)) {
-    return render(value(syntax), normalize);
+  if (typeof value === 'function') {
+    return render(value(syntax), aliases, normalize);
   }
-  if (Types.isObject(value) && 'render' in value) {
-    return render(value.render(), normalize);
+  if (typeof value === 'object' && 'render' in value) {
+    return render(value.render(aliases), aliases, normalize);
   }
-  return normalize ? normalizeValue(value) : value;
+  return normalize ? normalizeValue(value, aliases) : value;
 }
 
 export class Function<T> implements Renderable {
@@ -35,11 +35,14 @@ export class Function<T> implements Renderable {
     protected normalize: boolean = true
   ) {}
 
-  render(): string {
+  render(aliases?: QueryCustomType[]): string {
     let [field, ...values] = this.values;
 
     field = render(field);
-    let params = [field, ...values.map((v) => render(v, this.normalize))];
+    let params = [
+      field,
+      ...values.map((v) => render(v, aliases, this.normalize)),
+    ];
     return `${this.name}(${params.join(', ')})`;
   }
 }
@@ -187,14 +190,14 @@ export class Operator<T> implements Renderable {
     protected normalize: boolean = true
   ) {}
 
-  render(): string {
+  render(aliases?: QueryCustomType[]): string {
     let [left, right] = this.values;
 
     left = render(left);
     if (right !== undefined) {
       right = Array.isArray(right)
-        ? `(${right.map((v) => render(v, this.normalize)).join(',')})`
-        : render(right, this.normalize);
+        ? `(${right.map((v) => render(v, aliases, this.normalize)).join(',')})`
+        : render(right, aliases, this.normalize);
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -261,16 +264,16 @@ export class ArithmeticOperators<T> {
 export class Grouping<T> implements Renderable {
   constructor(protected group: any) {}
 
-  render(): string {
-    return `(${render(this.group)})`;
+  render(aliases?: QueryCustomType[]): string {
+    return `(${render(this.group, aliases)})`;
   }
 }
 
 export class Navigation<T, N> implements Renderable {
   constructor(protected field: T, protected value: Field<N>) {}
 
-  render(): string {
-    return `${this.field}/${render(this.value)}`;
+  render(aliases?: QueryCustomType[]): string {
+    return `${this.field}/${render(this.value, aliases)}`;
   }
 }
 
@@ -284,19 +287,21 @@ export class GroupingAndNavigationOperators<T> {
   }
 }
 
-export class Lambda<T> implements Renderable {
+export class Lambda<T> extends Operator<T> {
   constructor(
     protected op: string,
     protected values: any[],
     protected normalize: boolean = true
-  ) {}
+  ) {
+    super(op, values, normalize);
+  }
 
-  render(): string {
+  render(aliases?: QueryCustomType[]): string {
     let [left, right] = this.values;
 
-    left = render(left);
+    left = render(left, aliases);
     let alias = left.split('/').pop().toLowerCase();
-    return `${left}/${this.op}(${alias}:${alias}/${render(right)})`;
+    return `${left}/${this.op}(${alias}:${alias}/${render(right, aliases)})`;
   }
 }
 

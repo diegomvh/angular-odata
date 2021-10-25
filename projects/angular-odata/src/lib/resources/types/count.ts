@@ -4,25 +4,25 @@ import { $COUNT } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
-import { ODataQueryOptions, Filter } from '../query';
+import { ODataQueryOptions, Filter, EntitiesQueryHandler } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 
-export class ODataCountResource extends ODataResource<any> {
+export class ODataCountResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory(
+  static factory<T>(
     api: ODataApi,
     segments: ODataPathSegments,
     query: ODataQueryOptions
   ) {
     segments.add(PathSegmentNames.count, $COUNT).type('Edm.Int32');
     query.keep(QueryOptionNames.filter, QueryOptionNames.search);
-    return new ODataCountResource(api, segments, query);
+    return new ODataCountResource<T>(api, segments, query);
   }
   //#endregion
 
   clone() {
-    return new ODataCountResource(
+    return new ODataCountResource<T>(
       this.api,
       this.cloneSegments(),
       this.cloneQuery()
@@ -44,16 +44,9 @@ export class ODataCountResource extends ODataResource<any> {
     };
   }
 
-  get query() {
-    const options = this.queryOptions;
-    return {
-      search(opts?: string) {
-        return options.option<string>(QueryOptionNames.search, opts);
-      },
-      filter(opts?: Filter) {
-        return options.option<Filter>(QueryOptionNames.filter, opts);
-      },
-    };
+  query(func: (q: EntitiesQueryHandler<T>) => void) {
+    func(this.entitiesQueryHandler());
+    return this;
   }
 
   //#region Requests

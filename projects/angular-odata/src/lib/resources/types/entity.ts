@@ -12,7 +12,12 @@ import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
 import { ODataPropertyResource } from './property';
-import { ODataQueryOptions, Expand, Select } from '../query';
+import {
+  ODataQueryOptions,
+  Expand,
+  Select,
+  EntityQueryHandler,
+} from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { map } from 'rxjs/operators';
 
@@ -160,21 +165,15 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   select(opts: Select<T>) {
-    const clone = this.clone();
-    clone.query.select(opts);
-    return clone;
+    return this.clone().query((q) => q.select(opts));
   }
 
   expand(opts: Expand<T>) {
-    const clone = this.clone();
-    clone.query.expand(opts);
-    return clone;
+    return this.clone().query((q) => q.expand(opts));
   }
 
   format(opts: string) {
-    const clone = this.clone();
-    clone.query.format(opts);
-    return clone;
+    return this.clone().query((q) => q.format(opts));
   }
   //#endregion
 
@@ -191,8 +190,13 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     };
   }
 
-  get query() {
-    return this.entityQueryHandler();
+  /**
+   * Handle query options of the action
+   * @returns Handler for mutate the query of the action
+   */
+  query(func: (q: EntityQueryHandler<T>) => void) {
+    func(this.entityQueryHandler());
+    return this;
   }
   //#endregion
 

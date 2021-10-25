@@ -30,6 +30,7 @@ import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
 import { map } from 'rxjs/operators';
+import { EntitiesQueryHandler } from 'projects/angular-odata/src/public-api';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
@@ -77,7 +78,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     let path = annots?.entitySet;
     if (path !== undefined) {
       resource = this.api.entitySet<R>(path).entity(entity as Partial<R>);
-      resource.query.apply(this.queryOptions.toQueryArguments());
+      resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
     }
     return new Model(entity, { resource, annots, reset }) as M;
   }
@@ -95,70 +96,50 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     let path = annots?.entitySet;
     if (path !== undefined) {
       resource = this.api.entitySet<R>(path);
-      resource.query.apply(this.queryOptions.toQueryArguments());
+      resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
     }
     return new Collection(entities, { resource, annots, reset }) as C;
   }
 
   //#region Inmutable Resource
   select(opts: Select<R>) {
-    const clone = this.clone();
-    clone.query.select(opts);
-    return clone;
+    return this.clone().query((q) => q.select(opts));
   }
 
   expand(opts: Expand<R>) {
-    const clone = this.clone();
-    clone.query.expand(opts);
-    return clone;
+    return this.clone().query((q) => q.expand(opts));
   }
 
   transform(opts: Transform<R>) {
-    const clone = this.clone();
-    clone.query.transform(opts);
-    return clone;
+    return this.clone().query((q) => q.transform(opts));
   }
 
   search(opts: string) {
-    const clone = this.clone();
-    clone.query.search(opts);
-    return clone;
+    return this.clone().query((q) => q.search(opts));
   }
 
-  filter(opts: Filter) {
-    const clone = this.clone();
-    clone.query.filter(opts);
-    return clone;
+  filter(opts: Filter<R>) {
+    return this.clone().query((q) => q.filter(opts));
   }
 
   orderBy(opts: OrderBy<R>) {
-    const clone = this.clone();
-    clone.query.orderBy(opts);
-    return clone;
+    return this.clone().query((q) => q.orderBy(opts));
   }
 
   format(opts: string) {
-    const clone = this.clone();
-    clone.query.format(opts);
-    return clone;
+    return this.clone().query((q) => q.format(opts));
   }
 
   top(opts: number) {
-    const clone = this.clone();
-    clone.query.top(opts);
-    return clone;
+    return this.clone().query((q) => q.top(opts));
   }
 
   skip(opts: number) {
-    const clone = this.clone();
-    clone.query.skip(opts);
-    return clone;
+    return this.clone().query((q) => q.skip(opts));
   }
 
   skiptoken(opts: string) {
-    const clone = this.clone();
-    clone.query.skiptoken(opts);
-    return clone;
+    return this.clone().query((q) => q.skiptoken(opts));
   }
   //#endregion
 
@@ -182,8 +163,9 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * Handle query options of the action
    * @returns Handler for mutate the query of the action
    */
-  get query() {
-    return this.entitiesQueryHandler();
+  query(func: (q: EntitiesQueryHandler<R>) => void) {
+    func(this.entitiesQueryHandler());
+    return this;
   }
 
   //#endregion

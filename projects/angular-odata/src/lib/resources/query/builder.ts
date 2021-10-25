@@ -1,3 +1,12 @@
+import { Expression } from './expressions';
+import {
+  Grouping,
+  Navigation,
+  ODataSyntax,
+  Operator,
+  Function,
+} from './syntax';
+
 const COMPARISON_OPERATORS = ['eq', 'ne', 'gt', 'ge', 'lt', 'le'];
 const LOGICAL_OPERATORS = ['and', 'or', 'not'];
 const COLLECTION_OPERATORS = ['any', 'all'];
@@ -15,10 +24,19 @@ const SUPPORTED_EXPAND_PROPERTIES = [
 const FUNCTION_REGEX = /\((.*)\)/;
 const INDEXOF_REGEX = /(?!indexof)\((\w+)\)/;
 
+export interface Renderable {
+  render(aliases?: QueryCustomType[]): string;
+}
+
+export type Funcs<T> = (
+  x: ODataSyntax<T>
+) => Function<T> | Operator<T> | Grouping<T> | Navigation<T, any>;
+export type Field<T> = keyof T | Funcs<keyof T>;
+
 export type Unpacked<T> = T extends (infer U)[] ? U : T;
 export type Select<T> = SelectType<T> | SelectType<T>[];
 export type SelectType<T> = string | keyof T;
-export type Filter = FilterType | FilterType[];
+export type Filter<T> = FilterType | FilterType[] | Expression<T>;
 export type FilterType = string | { [name: string]: any };
 
 export enum StandardAggregateMethods {
@@ -34,7 +52,7 @@ export type Aggregate =
 
 // OrderBy
 
-export type OrderBy<T> = OrderByType<T> | OrderByType<T>[];
+export type OrderBy<T> = OrderByType<T> | OrderByType<T>[] | Expression<T>;
 export type OrderByType<T> = string | OrderByObject<T>;
 export type OrderByObject<T> = keyof T | [keyof T | string, 'asc' | 'desc'];
 //TODO: support angular 12 recursive type:
@@ -53,17 +71,17 @@ export type NestedExpandOptions<T> = {
 };
 export type ExpandOptions<T> = {
   select?: Select<T>;
-  filter?: Filter;
+  filter?: Filter<T>;
   orderBy?: OrderBy<T>;
   top?: number;
   levels?: number | 'max';
-  count?: boolean | Filter;
+  count?: boolean | Filter<T>;
   expand?: Expand<T>;
 };
 
 export type Transform<T> = {
   aggregate?: Aggregate | Array<Aggregate>;
-  filter?: Filter;
+  filter?: Filter<T>;
   groupBy?: GroupBy<T>;
 };
 export type GroupBy<T> = {
@@ -83,7 +101,13 @@ export type QueryCustomType = {
   value: any;
   name?: string;
 };
-export type Value = string | Date | number | boolean | QueryCustomType;
+export type Value =
+  | string
+  | Date
+  | number
+  | boolean
+  | QueryCustomType
+  | Renderable;
 
 //https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_QueryOptions
 export const raw = (value: string): QueryCustomType => ({
@@ -113,7 +137,7 @@ export type QueryOptions<T> = ExpandOptions<T> & {
   skip: number;
   skiptoken: string;
   key: string | number | { [name: string]: any };
-  count: boolean | Filter;
+  count: boolean | Filter<T>;
   action: string;
   func: string | { [functionName: string]: { [parameterName: string]: any } };
   format: string;
@@ -283,7 +307,7 @@ function renderPrimitiveValue(
 }
 
 function buildFilter(
-  filters: Filter = {},
+  filters: Filter<any> = {},
   aliases: QueryCustomType[] = [],
   propPrefix = ''
 ): string {
@@ -303,7 +327,7 @@ function buildFilter(
   ).join(' and ');
 
   function buildFilterCore(
-    filter: Filter = {},
+    filter: Filter<any> = {},
     aliases: QueryCustomType[] = [],
     propPrefix = ''
   ) {
@@ -543,6 +567,8 @@ export function normalizeValue(value: Value, aliases?: QueryCustomType[]): any {
     return `[${value.map((d) => normalizeValue(d)).join(',')}]`;
   } else if (value === null) {
     return value;
+  } else if (typeof value === 'object' && 'render' in value) {
+    return value.render(aliases);
   } else if (typeof value === 'object') {
     switch (value.type) {
       case QueryCustomTypes.Raw:

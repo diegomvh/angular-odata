@@ -9,7 +9,6 @@ import { ODataHelper } from '../helper';
 import { ODataParserOptions } from '../options';
 import { ODataStructuredTypeFieldParser } from '../parsers';
 import {
-  Expand,
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
   ODataEntityResource,
@@ -21,9 +20,7 @@ import {
   EntityKey,
   ODataResource,
   ODataSingletonResource,
-  OptionHandler,
-  ODataQueryArguments,
-  Select,
+  EntityQueryHandler,
 } from '../resources';
 import { ODataEntitySet, ODataStructuredType } from '../schema';
 import { Options } from '../types';
@@ -454,12 +451,12 @@ export class ODataModelField<F> {
     if (Model === undefined || Collection === undefined)
       throw Error(`No model for ${this.name}`);
     return this.parser.collection
-      ? (new Collection((value || []) as (F | { [name: string]: any })[], {
+      ? (new Collection((value || []) as F[], {
           annots: annots as ODataEntitiesAnnotations,
           parent: [parent, this],
           reset,
         }) as ODataCollection<F, ODataModel<F>>)
-      : (new Model((value || {}) as F | { [name: string]: any }, {
+      : (new Model((value || {}) as F, {
           annots: annots as ODataEntityAnnotations,
           parent: [parent, this],
           reset,
@@ -669,7 +666,7 @@ export class ODataModelOptions<T> {
       }
       if (field === null) {
         const query = model._resource?.cloneQuery().toQueryArguments();
-        if (query !== undefined) resource.query.apply(query);
+        if (query !== undefined) resource.query((q) => q.apply(query));
         continue;
       }
       resource = (field as ODataModelField<any>).resourceFactory<any, any>(
@@ -763,14 +760,9 @@ export class ODataModelOptions<T> {
   query(
     self: ODataModel<T>,
     resource: ODataModelResource<T>,
-    func: (q: {
-      select(opts?: Select<T>): OptionHandler<Select<T>>;
-      expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
-      format(opts?: string): OptionHandler<string>;
-      apply(query: ODataQueryArguments<T>): void;
-    }) => void
+    func: (q: EntityQueryHandler<T>) => void
   ) {
-    func(resource.query);
+    resource.query(func);
     this.attach(self, resource);
     return self;
   }

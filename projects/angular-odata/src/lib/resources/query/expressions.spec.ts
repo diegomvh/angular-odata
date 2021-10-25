@@ -30,7 +30,7 @@ describe('OData filter builder', () => {
     Pets?: Pet[];
   }
 
-  const f = Expression.f;
+  const f = Expression.e;
   const and = Expression.and;
   const or = Expression.or;
   const not = Expression.not;

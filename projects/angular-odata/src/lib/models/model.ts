@@ -15,6 +15,7 @@ import {
   OptionHandler,
   ODataQueryArguments,
   ODataQueryArgumentsOptions,
+  EntityQueryHandler,
 } from '../resources/index';
 
 import { ODataCollection } from './collection';
@@ -510,14 +511,7 @@ export class ODataModel<T> {
    * Create an execution context for change the internal query of a resource
    * @param func Function to execute
    */
-  query(
-    func: (q: {
-      select(opts?: Select<T>): OptionHandler<Select<T>>;
-      expand(opts?: Expand<T>): OptionHandler<Expand<T>>;
-      format(opts?: string): OptionHandler<string>;
-      apply(query: ODataQueryArguments<T>): void;
-    }) => void
-  ) {
+  query(func: (q: EntityQueryHandler<T>) => void) {
     return this._meta.query(this, this.resource(), func) as this;
   }
 
@@ -553,8 +547,7 @@ export class ODataModel<T> {
         "Can't call function without ODataEntityResource with key"
       );
 
-    const func = resource.function<P, R>(name);
-    func.query.apply(options);
+    const func = resource.function<P, R>(name).query((q) => q.apply(options));
     switch (responseType) {
       case 'property':
         return func.callProperty(params, options);
@@ -579,8 +572,7 @@ export class ODataModel<T> {
         "Can't call action without ODataEntityResource with key"
       );
 
-    const action = resource.action<P, R>(name);
-    action.query.apply(options);
+    const action = resource.action<P, R>(name).query((q) => q.apply(options));
     switch (responseType) {
       case 'property':
         return action.callProperty(params, options);
@@ -614,7 +606,7 @@ export class ODataModel<T> {
     const nav = this.navigationProperty<S>(
       name
     ) as ODataNavigationPropertyResource<S>;
-    nav.query.apply(options);
+    nav.query((q) => q.apply(options));
     switch (responseType) {
       case 'model':
         return nav.fetchModel(options);

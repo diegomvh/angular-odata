@@ -10,7 +10,12 @@ import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path-segments';
 import { ODataPropertyResource } from './property';
-import { ODataQueryOptions, Expand, Select } from '../query';
+import {
+  ODataQueryOptions,
+  Expand,
+  Select,
+  EntityQueryHandler,
+} from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -144,19 +149,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
 
   select(opts: Select<T>) {
     const clone = this.clone();
-    clone.query.select(opts);
+    clone.query((q) => q.select(opts));
     return clone;
   }
 
   expand(opts: Expand<T>) {
     const clone = this.clone();
-    clone.query.expand(opts);
+    clone.query((q) => q.expand(opts));
     return clone;
   }
 
   format(opts: string) {
     const clone = this.clone();
-    clone.query.format(opts);
+    clone.query((q) => q.format(opts));
     return clone;
   }
   //#endregion
@@ -174,8 +179,9 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     };
   }
 
-  get query() {
-    return this.entityQueryHandler();
+  query(func: (q: EntityQueryHandler<T>) => void) {
+    func(this.entityQueryHandler());
+    return this;
   }
   //#endregion
 

@@ -1,5 +1,10 @@
+import { Renderable, Field, QueryCustomType } from './builder';
 import { syntax } from './syntax';
-import { Field, Connector, Renderable } from './types';
+
+export enum Connector {
+  AND = 'and',
+  OR = 'or',
+}
 
 export class Expression<T> implements Renderable {
   private _connector: Connector;
@@ -19,7 +24,7 @@ export class Expression<T> implements Renderable {
     this._negated = negated || false;
   }
 
-  static f<T>() {
+  static e<T>() {
     return new Expression<T>({ connector: Connector.AND });
   }
 
@@ -55,9 +60,9 @@ export class Expression<T> implements Renderable {
     return this._children.length;
   }
 
-  render() {
+  render(aliases?: QueryCustomType[]): string {
     let content = this._children
-      .map((n) => n.render())
+      .map((n) => n.render(aliases))
       .join(` ${this._connector} `);
     if (this._negated) {
       content = `not (${content})`;

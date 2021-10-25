@@ -9,13 +9,14 @@ import {
 } from './builder';
 
 import { QueryOptionNames } from '../../types';
+import { Expression } from './expressions';
 
 export type ODataQueryArguments<T> = {
   select?: Select<T>;
   expand?: Expand<T>;
   transform?: Transform<T>;
   search?: string;
-  filter?: Filter;
+  filter?: Filter<T>;
   orderBy?: OrderBy<T>;
   top?: number;
   skip?: number;
@@ -35,6 +36,7 @@ export class ODataQueryOptions {
       QueryOptionNames.select,
       QueryOptionNames.filter,
       QueryOptionNames.search,
+      QueryOptionNames.compute,
       QueryOptionNames.transform,
       QueryOptionNames.orderBy,
       QueryOptionNames.top,
@@ -83,6 +85,18 @@ export class ODataQueryOptions {
 
   clone() {
     return new ODataQueryOptions(this.toJSON());
+  }
+
+  e<T>() {
+    return Expression.e<T>();
+  }
+
+  and<T>() {
+    return Expression.and<T>();
+  }
+
+  or<T>() {
+    return Expression.or<T>();
   }
 
   // Option Handler
@@ -205,5 +219,88 @@ export class OptionHandler<T> {
 
   clear() {
     delete this.o[this.n];
+  }
+}
+
+export class EntityQueryHandler<T> {
+  constructor(protected options: ODataQueryOptions) {}
+  select(opts?: Select<T>) {
+    return this.options.option<Select<T>>(QueryOptionNames.select, opts);
+  }
+  expand(opts?: Expand<T>) {
+    return this.options.option<Expand<T>>(QueryOptionNames.expand, opts);
+  }
+  compute(opts?: string) {
+    return this.options.option<string>(QueryOptionNames.compute, opts);
+  }
+  format(opts?: string) {
+    return this.options.option<string>(QueryOptionNames.format, opts);
+  }
+  apply(query: ODataQueryArguments<T>) {
+    if (query.select !== undefined) {
+      this.select(query.select);
+    }
+    if (query.expand !== undefined) {
+      this.expand(query.expand);
+    }
+  }
+}
+
+export class EntitiesQueryHandler<T> extends EntityQueryHandler<T> {
+  constructor(protected options: ODataQueryOptions) {
+    super(options);
+  }
+  transform(opts?: Transform<T>) {
+    return this.options.option<Transform<T>>(QueryOptionNames.transform, opts);
+  }
+  search(opts?: string) {
+    return this.options.option<string>(QueryOptionNames.search, opts);
+  }
+  filter(opts?: Filter<T>) {
+    return this.options.option<Filter<T>>(QueryOptionNames.filter, opts);
+  }
+  orderBy(opts?: OrderBy<T>) {
+    return this.options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
+  }
+  top(opts?: number) {
+    return this.options.option<number>(QueryOptionNames.top, opts);
+  }
+  skip(opts?: number) {
+    return this.options.option<number>(QueryOptionNames.skip, opts);
+  }
+  skiptoken(opts?: string) {
+    return this.options.option<string>(QueryOptionNames.skiptoken, opts);
+  }
+  paging({
+    skip,
+    skiptoken,
+    top,
+  }: { skip?: number; skiptoken?: string; top?: number } = {}) {
+    if (skiptoken !== undefined) this.skiptoken(skiptoken);
+    else if (skip !== undefined) this.skip(skip);
+    if (top !== undefined) this.top(top);
+  }
+
+  clearPaging() {
+    this.skip().clear();
+    this.top().clear();
+    this.skiptoken().clear();
+  }
+
+  apply(query: ODataQueryArguments<T>) {
+    super.apply(query);
+    if (query.transform !== undefined) {
+      this.transform(query.transform);
+    }
+    if (query.search !== undefined) {
+      this.search(query.search);
+    }
+    if (query.filter !== undefined) {
+      this.filter(query.filter);
+    }
+    if (query.orderBy !== undefined) {
+      this.orderBy(query.orderBy);
+    }
+    this.paging(query);
   }
 }

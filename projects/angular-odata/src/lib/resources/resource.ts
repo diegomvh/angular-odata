@@ -16,15 +16,11 @@ import { OptionsHelper, QueryOptionNames } from '../types';
 import { ODataRequest } from './request';
 import { ODataStructuredTypeParser } from '../parsers';
 import {
-  Expand,
-  Filter,
-  OrderBy,
-  Select,
-  Transform,
   QueryCustomType,
   isQueryCustomType,
-  ODataQueryArguments,
   ODataQueryOptions,
+  EntityQueryHandler,
+  EntitiesQueryHandler,
 } from './query';
 import { ODataStructuredType, ODataCallable } from '../schema/index';
 
@@ -220,29 +216,15 @@ export abstract class ODataResource<T> {
    * @returns Object handler for mutate query options
    */
   protected entityQueryHandler() {
-    const options = this.queryOptions;
-    return {
-      select(opts?: Select<T>) {
-        return options.option<Select<T>>(QueryOptionNames.select, opts);
-      },
-      expand(opts?: Expand<T>) {
-        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
-      },
-      compute(opts?: string) {
-        return options.option<string>(QueryOptionNames.compute, opts);
-      },
-      format(opts?: string) {
-        return options.option<string>(QueryOptionNames.format, opts);
-      },
-      apply(query: ODataQueryArguments<T>) {
-        if (query.select !== undefined) {
-          this.select(query.select);
-        }
-        if (query.expand !== undefined) {
-          this.expand(query.expand);
-        }
-      },
-    };
+    return new EntityQueryHandler<T>(this.queryOptions);
+  }
+
+  /**
+   * Factorise an object handler for mutate query options for resources that match to entities
+   * @returns Object handler for mutate query options
+   */
+  protected entitiesQueryHandler() {
+    return new EntitiesQueryHandler<T>(this.queryOptions);
   }
 
   static resolveKey<T>(
@@ -261,87 +243,6 @@ export abstract class ODataResource<T> {
 
   protected resolveKey(value: any): EntityKey<T> | undefined {
     return ODataResource.resolveKey<T>(value, this.schema());
-  }
-
-  /**
-   * Factorise an object handler for mutate query options for resources that match to entities
-   * @returns Object handler for mutate query options
-   */
-  protected entitiesQueryHandler() {
-    const options = this.queryOptions;
-    return {
-      select(opts?: Select<T>) {
-        return options.option<Select<T>>(QueryOptionNames.select, opts);
-      },
-      expand(opts?: Expand<T>) {
-        return options.option<Expand<T>>(QueryOptionNames.expand, opts);
-      },
-      compute(opts?: string) {
-        return options.option<string>(QueryOptionNames.compute, opts);
-      },
-      transform(opts?: Transform<T>) {
-        return options.option<Transform<T>>(QueryOptionNames.transform, opts);
-      },
-      search(opts?: string) {
-        return options.option<string>(QueryOptionNames.search, opts);
-      },
-      filter(opts?: Filter) {
-        return options.option<Filter>(QueryOptionNames.filter, opts);
-      },
-      orderBy(opts?: OrderBy<T>) {
-        return options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
-      },
-      format(opts?: string) {
-        return options.option<string>(QueryOptionNames.format, opts);
-      },
-      top(opts?: number) {
-        return options.option<number>(QueryOptionNames.top, opts);
-      },
-      skip(opts?: number) {
-        return options.option<number>(QueryOptionNames.skip, opts);
-      },
-      skiptoken(opts?: string) {
-        return options.option<string>(QueryOptionNames.skiptoken, opts);
-      },
-
-      paging({
-        skip,
-        skiptoken,
-        top,
-      }: { skip?: number; skiptoken?: string; top?: number } = {}) {
-        if (skiptoken !== undefined) this.skiptoken(skiptoken);
-        else if (skip !== undefined) this.skip(skip);
-        if (top !== undefined) this.top(top);
-      },
-
-      clearPaging() {
-        this.skip().clear();
-        this.top().clear();
-        this.skiptoken().clear();
-      },
-
-      apply(query: ODataQueryArguments<T>) {
-        if (query.select !== undefined) {
-          this.select(query.select);
-        }
-        if (query.expand !== undefined) {
-          this.expand(query.expand);
-        }
-        if (query.transform !== undefined) {
-          this.transform(query.transform);
-        }
-        if (query.search !== undefined) {
-          this.search(query.search);
-        }
-        if (query.filter !== undefined) {
-          this.filter(query.filter);
-        }
-        if (query.orderBy !== undefined) {
-          this.orderBy(query.orderBy);
-        }
-        this.paging(query);
-      },
-    };
   }
   //#endregion
 

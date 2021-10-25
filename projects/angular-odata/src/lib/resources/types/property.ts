@@ -25,6 +25,7 @@ import {
   OrderBy,
   Select,
   Transform,
+  EntitiesQueryHandler,
 } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataValueResource } from './value';
@@ -112,6 +113,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.cloneQuery()
     );
   }
+
   /*
   navigationProperty<N>(path: string) {
     let type = this.type();
@@ -150,63 +152,43 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   select(opts: Select<T>) {
-    const clone = this.clone();
-    clone.query.select(opts);
-    return clone;
+    return this.clone().query((q) => q.select(opts));
   }
 
   expand(opts: Expand<T>) {
-    const clone = this.clone();
-    clone.query.expand(opts);
-    return clone;
+    return this.clone().query((q) => q.expand(opts));
   }
 
   transform(opts: Transform<T>) {
-    const clone = this.clone();
-    clone.query.transform(opts);
-    return clone;
+    return this.clone().query((q) => q.transform(opts));
   }
 
   search(opts: string) {
-    const clone = this.clone();
-    clone.query.search(opts);
-    return clone;
+    return this.clone().query((q) => q.search(opts));
   }
 
-  filter(opts: Filter) {
-    const clone = this.clone();
-    clone.query.filter(opts);
-    return clone;
+  filter(opts: Filter<T>) {
+    return this.clone().query((q) => q.filter(opts));
   }
 
   orderBy(opts: OrderBy<T>) {
-    const clone = this.clone();
-    clone.query.orderBy(opts);
-    return clone;
+    return this.clone().query((q) => q.orderBy(opts));
   }
 
   format(opts: string) {
-    const clone = this.clone();
-    clone.query.format(opts);
-    return clone;
+    return this.clone().query((q) => q.format(opts));
   }
 
   top(opts: number) {
-    const clone = this.clone();
-    clone.query.top(opts);
-    return clone;
+    return this.clone().query((q) => q.top(opts));
   }
 
   skip(opts: number) {
-    const clone = this.clone();
-    clone.query.skip(opts);
-    return clone;
+    return this.clone().query((q) => q.skip(opts));
   }
 
   skiptoken(opts: string) {
-    const clone = this.clone();
-    clone.query.skiptoken(opts);
-    return clone;
+    return this.clone().query((q) => q.skiptoken(opts));
   }
   //#endregion
 
@@ -229,8 +211,9 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     };
   }
 
-  get query() {
-    return this.entitiesQueryHandler();
+  query(func: (q: EntitiesQueryHandler<T>) => void) {
+    func(this.entitiesQueryHandler());
+    return this;
   }
   //#endregion
 
@@ -340,14 +323,14 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   fetchAll(options: ODataOptions = {}): Observable<T[]> {
     let res = this.clone();
     // Clean Paging
-    res.query.clearPaging();
+    res.query((q) => q.clearPaging());
     let fetch = (opts?: {
       skip?: number;
       skiptoken?: string;
       top?: number;
     }): Observable<ODataEntities<T>> => {
       if (opts) {
-        res.query.paging(opts);
+        res.query((q) => q.paging(opts));
       }
       return res.fetch({ responseType: 'entities', ...options });
     };
