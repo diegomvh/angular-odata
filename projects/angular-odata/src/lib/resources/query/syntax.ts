@@ -192,7 +192,9 @@ export class Operator<T> implements Renderable {
 
     left = render(left);
     if (right !== undefined) {
-      right = render(right, this.normalize);
+      right = Array.isArray(right)
+        ? `(${right.map((v) => render(v, this.normalize)).join(',')})`
+        : render(right, this.normalize);
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -264,11 +266,11 @@ export class Grouping<T> implements Renderable {
   }
 }
 
-export class Navigation<T> implements Renderable {
-  constructor(protected field: any, protected value: any) {}
+export class Navigation<T, N> implements Renderable {
+  constructor(protected field: T, protected value: Field<N>) {}
 
   render(): string {
-    return `${render(this.field)}/${render(this.value)}`;
+    return `${this.field}/${render(this.value)}`;
   }
 }
 
@@ -278,17 +280,33 @@ export class GroupingAndNavigationOperators<T> {
   }
 
   navigation<N>(field: T, value: Field<N>) {
-    return new Navigation<N>(field, value);
+    return new Navigation<T, N>(field, value);
+  }
+}
+
+export class Lambda<T> implements Renderable {
+  constructor(
+    protected op: string,
+    protected values: any[],
+    protected normalize: boolean = true
+  ) {}
+
+  render(): string {
+    let [left, right] = this.values;
+
+    left = render(left);
+    let alias = left.split('/').pop().toLowerCase();
+    return `${left}/${this.op}(${alias}:${alias}/${render(right)})`;
   }
 }
 
 export class LambdaOperators<T> {
-  any(value: any) {
-    return new Operator('any', [value]);
+  any(field: T, value: any) {
+    return new Lambda('any', [field, value]);
   }
 
-  all(value: any) {
-    return new Operator('all', [value]);
+  all(field: T, value: any) {
+    return new Lambda('all', [field, value]);
   }
 }
 

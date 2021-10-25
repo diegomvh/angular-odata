@@ -17,5 +17,5 @@ export interface Renderable {
 
 export type Funcs<T> = (
   x: ODataSyntax<T>
-) => Function<T> | Operator<T> | Grouping<T> | Navigation<T>;
+) => Function<T> | Operator<T> | Grouping<T> | Navigation<T, any>;
 export type Field<T> = keyof T | Funcs<keyof T>;

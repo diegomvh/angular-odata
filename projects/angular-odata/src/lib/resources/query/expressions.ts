@@ -1,4 +1,4 @@
-import { Navigation, syntax } from './syntax';
+import { syntax } from './syntax';
 import { Field, Connector, Renderable } from './types';
 
 export class Expression<T> implements Renderable {
@@ -13,7 +13,7 @@ export class Expression<T> implements Renderable {
     children?: Renderable[];
     connector?: Connector;
     negated?: boolean;
-  }) {
+  } = {}) {
     this._children = children || [];
     this._connector = connector || Connector.AND;
     this._negated = negated || false;
@@ -69,13 +69,16 @@ export class Expression<T> implements Renderable {
     if (connector !== undefined && this._connector !== connector) {
       let children = [];
       if (this._children.length > 0) {
-        children.push(
-          new Expression<T>({
-            children: this._children,
-            connector: this._connector,
-            negated: this._negated,
-          })
-        );
+        let exp = new Expression<T>({
+          children: this._children,
+          connector: this._connector,
+          negated: this._negated,
+        });
+        if (exp.length() > 1) {
+          children.push(syntax.grouping(exp));
+        } else {
+          children.push(exp);
+        }
       }
       if (
         node instanceof Expression &&
@@ -107,7 +110,7 @@ export class Expression<T> implements Renderable {
     exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
   ): Expression<T> {
     return this._add(
-      typeof exp === 'function' ? exp(new Expression<T>({})) : exp,
+      typeof exp === 'function' ? exp(new Expression<T>()) : exp,
       Connector.OR
     );
   }
@@ -116,7 +119,7 @@ export class Expression<T> implements Renderable {
     exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
   ): Expression<T> {
     return this._add(
-      typeof exp === 'function' ? exp(new Expression<T>({})) : exp,
+      typeof exp === 'function' ? exp(new Expression<T>()) : exp,
       Connector.AND
     );
   }
@@ -126,13 +129,13 @@ export class Expression<T> implements Renderable {
   ): Expression<T> {
     return this._add(
       Expression.not(
-        typeof exp === 'function' ? exp(new Expression<T>({})) : exp
+        typeof exp === 'function' ? exp(new Expression<T>()) : exp
       ),
       this._connector
     );
   }
 
-  eq(left: Field<T> | Navigation<T>, right: any, normalize?: boolean) {
+  eq(left: Field<T>, right: any, normalize?: boolean) {
     return this._add(syntax.eq(left, right, normalize));
   }
 
@@ -174,5 +177,29 @@ export class Expression<T> implements Renderable {
 
   endsWith(left: Field<T>, right: any, normalize?: boolean) {
     return this._add(syntax.endsWith(left, right, normalize));
+  }
+
+  any<N>(
+    left: Field<T>,
+    exp: Expression<N> | ((x: Expression<N>) => Expression<N>)
+  ) {
+    return this._add(
+      syntax.any(
+        left,
+        typeof exp === 'function' ? exp(new Expression<N>()) : exp
+      )
+    );
+  }
+
+  all<N>(
+    left: Field<T>,
+    exp: Expression<N> | ((x: Expression<N>) => Expression<N>)
+  ) {
+    return this._add(
+      syntax.all(
+        left,
+        typeof exp === 'function' ? exp(new Expression<N>()) : exp
+      )
+    );
   }
 }

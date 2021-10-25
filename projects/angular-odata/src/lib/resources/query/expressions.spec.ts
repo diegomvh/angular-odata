@@ -2,6 +2,13 @@ import { Expression } from './expressions';
 import { StringFunctions } from './syntax';
 
 describe('OData filter builder', () => {
+  interface Pet {
+    Id?: number;
+    Name?: string;
+    Age?: number;
+    Person?: Person;
+  }
+
   interface Model {
     Id?: number;
   }
@@ -20,6 +27,7 @@ describe('OData filter builder', () => {
     EditedOn?: boolean;
     CreatedOn?: boolean;
     Car?: Car;
+    Pets?: Pet[];
   }
 
   const f = Expression.f;
@@ -75,19 +83,68 @@ describe('OData filter builder', () => {
       });
     });
 
-    describe('navigate', () => {
-      const compare1 = and<Person>().eq(
-        (x) =>
-          x.navigation<Car>('Car', (x) => x.navigation<Model>('Model', 'Id')),
-        1
-      );
+    describe('navigate main', () => {
+      it('navigate', () => {
+        const compare1 = and<Person>().eq(
+          (x) =>
+            x.navigation<Car>('Car', (x) => x.navigation<Model>('Model', 'Id')),
+          1
+        );
+        expect(compare1.render()).toBe('Car/Model/Id eq 1');
+      });
 
-      expect(compare1.render()).toBe('Car/Model/Id eq 1');
+      it('combination navigate', () => {
+        const compare1 = and<Person>()
+          .eq(
+            (x) =>
+              x.navigation<Car>('Car', (x) =>
+                x.navigation<Model>('Model', 'Id')
+              ),
+            1
+          )
+          .ne('Id', 1)
+          .or((x) => x.endsWith('Name', 'John'));
+        expect(compare1.render()).toBe(
+          "(Car/Model/Id eq 1 and Id ne 1) or endswith(Name, 'John')"
+        );
+      });
+
+      it('combination and.or()', () => {
+        const compare1 = and<Person>()
+          .eq(
+            (x) =>
+              x.navigation<Car>('Car', (x) =>
+                x.navigation<Model>('Model', 'Id')
+              ),
+            1
+          )
+          .or((x) => x.endsWith('Name', 'John'));
+        expect(compare1.render()).toBe(
+          "Car/Model/Id eq 1 or endswith(Name, 'John')"
+        );
+      });
+    });
+
+    describe('lambdas basics', () => {
+      it('any', () => {
+        const compare1 = and<Person>().any<Pet>('Pets', (x) => x.eq('Age', 1));
+        expect(compare1.render()).toBe('Pets/any(pets:pets/Age eq 1)');
+      });
+
+      it('all', () => {
+        const compare1 = and<Person>().all<Pet>('Pets', (x) => x.ne('Age', 1));
+        expect(compare1.render()).toBe('Pets/all(pets:pets/Age ne 1)');
+      });
     });
 
     describe('logical operators', () => {
       const comparators = ['eq', 'ne', 'gt', 'ge', 'lt', 'le'];
       const functions = ['contains', 'startsWith', 'endsWith'];
+
+      it('in', () => {
+        const compare1 = and<Person>().in('Age', [1, 2, '3']);
+        expect(compare1.render()).toBe("Age in (1,2,'3')");
+      });
 
       describe('simple comparision', () => {
         comparators.forEach((operator) => {
