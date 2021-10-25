@@ -323,7 +323,7 @@ describe('ODataResource', () => {
         segments,
         options
       );
-    const count: ODataCountResource = set.count();
+    const count: ODataCountResource<Person> = set.count();
     expect(count.toString()).toEqual('People/$count');
   });
 

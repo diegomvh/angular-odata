@@ -22,7 +22,7 @@ function render(
   if (typeof value === 'function') {
     return render(value(syntax), aliases, normalize);
   }
-  if (typeof value === 'object' && 'render' in value) {
+  if (typeof value === 'object' && value !== null && 'render' in value) {
     return render(value.render(aliases), aliases, normalize);
   }
   return normalize ? normalizeValue(value, aliases) : value;
