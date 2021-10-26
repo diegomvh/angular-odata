@@ -101,7 +101,7 @@ export class OptionHandler<T> {
   }
 }
 
-export class EntityQueryHandler<T> {
+export class ODataQueryOptionsHandler<T> {
   constructor(protected options: ODataQueryOptions) {}
   expression(
     f: (e: {
@@ -129,20 +129,6 @@ export class EntityQueryHandler<T> {
   }
   format(opts?: string) {
     return this.options.option<string>(QueryOptionNames.format, opts);
-  }
-  apply(query: ODataQueryArguments<T>) {
-    if (query.select !== undefined) {
-      this.select(query.select);
-    }
-    if (query.expand !== undefined) {
-      this.expand(query.expand);
-    }
-  }
-}
-
-export class EntitiesQueryHandler<T> extends EntityQueryHandler<T> {
-  constructor(protected options: ODataQueryOptions) {
-    super(options);
   }
   transform(opts?: Transform<T>) {
     return this.options.option<Transform<T>>(QueryOptionNames.transform, opts);
@@ -182,7 +168,12 @@ export class EntitiesQueryHandler<T> extends EntityQueryHandler<T> {
   }
 
   apply(query: ODataQueryArguments<T>) {
-    super.apply(query);
+    if (query.select !== undefined) {
+      this.select(query.select);
+    }
+    if (query.expand !== undefined) {
+      this.expand(query.expand);
+    }
     if (query.transform !== undefined) {
       this.transform(query.transform);
     }

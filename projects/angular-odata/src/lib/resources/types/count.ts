@@ -4,7 +4,7 @@ import { $COUNT } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path';
-import { ODataQueryOptions, Filter, EntitiesQueryHandler } from '../query';
+import { ODataQueryOptions, Filter, ODataQueryOptionsHandler } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 
@@ -44,7 +44,7 @@ export class ODataCountResource<T> extends ODataResource<T> {
     };
   }
 
-  query(func: (q: EntitiesQueryHandler<T>) => void) {
+  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
     func(this.entitiesQueryHandler());
     return this;
   }

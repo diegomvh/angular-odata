@@ -25,7 +25,7 @@ import {
   OrderBy,
   Select,
   Transform,
-  EntitiesQueryHandler,
+  ODataQueryOptionsHandler,
 } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
@@ -163,7 +163,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * Handle query options of the action
    * @returns Handler for mutate the query of the action
    */
-  query(func: (q: EntitiesQueryHandler<R>) => void) {
+  query(func: (q: ODataQueryOptionsHandler<R>) => void) {
     func(this.entitiesQueryHandler());
     return this;
   }

@@ -16,7 +16,7 @@ import {
   ODataQueryOptions,
   Expand,
   Select,
-  EntityQueryHandler,
+  ODataQueryOptionsHandler,
 } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { map } from 'rxjs/operators';
@@ -194,8 +194,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
    * Handle query options of the action
    * @returns Handler for mutate the query of the action
    */
-  query(func: (q: EntityQueryHandler<T>) => void) {
-    func(this.entityQueryHandler());
+  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
+    func(this.entitiesQueryHandler());
     return this;
   }
   //#endregion

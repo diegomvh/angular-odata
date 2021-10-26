@@ -1,5 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import {
   COMPUTED,
   DEFAULT_VERSION,
@@ -20,7 +20,7 @@ import {
   EntityKey,
   ODataResource,
   ODataSingletonResource,
-  EntityQueryHandler,
+  ODataQueryOptionsHandler,
 } from '../resources';
 import { ODataEntitySet, ODataStructuredType } from '../schema';
 import { Options } from '../types';
@@ -760,7 +760,7 @@ export class ODataModelOptions<T> {
   query(
     self: ODataModel<T>,
     resource: ODataModelResource<T>,
-    func: (q: EntityQueryHandler<T>) => void
+    func: (q: ODataQueryOptionsHandler<T>) => void
   ) {
     resource.query(func);
     this.attach(self, resource);

@@ -9,14 +9,10 @@ import {
   ODataOptions,
   ODataEntityAnnotations,
   ODataEntity,
-  Select,
-  Expand,
   EntityKey,
-  OptionHandler,
-  ODataQueryArguments,
   ODataQueryArgumentsOptions,
-  EntityQueryHandler,
-} from '../resources/index';
+  ODataQueryOptionsHandler,
+} from '../resources';
 
 import { ODataCollection } from './collection';
 import { Objects, Types, Strings } from '../utils';
@@ -511,7 +507,7 @@ export class ODataModel<T> {
    * Create an execution context for change the internal query of a resource
    * @param func Function to execute
    */
-  query(func: (q: EntityQueryHandler<T>) => void) {
+  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
     return this._meta.query(this, this.resource(), func) as this;
   }
 

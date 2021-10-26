@@ -1,4 +1,4 @@
-import { finalize, map, switchMap, tap } from 'rxjs/operators';
+import { finalize, map, switchMap } from 'rxjs/operators';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 
 import {
@@ -10,16 +10,9 @@ import {
   ODataEntities,
   ODataPropertyResource,
   ODataEntityAnnotations,
-  Select,
-  Expand,
-  OptionHandler,
-  Transform,
-  Filter,
-  OrderBy,
   EntityKey,
-  ODataQueryArguments,
   ODataQueryArgumentsOptions,
-  EntitiesQueryHandler,
+  ODataQueryOptionsHandler,
 } from '../resources/index';
 
 import { EventEmitter } from '@angular/core';
@@ -794,7 +787,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  query(func: (q: EntitiesQueryHandler<T>) => void) {
+  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
     const resource = this.resource();
     resource.query(func);
     this.attach(resource);

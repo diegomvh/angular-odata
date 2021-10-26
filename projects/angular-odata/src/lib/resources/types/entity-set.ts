@@ -23,7 +23,7 @@ import {
   OrderBy,
   Select,
   Transform,
-  EntitiesQueryHandler,
+  ODataQueryOptionsHandler,
 } from '../query';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
@@ -185,7 +185,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
    * Handle query options of the navigation property
    * @returns Handler for mutate the query of the navigation property
    */
-  query(func: (q: EntitiesQueryHandler<T>) => void) {
+  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
     func(this.entitiesQueryHandler());
     return this;
   }

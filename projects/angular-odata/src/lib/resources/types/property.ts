@@ -25,7 +25,7 @@ import {
   OrderBy,
   Select,
   Transform,
-  EntitiesQueryHandler,
+  ODataQueryOptionsHandler,
 } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataValueResource } from './value';
@@ -211,7 +211,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     };
   }
 
-  query(func: (q: EntitiesQueryHandler<T>) => void) {
+  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
     func(this.entitiesQueryHandler());
     return this;
   }

@@ -19,8 +19,7 @@ import {
   QueryCustomType,
   isQueryCustomType,
   ODataQueryOptions,
-  EntityQueryHandler,
-  EntitiesQueryHandler,
+  ODataQueryOptionsHandler,
 } from './query';
 import { ODataStructuredType, ODataCallable } from '../schema/index';
 
@@ -212,19 +211,11 @@ export abstract class ODataResource<T> {
   }
 
   /**
-   * Factorise an object handler for mutate query options for resources that match to entity
-   * @returns Object handler for mutate query options
-   */
-  protected entityQueryHandler() {
-    return new EntityQueryHandler<T>(this.queryOptions);
-  }
-
-  /**
    * Factorise an object handler for mutate query options for resources that match to entities
    * @returns Object handler for mutate query options
    */
   protected entitiesQueryHandler() {
-    return new EntitiesQueryHandler<T>(this.queryOptions);
+    return new ODataQueryOptionsHandler<T>(this.queryOptions);
   }
 
   static resolveKey<T>(

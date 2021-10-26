@@ -76,17 +76,21 @@ export class Expression<T> implements Renderable {
 
   private _add(node: Renderable, connector?: Connector): Expression<T> {
     if (connector !== undefined && this._connector !== connector) {
-      let children = [];
+      let children: Renderable[] = [];
       if (this._children.length > 0) {
-        let exp = new Expression<T>({
-          children: this._children,
-          connector: this._connector,
-          negated: this._negated,
-        });
-        if (exp.length() > 1) {
-          children.push(syntax.grouping(exp));
+        if (this._children.length === 1) {
+          children = [...this._children];
         } else {
-          children.push(exp);
+          let exp = new Expression<T>({
+            children: this._children,
+            connector: this._connector,
+            negated: this._negated,
+          });
+          if (exp.length() > 1) {
+            children.push(syntax.grouping(exp));
+          } else {
+            children.push(exp);
+          }
         }
       }
       if (

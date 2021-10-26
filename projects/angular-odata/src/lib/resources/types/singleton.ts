@@ -14,7 +14,7 @@ import {
   ODataQueryOptions,
   Expand,
   Select,
-  EntityQueryHandler,
+  ODataQueryOptionsHandler,
 } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { Observable } from 'rxjs';
@@ -179,8 +179,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     };
   }
 
-  query(func: (q: EntityQueryHandler<T>) => void) {
-    func(this.entityQueryHandler());
+  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
+    func(this.entitiesQueryHandler());
     return this;
   }
   //#endregion
