@@ -159,6 +159,27 @@ describe('ODataClient', () => {
     });
   });
 
+  it('should convert resource with expression to json', () => {
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
+      'People',
+      `${NAMESPACE}.Person`
+    );
+    const func = set.function<any, any>('NS.MyFunction');
+    func.query((q) => {
+      const exp = q.expression(({ e }) => e.eq('Bla', 'Bla'));
+      q.filter(exp);
+    });
+    const json = func.toJSON();
+    console.log(json);
+    expect(json).toEqual({
+      segments: [
+        { name: 'entitySet', path: 'People', type: 'TripPin.Person' },
+        { name: 'function', path: 'NS.MyFunction' },
+      ],
+      options: {},
+    });
+  });
+
   it('should fetch people', () => {
     const dummyPeople = [
       {

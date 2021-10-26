@@ -6,6 +6,7 @@ import {
   Select,
   Transform,
   buildPathAndQuery,
+  QueryCustomType,
 } from './builder';
 
 import { QueryOptionNames } from '../../types';
@@ -33,6 +34,7 @@ export class ODataQueryOptions {
 
   // Params
   pathAndParams(): [string, { [name: string]: any }] {
+    let aliases: QueryCustomType[] = [];
     let options = [
       QueryOptionNames.select,
       QueryOptionNames.filter,
@@ -47,12 +49,15 @@ export class ODataQueryOptions {
       QueryOptionNames.format,
     ]
       .filter((key) => !Types.isEmpty(this.options[key]))
-      .reduce(
-        (acc, key) => Object.assign(acc, { [key]: this.options[key] }),
-        {}
-      );
+      .reduce((acc, key) => {
+        let value = this.options[key];
+        if (Types.rawType(value) === 'Expression') {
+          value = value.render(aliases);
+        }
+        return Object.assign(acc, { [key]: value });
+      }, {});
 
-    return buildPathAndQuery(options);
+    return buildPathAndQuery<any>({ ...options, aliases });
   }
 
   toString(): string {

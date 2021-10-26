@@ -1190,11 +1190,11 @@ export class ODataModelOptions<T> {
   }
 
   static isModel(obj: any) {
-    return {}.toString.call(obj) === '[object Model]';
+    return Types.rawType(obj) === 'Model';
   }
 
   static isCollection(obj: any) {
-    return {}.toString.call(obj) === '[object Collection]';
+    return Types.rawType(obj) === 'Collection';
   }
 
   private updateCollection<F>(

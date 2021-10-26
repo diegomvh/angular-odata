@@ -1,5 +1,16 @@
 import { normalizeValue } from './builder';
-import type { Field, Renderable, QueryCustomType } from './builder';
+import type { QueryCustomType } from './builder';
+
+export interface Renderable {
+  render(aliases?: QueryCustomType[]): string;
+  toString(): string;
+  toJSON(): any;
+}
+
+export type Funcs<T> = (
+  x: ODataSyntax<T>
+) => Function<T> | Operator<T> | Grouping<T> | Navigation<T, any>;
+export type Field<T> = keyof T | Funcs<keyof T>;
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {

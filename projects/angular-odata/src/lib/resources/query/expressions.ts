@@ -1,4 +1,5 @@
-import type { Renderable, Field, QueryCustomType } from './builder';
+import type { QueryCustomType } from './builder';
+import type { Field, Renderable } from './syntax';
 import { syntax } from './syntax';
 
 export enum Connector {
