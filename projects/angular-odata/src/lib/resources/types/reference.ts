@@ -3,7 +3,7 @@ import { $ID, $REF, ODATA_ID } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';

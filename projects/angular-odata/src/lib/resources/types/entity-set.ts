@@ -15,7 +15,7 @@ import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import {
   ODataQueryOptions,
   Expand,

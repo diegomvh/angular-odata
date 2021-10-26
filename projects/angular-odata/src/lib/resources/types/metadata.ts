@@ -2,7 +2,7 @@ import { $METADATA } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataMetadata } from '../responses';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';

@@ -18,7 +18,7 @@ import { ODataCollection } from '../../models/collection';
 import { ODataEntityResource } from './entity';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataModel } from '../../models/model';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import {
   ODataQueryOptions,
   Expand,

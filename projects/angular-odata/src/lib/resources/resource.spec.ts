@@ -10,7 +10,7 @@ import {
   ODataMediaResource,
   ODataNavigationPropertyResource,
 } from './types';
-import { ODataPathSegments } from './path-segments';
+import { ODataPathSegments } from './path';
 import { ODataQueryOptions, raw } from './query';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';

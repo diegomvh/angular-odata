@@ -8,7 +8,7 @@ import {
 } from '../constants';
 import { Objects, Http, Types } from '../utils/index';
 
-import { ODataPathSegments } from './path-segments';
+import { ODataPathSegments } from './path';
 import { ODataOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';

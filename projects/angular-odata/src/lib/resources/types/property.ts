@@ -17,7 +17,7 @@ import {
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 
 import { ODataApi } from '../../api';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import {
   ODataQueryOptions,
   Expand,

@@ -3,7 +3,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { $COUNT } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import { ODataQueryOptions, Filter, EntitiesQueryHandler } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';

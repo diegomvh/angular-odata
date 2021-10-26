@@ -1,4 +1,4 @@
-import { Renderable, Field, QueryCustomType } from './builder';
+import type { Renderable, Field, QueryCustomType } from './builder';
 import { syntax } from './syntax';
 
 export enum Connector {
@@ -22,6 +22,10 @@ export class Expression<T> implements Renderable {
     this._children = children || [];
     this._connector = connector || Connector.AND;
     this._negated = negated || false;
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'Expression';
   }
 
   static e<T>() {

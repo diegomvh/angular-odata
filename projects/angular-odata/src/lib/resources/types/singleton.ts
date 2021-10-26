@@ -8,7 +8,7 @@ import { ODataFunctionResource } from './function';
 import { ODataModel } from '../../models';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import { ODataPropertyResource } from './property';
 import {
   ODataQueryOptions,

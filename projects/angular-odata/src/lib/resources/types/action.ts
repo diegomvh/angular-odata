@@ -17,7 +17,7 @@ import {
 import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
 import { ODataEntitySetResource } from './entity-set';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import {
   ODataQueryOptions,
   Expand,

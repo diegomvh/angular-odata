@@ -29,7 +29,7 @@ import { Observable, Subject } from 'rxjs';
 import { Http } from '../../utils/http';
 import { ODataApi } from '../../api';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path-segments';
+import { ODataPathSegments } from '../path';
 import { ODataRequest } from '../request';
 import { ODataResource } from '../resource';
 import { ODataResponse } from '../responses';

@@ -1,4 +1,4 @@
-import { Expression } from './expressions';
+import type { Expression } from './expressions';
 import {
   Grouping,
   Navigation,
@@ -225,8 +225,8 @@ export function buildPathAndQuery<T>({
   }
 
   if (filter || typeof count === 'object') {
-    if (filter instanceof Expression) {
-      query.$filter = filter.render(aliases);
+    if ({}.toString.call(filter) === '[object Expression]') {
+      query.$filter = (filter as Expression<T>).render(aliases);
     } else {
       query.$filter = buildFilter(
         typeof count === 'object' ? count : filter,

@@ -1,5 +1,5 @@
-import { normalizeValue, QueryCustomType } from './builder';
-import { Field, Renderable } from './builder';
+import { normalizeValue } from './builder';
+import type { Field, Renderable, QueryCustomType } from './builder';
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -34,6 +34,10 @@ export class Function<T> implements Renderable {
     protected values: any[],
     protected normalize: boolean = true
   ) {}
+
+  get [Symbol.toStringTag]() {
+    return 'Function';
+  }
 
   render(aliases?: QueryCustomType[]): string {
     let [field, ...values] = this.values;
@@ -190,6 +194,10 @@ export class Operator<T> implements Renderable {
     protected normalize: boolean = true
   ) {}
 
+  get [Symbol.toStringTag]() {
+    return 'Operator';
+  }
+
   render(aliases?: QueryCustomType[]): string {
     let [left, right] = this.values;
 
@@ -264,6 +272,10 @@ export class ArithmeticOperators<T> {
 export class Grouping<T> implements Renderable {
   constructor(protected group: any) {}
 
+  get [Symbol.toStringTag]() {
+    return 'Grouping';
+  }
+
   render(aliases?: QueryCustomType[]): string {
     return `(${render(this.group, aliases)})`;
   }
@@ -271,6 +283,10 @@ export class Grouping<T> implements Renderable {
 
 export class Navigation<T, N> implements Renderable {
   constructor(protected field: T, protected value: Field<N>) {}
+
+  get [Symbol.toStringTag]() {
+    return 'Navigation';
+  }
 
   render(aliases?: QueryCustomType[]): string {
     return `${this.field}/${render(this.value, aliases)}`;
@@ -294,6 +310,10 @@ export class Lambda<T> extends Operator<T> {
     protected normalize: boolean = true
   ) {
     super(op, values, normalize);
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'Lambda';
   }
 
   render(aliases?: QueryCustomType[]): string {
