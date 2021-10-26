@@ -87,18 +87,6 @@ export class ODataQueryOptions {
     return new ODataQueryOptions(this.toJSON());
   }
 
-  e<T>() {
-    return Expression.e<T>();
-  }
-
-  and<T>() {
-    return Expression.and<T>();
-  }
-
-  or<T>() {
-    return Expression.or<T>();
-  }
-
   // Option Handler
   option<T>(name: QueryOptionNames, opts?: T) {
     if (opts !== undefined) this.options[name] = opts;
@@ -224,6 +212,15 @@ export class OptionHandler<T> {
 
 export class EntityQueryHandler<T> {
   constructor(protected options: ODataQueryOptions) {}
+  e() {
+    return Expression.e<T>();
+  }
+  and() {
+    return Expression.and<T>();
+  }
+  or() {
+    return Expression.or<T>();
+  }
   select(opts?: Select<T>) {
     return this.options.option<Select<T>>(QueryOptionNames.select, opts);
   }

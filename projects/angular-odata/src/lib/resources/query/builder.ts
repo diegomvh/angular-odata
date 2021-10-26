@@ -225,10 +225,14 @@ export function buildPathAndQuery<T>({
   }
 
   if (filter || typeof count === 'object') {
-    query.$filter = buildFilter(
-      typeof count === 'object' ? count : filter,
-      aliases
-    );
+    if (filter instanceof Expression) {
+      query.$filter = filter.render(aliases);
+    } else {
+      query.$filter = buildFilter(
+        typeof count === 'object' ? count : filter,
+        aliases
+      );
+    }
   }
 
   if (transform) {
