@@ -17,7 +17,7 @@ import {
 import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
 import { ODataEntitySetResource } from './entity-set';
-import { ODataPathSegments } from '../path';
+import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
 import {
   ODataQueryOptions,
   Expand,
@@ -144,19 +144,9 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   //#region Mutable Resource
-  get segment() {
-    const segments = this.pathSegments;
-    return {
-      entitySet() {
-        return segments.get(PathSegmentNames.entitySet);
-      },
-      singleton() {
-        return segments.get(PathSegmentNames.singleton);
-      },
-      action() {
-        return segments.get(PathSegmentNames.action);
-      },
-    };
+  segment(func: (q: ODataPathSegmentsHandler<R>) => void) {
+    func(this.pathSegmentsHandler());
+    return this;
   }
 
   /**
@@ -164,7 +154,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
    * @returns Handler for mutate the query of the action
    */
   query(func: (q: ODataQueryOptionsHandler<R>) => void) {
-    func(this.entitiesQueryHandler());
+    func(this.queryOptionsHandler());
     return this;
   }
 

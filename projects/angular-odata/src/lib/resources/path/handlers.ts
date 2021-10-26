@@ -1,7 +1,8 @@
+import { PathSegmentNames } from '../../types';
 import { Types } from '../../utils';
 
 import { EntityKey } from '../resource';
-import type { ODataSegment } from './segments';
+import type { ODataPathSegments, ODataSegment } from './segments';
 
 export class SegmentHandler {
   constructor(private segment: ODataSegment) {}
@@ -35,5 +36,30 @@ export class SegmentHandler {
   }
   clearParameters() {
     delete this.segment.parameters;
+  }
+}
+
+export class ODataPathSegmentsHandler<T> {
+  constructor(protected segments: ODataPathSegments) {}
+  entitySet() {
+    return this.segments.get(PathSegmentNames.entitySet);
+  }
+  singleton() {
+    return this.segments.get(PathSegmentNames.singleton);
+  }
+  action() {
+    return this.segments.get(PathSegmentNames.action);
+  }
+  function() {
+    return this.segments.get(PathSegmentNames.function);
+  }
+  keys(values?: (EntityKey<T> | undefined)[]) {
+    return this.segments.keys(values);
+  }
+  property() {
+    return this.segments.get(PathSegmentNames.property);
+  }
+  navigationProperty() {
+    return this.segments.get(PathSegmentNames.navigationProperty);
   }
 }

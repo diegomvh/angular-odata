@@ -1,4 +1,4 @@
-import { Dates, Types } from '../../utils';
+import { Objects, Types } from '../../utils';
 import {
   Expand,
   Filter,
@@ -16,6 +16,7 @@ export type ODataQueryArguments<T> = {
   expand?: Expand<T>;
   transform?: Transform<T>;
   search?: string;
+  compute?: string;
   filter?: Filter<T>;
   orderBy?: OrderBy<T>;
   top?: number;
@@ -66,7 +67,7 @@ export class ODataQueryOptions {
   }
 
   toJSON() {
-    return Dates.isoStringToDate(JSON.parse(JSON.stringify(this.options)));
+    return this.option;
   }
 
   toQueryArguments<T>(): ODataQueryArguments<T> {
@@ -74,6 +75,7 @@ export class ODataQueryOptions {
       select: this.options[QueryOptionNames.select],
       expand: this.options[QueryOptionNames.expand],
       transform: this.options[QueryOptionNames.transform],
+      compute: this.options[QueryOptionNames.compute],
       search: this.options[QueryOptionNames.search],
       filter: this.options[QueryOptionNames.filter],
       orderBy: this.options[QueryOptionNames.orderBy],
@@ -84,7 +86,7 @@ export class ODataQueryOptions {
   }
 
   clone() {
-    return new ODataQueryOptions(this.toJSON());
+    return new ODataQueryOptions(Objects.clone(this.option));
   }
 
   // Option Handler

@@ -18,7 +18,7 @@ import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCountResource } from './count';
 import { ODataMediaResource } from './media';
-import { ODataPathSegments } from '../path';
+import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
 import { ODataPropertyResource } from './property';
 import {
   ODataQueryOptions,
@@ -93,7 +93,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   key(value: any) {
     const navigation = this.clone();
     var key = this.resolveKey(value);
-    if (key !== undefined) navigation.segment.navigationProperty().key(key);
+    if (key !== undefined)
+      navigation.segment((s) => s.navigationProperty().key(key));
     return navigation;
   }
 
@@ -106,7 +107,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         this.api.findStructuredTypeForType<T>(types[index])
       )
     );
-    navigation.segment.keys(keys);
+    navigation.segment((s) => s.keys(keys));
     return navigation;
   }
 
@@ -222,22 +223,9 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
-  get segment() {
-    const segments = this.pathSegments;
-    return {
-      entitySet() {
-        return segments.get(PathSegmentNames.entitySet);
-      },
-      singleton() {
-        return segments.get(PathSegmentNames.singleton);
-      },
-      navigationProperty() {
-        return segments.get(PathSegmentNames.navigationProperty);
-      },
-      keys(values?: (EntityKey<T> | undefined)[]) {
-        return segments.keys(values);
-      },
-    };
+  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
+    func(this.pathSegmentsHandler());
+    return this;
   }
 
   /**
@@ -245,7 +233,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
    * @returns Handler for mutate the query of the navigation property
    */
   query(func: (q: ODataQueryOptionsHandler<T>) => void): this {
-    func(this.entitiesQueryHandler());
+    func(this.queryOptionsHandler());
     return this;
   }
   //#endregion

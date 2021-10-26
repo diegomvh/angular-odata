@@ -15,7 +15,7 @@ import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path';
+import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
 import {
   ODataQueryOptions,
   Expand,
@@ -169,16 +169,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
-  get segment() {
-    const segments = this.pathSegments;
-    return {
-      entitySet() {
-        return segments.get(PathSegmentNames.entitySet);
-      },
-      keys(values?: (EntityKey<T> | undefined)[]) {
-        return segments.keys(values);
-      },
-    };
+  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
+    func(this.pathSegmentsHandler());
+    return this;
   }
 
   /**
@@ -186,7 +179,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
    * @returns Handler for mutate the query of the navigation property
    */
   query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.entitiesQueryHandler());
+    func(this.queryOptionsHandler());
     return this;
   }
   //#endregion

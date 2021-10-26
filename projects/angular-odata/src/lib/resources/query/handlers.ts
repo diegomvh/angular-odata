@@ -105,16 +105,16 @@ export class ODataQueryOptionsHandler<T> {
   constructor(protected options: ODataQueryOptions) {}
   expression(
     f: (e: {
-      e: typeof Expression.e;
-      and: typeof Expression.and;
-      or: typeof Expression.or;
+      e: Expression<T>;
+      and: Expression<T>;
+      or: Expression<T>;
       not: typeof Expression.not;
     }) => Expression<T>
   ): Expression<T> {
     return f({
-      e: Expression.e,
-      and: Expression.and,
-      or: Expression.or,
+      e: Expression.e<T>(),
+      and: Expression.and<T>(),
+      or: Expression.or<T>(),
       not: Expression.not,
     });
   }

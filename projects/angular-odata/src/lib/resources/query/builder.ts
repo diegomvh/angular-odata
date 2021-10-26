@@ -26,6 +26,7 @@ const INDEXOF_REGEX = /(?!indexof)\((\w+)\)/;
 
 export interface Renderable {
   render(aliases?: QueryCustomType[]): string;
+  toJSON(): any;
 }
 
 export type Funcs<T> = (

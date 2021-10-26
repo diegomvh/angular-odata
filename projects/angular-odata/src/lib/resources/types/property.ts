@@ -17,7 +17,7 @@ import {
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 
 import { ODataApi } from '../../api';
-import { ODataPathSegments } from '../path';
+import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
 import {
   ODataQueryOptions,
   Expand,
@@ -88,7 +88,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   key(value: any) {
     const property = this.clone();
     var key = this.resolveKey(value);
-    if (key !== undefined) property.segment.property().key(key);
+    if (key !== undefined) property.segment((s) => s.property().key(key));
     return property;
   }
 
@@ -101,7 +101,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
         this.api.findStructuredTypeForType<T>(types[index])
       )
     );
-    property.segment.keys(keys);
+    property.segment((s) => s.keys(keys));
     return property;
   }
 
@@ -193,26 +193,13 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
-  get segment() {
-    const segments = this.pathSegments;
-    return {
-      entitySet() {
-        return segments.get(PathSegmentNames.entitySet);
-      },
-      singleton() {
-        return segments.get(PathSegmentNames.singleton);
-      },
-      property() {
-        return segments.get(PathSegmentNames.property);
-      },
-      keys(values?: (EntityKey<any> | undefined)[]) {
-        return segments.keys(values);
-      },
-    };
+  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
+    func(this.pathSegmentsHandler());
+    return this;
   }
 
   query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.entitiesQueryHandler());
+    func(this.queryOptionsHandler());
     return this;
   }
   //#endregion

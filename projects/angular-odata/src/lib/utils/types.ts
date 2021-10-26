@@ -1,11 +1,26 @@
+function cloneSymbol(targe: any) {
+  return Object(Symbol.prototype.valueOf.call(targe));
+}
+
+function cloneReg(targe: any) {
+  const reFlags = /\w*$/;
+  const result = new targe.constructor(targe.source, reFlags.exec(targe));
+  result.lastIndex = targe.lastIndex;
+  return result;
+}
+
 export const Types = {
+  rawType(value: any) {
+    return Object.prototype.toString.call(value).slice(8, -1);
+  },
+
   isObject(value: any): boolean {
     var type = typeof value;
     return value != null && (type === 'object' || type === 'function');
   },
 
   isPlainObject(value: any) {
-    if (Object.prototype.toString.call(value) !== '[object Object]') {
+    if (this.rawType(value) !== 'Object') {
       return false;
     }
 
@@ -113,5 +128,24 @@ export const Types = {
     if (type === 'object') return areObjectsEqual();
     if (type === 'function') return areFunctionsEqual();
     return arePrimativesEqual();
+  },
+  clone(target: any) {
+    const constrFun = target.constructor;
+    switch (this.rawType(target)) {
+      case 'Boolean':
+      case 'Number':
+      case 'String':
+      case 'Error':
+      case 'Date':
+        return new constrFun(target);
+      case 'RegExp':
+        return cloneReg(target);
+      case 'Symbol':
+        return cloneSymbol(target);
+      case 'Function':
+        return target;
+      default:
+        return null;
+    }
   },
 };

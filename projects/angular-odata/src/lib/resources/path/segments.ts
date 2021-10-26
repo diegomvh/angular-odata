@@ -1,6 +1,6 @@
 import { raw, buildPathAndQuery } from '../query';
 
-import { Types, Dates } from '../../utils';
+import { Types, Dates, Objects } from '../../utils';
 
 import { PATH_SEPARATOR } from '../../constants';
 import { EntityKey } from '../resource';
@@ -95,23 +95,17 @@ export class ODataPathSegments {
   }
 
   toJSON() {
-    return this._segments.map((segment) => {
-      let json = <any>{ name: segment.name, path: segment.path };
-      if (segment.type !== undefined) json.type = segment.type;
-      if (segment.key !== undefined)
-        json.key = Dates.isoStringToDate(
-          JSON.parse(JSON.stringify(segment.key))
-        );
-      if (segment.parameters !== undefined)
-        json.parameters = Dates.isoStringToDate(
-          JSON.parse(JSON.stringify(segment.parameters))
-        );
-      return json;
-    });
+    return this._segments.map((s) => ({
+      name: s.name,
+      type: s.type,
+      path: s.path,
+      key: s.key,
+      parameters: s.parameters,
+    }));
   }
 
   clone() {
-    return new ODataPathSegments(this.toJSON());
+    return new ODataPathSegments(Objects.clone(this._segments));
   }
 
   find(predicate: (segment: ODataSegment) => boolean) {

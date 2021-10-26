@@ -8,7 +8,7 @@ import { ODataFunctionResource } from './function';
 import { ODataModel } from '../../models';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path';
+import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
 import { ODataPropertyResource } from './property';
 import {
   ODataQueryOptions,
@@ -62,7 +62,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   key(value: any) {
     const singleton = this.clone();
     var key = this.resolveKey(value);
-    if (key !== undefined) singleton.segment.singleton().key(key);
+    if (key !== undefined) singleton.segment((s) => s.singleton().key(key));
     return singleton;
   }
 
@@ -75,7 +75,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
         this.api.findStructuredTypeForType<T>(types[index])
       )
     );
-    singleton.segment.keys(keys);
+    singleton.segment((s) => s.keys(keys));
     return singleton;
   }
 
@@ -167,20 +167,13 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Mutable Resource
-  get segment() {
-    const segments = this.pathSegments;
-    return {
-      singleton() {
-        return segments.get(PathSegmentNames.singleton);
-      },
-      keys(values?: (EntityKey<T> | undefined)[]) {
-        return segments.keys(values);
-      },
-    };
+  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
+    func(this.pathSegmentsHandler());
+    return this;
   }
 
   query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.entitiesQueryHandler());
+    func(this.queryOptionsHandler());
     return this;
   }
   //#endregion

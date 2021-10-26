@@ -8,7 +8,7 @@ import {
 } from '../constants';
 import { Objects, Http, Types } from '../utils/index';
 
-import { ODataPathSegments } from './path';
+import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import { ODataOptions } from './types';
 import { ODataResponse } from './responses/index';
 import { ODataApi } from '../api';
@@ -211,10 +211,18 @@ export abstract class ODataResource<T> {
   }
 
   /**
-   * Factorise an object handler for mutate query options for resources that match to entities
+   * Factorise an object handler for mutate path segments for resources
+   * @returns Object handler for mutate path segments
+   */
+  protected pathSegmentsHandler() {
+    return new ODataPathSegmentsHandler<T>(this.pathSegments);
+  }
+
+  /**
+   * Factorise an object handler for mutate query options for resources
    * @returns Object handler for mutate query options
    */
-  protected entitiesQueryHandler() {
+  protected queryOptionsHandler() {
     return new ODataQueryOptionsHandler<T>(this.queryOptions);
   }
 

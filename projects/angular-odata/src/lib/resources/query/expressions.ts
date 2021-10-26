@@ -28,6 +28,14 @@ export class Expression<T> implements Renderable {
     return 'Expression';
   }
 
+  toJSON() {
+    return {
+      children: this._children.map((c) => c.toJSON()),
+      connector: this._connector,
+      negated: this._negated,
+    };
+  }
+
   static e<T>() {
     return new Expression<T>({ connector: Connector.AND });
   }
@@ -214,5 +222,11 @@ export class Expression<T> implements Renderable {
         typeof exp === 'function' ? exp(new Expression<N>()) : exp
       )
     );
+  }
+
+  isof(type: string): Expression<T>;
+  isof(left: Field<T>, type: string): Expression<T>;
+  isof(left: any, type?: string): Expression<T> {
+    return this._add(syntax.isof(left, type));
   }
 }

@@ -1,5 +1,14 @@
 import { Types } from './types';
 
+function forEach(array: any[], iteratee: (value: any, index: number) => void) {
+  let index = -1;
+  const length = array.length;
+  while (++index < length) {
+    iteratee(array[index], index);
+  }
+  return array;
+}
+
 export const Objects = {
   set(obj: Object, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
@@ -148,6 +157,7 @@ export const Objects = {
     }
     return diffs;
   },
+
   resolveKey(key: any, { single = true }: { single?: boolean } = {}) {
     if (['number', 'string'].indexOf(typeof key) !== -1) return key;
     if (Types.isPlainObject(key)) {
@@ -162,5 +172,56 @@ export const Objects = {
       return !Types.isEmpty(key) ? key : undefined;
     }
     return undefined;
+  },
+
+  clone(target: any, map = new WeakMap()) {
+    // clone primitive types
+    if (typeof target != 'object' || target == null) {
+      return target;
+    }
+
+    const type = Types.rawType(target);
+    let cloneTarget: any = null;
+
+    if (map.get(target)) {
+      return map.get(target);
+    }
+    map.set(target, cloneTarget);
+
+    // clone Set
+    if (type == 'Set') {
+      cloneTarget = new Set();
+      target.forEach((value: any) => {
+        cloneTarget.add(this.clone(value, map));
+      });
+      return cloneTarget;
+    }
+
+    // clone Map
+    if (type == 'Map') {
+      cloneTarget = new Map();
+      target.forEach((value: any, key: any) => {
+        cloneTarget.set(key, this.clone(value, map));
+      });
+      return cloneTarget;
+    }
+
+    // clone Array
+    if (type == 'Array') {
+      cloneTarget = new Array();
+      forEach(target, (value, index) => {
+        cloneTarget[index] = this.clone(value, map);
+      });
+    }
+
+    // clone normal Object
+    if (type == 'Object') {
+      cloneTarget = new Object();
+      forEach(Object.keys(target), (key, index) => {
+        cloneTarget[key] = this.clone(target[key], map);
+      });
+    }
+
+    return Types.clone(target);
   },
 };

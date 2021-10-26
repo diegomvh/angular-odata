@@ -3,7 +3,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { $COUNT } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path';
+import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
 import { ODataQueryOptions, Filter, ODataQueryOptionsHandler } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
@@ -32,20 +32,13 @@ export class ODataCountResource<T> extends ODataResource<T> {
     return undefined;
   }
 
-  get segment() {
-    const segments = this.pathSegments;
-    return {
-      entitySet() {
-        return segments.get(PathSegmentNames.entitySet);
-      },
-      navigationProperty() {
-        return segments.get(PathSegmentNames.navigationProperty);
-      },
-    };
+  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
+    func(this.pathSegmentsHandler());
+    return this;
   }
 
   query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.entitiesQueryHandler());
+    func(this.queryOptionsHandler());
     return this;
   }
 

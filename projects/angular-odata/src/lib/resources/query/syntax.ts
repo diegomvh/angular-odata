@@ -39,6 +39,14 @@ export class Function<T> implements Renderable {
     return 'Function';
   }
 
+  toJSON() {
+    return {
+      name: this.name,
+      values: this.values,
+      normalize: this.normalize,
+    };
+  }
+
   render(aliases?: QueryCustomType[]): string {
     let [field, ...values] = this.values;
 
@@ -161,10 +169,11 @@ export class ArithmeticFunctions<T> {
 }
 
 export class TypeFunctions<T> {
-  cast(value: T | string, type: string) {
+  cast(value: T | string, type?: string) {
     return new Function<T>('cast', [value, type]);
   }
-  isof(value: T | string, type: string) {
+
+  isof(value: T | string, type?: string) {
     return new Function<T>('isof', [value, type]);
   }
 }
@@ -196,6 +205,14 @@ export class Operator<T> implements Renderable {
 
   get [Symbol.toStringTag]() {
     return 'Operator';
+  }
+
+  toJSON() {
+    return {
+      op: this.op,
+      values: this.values,
+      normalize: this.normalize,
+    };
   }
 
   render(aliases?: QueryCustomType[]): string {
@@ -270,10 +287,16 @@ export class ArithmeticOperators<T> {
 }
 
 export class Grouping<T> implements Renderable {
-  constructor(protected group: any) {}
+  constructor(protected group: Renderable) {}
 
   get [Symbol.toStringTag]() {
     return 'Grouping';
+  }
+
+  toJSON() {
+    return {
+      group: this.group.toJSON(),
+    };
   }
 
   render(aliases?: QueryCustomType[]): string {
@@ -286,6 +309,13 @@ export class Navigation<T, N> implements Renderable {
 
   get [Symbol.toStringTag]() {
     return 'Navigation';
+  }
+
+  toJSON() {
+    return {
+      field: this.field,
+      value: this.value,
+    };
   }
 
   render(aliases?: QueryCustomType[]): string {
