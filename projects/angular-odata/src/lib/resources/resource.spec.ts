@@ -24,8 +24,6 @@ interface Person {}
 describe('ODataResource', () => {
   let client: ODataClient;
   let settings: ODataSettings;
-  let segments: ODataPathSegments;
-  let options: ODataQueryOptions;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -37,8 +35,6 @@ describe('ODataResource', () => {
 
     client = TestBed.inject<ODataClient>(ODataClient);
     settings = TestBed.inject<ODataSettings>(ODataSettings);
-    segments = new ODataPathSegments();
-    options = new ODataQueryOptions();
   });
 
   it('should create batch resource', () => {
@@ -61,8 +57,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     expect(set.toString()).toEqual('People');
   });
@@ -73,8 +69,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     expect(entity.toString()).toEqual("People('russellwhyte')");
@@ -86,8 +82,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity(1);
     expect(entity.toString()).toEqual('People(1)');
@@ -99,8 +95,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity(raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'));
     expect(entity.toString()).toEqual(
@@ -114,8 +110,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity({
       id1: raw('cd5977c2-4a64-42de-b2fc-7fe4707c65cd'),
@@ -132,8 +128,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity({ id: 1 });
     expect(entity.toString()).toEqual('People(1)');
@@ -145,8 +141,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity({ id1: 1, id2: 2 });
     expect(entity.toString()).toEqual('People(id1=1,id2=2)');
@@ -158,8 +154,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const fun: ODataFunctionResource<any, any> = set.function<any, any>(
       'NS.MyFunction'
@@ -173,8 +169,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>(
@@ -189,8 +185,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     let fun: ODataFunctionResource<any, any> = entity
@@ -217,8 +213,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity
@@ -235,8 +231,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity
@@ -253,8 +249,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity
@@ -271,8 +267,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const fun: ODataFunctionResource<any, any> = entity
@@ -289,8 +285,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const act: ODataActionResource<any, any> = set.action<any, any>(
       'NS.MyAction'
@@ -304,8 +300,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const act: ODataActionResource<any, any> = entity.action<any, any>(
@@ -320,8 +316,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const count: ODataCountResource<Person> = set.count();
     expect(count.toString()).toEqual('People/$count');
@@ -333,8 +329,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> =
@@ -348,8 +344,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> =
@@ -366,8 +362,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> =
@@ -382,14 +378,14 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> =
       entity.navigationProperty<Person>('Friends');
     const friend = friends.key(1);
-    expect(friend.segment.keys()).toEqual(['russellwhyte', 1]);
+    friend.segment((s) => expect(s.keys()).toEqual(['russellwhyte', 1]));
   });
 
   it('should create entity single navigation and set keys', () => {
@@ -398,8 +394,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity();
     const friends: ODataNavigationPropertyResource<Person> =
@@ -415,8 +411,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> =
@@ -433,8 +429,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> =
@@ -449,8 +445,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const friends: ODataNavigationPropertyResource<Person> =
@@ -467,8 +463,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const mirsking: ODataNavigationPropertyResource<Person> = entity
@@ -489,8 +485,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const photo: ODataMediaResource<Photo> = entity
@@ -505,8 +501,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const mirsking: ODataNavigationPropertyResource<Person> = entity
@@ -529,8 +525,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const mirsking: ODataNavigationPropertyResource<Person> = entity
@@ -552,8 +548,8 @@ describe('ODataResource', () => {
         settings.defaultApi(),
         'People',
         undefined,
-        segments,
-        options
+        new ODataPathSegments(),
+        new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
     const mirsking: ODataNavigationPropertyResource<Person> = entity

@@ -67,7 +67,7 @@ export class ODataQueryOptions {
   }
 
   toJSON() {
-    return this.option;
+    return this.options;
   }
 
   toQueryArguments<T>(): ODataQueryArguments<T> {
@@ -86,7 +86,8 @@ export class ODataQueryOptions {
   }
 
   clone() {
-    return new ODataQueryOptions(Objects.clone(this.option));
+    const options = Objects.clone(this.options);
+    return new ODataQueryOptions(options);
   }
 
   // Option Handler

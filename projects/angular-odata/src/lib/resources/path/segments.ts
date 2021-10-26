@@ -95,17 +95,21 @@ export class ODataPathSegments {
   }
 
   toJSON() {
-    return this._segments.map((s) => ({
-      name: s.name,
-      type: s.type,
-      path: s.path,
-      key: s.key,
-      parameters: s.parameters,
-    }));
+    return this._segments.map((s) => {
+      let json = {
+        name: s.name as string,
+        path: s.path,
+      } as any;
+      if (s.type !== undefined) json.type = s.type;
+      if (s.key !== undefined) json.key = s.key;
+      if (s.parameters !== undefined) json.parameters = s.parameters;
+      return json;
+    });
   }
 
   clone() {
-    return new ODataPathSegments(Objects.clone(this._segments));
+    const segments = Objects.clone(this._segments);
+    return new ODataPathSegments(segments);
   }
 
   find(predicate: (segment: ODataSegment) => boolean) {

@@ -174,7 +174,8 @@ export const Objects = {
     return undefined;
   },
 
-  clone(target: any, map = new WeakMap()) {
+  clone(target: any, map?: WeakMap<object, any>) {
+    if (map === undefined) map = new WeakMap();
     // clone primitive types
     if (typeof target != 'object' || target == null) {
       return target;
@@ -187,6 +188,10 @@ export const Objects = {
       return map.get(target);
     }
     map.set(target, cloneTarget);
+
+    if (type != 'Set' && type != 'Map' && type != 'Array' && type != 'Object') {
+      return Types.clone(target);
+    }
 
     // clone Set
     if (type == 'Set') {
@@ -222,6 +227,6 @@ export const Objects = {
       });
     }
 
-    return Types.clone(target);
+    return cloneTarget;
   },
 };
