@@ -25,12 +25,12 @@ import {
   OrderBy,
   Select,
   Transform,
+  EntitiesQueryHandler,
 } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
 import { map } from 'rxjs/operators';
-import { EntitiesQueryHandler } from 'projects/angular-odata/src/public-api';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory
