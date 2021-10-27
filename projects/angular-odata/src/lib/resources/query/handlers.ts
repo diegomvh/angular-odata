@@ -2,10 +2,10 @@ import { Objects, Types } from '../../utils';
 import { Expand, Filter, OrderBy, Select, Transform } from './builder';
 
 import { QueryOptionNames } from '../../types';
-import { Expression } from './expressions';
+import { FilterExpression } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 
-export class OptionHandler<T> {
+export class ODataQueryOptionHandler<T> {
   constructor(
     private o: { [name: string]: any },
     private n: QueryOptionNames
@@ -102,7 +102,8 @@ export class OptionHandler<T> {
 }
 
 export class ODataQueryOptionsHandler<T> {
-  constructor(protected options: ODataQueryOptions) {}
+  constructor(protected options: ODataQueryOptions<T>) {}
+  /*
   expression(
     f: (e: {
       e: Expression<T>;
@@ -118,39 +119,90 @@ export class ODataQueryOptionsHandler<T> {
       not: Expression.not,
     });
   }
-  select(opts?: Select<T>) {
+  */
+  select(opts: Select<T>): ODataQueryOptionHandler<T>;
+  select(): ODataQueryOptionHandler<T>;
+  select(opts?: Select<T>): any {
     return this.options.option<Select<T>>(QueryOptionNames.select, opts);
   }
-  expand(opts?: Expand<T>) {
+
+  expand(opts: Expand<T>): ODataQueryOptionHandler<T>;
+  expand(): ODataQueryOptionHandler<T>;
+  expand(opts?: Expand<T>): any {
     return this.options.option<Expand<T>>(QueryOptionNames.expand, opts);
   }
-  compute(opts?: string) {
+
+  compute(opts: string): ODataQueryOptionHandler<T>;
+  compute(): ODataQueryOptionHandler<T>;
+  compute(opts?: string): any {
     return this.options.option<string>(QueryOptionNames.compute, opts);
   }
-  format(opts?: string) {
+
+  format(opts: string): ODataQueryOptionHandler<T>;
+  format(): ODataQueryOptionHandler<T>;
+  format(opts?: string): any {
     return this.options.option<string>(QueryOptionNames.format, opts);
   }
-  transform(opts?: Transform<T>) {
+
+  transform(opts: Transform<T>): ODataQueryOptionHandler<T>;
+  transform(): ODataQueryOptionHandler<T>;
+  transform(opts?: Transform<T>): any {
     return this.options.option<Transform<T>>(QueryOptionNames.transform, opts);
   }
-  search(opts?: string) {
+
+  search(opts: string): ODataQueryOptionHandler<T>;
+  search(): ODataQueryOptionHandler<T>;
+  search(opts?: string): any {
     return this.options.option<string>(QueryOptionNames.search, opts);
   }
-  filter(opts?: Filter<T>) {
+
+  filter(
+    opts: (e: {
+      e: FilterExpression<T>;
+      and: FilterExpression<T>;
+      or: FilterExpression<T>;
+      not: typeof FilterExpression.not;
+    }) => FilterExpression<T>
+  ): FilterExpression<T>;
+  filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
+  filter(): ODataQueryOptionHandler<T>;
+  filter(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      const exp = opts({
+        e: FilterExpression.e<T>(),
+        and: FilterExpression.and<T>(),
+        or: FilterExpression.or<T>(),
+        not: FilterExpression.not,
+      }) as FilterExpression<T>;
+      return this.options.expression(QueryOptionNames.filter, exp);
+    }
     return this.options.option<Filter<T>>(QueryOptionNames.filter, opts);
   }
-  orderBy(opts?: OrderBy<T>) {
+
+  orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
+  orderBy(): ODataQueryOptionHandler<T>;
+  orderBy(opts?: OrderBy<T>): any {
     return this.options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
   }
-  top(opts?: number) {
+
+  top(opts: number): ODataQueryOptionHandler<T>;
+  top(): ODataQueryOptionHandler<T>;
+  top(opts?: number): any {
     return this.options.option<number>(QueryOptionNames.top, opts);
   }
-  skip(opts?: number) {
+
+  skip(opts: number): ODataQueryOptionHandler<T>;
+  skip(): ODataQueryOptionHandler<T>;
+  skip(opts?: number): any {
     return this.options.option<number>(QueryOptionNames.skip, opts);
   }
-  skiptoken(opts?: string) {
+
+  skiptoken(opts: string): ODataQueryOptionHandler<T>;
+  skiptoken(): ODataQueryOptionHandler<T>;
+  skiptoken(opts?: string): any {
     return this.options.option<string>(QueryOptionNames.skiptoken, opts);
   }
+
   paging({
     skip,
     skiptoken,

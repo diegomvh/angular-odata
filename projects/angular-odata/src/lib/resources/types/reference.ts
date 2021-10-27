@@ -14,7 +14,7 @@ export class ODataReferenceResource extends ODataResource<any> {
   static factory<P>(
     api: ODataApi,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<P>
   ) {
     segments.add(PathSegmentNames.reference, $REF);
     options.clear();
@@ -26,7 +26,7 @@ export class ODataReferenceResource extends ODataResource<any> {
     return new ODataReferenceResource(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<any>()
     );
   }
 

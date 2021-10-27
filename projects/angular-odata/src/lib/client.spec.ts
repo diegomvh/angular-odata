@@ -166,11 +166,9 @@ describe('ODataClient', () => {
     );
     const func = set.function<any, any>('NS.MyFunction');
     func.query((q) => {
-      const exp = q.expression(({ e }) => e.eq('Bla', 'Bla'));
-      q.filter(exp);
+      q.filter(({ e }) => e.eq('Bla', 'Bla'));
     });
     const json = func.toJSON();
-    console.log(json);
     expect(json).toEqual({
       segments: [
         { name: 'entitySet', path: 'People', type: 'TripPin.Person' },

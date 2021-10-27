@@ -10,22 +10,24 @@ import {
 } from './builder';
 
 import { QueryOptionNames } from '../../types';
-import { OptionHandler } from './handlers';
+import { ODataQueryOptionHandler } from './handlers';
+import { Expression } from './expressions';
 
 export type ODataQueryArguments<T> = {
-  select?: Select<T>;
-  expand?: Expand<T>;
-  transform?: Transform<T>;
-  search?: string;
-  compute?: string;
-  filter?: Filter<T>;
-  orderBy?: OrderBy<T>;
-  top?: number;
-  skip?: number;
-  skiptoken?: string;
+  [QueryOptionNames.select]?: Select<T>;
+  [QueryOptionNames.filter]?: Filter<T>;
+  [QueryOptionNames.search]?: string;
+  [QueryOptionNames.compute]?: string;
+  [QueryOptionNames.transform]?: Transform<T>;
+  [QueryOptionNames.orderBy]?: OrderBy<T>;
+  [QueryOptionNames.top]?: number;
+  [QueryOptionNames.skip]?: number;
+  [QueryOptionNames.skiptoken]?: string;
+  [QueryOptionNames.expand]?: Expand<T>;
+  [QueryOptionNames.format]?: string;
 };
 
-export class ODataQueryOptions {
+export class ODataQueryOptions<T> {
   options: { [name: string]: any };
 
   constructor(options?: { [name: string]: any }) {
@@ -75,7 +77,7 @@ export class ODataQueryOptions {
     return this.options;
   }
 
-  toQueryArguments<T>(): ODataQueryArguments<T> {
+  toQueryArguments(): ODataQueryArguments<T> {
     return {
       select: this.options[QueryOptionNames.select],
       expand: this.options[QueryOptionNames.expand],
@@ -90,15 +92,20 @@ export class ODataQueryOptions {
     } as ODataQueryArguments<T>;
   }
 
-  clone() {
+  clone<O>() {
     const options = Objects.clone(this.options);
-    return new ODataQueryOptions(options);
+    return new ODataQueryOptions<O>(options);
+  }
+
+  // Set Expression
+  expression(name: QueryOptionNames, exp: Expression<T>) {
+    return (this.options[name] = exp);
   }
 
   // Option Handler
-  option<T>(name: QueryOptionNames, opts?: T) {
+  option<O>(name: QueryOptionNames, opts?: O) {
     if (opts !== undefined) this.options[name] = opts;
-    return new OptionHandler<T>(this.options, name);
+    return new ODataQueryOptionHandler<O>(this.options, name);
   }
 
   // Query Options tools

@@ -72,6 +72,11 @@ export const Http = {
     return [params, other];
   },
 
+  // Without Params
+  withoutHttpParams(params: HttpParams, keys: string[]): HttpParams {
+    return keys.reduce((acc, key) => acc.delete(key), params);
+  },
+
   resolveHeaderKey(
     headers: HttpHeaders | { [param: string]: string | string[] },
     options: string[]

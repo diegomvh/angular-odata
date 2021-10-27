@@ -13,7 +13,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
     api: ODataApi,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<V>
   ) {
     const segment = segments.add(PathSegmentNames.value, $VALUE);
     if (type) segment.type(type);
@@ -26,7 +26,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
     return new ODataValueResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 

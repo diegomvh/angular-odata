@@ -44,7 +44,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<E>
   ) {
     const segment = segments.add(PathSegmentNames.navigationProperty, path);
     if (type) segment.type(type);
@@ -57,7 +57,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return new ODataNavigationPropertyResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 

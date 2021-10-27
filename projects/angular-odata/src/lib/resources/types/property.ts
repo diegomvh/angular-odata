@@ -39,7 +39,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<P>
   ) {
     const segment = segments.add(PathSegmentNames.property, path);
     if (type) segment.type(type);
@@ -52,7 +52,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return new ODataPropertyResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 
@@ -147,7 +147,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<P>()
     );
   }
 

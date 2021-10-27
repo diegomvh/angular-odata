@@ -13,7 +13,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
   static factory<V>(
     api: ODataApi,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<V>
   ) {
     segments.add(PathSegmentNames.value, $VALUE);
     return new ODataMediaResource<V>(api, segments, options);
@@ -24,7 +24,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     return new ODataMediaResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 

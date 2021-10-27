@@ -26,7 +26,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   static factory<E>(
     api: ODataApi,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<E>
   ) {
     options.keep(
       QueryOptionNames.expand,
@@ -41,7 +41,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return new ODataEntityResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 

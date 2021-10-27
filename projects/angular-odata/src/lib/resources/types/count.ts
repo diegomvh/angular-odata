@@ -13,7 +13,7 @@ export class ODataCountResource<T> extends ODataResource<T> {
   static factory<T>(
     api: ODataApi,
     segments: ODataPathSegments,
-    query: ODataQueryOptions
+    query: ODataQueryOptions<T>
   ) {
     segments.add(PathSegmentNames.count, $COUNT).type('Edm.Int32');
     query.keep(QueryOptionNames.filter, QueryOptionNames.search);
@@ -25,7 +25,7 @@ export class ODataCountResource<T> extends ODataResource<T> {
     return new ODataCountResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
   schema() {

@@ -33,7 +33,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    query: ODataQueryOptions
+    query: ODataQueryOptions<E>
   ) {
     const segment = segments.add(PathSegmentNames.entitySet, path);
     if (type) segment.type(type);
@@ -45,7 +45,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return new ODataEntitySetResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 

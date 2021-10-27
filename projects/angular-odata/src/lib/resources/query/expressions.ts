@@ -231,3 +231,21 @@ export class Expression<T> implements Renderable {
     return this._add(syntax.isof(left, type));
   }
 }
+
+export class FilterExpression<T> extends Expression<T> {
+  constructor({
+    children,
+    connector,
+    negated,
+  }: {
+    children?: Renderable[];
+    connector?: Connector;
+    negated?: boolean;
+  } = {}) {
+    super({ children, connector, negated });
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'FilterExpression';
+  }
+}

@@ -35,11 +35,11 @@ export abstract class ODataResource<T> {
   // VARIABLES
   public api: ODataApi;
   protected pathSegments: ODataPathSegments;
-  protected queryOptions: ODataQueryOptions;
+  protected queryOptions: ODataQueryOptions<T>;
   constructor(
     api: ODataApi,
     segments?: ODataPathSegments,
-    query?: ODataQueryOptions
+    query?: ODataQueryOptions<T>
   ) {
     this.api = api;
     this.pathSegments = segments || new ODataPathSegments();
@@ -206,8 +206,8 @@ export abstract class ODataResource<T> {
     this.queryOptions.clear();
   }
 
-  cloneQuery() {
-    return this.queryOptions.clone();
+  cloneQuery<P>() {
+    return this.queryOptions.clone<P>();
   }
 
   /**
@@ -270,14 +270,6 @@ export abstract class ODataResource<T> {
       params = Http.mergeHttpParams(params, apiOptions.helper.countParam());
     }
 
-    let responseType: 'arraybuffer' | 'blob' | 'json' | 'text' =
-      options.responseType &&
-      ['property', 'entity', 'entities'].indexOf(options.responseType) !== -1
-        ? 'json'
-        : options.responseType === 'value'
-        ? 'text'
-        : <'arraybuffer' | 'blob' | 'json' | 'text'>options.responseType;
-
     let etag = options.etag;
     if (etag === undefined && Types.isPlainObject(options.body)) {
       etag = apiOptions.helper.etag(options.body);
@@ -293,7 +285,7 @@ export abstract class ODataResource<T> {
       headers: options.headers,
       reportProgress: options.reportProgress,
       params: params,
-      responseType: responseType,
+      responseType: options.responseType,
       fetchPolicy: options.fetchPolicy,
       withCredentials: options.withCredentials,
       bodyQueryOptions: options.bodyQueryOptions,

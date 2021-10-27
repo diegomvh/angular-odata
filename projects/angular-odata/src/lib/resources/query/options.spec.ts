@@ -3,7 +3,7 @@ import { ODataQueryOptions } from './options';
 
 describe('ODataQueryOptions', () => {
   it('test select', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.select, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -21,7 +21,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test filter', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.filter, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -39,7 +39,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test expand', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.expand, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -60,7 +60,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test orderby', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.orderBy, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -81,7 +81,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test search', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.search, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -108,7 +108,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test skip', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.skip, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -120,7 +120,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test top', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.top, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -132,7 +132,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test format', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.format, undefined);
     expect(queryOptions.toString()).toEqual('');
     //
@@ -147,7 +147,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test toString', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     queryOptions.option(QueryOptionNames.select, ['value']);
     queryOptions.option(QueryOptionNames.filter, 'property eq value');
     queryOptions.option(QueryOptionNames.expand, 'entitySet');
@@ -168,12 +168,12 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test isEmpty', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     expect(queryOptions.toString()).toEqual('');
   });
 
   it('test value top', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     const handler = queryOptions.option(QueryOptionNames.top, 1);
     expect(queryOptions.toString()).toEqual('$top=1');
     expect(handler.value()).toEqual(1);
@@ -182,14 +182,14 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test clear by handler', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     const handler = queryOptions.option(QueryOptionNames.top, 1);
     handler.clear();
     expect(queryOptions.toString()).toEqual('');
   });
 
   it('test array like filter', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     const handler = queryOptions.option(QueryOptionNames.filter, 'foo eq 1');
     expect(queryOptions.toString()).toEqual('$filter=foo eq 1');
     handler.push('bar ne 2');
@@ -200,7 +200,7 @@ describe('ODataQueryOptions', () => {
   });
 
   it('test hashmap like filter', () => {
-    const queryOptions: ODataQueryOptions = new ODataQueryOptions();
+    const queryOptions: ODataQueryOptions<any> = new ODataQueryOptions<any>();
     const handler = queryOptions.option(QueryOptionNames.filter, { foo: 1 });
     expect(queryOptions.toString()).toEqual('$filter=foo eq 1');
     handler.set('bar', { ne: 2 });

@@ -88,7 +88,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   name: string;
   namespace: string;
   alias?: string;
-  return?: { type: string; callable?: boolean };
+  return?: { type: string; collection?: boolean };
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
   optionsHelper?: OptionsHelper;

@@ -41,7 +41,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<R>
   ) {
     const segment = segments.add(PathSegmentNames.function, path);
     if (type) segment.type(type);
@@ -57,7 +57,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new ODataFunctionResource<P, R>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 

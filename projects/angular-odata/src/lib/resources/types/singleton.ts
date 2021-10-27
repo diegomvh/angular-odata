@@ -27,7 +27,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions
+    options: ODataQueryOptions<R>
   ) {
     const segment = segments.add(PathSegmentNames.singleton, path);
     if (type !== undefined) segment.type(type);

@@ -20,7 +20,6 @@ export class ODataRequest<T> {
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
   readonly bodyQueryOptions: QueryOptionNames[];
-  readonly responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
   readonly fetchPolicy:
     | 'cache-first'
     | 'cache-and-network'
@@ -28,6 +27,15 @@ export class ODataRequest<T> {
     | 'no-cache'
     | 'cache-only';
   readonly resource: ODataResource<T>;
+  private readonly _responseType?:
+    | 'arraybuffer'
+    | 'blob'
+    | 'json'
+    | 'text'
+    | 'value'
+    | 'property'
+    | 'entity'
+    | 'entities';
   private readonly _method: string;
   private readonly _body: any | null;
   private readonly _headers: HttpHeaders;
@@ -45,7 +53,15 @@ export class ODataRequest<T> {
     headers?: HttpHeaders | { [header: string]: string | string[] };
     reportProgress?: boolean;
     params?: HttpParams | { [param: string]: string | string[] };
-    responseType?: 'arraybuffer' | 'blob' | 'json' | 'text';
+    responseType?:
+      | 'arraybuffer'
+      | 'blob'
+      | 'json'
+      | 'text'
+      | 'value'
+      | 'property'
+      | 'entity'
+      | 'entities';
     fetchPolicy?:
       | 'cache-first'
       | 'cache-and-network'
@@ -60,8 +76,10 @@ export class ODataRequest<T> {
 
     this.api = init.api;
     this.reportProgress = init.reportProgress;
-    this.responseType = init.responseType;
     this.observe = init.observe;
+
+    // Response Type
+    this._responseType = init.responseType;
 
     // The Body
     this._body = init.body !== undefined ? init.body : null;
@@ -167,17 +185,37 @@ export class ODataRequest<T> {
       Object.assign(customParams, resourceParams);
     }
 
-    this._params = Http.mergeHttpParams(
+    const params = Http.mergeHttpParams(
       this.api.options.params,
       customParams,
       init.params || {}
     );
+
+    this._params =
+      this._responseType === 'entity'
+        ? Http.withoutHttpParams(params, [
+            '$filter',
+            '$orderby',
+            '$count',
+            '$skip',
+            '$top',
+          ])
+        : params;
     //#endregion
 
     this._queryBody =
       this._method === 'GET' &&
       this.bodyQueryOptions.length > 0 &&
       this.bodyQueryOptions.some((name) => this._params.has(`$${name}`));
+  }
+
+  get responseType(): 'arraybuffer' | 'blob' | 'json' | 'text' {
+    return this._responseType &&
+      ['property', 'entity', 'entities'].indexOf(this._responseType) !== -1
+      ? 'json'
+      : this._responseType === 'value'
+      ? 'text'
+      : <'arraybuffer' | 'blob' | 'json' | 'text'>this._responseType;
   }
 
   get path() {
