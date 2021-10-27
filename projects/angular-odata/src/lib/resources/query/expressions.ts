@@ -232,6 +232,7 @@ export class Expression<T> implements Renderable {
   }
 }
 
+/*
 export class FilterExpression<T> extends Expression<T> {
   constructor({
     children,
@@ -249,3 +250,4 @@ export class FilterExpression<T> extends Expression<T> {
     return 'FilterExpression';
   }
 }
+*/

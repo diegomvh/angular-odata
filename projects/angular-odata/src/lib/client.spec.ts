@@ -166,7 +166,7 @@ describe('ODataClient', () => {
     );
     const func = set.function<any, any>('NS.MyFunction');
     func.query((q) => {
-      q.filter(({ e }) => e.eq('Bla', 'Bla'));
+      q.filter(({ e }) => e.eq('Name', 'John'));
     });
     const json = func.toJSON();
     expect(json).toEqual({
@@ -174,7 +174,13 @@ describe('ODataClient', () => {
         { name: 'entitySet', path: 'People', type: 'TripPin.Person' },
         { name: 'function', path: 'NS.MyFunction' },
       ],
-      options: {},
+      options: {
+        filter: {
+          children: [{ op: 'eq', values: ['Name', 'John'], normalize: true }],
+          connector: 'and',
+          negated: false,
+        },
+      },
     });
   });
 

@@ -2,7 +2,7 @@ import { Objects, Types } from '../../utils';
 import { Expand, Filter, OrderBy, Select, Transform } from './builder';
 
 import { QueryOptionNames } from '../../types';
-import { FilterExpression } from './expressions';
+import { Expression } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 
 export class ODataQueryOptionHandler<T> {
@@ -158,22 +158,22 @@ export class ODataQueryOptionsHandler<T> {
 
   filter(
     opts: (e: {
-      e: FilterExpression<T>;
-      and: FilterExpression<T>;
-      or: FilterExpression<T>;
-      not: typeof FilterExpression.not;
-    }) => FilterExpression<T>
-  ): FilterExpression<T>;
+      e: Expression<T>;
+      and: Expression<T>;
+      or: Expression<T>;
+      not: typeof Expression.not;
+    }) => Expression<T>
+  ): Expression<T>;
   filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
   filter(): ODataQueryOptionHandler<T>;
   filter(opts?: any): any {
     if (Types.isFunction(opts)) {
       const exp = opts({
-        e: FilterExpression.e<T>(),
-        and: FilterExpression.and<T>(),
-        or: FilterExpression.or<T>(),
-        not: FilterExpression.not,
-      }) as FilterExpression<T>;
+        e: Expression.e<T>(),
+        and: Expression.and<T>(),
+        or: Expression.or<T>(),
+        not: Expression.not,
+      }) as Expression<T>;
       return this.options.expression(QueryOptionNames.filter, exp);
     }
     return this.options.option<Filter<T>>(QueryOptionNames.filter, opts);
