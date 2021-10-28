@@ -128,7 +128,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Url: https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
+   * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    */
   compute(
     opts: (e: {
@@ -156,7 +156,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Url: https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionformat
+   * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionformat
    */
   format(opts: string): ODataQueryOptionHandler<T>;
   format(): ODataQueryOptionHandler<T>;
