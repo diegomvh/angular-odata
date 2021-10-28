@@ -1,4 +1,4 @@
-import { EntityKey, ODataResource } from '../resource';
+import { ODataResource } from '../resource';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 
@@ -8,14 +8,9 @@ import { ODataFunctionResource } from './function';
 import { ODataModel } from '../../models';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataOptions } from './options';
-import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
+import { ODataPathSegments } from '../path';
 import { ODataPropertyResource } from './property';
-import {
-  ODataQueryOptions,
-  Expand,
-  Select,
-  ODataQueryOptionsHandler,
-} from '../query';
+import { ODataQueryOptions } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -34,7 +29,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     options.keep(QueryOptionNames.format);
     return new ODataSingletonResource<R>(api, segments, options);
   }
-  //#endregion
 
   clone() {
     return new ODataSingletonResource<T>(
@@ -43,6 +37,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.cloneQuery()
     );
   }
+  //#endregion
 
   schema() {
     let type = this.type();
@@ -50,6 +45,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       ? this.api.findStructuredTypeForType<T>(type)
       : undefined;
   }
+
   asModel<M extends ODataModel<T>>(
     entity: Partial<T> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
@@ -58,7 +54,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return new Model(entity, { resource: this, annots, reset }) as M;
   }
 
-  //#region Inmutable Resource
   key(value: any) {
     const singleton = this.clone();
     var key = this.resolveKey(value);
@@ -146,37 +141,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       this.cloneQuery()
     );
   }
-
-  select(opts: Select<T>) {
-    const clone = this.clone();
-    clone.query((q) => q.select(opts));
-    return clone;
-  }
-
-  expand(opts: Expand<T>) {
-    const clone = this.clone();
-    clone.query((q) => q.expand(opts));
-    return clone;
-  }
-
-  format(opts: string) {
-    const clone = this.clone();
-    clone.query((q) => q.format(opts));
-    return clone;
-  }
-  //#endregion
-
-  //#region Mutable Resource
-  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
-    func(this.pathSegmentsHandler());
-    return this;
-  }
-
-  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.queryOptionsHandler());
-    return this;
-  }
-  //#endregion
 
   //#region Requests
   protected post(

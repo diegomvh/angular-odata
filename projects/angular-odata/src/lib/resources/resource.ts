@@ -211,19 +211,24 @@ export abstract class ODataResource<T> {
   }
 
   /**
-   * Factorise an object handler for mutate path segments for resources
-   * @returns Object handler for mutate path segments
+   * Handle the path segments of the resource
+   * Create an object handler for mutate the path segments of the resource
+   * @param f Function context for handle the segments
+   * @returns ODataActionResource
    */
-  protected pathSegmentsHandler() {
-    return new ODataPathSegmentsHandler<T>(this.pathSegments);
+  segment(f: (q: ODataPathSegmentsHandler<T>) => void) {
+    f(new ODataPathSegmentsHandler<T>(this.pathSegments));
+    return this;
   }
 
   /**
-   * Factorise an object handler for mutate query options for resources
-   * @returns Object handler for mutate query options
+   * Handle the query options of the resource
+   * Create an object handler for mutate the query options of the resource
+   * @param f Function context for handle the query options
    */
-  protected queryOptionsHandler() {
-    return new ODataQueryOptionsHandler<T>(this.queryOptions);
+  query(f: (q: ODataQueryOptionsHandler<T>) => void) {
+    f(new ODataQueryOptionsHandler<T>(this.queryOptions));
+    return this;
   }
 
   static resolveKey<T>(

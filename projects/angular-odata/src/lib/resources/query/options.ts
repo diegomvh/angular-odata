@@ -7,6 +7,7 @@ import {
   Transform,
   buildPathAndQuery,
   QueryCustomType,
+  alias,
 } from './builder';
 
 import { QueryOptionNames } from '../../types';
@@ -53,10 +54,7 @@ export class ODataQueryOptions<T> {
       .filter((key) => !Types.isEmpty(this.options[key]))
       .reduce((acc, key) => {
         let value = this.options[key];
-        if (
-          key === QueryOptionNames.filter &&
-          Types.rawType(value) === 'FilterExpression'
-        ) {
+        if (Types.rawType(value) === 'Expression') {
           value = value.render(aliases);
         }
         return Object.assign(acc, { [key]: value });

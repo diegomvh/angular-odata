@@ -1,11 +1,3 @@
-import {
-  Grouping,
-  Navigation,
-  ODataSyntax,
-  Operator,
-  Function,
-} from './syntax';
-
 const COMPARISON_OPERATORS = ['eq', 'ne', 'gt', 'ge', 'lt', 'le'];
 const LOGICAL_OPERATORS = ['and', 'or', 'not'];
 const COLLECTION_OPERATORS = ['any', 'all'];
@@ -564,7 +556,12 @@ export function normalizeValue(value: Value, aliases?: QueryCustomType[]): any {
         return `binary'${value.value}'`;
       case QueryCustomTypes.Alias:
         // Store
-        if (Array.isArray(aliases)) aliases.push(value);
+        if (Array.isArray(aliases)) {
+          if (value.name === undefined) {
+            value.name = `a${aliases.length + 1}`;
+          }
+          aliases.push(value);
+        }
         return `@${value.name}`;
       default:
         return Object.entries(value)

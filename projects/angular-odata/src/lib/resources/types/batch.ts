@@ -156,21 +156,21 @@ export class ODataBatchResource extends ODataResource<any> {
     return this._requests.map((r) => r.request);
   }
 
-  clone() {
-    return new ODataBatchResource(this.api, this.cloneSegments());
-  }
-
-  schema() {
-    return undefined;
-  }
-
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
     segments.add(PathSegmentNames.batch, $BATCH);
     return new ODataBatchResource(api, segments);
   }
+
+  clone() {
+    return new ODataBatchResource(this.api, this.cloneSegments());
+  }
   //#endregion
+
+  schema() {
+    return undefined;
+  }
 
   /**
    * Execute the batch request
@@ -368,7 +368,7 @@ export class ODataBatchResource extends ODataResource<any> {
     }
     chunks.forEach((chunk, index) => {
       const req = requests[index];
-      const { status, code, message } = Http.parseResponseStatus(chunk[0]);
+      const { code, message } = Http.parseResponseStatus(chunk[0]);
       req.onLoad(chunk.slice(1), { code, message });
     });
   }

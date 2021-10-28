@@ -582,7 +582,9 @@ describe('ODataResource', () => {
         new ODataPathSegments(),
         new ODataQueryOptions()
       );
-    const entity2 = set2.entity('russellwhyte').expand({ Friends: {} });
+    const entity2 = set2
+      .entity('russellwhyte')
+      .query((q) => q.expand({ Friends: {} }));
     expect(entity1.isEqualTo(entity2, 'path')).toBeTrue();
   });
 
@@ -595,7 +597,9 @@ describe('ODataResource', () => {
         new ODataPathSegments(),
         new ODataQueryOptions()
       );
-    const entity1 = set1.entity('russell').expand({ Friends: {} });
+    const entity1 = set1
+      .entity('russell')
+      .query((q) => q.expand({ Friends: {} }));
     const set2: ODataEntitySetResource<Person> =
       ODataEntitySetResource.factory<Person>(
         settings.defaultApi(),
@@ -604,7 +608,9 @@ describe('ODataResource', () => {
         new ODataPathSegments(),
         new ODataQueryOptions()
       );
-    const entity2 = set2.entity('russellwhyte').expand({ Friends: {} });
+    const entity2 = set2
+      .entity('russellwhyte')
+      .query((q) => q.expand({ Friends: {} }));
     expect(entity1.isEqualTo(entity2, 'params')).toBeTrue();
   });
 
@@ -617,7 +623,9 @@ describe('ODataResource', () => {
         new ODataPathSegments(),
         new ODataQueryOptions()
       );
-    const entity1 = set1.entity('russellwhyte').expand({ Friends: {} });
+    const entity1 = set1
+      .entity('russellwhyte')
+      .query((q) => q.expand({ Friends: {} }));
     const set2: ODataEntitySetResource<Person> =
       ODataEntitySetResource.factory<Person>(
         settings.defaultApi(),
@@ -626,7 +634,9 @@ describe('ODataResource', () => {
         new ODataPathSegments(),
         new ODataQueryOptions()
       );
-    const entity2 = set2.entity('russellwhyte').expand({ Friends: {} });
+    const entity2 = set2
+      .entity('russellwhyte')
+      .query((q) => q.expand({ Friends: {} }));
     expect(entity1.isEqualTo(entity2)).toBeTrue();
   });
 });

@@ -20,7 +20,6 @@ export class ODataReferenceResource extends ODataResource<any> {
     options.clear();
     return new ODataReferenceResource(api, segments, options);
   }
-  //#endregion
 
   clone() {
     return new ODataReferenceResource(
@@ -29,6 +28,7 @@ export class ODataReferenceResource extends ODataResource<any> {
       this.cloneQuery<any>()
     );
   }
+  //#endregion
 
   schema() {
     return undefined;

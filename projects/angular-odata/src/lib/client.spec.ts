@@ -212,7 +212,7 @@ describe('ODataClient', () => {
     };
     client
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
-      .top(2)
+      .query((q) => q.top(2))
       .fetch()
       .subscribe(({ entities, annots }) => {
         expect(entities !== null).toBeTrue();

@@ -17,16 +17,8 @@ import {
 import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
 import { ODataEntitySetResource } from './entity-set';
-import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
-import {
-  ODataQueryOptions,
-  Expand,
-  Filter,
-  OrderBy,
-  Select,
-  Transform,
-  ODataQueryOptionsHandler,
-} from '../query';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
@@ -46,7 +38,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     query.clear();
     return new ODataActionResource<P, R>(api, segments, query);
   }
-  //#endregion
 
   clone() {
     return new ODataActionResource<P, R>(
@@ -55,6 +46,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       this.cloneQuery<R>()
     );
   }
+  //#endregion
 
   schema() {
     //TODO: Binding Type
@@ -100,65 +92,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     }
     return new Collection(entities, { resource, annots, reset }) as C;
   }
-
-  //#region Inmutable Resource
-  select(opts: Select<R>) {
-    return this.clone().query((q) => q.select(opts));
-  }
-
-  expand(opts: Expand<R>) {
-    return this.clone().query((q) => q.expand(opts));
-  }
-
-  transform(opts: Transform<R>) {
-    return this.clone().query((q) => q.transform(opts));
-  }
-
-  search(opts: string) {
-    return this.clone().query((q) => q.search(opts));
-  }
-
-  filter(opts: Filter<R>) {
-    return this.clone().query((q) => q.filter(opts));
-  }
-
-  orderBy(opts: OrderBy<R>) {
-    return this.clone().query((q) => q.orderBy(opts));
-  }
-
-  format(opts: string) {
-    return this.clone().query((q) => q.format(opts));
-  }
-
-  top(opts: number) {
-    return this.clone().query((q) => q.top(opts));
-  }
-
-  skip(opts: number) {
-    return this.clone().query((q) => q.skip(opts));
-  }
-
-  skiptoken(opts: string) {
-    return this.clone().query((q) => q.skiptoken(opts));
-  }
-  //#endregion
-
-  //#region Mutable Resource
-  segment(func: (q: ODataPathSegmentsHandler<R>) => void) {
-    func(this.pathSegmentsHandler());
-    return this;
-  }
-
-  /**
-   * Handle query options of the action
-   * @returns Handler for mutate the query of the action
-   */
-  query(func: (q: ODataQueryOptionsHandler<R>) => void) {
-    func(this.queryOptionsHandler());
-    return this;
-  }
-
-  //#endregion
 
   //#region Requests
   protected post(

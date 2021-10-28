@@ -1,5 +1,5 @@
 import { EMPTY, Observable } from 'rxjs';
-import { EntityKey, ODataResource } from '../resource';
+import { ODataResource } from '../resource';
 import { ODataCollection, ODataModel } from '../../models';
 import {
   ODataEntities,
@@ -15,16 +15,8 @@ import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
-import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
-import {
-  ODataQueryOptions,
-  Expand,
-  Filter,
-  OrderBy,
-  Select,
-  Transform,
-  ODataQueryOptionsHandler,
-} from '../query';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions } from '../query';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
@@ -39,7 +31,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     if (type) segment.type(type);
     return new ODataEntitySetResource<E>(api, segments, query);
   }
-  //#endregion
 
   clone() {
     return new ODataEntitySetResource<T>(
@@ -48,6 +39,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.cloneQuery<T>()
     );
   }
+  //#endregion
 
   schema() {
     let type = this.type();
@@ -68,7 +60,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return new Collection(entities, { resource: this, annots, reset }) as C;
   }
 
-  //#region Inmutable Resource
   entity(key?: any) {
     const entity = ODataEntityResource.factory<T>(
       this.api,
@@ -126,63 +117,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       this.cloneQuery()
     );
   }
-
-  select(opts: Select<T>) {
-    return this.clone().query((q) => q.select(opts));
-  }
-
-  expand(opts: Expand<T>) {
-    return this.clone().query((q) => q.expand(opts));
-  }
-
-  transform(opts: Transform<T>) {
-    return this.clone().query((q) => q.transform(opts));
-  }
-
-  search(opts: string) {
-    return this.clone().query((q) => q.search(opts));
-  }
-
-  filter(opts: Filter<T>) {
-    return this.clone().query((q) => q.filter(opts));
-  }
-
-  orderBy(opts: OrderBy<T>) {
-    return this.clone().query((q) => q.orderBy(opts));
-  }
-
-  format(opts: string) {
-    return this.clone().query((q) => q.format(opts));
-  }
-
-  top(opts: number) {
-    return this.clone().query((q) => q.top(opts));
-  }
-
-  skip(opts: number) {
-    return this.clone().query((q) => q.skip(opts));
-  }
-
-  skiptoken(opts: string) {
-    return this.clone().query((q) => q.skiptoken(opts));
-  }
-  //#endregion
-
-  //#region Mutable Resource
-  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
-    func(this.pathSegmentsHandler());
-    return this;
-  }
-
-  /**
-   * Handle query options of the navigation property
-   * @returns Handler for mutate the query of the navigation property
-   */
-  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.queryOptionsHandler());
-    return this;
-  }
-  //#endregion
 
   //#region Requests
   protected post(

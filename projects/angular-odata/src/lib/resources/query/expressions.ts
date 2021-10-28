@@ -29,14 +29,6 @@ export class Expression<T> implements Renderable {
     return 'Expression';
   }
 
-  toJSON() {
-    return {
-      children: this._children.map((c) => c.toJSON()),
-      connector: this._connector,
-      negated: this._negated,
-    };
-  }
-
   static e<T>() {
     return new Expression<T>({ connector: Connector.AND });
   }
@@ -55,6 +47,14 @@ export class Expression<T> implements Renderable {
       connector: exp.connector(),
       negated: true,
     });
+  }
+
+  toJSON() {
+    return {
+      children: this._children.map((c) => c.toJSON()),
+      connector: this._connector,
+      negated: this._negated,
+    };
   }
 
   children() {
@@ -248,6 +248,26 @@ export class FilterExpression<T> extends Expression<T> {
 
   get [Symbol.toStringTag]() {
     return 'FilterExpression';
+  }
+
+  static e<T>() {
+    return new FilterExpression<T>({ connector: Connector.AND });
+  }
+
+  static and<T>() {
+    return new FilterExpression<T>({ connector: Connector.AND });
+  }
+
+  static or<T>() {
+    return new FilterExpression<T>({ connector: Connector.OR });
+  }
+
+  static not<T>(exp: FilterExpression<T>) {
+    return new FilterExpression<T>({
+      children: exp.children(),
+      connector: exp.connector(),
+      negated: true,
+    });
   }
 }
 */

@@ -18,17 +18,8 @@ import { ODataCollection } from '../../models/collection';
 import { ODataEntityResource } from './entity';
 import { ODataEntitySetResource } from './entity-set';
 import { ODataModel } from '../../models/model';
-import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
-import {
-  ODataQueryOptions,
-  Expand,
-  Filter,
-  OrderBy,
-  Select,
-  Transform,
-  alias as fAlias,
-  ODataQueryOptionsHandler,
-} from '../query';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions, alias as fAlias } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
@@ -48,17 +39,18 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     options.clear();
     return new ODataFunctionResource<P, R>(api, segments, options);
   }
-  //#endregion
 
-  returnType() {
-    return this.schema()?.parser.return?.type;
-  }
   clone() {
     return new ODataFunctionResource<P, R>(
       this.api,
       this.cloneSegments(),
       this.cloneQuery<R>()
     );
+  }
+  //#endregion
+
+  returnType() {
+    return this.schema()?.parser.return?.type;
   }
 
   schema() {
@@ -68,6 +60,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       ? this.api.findCallableForType<R>(type)
       : undefined;
   }
+
   asModel<M extends ODataModel<R>>(
     entity: Partial<R> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
@@ -101,7 +94,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new Collection(entities, { resource, annots, reset }) as C;
   }
 
-  //#region Inmutable Resource
   parameters(params: P | null, { alias }: { alias?: boolean } = {}) {
     const segments = this.cloneSegments();
     const segment = segments.get(PathSegmentNames.function);
@@ -118,63 +110,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       this.cloneQuery()
     );
   }
-
-  select(opts: Select<R>) {
-    return this.clone().query((q) => q.select(opts));
-  }
-
-  expand(opts: Expand<R>) {
-    return this.clone().query((q) => q.expand(opts));
-  }
-
-  transform(opts: Transform<R>) {
-    return this.clone().query((q) => q.transform(opts));
-  }
-
-  search(opts: string) {
-    return this.clone().query((q) => q.search(opts));
-  }
-
-  filter(opts: Filter<R>) {
-    return this.clone().query((q) => q.filter(opts));
-  }
-
-  orderBy(opts: OrderBy<R>) {
-    return this.clone().query((q) => q.orderBy(opts));
-  }
-
-  format(opts: string) {
-    return this.clone().query((q) => q.format(opts));
-  }
-
-  top(opts: number) {
-    return this.clone().query((q) => q.top(opts));
-  }
-
-  skip(opts: number) {
-    return this.clone().query((q) => q.skip(opts));
-  }
-
-  skiptoken(opts: string) {
-    return this.clone().query((q) => q.skiptoken(opts));
-  }
-  //#endregion
-
-  //#region Mutable Resource
-  segment(func: (q: ODataPathSegmentsHandler<R>) => void) {
-    func(this.pathSegmentsHandler());
-    return this;
-  }
-
-  /**
-   * Handle query options of the action
-   * @returns Handler for mutate the query of the action
-   */
-  query(func: (q: ODataQueryOptionsHandler<R>) => void) {
-    func(this.queryOptionsHandler());
-    return this;
-  }
-  //#endregion
 
   //#region Requests
   protected get(

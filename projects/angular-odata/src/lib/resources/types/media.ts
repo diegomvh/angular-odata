@@ -18,7 +18,6 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     segments.add(PathSegmentNames.value, $VALUE);
     return new ODataMediaResource<V>(api, segments, options);
   }
-  //#endregion
 
   clone() {
     return new ODataMediaResource<T>(
@@ -27,6 +26,7 @@ export class ODataMediaResource<T> extends ODataResource<T> {
       this.cloneQuery<T>()
     );
   }
+  //#endregion
 
   schema() {
     return undefined;

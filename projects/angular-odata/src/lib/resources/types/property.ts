@@ -1,5 +1,5 @@
 import { EMPTY, Observable } from 'rxjs';
-import { EntityKey, ODataResource } from '../resource';
+import { ODataResource } from '../resource';
 import { ODataCollection, ODataModel } from '../../models';
 import {
   ODataEntities,
@@ -17,16 +17,8 @@ import {
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 
 import { ODataApi } from '../../api';
-import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
-import {
-  ODataQueryOptions,
-  Expand,
-  Filter,
-  OrderBy,
-  Select,
-  Transform,
-  ODataQueryOptionsHandler,
-} from '../query';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { ODataValueResource } from './value';
 //import { ODataNavigationPropertyResource } from './navigation-property';
@@ -46,7 +38,6 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     options.clear();
     return new ODataPropertyResource<P>(api, segments, options);
   }
-  //#endregion
 
   clone() {
     return new ODataPropertyResource<T>(
@@ -55,6 +46,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.cloneQuery<T>()
     );
   }
+  //#endregion
 
   schema() {
     let type = this.type();
@@ -84,7 +76,6 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return new Collection(entities, { resource: this, annots, reset }) as C;
   }
 
-  //#region Inmutable Resource
   key(value: any) {
     const property = this.clone();
     var key = this.resolveKey(value);
@@ -133,6 +124,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
   */
+
   property<P>(path: string) {
     let type = this.type();
     if (type !== undefined) {
@@ -150,59 +142,6 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.cloneQuery<P>()
     );
   }
-
-  select(opts: Select<T>) {
-    return this.clone().query((q) => q.select(opts));
-  }
-
-  expand(opts: Expand<T>) {
-    return this.clone().query((q) => q.expand(opts));
-  }
-
-  transform(opts: Transform<T>) {
-    return this.clone().query((q) => q.transform(opts));
-  }
-
-  search(opts: string) {
-    return this.clone().query((q) => q.search(opts));
-  }
-
-  filter(opts: Filter<T>) {
-    return this.clone().query((q) => q.filter(opts));
-  }
-
-  orderBy(opts: OrderBy<T>) {
-    return this.clone().query((q) => q.orderBy(opts));
-  }
-
-  format(opts: string) {
-    return this.clone().query((q) => q.format(opts));
-  }
-
-  top(opts: number) {
-    return this.clone().query((q) => q.top(opts));
-  }
-
-  skip(opts: number) {
-    return this.clone().query((q) => q.skip(opts));
-  }
-
-  skiptoken(opts: string) {
-    return this.clone().query((q) => q.skiptoken(opts));
-  }
-  //#endregion
-
-  //#region Mutable Resource
-  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
-    func(this.pathSegmentsHandler());
-    return this;
-  }
-
-  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.queryOptionsHandler());
-    return this;
-  }
-  //#endregion
 
   //#region Requests
   protected get(

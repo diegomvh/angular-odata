@@ -13,20 +13,21 @@ export class ODataMetadataResource extends ODataResource<any> {
     super(api, segments);
   }
 
-  clone() {
-    return new ODataMetadataResource(this.api, this.cloneSegments());
-  }
-
-  schema() {
-    return undefined;
-  }
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
     segments.add(PathSegmentNames.metadata, $METADATA);
     return new ODataMetadataResource(api, segments);
   }
+
+  clone() {
+    return new ODataMetadataResource(this.api, this.cloneSegments());
+  }
   //#endregion
+
+  schema() {
+    return undefined;
+  }
 
   //#region Requests
   protected get(options?: ODataOptions): Observable<ODataMetadata> {

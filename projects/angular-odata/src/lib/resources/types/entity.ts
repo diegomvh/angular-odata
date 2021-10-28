@@ -1,4 +1,4 @@
-import { EntityKey, ODataResource } from '../resource';
+import { ODataResource } from '../resource';
 import { ODataEntity, ODataEntityAnnotations } from '../responses';
 import { Observable, throwError } from 'rxjs';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
@@ -10,14 +10,9 @@ import { ODataMediaResource } from './media';
 import { ODataModel } from '../../models';
 import { ODataNavigationPropertyResource } from './navigation-property';
 import { ODataOptions } from './options';
-import { ODataPathSegments, ODataPathSegmentsHandler } from '../path';
+import { ODataPathSegments } from '../path';
 import { ODataPropertyResource } from './property';
-import {
-  ODataQueryOptions,
-  Expand,
-  Select,
-  ODataQueryOptionsHandler,
-} from '../query';
+import { ODataQueryOptions } from '../query';
 import { ODataStructuredTypeParser } from '../../parsers/structured-type';
 import { map } from 'rxjs/operators';
 
@@ -35,7 +30,6 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     );
     return new ODataEntityResource<E>(api, segments, options);
   }
-  //#endregion
 
   clone() {
     return new ODataEntityResource<T>(
@@ -44,6 +38,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       this.cloneQuery<T>()
     );
   }
+  //#endregion
 
   schema() {
     let type = this.type();
@@ -51,6 +46,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       ? this.api.findStructuredTypeForType<T>(type)
       : undefined;
   }
+
   asModel<M extends ODataModel<T>>(
     entity: Partial<T> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
@@ -60,7 +56,6 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return new Model(entity, { resource: this, annots, reset }) as M;
   }
 
-  //#region Inmutable Resource
   key(value: any) {
     const entity = this.clone();
     var key = this.resolveKey(value);
@@ -163,35 +158,6 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntityResource<C>(this.api, segments, this.cloneQuery());
   }
-
-  select(opts: Select<T>) {
-    return this.clone().query((q) => q.select(opts));
-  }
-
-  expand(opts: Expand<T>) {
-    return this.clone().query((q) => q.expand(opts));
-  }
-
-  format(opts: string) {
-    return this.clone().query((q) => q.format(opts));
-  }
-  //#endregion
-
-  //#region Mutable Resource
-  segment(func: (q: ODataPathSegmentsHandler<T>) => void) {
-    func(this.pathSegmentsHandler());
-    return this;
-  }
-
-  /**
-   * Handle query options of the action
-   * @returns Handler for mutate the query of the action
-   */
-  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
-    func(this.queryOptionsHandler());
-    return this;
-  }
-  //#endregion
 
   //#region Requests
   protected post(

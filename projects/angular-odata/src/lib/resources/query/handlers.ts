@@ -1,5 +1,5 @@
 import { Objects, Types } from '../../utils';
-import { Expand, Filter, OrderBy, Select, Transform } from './builder';
+import { alias, Expand, Filter, OrderBy, Select, Transform } from './builder';
 
 import { QueryOptionNames } from '../../types';
 import { Expression } from './expressions';
@@ -36,11 +36,11 @@ export class ODataQueryOptionHandler<T> {
     return this.o[this.n];
   }
 
-  push(value: T) {
+  push(value: any) {
     this.assertArray().push(value);
   }
 
-  remove(value: T) {
+  remove(value: any) {
     this.o[this.n] = this.assertArray().filter((v) => v !== value);
     // If only one... down to value
     if (this.o[this.n].length === 1) this.o[this.n] = this.o[this.n][0];
@@ -103,23 +103,18 @@ export class ODataQueryOptionHandler<T> {
 
 export class ODataQueryOptionsHandler<T> {
   constructor(protected options: ODataQueryOptions<T>) {}
-  /*
-  expression(
-    f: (e: {
-      e: Expression<T>;
-      and: Expression<T>;
-      or: Expression<T>;
-      not: typeof Expression.not;
-    }) => Expression<T>
-  ): Expression<T> {
-    return f({
-      e: Expression.e<T>(),
-      and: Expression.and<T>(),
-      or: Expression.or<T>(),
-      not: Expression.not,
-    });
+
+  /**
+   * Create a new odata alias parameter
+   * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ParameterAliases
+   * @param value The value of the alias
+   * @param name The name of the alias
+   * @returns The alias
+   */
+  alias(value: any, name?: string) {
+    return alias(value, name);
   }
-  */
+
   select(opts: Select<T>): ODataQueryOptionHandler<T>;
   select(): ODataQueryOptionHandler<T>;
   select(opts?: Select<T>): any {
