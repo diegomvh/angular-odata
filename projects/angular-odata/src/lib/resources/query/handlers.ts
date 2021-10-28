@@ -132,12 +132,37 @@ export class ODataQueryOptionsHandler<T> {
     return this.options.option<Expand<T>>(QueryOptionNames.expand, opts);
   }
 
+  /**
+   * Url: https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
+   */
+  compute(
+    opts: (e: {
+      e: Expression<T>;
+      and: Expression<T>;
+      or: Expression<T>;
+      not: typeof Expression.not;
+    }) => Expression<T>
+  ): Expression<T>;
   compute(opts: string): ODataQueryOptionHandler<T>;
   compute(): ODataQueryOptionHandler<T>;
-  compute(opts?: string): any {
+  compute(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOptionNames.compute,
+        opts({
+          e: Expression.e<T>(),
+          and: Expression.and<T>(),
+          or: Expression.or<T>(),
+          not: Expression.not,
+        }) as Expression<T>
+      );
+    }
     return this.options.option<string>(QueryOptionNames.compute, opts);
   }
 
+  /**
+   * Url: https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionformat
+   */
   format(opts: string): ODataQueryOptionHandler<T>;
   format(): ODataQueryOptionHandler<T>;
   format(opts?: string): any {
@@ -168,20 +193,41 @@ export class ODataQueryOptionsHandler<T> {
   filter(): ODataQueryOptionHandler<T>;
   filter(opts?: any): any {
     if (Types.isFunction(opts)) {
-      const exp = opts({
-        e: Expression.e<T>(),
-        and: Expression.and<T>(),
-        or: Expression.or<T>(),
-        not: Expression.not,
-      }) as Expression<T>;
-      return this.options.expression(QueryOptionNames.filter, exp);
+      return this.options.expression(
+        QueryOptionNames.filter,
+        opts({
+          e: Expression.e<T>(),
+          and: Expression.and<T>(),
+          or: Expression.or<T>(),
+          not: Expression.not,
+        }) as Expression<T>
+      );
     }
     return this.options.option<Filter<T>>(QueryOptionNames.filter, opts);
   }
 
+  orderBy(
+    opts: (e: {
+      e: Expression<T>;
+      and: Expression<T>;
+      or: Expression<T>;
+      not: typeof Expression.not;
+    }) => Expression<T>
+  ): Expression<T>;
   orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
   orderBy(): ODataQueryOptionHandler<T>;
-  orderBy(opts?: OrderBy<T>): any {
+  orderBy(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOptionNames.orderBy,
+        opts({
+          e: Expression.e<T>(),
+          and: Expression.and<T>(),
+          or: Expression.or<T>(),
+          not: Expression.not,
+        }) as Expression<T>
+      );
+    }
     return this.options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
   }
 
