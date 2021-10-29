@@ -29,7 +29,9 @@ export class ODataSingletonService<T> extends ODataEntityService<T> {
     model.attach(this.entity());
   }
 
-  // Service Config
+  /**
+   * The schema for the singleton.
+   */
   get singletonSchema() {
     return this.api.findEntitySetByName(this.name);
   }

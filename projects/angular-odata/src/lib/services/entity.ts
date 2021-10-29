@@ -7,7 +7,9 @@ export abstract class ODataEntityService<T> extends ODataBaseService {
   public abstract entity(key?: EntityKey<T>): ODataResource<T>;
   public abstract attach<M extends ODataModel<T>>(value: M): void;
 
-  // Entity Config
+  /**
+   * The schema for the structured type.
+   */
   get structuredTypeSchema() {
     return this.apiNameOrEntityType !== undefined
       ? this.api.findStructuredTypeForType<T>(this.apiNameOrEntityType)

@@ -44,6 +44,9 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     }
   }
 
+  /**
+   * The schema for the entity set.
+   */
   get entitySetSchema() {
     return this.api.findEntitySetByName(this.name);
   }

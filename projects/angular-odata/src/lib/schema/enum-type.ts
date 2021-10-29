@@ -59,18 +59,38 @@ export class ODataEnumType<E> {
     return this.annotations.find(predicate);
   }
 
+  /**
+   * Returns the fields of the enum type.
+   * @returns The fields of the enum type.
+   */
   fields(): ODataEnumTypeFieldParser[] {
     return this.parser.fields;
   }
 
+  /**
+   * Find a field by name.
+   * @param name The name of the field
+   * @returns The field with the given name
+   */
   findFieldByName(name: string) {
     return this.fields().find((f) => f.name === name);
   }
 
+  /**
+   * Find a field by value.
+   * @param value The value of the field
+   * @returns The field with the given value
+   */
   findFieldByValue(value: number) {
     return this.fields().find((f) => f.value === value);
   }
 
+  /**
+   * Find a title for a given value.
+   * @param value Value of the field
+   * @param pattern Pattern to use for find in annotations
+   * @returns The name or annotation of the filed that matches with the value.
+   */
   fieldTitle(value: number | string, pattern?: RegExp) {
     const resolveTitle = (field?: ODataEnumTypeFieldParser) => {
       if (field !== undefined) {
@@ -91,6 +111,11 @@ export class ODataEnumType<E> {
     }
   }
 
+  /**
+   * Map the fields of the enum type.
+   * @param mapper Function that maps the value to the new value
+   * @returns The fields mapped by the mapper
+   */
   mapFields<T>(mapper: (field: ODataEnumTypeFieldParser) => T) {
     return this.fields().map(mapper);
   }
