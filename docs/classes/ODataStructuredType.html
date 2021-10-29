@@ -140,13 +140,19 @@
                                 <a href="#encode" >encode</a>
                             </li>
                             <li>
-                                <a href="#field" >field</a>
-                            </li>
-                            <li>
                                 <a href="#fields" >fields</a>
                             </li>
                             <li>
                                 <a href="#findAnnotation" >findAnnotation</a>
+                            </li>
+                            <li>
+                                <a href="#findFieldByName" >findFieldByName</a>
+                            </li>
+                            <li>
+                                <a href="#findParentSchema" >findParentSchema</a>
+                            </li>
+                            <li>
+                                <a href="#findSchemaForField" >findSchemaForField</a>
                             </li>
                             <li>
                                 <a href="#isCompoundKey" >isCompoundKey</a>
@@ -622,17 +628,25 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="214"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:214</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="277"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:277</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Returns the defaults values for the structured type.</p>
+</div>
 
+                    <div>
+                    </div>
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>Default values for the structured type</p>
 
                     </div>
                 </td>
@@ -659,8 +673,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="186"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:186</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="240"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:240</a></div>
                 </td>
             </tr>
 
@@ -752,8 +766,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="206"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:206</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="260"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:260</a></div>
                 </td>
             </tr>
 
@@ -829,71 +843,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="field"></a>
-                    <span class="name">
-                        <span ><b>field</b></span>
-                        <a href="#field"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>field(name)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="121"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:121</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="fields"></a>
                     <span class="name">
                         <span ><b>fields</b></span>
@@ -910,14 +859,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="125"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:125</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="166"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:166</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Returns all fields of the structured type.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -928,7 +879,6 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -941,9 +891,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                        <code>{}</code>
-                                    </td>
 
                                 </tr>
                             </tbody>
@@ -956,7 +903,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>All fields of the structured type.</p>
+
                     </div>
                 </td>
             </tr>
@@ -1033,6 +981,233 @@
                     </div>
                     <div class="io-description">
                         <p>The annotation that matches the predicate.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findFieldByName"></a>
+                    <span class="name">
+                        <span ><b>findFieldByName</b></span>
+                        <a href="#findFieldByName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findFieldByName(name)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="126"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:126</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find the field parser for the given field name.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Name of the field</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The field parser</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findParentSchema"></a>
+                    <span class="name">
+                        <span ><b>findParentSchema</b></span>
+                        <a href="#findParentSchema"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findParentSchema(predicate: (p: <a href="../classes/ODataStructuredType.html">ODataStructuredType<any></a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="138"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:138</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find a parent schema of the structured type.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>predicate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Function for evaluate the schemas in the hierarchy.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType | undefined</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The schema that matches the predicate.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findSchemaForField"></a>
+                    <span class="name">
+                        <span ><b>findSchemaForField</b></span>
+                        <a href="#findSchemaForField"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findSchemaForField(field: <a href="../interfaces/Parser.html" target="_self">ODataStructuredTypeFieldParser&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="151"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:151</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find a parent schema of the structured type for the given field.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+                                    <td>
+                                                <code><a href="../interfaces/Parser.html" target="_self" >ODataStructuredTypeFieldParser&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Field that belongs to the structured type</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataStructuredType.html" target="_self" >ODataStructuredType&lt;any&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The schema of the field</p>
 
                     </div>
                 </td>
@@ -1226,14 +1401,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="142"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:142</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="188"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:188</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Returns the keys of the structured type.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -1272,7 +1449,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>The keys of the structured type</p>
+
                     </div>
                 </td>
             </tr>
@@ -1291,21 +1469,23 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pick(value: literal type, undefined: literal type)</code>
+<code>pick(attrs: literal type, undefined: literal type)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="155"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:155</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="209"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:209</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Picks the fields from attributes.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -1321,7 +1501,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>value</td>
+                                    <td>attrs</td>
                                     <td>
                                             <code>literal type</code>
                                     </td>
@@ -1358,7 +1538,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>The picked fields</p>
+
                     </div>
                 </td>
             </tr>
@@ -1384,14 +1565,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="210"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:210</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="269"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:269</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Resolve the key of the structured type for the given value.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -1402,6 +1585,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1416,6 +1600,10 @@
                                     </td>
 
 
+                                    <td>
+                                        <p>Attributes of the value</p>
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1427,7 +1615,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>Resolved key</p>
+
                     </div>
                 </td>
             </tr>
@@ -1453,8 +1642,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="196"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:196</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="250"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:250</a></div>
                 </td>
             </tr>
 
@@ -1546,14 +1735,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="218"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:218</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="286"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:286</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Convert the structured type to json schema</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -1565,6 +1756,7 @@
                                     <td>Type</td>
                                     <td>Optional</td>
                                     <td>Default value</td>
+                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1582,6 +1774,10 @@
                                         <code>{}</code>
                                     </td>
 
+                                    <td>
+                                        <p>Options for json schema</p>
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1593,7 +1789,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>Json Schema</p>
+
                     </div>
                 </td>
             </tr>
@@ -1694,14 +1891,16 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="222"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:222</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="296"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:296</a></div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Validate the given value against the structured type.</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -1713,6 +1912,7 @@
                                     <td>Type</td>
                                     <td>Optional</td>
                                     <td>Default value</td>
+                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1729,6 +1929,10 @@
                                     <td>
                                     </td>
 
+                                    <td>
+                                        <p>Attributes of the value</p>
+
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -1743,6 +1947,8 @@
                                         <code>{}</code>
                                     </td>
 
+                                    <td>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1754,7 +1960,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>Object with the errors</p>
+
                     </div>
                 </td>
             </tr>
@@ -1917,17 +2124,58 @@ export class ODataStructuredType&lt;T&gt; {
     return this.annotations.find(predicate);
   }
 
-  field(name: keyof T) {
-    return this.fields().find((f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; name);
+  /**
+   * Find the field parser for the given field name.
+   * @param name Name of the field
+   * @returns The field parser
+   */
+  findFieldByName(name: keyof T) {
+    return this.fields({
+      include_parents: true,
+      include_navigation: true,
+    }).find((f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; name);
   }
 
+  /**
+   * Find a parent schema of the structured type.
+   * @param predicate Function for evaluate the schemas in the hierarchy.
+   * @returns The schema that matches the predicate.
+   */
+  findParentSchema(
+    predicate: (p: ODataStructuredType&lt;any&gt;) &#x3D;&gt; boolean
+  ): ODataStructuredType&lt;any&gt; | undefined {
+    if (predicate(this)) return this;
+    if (this.parent &#x3D;&#x3D;&#x3D; undefined) return undefined;
+    return this.parent.findParentSchema(predicate);
+  }
+
+  /**
+   * Find a parent schema of the structured type for the given field.
+   * @param field Field that belongs to the structured type
+   * @returns The schema of the field
+   */
+  findSchemaForField(field: ODataStructuredTypeFieldParser&lt;any&gt;) {
+    return this.findParentSchema(
+      (p) &#x3D;&gt;
+        p
+          .fields({ include_parents: false, include_navigation: true })
+          .find((f) &#x3D;&gt; f &#x3D;&#x3D;&#x3D; field) !&#x3D;&#x3D; undefined
+    );
+  }
+
+  /**
+   * Returns all fields of the structured type.
+   * @param include_navigation Include navigation properties in the result.
+   * @param include_parents Include the parent types in the result.
+   * @returns All fields of the structured type.
+   */
   fields({
-    include_navigation &#x3D; false,
-    include_parents &#x3D; true,
+    include_navigation,
+    include_parents,
   }: {
-    include_parents?: boolean;
-    include_navigation?: boolean;
-  } &#x3D; {}): ODataStructuredTypeFieldParser&lt;any&gt;[] {
+    include_parents: boolean;
+    include_navigation: boolean;
+  }): ODataStructuredTypeFieldParser&lt;any&gt;[] {
     return [
       ...(include_parents &amp;&amp; this.parent !&#x3D;&#x3D; undefined
         ? this.parent.fields({ include_parents, include_navigation })
@@ -1938,6 +2186,11 @@ export class ODataStructuredType&lt;T&gt; {
     ];
   }
 
+  /**
+   * Returns the keys of the structured type.
+   * @param include_parents Include the parent fields
+   * @returns The keys of the structured type
+   */
   keys({
     include_parents &#x3D; true,
   }: {
@@ -1951,8 +2204,16 @@ export class ODataStructuredType&lt;T&gt; {
     ];
   }
 
+  /**
+   * Picks the fields from attributes.
+   * @param attrs
+   * @param include_parents Include the parent fields
+   * @param include_navigation Include the navigation fields
+   * @param include_etag Include the etag field
+   * @returns The picked fields
+   */
   pick(
-    value: { [name: string]: any },
+    attrs: { [name: string]: any },
     {
       include_parents &#x3D; true,
       include_navigation &#x3D; false,
@@ -1966,14 +2227,14 @@ export class ODataStructuredType&lt;T&gt; {
     const names &#x3D; this.fields({ include_parents, include_navigation }).map(
       (f) &#x3D;&gt; f.name
     );
-    let attrs &#x3D; Object.keys(value)
+    let values &#x3D; Object.keys(attrs)
       .filter((k) &#x3D;&gt; names.indexOf(k) !&#x3D;&#x3D; -1)
-      .reduce((acc, k) &#x3D;&gt; Object.assign(acc, { [k]: value[k] }), {});
+      .reduce((acc, k) &#x3D;&gt; Object.assign(acc, { [k]: attrs[k] }), {});
     if (include_etag) {
-      const etag &#x3D; this.api.options.helper.etag(value);
+      const etag &#x3D; this.api.options.helper.etag(attrs);
       this.api.options.helper.etag(attrs, etag);
     }
-    return attrs;
+    return values;
   }
 
   /**
@@ -2006,18 +2267,38 @@ export class ODataStructuredType&lt;T&gt; {
     return this.parser.encode(value, options);
   }
 
+  /**
+   * Resolve the key of the structured type for the given value.
+   * @param attrs Attributes of the value
+   * @returns Resolved key
+   */
   resolveKey(attrs: T | { [name: string]: any }) {
     return this.parser.resolveKey(attrs);
   }
 
+  /**
+   * Returns the defaults values for the structured type.
+   * @returns Default values for the structured type
+   */
   defaults() {
     return this.parser.defaults();
   }
 
+  /**
+   * Convert the structured type to json schema
+   * @param options Options for json schema
+   * @returns Json Schema
+   */
   toJsonSchema(options: JsonSchemaOptions&lt;T&gt; &#x3D; {}) {
     return this.parser.toJsonSchema(options);
   }
 
+  /**
+   * Validate the given value against the structured type.
+   * @param attrs Attributes of the value
+   * @param method Method to use for the process validation
+   * @returns Object with the errors
+   */
   validate(
     attrs: Partial&lt;T&gt;,
     {

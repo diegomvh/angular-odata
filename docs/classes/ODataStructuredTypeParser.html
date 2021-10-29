@@ -1412,7 +1412,7 @@ import {
 import { ODataEnumTypeParser } from &#x27;./enum-type&#x27;;
 import { COMPUTED } from &#x27;../constants&#x27;;
 import { ODataAnnotation } from &#x27;../schema/annotation&#x27;;
-import { raw } from &#x27;../resources/builder&#x27;;
+import { raw } from &#x27;../resources/query&#x27;;
 import { ODataParserOptions } from &#x27;../options&#x27;;
 
 // JSON SCHEMA
@@ -1898,9 +1898,9 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
               : undefined;
           }
         }
-        if (field &#x3D;&#x3D;&#x3D; undefined) return undefined;
-        let name &#x3D; k.alias || field.name;
-        key[name] &#x3D; field.encode(v);
+        if (field !&#x3D;&#x3D; undefined &amp;&amp; v !&#x3D;&#x3D; undefined) {
+          key[k.alias || field.name] &#x3D; field.encode(v);
+        }
       }
     }
     if (Types.isEmpty(key)) return undefined;

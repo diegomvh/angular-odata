@@ -940,7 +940,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
   name: string;
   namespace: string;
   alias?: string;
-  return?: { type: string; callable?: boolean };
+  return?: { type: string; collection?: boolean };
   parser: Parser&lt;any&gt;;
   parameters: ODataParameterParser&lt;any&gt;[];
   optionsHelper?: OptionsHelper;

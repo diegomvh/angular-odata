@@ -431,7 +431,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>callFunction(params: P | null, resource: <a href="../classes/ODataFunctionResource.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;R&gt;</a>)</code>
+                    <code>callFunction(params: P | null, resource: <a href="../objects/OData.html" target="_self">ODataFunctionResource&lt;P | R&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -489,7 +489,7 @@
                                 <tr>
                                     <td>resource</td>
                                     <td>
-                                                <code><a href="../classes/ODataFunctionResource.html" target="_self" >ODataFunctionResource&lt;P | R&gt;</a></code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataFunctionResource&lt;P | R&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -552,7 +552,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../objects/OData.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -597,7 +597,7 @@
                                 <tr>
                                     <td>resource</td>
                                     <td>
-                                                <code><a href="../classes/ODataNavigationPropertyResource.html" target="_self" >ODataNavigationPropertyResource&lt;S&gt;</a></code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataNavigationPropertyResource&lt;S&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -671,9 +671,16 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:11</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:13</a></div>
                                 </td>
                             </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>The schema for the structured type.</p>
+</div>
+
+                        </td>
+                    </tr>
 
             </tbody>
         </table>
@@ -691,7 +698,9 @@ export abstract class ODataEntityService&lt;T&gt; extends ODataBaseService {
   public abstract entity(key?: EntityKey&lt;T&gt;): ODataResource&lt;T&gt;;
   public abstract attach&lt;M extends ODataModel&lt;T&gt;&gt;(value: M): void;
 
-  // Entity Config
+  /**
+   * The schema for the structured type.
+   */
   get structuredTypeSchema() {
     return this.apiNameOrEntityType !&#x3D;&#x3D; undefined
       ? this.api.findStructuredTypeForType&lt;T&gt;(this.apiNameOrEntityType)

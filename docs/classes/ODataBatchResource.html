@@ -177,14 +177,6 @@
                             </li>
                             <li>
                                     <span class="modifier">Protected</span>
-                                <a href="#entitiesQueryHandler" >entitiesQueryHandler</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#entityQueryHandler" >entityQueryHandler</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Protected</span>
                                 <a href="#get" >get</a>
                             </li>
                             <li>
@@ -218,6 +210,9 @@
                                 <a href="#put" >put</a>
                             </li>
                             <li>
+                                <a href="#query" >query</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Protected</span>
                                 <a href="#request" >request</a>
                             </li>
@@ -227,6 +222,9 @@
                             </li>
                             <li>
                                 <a href="#returnType" >returnType</a>
+                            </li>
+                            <li>
+                                <a href="#segment" >segment</a>
                             </li>
                             <li>
                                 <a href="#serialize" >serialize</a>
@@ -319,7 +317,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:40</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:36</a></code>
 </div>
                         </td>
                     </tr>
@@ -353,7 +351,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:41</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:37</a></code>
 </div>
                         </td>
                     </tr>
@@ -375,7 +373,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ODataQueryOptions</a></code>
+                        <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ODataQueryOptions&lt;T&gt;</a></code>
 
                     </td>
                 </tr>
@@ -387,7 +385,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:42</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:38</a></code>
 </div>
                         </td>
                     </tr>
@@ -422,8 +420,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="225"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:225</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="231"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:231</a></div>
                 </td>
             </tr>
 
@@ -461,8 +459,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="232"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:232</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="238"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:238</a></div>
                 </td>
             </tr>
 
@@ -548,7 +546,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:159</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:166</a></code>
 </div>
                 </td>
             </tr>
@@ -585,8 +583,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="175"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:175</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="181"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:181</a></div>
                 </td>
             </tr>
 
@@ -601,6 +599,8 @@
 
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Execute the batch request</p>
+</div>
 
                     <div class="io-description">
                         <b>Parameters :</b>
@@ -611,6 +611,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Description</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -625,6 +626,10 @@
                                     </td>
 
 
+                                    <td>
+                                        <p>The context for the request</p>
+
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>options</td>
@@ -637,6 +642,10 @@
                                     </td>
 
 
+                                    <td>
+                                        <p>The options of the batch request</p>
+
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -648,7 +657,8 @@
 
                     </div>
                     <div class="io-description">
-                        
+                        <p>The result of execute the context</p>
+
                     </div>
                 </td>
             </tr>
@@ -676,8 +686,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="168"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:168</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="160"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:160</a></div>
                 </td>
             </tr>
 
@@ -747,8 +757,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="297"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:297</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="303"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:303</a></div>
                 </td>
             </tr>
 
@@ -871,7 +881,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:163</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:171</a></code>
 </div>
                 </td>
             </tr>
@@ -914,7 +924,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:81</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:77</a></code>
 </div>
                 </td>
             </tr>
@@ -957,7 +967,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:209</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:205</a></code>
 </div>
                 </td>
             </tr>
@@ -1000,11 +1010,19 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:213</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:209</a></code>
 </div>
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>P</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -1043,7 +1061,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:204</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:200</a></code>
 </div>
                 </td>
             </tr>
@@ -1088,7 +1106,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:492</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:390</a></code>
 </div>
                 </td>
             </tr>
@@ -1163,7 +1181,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:149</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:145</a></code>
 </div>
                 </td>
             </tr>
@@ -1250,7 +1268,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:181</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:177</a></code>
 </div>
                 </td>
             </tr>
@@ -1337,7 +1355,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:129</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:125</a></code>
 </div>
                 </td>
             </tr>
@@ -1394,112 +1412,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="entitiesQueryHandler"></a>
-                    <span class="name">
-                        <span class="modifier">Protected</span>
-                        <span ><b>entitiesQueryHandler</b></span>
-                        <a href="#entitiesQueryHandler"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entitiesQueryHandler()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:269</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Factorise an object handler for mutate query options for resources that match to entities</p>
-</div>
-
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>{ select(opts?: any): any; expand(opts?: any): any; compute(opts?: string): any; transform(opts?: any): any; search(opts?: string): any; filter(opts?: any): any; orderBy(opts?: any): any; ... 6 more ...; apply(query: any): void; }</code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>Object handler for mutate query options</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="entityQueryHandler"></a>
-                    <span class="name">
-                        <span class="modifier">Protected</span>
-                        <span ><b>entityQueryHandler</b></span>
-                        <a href="#entityQueryHandler"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>entityQueryHandler()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
-</div>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:221</a></code>
-</div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Factorise an object handler for mutate query options for resources that match to entity</p>
-</div>
-
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>{ select(opts?: any): any; expand(opts?: any): any; compute(opts?: string): any; format(opts?: string): any; apply(query: any): void; }</code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>Object handler for mutate query options</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="get"></a>
                     <span class="name">
                         <span class="modifier">Protected</span>
@@ -1524,7 +1436,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:417</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:315</a></code>
 </div>
                 </td>
             </tr>
@@ -1599,7 +1511,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:77</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:73</a></code>
 </div>
                 </td>
             </tr>
@@ -1648,7 +1560,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:107</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:103</a></code>
 </div>
                 </td>
             </tr>
@@ -1723,7 +1635,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:113</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:109</a></code>
 </div>
                 </td>
             </tr>
@@ -1810,7 +1722,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:101</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:97</a></code>
 </div>
                 </td>
             </tr>
@@ -1885,7 +1797,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:85</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:81</a></code>
 </div>
                 </td>
             </tr>
@@ -1962,7 +1874,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:473</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:371</a></code>
 </div>
                 </td>
             </tr>
@@ -2054,7 +1966,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:123</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:119</a></code>
 </div>
                 </td>
             </tr>
@@ -2090,7 +2002,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:436</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:334</a></code>
 </div>
                 </td>
             </tr>
@@ -2184,7 +2096,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:454</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:352</a></code>
 </div>
                 </td>
             </tr>
@@ -2254,6 +2166,89 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="query"></a>
+                    <span class="name">
+                        <span ><b>query</b></span>
+                        <a href="#query"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>query(f: (q: <a href="../interfaces/Options.html">ODataQueryOptionsHandler<T></a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:229</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Handle the query options of the resource
+Create an object handler for mutate the query options of the resource</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>f</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Function context for handle the query options</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>this</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="request"></a>
                     <span class="name">
                         <span class="modifier">Protected</span>
@@ -2278,7 +2273,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:348</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:254</a></code>
 </div>
                 </td>
             </tr>
@@ -2366,7 +2361,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:247</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:234</a></code>
 </div>
                 </td>
             </tr>
@@ -2461,7 +2456,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:63</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:59</a></code>
 </div>
                 </td>
             </tr>
@@ -2478,6 +2473,90 @@
                     </div>
                     <div class="io-description">
                         <p>string The type of the return</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="segment"></a>
+                    <span class="name">
+                        <span ><b>segment</b></span>
+                        <a href="#segment"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>segment(f: (q: <a href="../objects/OData.html">ODataPathSegmentsHandler<T></a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataResource.html" target="_self" >ODataResource</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:219</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Handle the path segments of the resource
+Create an object handler for mutate the path segments of the resource</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>f</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Function context for handle the segments</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>this</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>ODataActionResource</p>
 
                     </div>
                 </td>
@@ -2510,7 +2589,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:165</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:161</a></code>
 </div>
                 </td>
             </tr>
@@ -2597,7 +2676,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:197</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:193</a></code>
 </div>
                 </td>
             </tr>
@@ -2640,7 +2719,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:138</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:134</a></code>
 </div>
                 </td>
             </tr>
@@ -2683,7 +2762,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:56</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:52</a></code>
 </div>
                 </td>
             </tr>
@@ -2732,7 +2811,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:70</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:66</a></code>
 </div>
                 </td>
             </tr>
@@ -2796,7 +2875,7 @@ import { Observable, Subject } from &#x27;rxjs&#x27;;
 import { Http } from &#x27;../../utils/http&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import { ODataOptions } from &#x27;./options&#x27;;
-import { ODataPathSegments } from &#x27;../path-segments&#x27;;
+import { ODataPathSegments } from &#x27;../path&#x27;;
 import { ODataRequest } from &#x27;../request&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
 import { ODataResponse } from &#x27;../responses&#x27;;
@@ -2923,22 +3002,28 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     return this._requests.map((r) &#x3D;&gt; r.request);
   }
 
-  clone() {
-    return new ODataBatchResource(this.api, this.cloneSegments());
-  }
-
-  schema() {
-    return undefined;
-  }
-
   //#region Factory
   static factory(api: ODataApi) {
     let segments &#x3D; new ODataPathSegments();
     segments.add(PathSegmentNames.batch, $BATCH);
     return new ODataBatchResource(api, segments);
   }
+
+  clone() {
+    return new ODataBatchResource(this.api, this.cloneSegments());
+  }
   //#endregion
 
+  schema() {
+    return undefined;
+  }
+
+  /**
+   * Execute the batch request
+   * @param ctx The context for the request
+   * @param options The options of the batch request
+   * @returns The result of execute the context
+   */
   exec&lt;R&gt;(
     ctx: (batch: this) &#x3D;&gt; Observable&lt;R&gt;,
     options?: ODataOptions
@@ -3129,7 +3214,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     }
     chunks.forEach((chunk, index) &#x3D;&gt; {
       const req &#x3D; requests[index];
-      const { status, code, message } &#x3D; Http.parseResponseStatus(chunk[0]);
+      const { code, message } &#x3D; Http.parseResponseStatus(chunk[0]);
       req.onLoad(chunk.slice(1), { code, message });
     });
   }

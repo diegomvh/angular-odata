@@ -86,6 +86,18 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                         </div>
                         <ul class="links collapse " ${ isNormalMode ? 'id="classes-links"' : 'id="xs-classes-links"' }>
                             <li class="link">
+                                <a href="classes/ArithmeticFunctions.html" data-type="entity-link" >ArithmeticFunctions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ArithmeticOperators.html" data-type="entity-link" >ArithmeticOperators</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/CollectionFunctions.html" data-type="entity-link" >CollectionFunctions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ConditionalFunctions.html" data-type="entity-link" >ConditionalFunctions</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/CsdlAction.html" data-type="entity-link" >CsdlAction</a>
                             </li>
                             <li class="link">
@@ -179,7 +191,37 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/CsdlTypeDefinition.html" data-type="entity-link" >CsdlTypeDefinition</a>
                             </li>
                             <li class="link">
+                                <a href="classes/DateAndTimeFunctions.html" data-type="entity-link" >DateAndTimeFunctions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/Expression.html" data-type="entity-link" >Expression</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/Field.html" data-type="entity-link" >Field</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/Function.html" data-type="entity-link" >Function</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/GeoFunctions.html" data-type="entity-link" >GeoFunctions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/Grouping.html" data-type="entity-link" >Grouping</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/GroupingAndNavigationOperators.html" data-type="entity-link" >GroupingAndNavigationOperators</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/Lambda.html" data-type="entity-link" >Lambda</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/LambdaOperators.html" data-type="entity-link" >LambdaOperators</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/LogicalOperators.html" data-type="entity-link" >LogicalOperators</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/Navigation.html" data-type="entity-link" >Navigation</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataActionResource.html" data-type="entity-link" >ODataActionResource</a>
@@ -299,13 +341,22 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataPathSegments.html" data-type="entity-link" >ODataPathSegments</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataPathSegmentsHandler.html" data-type="entity-link" >ODataPathSegmentsHandler</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataPropertyAnnotations.html" data-type="entity-link" >ODataPropertyAnnotations</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataPropertyResource.html" data-type="entity-link" >ODataPropertyResource</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ODataQueryOptionHandler.html" data-type="entity-link" >ODataQueryOptionHandler</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ODataQueryOptions.html" data-type="entity-link" >ODataQueryOptions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ODataQueryOptionsHandler.html" data-type="entity-link" >ODataQueryOptionsHandler</a>
                             </li>
                             <li class="link">
                                 <a href="classes/ODataReferenceResource.html" data-type="entity-link" >ODataReferenceResource</a>
@@ -350,10 +401,19 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataValueResource.html" data-type="entity-link" >ODataValueResource</a>
                             </li>
                             <li class="link">
-                                <a href="classes/OptionHandler.html" data-type="entity-link" >OptionHandler</a>
+                                <a href="classes/Operator.html" data-type="entity-link" >Operator</a>
                             </li>
                             <li class="link">
                                 <a href="classes/SegmentHandler.html" data-type="entity-link" >SegmentHandler</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/StringAndCollectionFunctions.html" data-type="entity-link" >StringAndCollectionFunctions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/StringFunctions.html" data-type="entity-link" >StringFunctions</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/TypeFunctions.html" data-type="entity-link" >TypeFunctions</a>
                             </li>
                         </ul>
                     </li>
@@ -398,6 +458,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="interfaces/Parser.html" data-type="entity-link" >Parser</a>
+                            </li>
+                            <li class="link">
+                                <a href="interfaces/Renderable.html" data-type="entity-link" >Renderable</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/ResponseJson.html" data-type="entity-link" >ResponseJson</a>

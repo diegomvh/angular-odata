@@ -270,6 +270,7 @@ export interface ODataCacheEntry&lt;T&gt; {
 export abstract class ODataCache implements Cache {
   timeout: number;
   entries: Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;;
+
   constructor({ timeout &#x3D; DEFAULT_TIMEOUT }: { timeout?: number }) {
     this.timeout &#x3D; timeout;
     this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;();

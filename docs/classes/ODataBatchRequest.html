@@ -452,7 +452,7 @@ import { Observable, Subject } from &#x27;rxjs&#x27;;
 import { Http } from &#x27;../../utils/http&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import { ODataOptions } from &#x27;./options&#x27;;
-import { ODataPathSegments } from &#x27;../path-segments&#x27;;
+import { ODataPathSegments } from &#x27;../path&#x27;;
 import { ODataRequest } from &#x27;../request&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
 import { ODataResponse } from &#x27;../responses&#x27;;
@@ -579,22 +579,28 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     return this._requests.map((r) &#x3D;&gt; r.request);
   }
 
-  clone() {
-    return new ODataBatchResource(this.api, this.cloneSegments());
-  }
-
-  schema() {
-    return undefined;
-  }
-
   //#region Factory
   static factory(api: ODataApi) {
     let segments &#x3D; new ODataPathSegments();
     segments.add(PathSegmentNames.batch, $BATCH);
     return new ODataBatchResource(api, segments);
   }
+
+  clone() {
+    return new ODataBatchResource(this.api, this.cloneSegments());
+  }
   //#endregion
 
+  schema() {
+    return undefined;
+  }
+
+  /**
+   * Execute the batch request
+   * @param ctx The context for the request
+   * @param options The options of the batch request
+   * @returns The result of execute the context
+   */
   exec&lt;R&gt;(
     ctx: (batch: this) &#x3D;&gt; Observable&lt;R&gt;,
     options?: ODataOptions
@@ -785,7 +791,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
     }
     chunks.forEach((chunk, index) &#x3D;&gt; {
       const req &#x3D; requests[index];
-      const { status, code, message } &#x3D; Http.parseResponseStatus(chunk[0]);
+      const { code, message } &#x3D; Http.parseResponseStatus(chunk[0]);
       req.onLoad(chunk.slice(1), { code, message });
     });
   }

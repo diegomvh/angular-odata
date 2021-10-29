@@ -16,36 +16,74 @@ import {
 import { ODataHelper } from './helper';
 
 export class ODataApiOptions implements ApiOptions, OptionsHelper {
+  /**
+   * Default OData version
+   */
   version: ODataVersion;
+  /**
+   * Send enum as string in the request
+   */
   stringAsEnum?: boolean;
+  /**
+   * Strip metadata from the response
+   */
   stripMetadata: ODataMetadataType;
+  /**
+   * Cache fetch policy
+   */
   fetchPolicy: FetchPolicy;
-  // Http
+  /**
+   * Extra params to be sent in the request
+   */
   params: { [param: string]: string | string[] };
+  /**
+   * Extra headers to be sent in the request
+   */
   headers: { [param: string]: string | string[] };
+  /**
+   * Http request with credentials
+   */
   withCredentials?: boolean;
+  /**
+   * Send query options in the request body
+   */
   bodyQueryOptions: QueryOptionNames[];
+  /**
+   * Customize accept header with OData options
+   * @link http://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat
+   */
   accept?: {
-    //http://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat
     exponentialDecimals?: boolean;
     ieee754Compatible?: boolean;
     metadata?: ODataMetadataType;
     streaming?: boolean;
   };
   etag: {
-    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398229
+    /**
+     * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398229
+     */
     ifMatch: boolean;
-    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398230
+    /**
+     * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398230
+     */
     ifNoneMatch: boolean;
   } = { ifMatch: true, ifNoneMatch: false };
   prefer?: {
-    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398238
+    /**
+     * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398238
+     */
     maxPageSize?: number;
-    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398240
+    /**
+     * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398240
+     */
     return?: 'representation' | 'minimal';
-    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398236
+    /**
+     * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398236
+     */
     continueOnError?: boolean;
-    //http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398237
+    /**
+     * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398237
+     */
     includeAnnotations?: string;
   };
 
