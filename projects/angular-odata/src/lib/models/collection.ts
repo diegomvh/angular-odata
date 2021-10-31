@@ -433,7 +433,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent = false,
       reset = false,
       position = -1,
-    }: { silent?: boolean; reset?: boolean; position?: number } = {}
+    }: {
+      silent?: boolean;
+      reset?: boolean;
+      position?: number;
+    } = {}
   ): M | undefined {
     const key = model.key();
     let entry = this._findEntry({
@@ -453,6 +457,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
         model,
         key: model.key(),
       };
+      // Set Parent
+      if (model._parent === null && model.isNew()) model._parent = [this, null];
       // Subscribe
       this._subscribe(entry);
       // Now add
@@ -753,11 +759,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
         toRemove.push(entry.model);
       });
 
-    toRemove.forEach((m) => this._removeModel(m, { silent: silent, reset }));
+    toRemove.forEach((m) => {
+      this._removeModel(m, { silent: silent, reset });
+    });
     toAdd.forEach((m) => {
       this._addModel(m, { silent: silent, reset });
-      // Set Parent
-      m._parent = [this, null];
     });
     toSort.forEach((m) => {
       this._removeModel(m[0], { silent: true, reset });
