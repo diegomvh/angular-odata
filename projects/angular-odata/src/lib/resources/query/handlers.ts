@@ -145,10 +145,10 @@ export class ODataQueryOptionsHandler<T> {
       return this.options.expression(
         QueryOptionNames.compute,
         opts({
-          e: Expression.e<T>(),
-          and: Expression.and<T>(),
-          or: Expression.or<T>(),
-          not: Expression.not,
+          e: () => Expression.e<T>(),
+          and: () => Expression.and<T>(),
+          or: () => Expression.or<T>(),
+          not: (e: Expression<T>) => Expression.not(e),
         }) as Expression<T>
       );
     }
@@ -178,10 +178,10 @@ export class ODataQueryOptionsHandler<T> {
 
   filter(
     opts: (e: {
-      e: Expression<T>;
-      and: Expression<T>;
-      or: Expression<T>;
-      not: typeof Expression.not;
+      e: () => Expression<T>;
+      and: () => Expression<T>;
+      or: () => Expression<T>;
+      not: (e: Expression<T>) => Expression<T>;
     }) => Expression<T>
   ): Expression<T>;
   filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
@@ -191,10 +191,10 @@ export class ODataQueryOptionsHandler<T> {
       return this.options.expression(
         QueryOptionNames.filter,
         opts({
-          e: Expression.e<T>(),
-          and: Expression.and<T>(),
-          or: Expression.or<T>(),
-          not: Expression.not,
+          e: () => Expression.e<T>(),
+          and: () => Expression.and<T>(),
+          or: () => Expression.or<T>(),
+          not: (e: Expression<T>) => Expression.not(e),
         }) as Expression<T>
       );
     }
@@ -203,10 +203,10 @@ export class ODataQueryOptionsHandler<T> {
 
   orderBy(
     opts: (e: {
-      e: Expression<T>;
-      and: Expression<T>;
-      or: Expression<T>;
-      not: typeof Expression.not;
+      e: () => Expression<T>;
+      and: () => Expression<T>;
+      or: () => Expression<T>;
+      not: (e: Expression<T>) => Expression<T>;
     }) => Expression<T>
   ): Expression<T>;
   orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
@@ -216,10 +216,10 @@ export class ODataQueryOptionsHandler<T> {
       return this.options.expression(
         QueryOptionNames.orderBy,
         opts({
-          e: Expression.e<T>(),
-          and: Expression.and<T>(),
-          or: Expression.or<T>(),
-          not: Expression.not,
+          e: () => Expression.e<T>(),
+          and: () => Expression.and<T>(),
+          or: () => Expression.or<T>(),
+          not: (e: Expression<T>) => Expression.not(e),
         }) as Expression<T>
       );
     }
