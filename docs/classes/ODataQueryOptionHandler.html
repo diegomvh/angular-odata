@@ -1269,10 +1269,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       return this.options.expression(
         QueryOptionNames.compute,
         opts({
-          e: Expression.e&lt;T&gt;(),
-          and: Expression.and&lt;T&gt;(),
-          or: Expression.or&lt;T&gt;(),
-          not: Expression.not,
+          e: () &#x3D;&gt; Expression.e&lt;T&gt;(),
+          and: () &#x3D;&gt; Expression.and&lt;T&gt;(),
+          or: () &#x3D;&gt; Expression.or&lt;T&gt;(),
+          not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression.not(e),
         }) as Expression&lt;T&gt;
       );
     }
@@ -1302,10 +1302,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
 
   filter(
     opts: (e: {
-      e: Expression&lt;T&gt;;
-      and: Expression&lt;T&gt;;
-      or: Expression&lt;T&gt;;
-      not: typeof Expression.not;
+      e: () &#x3D;&gt; Expression&lt;T&gt;;
+      and: () &#x3D;&gt; Expression&lt;T&gt;;
+      or: () &#x3D;&gt; Expression&lt;T&gt;;
+      not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression&lt;T&gt;;
     }) &#x3D;&gt; Expression&lt;T&gt;
   ): Expression&lt;T&gt;;
   filter(opts: Filter&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
@@ -1315,10 +1315,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       return this.options.expression(
         QueryOptionNames.filter,
         opts({
-          e: Expression.e&lt;T&gt;(),
-          and: Expression.and&lt;T&gt;(),
-          or: Expression.or&lt;T&gt;(),
-          not: Expression.not,
+          e: () &#x3D;&gt; Expression.e&lt;T&gt;(),
+          and: () &#x3D;&gt; Expression.and&lt;T&gt;(),
+          or: () &#x3D;&gt; Expression.or&lt;T&gt;(),
+          not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression.not(e),
         }) as Expression&lt;T&gt;
       );
     }
@@ -1327,10 +1327,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
 
   orderBy(
     opts: (e: {
-      e: Expression&lt;T&gt;;
-      and: Expression&lt;T&gt;;
-      or: Expression&lt;T&gt;;
-      not: typeof Expression.not;
+      e: () &#x3D;&gt; Expression&lt;T&gt;;
+      and: () &#x3D;&gt; Expression&lt;T&gt;;
+      or: () &#x3D;&gt; Expression&lt;T&gt;;
+      not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression&lt;T&gt;;
     }) &#x3D;&gt; Expression&lt;T&gt;
   ): Expression&lt;T&gt;;
   orderBy(opts: OrderBy&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
@@ -1340,10 +1340,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       return this.options.expression(
         QueryOptionNames.orderBy,
         opts({
-          e: Expression.e&lt;T&gt;(),
-          and: Expression.and&lt;T&gt;(),
-          or: Expression.or&lt;T&gt;(),
-          not: Expression.not,
+          e: () &#x3D;&gt; Expression.e&lt;T&gt;(),
+          and: () &#x3D;&gt; Expression.and&lt;T&gt;(),
+          or: () &#x3D;&gt; Expression.or&lt;T&gt;(),
+          not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression.not(e),
         }) as Expression&lt;T&gt;
       );
     }

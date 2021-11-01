@@ -88,10 +88,16 @@ export class AppComponent {
 
   queries() {
     // Use OData Service Factory
-    let airportsService = this.factory.entity&lt;Airport&gt;(&quot;Airports&quot;);
-    let peopleService = this.factory.entity&lt;Person&gt;(&quot;People&quot;);
-
+    let airportsService = this.factory.entitySet&lt;Airport&gt;(
+      &quot;Airports&quot;,
+      &quot;Microsoft.OData.SampleService.Models.TripPin.Airport&quot;
+    );
     let airports = airportsService.entities();
+
+    // Fetch airports
+    airports.fetch().subscribe(({ entities }) =&gt; {
+      console.log(&quot;Airports: &quot;, entities);
+    });
 
     // Fetch airports with count
     airports
@@ -101,24 +107,30 @@ export class AppComponent {
       );
 
     // Fetch all airports
-    airports.fetchAll().subscribe((aports) =&gt; console.log(&quot;All: &quot;, aports));
+    airports
+      .fetchAll()
+      .subscribe((airports) =&gt; console.log(&quot;All Airports: &quot;, airports));
 
-    // Fetch airport with key
+    // Fetch airport with key and fetch again from cache
     airports
       .entity(&quot;CYYZ&quot;)
       .fetch()
       .pipe(
         switchMap(() =&gt;
+          // From Cache!
           airports.entity(&quot;CYYZ&quot;).fetch({ fetchPolicy: &quot;cache-first&quot; })
         )
-      ) // From Cache!
+      )
       .subscribe(({ entity, annots }) =&gt;
         console.log(&quot;Airport: &quot;, entity, &quot;Annotations: &quot;, annots)
       );
 
-    // Filter airports (inmutable resource)
+    // Clone airports resource and filter new resource
     airports
-      .filter({ Location: { City: { CountryRegion: &quot;United States&quot; } } })
+      .clone()
+      .query((q) =&gt;
+        q.filter({ Location: { City: { CountryRegion: &quot;United States&quot; } } })
+      )
       .fetch()
       .subscribe(({ entities, annots }) =&gt;
         console.log(
@@ -129,10 +141,10 @@ export class AppComponent {
         )
       );
 
-    // Add filter (mutable resource)
-    airports.query
-      .filter()
-      .push({ Location: { City: { Region: &quot;California&quot; } } });
+    // Change query definition of airports resource and fetch again
+    airports.query((q) =&gt;
+      q.filter().push({ Location: { City: { Region: &quot;California&quot; } } })
+    );
     airports
       .fetch()
       .subscribe(({ entities, annots }) =&gt;
@@ -144,32 +156,55 @@ export class AppComponent {
         )
       );
 
-    // Resource to JSON
-    const json = airports.toJSON();
-    console.log(json);
-    // JSON to Resource
-    const query = this.odata.fromJSON(json);
-    console.log(query);
+    // Store airports resource
+    var json = airports.toJSON();
+    // Load airports resource
+    airports = this.odata.fromJSON(json) as ODataEntitySetResource&lt;Airport&gt;;
 
-    // Remove filter (mutable resource)
-    airports.query.filter().clear();
+    // Change query definition of airports resource and fetch again
+    airports.query((q) =&gt; q.filter().clear());
     airports
       .fetch()
       .subscribe(({ entities, annots }) =&gt;
         console.log(&quot;Airports: &quot;, entities, &quot;Annotations: &quot;, annots)
       );
 
+    let peopleService = this.factory.entitySet&lt;Person&gt;(
+      &quot;People&quot;,
+      &quot;Microsoft.OData.SampleService.Models.TripPin.Person&quot;
+    );
     let people = peopleService.entities();
 
-    // Expand (inmutable resource)
+    // Clone people resource and expand and fetch
     people
-      .expand({
-        Friends: {
-          expand: { Friends: { select: [&quot;AddressInfo&quot;] } },
-        },
-        Trips: { select: [&quot;Name&quot;, &quot;Tags&quot;] },
-      })
+      .clone()
+      .query((q) =&gt;
+        q.expand({
+          Friends: {
+            expand: { Friends: { select: [&quot;AddressInfo&quot;] } },
+          },
+          Trips: { select: [&quot;Name&quot;, &quot;Tags&quot;] },
+        })
+      )
       .fetch({ withCount: true })
+      .subscribe(({ entities, annots }) =&gt;
+        console.log(
+          &quot;People with Friends and Trips: &quot;,
+          entities,
+          &quot;Annotations: &quot;,
+          annots
+        )
+      );
+
+    // Clone people resource and filter with expressions
+    people
+      .clone()
+      .query((q) =&gt;
+        q.filter(({ e }) =&gt;
+          e().eq(&quot;Emails&quot;, &quot;john&#64;example.com&quot;).or(e().eq(&quot;UserName&quot;, &quot;john&quot;))
+        )
+      )
+      .fetch()
       .subscribe(({ entities, annots }) =&gt;
         console.log(
           &quot;People with Friends and Trips: &quot;,
@@ -181,12 +216,11 @@ export class AppComponent {
 
     this.odata
       .batch(&quot;TripPin&quot;)
-      .exec((batch) =&gt;
-        forkJoin([
-          airports.fetch(),
-          airport.fetch(),
-          people.fetch({ withCount: true }),
-        ])
+      .exec(() =&gt;
+        forkJoin({
+          airports: airports.fetch(),
+          people: people.fetch({ withCount: true }),
+        })
       )
       .subscribe();
   }
