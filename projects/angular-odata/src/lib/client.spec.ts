@@ -166,7 +166,7 @@ describe('ODataClient', () => {
     );
     const func = set.function<any, any>('NS.MyFunction');
     func.query((q) => {
-      q.filter(({ e }) => e.eq('Name', 'John'));
+      q.filter(({ e }) => e().eq('Name', 'John'));
     });
     const json = func.toJSON();
     expect(json).toEqual({
