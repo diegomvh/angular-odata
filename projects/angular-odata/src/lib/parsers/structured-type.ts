@@ -251,8 +251,9 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   }) {
     this.optionsHelper = options;
     this.parser = parserForType(this.type);
-    if (this.default !== undefined)
+    if (this.default !== undefined) {
       this.default = this.deserialize(this.default, options);
+    }
   }
 
   //#region Json Schema

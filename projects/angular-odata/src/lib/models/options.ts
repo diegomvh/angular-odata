@@ -23,7 +23,7 @@ import {
   ODataQueryOptionsHandler,
 } from '../resources';
 import { ODataEntitySet, ODataStructuredType } from '../schema';
-import { Options } from '../types';
+import { Options, OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
@@ -225,7 +225,7 @@ export class ODataModelField<F> {
     this.name = name;
     this.field = field;
     this.parser = parser;
-    this.default = opts.default || this.parser.default;
+    this.default = opts.default;
     this.required = Boolean(opts.required);
     this.concurrency = Boolean(opts.concurrency);
     this.maxLength = opts.maxLength;
@@ -260,12 +260,17 @@ export class ODataModelField<F> {
   configure({
     findOptionsForType,
     concurrency,
+    options,
   }: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
     concurrency: boolean;
+    options: OptionsHelper;
   }) {
     this.meta = findOptionsForType(this.parser.type);
     if (concurrency) this.concurrency = concurrency;
+    if (this.default !== undefined) {
+      this.default = this.deserialize(this.default, options);
+    }
   }
 
   isKey() {
@@ -536,8 +541,10 @@ export class ODataModelOptions<T> {
 
   configure({
     findOptionsForType,
+    options,
   }: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
+    options: OptionsHelper;
   }) {
     if (this.base) {
       const parent = findOptionsForType(this.base) as ODataModelOptions<any>;
@@ -556,6 +563,7 @@ export class ODataModelOptions<T> {
       field.configure({
         findOptionsForType,
         concurrency,
+        options,
       });
     });
   }

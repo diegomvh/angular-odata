@@ -67,10 +67,11 @@ export class ODataStructuredType<T> {
       parent.children.push(this);
       this.parent = parent;
     }
-    this.parser.configure({ options: this.api.options, parserForType });
+    this.parser.configure({ parserForType, options: this.api.options });
     if (this.model !== undefined && this.model.options !== null) {
       this.model.meta.configure({
         findOptionsForType,
+        options: this.api.options,
       });
     }
   }
