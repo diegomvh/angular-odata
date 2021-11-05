@@ -88,9 +88,9 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     );
     this.default = field.default;
     this.maxLength = field.maxLength;
-    this.collection = field.collection !== undefined ? field.collection : false;
     this.nullable = field.nullable !== undefined ? field.nullable : true;
-    this.navigation = field.navigation !== undefined ? field.navigation : false;
+    this.collection = Boolean(field.collection);
+    this.navigation = Boolean(field.navigation);
     this.precision = field.precision;
     this.scale = field.scale;
   }

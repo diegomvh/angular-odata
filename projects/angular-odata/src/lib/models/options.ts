@@ -225,10 +225,10 @@ export class ODataModelField<F> {
     this.name = name;
     this.field = field;
     this.parser = parser;
-    this.default = opts.default;
-    this.required = Boolean(opts.required);
+    this.default = opts.default || parser.default;
+    this.required = Boolean(opts.required || !parser.nullable);
     this.concurrency = Boolean(opts.concurrency);
-    this.maxLength = opts.maxLength;
+    this.maxLength = opts.maxLength || parser.maxLength;
     this.minLength = opts.minLength;
     this.min = opts.min;
     this.max = opts.max;
@@ -268,9 +268,8 @@ export class ODataModelField<F> {
   }) {
     this.meta = findOptionsForType(this.parser.type);
     if (concurrency) this.concurrency = concurrency;
-    if (this.default !== undefined) {
+    if (this.default !== undefined)
       this.default = this.deserialize(this.default, options);
-    }
   }
 
   isKey() {
@@ -330,7 +329,8 @@ export class ODataModelField<F> {
       let errors = this.parser?.validate(value, { method, navigation }) || [];
       if (
         this.required &&
-        (value === null || (value === undefined && method !== 'modify')) // Is null or undefined without patch?
+        (value === null || (value === undefined && method !== 'modify')) && // Is null or undefined without patch?
+        !(this.computed && method === 'create') // Not (Is Computed field and create) ?
       ) {
         errors.push(`required`);
       }
