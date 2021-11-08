@@ -176,7 +176,14 @@ describe('ODataClient', () => {
       ],
       options: {
         filter: {
-          children: [{ op: 'eq', values: ['Name', 'John'], normalize: true }],
+          children: [
+            {
+              op: 'eq',
+              values: ['Name', 'John'],
+              normalize: true,
+              escape: false,
+            },
+          ],
           connector: 'and',
           negated: false,
         },

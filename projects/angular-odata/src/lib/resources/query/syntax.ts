@@ -27,23 +27,31 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
 
 function render(
   value: any,
-  aliases?: QueryCustomType[],
-  normalize?: boolean
+  {
+    aliases,
+    normalize,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    normalize?: boolean;
+    escape?: boolean;
+  } = {}
 ): string | number | boolean | null {
   if (typeof value === 'function') {
-    return render(value(syntax), aliases, normalize);
+    return render(value(syntax), { aliases, normalize, escape });
   }
   if (typeof value === 'object' && value !== null && 'render' in value) {
-    return render(value.render(aliases), aliases, normalize);
+    return render(value.render(aliases), { aliases, normalize, escape });
   }
-  return normalize ? normalizeValue(value, aliases) : value;
+  return normalize ? normalizeValue(value, { aliases, escape }) : value;
 }
 
 export class Function<T> implements Renderable {
   constructor(
     protected name: string,
     protected values: any[],
-    protected normalize: boolean = true
+    protected normalize: boolean = true,
+    protected escape: boolean = false
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -55,6 +63,7 @@ export class Function<T> implements Renderable {
       name: this.name,
       values: this.values,
       normalize: this.normalize,
+      escape: this.escape,
     };
   }
 
@@ -64,37 +73,62 @@ export class Function<T> implements Renderable {
     field = render(field);
     let params = [
       field,
-      ...values.map((v) => render(v, aliases, this.normalize)),
+      ...values.map((v) =>
+        render(v, { aliases, normalize: this.normalize, escape: this.escape })
+      ),
     ];
     return `${this.name}(${params.join(', ')})`;
   }
 }
 
 export class StringAndCollectionFunctions<T> {
-  concat(field: T, value: any, normalize?: boolean) {
-    return new Function<T>('concat', [field, value], normalize);
+  concat(
+    field: T,
+    value: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('concat', [field, value], normalize, escape);
   }
-  contains(field: T, value: any, normalize?: boolean) {
-    return new Function<T>('contains', [field, value], normalize);
+  contains(
+    field: T,
+    value: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('contains', [field, value], normalize, escape);
   }
-  endsWith(field: T, value: any, normalize?: boolean) {
-    return new Function<T>('endswith', [field, value], normalize);
+  endsWith(
+    field: T,
+    value: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('endswith', [field, value], normalize, escape);
   }
-  indexOf(field: T, value: any, normalize?: boolean) {
-    return new Function<T>('indexof', [field, value], normalize);
+  indexOf(
+    field: T,
+    value: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('indexof', [field, value], normalize, escape);
   }
-  length(value: T, normalize?: boolean) {
-    return new Function<T>('length', [value], normalize);
+  length(
+    value: T,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('length', [value], normalize, escape);
   }
-  startsWith(field: T, value: any, normalize?: boolean) {
-    return new Function<T>('startswith', [field, value], normalize);
+  startsWith(
+    field: T,
+    value: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('startswith', [field, value], normalize, escape);
   }
-  subString(field: T, start: any, length?: any, normalize?: boolean) {
+  subString(field: T, start: number, length?: number) {
     let values = [field, start];
     if (length !== undefined) {
       values.push(length);
     }
-    return new Function<T>('substring', values, normalize);
+    return new Function<T>('substring', values);
   }
 }
 
@@ -190,14 +224,25 @@ export class TypeFunctions<T> {
 }
 
 export class GeoFunctions<T> {
-  distance(value: T, point: string, normalize?: boolean) {
-    return new Function<T>('distance', [value, point], normalize);
+  distance(
+    value: T,
+    point: string,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('distance', [value, point], normalize, escape);
   }
-  intersects(value: T, polygon: string, normalize?: boolean) {
-    return new Function<T>('intersects', [value, polygon], normalize);
+  intersects(
+    value: T,
+    polygon: string,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('intersects', [value, polygon], normalize, escape);
   }
-  length(value: T, normalize?: boolean) {
-    return new Function<T>('length', [value], normalize);
+  length(
+    value: T,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Function<T>('length', [value], normalize, escape);
   }
 }
 
@@ -211,7 +256,8 @@ export class Operator<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: boolean = true
+    protected normalize: boolean = true,
+    protected escape: boolean = false
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -223,6 +269,7 @@ export class Operator<T> implements Renderable {
       op: this.op,
       values: this.values,
       normalize: this.normalize,
+      escape: this.escape,
     };
   }
 
@@ -232,8 +279,20 @@ export class Operator<T> implements Renderable {
     left = render(left);
     if (right !== undefined) {
       right = Array.isArray(right)
-        ? `(${right.map((v) => render(v, aliases, this.normalize)).join(',')})`
-        : render(right, aliases, this.normalize);
+        ? `(${right
+            .map((v) =>
+              render(v, {
+                aliases,
+                normalize: this.normalize,
+                escape: this.escape,
+              })
+            )
+            .join(',')})`
+        : render(right, {
+            aliases,
+            normalize: this.normalize,
+            escape: this.escape,
+          });
       return `${left} ${this.op} ${right}`;
     }
     return `${this.op}(${left})`;
@@ -241,59 +300,125 @@ export class Operator<T> implements Renderable {
 }
 
 export class LogicalOperators<T> {
-  eq(left: any, right: any, normalize?: boolean) {
-    return new Operator('eq', [left, right], normalize);
+  eq(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('eq', [left, right], normalize, escape);
   }
-  ne(left: any, right: any, normalize?: boolean) {
-    return new Operator('ne', [left, right], normalize);
+  ne(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('ne', [left, right], normalize, escape);
   }
-  gt(left: any, right: any, normalize?: boolean) {
-    return new Operator('gt', [left, right], normalize);
+  gt(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('gt', [left, right], normalize, escape);
   }
-  ge(left: any, right: any, normalize?: boolean) {
-    return new Operator('ge', [left, right], normalize);
+  ge(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('ge', [left, right], normalize, escape);
   }
-  lt(left: any, right: any, normalize?: boolean) {
-    return new Operator('lt', [left, right], normalize);
+  lt(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('lt', [left, right], normalize, escape);
   }
-  le(left: any, right: any, normalize?: boolean) {
-    return new Operator('le', [left, right], normalize);
+  le(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('le', [left, right], normalize, escape);
   }
-  and(left: any, right: any, normalize?: boolean) {
-    return new Operator('and', [left, right], normalize);
+  and(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('and', [left, right], normalize, escape);
   }
-  or(left: any, right: any, normalize?: boolean) {
-    return new Operator('or', [left, right], normalize);
+  or(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('or', [left, right], normalize, escape);
   }
-  not(value: any, normalize?: boolean) {
-    return new Operator<T>('not', [value], normalize);
+  not(
+    value: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator<T>('not', [value], normalize, escape);
   }
-  has(left: any, right: any, normalize?: boolean) {
-    return new Operator('has', [left, right], normalize);
+  has(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('has', [left, right], normalize, escape);
   }
-  in(left: any, right: any, normalize?: boolean) {
-    return new Operator('in', [left, right], normalize);
+  in(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('in', [left, right], normalize, escape);
   }
 }
 
 export class ArithmeticOperators<T> {
-  add(left: any, right: any, normalize?: boolean) {
-    return new Operator<T>('add', [left, right], normalize);
+  add(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator<T>('add', [left, right], normalize, escape);
   }
-  sub(left: any, right: any, normalize?: boolean) {
-    return new Operator('sub', [left, right], normalize);
+  sub(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('sub', [left, right], normalize, escape);
   }
-  mul(left: any, right: any, normalize?: boolean) {
-    return new Operator('mul', [left, right], normalize);
+  mul(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('mul', [left, right], normalize, escape);
   }
-  div(left: any, right: any, normalize?: boolean) {
-    return new Operator('div', [left, right], normalize);
+  div(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('div', [left, right], normalize, escape);
   }
-  mod(left: any, right: any, normalize?: boolean) {
-    return new Operator('mod', [left, right], normalize);
+  mod(
+    left: any,
+    right: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('mod', [left, right], normalize, escape);
   }
-  neg(value: any, normalize?: boolean) {
-    return new Operator('-', [value], normalize);
+  neg(
+    value: any,
+    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
+  ) {
+    return new Operator('-', [value], normalize, escape);
   }
 }
 
@@ -311,7 +436,7 @@ export class Grouping<T> implements Renderable {
   }
 
   render(aliases?: QueryCustomType[]): string {
-    return `(${render(this.group, aliases)})`;
+    return `(${render(this.group, { aliases })})`;
   }
 }
 
@@ -330,7 +455,7 @@ export class Navigation<T, N> implements Renderable {
   }
 
   render(aliases?: QueryCustomType[]): string {
-    return `${this.field}/${render(this.value, aliases)}`;
+    return `${this.field}/${render(this.value, { aliases })}`;
   }
 }
 
@@ -348,9 +473,10 @@ export class Lambda<T> extends Operator<T> {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: boolean = true
+    protected normalize: boolean = true,
+    protected escape: boolean = false
   ) {
-    super(op, values, normalize);
+    super(op, values, normalize, escape);
   }
 
   get [Symbol.toStringTag]() {
@@ -360,9 +486,11 @@ export class Lambda<T> extends Operator<T> {
   render(aliases?: QueryCustomType[]): string {
     let [left, right] = this.values;
 
-    left = render(left, aliases);
+    left = render(left, { aliases });
     let alias = left.split('/').pop().toLowerCase();
-    return `${left}/${this.op}(${alias}:${alias}/${render(right, aliases)})`;
+    return `${left}/${this.op}(${alias}:${alias}/${render(right, {
+      aliases,
+    })})`;
   }
 }
 

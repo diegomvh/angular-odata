@@ -629,7 +629,7 @@ describe('filter', () => {
     it("should escape the `'` character in strings", () => {
       const filter = { StringProp: "O'Dimm" };
       const expected = "?$filter=StringProp eq 'O''Dimm'";
-      const actual = buildQuery({ filter });
+      const actual = buildQuery({ filter, escape: true });
       expect(actual).toEqual(expected);
     });
 

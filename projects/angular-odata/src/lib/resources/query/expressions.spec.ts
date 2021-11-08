@@ -160,7 +160,7 @@ describe('OData filter builder', () => {
             const compareString1 = (f<any>() as any)[operator](
               'CompanyName',
               'OtherCompanyName',
-              false
+              { normalize: false }
             );
 
             expect(compareNumber.render()).toBe(`Id ${operator} 1`);
@@ -282,7 +282,7 @@ describe('OData filter builder', () => {
           const func = f<any>().eq(
             (x) => x.trim('CompanyName'),
             'CompanyName',
-            false
+            { normalize: false }
           );
 
           expect(func.render()).toBe('trim(CompanyName) eq CompanyName');
@@ -323,11 +323,9 @@ describe('OData filter builder', () => {
         it('concat', () => {
           const func = f<any>().eq(
             (x) =>
-              x.concat(
-                ((y: any) => y.concat('City', ', ')) as any,
-                'Country',
-                false
-              ),
+              x.concat(((y: any) => y.concat('City', ', ')) as any, 'Country', {
+                normalize: false,
+              }),
             'Berlin, Germany'
           );
 

@@ -139,6 +139,7 @@ export default function <T>({
   action,
   func,
   aliases,
+  escape,
 }: Partial<QueryOptions<T>> = {}) {
   const [path, params] = buildPathAndQuery({
     select,
@@ -156,6 +157,7 @@ export default function <T>({
     action,
     func,
     aliases,
+    escape,
   });
 
   return buildUrl(path, params);
@@ -599,7 +601,7 @@ export function normalizeValue(
   { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
 ): any {
   if (typeof value === 'string') {
-    return `'${escapeIllegalChars(value)}'`;
+    return escape ? `'${escapeIllegalChars(value)}'` : `'${value}'`;
   } else if (value instanceof Date) {
     return value.toISOString();
   } else if (typeof value === 'number') {
