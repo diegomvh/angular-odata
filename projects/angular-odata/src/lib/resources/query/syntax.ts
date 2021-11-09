@@ -73,7 +73,6 @@ export class Function<T> implements Renderable {
       name: this.name,
       values: this.values,
       normalize: this.normalize,
-      escape: this.escape,
     };
   }
 
