@@ -16,12 +16,16 @@ export type ODataSegment = {
 };
 
 function pathSegmentsBuilder(
-  segment: ODataSegment
+  segment: ODataSegment,
+  escape: boolean = false
 ): [string, { [name: string]: any }] {
   if (segment.name === PathSegmentNames.function) {
     let [path, params] = segment.parameters
-      ? buildPathAndQuery({ func: { [segment.path]: segment.parameters } })
-      : buildPathAndQuery({ func: segment.path });
+      ? buildPathAndQuery({
+          func: { [segment.path]: segment.parameters },
+          escape,
+        })
+      : buildPathAndQuery({ func: segment.path, escape });
     if (path.startsWith(PATH_SEPARATOR)) {
       path = path.slice(1);
     }
@@ -37,7 +41,7 @@ function pathSegmentsBuilder(
     ) {
       key = raw(key);
     }
-    let [path, params] = key ? buildPathAndQuery({ key }) : ['', {}];
+    let [path, params] = key ? buildPathAndQuery({ key, escape }) : ['', {}];
     return [segment.path + path, params];
   }
 }
@@ -49,10 +53,10 @@ export class ODataPathSegments {
     this._segments = segments || [];
   }
 
-  pathAndParams(): [string, { [name: string]: any }] {
+  pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
     const result = this._segments.reduce(
       (acc, segment) => {
-        const [path, params] = pathSegmentsBuilder(segment);
+        const [path, params] = pathSegmentsBuilder(segment, escape);
         acc.paths.push(path);
         acc.params = Object.assign(acc.params, params);
         return acc;

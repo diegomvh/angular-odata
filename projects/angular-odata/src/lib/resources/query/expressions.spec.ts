@@ -1,5 +1,4 @@
 import { Expression } from './expressions';
-import { StringFunctions } from './syntax';
 
 describe('OData filter builder', () => {
   interface Pet {
@@ -288,7 +287,7 @@ describe('OData filter builder', () => {
           const func = e<any>().eq(
             (x) => x.trim('CompanyName'),
             'CompanyName',
-            { normalize: false }
+            false
           );
 
           expect(func.render()).toBe('trim(CompanyName) eq CompanyName');
@@ -329,9 +328,11 @@ describe('OData filter builder', () => {
         it('concat', () => {
           const func = e<any>().eq(
             (x) =>
-              x.concat(((y: any) => y.concat('City', ', ')) as any, 'Country', {
-                normalize: false,
-              }),
+              x.concat(
+                ((y: any) => y.concat('City', ', ')) as any,
+                'Country',
+                false
+              ),
             'Berlin, Germany'
           );
 

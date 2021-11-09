@@ -116,9 +116,9 @@ export abstract class ODataResource<T> {
       : otherPath === selfPath && Types.isEqual(selfParams, otherParams);
   }
 
-  pathAndParams(): [string, { [name: string]: any }] {
-    const [spath, sparams] = this.pathSegments.pathAndParams();
-    const [, qparams] = this.queryOptions.pathAndParams();
+  pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
+    const [spath, sparams] = this.pathSegments.pathAndParams(escape);
+    const [, qparams] = this.queryOptions.pathAndParams(escape);
     return [spath, { ...sparams, ...qparams }];
   }
 

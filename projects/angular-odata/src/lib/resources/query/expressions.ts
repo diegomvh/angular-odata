@@ -73,9 +73,15 @@ export class Expression<T> implements Renderable {
     return this._children.length;
   }
 
-  render(aliases?: QueryCustomType[]): string {
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+  } = {}): string {
     let content = this._children
-      .map((n) => n.render(aliases))
+      .map((n) => n.render({ aliases, escape }))
       .join(` ${this._connector} `);
     if (this._negated) {
       content = `not (${content})`;
@@ -157,92 +163,48 @@ export class Expression<T> implements Renderable {
     );
   }
 
-  eq(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.eq(left, right, { normalize, escape }));
+  eq(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.eq(left, right, normalize));
   }
 
-  ne(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.ne(left, right, { normalize, escape }));
+  ne(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.ne(left, right, normalize));
   }
 
-  gt(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.gt(left, right, { normalize, escape }));
+  gt(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.gt(left, right, normalize));
   }
 
-  ge(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.ge(left, right, { normalize, escape }));
+  ge(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.ge(left, right, normalize));
   }
 
-  lt(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.lt(left, right, { normalize, escape }));
+  lt(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.lt(left, right, normalize));
   }
 
-  le(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.le(left, right, { normalize, escape }));
+  le(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.le(left, right, normalize));
   }
 
-  has(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.has(left, right, { normalize, escape }));
+  has(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.has(left, right, normalize));
   }
 
-  in(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.in(left, right, { normalize, escape }));
+  in(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.in(left, right, normalize));
   }
 
-  contains(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.contains(left, right, { normalize, escape }));
+  contains(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.contains(left, right, normalize));
   }
 
-  startsWith(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.startsWith(left, right, { normalize, escape }));
+  startsWith(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.startsWith(left, right, normalize));
   }
 
-  endsWith(
-    left: Field<T>,
-    right: any,
-    { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
-  ) {
-    return this._add(syntax.endsWith(left, right, { normalize, escape }));
+  endsWith(left: Field<T>, right: any, normalize?: boolean) {
+    return this._add(syntax.endsWith(left, right, normalize));
   }
 
   any<N>(

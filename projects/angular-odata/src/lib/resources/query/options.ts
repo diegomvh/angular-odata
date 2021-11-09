@@ -36,7 +36,7 @@ export class ODataQueryOptions<T> {
   }
 
   // Params
-  pathAndParams(): [string, { [name: string]: any }] {
+  pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
     let aliases: QueryCustomType[] = [];
     let options = [
       QueryOptionNames.select,
@@ -60,7 +60,7 @@ export class ODataQueryOptions<T> {
         return Object.assign(acc, { [key]: value });
       }, {});
 
-    return buildPathAndQuery<any>({ ...options, aliases });
+    return buildPathAndQuery<any>({ ...options, aliases, escape });
   }
 
   toString(): string {
