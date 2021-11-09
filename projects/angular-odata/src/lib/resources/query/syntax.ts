@@ -89,6 +89,7 @@ export class StringAndCollectionFunctions<T> {
   ) {
     return new Function<T>('concat', [field, value], normalize, escape);
   }
+
   contains(
     field: T,
     value: any,
@@ -96,6 +97,7 @@ export class StringAndCollectionFunctions<T> {
   ) {
     return new Function<T>('contains', [field, value], normalize, escape);
   }
+
   endsWith(
     field: T,
     value: any,
@@ -103,6 +105,7 @@ export class StringAndCollectionFunctions<T> {
   ) {
     return new Function<T>('endswith', [field, value], normalize, escape);
   }
+
   indexOf(
     field: T,
     value: any,
@@ -110,12 +113,14 @@ export class StringAndCollectionFunctions<T> {
   ) {
     return new Function<T>('indexof', [field, value], normalize, escape);
   }
+
   length(
     value: T,
     { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
   ) {
     return new Function<T>('length', [value], normalize, escape);
   }
+
   startsWith(
     field: T,
     value: any,
@@ -123,6 +128,7 @@ export class StringAndCollectionFunctions<T> {
   ) {
     return new Function<T>('startswith', [field, value], normalize, escape);
   }
+
   subString(field: T, start: number, length?: number) {
     let values = [field, start];
     if (length !== undefined) {
@@ -224,25 +230,30 @@ export class TypeFunctions<T> {
 }
 
 export class GeoFunctions<T> {
-  distance(
+  geoDistance(
     value: T,
     point: string,
     { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
   ) {
-    return new Function<T>('distance', [value, point], normalize, escape);
+    return new Function<T>('geo.distance', [value, point], normalize, escape);
   }
-  intersects(
+  geoIntersects(
     value: T,
     polygon: string,
     { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
   ) {
-    return new Function<T>('intersects', [value, polygon], normalize, escape);
+    return new Function<T>(
+      'geo.intersects',
+      [value, polygon],
+      normalize,
+      escape
+    );
   }
-  length(
-    value: T,
+  geoLength(
+    line: T,
     { normalize, escape }: { normalize?: boolean; escape?: boolean } = {}
   ) {
-    return new Function<T>('length', [value], normalize, escape);
+    return new Function<T>('geo.length', [line], normalize, escape);
   }
 }
 

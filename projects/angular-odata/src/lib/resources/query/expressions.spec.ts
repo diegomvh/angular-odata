@@ -30,7 +30,7 @@ describe('OData filter builder', () => {
     Pets?: Pet[];
   }
 
-  const f = Expression.e;
+  const e = Expression.e;
   const and = Expression.and;
   const or = Expression.or;
   const not = Expression.not;
@@ -52,32 +52,32 @@ describe('OData filter builder', () => {
 
     describe('value types', () => {
       it('string', () => {
-        const filter = f<Person>().eq('Name', 'test');
+        const filter = e<Person>().eq('Name', 'test');
 
         expect(filter.render()).toBe("Name eq 'test'");
       });
 
       it('number', () => {
-        const filter = f<Person>().eq('Age', 200.55);
+        const filter = e<Person>().eq('Age', 200.55);
 
         expect(filter.render()).toBe('Age eq 200.55');
       });
 
       it('boolean', () => {
-        const filter = f<Person>().eq('IsCorrect', true);
+        const filter = e<Person>().eq('IsCorrect', true);
 
         expect(filter.render()).toBe('IsCorrect eq true');
       });
 
       it('null', () => {
-        const filter = f<Person>().eq('EditedOn', null);
+        const filter = e<Person>().eq('EditedOn', null);
 
         expect(filter.render()).toBe('EditedOn eq null');
       });
 
       it('Date', () => {
         const date = '1995-05-22T21:00:00.000Z';
-        const filter = f<Person>().gt('CreatedOn', new Date(date));
+        const filter = e<Person>().gt('CreatedOn', new Date(date));
 
         expect(filter.render()).toBe(`CreatedOn gt ${date}`);
       });
@@ -149,15 +149,15 @@ describe('OData filter builder', () => {
       describe('simple comparision', () => {
         comparators.forEach((operator) => {
           it(operator, () => {
-            const compareNumber = (f<any>() as any)[operator]('Id', 1);
+            const compareNumber = (e<any>() as any)[operator]('Id', 1);
 
-            const compareString = (f<any>() as any)[operator](
+            const compareString = (e<any>() as any)[operator](
               'CompanyName',
               'Google'
             );
 
             // skip value normalisation
-            const compareString1 = (f<any>() as any)[operator](
+            const compareString1 = (e<any>() as any)[operator](
               'CompanyName',
               'OtherCompanyName',
               { normalize: false }
@@ -178,7 +178,7 @@ describe('OData filter builder', () => {
         describe('simple comparision functions', () => {
           functions.forEach((func) => {
             it(func, () => {
-              const compareNumber = (f<any>() as any)[func]('Name', 'a');
+              const compareNumber = (e<any>() as any)[func]('Name', 'a');
 
               expect(compareNumber.render()).toBe(
                 `${func.toLowerCase()}(Name, 'a')`
@@ -192,7 +192,7 @@ describe('OData filter builder', () => {
     describe('multiple compare', () => {
       describe('base condition f.or().eq(...)', () => {
         it('and', () => {
-          const compare = f<any>()
+          const compare = e<any>()
             .eq('Id', 1)
             .ne('Type/Id', 3)
             .startsWith('Name', 'a');
@@ -217,9 +217,9 @@ describe('OData filter builder', () => {
       describe('combination f().and(f().eq(...))', () => {
         it('and', () => {
           const compare = or<any>()
-            .and(f<any>().eq('Id', 1))
-            .and(f<any>().ne('Type/Id', 3))
-            .and(f<any>().contains('Name', 'a'));
+            .and(e<any>().eq('Id', 1))
+            .and(e<any>().ne('Type/Id', 3))
+            .and(e<any>().contains('Name', 'a'));
 
           expect(compare.render()).toBe(
             "Id eq 1 and Type/Id ne 3 and contains(Name, 'a')"
@@ -227,10 +227,10 @@ describe('OData filter builder', () => {
         });
 
         it('or', () => {
-          const compare = f<any>()
-            .or(f<any>().eq('Id', 1))
-            .or(f<any>().ne('Type/Id', 3))
-            .or(f<any>().contains('Name', 'a'));
+          const compare = e<any>()
+            .or(e<any>().eq('Id', 1))
+            .or(e<any>().ne('Type/Id', 3))
+            .or(e<any>().contains('Name', 'a'));
 
           expect(compare.render()).toBe(
             "Id eq 1 or Type/Id ne 3 or contains(Name, 'a')"
@@ -238,10 +238,10 @@ describe('OData filter builder', () => {
         });
 
         it('not', () => {
-          const compare = f<any>()
-            .not(f<any>().eq('Id', 1))
-            .not(f<any>().ne('Type/Id', 3))
-            .not(f<any>().contains('Name', 'a'));
+          const compare = e<any>()
+            .not(e<any>().eq('Id', 1))
+            .not(e<any>().ne('Type/Id', 3))
+            .not(e<any>().contains('Name', 'a'));
 
           expect(compare.render()).toBe(
             "not (Id eq 1) and not (Type/Id ne 3) and not (contains(Name, 'a'))"
@@ -250,14 +250,20 @@ describe('OData filter builder', () => {
       });
 
       describe('canonical functions', () => {
+        it('startsWith', () => {
+          const func = e<any>().startsWith('CompanyName', '/3/');
+
+          expect(func.render()).toBe("startswith(CompanyName, '/3/')");
+        });
+
         it('length', () => {
-          const func = f<any>().eq((x) => x.length('CompanyName'), 19);
+          const func = e<any>().eq((x) => x.length('CompanyName'), 19);
 
           expect(func.render()).toBe('length(CompanyName) eq 19');
         });
 
         it('toTower', () => {
-          const func = f<any>().eq(
+          const func = e<any>().eq(
             (x) => x.toLower('CompanyName'),
             'alfreds futterkiste'
           );
@@ -268,7 +274,7 @@ describe('OData filter builder', () => {
         });
 
         it('toUpper', () => {
-          const func = f<any>().eq(
+          const func = e<any>().eq(
             (x) => x.toUpper('CompanyName'),
             'ALFREDS FUTTERKISTE'
           );
@@ -279,7 +285,7 @@ describe('OData filter builder', () => {
         });
 
         it('trim', () => {
-          const func = f<any>().eq(
+          const func = e<any>().eq(
             (x) => x.trim('CompanyName'),
             'CompanyName',
             { normalize: false }
@@ -289,7 +295,7 @@ describe('OData filter builder', () => {
         });
 
         it('indexOf', () => {
-          const func1 = f<any>().eq(
+          const func1 = e<any>().eq(
             (x) => x.indexOf('CompanyName', 'lfreds'),
             1
           );
@@ -299,14 +305,14 @@ describe('OData filter builder', () => {
         });
 
         it('substring', () => {
-          const func1 = f<any>().eq(
+          const func1 = e<any>().eq(
             (x) => x.subString('CompanyName', 1),
             'lfreds Futterkiste'
           );
           const expectedString1 =
             "substring(CompanyName, 1) eq 'lfreds Futterkiste'";
 
-          const func3 = f<any>().eq(
+          const func3 = e<any>().eq(
             (x) => x.subString('CompanyName', 1, 2),
             'lf'
           );
@@ -321,7 +327,7 @@ describe('OData filter builder', () => {
         // * f().eq(x => x.substring('CompanyName', 1), 'lfreds Futterkiste');
 
         it('concat', () => {
-          const func = f<any>().eq(
+          const func = e<any>().eq(
             (x) =>
               x.concat(((y: any) => y.concat('City', ', ')) as any, 'Country', {
                 normalize: false,
