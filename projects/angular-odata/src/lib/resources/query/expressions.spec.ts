@@ -159,7 +159,7 @@ describe('OData filter builder', () => {
             const compareString1 = (e<any>() as any)[operator](
               'CompanyName',
               'OtherCompanyName',
-              { normalize: false }
+              false
             );
 
             expect(compareNumber.render()).toBe(`Id ${operator} 1`);

@@ -244,8 +244,7 @@ export class Operator<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: boolean = true,
-    protected escape: boolean = false
+    protected normalize: boolean = true
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -257,7 +256,6 @@ export class Operator<T> implements Renderable {
       op: this.op,
       values: this.values,
       normalize: this.normalize,
-      escape: this.escape,
     };
   }
 
@@ -413,8 +411,7 @@ export class Lambda<T> extends Operator<T> {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: boolean = true,
-    protected escape: boolean = false
+    protected normalize: boolean = true
   ) {
     super(op, values, normalize);
   }
