@@ -181,7 +181,6 @@ describe('ODataClient', () => {
               op: 'eq',
               values: ['Name', 'John'],
               normalize: true,
-              escape: false,
             },
           ],
           connector: 'and',
