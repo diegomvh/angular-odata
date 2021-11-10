@@ -669,7 +669,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  get(path: number): M;
+  get(path: number): M | undefined;
   get(path: string | string[]): any;
   get(path: any): any {
     const Model = this._model;
@@ -955,6 +955,22 @@ export class ODataCollection<T, M extends ODataModel<T>>
   last(): M | undefined {
     const models = this.models();
     return models[models.length - 1];
+  }
+
+  next(model: M): M | undefined {
+    const index = this.indexOf(model);
+    if (index >= 0) {
+      return this.get(index + 1);
+    }
+    return undefined;
+  }
+
+  prev(model: M): M | undefined {
+    const index = this.indexOf(model);
+    if (index >= 0) {
+      return this.get(index - 1);
+    }
+    return undefined;
   }
 
   every(predicate: (m: M, index: number) => boolean): boolean {
