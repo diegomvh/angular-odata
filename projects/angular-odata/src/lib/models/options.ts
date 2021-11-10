@@ -1145,10 +1145,12 @@ export class ODataModelOptions<T> {
     entity: Partial<T> | { [name: string]: any },
     {
       reset = false,
+      reparent = false,
       silent = false,
-    }: { reset?: boolean; silent?: boolean } = {}
+    }: { reset?: boolean; reparent?: boolean; silent?: boolean } = {}
   ) {
-    self._resetting = reset;
+    self._reset = reset;
+    self._reparent = reparent;
     self._silent = silent;
 
     const changes: string[] = [];
@@ -1163,19 +1165,13 @@ export class ODataModelOptions<T> {
           include_navigation: true,
         }).find(
           (field: ODataModelField<any>) =>
-            (self._resetting && field.field === key) || field.name === key
+            (self._reset && field.field === key) || field.name === key
         );
 
         if (field !== undefined) {
           // Delegated to private setter
           if (this._set(self, field, value)) {
             changes.push(field.name);
-            if (
-              ODataModelOptions.isCollection(value) ||
-              ODataModelOptions.isModel(value)
-            )
-              // Set Parent
-              value._parent = [self, field];
           }
         } else {
           // Basic assignment
@@ -1187,13 +1183,14 @@ export class ODataModelOptions<T> {
 
     if (!self._silent && changes.length > 0) {
       self.events$.emit(
-        new ODataModelEvent(self._resetting ? 'reset' : 'update', {
+        new ODataModelEvent(self._reset ? 'reset' : 'update', {
           model: self,
           options: { changes },
         })
       );
     }
-    self._resetting = false;
+    self._reset = false;
+    self._reparent = false;
     self._silent = false;
   }
 
@@ -1209,24 +1206,14 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     field: ODataModelField<F>,
     collection: ODataCollection<F, ODataModel<F>>,
-    value: ODataCollection<F, ODataModel<F>> | T[] | { [name: string]: any }[]
+    value: T[] | { [name: string]: any }[]
   ) {
-    if (
-      ODataModelOptions.isCollection(value) &&
-      collection.equals(value as ODataCollection<F, ODataModel<F>>)
-    ) {
-      return false;
-    }
-    if (ODataModelOptions.isCollection(value)) {
-      value = (value as ODataCollection<any, ODataModel<any>>).toEntities(
-        INCLUDE_DEEP
-      );
-    }
     collection._annotations = field.annotationsFactory(
       self.annots()
     ) as ODataEntitiesAnnotations;
     collection.assign(value as T[] | { [name: string]: any }[], {
-      reset: self._resetting,
+      reset: self._reset,
+      reparent: self._reparent,
       silent: self._silent,
     });
     return collection.hasChanged();
@@ -1235,22 +1222,14 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     field: ODataModelField<F>,
     model: ODataModel<F>,
-    value: ODataModel<F> | F | { [name: string]: any }
+    value: F | { [name: string]: any }
   ) {
-    if (
-      ODataModelOptions.isModel(value) &&
-      model.equals(value as ODataModel<F>)
-    ) {
-      return false;
-    }
-    if (ODataModelOptions.isModel(value)) {
-      value = (value as ODataModel<F>).toEntity(INCLUDE_DEEP);
-    }
     model._annotations = field.annotationsFactory(
       self.annots()
     ) as ODataEntityAnnotations;
     model.assign(value as F | { [name: string]: any }, {
-      reset: self._resetting,
+      reset: self._reset,
+      reparent: self._reparent,
       silent: self._silent,
     });
     return model.hasChanged();
@@ -1299,22 +1278,45 @@ export class ODataModelOptions<T> {
       changed = currentModel !== value;
       this._unsubscribe(self, relation);
     } else if (ODataModelOptions.isCollection(currentModel)) {
-      changed = this.updateCollection<F>(
-        self,
-        field,
-        currentModel as ODataCollection<F, ODataModel<F>>,
-        value as
-          | ODataCollection<F, ODataModel<F>>
-          | T[]
-          | { [name: string]: any }[]
-      );
+      if (ODataModelOptions.isCollection(value)) {
+        if (
+          (currentModel as ODataCollection<F, ODataModel<F>>).equals(
+            value as ODataCollection<F, ODataModel<F>>
+          )
+        ) {
+          changed = false;
+        }
+        this._unsubscribe(self, relation);
+        relation.model = value as ODataCollection<F, ODataModel<F>>;
+        this._subscribe(self, relation);
+        if (self._reparent) relation.model._parent = [self, field];
+        changed = true;
+      } else if (Types.isArray(value)) {
+        changed = this.updateCollection<F>(
+          self,
+          field,
+          currentModel as ODataCollection<F, ODataModel<F>>,
+          value as T[] | { [name: string]: any }[]
+        );
+      }
     } else if (ODataModelOptions.isModel(currentModel)) {
-      changed = this.updateModel<F>(
-        self,
-        field,
-        currentModel as ODataModel<F>,
-        value as ODataModel<F> | F | { [name: string]: any }
-      );
+      if (ODataModelOptions.isModel(value)) {
+        if ((currentModel as ODataModel<F>).equals(value as ODataModel<F>)) {
+          changed = false;
+        }
+        this._unsubscribe(self, relation);
+        relation.model = value as ODataModel<F>;
+        this._subscribe(self, relation);
+        if (self._reparent) relation.model._parent = [self, field];
+        changed = true;
+      } else if (Types.isPlainObject(value)) {
+        changed = this.updateModel<F>(
+          self,
+          field,
+          currentModel as ODataModel<F>,
+          value as F | { [name: string]: any }
+        );
+      }
     } else {
       relation.model =
         ODataModelOptions.isCollection(value) ||
@@ -1323,10 +1325,11 @@ export class ODataModelOptions<T> {
           : field.modelCollectionFactory<T, F>({
               parent: self,
               value: value,
-              reset: self._resetting,
+              reset: self._reset,
             });
       changed = true;
       this._subscribe(self, relation);
+      if (self._reparent) relation.model._parent = [self, field];
     }
     if (!ODataModelOptions.isCollection(relation.model)) {
       var ref = field.meta?.resolveReferential(relation.model, field);
@@ -1337,7 +1340,7 @@ export class ODataModelOptions<T> {
       }
     }
     relation.state =
-      self._resetting || !changed
+      self._reset || !changed
         ? ODataModelState.Unchanged
         : ODataModelState.Changed;
     if (!self._silent && changed) {
@@ -1373,7 +1376,7 @@ export class ODataModelOptions<T> {
     });
     const currentValue = attrs[field];
     changed = !Types.isEqual(currentValue, value);
-    if (self._resetting) {
+    if (self._reset) {
       delete self._changes[field];
       self._attributes[field] = value;
     } else if (Types.isEqual(value, self._attributes[field])) {

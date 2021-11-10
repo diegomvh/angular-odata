@@ -48,7 +48,8 @@ export class ODataModel<T> {
   _relations: { [name: string]: ODataModelRelation<any> } = {};
   _resource?: ODataModelResource<T>;
   _annotations!: ODataEntityAnnotations;
-  _resetting: boolean = false;
+  _reset: boolean = false;
+  _reparent: boolean = false;
   _silent: boolean = false;
   _meta: ODataModelOptions<T>;
   // Events
@@ -342,10 +343,11 @@ export class ODataModel<T> {
     entity: Partial<T> | { [name: string]: any },
     {
       reset = false,
+      reparent = false,
       silent = false,
-    }: { reset?: boolean; silent?: boolean } = {}
+    }: { reset?: boolean; reparent?: boolean; silent?: boolean } = {}
   ) {
-    return this._meta.assign(this, entity, { reset, silent });
+    return this._meta.assign(this, entity, { reset, silent, reparent });
   }
 
   clone<M extends ODataModel<T>>() {

@@ -432,10 +432,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       reset = false,
+      reparent = false,
       position = -1,
     }: {
       silent?: boolean;
       reset?: boolean;
+      reparent?: boolean;
       position?: number;
     } = {}
   ): M | undefined {
@@ -458,7 +460,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         key: model.key(),
       };
       // Set Parent
-      if (model._parent === null && model.isNew()) model._parent = [this, null];
+      if (reparent) model._parent = [this, null];
       // Subscribe
       this._subscribe(entry);
       // Now add
@@ -480,11 +482,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
     {
       silent = false,
       reset = false,
+      reparent = false,
       position = -1,
-    }: { silent?: boolean; reset?: boolean; position?: number } = {}
+    }: {
+      silent?: boolean;
+      reset?: boolean;
+      reparent?: boolean;
+      position?: number;
+    } = {}
   ) {
     if (position < 0) position = this._bisect(model);
-    const added = this._addModel(model, { silent, reset, position });
+    const added = this._addModel(model, { silent, reset, position, reparent });
     if (!silent && added !== undefined) {
       this.events$.emit(
         new ODataModelEvent('update', {
@@ -499,19 +507,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
     model: M,
     {
       silent = false,
+      reparent = false,
       server = true,
       position = -1,
-    }: { silent?: boolean; server?: boolean; position?: number } = {}
+    }: {
+      silent?: boolean;
+      reparent?: boolean;
+      server?: boolean;
+      position?: number;
+    } = {}
   ): Observable<this> {
     if (server) {
       return this.addReference(model).pipe(
         map((model) => {
-          this.addModel(model, { silent, position, reset: true });
+          this.addModel(model, { silent, position, reparent, reset: true });
           return this;
         })
       );
     } else {
-      this.addModel(model, { silent, position });
+      this.addModel(model, { silent, position, reparent });
       return of(this);
     }
   }
@@ -642,7 +656,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         if (entry.model.hasChanged()) toMerge.push(model);
       } else {
         // Add
-        this._addModel(value);
+        this._addModel(value, { reparent: true });
         toAdd.push(model);
       }
       this.events$.emit(
@@ -692,8 +706,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     objects: Partial<T>[] | { [name: string]: any }[] | M[],
     {
       reset = false,
+      reparent = false,
       silent = false,
-    }: { reset?: boolean; silent?: boolean } = {}
+    }: { reset?: boolean; reparent?: boolean; silent?: boolean } = {}
   ) {
     const Model = this._model;
 
@@ -760,14 +775,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
 
     toRemove.forEach((m) => {
-      this._removeModel(m, { silent: silent, reset });
+      this._removeModel(m, { silent, reset });
     });
     toAdd.forEach((m) => {
-      this._addModel(m, { silent: silent, reset });
+      this._addModel(m, { silent, reset, reparent });
     });
     toSort.forEach((m) => {
       this._removeModel(m[0], { silent: true, reset });
-      this._addModel(m[0], { silent: true, reset, position: m[1] });
+      this._addModel(m[0], { silent: true, reset, position: m[1], reparent });
     });
 
     if (
