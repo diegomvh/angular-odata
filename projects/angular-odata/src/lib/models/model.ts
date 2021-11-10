@@ -712,23 +712,18 @@ export class ODataModel<T> {
     return 'Model';
   }
 
-  next(): ODataModel<T> | undefined {
-    if (
-      this._parent !== null &&
+  collection() {
+    return this._parent !== null &&
       ODataModelOptions.isCollection(this._parent[0])
-    ) {
-      return (this._parent[0] as ODataCollection<T, ODataModel<T>>).next(this);
-    }
-    return undefined;
+      ? (this._parent[0] as ODataCollection<T, ODataModel<T>>)
+      : undefined;
+  }
+
+  next(): ODataModel<T> | undefined {
+    return this.collection()?.next(this);
   }
 
   prev(): ODataModel<T> | undefined {
-    if (
-      this._parent !== null &&
-      ODataModelOptions.isCollection(this._parent[0])
-    ) {
-      return (this._parent[0] as ODataCollection<T, ODataModel<T>>).prev(this);
-    }
-    return undefined;
+    return this.collection()?.prev(this);
   }
 }
