@@ -231,6 +231,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       });
   }
 
+  toJSON() {
+    return this.toEntities();
+  }
+
   hasChanged({ include_navigation }: { include_navigation?: boolean } = {}) {
     return (
       this._entries.some((e) => e.state !== ODataModelState.Unchanged) ||

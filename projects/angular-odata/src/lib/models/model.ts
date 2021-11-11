@@ -231,6 +231,7 @@ export class ODataModel<T> {
   protected defaults() {
     return this._meta.defaults() || {};
   }
+
   toEntity({
     client_id = false,
     include_navigation = false,
@@ -263,6 +264,10 @@ export class ODataModel<T> {
       field_mapping,
       chain,
     });
+  }
+
+  toJSON() {
+    return this.toEntity();
   }
 
   attributes({
