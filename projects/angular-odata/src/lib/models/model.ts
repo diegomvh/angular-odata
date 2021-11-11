@@ -54,6 +54,7 @@ export class ODataModel<T> {
   _meta: ODataModelOptions<T>;
   // Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
+
   constructor(
     data: Partial<T> | { [name: string]: any } = {},
     {
@@ -86,22 +87,6 @@ export class ODataModel<T> {
     let defaults = this.defaults();
 
     this.assign(Objects.merge(defaults, attrs), { reset });
-  }
-  get [Symbol.toStringTag]() {
-    return 'Model';
-  }
-
-  equals(other: ODataModel<T>) {
-    const thisKey = this.key();
-    const otherKey = other.key();
-    return (
-      this === other ||
-      (typeof this === typeof other &&
-        ((<any>this)[this._meta.cid] === (<any>other)[this._meta.cid] ||
-          (thisKey !== undefined &&
-            otherKey !== undefined &&
-            Types.isEqual(thisKey, otherKey))))
-    );
   }
 
   //#region Resources
@@ -712,5 +697,38 @@ export class ODataModel<T> {
       (this as any)[name] = model;
     }
     return model;
+  }
+
+  // Model functions
+  equals(other: ODataModel<T>) {
+    const thisKey = this.key();
+    const otherKey = other.key();
+    return (
+      this === other ||
+      (typeof this === typeof other &&
+        ((<any>this)[this._meta.cid] === (<any>other)[this._meta.cid] ||
+          (thisKey !== undefined &&
+            otherKey !== undefined &&
+            Types.isEqual(thisKey, otherKey))))
+    );
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'Model';
+  }
+
+  collection() {
+    return this._parent !== null &&
+      ODataModelOptions.isCollection(this._parent[0])
+      ? (this._parent[0] as ODataCollection<T, ODataModel<T>>)
+      : undefined;
+  }
+
+  next(): ODataModel<T> | undefined {
+    return this.collection()?.next(this);
+  }
+
+  prev(): ODataModel<T> | undefined {
+    return this.collection()?.prev(this);
   }
 }

@@ -124,11 +124,11 @@ export class ODataStructuredType<T> {
    * @param name Name of the field
    * @returns The field parser
    */
-  findFieldByName(name: keyof T) {
+  findFieldByName<F>(name: keyof T) {
     return this.fields({
       include_parents: true,
       include_navigation: true,
-    }).find((f) => f.name === name);
+    }).find((f) => f.name === name) as ODataStructuredTypeFieldParser<F>;
   }
 
   /**
