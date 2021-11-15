@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 
 import { $COUNT } from '../../constants';
@@ -6,9 +7,8 @@ import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { Observable } from 'rxjs';
 
-export class ODataCountResource extends ODataResource<any> {
+export class ODataCountResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<T>(
     api: ODataApi,
@@ -17,14 +17,14 @@ export class ODataCountResource extends ODataResource<any> {
   ) {
     segments.add(PathSegmentNames.count, $COUNT).type('Edm.Int32');
     query.keep(QueryOptionNames.filter, QueryOptionNames.search);
-    return new ODataCountResource(api, segments, query);
+    return new ODataCountResource<T>(api, segments, query);
   }
 
   clone() {
-    return new ODataCountResource(
+    return new ODataCountResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
   //#endregion
