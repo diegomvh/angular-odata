@@ -9,7 +9,7 @@ import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
 
-export class ODataReferenceResource extends ODataResource<any> {
+export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<P>(
     api: ODataApi,
@@ -18,14 +18,14 @@ export class ODataReferenceResource extends ODataResource<any> {
   ) {
     segments.add(PathSegmentNames.reference, $REF);
     options.clear();
-    return new ODataReferenceResource(api, segments, options);
+    return new ODataReferenceResource<P>(api, segments, options);
   }
 
   clone() {
-    return new ODataReferenceResource(
+    return new ODataReferenceResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
   //#endregion
@@ -46,7 +46,7 @@ export class ODataReferenceResource extends ODataResource<any> {
     target: ODataEntityResource<any>,
     options?: ODataOptions & { etag?: string }
   ): Observable<any> {
-    return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
+    return super.put({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
   //TODO: https://github.com/OData/AspNetCoreOData/blob/08b00758dac691b28aa675f5aa3522fc1caa089e/sample/ODataRoutingSample/Controllers/v1/OrganizationsController.cs#L178
