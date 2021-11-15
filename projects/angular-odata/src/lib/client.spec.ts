@@ -24,9 +24,9 @@ import {
   SERVICE_ROOT,
   PlanItem,
   Trip,
+  Photo,
 } from './trippin.spec';
 import { ODataStructuredType } from './schema';
-import { Http } from './utils';
 
 describe('ODataClient', () => {
   let client: ODataClient;
@@ -369,12 +369,118 @@ describe('ODataClient', () => {
       .navigationProperty<Trip>('Trips')
       .key(1001)
       .destroy()
-      .subscribe(({ entity, annots: meta }) => {
+      .subscribe(({ entity, annots }) => {
         expect(entity).toBeNull();
       });
 
     const req = httpMock.expectOne(
       `${SERVICE_ROOT}People('russellwhyte')/Trips(1001)`
+    );
+    expect(req.request.method).toBe('DELETE');
+    req.flush('');
+  });
+
+  it('should set reference', () => {
+    let target = client
+      .entitySet<Photo>('Photos', `${NAMESPACE}.Photo`)
+      .entity(1);
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Photo>('Photo')
+      .reference()
+      .set(target)
+      .subscribe(({ entity, annots: meta }) => {
+        //expect(entity).toBeNull();
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`
+    );
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual({
+      '@odata.id': `${SERVICE_ROOT}Photos(1)`,
+    });
+    req.flush('');
+  });
+
+  it('should unset reference', () => {
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Photo>('Photo')
+      .reference()
+      .unset()
+      .subscribe(({ entity, annots: meta }) => {
+        //expect(entity).toBeNull();
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`
+    );
+    expect(req.request.method).toBe('DELETE');
+    req.flush('');
+  });
+
+  it('should add collection reference', () => {
+    let target = client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('mirsking');
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Person>('Friends')
+      .reference()
+      .add(target)
+      .subscribe(({ entity, annots }) => {
+        //expect(entity).toBeNull();
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Friends/$ref`
+    );
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      '@odata.id': `${SERVICE_ROOT}People('mirsking')`,
+    });
+    req.flush('');
+  });
+
+  it('should remove collection reference using target', () => {
+    let target = client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('mirsking');
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Person>('Friends')
+      .reference()
+      .remove(target)
+      .subscribe(({ entity, annots }) => {
+        //expect(entity).toBeNull();
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Friends/$ref?$id=${SERVICE_ROOT}People('mirsking')`
+    );
+    expect(req.request.method).toBe('DELETE');
+    req.flush('');
+  });
+
+  it('should remove collection reference using ids', () => {
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Person>('Friends')
+      .key('mirsking')
+      .reference()
+      .remove()
+      .subscribe(({ entity, annots: meta }) => {
+        //expect(entity).toBeNull();
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Friends('mirsking')/$ref`
     );
     expect(req.request.method).toBe('DELETE');
     req.flush('');

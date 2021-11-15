@@ -9,6 +9,7 @@ import {
   ODataCountResource,
   ODataMediaResource,
   ODataNavigationPropertyResource,
+  ODataReferenceResource,
 } from './types';
 import { ODataPathSegments } from './path';
 import { ODataQueryOptions, raw } from './query';
@@ -516,6 +517,25 @@ describe('ODataResource', () => {
       .key('keithpinckney');
     expect(keithpinckney.toString()).toEqual(
       "People('russellwhyte')/Friends('mirsking')/Friends('keithpinckney')"
+    );
+  });
+
+  it('should create collection navigation reference', () => {
+    const set: ODataEntitySetResource<Person> =
+      ODataEntitySetResource.factory<Person>(
+        settings.defaultApi(),
+        'People',
+        undefined,
+        new ODataPathSegments(),
+        new ODataQueryOptions()
+      );
+    const entity = set.entity('russellwhyte');
+    const mirsking: ODataReferenceResource<Person> = entity
+      .navigationProperty<Person>('Friends')
+      .key('mirsking')
+      .reference();
+    expect(mirsking.toString()).toEqual(
+      "People('russellwhyte')/Friends('mirsking')/$ref"
     );
   });
 
