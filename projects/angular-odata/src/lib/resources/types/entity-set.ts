@@ -64,7 +64,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     const entity = ODataEntityResource.factory<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
     if (key !== undefined) {
       return entity.key(key);
@@ -90,7 +90,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 
@@ -106,7 +106,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 
@@ -114,7 +114,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return ODataCountResource.factory<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 

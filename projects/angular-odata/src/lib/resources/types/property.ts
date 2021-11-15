@@ -101,7 +101,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       this.api,
       this.type(),
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 
@@ -120,7 +120,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<N>()
     );
   }
   */

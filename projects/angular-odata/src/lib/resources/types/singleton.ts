@@ -34,7 +34,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return new ODataSingletonResource<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
   //#endregion
@@ -88,7 +88,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<N>()
     );
   }
 
@@ -106,7 +106,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<P>()
     );
   }
 
@@ -122,7 +122,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 
@@ -138,7 +138,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 

@@ -107,7 +107,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new ODataFunctionResource<P, R>(
       this.api,
       segments,
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 

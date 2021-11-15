@@ -106,15 +106,15 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataMediaResource.factory<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 
   reference() {
-    return ODataReferenceResource.factory(
+    return ODataReferenceResource.factory<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 
@@ -132,7 +132,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<N>()
     );
   }
 
@@ -150,7 +150,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<P>()
     );
   }
 
@@ -158,7 +158,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return ODataCountResource.factory<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 
@@ -168,7 +168,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     return new ODataNavigationPropertyResource<C>(
       this.api,
       segments,
-      this.cloneQuery()
+      this.cloneQuery<C>()
     );
   }
 

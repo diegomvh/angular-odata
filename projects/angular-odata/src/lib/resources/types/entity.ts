@@ -80,7 +80,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataMediaResource.factory<T>(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<T>()
     );
   }
 
@@ -98,7 +98,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<N>()
     );
   }
 
@@ -116,7 +116,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<P>()
     );
   }
 
@@ -132,7 +132,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 
@@ -148,7 +148,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       path,
       type,
       this.cloneSegments(),
-      this.cloneQuery()
+      this.cloneQuery<R>()
     );
   }
 
@@ -156,7 +156,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   cast<C>(type: string) {
     let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataEntityResource<C>(this.api, segments, this.cloneQuery());
+    return new ODataEntityResource<C>(this.api, segments, this.cloneQuery<C>());
   }
 
   //#region Requests

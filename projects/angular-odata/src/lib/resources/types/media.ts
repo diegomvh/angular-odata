@@ -8,7 +8,7 @@ import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
 import { PathSegmentNames } from '../../types';
 
-export class ODataMediaResource<T> extends ODataResource<T> {
+export class ODataMediaResource extends ODataResource<any> {
   //#region Factory
   static factory<V>(
     api: ODataApi,
@@ -16,14 +16,14 @@ export class ODataMediaResource<T> extends ODataResource<T> {
     options: ODataQueryOptions<V>
   ) {
     segments.add(PathSegmentNames.value, $VALUE);
-    return new ODataMediaResource<V>(api, segments, options);
+    return new ODataMediaResource(api, segments, options);
   }
 
   clone() {
-    return new ODataMediaResource<T>(
+    return new ODataMediaResource(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery<T>()
+      this.cloneQuery()
     );
   }
   //#endregion

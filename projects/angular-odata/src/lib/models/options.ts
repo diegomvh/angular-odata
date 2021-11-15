@@ -673,7 +673,7 @@ export class ODataModelOptions<T> {
               : resource.key(key);
       }
       if (field === null) {
-        const query = model._resource?.cloneQuery().toQueryArguments();
+        const query = model._resource?.cloneQuery<T>().toQueryArguments();
         if (query !== undefined) resource.query((q) => q.apply(query));
         continue;
       }
@@ -695,7 +695,7 @@ export class ODataModelOptions<T> {
         this.entitySet.name,
         this.type(),
         new ODataPathSegments(),
-        baseResource?.cloneQuery() || new ODataQueryOptions()
+        baseResource?.cloneQuery<T>() || new ODataQueryOptions<T>()
       );
     if (baseResource === undefined)
       throw new Error("collectionResourceFactory: Can't build resource");

@@ -489,7 +489,7 @@ describe('ODataResource', () => {
         new ODataQueryOptions()
       );
     const entity = set.entity('russellwhyte');
-    const photo: ODataMediaResource<Photo> = entity
+    const photo: ODataMediaResource = entity
       .navigationProperty<Photo>('Photo')
       .media();
     expect(photo.toString()).toEqual("People('russellwhyte')/Photo/$value");

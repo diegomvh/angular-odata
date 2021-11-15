@@ -25,7 +25,7 @@ export class ODataReferenceResource extends ODataResource<any> {
     return new ODataReferenceResource(
       this.api,
       this.cloneSegments(),
-      this.cloneQuery<any>()
+      this.cloneQuery()
     );
   }
   //#endregion
@@ -49,6 +49,7 @@ export class ODataReferenceResource extends ODataResource<any> {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
+  //TODO: https://github.com/OData/AspNetCoreOData/blob/08b00758dac691b28aa675f5aa3522fc1caa089e/sample/ODataRoutingSample/Controllers/v1/OrganizationsController.cs#L178
   protected delete({
     etag,
     target,
