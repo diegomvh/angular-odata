@@ -11,7 +11,7 @@ import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path';
 import { ODataPropertyResource } from './property';
 import { ODataQueryOptions } from '../query';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
+import { ODataStructuredTypeParser } from '../../schema';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

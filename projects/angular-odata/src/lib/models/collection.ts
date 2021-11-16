@@ -451,34 +451,35 @@ export class ODataCollection<T, M extends ODataModel<T>>
       key,
       cid: (<any>model)[this._model.meta.cid],
     });
-    if (entry === undefined || entry.state === ODataModelState.Removed) {
-      if (entry !== undefined && entry.state === ODataModelState.Removed) {
-        const index = this._entries.indexOf(entry);
-        this._entries.splice(index, 1);
-      }
-
-      // Create Entry
-      entry = {
-        state: reset ? ODataModelState.Unchanged : ODataModelState.Added,
-        model,
-        key: model.key(),
-      };
-      // Set Parent
-      if (reparent) model._parent = [this, null];
-      // Subscribe
-      this._subscribe(entry);
-      // Now add
-      if (position >= 0) this._entries.splice(position, 0, entry);
-      else this._entries.push(entry);
-
-      if (!silent) {
-        model.events$.emit(
-          new ODataModelEvent('add', { model, collection: this })
-        );
-      }
-      return entry.model;
+    if (entry !== undefined && entry.state !== ODataModelState.Removed) {
+      return undefined;
     }
-    return undefined;
+
+    if (entry !== undefined && entry.state === ODataModelState.Removed) {
+      const index = this._entries.indexOf(entry);
+      this._entries.splice(index, 1);
+    }
+
+    // Create Entry
+    entry = {
+      state: reset ? ODataModelState.Unchanged : ODataModelState.Added,
+      model,
+      key: model.key(),
+    };
+    // Set Parent
+    if (reparent) model._parent = [this, null];
+    // Subscribe
+    this._subscribe(entry);
+    // Now add
+    if (position >= 0) this._entries.splice(position, 0, entry);
+    else this._entries.push(entry);
+
+    if (!silent) {
+      model.events$.emit(
+        new ODataModelEvent('add', { model, collection: this })
+      );
+    }
+    return entry.model;
   }
 
   protected addModel(
@@ -561,25 +562,26 @@ export class ODataCollection<T, M extends ODataModel<T>>
       key,
       cid: (<any>model)[this._model.meta.cid],
     });
-    if (entry !== undefined && entry.state !== ODataModelState.Removed) {
-      // Emit Event
-      if (!silent)
-        model.events$.emit(
-          new ODataModelEvent('remove', { model, collection: this })
-        );
-
-      // Now remove
-      const index = this._entries.indexOf(entry);
-      this._entries.splice(index, 1);
-      if (!(reset || entry.state === ODataModelState.Added)) {
-        // Move to end of array and mark as removed
-        entry.state = ODataModelState.Removed;
-        this._entries.push(entry);
-      }
-      this._unsubscribe(entry);
-      return entry.model;
+    if (entry === undefined || entry.state === ODataModelState.Removed) {
+      return undefined;
     }
-    return undefined;
+
+    // Emit Event
+    if (!silent)
+      model.events$.emit(
+        new ODataModelEvent('remove', { model, collection: this })
+      );
+
+    // Now remove
+    const index = this._entries.indexOf(entry);
+    this._entries.splice(index, 1);
+    if (!(reset || entry.state === ODataModelState.Added)) {
+      // Move to end of array and mark as removed
+      entry.state = ODataModelState.Removed;
+      this._entries.push(entry);
+    }
+    this._unsubscribe(entry);
+    return entry.model;
   }
 
   protected removeModel(
@@ -963,18 +965,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   next(model: M): M | undefined {
     const index = this.indexOf(model);
-    if (index >= 0) {
-      return this.get(index + 1);
+    if (index === -1 || index === this.length - 1) {
+      return undefined;
     }
-    return undefined;
+    return this.get(index + 1);
   }
 
   prev(model: M): M | undefined {
     const index = this.indexOf(model);
-    if (index >= 0) {
-      return this.get(index - 1);
+    if (index <= 0) {
+      return undefined;
     }
-    return undefined;
+    return this.get(index - 1);
   }
 
   every(predicate: (m: M, index: number) => boolean): boolean {

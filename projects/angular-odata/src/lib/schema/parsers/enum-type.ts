@@ -1,39 +1,34 @@
-import { Enums } from '../utils';
-import { raw } from '../resources/query';
-import { ODataAnnotation } from '../schema/annotation';
+import { Enums } from '../../utils';
+import { raw } from '../../resources/query';
+import { ODataAnnotatable } from '../base';
 import {
   EnumTypeConfig,
   Parser,
   OptionsHelper,
   EnumTypeFieldConfig,
   Options,
-} from '../types';
-import { ODataParserOptions } from '../options';
+} from '../../types';
+import { ODataParserOptions } from '../../options';
 
-export class ODataEnumTypeFieldParser {
+export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   name: string;
   value: number;
-  annotations: ODataAnnotation[];
 
   constructor(name: string, field: EnumTypeFieldConfig) {
+    super(field);
     this.name = name;
     this.value = field.value;
-    this.annotations = (field.annotations || []).map(
-      (annot) => new ODataAnnotation(annot)
-    );
   }
 
-  /**
-   * Find an annotation inside the enum field.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
-    return this.annotations.find(predicate);
+  titleize(term: string | RegExp): string {
+    return this.annotatedValue(term) || this.name;
   }
 }
 
-export class ODataEnumTypeParser<T> implements Parser<T> {
+export class ODataEnumTypeParser<T>
+  extends ODataAnnotatable
+  implements Parser<T>
+{
   name: string;
   namespace: string;
   alias?: string;
@@ -43,6 +38,7 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
   optionsHelper?: OptionsHelper;
 
   constructor(config: EnumTypeConfig<T>, namespace: string, alias?: string) {
+    super(config);
     this.name = config.name;
     this.namespace = namespace;
     this.alias = alias;
@@ -51,6 +47,16 @@ export class ODataEnumTypeParser<T> implements Parser<T> {
     this.fields = Object.entries(config.fields).map(
       ([name, f]) => new ODataEnumTypeFieldParser(name, f)
     );
+  }
+
+  /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string {
+    return this.annotatedValue(term) || this.name;
   }
 
   configure({ options }: { options: OptionsHelper }) {

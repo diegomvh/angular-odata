@@ -1,7 +1,7 @@
 import { Parser, SchemaConfig } from '../types';
 
 import { OData } from '../utils/odata';
-import { ODataAnnotation } from './annotation';
+import { ODataAnnotatable, ODataAnnotation } from './base';
 import { ODataApi } from '../api';
 import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';
@@ -9,7 +9,7 @@ import { ODataEntitySet } from './entity-set';
 import { ODataEnumType } from './enum-type';
 import { ODataStructuredType } from './structured-type';
 
-export class ODataSchema {
+export class ODataSchema extends ODataAnnotatable {
   api: ODataApi;
   namespace: string;
   alias?: string;
@@ -17,9 +17,9 @@ export class ODataSchema {
   entities: ODataStructuredType<any>[];
   callables: ODataCallable<any>[];
   containers: ODataEntityContainer[];
-  annotations: ODataAnnotation[];
 
   constructor(config: SchemaConfig, api: ODataApi) {
+    super(config);
     this.api = api;
     this.namespace = config.namespace;
     this.alias = config.alias;
@@ -35,9 +35,16 @@ export class ODataSchema {
     this.containers = (config.containers || []).map(
       (config) => new ODataEntityContainer(config, this)
     );
-    this.annotations = (config.annotations || []).map(
-      (config) => new ODataAnnotation(config)
-    );
+  }
+
+  /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string | undefined {
+    return this.annotatedValue(term);
   }
 
   isNamespaceOf(type: string) {
@@ -52,15 +59,6 @@ export class ODataSchema {
       (acc, container) => [...acc, ...container.entitySets],
       [] as ODataEntitySet[]
     );
-  }
-
-  /**
-   * Find an annotation inside the schema.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
-    return this.annotations.find(predicate);
   }
 
   //#region Find for Type

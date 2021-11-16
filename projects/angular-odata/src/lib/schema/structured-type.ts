@@ -3,15 +3,15 @@ import {
   ODataEntityTypeKey,
   ODataStructuredTypeFieldParser,
   ODataStructuredTypeParser,
-} from '../parsers';
+} from './parsers';
 import { Options, StructuredTypeConfig } from '../types';
 
-import { ODataAnnotation } from './annotation';
+import { ODataAnnotatable } from './base';
 import { ODataCollection } from '../models';
 import { ODataModel } from '../models/model';
 import { ODataSchema } from './schema';
 
-export class ODataStructuredType<T> {
+export class ODataStructuredType<T> extends ODataAnnotatable {
   name: string;
   schema: ODataSchema;
   base?: string;
@@ -21,9 +21,9 @@ export class ODataStructuredType<T> {
   model?: typeof ODataModel;
   collection?: typeof ODataCollection;
   parser: ODataStructuredTypeParser<T>;
-  annotations: ODataAnnotation[];
 
   constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
+    super(config);
     this.schema = schema;
     this.name = config.name;
     this.base = config.base;
@@ -32,9 +32,6 @@ export class ODataStructuredType<T> {
       config,
       schema.namespace,
       schema.alias
-    );
-    this.annotations = (config.annotations || []).map(
-      (annot) => new ODataAnnotation(annot)
     );
     this.model = config.model as typeof ODataModel;
     this.collection = config.collection as typeof ODataCollection;
@@ -77,6 +74,16 @@ export class ODataStructuredType<T> {
   }
 
   /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string {
+    return this.annotatedValue(term) || this.name;
+  }
+
+  /**
    * Returns a full type of the structured type including the namespace/alias.
    * @param alias Use the alias of the namespace instead of the namespace.
    * @returns The string representation of the type.
@@ -108,15 +115,6 @@ export class ODataStructuredType<T> {
    */
   isCompoundKey() {
     return this.keys().length > 1;
-  }
-
-  /**
-   * Find an annotation inside the structured type
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
-    return this.annotations.find(predicate);
   }
 
   /**

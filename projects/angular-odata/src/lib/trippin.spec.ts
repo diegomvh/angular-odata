@@ -1,13 +1,13 @@
-import {
-  ApiConfig,
-  EnumTypeConfig,
-  StructuredTypeConfig,
-  EntitySetConfig,
-} from './types';
-import { EDM_PARSERS } from './parsers';
-import { ODataEntitySetService } from './services';
 import { Injectable } from '@angular/core';
 import { ODataClient } from './client';
+import { EDM_PARSERS } from './schema';
+import { ODataEntitySetService } from './services';
+import {
+  ApiConfig,
+  EntitySetConfig,
+  EnumTypeConfig,
+  StructuredTypeConfig,
+} from './types';
 
 export const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 export const NAMESPACE = 'TripPin';

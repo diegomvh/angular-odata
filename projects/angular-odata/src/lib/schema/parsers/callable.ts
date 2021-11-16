@@ -5,11 +5,11 @@ import {
   OptionsHelper,
   Parameter,
   Parser,
-} from '../types';
+} from '../../types';
 
-import { CALLABLE_BINDING_PARAMETER } from '../constants';
+import { CALLABLE_BINDING_PARAMETER } from '../../constants';
 import { ODataEnumTypeParser } from './enum-type';
-import { ODataParserOptions } from '../options';
+import { ODataParserOptions } from '../../options';
 import { ODataStructuredTypeParser } from './structured-type';
 
 export class ODataParameterParser<T> {

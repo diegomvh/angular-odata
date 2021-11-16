@@ -1,21 +1,28 @@
 import { EntitySetConfig } from '../types';
-import { ODataAnnotation } from './annotation';
+import { ODataAnnotatable } from './base';
 import { ODataSchema } from './schema';
 
-export class ODataEntitySet {
+export class ODataEntitySet extends ODataAnnotatable {
   schema: ODataSchema;
   name: string;
   entityType: string;
   service: { new (...params: any[]): any };
-  annotations: ODataAnnotation[];
   constructor(config: EntitySetConfig, schema: ODataSchema) {
+    super(config);
     this.schema = schema;
     this.name = config.name;
     this.entityType = config.entityType;
     this.service = config.service;
-    this.annotations = (config.annotations || []).map(
-      (annot) => new ODataAnnotation(annot)
-    );
+  }
+
+  /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string {
+    return this.annotatedValue(term) || this.name;
   }
 
   /**
@@ -31,14 +38,5 @@ export class ODataEntitySet {
 
   get api() {
     return this.schema.api;
-  }
-
-  /**
-   * Find an annotation inside the entity set.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
-    return this.annotations.find(predicate);
   }
 }

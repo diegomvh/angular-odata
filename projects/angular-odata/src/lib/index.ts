@@ -11,9 +11,6 @@ export * from './utils/index';
 // Services
 export * from './services/index';
 
-// Parsers
-export * from './parsers/index';
-
 // Schema
 export * from './schema/index';
 

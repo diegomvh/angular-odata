@@ -1,7 +1,34 @@
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-
+import { ODataCache, ODataInMemoryCache } from './cache/index';
+import { DEFAULT_VERSION } from './constants';
+import { ODataCollection, ODataModel, ODataModelOptions } from './models/index';
+import { ODataApiOptions } from './options';
+import {
+  ODataActionResource,
+  ODataBatchResource,
+  ODataEntityResource,
+  ODataEntitySetResource,
+  ODataFunctionResource,
+  ODataMetadataResource,
+  ODataNavigationPropertyResource,
+  ODataPathSegments,
+  ODataQueryOptions,
+  ODataRequest,
+  ODataResponse,
+  ODataSegment,
+  ODataSingletonResource,
+} from './resources/index';
+import {
+  EDM_PARSERS,
+  ODataCallable,
+  ODataEntitySet,
+  ODataEnumType,
+  ODataSchema,
+  ODataStructuredType,
+} from './schema';
+import { ODataEntityService } from './services/entity';
 import {
   ApiConfig,
   ApiOptions,
@@ -9,34 +36,6 @@ import {
   Parser,
   PathSegmentNames,
 } from './types';
-import { EDM_PARSERS } from './parsers/index';
-import {
-  ODataSchema,
-  ODataEnumType,
-  ODataCallable,
-  ODataEntitySet,
-  ODataStructuredType,
-} from './schema/index';
-import { ODataModel, ODataCollection, ODataModelOptions } from './models/index';
-import {
-  ODataBatchResource,
-  ODataMetadataResource,
-  ODataEntitySetResource,
-  ODataSingletonResource,
-  ODataFunctionResource,
-  ODataActionResource,
-  ODataEntityResource,
-  ODataPathSegments,
-  ODataSegment,
-  ODataQueryOptions,
-  ODataResponse,
-  ODataNavigationPropertyResource,
-  ODataRequest,
-} from './resources/index';
-import { ODataCache, ODataInMemoryCache } from './cache/index';
-import { ODataApiOptions } from './options';
-import { DEFAULT_VERSION } from './constants';
-import { ODataEntityService } from './services/entity';
 
 /**
  * Api abstraction for consuming OData services.
@@ -276,12 +275,11 @@ export class ODataApi {
 
   private findSchemaForType(type: string) {
     const schemas = this.schemas.filter((s) => s.isNamespaceOf(type));
-    if (schemas.length > 1)
-      return schemas
-        .sort((s1, s2) => s1.namespace.length - s2.namespace.length)
-        .pop();
+    if (schemas.length === 0) return undefined;
     if (schemas.length === 1) return schemas[0];
-    return undefined;
+    return schemas
+      .sort((s1, s2) => s1.namespace.length - s2.namespace.length)
+      .pop();
   }
 
   public findEnumTypeForType<T>(type: string) {

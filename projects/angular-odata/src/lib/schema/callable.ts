@@ -1,6 +1,6 @@
 import { CallableConfig, Options, Parser } from '../types';
 
-import { ODataCallableParser } from '../parsers';
+import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
 
 export class ODataCallable<R> {

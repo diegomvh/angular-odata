@@ -7,8 +7,8 @@ import {
 } from '../constants';
 import { ODataHelper } from '../helper';
 import { ODataParserOptions } from '../options';
-import { ODataStructuredTypeFieldParser } from '../parsers';
 import {
+  EntityKey,
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
   ODataEntityResource,
@@ -17,12 +17,15 @@ import {
   ODataPathSegments,
   ODataPropertyResource,
   ODataQueryOptions,
-  EntityKey,
+  ODataQueryOptionsHandler,
   ODataResource,
   ODataSingletonResource,
-  ODataQueryOptionsHandler,
 } from '../resources';
-import { ODataEntitySet, ODataStructuredType } from '../schema';
+import {
+  ODataEntitySet,
+  ODataStructuredType,
+  ODataStructuredTypeFieldParser,
+} from '../schema';
 import { Options, OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';

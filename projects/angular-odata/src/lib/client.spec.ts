@@ -1,32 +1,31 @@
-import { TestBed } from '@angular/core/testing';
+import { HttpHeaders } from '@angular/common/http';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { ODataClient } from './client';
+import { ODataModule } from './module';
 import {
-  ODataMetadataResource,
+  ODataActionResource,
+  ODataBatchResource,
+  ODataEntityResource,
   ODataEntitySetResource,
   ODataFunctionResource,
-  ODataActionResource,
-  ODataSingletonResource,
-  ODataEntityResource,
-  ODataBatchResource,
+  ODataMetadataResource,
   ODataResource,
+  ODataSingletonResource,
 } from './resources';
-import { ODataModule } from './module';
-import { ODataStructuredTypeParser } from './parsers';
-import { HttpHeaders } from '@angular/common/http';
+import { ODataStructuredType, ODataStructuredTypeParser } from './schema';
 import {
-  TripPinConfig,
-  Person,
   NAMESPACE,
-  SERVICE_ROOT,
-  PlanItem,
-  Trip,
+  Person,
   Photo,
+  PlanItem,
+  SERVICE_ROOT,
+  Trip,
+  TripPinConfig,
 } from './trippin.spec';
-import { ODataStructuredType } from './schema';
 
 describe('ODataClient', () => {
   let client: ODataClient;

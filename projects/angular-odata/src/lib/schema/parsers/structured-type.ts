@@ -1,4 +1,4 @@
-import { Objects, Types } from '../utils';
+import { Objects, Types } from '../../utils';
 import {
   Parser,
   StructuredTypeFieldConfig,
@@ -7,12 +7,12 @@ import {
   NONE_PARSER,
   StructuredTypeFieldOptions,
   Options,
-} from '../types';
+} from '../../types';
 import { ODataEnumTypeParser } from './enum-type';
-import { COMPUTED } from '../constants';
-import { ODataAnnotation } from '../schema/annotation';
-import { raw } from '../resources/query';
-import { ODataParserOptions } from '../options';
+import { COMPUTED } from '../../constants';
+import { ODataAnnotatable } from '../base';
+import { raw } from '../../resources/query';
+import { ODataParserOptions } from '../../options';
 
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;
@@ -55,7 +55,10 @@ export class ODataReferential {
   }
 }
 
-export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
+export class ODataStructuredTypeFieldParser<T>
+  extends ODataAnnotatable
+  implements Parser<T>
+{
   name: string;
   private structuredType: ODataStructuredTypeParser<any>;
   type: string;
@@ -68,7 +71,6 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   precision?: number;
   scale?: number;
   referentials: ODataReferential[];
-  annotations: ODataAnnotation[];
   optionsHelper?: OptionsHelper;
 
   constructor(
@@ -76,13 +78,11 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     structuredType: ODataStructuredTypeParser<any>,
     field: StructuredTypeFieldConfig
   ) {
+    super(field);
     this.name = name;
     this.structuredType = structuredType;
     this.type = field.type;
     this.parser = NONE_PARSER;
-    this.annotations = (field.annotations || []).map(
-      (annot) => new ODataAnnotation(annot)
-    );
     this.referentials = (field.referentials || []).map(
       (referential) => new ODataReferential(referential)
     );
@@ -93,15 +93,6 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
     this.navigation = Boolean(field.navigation);
     this.precision = field.precision;
     this.scale = field.scale;
-  }
-
-  /**
-   * Find an annotation inside the structured field type.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
-    return this.annotations.find(predicate);
   }
 
   validate(
@@ -344,7 +335,10 @@ export class ODataStructuredTypeFieldParser<T> implements Parser<T> {
   }
 }
 
-export class ODataStructuredTypeParser<T> implements Parser<T> {
+export class ODataStructuredTypeParser<T>
+  extends ODataAnnotatable
+  implements Parser<T>
+{
   name: string;
   namespace: string;
   open: boolean;
@@ -361,6 +355,7 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     namespace: string,
     alias?: string
   ) {
+    super(config);
     this.name = config.name;
     this.base = config.base;
     this.open = config.open || false;
@@ -373,6 +368,16 @@ export class ODataStructuredTypeParser<T> implements Parser<T> {
     ).map(
       ([name, config]) => new ODataStructuredTypeFieldParser(name, this, config)
     );
+  }
+
+  /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string {
+    return this.annotatedValue(term) || this.name;
   }
 
   isTypeOf(type: string) {

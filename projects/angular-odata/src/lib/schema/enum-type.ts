@@ -1,16 +1,16 @@
 import { EnumTypeConfig, Options } from '../types';
-import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from '../parsers';
+import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 
-import { ODataAnnotation } from './annotation';
+import { ODataAnnotatable, ODataAnnotation } from './base';
 import { ODataSchema } from './schema';
 
-export class ODataEnumType<E> {
+export class ODataEnumType<E> extends ODataAnnotatable {
   schema: ODataSchema;
   name: string;
   parser: ODataEnumTypeParser<E>;
   members: { [name: string]: number } | { [value: number]: string };
-  annotations: ODataAnnotation[];
   constructor(config: EnumTypeConfig<E>, schema: ODataSchema) {
+    super(config);
     this.schema = schema;
     this.name = config.name;
     this.members = config.members;
@@ -19,9 +19,16 @@ export class ODataEnumType<E> {
       schema.namespace,
       schema.alias
     );
-    this.annotations = (config.annotations || []).map(
-      (annot) => new ODataAnnotation(annot)
-    );
+  }
+
+  /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string {
+    return this.annotatedValue(term) || this.name;
   }
 
   /**
@@ -51,15 +58,6 @@ export class ODataEnumType<E> {
   }
 
   /**
-   * Find an annotation inside the enum type.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) => boolean) {
-    return this.annotations.find(predicate);
-  }
-
-  /**
    * Returns the fields of the enum type.
    * @returns The fields of the enum type.
    */
@@ -83,32 +81,6 @@ export class ODataEnumType<E> {
    */
   findFieldByValue(value: number) {
     return this.fields().find((f) => f.value === value);
-  }
-
-  /**
-   * Find a title for a given value.
-   * @param value Value of the field
-   * @param pattern Pattern to use for find in annotations
-   * @returns The name or annotation of the filed that matches with the value.
-   */
-  fieldTitle(value: number | string, pattern?: RegExp) {
-    const resolveTitle = (field?: ODataEnumTypeFieldParser) => {
-      if (field !== undefined) {
-        if (pattern !== undefined) {
-          const annotation = field.findAnnotation((a) => pattern.test(a.term));
-          if (annotation !== undefined && annotation.string !== undefined) {
-            return annotation.string;
-          }
-        }
-        return field.name;
-      }
-      return '';
-    };
-    if (typeof value === 'number') {
-      return resolveTitle(this.findFieldByValue(value));
-    } else {
-      return resolveTitle(this.findFieldByName(value));
-    }
   }
 
   /**

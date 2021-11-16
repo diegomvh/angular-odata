@@ -22,7 +22,7 @@ import { ODataPathSegments } from '../path';
 import { ODataPropertyResource } from './property';
 import { ODataQueryOptions } from '../query';
 import { ODataReferenceResource } from './reference';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
+import { ODataStructuredTypeParser } from '../../schema';
 
 /**
  * OData Navigation Property Resource

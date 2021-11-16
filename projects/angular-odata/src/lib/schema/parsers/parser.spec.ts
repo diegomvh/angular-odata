@@ -6,17 +6,17 @@ import {
   PersonGender,
   Trip,
   Photo,
-} from '../trippin.spec';
-import { ODataClient } from '../client';
-import { ODataModule } from '../module';
+} from '../../trippin.spec';
+import { ODataClient } from '../../client';
+import { ODataModule } from '../../module';
 import { ODataEnumTypeParser } from './enum-type';
 import {
   ODataStructuredTypeParser,
   ODataStructuredTypeFieldParser,
 } from './structured-type';
-import { ODataApi } from '../api';
-import { ODataStructuredType } from '../schema';
-import { Parser } from '../types';
+import { ODataApi } from '../../api';
+import { ODataStructuredType } from '..';
+import { Parser } from '../../types';
 import { HttpClientModule } from '@angular/common/http';
 
 describe('ODataClient', () => {

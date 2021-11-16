@@ -13,7 +13,7 @@ import { ODataOptions } from './options';
 import { ODataPathSegments } from '../path';
 import { ODataPropertyResource } from './property';
 import { ODataQueryOptions } from '../query';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
+import { ODataStructuredTypeParser } from '../../schema';
 import { map } from 'rxjs/operators';
 
 export class ODataEntityResource<T> extends ODataResource<T> {

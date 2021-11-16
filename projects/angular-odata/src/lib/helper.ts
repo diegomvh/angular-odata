@@ -104,16 +104,12 @@ const ODataVersionBaseHelper = <any>{
   },
   type(value: { [name: string]: any }, type?: string) {
     if (type !== undefined) value[this.ODATA_TYPE] = `#${type}`;
-    if (this.ODATA_TYPE in value) {
-      const type = value[this.ODATA_TYPE].substr(1) as string;
-      const matches = COLLECTION.exec(type);
-      if (matches)
-        return matches[1].indexOf('.') === -1
-          ? `Edm.${matches[1]}`
-          : matches[1];
-      return type;
-    }
-    return undefined;
+    if (!(this.ODATA_TYPE in value)) return undefined;
+    const t = value[this.ODATA_TYPE].substr(1);
+    const matches = COLLECTION.exec(t);
+    if (matches)
+      return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
+    return t;
   },
   mediaEtag(value: { [name: string]: any }) {
     return this.ODATA_MEDIA_ETAG in value

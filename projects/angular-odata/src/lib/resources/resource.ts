@@ -1,27 +1,28 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
+import { ODataApi } from '../api';
 import {
-  VALUE_SEPARATOR,
   PARAM_SEPARATOR,
   QUERY_SEPARATOR,
+  VALUE_SEPARATOR,
 } from '../constants';
-import { Objects, Http, Types } from '../utils/index';
-
-import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
-import { ODataOptions } from './types';
-import { ODataResponse } from './responses/index';
-import { ODataApi } from '../api';
-import { OptionsHelper, QueryOptionNames } from '../types';
-import { ODataRequest } from './request';
-import { ODataStructuredTypeParser } from '../parsers';
 import {
-  QueryCustomType,
+  ODataCallable,
+  ODataStructuredType,
+  ODataStructuredTypeParser,
+} from '../schema';
+import { OptionsHelper, QueryOptionNames } from '../types';
+import { Http, Objects, Types } from '../utils/index';
+import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
+import {
   isQueryCustomType,
   ODataQueryOptions,
   ODataQueryOptionsHandler,
+  QueryCustomType,
 } from './query';
-import { ODataStructuredType, ODataCallable } from '../schema/index';
+import { ODataRequest } from './request';
+import { ODataResponse } from './responses/index';
+import { ODataOptions } from './types';
 
 export type EntityKey<T> =
   | {

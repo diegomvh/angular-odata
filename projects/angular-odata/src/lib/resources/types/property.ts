@@ -19,7 +19,7 @@ import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
-import { ODataStructuredTypeParser } from '../../parsers/structured-type';
+import { ODataStructuredTypeParser } from '../../schema';
 import { ODataValueResource } from './value';
 //import { ODataNavigationPropertyResource } from './navigation-property';
 import { PathSegmentNames } from '../../types';
