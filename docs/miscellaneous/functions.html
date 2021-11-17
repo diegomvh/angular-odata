@@ -292,7 +292,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>render(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, aliases?, normalize?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>render(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, __namedParameters: {aliases: <a href="../undefineds/QueryCustomType.html" target="_self">QueryCustomType[]</a>, normalize: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -329,10 +329,11 @@
                                 <tr>
                                     <td>aliases</td>
                                     <td>
+                                                <code><a href="../miscellaneous/typealiases.html#QueryCustomType" target="_self" >QueryCustomType[]</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
 
@@ -344,7 +345,19 @@
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
                                     </td>
 
 
@@ -432,7 +445,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildExpand(expands: <a href="../undefineds/Expand.html" target="_self">Expand</a>)</code>
+<code>buildExpand(expands: <a href="../undefineds/Expand.html" target="_self">Expand</a>, __namedParameters: {aliases: <a href="../undefineds/QueryCustomType.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -451,6 +464,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -464,6 +478,37 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>aliases</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#QueryCustomType" target="_self" >QueryCustomType[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -495,7 +540,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildFilter(filters: <a href="../undefineds/Filter.html" target="_self">Filter</a>, aliases, propPrefix: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>buildFilter(filters: <a href="../undefineds/Filter.html" target="_self">Filter</a>, __namedParameters: {aliases: <a href="../undefineds/QueryCustomType.html" target="_self">QueryCustomType[]</a>, propPrefix: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -536,6 +581,7 @@
                                 <tr>
                                     <td>aliases</td>
                                     <td>
+                                                <code><a href="../miscellaneous/typealiases.html#QueryCustomType" target="_self" >QueryCustomType[]</a></code>
                                     </td>
 
                                     <td>
@@ -543,7 +589,6 @@
                                     </td>
 
                                     <td>
-                                        <code>[]</code>
                                     </td>
 
                                 </tr>
@@ -558,7 +603,20 @@
                                     </td>
 
                                     <td>
-                                        <code>&#x27;&#x27;</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
                                     </td>
 
                                 </tr>
@@ -591,7 +649,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildGroupBy(groupBy: <a href="../undefineds/GroupBy.html" target="_self">GroupBy</a>)</code>
+<code>buildGroupBy(groupBy: <a href="../undefineds/GroupBy.html" target="_self">GroupBy</a>, __namedParameters: {aliases: <a href="../undefineds/QueryCustomType.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -610,6 +668,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -623,6 +682,37 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>aliases</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#QueryCustomType" target="_self" >QueryCustomType[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -728,7 +818,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildPathAndQuery(__namedParameters: {select: <a href="../interfaces/Options.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, transform, orderBy, key, count, expand, action, func, aliases})</code>
+<code>buildPathAndQuery(__namedParameters: {select: <a href="../interfaces/Options.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, transform, orderBy, key, count, expand, action, func, aliases, escape})</code>
                 </td>
             </tr>
 
@@ -916,6 +1006,17 @@
 
 
                                 </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -938,7 +1039,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>buildTransforms(transforms)</code>
+<code>buildTransforms(transforms, __namedParameters: {aliases: <a href="../undefineds/QueryCustomType.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -955,17 +1056,52 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
+                                    <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>transforms</td>
+                                    <td>
+                                    </td>
 
                                     <td>
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>aliases</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#QueryCustomType" target="_self" >QueryCustomType[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -1212,7 +1348,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>normalizeValue(value: <a href="../undefineds/Value.html" target="_self">Value</a>, aliases?)</code>
+<code>normalizeValue(value: <a href="../undefineds/Value.html" target="_self">Value</a>, __namedParameters: {aliases: <a href="../undefineds/QueryCustomType.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -1231,6 +1367,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1244,17 +1381,37 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
                                     <td>aliases</td>
                                     <td>
+                                                <code><a href="../miscellaneous/typealiases.html#QueryCustomType" target="_self" >QueryCustomType[]</a></code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
 
                                 </tr>
                             </tbody>
@@ -1345,7 +1502,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>renderPrimitiveValue(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, val: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, aliases)</code>
+<code>renderPrimitiveValue(key: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, val: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, __namedParameters: {aliases: <a href="../undefineds/QueryCustomType.html" target="_self">QueryCustomType[]</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>})</code>
                 </td>
             </tr>
 
@@ -1364,7 +1521,6 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
-                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1378,8 +1534,6 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
@@ -1392,22 +1546,30 @@
                                         No
                                     </td>
 
-                                    <td>
-                                    </td>
 
                                 </tr>
                                 <tr>
                                     <td>aliases</td>
                                     <td>
+                                                <code><a href="../miscellaneous/typealiases.html#QueryCustomType" target="_self" >QueryCustomType[]</a></code>
                                     </td>
 
                                     <td>
                                         No
                                     </td>
 
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
                                     <td>
-                                        <code>[]</code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
                                     </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
 
                                 </tr>
                             </tbody>
@@ -1432,7 +1594,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>Unnamed function(__namedParameters: {select: <a href="../interfaces/Options.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, transform, orderBy, key, count, expand, action, func, aliases})</code>
+<code>Unnamed function(__namedParameters: {select: <a href="../interfaces/Options.html" target="_self">Partial&lt;QueryOptions&lt;T&gt;&gt;</a>, search, skiptoken, format, top, skip, filter, transform, orderBy, key, count, expand, action, func, aliases, escape})</code>
                 </td>
             </tr>
 
@@ -1611,6 +1773,17 @@
                                 </tr>
                                 <tr>
                                     <td>aliases</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
                                     <td>
                                     </td>
 
@@ -2028,7 +2201,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pathSegmentsBuilder(segment: <a href="../objects/OData.html" target="_self">ODataSegment</a>)</code>
+<code>pathSegmentsBuilder(segment: <a href="../objects/OData.html" target="_self">ODataSegment</a>, escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
@@ -2047,6 +2220,7 @@
                                     <td>Name</td>
                                     <td>Type</td>
                                     <td>Optional</td>
+                                    <td>Default value</td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2060,6 +2234,23 @@
                                         No
                                     </td>
 
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
 
                                 </tr>
                             </tbody>

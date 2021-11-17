@@ -631,7 +631,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pathAndParams()</code>
+<code>pathAndParams(escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
@@ -644,6 +644,44 @@
             </tr>
 
 
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>escape</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
     <table class="table table-sm table-bordered">
@@ -874,7 +912,7 @@ export class ODataQueryOptions&lt;T&gt; {
   }
 
   // Params
-  pathAndParams(): [string, { [name: string]: any }] {
+  pathAndParams(escape: boolean &#x3D; false): [string, { [name: string]: any }] {
     let aliases: QueryCustomType[] &#x3D; [];
     let options &#x3D; [
       QueryOptionNames.select,
@@ -898,7 +936,7 @@ export class ODataQueryOptions&lt;T&gt; {
         return Object.assign(acc, { [key]: value });
       }, {});
 
-    return buildPathAndQuery&lt;any&gt;({ ...options, aliases });
+    return buildPathAndQuery&lt;any&gt;({ ...options, aliases, escape });
   }
 
   toString(): string {

@@ -170,6 +170,9 @@
                             <a href="#DEFAULT_VERSION" title="projects/angular-odata/src/lib/constants.ts" ><b>DEFAULT_VERSION</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
+                            <a href="#DESCRIPTION" title="projects/angular-odata/src/lib/constants.ts" ><b>DESCRIPTION</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
+                        </li>
+                        <li>
                             <a href="#duration" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>duration</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
                         </li>
                         <li>
@@ -179,10 +182,10 @@
                             <a href="#Durations" title="projects/angular-odata/src/lib/utils/durations.ts" ><b>Durations</b>&nbsp;&nbsp;&nbsp;(projects/.../durations.ts)</a>
                         </li>
                         <li>
-                            <a href="#EDM_PARSERS" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>EDM_PARSERS</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                            <a href="#EDM_PARSERS" title="projects/angular-odata/src/lib/schema/parsers/edm.ts" ><b>EDM_PARSERS</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
-                            <a href="#EdmParser" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>EdmParser</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                            <a href="#EdmParser" title="projects/angular-odata/src/lib/schema/parsers/edm.ts" ><b>EdmParser</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
                             <a href="#Enums" title="projects/angular-odata/src/lib/utils/enums.ts" ><b>Enums</b>&nbsp;&nbsp;&nbsp;(projects/.../enums.ts)</a>
@@ -212,7 +215,7 @@
                             <a href="#HTTP11" title="projects/angular-odata/src/lib/constants.ts" ><b>HTTP11</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
-                            <a href="#Identity" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>Identity</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                            <a href="#Identity" title="projects/angular-odata/src/lib/schema/parsers/edm.ts" ><b>Identity</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
                             <a href="#IF_MATCH_HEADER" title="projects/angular-odata/src/lib/constants.ts" ><b>IF_MATCH_HEADER</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
@@ -246,6 +249,9 @@
                         </li>
                         <li>
                             <a href="#LOGICAL_OPERATORS" title="projects/angular-odata/src/lib/resources/query/builder.ts" ><b>LOGICAL_OPERATORS</b>&nbsp;&nbsp;&nbsp;(projects/.../builder.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#LONG_DESCRIPTION" title="projects/angular-odata/src/lib/constants.ts" ><b>LONG_DESCRIPTION</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
                             <a href="#lookup" title="projects/angular-odata/src/lib/utils/arraybuffers.ts" ><b>lookup</b>&nbsp;&nbsp;&nbsp;(projects/.../arraybuffers.ts)</a>
@@ -353,16 +359,16 @@
                             <a href="#TEXT_PLAIN" title="projects/angular-odata/src/lib/constants.ts" ><b>TEXT_PLAIN</b>&nbsp;&nbsp;&nbsp;(projects/.../constants.ts)</a>
                         </li>
                         <li>
-                            <a href="#toBoolean" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toBoolean</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                            <a href="#toBoolean" title="projects/angular-odata/src/lib/schema/parsers/edm.ts" ><b>toBoolean</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
-                            <a href="#toDate" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toDate</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                            <a href="#toDate" title="projects/angular-odata/src/lib/schema/parsers/edm.ts" ><b>toDate</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
-                            <a href="#toNumber" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toNumber</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                            <a href="#toNumber" title="projects/angular-odata/src/lib/schema/parsers/edm.ts" ><b>toNumber</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
-                            <a href="#toString" title="projects/angular-odata/src/lib/parsers/edm.ts" ><b>toString</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
+                            <a href="#toString" title="projects/angular-odata/src/lib/schema/parsers/edm.ts" ><b>toString</b>&nbsp;&nbsp;&nbsp;(projects/.../edm.ts)</a>
                         </li>
                         <li>
                             <a href="#Types" title="projects/angular-odata/src/lib/utils/types.ts" ><b>Types</b>&nbsp;&nbsp;&nbsp;(projects/.../types.ts)</a>
@@ -875,13 +881,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>&#x27;Org.OData.Core.V1.Computed&#x27;</code>
+                        <i>Default value : </i><code>/.*Computed$/</code>
                     </td>
                 </tr>
 
@@ -1068,6 +1068,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="DESCRIPTION"></a>
+                    <span class="name">
+                        <span ><b>DESCRIPTION</b></span>
+                        <a href="#DESCRIPTION"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>/.*Description$/</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="ETAG_HEADER"></a>
                     <span class="name">
                         <span ><b>ETAG_HEADER</b></span>
@@ -1243,6 +1263,26 @@
   LOCATION_HEADER,
   LOCATION_HEADER.toLowerCase(),
 ]</code>
+                    </td>
+                </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="LONG_DESCRIPTION"></a>
+                    <span class="name">
+                        <span ><b>LONG_DESCRIPTION</b></span>
+                        <a href="#LONG_DESCRIPTION"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>/.*LongDescription$/</code>
                     </td>
                 </tr>
 
@@ -1575,13 +1615,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>&#x27;Org.OData.Core.V1.OptimisticConcurrency&#x27;</code>
+                        <i>Default value : </i><code>/.*OptimisticConcurrency$/</code>
                     </td>
                 </tr>
 
@@ -2785,16 +2819,12 @@
   },
   type(value: { [name: string]: any }, type?: string) {
     if (type !&#x3D;&#x3D; undefined) value[this.ODATA_TYPE] &#x3D; &#x60;#${type}&#x60;;
-    if (this.ODATA_TYPE in value) {
-      const type &#x3D; value[this.ODATA_TYPE].substr(1) as string;
-      const matches &#x3D; COLLECTION.exec(type);
-      if (matches)
-        return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1
-          ? &#x60;Edm.${matches[1]}&#x60;
-          : matches[1];
-      return type;
-    }
-    return undefined;
+    if (!(this.ODATA_TYPE in value)) return undefined;
+    const t &#x3D; value[this.ODATA_TYPE].substr(1);
+    const matches &#x3D; COLLECTION.exec(t);
+    if (matches)
+      return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1 ? &#x60;Edm.${matches[1]}&#x60; : matches[1];
+    return t;
   },
   mediaEtag(value: { [name: string]: any }) {
     return this.ODATA_MEDIA_ETAG in value
@@ -3047,7 +3077,7 @@
         </tbody>
     </table>
 </section>
-    <h3>projects/angular-odata/src/lib/parsers/edm.ts</h3>
+    <h3>projects/angular-odata/src/lib/schema/parsers/edm.ts</h3>
     <section>
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -3504,6 +3534,14 @@
   uniqueId(prefix?: string, suffix?: string): string {
     return (prefix ? prefix : &#x27;&#x27;) + now().toString(36) + (suffix ? suffix : &#x27;&#x27;);
   },
+
+  titleCase(text: string): string {
+    const result &#x3D; text.replace(/([a-z])([A-Z])/g, &#x27;$1 $2&#x27;);
+    return result
+      .split(&#x27; &#x27;)
+      .map((p) &#x3D;&gt; p.charAt(0).toUpperCase() + p.slice(1))
+      .join(&#x27; &#x27;);
+  },
 }</code>
                     </td>
                 </tr>
@@ -3862,18 +3900,18 @@
 
   resolveKey(key: any, { single &#x3D; true }: { single?: boolean } &#x3D; {}) {
     if ([&#x27;number&#x27;, &#x27;string&#x27;].indexOf(typeof key) !&#x3D;&#x3D; -1) return key;
-    if (Types.isPlainObject(key)) {
-      const values &#x3D; Object.values(key);
-      if (values.length &#x3D;&#x3D;&#x3D; 1 &amp;&amp; single) {
-        // Single primitive key value
-        key &#x3D; values[0];
-      } else if (values.some((v) &#x3D;&gt; v &#x3D;&#x3D;&#x3D; undefined)) {
-        // Compose key, needs all values
-        return undefined;
-      }
-      return !Types.isEmpty(key) ? key : undefined;
+    if (!Types.isPlainObject(key)) {
+      return undefined;
     }
-    return undefined;
+    const values &#x3D; Object.values(key);
+    if (values.length &#x3D;&#x3D;&#x3D; 1 &amp;&amp; single) {
+      // Single primitive key value
+      key &#x3D; values[0];
+    } else if (values.some((v) &#x3D;&gt; v &#x3D;&#x3D;&#x3D; undefined)) {
+      // Compose key, needs all values
+      return undefined;
+    }
+    return !Types.isEmpty(key) ? key : undefined;
   },
 
   clone(target: any, map?: WeakMap&lt;object, any&gt;) {

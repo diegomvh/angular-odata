@@ -66,6 +66,12 @@
 
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+            </p>
 
 
 
@@ -86,9 +92,6 @@
                                 <a href="#alias" >alias</a>
                             </li>
                             <li>
-                                <a href="#annotations" >annotations</a>
-                            </li>
-                            <li>
                                 <a href="#api" >api</a>
                             </li>
                             <li>
@@ -106,6 +109,9 @@
                             <li>
                                 <a href="#namespace" >namespace</a>
                             </li>
+                            <li>
+                                <a href="#annotations" >annotations</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -120,9 +126,6 @@
                         <ul class="index-list">
                             <li>
                                 <a href="#configure" >configure</a>
-                            </li>
-                            <li>
-                                <a href="#findAnnotation" >findAnnotation</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -142,6 +145,12 @@
                             </li>
                             <li>
                                 <a href="#isNamespaceOf" >isNamespaceOf</a>
+                            </li>
+                            <li>
+                                <a href="#annotatedValue" >annotatedValue</a>
+                            </li>
+                            <li>
+                                <a href="#findAnnotation" >findAnnotation</a>
                             </li>
                         </ul>
                     </td>
@@ -180,7 +189,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:19</a></div>
                             </td>
                         </tr>
 
@@ -256,32 +265,6 @@
                     <tr>
                         <td class="col-md-4">
                                 <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:15</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="annotations"></a>
-                    <span class="name">
-                        <span ><b>annotations</b></span>
-                        <a href="#annotations"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../classes/ODataAnnotation.html" target="_self" >ODataAnnotation[]</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -444,6 +427,39 @@
 
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="annotations"></a>
+                    <span class="name">
+                        <span ><b>annotations</b></span>
+                        <a href="#annotations"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ODataAnnotation.html" target="_self" >ODataAnnotation[]</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:18</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
 </section>
 
             <section>
@@ -471,8 +487,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="92"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:92</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="80"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:80</a></div>
                 </td>
             </tr>
 
@@ -523,83 +539,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findAnnotation"></a>
-                    <span class="name">
-                        <span ><b>findAnnotation</b></span>
-                        <a href="#findAnnotation"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findAnnotation(predicate: (annot: <a href="../classes/ODataAnnotation.html">ODataAnnotation</a>) => void)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="62"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:62</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Find an annotation inside the schema.</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>predicate</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>Function that returns true if the annotation match.</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>The annotation that matches the predicate.</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="findCallableForType"></a>
                     <span class="name">
                         <span class="modifier">Public</span>
@@ -618,8 +557,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="79"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:79</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="67"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:67</a></div>
                 </td>
             </tr>
 
@@ -709,8 +648,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="87"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:87</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="75"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:75</a></div>
                 </td>
             </tr>
 
@@ -780,8 +719,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="67"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:67</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:55</a></div>
                 </td>
             </tr>
 
@@ -859,8 +798,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="73"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:73</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="61"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:61</a></div>
                 </td>
             </tr>
 
@@ -936,8 +875,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="43"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:43</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="40"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:40</a></div>
                 </td>
             </tr>
 
@@ -985,6 +924,180 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="annotatedValue"></a>
+                    <span class="name">
+                        <span ><b>annotatedValue</b></span>
+                        <a href="#annotatedValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>annotatedValue(term: string | RegExp)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:39</a></code>
+</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find an annotation inside the annotatable and return its value.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>term</td>
+                                    <td>
+                                            <code>string | RegExp</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>The term of the annotation to find.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>T | undefined</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The value of the annotation.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAnnotation"></a>
+                    <span class="name">
+                        <span ><b>findAnnotation</b></span>
+                        <a href="#findAnnotation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findAnnotation(predicate: (annot: <a href="../classes/ODataAnnotation.html">ODataAnnotation</a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:30</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find an annotation inside the annotatable.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>predicate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Function that returns true if the annotation match.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The annotation that matches the predicate.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
 
@@ -1011,7 +1124,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:50</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/schema/schema.ts:47</a></div>
                                 </td>
                             </tr>
 
@@ -1025,7 +1138,7 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Parser, SchemaConfig } from &#x27;../types&#x27;;
 
 import { OData } from &#x27;../utils/odata&#x27;;
-import { ODataAnnotation } from &#x27;./annotation&#x27;;
+import { ODataAnnotatable, ODataAnnotation } from &#x27;./base&#x27;;
 import { ODataApi } from &#x27;../api&#x27;;
 import { ODataCallable } from &#x27;./callable&#x27;;
 import { ODataEntityContainer } from &#x27;./entity-container&#x27;;
@@ -1033,7 +1146,7 @@ import { ODataEntitySet } from &#x27;./entity-set&#x27;;
 import { ODataEnumType } from &#x27;./enum-type&#x27;;
 import { ODataStructuredType } from &#x27;./structured-type&#x27;;
 
-export class ODataSchema {
+export class ODataSchema extends ODataAnnotatable {
   api: ODataApi;
   namespace: string;
   alias?: string;
@@ -1041,9 +1154,9 @@ export class ODataSchema {
   entities: ODataStructuredType&lt;any&gt;[];
   callables: ODataCallable&lt;any&gt;[];
   containers: ODataEntityContainer[];
-  annotations: ODataAnnotation[];
 
   constructor(config: SchemaConfig, api: ODataApi) {
+    super(config);
     this.api &#x3D; api;
     this.namespace &#x3D; config.namespace;
     this.alias &#x3D; config.alias;
@@ -1059,9 +1172,6 @@ export class ODataSchema {
     this.containers &#x3D; (config.containers || []).map(
       (config) &#x3D;&gt; new ODataEntityContainer(config, this)
     );
-    this.annotations &#x3D; (config.annotations || []).map(
-      (config) &#x3D;&gt; new ODataAnnotation(config)
-    );
   }
 
   isNamespaceOf(type: string) {
@@ -1076,15 +1186,6 @@ export class ODataSchema {
       (acc, container) &#x3D;&gt; [...acc, ...container.entitySets],
       [] as ODataEntitySet[]
     );
-  }
-
-  /**
-   * Find an annotation inside the schema.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) &#x3D;&gt; boolean) {
-    return this.annotations.find(predicate);
   }
 
   //#region Find for Type

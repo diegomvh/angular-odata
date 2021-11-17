@@ -83,13 +83,13 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#distance" >distance</a>
+                                <a href="#geoDistance" >geoDistance</a>
                             </li>
                             <li>
-                                <a href="#intersects" >intersects</a>
+                                <a href="#geoIntersects" >geoIntersects</a>
                             </li>
                             <li>
-                                <a href="#length" >length</a>
+                                <a href="#geoLength" >geoLength</a>
                             </li>
                         </ul>
                     </td>
@@ -114,24 +114,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="distance"></a>
+                    <a name="geoDistance"></a>
                     <span class="name">
-                        <span ><b>distance</b></span>
-                        <a href="#distance"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>geoDistance</b></span>
+                        <a href="#geoDistance"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>distance(value: T, point: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, normalize?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>geoDistance(value: T, point: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, normalize?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="193"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:193</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="225"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:225</a></div>
                 </td>
             </tr>
 
@@ -207,24 +207,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="intersects"></a>
+                    <a name="geoIntersects"></a>
                     <span class="name">
-                        <span ><b>intersects</b></span>
-                        <a href="#intersects"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>geoIntersects</b></span>
+                        <a href="#geoIntersects"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>intersects(value: T, polygon: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, normalize?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>geoIntersects(value: T, polygon: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, normalize?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="196"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:196</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="228"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:228</a></div>
                 </td>
             </tr>
 
@@ -300,24 +300,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="length"></a>
+                    <a name="geoLength"></a>
                     <span class="name">
-                        <span ><b>length</b></span>
-                        <a href="#length"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>geoLength</b></span>
+                        <a href="#geoLength"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>length(value: T, normalize?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>geoLength(line: T, normalize?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="199"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:199</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="231"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:231</a></div>
                 </td>
             </tr>
 
@@ -338,7 +338,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>value</td>
+                                    <td>line</td>
                                     <td>
                                             <code>T</code>
                                     </td>
@@ -391,7 +391,13 @@
 import type { QueryCustomType } from &#x27;./builder&#x27;;
 
 export interface Renderable {
-  render(aliases?: QueryCustomType[]): string;
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+  }): string;
   toString(): string;
   toJSON(): any;
 }
@@ -416,23 +422,35 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
 
 function render(
   value: any,
-  aliases?: QueryCustomType[],
-  normalize?: boolean
+  {
+    aliases,
+    normalize,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    normalize?: boolean;
+    escape?: boolean;
+  } &#x3D; {}
 ): string | number | boolean | null {
   if (typeof value &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {
-    return render(value(syntax), aliases, normalize);
+    return render(value(syntax), { aliases, normalize });
   }
   if (typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; value !&#x3D;&#x3D; null &amp;&amp; &#x27;render&#x27; in value) {
-    return render(value.render(aliases), aliases, normalize);
+    return render(value.render({ aliases, escape }), {
+      aliases,
+      normalize,
+      escape,
+    });
   }
-  return normalize ? normalizeValue(value, aliases) : value;
+  return normalize ? normalizeValue(value, { aliases, escape }) : value;
 }
 
 export class Function&lt;T&gt; implements Renderable {
   constructor(
     protected name: string,
     protected values: any[],
-    protected normalize: boolean &#x3D; true
+    protected normalize: boolean &#x3D; true,
+    protected escape: boolean &#x3D; false
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -447,13 +465,21 @@ export class Function&lt;T&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+  }): string {
     let [field, ...values] &#x3D; this.values;
 
     field &#x3D; render(field);
     let params &#x3D; [
       field,
-      ...values.map((v) &#x3D;&gt; render(v, aliases, this.normalize)),
+      ...values.map((v) &#x3D;&gt;
+        render(v, { aliases, escape, normalize: this.normalize })
+      ),
     ];
     return &#x60;${this.name}(${params.join(&#x27;, &#x27;)})&#x60;;
   }
@@ -463,27 +489,33 @@ export class StringAndCollectionFunctions&lt;T&gt; {
   concat(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;concat&#x27;, [field, value], normalize);
   }
+
   contains(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;contains&#x27;, [field, value], normalize);
   }
+
   endsWith(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;endswith&#x27;, [field, value], normalize);
   }
+
   indexOf(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;indexof&#x27;, [field, value], normalize);
   }
+
   length(value: T, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;length&#x27;, [value], normalize);
   }
+
   startsWith(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;startswith&#x27;, [field, value], normalize);
   }
-  subString(field: T, start: any, length?: any, normalize?: boolean) {
+
+  subString(field: T, start: number, length?: number) {
     let values &#x3D; [field, start];
     if (length !&#x3D;&#x3D; undefined) {
       values.push(length);
     }
-    return new Function&lt;T&gt;(&#x27;substring&#x27;, values, normalize);
+    return new Function&lt;T&gt;(&#x27;substring&#x27;, values);
   }
 }
 
@@ -579,14 +611,14 @@ export class TypeFunctions&lt;T&gt; {
 }
 
 export class GeoFunctions&lt;T&gt; {
-  distance(value: T, point: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;distance&#x27;, [value, point], normalize);
+  geoDistance(value: T, point: string, normalize?: boolean) {
+    return new Function&lt;T&gt;(&#x27;geo.distance&#x27;, [value, point], normalize);
   }
-  intersects(value: T, polygon: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;intersects&#x27;, [value, polygon], normalize);
+  geoIntersects(value: T, polygon: string, normalize?: boolean) {
+    return new Function&lt;T&gt;(&#x27;geo.intersects&#x27;, [value, polygon], normalize);
   }
-  length(value: T, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;length&#x27;, [value], normalize);
+  geoLength(line: T, normalize?: boolean) {
+    return new Function&lt;T&gt;(&#x27;geo.length&#x27;, [line], normalize);
   }
 }
 
@@ -615,14 +647,32 @@ export class Operator&lt;T&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
     let [left, right] &#x3D; this.values;
 
-    left &#x3D; render(left);
+    left &#x3D; render(left, { aliases, escape });
     if (right !&#x3D;&#x3D; undefined) {
       right &#x3D; Array.isArray(right)
-        ? &#x60;(${right.map((v) &#x3D;&gt; render(v, aliases, this.normalize)).join(&#x27;,&#x27;)})&#x60;
-        : render(right, aliases, this.normalize);
+        ? &#x60;(${right
+            .map((v) &#x3D;&gt;
+              render(v, {
+                aliases,
+                escape,
+                normalize: this.normalize,
+              })
+            )
+            .join(&#x27;,&#x27;)})&#x60;
+        : render(right, {
+            aliases,
+            escape,
+            normalize: this.normalize,
+          });
       return &#x60;${left} ${this.op} ${right}&#x60;;
     }
     return &#x60;${this.op}(${left})&#x60;;
@@ -699,8 +749,14 @@ export class Grouping&lt;T&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
-    return &#x60;(${render(this.group, aliases)})&#x60;;
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
+    return &#x60;(${render(this.group, { aliases })})&#x60;;
   }
 }
 
@@ -718,8 +774,14 @@ export class Navigation&lt;T, N&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
-    return &#x60;${this.field}/${render(this.value, aliases)}&#x60;;
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
+    return &#x60;${this.field}/${render(this.value, { aliases, escape })}&#x60;;
   }
 }
 
@@ -746,12 +808,21 @@ export class Lambda&lt;T&gt; extends Operator&lt;T&gt; {
     return &#x27;Lambda&#x27;;
   }
 
-  render(aliases?: QueryCustomType[]): string {
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
     let [left, right] &#x3D; this.values;
 
-    left &#x3D; render(left, aliases);
+    left &#x3D; render(left, { aliases, escape });
     let alias &#x3D; left.split(&#x27;/&#x27;).pop().toLowerCase();
-    return &#x60;${left}/${this.op}(${alias}:${alias}/${render(right, aliases)})&#x60;;
+    return &#x60;${left}/${this.op}(${alias}:${alias}/${render(right, {
+      aliases,
+      escape,
+    })})&#x60;;
   }
 }
 

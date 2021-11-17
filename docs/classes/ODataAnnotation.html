@@ -61,7 +61,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/schema/annotation.ts</code>
+            <code>projects/angular-odata/src/lib/schema/base.ts</code>
         </p>
 
 
@@ -128,7 +128,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/schema/annotation.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/schema/base.ts:9</a></div>
                             </td>
                         </tr>
 
@@ -191,7 +191,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/schema/annotation.ts:6</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">projects/angular-odata/src/lib/schema/base.ts:6</a></div>
                         </td>
                     </tr>
 
@@ -218,7 +218,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/schema/annotation.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/schema/base.ts:7</a></div>
                         </td>
                     </tr>
 
@@ -245,7 +245,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/annotation.ts:8</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/base.ts:8</a></div>
                         </td>
                     </tr>
 
@@ -272,7 +272,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/schema/annotation.ts:9</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/schema/base.ts:9</a></div>
                         </td>
                     </tr>
 
@@ -299,7 +299,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/schema/annotation.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/schema/base.ts:5</a></div>
                         </td>
                     </tr>
 
@@ -325,7 +325,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="4" class="link-to-prism">projects/angular-odata/src/lib/schema/annotation.ts:4</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="4" class="link-to-prism">projects/angular-odata/src/lib/schema/base.ts:4</a></div>
                         </td>
                     </tr>
 
@@ -357,6 +357,42 @@ export class ODataAnnotation {
   constructor(annot: AnnotationConfig) {
     this.term &#x3D; annot.term;
     Object.assign(this, annot);
+  }
+}
+
+export class ODataAnnotatable {
+  annotations: ODataAnnotation[];
+  constructor(config: { annotations?: AnnotationConfig[] }) {
+    this.annotations &#x3D; (config.annotations || []).map(
+      (annot) &#x3D;&gt; new ODataAnnotation(annot)
+    );
+  }
+
+  /**
+   * Find an annotation inside the annotatable.
+   * @param predicate Function that returns true if the annotation match.
+   * @returns The annotation that matches the predicate.
+   */
+  findAnnotation(predicate: (annot: ODataAnnotation) &#x3D;&gt; boolean) {
+    return this.annotations.find(predicate);
+  }
+
+  /**
+   * Find an annotation inside the annotatable and return its value.
+   * @param term The term of the annotation to find.
+   * @returns The value of the annotation.
+   */
+  annotatedValue&lt;T&gt;(term: string | RegExp): T | undefined {
+    const reg &#x3D; term instanceof RegExp ? term : new RegExp(&#x60;^${term}$&#x60;);
+    const annot &#x3D; this.findAnnotation((a) &#x3D;&gt; reg.test(a.term));
+    if (!annot) {
+      return undefined;
+    }
+    return (annot.string ||
+      annot.bool ||
+      annot.int ||
+      annot.permissions ||
+      annot.properties) as any;
   }
 }
 </code></pre>

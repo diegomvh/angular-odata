@@ -127,8 +127,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="183"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:183</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="215"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:215</a></div>
                 </td>
             </tr>
 
@@ -208,8 +208,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="187"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:187</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="219"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:219</a></div>
                 </td>
             </tr>
 
@@ -283,7 +283,13 @@
 import type { QueryCustomType } from &#x27;./builder&#x27;;
 
 export interface Renderable {
-  render(aliases?: QueryCustomType[]): string;
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+  }): string;
   toString(): string;
   toJSON(): any;
 }
@@ -308,23 +314,35 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
 
 function render(
   value: any,
-  aliases?: QueryCustomType[],
-  normalize?: boolean
+  {
+    aliases,
+    normalize,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    normalize?: boolean;
+    escape?: boolean;
+  } &#x3D; {}
 ): string | number | boolean | null {
   if (typeof value &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {
-    return render(value(syntax), aliases, normalize);
+    return render(value(syntax), { aliases, normalize });
   }
   if (typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; value !&#x3D;&#x3D; null &amp;&amp; &#x27;render&#x27; in value) {
-    return render(value.render(aliases), aliases, normalize);
+    return render(value.render({ aliases, escape }), {
+      aliases,
+      normalize,
+      escape,
+    });
   }
-  return normalize ? normalizeValue(value, aliases) : value;
+  return normalize ? normalizeValue(value, { aliases, escape }) : value;
 }
 
 export class Function&lt;T&gt; implements Renderable {
   constructor(
     protected name: string,
     protected values: any[],
-    protected normalize: boolean &#x3D; true
+    protected normalize: boolean &#x3D; true,
+    protected escape: boolean &#x3D; false
   ) {}
 
   get [Symbol.toStringTag]() {
@@ -339,13 +357,21 @@ export class Function&lt;T&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+  }): string {
     let [field, ...values] &#x3D; this.values;
 
     field &#x3D; render(field);
     let params &#x3D; [
       field,
-      ...values.map((v) &#x3D;&gt; render(v, aliases, this.normalize)),
+      ...values.map((v) &#x3D;&gt;
+        render(v, { aliases, escape, normalize: this.normalize })
+      ),
     ];
     return &#x60;${this.name}(${params.join(&#x27;, &#x27;)})&#x60;;
   }
@@ -355,27 +381,33 @@ export class StringAndCollectionFunctions&lt;T&gt; {
   concat(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;concat&#x27;, [field, value], normalize);
   }
+
   contains(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;contains&#x27;, [field, value], normalize);
   }
+
   endsWith(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;endswith&#x27;, [field, value], normalize);
   }
+
   indexOf(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;indexof&#x27;, [field, value], normalize);
   }
+
   length(value: T, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;length&#x27;, [value], normalize);
   }
+
   startsWith(field: T, value: any, normalize?: boolean) {
     return new Function&lt;T&gt;(&#x27;startswith&#x27;, [field, value], normalize);
   }
-  subString(field: T, start: any, length?: any, normalize?: boolean) {
+
+  subString(field: T, start: number, length?: number) {
     let values &#x3D; [field, start];
     if (length !&#x3D;&#x3D; undefined) {
       values.push(length);
     }
-    return new Function&lt;T&gt;(&#x27;substring&#x27;, values, normalize);
+    return new Function&lt;T&gt;(&#x27;substring&#x27;, values);
   }
 }
 
@@ -471,14 +503,14 @@ export class TypeFunctions&lt;T&gt; {
 }
 
 export class GeoFunctions&lt;T&gt; {
-  distance(value: T, point: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;distance&#x27;, [value, point], normalize);
+  geoDistance(value: T, point: string, normalize?: boolean) {
+    return new Function&lt;T&gt;(&#x27;geo.distance&#x27;, [value, point], normalize);
   }
-  intersects(value: T, polygon: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;intersects&#x27;, [value, polygon], normalize);
+  geoIntersects(value: T, polygon: string, normalize?: boolean) {
+    return new Function&lt;T&gt;(&#x27;geo.intersects&#x27;, [value, polygon], normalize);
   }
-  length(value: T, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;length&#x27;, [value], normalize);
+  geoLength(line: T, normalize?: boolean) {
+    return new Function&lt;T&gt;(&#x27;geo.length&#x27;, [line], normalize);
   }
 }
 
@@ -507,14 +539,32 @@ export class Operator&lt;T&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
     let [left, right] &#x3D; this.values;
 
-    left &#x3D; render(left);
+    left &#x3D; render(left, { aliases, escape });
     if (right !&#x3D;&#x3D; undefined) {
       right &#x3D; Array.isArray(right)
-        ? &#x60;(${right.map((v) &#x3D;&gt; render(v, aliases, this.normalize)).join(&#x27;,&#x27;)})&#x60;
-        : render(right, aliases, this.normalize);
+        ? &#x60;(${right
+            .map((v) &#x3D;&gt;
+              render(v, {
+                aliases,
+                escape,
+                normalize: this.normalize,
+              })
+            )
+            .join(&#x27;,&#x27;)})&#x60;
+        : render(right, {
+            aliases,
+            escape,
+            normalize: this.normalize,
+          });
       return &#x60;${left} ${this.op} ${right}&#x60;;
     }
     return &#x60;${this.op}(${left})&#x60;;
@@ -591,8 +641,14 @@ export class Grouping&lt;T&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
-    return &#x60;(${render(this.group, aliases)})&#x60;;
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
+    return &#x60;(${render(this.group, { aliases })})&#x60;;
   }
 }
 
@@ -610,8 +666,14 @@ export class Navigation&lt;T, N&gt; implements Renderable {
     };
   }
 
-  render(aliases?: QueryCustomType[]): string {
-    return &#x60;${this.field}/${render(this.value, aliases)}&#x60;;
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
+    return &#x60;${this.field}/${render(this.value, { aliases, escape })}&#x60;;
   }
 }
 
@@ -638,12 +700,21 @@ export class Lambda&lt;T&gt; extends Operator&lt;T&gt; {
     return &#x27;Lambda&#x27;;
   }
 
-  render(aliases?: QueryCustomType[]): string {
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape: boolean;
+  }): string {
     let [left, right] &#x3D; this.values;
 
-    left &#x3D; render(left, aliases);
+    left &#x3D; render(left, { aliases, escape });
     let alias &#x3D; left.split(&#x27;/&#x27;).pop().toLowerCase();
-    return &#x60;${left}/${this.op}(${alias}:${alias}/${render(right, aliases)})&#x60;;
+    return &#x60;${left}/${this.op}(${alias}:${alias}/${render(right, {
+      aliases,
+      escape,
+    })})&#x60;;
   }
 }
 

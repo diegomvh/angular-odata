@@ -61,7 +61,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/parsers/structured-type.ts</code>
+            <code>projects/angular-odata/src/lib/schema/parsers/structured-type.ts</code>
         </p>
 
 
@@ -112,7 +112,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:36</a></div>
                             </td>
                         </tr>
 
@@ -174,7 +174,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -200,7 +200,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -219,7 +219,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Objects, Types } from &#x27;../utils&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
 import {
   Parser,
   StructuredTypeFieldConfig,
@@ -228,12 +228,12 @@ import {
   NONE_PARSER,
   StructuredTypeFieldOptions,
   Options,
-} from &#x27;../types&#x27;;
+} from &#x27;../../types&#x27;;
 import { ODataEnumTypeParser } from &#x27;./enum-type&#x27;;
-import { COMPUTED } from &#x27;../constants&#x27;;
-import { ODataAnnotation } from &#x27;../schema/annotation&#x27;;
-import { raw } from &#x27;../resources/query&#x27;;
-import { ODataParserOptions } from &#x27;../options&#x27;;
+import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from &#x27;../../constants&#x27;;
+import { ODataAnnotatable } from &#x27;../base&#x27;;
+import { raw } from &#x27;../../resources/query&#x27;;
+import { ODataParserOptions } from &#x27;../../options&#x27;;
 
 // JSON SCHEMA
 type JsonSchemaSelect&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
@@ -276,7 +276,10 @@ export class ODataReferential {
   }
 }
 
-export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; {
+export class ODataStructuredTypeFieldParser&lt;T&gt;
+  extends ODataAnnotatable
+  implements Parser&lt;T&gt;
+{
   name: string;
   private structuredType: ODataStructuredTypeParser&lt;any&gt;;
   type: string;
@@ -289,7 +292,6 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
   precision?: number;
   scale?: number;
   referentials: ODataReferential[];
-  annotations: ODataAnnotation[];
   optionsHelper?: OptionsHelper;
 
   constructor(
@@ -297,32 +299,21 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
     structuredType: ODataStructuredTypeParser&lt;any&gt;,
     field: StructuredTypeFieldConfig
   ) {
+    super(field);
     this.name &#x3D; name;
     this.structuredType &#x3D; structuredType;
     this.type &#x3D; field.type;
     this.parser &#x3D; NONE_PARSER;
-    this.annotations &#x3D; (field.annotations || []).map(
-      (annot) &#x3D;&gt; new ODataAnnotation(annot)
-    );
     this.referentials &#x3D; (field.referentials || []).map(
       (referential) &#x3D;&gt; new ODataReferential(referential)
     );
     this.default &#x3D; field.default;
     this.maxLength &#x3D; field.maxLength;
-    this.collection &#x3D; field.collection !&#x3D;&#x3D; undefined ? field.collection : false;
     this.nullable &#x3D; field.nullable !&#x3D;&#x3D; undefined ? field.nullable : true;
-    this.navigation &#x3D; field.navigation !&#x3D;&#x3D; undefined ? field.navigation : false;
+    this.collection &#x3D; Boolean(field.collection);
+    this.navigation &#x3D; Boolean(field.navigation);
     this.precision &#x3D; field.precision;
     this.scale &#x3D; field.scale;
-  }
-
-  /**
-   * Find an annotation inside the structured field type.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) &#x3D;&gt; boolean) {
-    return this.annotations.find(predicate);
   }
 
   validate(
@@ -360,12 +351,12 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
       errors &#x3D; this.enum().validate(value, { method, navigation });
     } else {
       // IsEdmType
-      const computed &#x3D; this.findAnnotation((a) &#x3D;&gt; a.term &#x3D;&#x3D;&#x3D; COMPUTED);
+      const computed &#x3D; this.annotatedValue&lt;boolean&gt;(COMPUTED);
       errors &#x3D; [];
       if (
         !this.nullable &amp;&amp;
         (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;modify&#x27;)) &amp;&amp; // Is null or undefined without patch?
-        !(computed?.bool &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
+        !(computed &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
       ) {
         errors.push(&#x60;required&#x60;);
       }
@@ -472,8 +463,9 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
   }) {
     this.optionsHelper &#x3D; options;
     this.parser &#x3D; parserForType(this.type);
-    if (this.default !&#x3D;&#x3D; undefined)
+    if (this.default !&#x3D;&#x3D; undefined) {
       this.default &#x3D; this.deserialize(this.default, options);
+    }
   }
 
   //#region Json Schema
@@ -564,7 +556,10 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
   }
 }
 
-export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
+export class ODataStructuredTypeParser&lt;T&gt;
+  extends ODataAnnotatable
+  implements Parser&lt;T&gt;
+{
   name: string;
   namespace: string;
   open: boolean;
@@ -581,6 +576,7 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     namespace: string,
     alias?: string
   ) {
+    super(config);
     this.name &#x3D; config.name;
     this.base &#x3D; config.base;
     this.open &#x3D; config.open || false;
@@ -593,6 +589,16 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     ).map(
       ([name, config]) &#x3D;&gt; new ODataStructuredTypeFieldParser(name, this, config)
     );
+  }
+
+  /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string {
+    return this.annotatedValue(term) || Strings.titleCase(this.name);
   }
 
   isTypeOf(type: string) {
@@ -748,7 +754,8 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     let schema: any &#x3D; this.parent?.toJsonSchema(options) || {
       $schema: &#x27;http://json-schema.org/draft-07/schema#&#x27;,
       $id: &#x60;${this.namespace}.${this.name}&#x60;,
-      title: this.name,
+      title: this.titelize(DESCRIPTION),
+      description: this.annotatedValue(LONG_DESCRIPTION),
       type: &#x27;object&#x27;,
       properties: {},
       required: [],

@@ -61,11 +61,17 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/parsers/structured-type.ts</code>
+            <code>projects/angular-odata/src/lib/schema/parsers/structured-type.ts</code>
         </p>
 
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+            </p>
 
             <p class="comment">
                 <h3>Implements</h3>
@@ -122,6 +128,9 @@
                                     <span class="modifier">Optional</span>
                                 <a href="#parent" >parent</a>
                             </li>
+                            <li>
+                                <a href="#annotations" >annotations</a>
+                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -162,6 +171,9 @@
                                 <a href="#serialize" >serialize</a>
                             </li>
                             <li>
+                                <a href="#titelize" >titelize</a>
+                            </li>
+                            <li>
                                 <a href="#toJsonSchema" >toJsonSchema</a>
                             </li>
                             <li>
@@ -169,6 +181,12 @@
                             </li>
                             <li>
                                 <a href="#validate" >validate</a>
+                            </li>
+                            <li>
+                                <a href="#annotatedValue" >annotatedValue</a>
+                            </li>
+                            <li>
+                                <a href="#findAnnotation" >findAnnotation</a>
                             </li>
                         </ul>
                     </td>
@@ -193,7 +211,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="356" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:356</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="351" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:351</a></div>
                             </td>
                         </tr>
 
@@ -280,7 +298,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="351" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:351</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="346" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:346</a></div>
                         </td>
                     </tr>
 
@@ -307,7 +325,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="352" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:352</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="347" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:347</a></div>
                         </td>
                     </tr>
 
@@ -338,7 +356,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="350" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:350</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="345" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:345</a></div>
                         </td>
                     </tr>
 
@@ -364,7 +382,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="355" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:355</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="350" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:350</a></div>
                         </td>
                     </tr>
 
@@ -391,7 +409,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="354" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:354</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="349" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:349</a></div>
                         </td>
                     </tr>
 
@@ -417,7 +435,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="347" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:347</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="342" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:342</a></div>
                         </td>
                     </tr>
 
@@ -443,7 +461,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="348" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:348</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="343" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:343</a></div>
                         </td>
                     </tr>
 
@@ -469,7 +487,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="349" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:349</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="344" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:344</a></div>
                         </td>
                     </tr>
 
@@ -496,7 +514,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="356" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:356</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="351" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:351</a></div>
                         </td>
                     </tr>
 
@@ -523,7 +541,40 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="353" class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:353</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="348" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:348</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="annotations"></a>
+                    <span class="name">
+                        <span ><b>annotations</b></span>
+                        <a href="#annotations"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../classes/ODataAnnotation.html" target="_self" >ODataAnnotation[]</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:18</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -557,8 +608,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="402"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:402</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="408"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:408</a></div>
                 </td>
             </tr>
 
@@ -626,8 +677,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="467"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:467</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="473"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:473</a></div>
                 </td>
             </tr>
 
@@ -694,8 +745,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="509"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:509</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="515"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:515</a></div>
                 </td>
             </tr>
 
@@ -731,8 +782,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="409"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:409</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="415"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:415</a></div>
                 </td>
             </tr>
 
@@ -812,8 +863,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="459"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:459</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="465"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:465</a></div>
                 </td>
             </tr>
 
@@ -893,8 +944,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="390"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:390</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="396"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:396</a></div>
                 </td>
             </tr>
 
@@ -962,8 +1013,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="377"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:377</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="383"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:383</a></div>
                 </td>
             </tr>
 
@@ -1031,8 +1082,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="483"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:483</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="489"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:489</a></div>
                 </td>
             </tr>
 
@@ -1100,8 +1151,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="433"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:433</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="439"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:439</a></div>
                 </td>
             </tr>
 
@@ -1165,6 +1216,84 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="titelize"></a>
+                    <span class="name">
+                        <span ><b>titelize</b></span>
+                        <a href="#titelize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>titelize(term: string | RegExp)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="379"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:379</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Create a nicer looking title.
+Titleize is meant for creating pretty output.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>term</td>
+                                    <td>
+                                            <code>string | RegExp</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>The term of the annotation to find.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The titleized string.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="toJsonSchema"></a>
                     <span class="name">
                         <span ><b>toJsonSchema</b></span>
@@ -1181,8 +1310,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="526"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:526</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="532"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:532</a></div>
                 </td>
             </tr>
 
@@ -1254,8 +1383,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="383"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:383</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="389"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:389</a></div>
                 </td>
             </tr>
 
@@ -1323,8 +1452,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="574"
-                            class="link-to-prism">projects/angular-odata/src/lib/parsers/structured-type.ts:574</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="581"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:581</a></div>
                 </td>
             </tr>
 
@@ -1389,6 +1518,180 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="annotatedValue"></a>
+                    <span class="name">
+                        <span ><b>annotatedValue</b></span>
+                        <a href="#annotatedValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>annotatedValue(term: string | RegExp)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:39</a></code>
+</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find an annotation inside the annotatable and return its value.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>term</td>
+                                    <td>
+                                            <code>string | RegExp</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>The term of the annotation to find.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>T | undefined</code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The value of the annotation.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findAnnotation"></a>
+                    <span class="name">
+                        <span ><b>findAnnotation</b></span>
+                        <a href="#findAnnotation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findAnnotation(predicate: (annot: <a href="../classes/ODataAnnotation.html">ODataAnnotation</a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotatable.html#source" target="_self" >ODataAnnotatable:30</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find an annotation inside the annotatable.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>predicate</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Function that returns true if the annotation match.</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The annotation that matches the predicate.</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
 
@@ -1399,7 +1702,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Objects, Types } from &#x27;../utils&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
 import {
   Parser,
   StructuredTypeFieldConfig,
@@ -1408,12 +1711,12 @@ import {
   NONE_PARSER,
   StructuredTypeFieldOptions,
   Options,
-} from &#x27;../types&#x27;;
+} from &#x27;../../types&#x27;;
 import { ODataEnumTypeParser } from &#x27;./enum-type&#x27;;
-import { COMPUTED } from &#x27;../constants&#x27;;
-import { ODataAnnotation } from &#x27;../schema/annotation&#x27;;
-import { raw } from &#x27;../resources/query&#x27;;
-import { ODataParserOptions } from &#x27;../options&#x27;;
+import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from &#x27;../../constants&#x27;;
+import { ODataAnnotatable } from &#x27;../base&#x27;;
+import { raw } from &#x27;../../resources/query&#x27;;
+import { ODataParserOptions } from &#x27;../../options&#x27;;
 
 // JSON SCHEMA
 type JsonSchemaSelect&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
@@ -1456,7 +1759,10 @@ export class ODataReferential {
   }
 }
 
-export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; {
+export class ODataStructuredTypeFieldParser&lt;T&gt;
+  extends ODataAnnotatable
+  implements Parser&lt;T&gt;
+{
   name: string;
   private structuredType: ODataStructuredTypeParser&lt;any&gt;;
   type: string;
@@ -1469,7 +1775,6 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
   precision?: number;
   scale?: number;
   referentials: ODataReferential[];
-  annotations: ODataAnnotation[];
   optionsHelper?: OptionsHelper;
 
   constructor(
@@ -1477,32 +1782,21 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
     structuredType: ODataStructuredTypeParser&lt;any&gt;,
     field: StructuredTypeFieldConfig
   ) {
+    super(field);
     this.name &#x3D; name;
     this.structuredType &#x3D; structuredType;
     this.type &#x3D; field.type;
     this.parser &#x3D; NONE_PARSER;
-    this.annotations &#x3D; (field.annotations || []).map(
-      (annot) &#x3D;&gt; new ODataAnnotation(annot)
-    );
     this.referentials &#x3D; (field.referentials || []).map(
       (referential) &#x3D;&gt; new ODataReferential(referential)
     );
     this.default &#x3D; field.default;
     this.maxLength &#x3D; field.maxLength;
-    this.collection &#x3D; field.collection !&#x3D;&#x3D; undefined ? field.collection : false;
     this.nullable &#x3D; field.nullable !&#x3D;&#x3D; undefined ? field.nullable : true;
-    this.navigation &#x3D; field.navigation !&#x3D;&#x3D; undefined ? field.navigation : false;
+    this.collection &#x3D; Boolean(field.collection);
+    this.navigation &#x3D; Boolean(field.navigation);
     this.precision &#x3D; field.precision;
     this.scale &#x3D; field.scale;
-  }
-
-  /**
-   * Find an annotation inside the structured field type.
-   * @param predicate Function that returns true if the annotation match.
-   * @returns The annotation that matches the predicate.
-   */
-  findAnnotation(predicate: (annot: ODataAnnotation) &#x3D;&gt; boolean) {
-    return this.annotations.find(predicate);
   }
 
   validate(
@@ -1540,12 +1834,12 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
       errors &#x3D; this.enum().validate(value, { method, navigation });
     } else {
       // IsEdmType
-      const computed &#x3D; this.findAnnotation((a) &#x3D;&gt; a.term &#x3D;&#x3D;&#x3D; COMPUTED);
+      const computed &#x3D; this.annotatedValue&lt;boolean&gt;(COMPUTED);
       errors &#x3D; [];
       if (
         !this.nullable &amp;&amp;
         (value &#x3D;&#x3D;&#x3D; null || (value &#x3D;&#x3D;&#x3D; undefined &amp;&amp; method !&#x3D;&#x3D; &#x27;modify&#x27;)) &amp;&amp; // Is null or undefined without patch?
-        !(computed?.bool &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
+        !(computed &amp;&amp; method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;) // Not (Is Computed field and create) ?
       ) {
         errors.push(&#x60;required&#x60;);
       }
@@ -1652,8 +1946,9 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
   }) {
     this.optionsHelper &#x3D; options;
     this.parser &#x3D; parserForType(this.type);
-    if (this.default !&#x3D;&#x3D; undefined)
+    if (this.default !&#x3D;&#x3D; undefined) {
       this.default &#x3D; this.deserialize(this.default, options);
+    }
   }
 
   //#region Json Schema
@@ -1744,7 +2039,10 @@ export class ODataStructuredTypeFieldParser&lt;T&gt; implements Parser&lt;T&gt; 
   }
 }
 
-export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
+export class ODataStructuredTypeParser&lt;T&gt;
+  extends ODataAnnotatable
+  implements Parser&lt;T&gt;
+{
   name: string;
   namespace: string;
   open: boolean;
@@ -1761,6 +2059,7 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     namespace: string,
     alias?: string
   ) {
+    super(config);
     this.name &#x3D; config.name;
     this.base &#x3D; config.base;
     this.open &#x3D; config.open || false;
@@ -1773,6 +2072,16 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     ).map(
       ([name, config]) &#x3D;&gt; new ODataStructuredTypeFieldParser(name, this, config)
     );
+  }
+
+  /**
+   * Create a nicer looking title.
+   * Titleize is meant for creating pretty output.
+   * @param term The term of the annotation to find.
+   * @returns The titleized string.
+   */
+  titelize(term: string | RegExp): string {
+    return this.annotatedValue(term) || Strings.titleCase(this.name);
   }
 
   isTypeOf(type: string) {
@@ -1928,7 +2237,8 @@ export class ODataStructuredTypeParser&lt;T&gt; implements Parser&lt;T&gt; {
     let schema: any &#x3D; this.parent?.toJsonSchema(options) || {
       $schema: &#x27;http://json-schema.org/draft-07/schema#&#x27;,
       $id: &#x60;${this.namespace}.${this.name}&#x60;,
-      title: this.name,
+      title: this.titelize(DESCRIPTION),
+      description: this.annotatedValue(LONG_DESCRIPTION),
       type: &#x27;object&#x27;,
       properties: {},
       required: [],
