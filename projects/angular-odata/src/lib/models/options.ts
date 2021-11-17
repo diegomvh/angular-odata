@@ -254,10 +254,8 @@ export class ODataModelField<F> {
     return Boolean(this.parser.collection);
   }
 
-  get computed() {
-    return Boolean(
-      this.parser.findAnnotation((a) => a.term === COMPUTED)?.bool
-    );
+  annotatedValue<T>(term: string | RegExp) {
+    return this.parser.annotatedValue<T>(term);
   }
 
   configure({
@@ -329,11 +327,12 @@ export class ODataModelField<F> {
         ? value.models().map((m: ODataModel<any>) => m._errors)
         : undefined;
     } else {
+      const computed = this.annotatedValue<boolean>(COMPUTED);
       let errors = this.parser?.validate(value, { method, navigation }) || [];
       if (
         this.required &&
         (value === null || (value === undefined && method !== 'modify')) && // Is null or undefined without patch?
-        !(this.computed && method === 'create') // Not (Is Computed field and create) ?
+        !(computed && method === 'create') // Not (Is Computed field and create) ?
       ) {
         errors.push(`required`);
       }
@@ -1080,16 +1079,17 @@ export class ODataModelOptions<T> {
     const fieldAttrs = this.fields().reduce((acc, f) => {
       const isChanged = f.name in self._changes;
       const name = field_mapping ? f.field : f.name;
+      const computed = f.annotatedValue<boolean>(COMPUTED);
       const value = isChanged
         ? self._changes[f.name]
         : self._attributes[f.name];
       if (f.concurrency && include_concurrency) {
         return Object.assign(acc, { [name]: value });
-      } else if (f.computed && include_computed) {
+      } else if (computed && include_computed) {
         return Object.assign(acc, { [name]: value });
       } else if (changes_only && isChanged) {
         return Object.assign(acc, { [name]: value });
-      } else if (!changes_only && !f.concurrency && !f.computed) {
+      } else if (!changes_only && !f.concurrency && !computed) {
         return Object.assign(acc, { [name]: value });
       } else {
         return acc;

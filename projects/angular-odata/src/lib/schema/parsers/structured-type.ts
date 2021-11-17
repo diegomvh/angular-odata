@@ -130,12 +130,12 @@ export class ODataStructuredTypeFieldParser<T>
       errors = this.enum().validate(value, { method, navigation });
     } else {
       // IsEdmType
-      const computed = this.findAnnotation((a) => a.term === COMPUTED);
+      const computed = this.annotatedValue<boolean>(COMPUTED);
       errors = [];
       if (
         !this.nullable &&
         (value === null || (value === undefined && method !== 'modify')) && // Is null or undefined without patch?
-        !(computed?.bool && method === 'create') // Not (Is Computed field and create) ?
+        !(computed && method === 'create') // Not (Is Computed field and create) ?
       ) {
         errors.push(`required`);
       }
