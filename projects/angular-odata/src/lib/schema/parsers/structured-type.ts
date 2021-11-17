@@ -1,4 +1,4 @@
-import { Objects, Types } from '../../utils';
+import { Objects, Strings, Types } from '../../utils';
 import {
   Parser,
   StructuredTypeFieldConfig,
@@ -9,7 +9,7 @@ import {
   Options,
 } from '../../types';
 import { ODataEnumTypeParser } from './enum-type';
-import { COMPUTED } from '../../constants';
+import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from '../../constants';
 import { ODataAnnotatable } from '../base';
 import { raw } from '../../resources/query';
 import { ODataParserOptions } from '../../options';
@@ -377,7 +377,7 @@ export class ODataStructuredTypeParser<T>
    * @returns The titleized string.
    */
   titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+    return this.annotatedValue(term) || Strings.titleCase(this.name);
   }
 
   isTypeOf(type: string) {
@@ -533,7 +533,8 @@ export class ODataStructuredTypeParser<T>
     let schema: any = this.parent?.toJsonSchema(options) || {
       $schema: 'http://json-schema.org/draft-07/schema#',
       $id: `${this.namespace}.${this.name}`,
-      title: this.name,
+      title: this.titelize(DESCRIPTION),
+      description: this.annotatedValue(LONG_DESCRIPTION),
       type: 'object',
       properties: {},
       required: [],

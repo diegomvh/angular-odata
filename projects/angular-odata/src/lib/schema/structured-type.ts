@@ -10,6 +10,7 @@ import { ODataAnnotatable } from './base';
 import { ODataCollection } from '../models';
 import { ODataModel } from '../models/model';
 import { ODataSchema } from './schema';
+import { Strings } from '../utils/strings';
 
 export class ODataStructuredType<T> extends ODataAnnotatable {
   name: string;
@@ -80,7 +81,7 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
    * @returns The titleized string.
    */
   titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+    return this.annotatedValue(term) || Strings.titleCase(this.name);
   }
 
   /**

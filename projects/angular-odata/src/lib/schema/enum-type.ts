@@ -3,6 +3,7 @@ import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 
 import { ODataAnnotatable, ODataAnnotation } from './base';
 import { ODataSchema } from './schema';
+import { Strings } from '../utils/strings';
 
 export class ODataEnumType<E> extends ODataAnnotatable {
   schema: ODataSchema;
@@ -28,7 +29,7 @@ export class ODataEnumType<E> extends ODataAnnotatable {
    * @returns The titleized string.
    */
   titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+    return this.annotatedValue(term) || Strings.titleCase(this.name);
   }
 
   /**

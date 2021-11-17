@@ -85,7 +85,7 @@ export const CACHE_KEY_SEPARATOR = ':';
 // Standard vocabularies for annotating OData services
 // http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html
 
-export const COMPUTED = 'Org.OData.Core.V1.Computed';
-export const OPTIMISTIC_CONCURRENCY = 'Org.OData.Core.V1.OptimisticConcurrency';
-export const DESCRIPTION = 'Org.OData.Core.V1.Description';
-export const LONG_DESCRIPTION = 'Org.OData.Core.V1.LongDescription';
+export const COMPUTED = /.*Computed$/;
+export const OPTIMISTIC_CONCURRENCY = /.*OptimisticConcurrency$/;
+export const DESCRIPTION = /.*Description$/;
+export const LONG_DESCRIPTION = /.*LongDescription$/;

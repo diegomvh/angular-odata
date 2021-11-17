@@ -1,4 +1,4 @@
-import { Enums } from '../../utils';
+import { Enums, Strings } from '../../utils';
 import { raw } from '../../resources/query';
 import { ODataAnnotatable } from '../base';
 import {
@@ -56,7 +56,7 @@ export class ODataEnumTypeParser<T>
    * @returns The titleized string.
    */
   titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+    return this.annotatedValue(term) || Strings.titleCase(this.name);
   }
 
   configure({ options }: { options: OptionsHelper }) {

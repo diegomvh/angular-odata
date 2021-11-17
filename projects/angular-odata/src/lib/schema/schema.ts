@@ -37,16 +37,6 @@ export class ODataSchema extends ODataAnnotatable {
     );
   }
 
-  /**
-   * Create a nicer looking title.
-   * Titleize is meant for creating pretty output.
-   * @param term The term of the annotation to find.
-   * @returns The titleized string.
-   */
-  titelize(term: string | RegExp): string | undefined {
-    return this.annotatedValue(term);
-  }
-
   isNamespaceOf(type: string) {
     return (
       type.startsWith(this.namespace) ||

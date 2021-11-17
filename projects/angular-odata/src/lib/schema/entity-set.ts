@@ -1,4 +1,5 @@
 import { EntitySetConfig } from '../types';
+import { Strings } from '../utils/strings';
 import { ODataAnnotatable } from './base';
 import { ODataSchema } from './schema';
 
@@ -22,7 +23,7 @@ export class ODataEntitySet extends ODataAnnotatable {
    * @returns The titleized string.
    */
   titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+    return this.annotatedValue(term) || Strings.titleCase(this.name);
   }
 
   /**

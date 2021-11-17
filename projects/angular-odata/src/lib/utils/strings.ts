@@ -9,4 +9,12 @@ export const Strings = {
   uniqueId(prefix?: string, suffix?: string): string {
     return (prefix ? prefix : '') + now().toString(36) + (suffix ? suffix : '');
   },
+
+  titleCase(text: string): string {
+    const result = text.replace(/([a-z])([A-Z])/g, '$1 $2');
+    return result
+      .split(' ')
+      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+      .join(' ');
+  },
 };

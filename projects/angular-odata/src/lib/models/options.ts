@@ -557,8 +557,7 @@ export class ODataModelOptions<T> {
     let concurrencyFields: string[] = [];
     if (this.entitySet !== undefined) {
       concurrencyFields =
-        this.entitySet.findAnnotation((a) => a.term === OPTIMISTIC_CONCURRENCY)
-          ?.properties || [];
+        this.entitySet.annotatedValue<string[]>(OPTIMISTIC_CONCURRENCY) || [];
     }
     this._fields.forEach((field) => {
       let concurrency = concurrencyFields.indexOf(field.field) !== -1;
