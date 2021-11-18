@@ -2,12 +2,20 @@ import { $ID, $REF, ODATA_ID } from '../../constants';
 
 import { ODataApi } from '../../api';
 import { ODataEntityResource } from './entity';
-import { ODataOptions } from './options';
+import {
+  ODataEntitiesOptions,
+  ODataEntityOptions,
+  ODataOptions,
+} from './options';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import { Observable } from 'rxjs';
-import { PathSegmentNames } from '../../types';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { ODataEntities, ODataEntity } from '../responses/types';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
+import { ODataModel } from '../../models/model';
+import { ODataCollection } from '../../models/collection';
 
 export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Factory
@@ -115,5 +123,65 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   unset(options?: ODataOptions & { etag?: string }): Observable<any> {
     return this.delete(options);
   }
-  //#region
+  //#endregion
+
+  //#region Fetch
+  /**
+   * Fetch entity / entities
+   * @param options Options for the request
+   * @return An observable of the entity or entities with annotations
+   */
+  fetch(
+    options?: ODataEntityOptions & {
+      etag?: string;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntity<T>>;
+  fetch(
+    options?: ODataEntitiesOptions & {
+      etag?: string;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntities<T>>;
+  fetch(
+    options: ODataEntityOptions &
+      ODataEntitiesOptions & {
+        etag?: string;
+        bodyQueryOptions?: QueryOptionNames[];
+      } = {}
+  ): Observable<any> {
+    return this.get(options);
+  }
+
+  /**
+   * Fetch the entity
+   * @param options Options for the request
+   * @returns The entity
+   */
+  fetchEntity(
+    options: ODataOptions & {
+      etag?: string;
+      bodyQueryOptions?: QueryOptionNames[];
+    } = {}
+  ): Observable<T | null> {
+    return this.fetch({ responseType: 'entity', ...options }).pipe(
+      map(({ entity }) => entity)
+    );
+  }
+
+  /**
+   * Fetch entities
+   * @param options Options for the request
+   * @returns The entities
+   */
+  fetchEntities(
+    options: ODataOptions & {
+      bodyQueryOptions?: QueryOptionNames[];
+    } = {}
+  ): Observable<T[] | null> {
+    return this.fetch({ responseType: 'entities', ...options }).pipe(
+      map(({ entities }) => entities)
+    );
+  }
+  //#endregion
 }

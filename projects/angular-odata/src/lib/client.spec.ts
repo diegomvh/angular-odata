@@ -379,6 +379,24 @@ describe('ODataClient', () => {
     req.flush('');
   });
 
+  it('should get reference', () => {
+    client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte')
+      .navigationProperty<Photo>('Photo')
+      .reference()
+      .fetchEntity()
+      .subscribe((photo) => {
+        expect(photo).toBeDefined();
+      });
+
+    const req = httpMock.expectOne(
+      `${SERVICE_ROOT}People('russellwhyte')/Photo/$ref`
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush('');
+  });
+
   it('should set reference', () => {
     let target = client
       .entitySet<Photo>('Photos', `${NAMESPACE}.Photo`)
