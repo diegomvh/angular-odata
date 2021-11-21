@@ -28,8 +28,8 @@ export class ODataEnumType<E> extends ODataAnnotatable {
    * @param term The term of the annotation to find.
    * @returns The titleized string.
    */
-  titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || Strings.titleCase(this.name);
+  titleize(term?: string | RegExp): string {
+    return (term && this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
   /**

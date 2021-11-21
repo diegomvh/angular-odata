@@ -376,8 +376,8 @@ export class ODataStructuredTypeParser<T>
    * @param term The term of the annotation to find.
    * @returns The titleized string.
    */
-  titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || Strings.titleCase(this.name);
+  titleize(term?: string | RegExp): string {
+    return (term && this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
   isTypeOf(type: string) {
@@ -533,7 +533,7 @@ export class ODataStructuredTypeParser<T>
     let schema: any = this.parent?.toJsonSchema(options) || {
       $schema: 'http://json-schema.org/draft-07/schema#',
       $id: `${this.namespace}.${this.name}`,
-      title: this.titelize(DESCRIPTION),
+      title: this.titleize(DESCRIPTION),
       description: this.annotatedValue(LONG_DESCRIPTION),
       type: 'object',
       properties: {},

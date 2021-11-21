@@ -20,8 +20,8 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
     this.value = field.value;
   }
 
-  titleize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+  titleize(term?: string | RegExp): string {
+    return (term && this.annotatedValue(term)) || this.name;
   }
 }
 
@@ -55,8 +55,8 @@ export class ODataEnumTypeParser<T>
    * @param term The term of the annotation to find.
    * @returns The titleized string.
    */
-  titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || Strings.titleCase(this.name);
+  ttitelize(term?: string | RegExp): string {
+    return (term && this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
   configure({ options }: { options: OptionsHelper }) {
