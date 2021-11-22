@@ -1,7 +1,7 @@
 import { Parser, SchemaConfig } from '../types';
 
 import { OData } from '../utils/odata';
-import { ODataAnnotatable, ODataAnnotation } from './base';
+import { ODataAnnotatable } from './base';
 import { ODataApi } from '../api';
 import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';

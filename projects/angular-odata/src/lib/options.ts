@@ -86,6 +86,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
      */
     includeAnnotations?: string;
   };
+  deleteRefBy: 'path' | 'id';
 
   constructor(config: ApiOptions) {
     this.version = config.version || DEFAULT_VERSION;
@@ -99,6 +100,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.accept = config.accept;
     Object.assign(this.etag, config.etag || {});
     this.prefer = config.prefer;
+    this.deleteRefBy = config.deleteRefBy || 'path';
   }
 
   get helper() {

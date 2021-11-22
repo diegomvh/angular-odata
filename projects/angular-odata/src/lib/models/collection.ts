@@ -536,14 +536,18 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   private removeReference(model: M, options?: ODataOptions): Observable<M> {
-    const resource = this.resource();
+    let resource = this.resource();
     if (!model.isNew() && resource instanceof ODataNavigationPropertyResource) {
+      let target =
+        this._model.meta.api.options.deleteRefBy === 'id'
+          ? (model._meta.entityResource(model) as ODataEntityResource<T>)
+          : undefined;
+      if (this._model.meta.api.options.deleteRefBy === 'path') {
+        resource = resource.key(model.key());
+      }
       return resource
         .reference()
-        .remove(
-          model._meta.entityResource(model) as ODataEntityResource<T>,
-          options
-        )
+        .remove(target, options)
         .pipe(map(() => model));
     }
     return of(model);

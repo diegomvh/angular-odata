@@ -70,6 +70,9 @@ export interface ApiOptions extends Options {
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
   bodyQueryOptions?: QueryOptionNames[];
+  //https://github.com/OData/WebApi/issues/1974
+  //https://github.com/OData/WebApi/issues/1647
+  deleteRefBy?: 'path' | 'id';
 }
 
 export interface OptionsHelper extends Options {
