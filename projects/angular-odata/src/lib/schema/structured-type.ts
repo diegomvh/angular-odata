@@ -39,7 +39,7 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
       const options = this.model.hasOwnProperty('options')
         ? this.model.options
         : { fields: {} };
-      this.model.buildMeta<T>(options, this);
+      this.model.buildMeta<T>({ options, schema: this });
     }
     if (this.collection !== undefined) {
       this.collection.model = this.model;

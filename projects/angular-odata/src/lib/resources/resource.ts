@@ -91,7 +91,7 @@ export abstract class ODataResource<T> {
 
   //#region Models
   asModel<M extends ODataModel<T>>(
-    entity: Partial<T> | { [name: string]: any },
+    entity?: Partial<T> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
   ): M {
     let resource: ODataModelResource<T> = this as any;
@@ -107,7 +107,7 @@ export abstract class ODataResource<T> {
   }
 
   asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
-    entities: Partial<T>[] | { [name: string]: any }[],
+    entities?: Partial<T>[] | { [name: string]: any }[],
     {
       annots,
       reset,

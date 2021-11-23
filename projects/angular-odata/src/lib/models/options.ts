@@ -458,11 +458,10 @@ export class ODataModelField<F> {
     value?: F | F[] | { [name: string]: any } | { [name: string]: any }[];
     reset?: boolean;
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
-    const schema = this.schemaFactory<T, F>(parent.schema());
     const annots = this.annotationsFactory(parent.annots());
+    const Model = this.api.modelForType(this.parser.type);
+    const Collection = this.api.collectionForType(this.parser.type);
 
-    const Model = schema?.model;
-    const Collection = schema?.collection;
     if (Model === undefined || Collection === undefined)
       throw Error(`No model for ${this.name}`);
     return this.parser.collection
@@ -504,21 +503,36 @@ export class ODataModelOptions<T> {
   parent?: ODataModelOptions<any>;
   children: ODataModelOptions<any>[] = [];
 
-  constructor(options: ModelOptions, schema: ODataStructuredType<T>) {
+  constructor({
+    options,
+    schema,
+  }: {
+    options?: ModelOptions;
+    schema: ODataStructuredType<T>;
+  }) {
     this.name = schema.name;
     this.base = schema.base;
     this.open = schema.open;
     this.schema = schema;
-    this.cid = options.cid || CID;
-    const schemaFields = this.schema.fields({
-      include_navigation: true,
-      include_parents: true,
-    });
-    this._fields = Object.entries(options.fields).map(([name, options]) => {
+    this.cid = options?.cid || CID;
+    let fields =
+      options?.fields ||
+      schema.fields({ include_navigation: true, include_parents: true }).reduce(
+        (acc, f) =>
+          Object.assign(acc, {
+            [f.name]: {
+              field: f.name,
+              default: f.default,
+              required: !f.nullable,
+            },
+          }),
+        {}
+      );
+    this._fields = Object.entries(fields).map(([name, options]) => {
       const { field, ...opts } = options;
       if (field === undefined || name === undefined)
         throw new Error('Model Properties need name and field');
-      const parser = schemaFields.find((f: any) => f.name === field);
+      const parser = this.schema.findFieldByName<T>(field as keyof T);
       if (parser === undefined)
         throw new Error(`No parser for ${field} with name = ${name}`);
       return new ODataModelField<T>(this, { name, field, parser, ...opts });

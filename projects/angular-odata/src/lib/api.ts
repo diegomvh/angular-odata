@@ -329,10 +329,9 @@ export class ODataApi {
       let schema = this.findStructuredTypeForType<any>(type);
       if (schema === undefined) throw Error('');
       Model = class extends ODataModel<any> {} as typeof ODataModel;
-      let fields = schema
-        .fields({ include_navigation: false, include_parents: false })
-        .reduce((acc, f) => Object.assign(acc, { field: f.name }), {});
-      Model.buildMeta({ fields } as ModelOptions, schema);
+      Model.buildMeta({ schema });
+      // Store New Model for next time
+      schema.model = Model;
     }
     return Model;
   }
@@ -351,6 +350,8 @@ export class ODataApi {
         ODataModel<any>
       > {} as typeof ODataCollection;
       Collection.model = this.modelForType(type);
+      // Store New Collection for next time
+      schema.collection = Collection;
     }
     return Collection;
   }

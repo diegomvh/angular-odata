@@ -31,8 +31,14 @@ export class ODataModel<T> {
   // Properties
   static options: ModelOptions;
   static meta: ODataModelOptions<any>;
-  static buildMeta<T>(options: ModelOptions, schema: ODataStructuredType<T>) {
-    this.meta = new ODataModelOptions<T>(options, schema);
+  static buildMeta<T>({
+    options,
+    schema,
+  }: {
+    options?: ModelOptions;
+    schema: ODataStructuredType<T>;
+  }) {
+    this.meta = new ODataModelOptions<T>({ options, schema });
   }
   // Parent
   _parent:
