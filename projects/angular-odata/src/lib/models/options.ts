@@ -290,8 +290,13 @@ export class ODataModelField<F> {
   }
 
   structured() {
-    //TODO: Throw error if not found
-    return this.api.findStructuredTypeForType<F>(this.parser.type);
+    let structuredType = this.api.findStructuredTypeForType<F>(
+      this.parser.type
+    );
+    //Throw error if not found
+    if (!structuredType)
+      throw new Error(`Could not find structured type for ${this.parser.type}`);
+    return structuredType;
   }
 
   isEnumType() {
@@ -299,8 +304,11 @@ export class ODataModelField<F> {
   }
 
   enum() {
-    //TODO: Throw error if not found
-    return this.api.findEnumTypeForType<F>(this.parser.type);
+    let enumType = this.api.findEnumTypeForType<F>(this.parser.type);
+    //Throw error if not found
+    if (!enumType)
+      throw new Error(`Could not find enum type for ${this.parser.type}`);
+    return enumType;
   }
 
   validate(
@@ -587,14 +595,16 @@ export class ODataModelOptions<T> {
   }
 
   field<F>(name: keyof T | string) {
-    //TODO: Throw error if not found
-    return this.fields({
+    let field = this.fields({
       include_parents: true,
       include_navigation: true,
     }).find(
       (modelField: ODataModelField<F>) =>
         modelField.name === name || modelField.field === name
     );
+    //Throw error if not found
+    if (field === undefined) throw new Error(`No field with name ${name}`);
+    return field;
   }
 
   attach(self: ODataModel<T>, resource: ODataModelResource<T>) {
