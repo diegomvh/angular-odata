@@ -3,7 +3,12 @@ import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ODataCache, ODataInMemoryCache } from './cache/index';
 import { DEFAULT_VERSION } from './constants';
-import { ODataCollection, ODataModel, ODataModelOptions } from './models/index';
+import {
+  ModelOptions,
+  ODataCollection,
+  ODataModel,
+  ODataModelOptions,
+} from './models/index';
 import { ODataApiOptions } from './options';
 import {
   ODataActionResource,
@@ -315,23 +320,39 @@ export class ODataApi {
   }
 
   public findModelForType(type: string) {
-    return this.findStructuredTypeForType<any>(type)?.model as
-      | typeof ODataModel
-      | undefined;
+    return this.findStructuredTypeForType<any>(type)?.model;
   }
 
-  public modelForType(type?: string) {
-    return (type && this.findModelForType(type)) || ODataModel;
+  public modelForType(type: string) {
+    let Model = this.findModelForType(type);
+    if (Model === undefined) {
+      let schema = this.findStructuredTypeForType<any>(type);
+      if (schema === undefined) throw Error('');
+      Model = class extends ODataModel<any> {} as typeof ODataModel;
+      let fields = schema
+        .fields({ include_navigation: false, include_parents: false })
+        .reduce((acc, f) => Object.assign(acc, { field: f.name }), {});
+      Model.buildMeta({ fields } as ModelOptions, schema);
+    }
+    return Model;
   }
 
   public findCollectionForType(type: string) {
-    return this.findStructuredTypeForType<any>(type)?.collection as
-      | typeof ODataCollection
-      | undefined;
+    return this.findStructuredTypeForType<any>(type)?.collection;
   }
 
-  public collectionForType(type?: string) {
-    return (type && this.findCollectionForType(type)) || ODataCollection;
+  public collectionForType(type: string) {
+    let Collection = this.findCollectionForType(type);
+    if (Collection === undefined) {
+      let schema = this.findStructuredTypeForType<any>(type);
+      if (schema === undefined) throw Error('');
+      Collection = class extends ODataCollection<
+        any,
+        ODataModel<any>
+      > {} as typeof ODataCollection;
+      Collection.model = this.modelForType(type);
+    }
+    return Collection;
   }
 
   public findServiceForType(type: string) {

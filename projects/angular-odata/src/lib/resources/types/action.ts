@@ -59,21 +59,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return this.schema()?.parser.return?.type;
   }
 
-  asModel<M extends ODataModel<R>>(
-    entity: Partial<R> | { [name: string]: any },
-    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
-  ): M {
-    let resource: ODataEntityResource<R> | undefined;
-    const type = annots?.type || this.returnType();
-    const Model = this.api.modelForType(type);
-    let path = annots?.entitySet;
-    if (path !== undefined) {
-      resource = this.api.entitySet<R>(path).entity(entity as Partial<R>);
-      resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
-    }
-    return new Model(entity, { resource, annots, reset }) as M;
-  }
-
   //#region Requests
   protected post(
     params: P | null,

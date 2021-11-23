@@ -96,6 +96,7 @@ export abstract class ODataResource<T> {
   ): M {
     let resource: ODataModelResource<T> = this as any;
     const type = annots?.type || this.returnType();
+    if (type === undefined) throw Error('');
     const Model = this.api.modelForType(type);
     let entitySet = annots?.entitySet;
     if (entitySet !== undefined) {
@@ -114,6 +115,7 @@ export abstract class ODataResource<T> {
   ): C {
     let resource: ODataCollectionResource<T> = this as any;
     const type = annots?.type || this.returnType();
+    if (type === undefined) throw Error('');
     const Collection = this.api.collectionForType(type);
     let path = annots?.entitySet;
     if (path !== undefined) {
