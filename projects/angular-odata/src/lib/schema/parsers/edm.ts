@@ -1,8 +1,7 @@
-import { Parser, StructuredTypeFieldOptions } from '../../types';
-
 import { raw } from '../../resources/query';
-import { Duration, Durations } from '../../utils/durations';
+import { Parser, StructuredTypeFieldOptions } from '../../types';
 import { ArrayBuffers } from '../../utils/arraybuffers';
+import { Duration, Durations } from '../../utils/durations';
 
 // Core EdmTypeParserBuilder
 const EdmParser = <T>(

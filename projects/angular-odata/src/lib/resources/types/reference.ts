@@ -1,21 +1,18 @@
-import { $ID, $REF, ODATA_ID } from '../../constants';
-
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
+import { $ID, $REF, ODATA_ID } from '../../constants';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions } from '../query';
+import { ODataResource } from '../resource';
+import { ODataEntities, ODataEntity } from '../responses/types';
 import { ODataEntityResource } from './entity';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
   ODataOptions,
 } from './options';
-import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
-import { ODataResource } from '../resource';
-import { Observable } from 'rxjs';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
-import { ODataEntities, ODataEntity } from '../responses/types';
-import { concatMap, expand, map, toArray } from 'rxjs/operators';
-import { ODataModel } from '../../models/model';
-import { ODataCollection } from '../../models/collection';
 
 export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Factory
@@ -57,7 +54,6 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     return super.put({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
-  //TODO: https://github.com/OData/AspNetCoreOData/blob/08b00758dac691b28aa675f5aa3522fc1caa089e/sample/ODataRoutingSample/Controllers/v1/OrganizationsController.cs#L178
   protected delete({
     etag,
     target,

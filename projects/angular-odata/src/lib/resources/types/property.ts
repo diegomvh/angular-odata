@@ -1,6 +1,13 @@
 import { EMPTY, Observable } from 'rxjs';
-import { ODataResource } from '../resource';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
+import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
+import { ODataStructuredTypeParser } from '../../schema';
+//import { ODataNavigationPropertyResource } from './navigation-property';
+import { PathSegmentNames } from '../../types';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions } from '../query';
+import { ODataResource } from '../resource';
 import {
   ODataEntities,
   ODataEntitiesAnnotations,
@@ -14,15 +21,7 @@ import {
   ODataOptions,
   ODataPropertyOptions,
 } from './options';
-import { concatMap, expand, map, toArray } from 'rxjs/operators';
-
-import { ODataApi } from '../../api';
-import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
-import { ODataStructuredTypeParser } from '../../schema';
 import { ODataValueResource } from './value';
-//import { ODataNavigationPropertyResource } from './navigation-property';
-import { PathSegmentNames } from '../../types';
 
 export class ODataPropertyResource<T> extends ODataResource<T> {
   //#region Factory

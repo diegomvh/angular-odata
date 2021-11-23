@@ -1,6 +1,5 @@
 import { PathSegmentNames } from '../../types';
 import { Types } from '../../utils';
-
 import { EntityKey } from '../resource';
 import type { ODataPathSegments, ODataSegment } from './segments';
 

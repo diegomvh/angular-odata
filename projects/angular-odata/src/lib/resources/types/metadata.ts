@@ -1,12 +1,12 @@
-import { $METADATA } from '../../constants';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
-import { ODataMetadata } from '../responses';
-import { ODataOptions } from './options';
+import { $METADATA } from '../../constants';
+import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataResource } from '../resource';
-import { Observable } from 'rxjs';
-import { PathSegmentNames } from '../../types';
-import { map } from 'rxjs/operators';
+import { ODataMetadata } from '../responses';
+import { ODataOptions } from './options';
 
 export class ODataMetadataResource extends ODataResource<any> {
   constructor(api: ODataApi, segments?: ODataPathSegments) {

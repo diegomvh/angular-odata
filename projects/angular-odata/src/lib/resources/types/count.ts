@@ -1,12 +1,11 @@
 import { Observable } from 'rxjs';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
-
-import { $COUNT } from '../../constants';
 import { ODataApi } from '../../api';
-import { ODataOptions } from './options';
+import { $COUNT } from '../../constants';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
+import { ODataOptions } from './options';
 
 export class ODataCountResource<T> extends ODataResource<T> {
   //#region Factory

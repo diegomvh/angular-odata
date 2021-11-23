@@ -1,5 +1,4 @@
 import { CallableConfig, Options, Parser } from '../types';
-
 import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
 

@@ -1,10 +1,8 @@
-import { raw, buildPathAndQuery } from '../query';
-
-import { Types, Dates, Objects } from '../../utils';
-
 import { PATH_SEPARATOR } from '../../constants';
-import { EntityKey } from '../resource';
 import { PathSegmentNames } from '../../types';
+import { Objects } from '../../utils';
+import { buildPathAndQuery, raw } from '../query';
+import { EntityKey } from '../resource';
 import { SegmentHandler } from './handlers';
 
 export type ODataSegment = {

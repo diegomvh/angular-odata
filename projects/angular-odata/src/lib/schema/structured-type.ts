@@ -1,16 +1,15 @@
+import { ODataCollection } from '../models';
+import { ODataModel } from '../models/model';
+import { Options, StructuredTypeConfig } from '../types';
+import { Strings } from '../utils/strings';
+import { ODataAnnotatable } from './base';
 import {
   JsonSchemaOptions,
   ODataEntityTypeKey,
   ODataStructuredTypeFieldParser,
   ODataStructuredTypeParser,
 } from './parsers';
-import { Options, StructuredTypeConfig } from '../types';
-
-import { ODataAnnotatable } from './base';
-import { ODataCollection } from '../models';
-import { ODataModel } from '../models/model';
 import { ODataSchema } from './schema';
-import { Strings } from '../utils/strings';
 
 export class ODataStructuredType<T> extends ODataAnnotatable {
   name: string;

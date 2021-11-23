@@ -1,7 +1,6 @@
-import { EntityKey, ODataResource } from '../resources';
-
-import { ODataBaseService } from './base';
 import { ODataModel } from '../models/model';
+import { EntityKey, ODataResource } from '../resources';
+import { ODataBaseService } from './base';
 
 export abstract class ODataEntityService<T> extends ODataBaseService {
   public abstract entity(key?: EntityKey<T>): ODataResource<T>;

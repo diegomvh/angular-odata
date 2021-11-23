@@ -1,4 +1,11 @@
 import {
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse,
+} from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { ODataApi } from '../../api';
+import {
   $BATCH,
   ACCEPT,
   APPLICATION_HTTP,
@@ -19,22 +26,14 @@ import {
   VERSION_4_0,
   XSSI_PREFIX,
 } from '../../constants';
-import {
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpResponse,
-} from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-
+import { PathSegmentNames } from '../../types';
 import { Http } from '../../utils/http';
-import { ODataApi } from '../../api';
-import { ODataOptions } from './options';
+import { Strings } from '../../utils/strings';
 import { ODataPathSegments } from '../path';
 import { ODataRequest } from '../request';
 import { ODataResource } from '../resource';
 import { ODataResponse } from '../responses';
-import { PathSegmentNames } from '../../types';
-import { Strings } from '../../utils/strings';
+import { ODataOptions } from './options';
 
 export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
   constructor(public request: ODataRequest<any>) {

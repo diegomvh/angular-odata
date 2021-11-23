@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { ODataClient } from '../client';
 import {
   ODataActionResource,
   ODataEntities,
@@ -7,9 +9,6 @@ import {
   ODataProperty,
   ODataQueryArgumentsOptions,
 } from '../resources';
-
-import { ODataClient } from '../client';
-import { Observable } from 'rxjs';
 
 export abstract class ODataBaseService {
   constructor(

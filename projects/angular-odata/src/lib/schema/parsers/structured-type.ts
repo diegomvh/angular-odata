@@ -1,18 +1,18 @@
-import { Objects, Strings, Types } from '../../utils';
-import {
-  Parser,
-  StructuredTypeFieldConfig,
-  StructuredTypeConfig,
-  OptionsHelper,
-  NONE_PARSER,
-  StructuredTypeFieldOptions,
-  Options,
-} from '../../types';
-import { ODataEnumTypeParser } from './enum-type';
 import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from '../../constants';
-import { ODataAnnotatable } from '../base';
-import { raw } from '../../resources/query';
 import { ODataParserOptions } from '../../options';
+import { raw } from '../../resources/query';
+import {
+  NONE_PARSER,
+  Options,
+  OptionsHelper,
+  Parser,
+  StructuredTypeConfig,
+  StructuredTypeFieldConfig,
+  StructuredTypeFieldOptions,
+} from '../../types';
+import { Objects, Strings, Types } from '../../utils';
+import { ODataAnnotatable } from '../base';
+import { ODataEnumTypeParser } from './enum-type';
 
 // JSON SCHEMA
 type JsonSchemaSelect<T> = Array<keyof T>;

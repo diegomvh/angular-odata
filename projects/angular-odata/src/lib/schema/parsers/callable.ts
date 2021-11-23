@@ -1,3 +1,5 @@
+import { CALLABLE_BINDING_PARAMETER } from '../../constants';
+import { ODataParserOptions } from '../../options';
 import {
   CallableConfig,
   NONE_PARSER,
@@ -6,10 +8,7 @@ import {
   Parameter,
   Parser,
 } from '../../types';
-
-import { CALLABLE_BINDING_PARAMETER } from '../../constants';
 import { ODataEnumTypeParser } from './enum-type';
-import { ODataParserOptions } from '../../options';
 import { ODataStructuredTypeParser } from './structured-type';
 
 export class ODataParameterParser<T> {

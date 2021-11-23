@@ -1,3 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ODataCollection } from '../models/collection';
+import { ODataModel } from '../models/model';
 import {
   EntityKey,
   ODataEntities,
@@ -6,13 +11,7 @@ import {
   ODataEntitySetResource,
   ODataOptions,
 } from '../resources';
-import { Observable, throwError } from 'rxjs';
-
-import { HttpErrorResponse } from '@angular/common/http';
-import { ODataCollection } from '../models/collection';
 import { ODataEntityService } from './entity';
-import { ODataModel } from '../models/model';
-import { catchError } from 'rxjs/operators';
 
 export class ODataEntitySetService<T> extends ODataEntityService<T> {
   /**

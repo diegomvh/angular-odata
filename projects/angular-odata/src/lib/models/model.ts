@@ -1,31 +1,29 @@
 import { EventEmitter } from '@angular/core';
-import { Observable, throwError, forkJoin, NEVER, of } from 'rxjs';
+import { forkJoin, NEVER, Observable, of, throwError } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-
 import {
+  EntityKey,
+  ODataEntity,
+  ODataEntityAnnotations,
   ODataEntityResource,
   ODataNavigationPropertyResource,
-  ODataPropertyResource,
   ODataOptions,
-  ODataEntityAnnotations,
-  ODataEntity,
-  EntityKey,
+  ODataPropertyResource,
   ODataQueryArgumentsOptions,
   ODataQueryOptionsHandler,
 } from '../resources';
-
-import { ODataCollection } from './collection';
-import { Objects, Types, Strings } from '../utils';
 import { ODataStructuredType } from '../schema';
+import { Objects, Strings, Types } from '../utils';
+import { ODataCollection } from './collection';
 import {
+  INCLUDE_DEEP,
+  INCLUDE_SHALLOW,
   ModelOptions,
   ODataModelEvent,
+  ODataModelField,
   ODataModelOptions,
   ODataModelRelation,
   ODataModelResource,
-  ODataModelField,
-  INCLUDE_DEEP,
-  INCLUDE_SHALLOW,
 } from './options';
 
 // @dynamic

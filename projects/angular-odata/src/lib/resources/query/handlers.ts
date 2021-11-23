@@ -1,7 +1,6 @@
+import { QueryOptionNames } from '../../types';
 import { Objects, Types } from '../../utils';
 import { alias, Expand, Filter, OrderBy, Select, Transform } from './builder';
-
-import { QueryOptionNames } from '../../types';
 import { Expression } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 

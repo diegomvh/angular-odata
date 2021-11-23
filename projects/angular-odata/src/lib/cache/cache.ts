@@ -1,8 +1,8 @@
-import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
-import { Cache, PathSegmentNames } from '../types';
-import { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
 import { Observable, of, throwError } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
+import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
+import { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
+import { Cache, PathSegmentNames } from '../types';
 
 export interface ODataCacheEntry<T> {
   payload: T;

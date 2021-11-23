@@ -1,4 +1,11 @@
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
+import { PathSegmentNames } from '../../types';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions } from '../query';
+import { ODataResource } from '../resource';
 import {
   ODataEntities,
   ODataEntitiesAnnotations,
@@ -6,6 +13,8 @@ import {
   ODataEntityAnnotations,
   ODataProperty,
 } from '../responses';
+import { ODataEntityResource } from './entity';
+import { ODataEntitySetResource } from './entity-set';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -13,16 +22,6 @@ import {
   ODataOptions,
   ODataPropertyOptions,
 } from './options';
-
-import { ODataApi } from '../../api';
-import { ODataEntityResource } from './entity';
-import { ODataEntitySetResource } from './entity-set';
-import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
-import { ODataResource } from '../resource';
-import { Observable } from 'rxjs';
-import { PathSegmentNames } from '../../types';
-import { map } from 'rxjs/operators';
 
 export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Factory

@@ -1,14 +1,14 @@
-import { Enums, Strings } from '../../utils';
+import { ODataParserOptions } from '../../options';
 import { raw } from '../../resources/query';
-import { ODataAnnotatable } from '../base';
 import {
   EnumTypeConfig,
-  Parser,
-  OptionsHelper,
   EnumTypeFieldConfig,
   Options,
+  OptionsHelper,
+  Parser,
 } from '../../types';
-import { ODataParserOptions } from '../../options';
+import { Enums, Strings } from '../../utils';
+import { ODataAnnotatable } from '../base';
 
 export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   name: string;

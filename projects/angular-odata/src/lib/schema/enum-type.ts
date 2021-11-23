@@ -1,9 +1,8 @@
 import { EnumTypeConfig, Options } from '../types';
-import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
-
-import { ODataAnnotatable, ODataAnnotation } from './base';
-import { ODataSchema } from './schema';
 import { Strings } from '../utils/strings';
+import { ODataAnnotatable } from './base';
+import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
+import { ODataSchema } from './schema';
 
 export class ODataEnumType<E> extends ODataAnnotatable {
   schema: ODataSchema;

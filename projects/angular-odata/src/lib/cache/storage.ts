@@ -1,5 +1,5 @@
-import { ODataCache, ODataCacheEntry } from './cache';
 import { ODataRequest, ODataResponse } from '../resources';
+import { ODataCache, ODataCacheEntry } from './cache';
 
 interface ResponseJson {
   body: any | null;

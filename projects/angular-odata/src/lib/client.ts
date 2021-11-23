@@ -6,6 +6,10 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ODataApi } from './api';
+import { ODataCollection, ODataModel } from './models/index';
 import {
   ODataActionResource,
   ODataBatchResource,
@@ -14,19 +18,14 @@ import {
   ODataFunctionResource,
   ODataMetadataResource,
   ODataNavigationPropertyResource,
+  ODataRequest,
   ODataResource,
   ODataResponse,
   ODataSegment,
   ODataSingletonResource,
 } from './resources/index';
-import { ODataCollection, ODataModel } from './models/index';
-
-import { ODataApi } from './api';
 import { ODataEntityService } from './services/entity';
-import { ODataRequest } from './resources/index';
 import { ODataSettings } from './settings';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 function addBody<T>(
   options: {

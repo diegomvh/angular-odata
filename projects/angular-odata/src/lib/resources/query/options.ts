@@ -1,18 +1,16 @@
+import { QueryOptionNames } from '../../types';
 import { Objects, Types } from '../../utils';
 import {
+  buildPathAndQuery,
   Expand,
   Filter,
   OrderBy,
+  QueryCustomType,
   Select,
   Transform,
-  buildPathAndQuery,
-  QueryCustomType,
-  alias,
 } from './builder';
-
-import { QueryOptionNames } from '../../types';
-import { ODataQueryOptionHandler } from './handlers';
 import { Expression } from './expressions';
+import { ODataQueryOptionHandler } from './handlers';
 
 export type ODataQueryArguments<T> = {
   [QueryOptionNames.select]?: Select<T>;

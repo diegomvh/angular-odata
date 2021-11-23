@@ -1,37 +1,35 @@
-import { finalize, map, switchMap } from 'rxjs/operators';
+import { EventEmitter } from '@angular/core';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
-
+import { finalize, map, switchMap } from 'rxjs/operators';
+import { DEFAULT_VERSION } from '../constants';
+import { ODataHelper } from '../helper';
 import {
-  ODataEntitySetResource,
-  ODataEntityResource,
-  ODataNavigationPropertyResource,
-  ODataEntitiesAnnotations,
-  ODataOptions,
-  ODataEntities,
-  ODataPropertyResource,
-  ODataEntityAnnotations,
   EntityKey,
+  ODataEntities,
+  ODataEntitiesAnnotations,
+  ODataEntityAnnotations,
+  ODataEntityResource,
+  ODataEntitySetResource,
+  ODataNavigationPropertyResource,
+  ODataOptions,
+  ODataPropertyResource,
   ODataQueryArgumentsOptions,
   ODataQueryOptionsHandler,
 } from '../resources/index';
-
-import { EventEmitter } from '@angular/core';
 import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
   BUBBLING,
-  ODataModelResource,
-  ODataCollectionResource,
-  ODataModelOptions,
-  ODataModelEvent,
-  ODataModelField,
-  ODataModelState,
-  ODataModelEntry,
   INCLUDE_DEEP,
   INCLUDE_SHALLOW,
+  ODataCollectionResource,
+  ODataModelEntry,
+  ODataModelEvent,
+  ODataModelField,
+  ODataModelOptions,
+  ODataModelResource,
+  ODataModelState,
 } from './options';
-import { ODataHelper } from '../helper';
-import { DEFAULT_VERSION } from '../constants';
 
 export class ODataCollection<T, M extends ODataModel<T>>
   implements Iterable<M>

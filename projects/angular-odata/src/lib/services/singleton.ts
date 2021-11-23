@@ -1,12 +1,11 @@
+import { Observable } from 'rxjs';
+import type { ODataModel } from '../models/model';
 import type {
   ODataEntity,
   ODataOptions,
   ODataSingletonResource,
 } from '../resources';
-
 import { ODataEntityService } from './entity';
-import type { ODataModel } from '../models/model';
-import { Observable } from 'rxjs';
 
 /**
  * OData Singleton Service

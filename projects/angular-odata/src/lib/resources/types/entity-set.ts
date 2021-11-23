@@ -1,22 +1,21 @@
 import { EMPTY, Observable } from 'rxjs';
-import { ODataResource } from '../resource';
+import { concatMap, expand, map, toArray } from 'rxjs/operators';
+import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
+import { PathSegmentNames, QueryOptionNames } from '../../types';
+import { ODataPathSegments } from '../path';
+import { ODataQueryOptions } from '../query';
+import { ODataResource } from '../resource';
 import {
   ODataEntities,
   ODataEntitiesAnnotations,
   ODataEntity,
 } from '../responses';
-import { PathSegmentNames, QueryOptionNames } from '../../types';
-import { concatMap, expand, map, toArray } from 'rxjs/operators';
-
 import { ODataActionResource } from './action';
-import { ODataApi } from '../../api';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
 import { ODataFunctionResource } from './function';
 import { ODataOptions } from './options';
-import { ODataPathSegments } from '../path';
-import { ODataQueryOptions } from '../query';
 
 export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
