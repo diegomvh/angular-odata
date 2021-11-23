@@ -7,6 +7,12 @@ import {
   VALUE_SEPARATOR,
 } from '../constants';
 import {
+  ODataModelResource,
+  ODataModel,
+  ODataCollection,
+  ODataCollectionResource,
+} from '../models';
+import {
   ODataCallable,
   ODataStructuredType,
   ODataStructuredTypeParser,
@@ -21,7 +27,11 @@ import {
   QueryCustomType,
 } from './query';
 import { ODataRequest } from './request';
-import { ODataResponse } from './responses/index';
+import {
+  ODataEntitiesAnnotations,
+  ODataEntityAnnotations,
+  ODataResponse,
+} from './responses/index';
 import { ODataOptions } from './types';
 
 export type EntityKey<T> =
@@ -78,6 +88,41 @@ export abstract class ODataResource<T> {
   clearKey() {
     return this.pathSegments.last({ key: true })?.clearKey();
   }
+
+  //#region Models
+  asModel<M extends ODataModel<T>>(
+    entity: Partial<T> | { [name: string]: any },
+    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
+  ): M {
+    let resource: ODataModelResource<T> = this as any;
+    const type = annots?.type || this.returnType();
+    const Model = this.api.modelForType(type);
+    let entitySet = annots?.entitySet;
+    if (entitySet !== undefined) {
+      resource = this.api.entitySet<T>(entitySet).entity(entity as Partial<T>);
+      resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
+    }
+    return new Model(entity, { resource, annots, reset }) as M;
+  }
+
+  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
+    entities: Partial<T>[] | { [name: string]: any }[],
+    {
+      annots,
+      reset,
+    }: { annots?: ODataEntitiesAnnotations; reset?: boolean } = {}
+  ): C {
+    let resource: ODataCollectionResource<T> = this as any;
+    const type = annots?.type || this.returnType();
+    const Collection = this.api.collectionForType(type);
+    let path = annots?.entitySet;
+    if (path !== undefined) {
+      resource = this.api.entitySet<T>(path);
+      resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
+    }
+    return new Collection(entities, { resource, annots, reset }) as C;
+  }
+  //#endregion
 
   isSubtypeOf(other: ODataResource<any>) {
     const api = this.api;

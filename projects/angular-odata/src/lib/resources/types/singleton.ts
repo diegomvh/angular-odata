@@ -45,14 +45,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
       : undefined;
   }
 
-  asModel<M extends ODataModel<T>>(
-    entity: Partial<T> | { [name: string]: any },
-    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
-  ): M {
-    const Model = this.api.modelForType(annots?.type || this.type());
-    return new Model(entity, { resource: this, annots, reset }) as M;
-  }
-
   key(value: any) {
     const singleton = this.clone();
     var key = this.resolveKey(value);

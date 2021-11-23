@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
+import { ODataCollectionResource } from '../../models';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { PathSegmentNames } from '../../types';
@@ -60,38 +61,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       : undefined;
   }
 
-  asModel<M extends ODataModel<R>>(
-    entity: Partial<R> | { [name: string]: any },
-    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
-  ): M {
-    let resource: ODataEntityResource<R> | undefined;
-    const type = annots?.type || this.returnType();
-    const Model = this.api.modelForType(type);
-    let path = annots?.entitySet;
-    if (path !== undefined) {
-      resource = this.api.entitySet<R>(path).entity(entity as Partial<R>);
-      resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
-    }
-    return new Model(entity, { resource, annots, reset }) as M;
-  }
-
-  asCollection<M extends ODataModel<R>, C extends ODataCollection<R, M>>(
-    entities: Partial<R>[] | { [name: string]: any }[],
-    {
-      annots,
-      reset,
-    }: { annots?: ODataEntitiesAnnotations; reset?: boolean } = {}
-  ): C {
-    let resource: ODataEntitySetResource<R> | undefined;
-    const type = annots?.type || this.returnType();
-    const Collection = this.api.collectionForType(type);
-    let path = annots?.entitySet;
-    if (path !== undefined) {
-      resource = this.api.entitySet<R>(path);
-      resource.query((q) => q.apply(this.queryOptions.toQueryArguments()));
-    }
-    return new Collection(entities, { resource, annots, reset }) as C;
-  }
 
   parameters(params: P | null, { alias }: { alias?: boolean } = {}) {
     const segments = this.cloneSegments();

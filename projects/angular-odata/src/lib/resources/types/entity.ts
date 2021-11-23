@@ -7,7 +7,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntity, ODataEntityAnnotations } from '../responses';
+import { ODataEntity } from '../responses/types';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataMediaResource } from './media';
@@ -44,15 +44,6 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return type !== undefined
       ? this.api.findStructuredTypeForType<T>(type)
       : undefined;
-  }
-
-  asModel<M extends ODataModel<T>>(
-    entity: Partial<T> | { [name: string]: any },
-    { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
-  ): M {
-    const type = annots?.type || this.type();
-    const Model = this.api.modelForType(type);
-    return new Model(entity, { resource: this, annots, reset }) as M;
   }
 
   key(value: any) {

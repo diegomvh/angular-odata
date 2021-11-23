@@ -47,18 +47,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       : undefined;
   }
 
-  asCollection<M extends ODataModel<T>, C extends ODataCollection<T, M>>(
-    entities: Partial<T>[] | { [name: string]: any }[],
-    {
-      annots,
-      reset = false,
-    }: { annots?: ODataEntitiesAnnotations; reset?: boolean } = {}
-  ): C {
-    const type = annots?.type || this.type();
-    const Collection = this.api.collectionForType(type);
-    return new Collection(entities, { resource: this, annots, reset }) as C;
-  }
-
   entity(key?: any) {
     const entity = ODataEntityResource.factory<T>(
       this.api,
