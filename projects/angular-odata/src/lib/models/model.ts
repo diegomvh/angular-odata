@@ -98,7 +98,9 @@ export class ODataModel<T> {
     return ODataModelOptions.resource<T>(this) as ODataModelResource<T>;
   }
 
-  navigationProperty<N>(name: string): ODataNavigationPropertyResource<N> {
+  navigationProperty<N>(
+    name: keyof T | string
+  ): ODataNavigationPropertyResource<N> {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)
       throw Error(`Can't find navigation property ${name}`);
@@ -188,7 +190,7 @@ export class ODataModel<T> {
 
   // Validation
   _errors?: { [key: string]: any };
-  protected validate({
+  validate({
     method,
     navigation = false,
   }: {
@@ -217,7 +219,7 @@ export class ODataModel<T> {
     return this._errors === undefined;
   }
 
-  protected defaults() {
+  defaults() {
     return this._meta.defaults() || {};
   }
 
@@ -527,7 +529,7 @@ export class ODataModel<T> {
     return this._meta.asEntity(this, ctx);
   }
 
-  protected callFunction<P, R>(
+  callFunction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
@@ -552,7 +554,7 @@ export class ODataModel<T> {
     }
   }
 
-  protected callAction<P, R>(
+  callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
@@ -578,7 +580,7 @@ export class ODataModel<T> {
   }
 
   // Cast
-  protected cast<S>(type: string): ODataModel<S> {
+  cast<S>(type: string): ODataModel<S> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource))
       throw new Error(
@@ -590,8 +592,8 @@ export class ODataModel<T> {
       .asModel(this.toEntity(INCLUDE_DEEP), { annots: this.annots() });
   }
 
-  protected fetchNavigationProperty<S>(
-    name: string,
+  fetchNavigationProperty<S>(
+    name: keyof T | string,
     responseType: 'model' | 'collection',
     { ...options }: {} & ODataQueryArgumentsOptions<S> = {}
   ): Observable<ODataModel<S> | ODataCollection<S, ODataModel<S>> | null> {
@@ -608,8 +610,8 @@ export class ODataModel<T> {
   }
 
   // Get Value
-  protected getValue<P>(
-    name: string,
+  getValue<P>(
+    name: keyof T | string,
     options?: ODataOptions
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.field(name);
@@ -640,8 +642,8 @@ export class ODataModel<T> {
   }
 
   // Set Reference
-  protected setReference<P>(
-    name: string,
+  setReference<P>(
+    name: keyof T | string,
     model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | null,
     options?: ODataOptions
   ): Observable<this> {
@@ -685,8 +687,8 @@ export class ODataModel<T> {
     );
   }
 
-  protected getReference<P>(
-    name: string
+  getReference<P>(
+    name: keyof T | string
   ): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)

@@ -480,7 +480,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return entry.model;
   }
 
-  protected addModel(
+  private addModel(
     model: M,
     {
       silent = false,
@@ -586,7 +586,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return entry.model;
   }
 
-  protected removeModel(
+  private removeModel(
     model: M,
     {
       silent = false,
@@ -823,7 +823,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this;
   }
 
-  protected callFunction<P, R>(
+  callFunction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
@@ -847,7 +847,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return throwError(`Can't function without ODataEntitySetResource`);
   }
 
-  protected callAction<P, R>(
+  callAction<P, R>(
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
