@@ -82,6 +82,9 @@ export const NEWLINE = '\r\n';
 export const NEWLINE_REGEXP = /\r?\n/;
 export const CACHE_KEY_SEPARATOR = ':';
 
+// Models
+export const CID_FIELD_NAME = '_cid';
+
 // Standard vocabularies for annotating OData services
 // http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html
 

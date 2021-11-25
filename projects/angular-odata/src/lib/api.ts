@@ -326,10 +326,17 @@ export class ODataApi {
   public modelForType(type: string) {
     let Model = this.findModelForType(type);
     if (Model === undefined) {
+      // Build Ad-hoc model
       let schema = this.findStructuredTypeForType<any>(type);
-      if (schema === undefined) throw Error('');
+      if (schema === undefined) throw Error(`No schema for ${type}`);
       Model = class extends ODataModel<any> {} as typeof ODataModel;
+      // Build Meta
       Model.buildMeta({ schema });
+      // Configure
+      Model.meta.configure({
+        findOptionsForType: (type: string) => this.findOptionsForType(type),
+        options: this.options,
+      });
       // Store New Model for next time
       schema.model = Model;
     }

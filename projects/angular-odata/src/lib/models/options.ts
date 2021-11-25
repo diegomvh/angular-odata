@@ -1,6 +1,7 @@
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import {
+  CID_FIELD_NAME,
   COMPUTED,
   DEFAULT_VERSION,
   OPTIMISTIC_CONCURRENCY,
@@ -31,7 +32,6 @@ import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
 
-export const CID = '_cid';
 export type ODataModelResource<T> =
   | ODataEntityResource<T>
   | ODataSingletonResource<T>
@@ -177,7 +177,7 @@ export type ModelFieldOptions = {
   pattern?: RegExp;
 };
 
-export function Model({ cid = CID }: { cid?: string } = {}) {
+export function Model({ cid = CID_FIELD_NAME }: { cid?: string } = {}) {
   return <T extends { new (...args: any[]): {} }>(constructor: T) => {
     const Klass = <any>constructor;
     if (!Klass.hasOwnProperty('options'))
@@ -507,28 +507,15 @@ export class ODataModelOptions<T> {
     options,
     schema,
   }: {
-    options?: ModelOptions;
+    options: ModelOptions;
     schema: ODataStructuredType<T>;
   }) {
     this.name = schema.name;
     this.base = schema.base;
     this.open = schema.open;
     this.schema = schema;
-    this.cid = options?.cid || CID;
-    let fields =
-      options?.fields ||
-      schema.fields({ include_navigation: true, include_parents: true }).reduce(
-        (acc, f) =>
-          Object.assign(acc, {
-            [f.name]: {
-              field: f.name,
-              default: f.default,
-              required: !f.nullable,
-            },
-          }),
-        {}
-      );
-    this._fields = Object.entries(fields).map(([name, options]) => {
+    this.cid = options?.cid || CID_FIELD_NAME;
+    this._fields = Object.entries(options.fields).map(([name, options]) => {
       const { field, ...opts } = options;
       if (field === undefined || name === undefined)
         throw new Error('Model Properties need name and field');

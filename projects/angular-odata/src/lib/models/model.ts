@@ -38,6 +38,25 @@ export class ODataModel<T> {
     options?: ModelOptions;
     schema: ODataStructuredType<T>;
   }) {
+    if (options === undefined) {
+      let fields = schema
+        .fields({ include_navigation: true, include_parents: true })
+        .reduce((acc, f) => {
+          let name = f.name;
+          // Prevent collision with reserved keywords
+          while (RESERVED_FIELD_NAMES.includes(name)) {
+            name = name + '_';
+          }
+          return Object.assign(acc, {
+            [name]: {
+              field: f.name,
+              default: f.default,
+              required: !f.nullable,
+            },
+          });
+        }, {});
+      options = { fields };
+    }
     this.meta = new ODataModelOptions<T>({ options, schema });
   }
   // Parent
@@ -738,3 +757,7 @@ export class ODataModel<T> {
     return this.collection()?.prev(this);
   }
 }
+
+export const RESERVED_FIELD_NAMES = Object.getOwnPropertyNames(
+  ODataModel.prototype
+);
