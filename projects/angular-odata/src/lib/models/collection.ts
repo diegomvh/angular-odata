@@ -794,25 +794,25 @@ export class ODataCollection<T, M extends ODataModel<T>>
     });
 
     if (
-      toAdd.length > 0 ||
-      toRemove.length > 0 ||
-      toMerge.length > 0 ||
-      toSort.length > 0
+      (!silent &&
+        (toAdd.length > 0 ||
+          toRemove.length > 0 ||
+          toMerge.length > 0 ||
+          toSort.length > 0)) ||
+      reset
     ) {
       this._sortBy = null;
-      if (!silent) {
-        this.events$.emit(
-          new ODataModelEvent(reset ? 'reset' : 'update', {
-            collection: this,
-            options: {
-              added: toAdd,
-              removed: toRemove,
-              merged: toMerge,
-              sorted: toSort,
-            },
-          })
-        );
-      }
+      this.events$.emit(
+        new ODataModelEvent(reset ? 'reset' : 'update', {
+          collection: this,
+          options: {
+            added: toAdd,
+            removed: toRemove,
+            merged: toMerge,
+            sorted: toSort,
+          },
+        })
+      );
     }
   }
 

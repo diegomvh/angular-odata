@@ -112,18 +112,29 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   action<P, R>(path: string) {
     let type;
+    let bindingType;
     const callable = this.api.findCallableForType(path, this.type());
     if (callable !== undefined) {
       path = callable.path();
       type = callable.type();
+      bindingType = callable.binding()?.type;
     }
-    return ODataActionResource.factory<P, R>(
+    const action = ODataActionResource.factory<P, R>(
       this.api,
       path,
       type,
       this.cloneSegments(),
       this.cloneQuery<R>()
     );
+
+    // Switch entitySet to binding type if available
+    if (bindingType !== undefined && bindingType !== this.type()) {
+      let entitySet = this.api.findEntitySetForType(bindingType);
+      if (entitySet !== undefined) {
+        action.segment((s) => s.entitySet().path(entitySet!.name));
+      }
+    }
+    return action;
   }
 
   function<P, R>(path: string) {

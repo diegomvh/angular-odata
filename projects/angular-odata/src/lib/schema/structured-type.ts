@@ -102,6 +102,15 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
   }
 
   /**
+   * Returns a boolean indicating if the structured type is a sub type of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
+  isSubTypeOf(type: string) {
+    return this.parser.isSubTypeOf(type);
+  }
+
+  /**
    * Returns a boolean indicating if the structured type has a simple key.
    * @returns True if the structured type has a simple key
    */

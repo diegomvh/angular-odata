@@ -386,6 +386,12 @@ export class ODataStructuredTypeParser<T>
     return names.indexOf(type) !== -1;
   }
 
+  isSubTypeOf(type: string): boolean {
+    if (this.isTypeOf(type)) return true;
+    if (this.parent) return this.parent.isSubTypeOf(type);
+    return false;
+  }
+
   typeFor(name: string): string | undefined {
     const field = this.fields.find((f) => f.name === name);
     if (field === undefined && this.parent !== undefined)

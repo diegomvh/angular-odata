@@ -1194,7 +1194,7 @@ export class ODataModelOptions<T> {
         }
       });
 
-    if (!self._silent && changes.length > 0) {
+    if ((!self._silent && changes.length > 0) || self._reset) {
       self.events$.emit(
         new ODataModelEvent(self._reset ? 'reset' : 'update', {
           model: self,

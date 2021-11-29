@@ -43,6 +43,11 @@ export class ODataSchema extends ODataAnnotatable {
     );
   }
 
+  isSubTypeOf(type: string, target?: string) {
+    const structuredType = this.api.findStructuredTypeForType(type);
+    return structuredType && target && structuredType.isSubTypeOf(target);
+  }
+
   get entitySets() {
     return this.containers.reduce(
       (acc, container) => [...acc, ...container.entitySets],
@@ -67,7 +72,8 @@ export class ODataSchema extends ODataAnnotatable {
     return this.callables.find(
       (c) =>
         c.isTypeOf(type) &&
-        (bindingType === undefined || bindingType === c.binding()?.type)
+        (bindingType === undefined ||
+          this.isSubTypeOf(bindingType, c.binding()?.type))
     ) as ODataCallable<T> | undefined;
   }
 
