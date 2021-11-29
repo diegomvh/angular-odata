@@ -75,82 +75,19 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(path: string) {
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = this.api.parserForType<N>(type);
-      type =
-        parser instanceof ODataStructuredTypeParser
-          ? parser.typeFor(path)
-          : undefined;
-    }
-    return ODataNavigationPropertyResource.factory<N>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<N>()
-    );
+    return ODataNavigationPropertyResource.fromResource<N>(this, path);
   }
 
   property<P>(path: string) {
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = this.api.parserForType<P>(type);
-      type =
-        parser instanceof ODataStructuredTypeParser
-          ? parser.typeFor(path)
-          : undefined;
-    }
-    return ODataPropertyResource.factory<P>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<P>()
-    );
+    return ODataPropertyResource.fromResource<P>(this, path);
   }
 
   action<P, R>(path: string) {
-    let type;
-    let bindingType;
-    const callable = this.api.findCallableForType(path, this.type());
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-      bindingType = callable.binding()?.type;
-    }
-    const action = ODataActionResource.factory<P, R>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<R>()
-    );
-
-    // Switch entitySet to binding type if available
-    if (bindingType !== undefined && bindingType !== this.type()) {
-      let entitySet = this.api.findEntitySetForType(bindingType);
-      if (entitySet !== undefined) {
-        action.segment((s) => s.entitySet().path(entitySet!.name));
-      }
-    }
-    return action;
+    return ODataActionResource.fromResource<P, R>(this, path);
   }
 
   function<P, R>(path: string) {
-    let type;
-    const callable = this.api.findCallableForType(path, this.type());
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-    }
-    return ODataFunctionResource.factory<P, R>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<R>()
-    );
+    return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 
   //TODO: Check

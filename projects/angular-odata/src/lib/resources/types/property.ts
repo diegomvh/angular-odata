@@ -15,6 +15,7 @@ import {
   ODataEntityAnnotations,
   ODataProperty,
 } from '../responses';
+import { ODataNavigationPropertyResource } from './navigation-property';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -36,6 +37,32 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     if (type) segment.type(type);
     options.clear();
     return new ODataPropertyResource<P>(api, segments, options);
+  }
+
+  static fromResource<P>(resource: ODataResource<any>, path: string) {
+    let type;
+    let bindingType;
+    if (resource.type() !== undefined) {
+      let structured = resource.api.findStructuredTypeForType<P>(
+        resource.type() as string
+      );
+      if (structured !== undefined) {
+        let field = structured.findFieldByName<any>(path as keyof P);
+        type = field.type;
+        if (field !== undefined) {
+          let schema = structured?.findSchemaForField(field);
+          bindingType = schema?.type();
+        }
+      }
+    }
+
+    return ODataPropertyResource.factory<P>(
+      resource.api,
+      path,
+      type,
+      resource.cloneSegments(),
+      resource.cloneQuery<P>()
+    );
   }
 
   clone() {
@@ -83,42 +110,12 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     );
   }
 
-  /*
   navigationProperty<N>(path: string) {
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = this.api.parserForType<N>(type);
-      type =
-        parser instanceof ODataStructuredTypeParser
-          ? parser.typeFor(path)
-          : undefined;
-    }
-    return ODataNavigationPropertyResource.factory<N>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<N>()
-    );
+    return ODataNavigationPropertyResource.fromResource<N>(this, path);
   }
-  */
 
   property<P>(path: string) {
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = this.api.parserForType<P>(type);
-      type =
-        parser instanceof ODataStructuredTypeParser
-          ? parser.typeFor(path)
-          : undefined;
-    }
-    return ODataPropertyResource.factory<P>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<P>()
-    );
+    return ODataPropertyResource.fromResource<P>(this, path);
   }
 
   //#region Requests

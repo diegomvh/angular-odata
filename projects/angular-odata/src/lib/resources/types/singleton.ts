@@ -66,71 +66,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(path: string) {
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = this.api.parserForType<N>(type);
-      type =
-        parser instanceof ODataStructuredTypeParser
-          ? parser.typeFor(path)
-          : undefined;
-    }
-    return ODataNavigationPropertyResource.factory<N>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<N>()
-    );
+    return ODataNavigationPropertyResource.fromResource<N>(this, path);
   }
 
   property<P>(path: string) {
-    let type = this.type();
-    if (type !== undefined) {
-      let parser = this.api.parserForType<P>(type);
-      type =
-        parser instanceof ODataStructuredTypeParser
-          ? parser.typeFor(path)
-          : undefined;
-    }
-    return ODataPropertyResource.factory<P>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<P>()
-    );
+    return ODataPropertyResource.fromResource<P>(this, path);
   }
 
   action<P, R>(path: string) {
-    let type;
-    const callable = this.api.findCallableForType(path, this.type());
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-    }
-    return ODataActionResource.factory<P, R>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<R>()
-    );
+    return ODataActionResource.fromResource<P, R>(this, path);
   }
 
   function<P, R>(path: string) {
-    let type;
-    const callable = this.api.findCallableForType(path, this.type());
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-    }
-    return ODataFunctionResource.factory<P, R>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<R>()
-    );
+    return ODataActionResource.fromResource<P, R>(this, path);
   }
 
   //#region Requests

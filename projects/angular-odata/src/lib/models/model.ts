@@ -661,20 +661,20 @@ export class ODataModel<T> {
   }
 
   // Set Reference
-  setReference<P>(
+  setReference<N>(
     name: keyof T | string,
-    model: ODataModel<P> | ODataCollection<P, ODataModel<P>> | null,
+    model: ODataModel<N> | ODataCollection<N, ODataModel<N>> | null,
     options?: ODataOptions
   ): Observable<this> {
     const reference = (
-      this.navigationProperty<P>(name) as ODataNavigationPropertyResource<P>
+      this.navigationProperty<N>(name) as ODataNavigationPropertyResource<N>
     ).reference();
 
     const etag = this.annots().etag;
     let obs$ = NEVER as Observable<any>;
     if (model instanceof ODataModel) {
       obs$ = reference.set(
-        model._meta.entityResource(model) as ODataEntityResource<P>,
+        model._meta.entityResource(model) as ODataEntityResource<N>,
         { etag, ...options }
       );
     } else if (model instanceof ODataCollection) {
@@ -683,7 +683,7 @@ export class ODataModel<T> {
           .models()
           .map((m) =>
             reference.add(
-              m._meta.entityResource(m) as ODataEntityResource<P>,
+              m._meta.entityResource(m) as ODataEntityResource<N>,
               options
             )
           )

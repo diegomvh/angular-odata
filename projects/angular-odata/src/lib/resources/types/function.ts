@@ -40,6 +40,33 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     return new ODataFunctionResource<P, R>(api, segments, options);
   }
 
+  static fromResource<P, R>(resource: ODataResource<any>, path: string) {
+    let type;
+    let bindingType;
+    const callable = resource.api.findCallableForType(path, resource.type());
+    if (callable !== undefined) {
+      path = callable.path();
+      type = callable.type();
+      bindingType = callable.binding()?.type;
+    }
+    const func = ODataFunctionResource.factory<P, R>(
+      resource.api,
+      path,
+      type,
+      resource.cloneSegments(),
+      resource.cloneQuery<R>()
+    );
+
+    // Switch entitySet to binding type if available
+    if (bindingType !== undefined && bindingType !== resource.type()) {
+      let entitySet = resource.api.findEntitySetForType(bindingType);
+      if (entitySet !== undefined) {
+        func.segment((s) => s.entitySet().path(entitySet!.name));
+      }
+    }
+    return func;
+  }
+
   clone() {
     return new ODataFunctionResource<P, R>(
       this.api,
@@ -60,7 +87,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       ? this.api.findCallableForType<R>(type)
       : undefined;
   }
-
 
   parameters(params: P | null, { alias }: { alias?: boolean } = {}) {
     const segments = this.cloneSegments();

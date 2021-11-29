@@ -6,11 +6,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import {
-  ODataEntities,
-  ODataEntitiesAnnotations,
-  ODataEntity,
-} from '../responses';
+import { ODataEntities, ODataEntity } from '../responses';
 import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
@@ -66,35 +62,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(path: string) {
-    let type;
-    const callable = this.api.findCallableForType(path, this.type());
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-    }
-    return ODataActionResource.factory<P, R>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<R>()
-    );
+    return ODataActionResource.fromResource<P, R>(this, path);
   }
 
   function<P, R>(path: string) {
-    let type;
-    const callable = this.api.findCallableForType(path, this.type());
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-    }
-    return ODataFunctionResource.factory<P, R>(
-      this.api,
-      path,
-      type,
-      this.cloneSegments(),
-      this.cloneQuery<R>()
-    );
+    return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 
   count() {

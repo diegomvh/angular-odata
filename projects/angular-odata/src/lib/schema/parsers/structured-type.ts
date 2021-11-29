@@ -392,13 +392,6 @@ export class ODataStructuredTypeParser<T>
     return false;
   }
 
-  typeFor(name: string): string | undefined {
-    const field = this.fields.find((f) => f.name === name);
-    if (field === undefined && this.parent !== undefined)
-      return this.parent.typeFor(name);
-    return field !== undefined ? field.type : undefined;
-  }
-
   findChildParser(
     predicate: (p: ODataStructuredTypeParser<any>) => boolean
   ): ODataStructuredTypeParser<any> | undefined {

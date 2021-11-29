@@ -6,15 +6,7 @@ import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import {
-  ODataEntities,
-  ODataEntitiesAnnotations,
-  ODataEntity,
-  ODataEntityAnnotations,
-  ODataProperty,
-} from '../responses';
-import { ODataEntityResource } from './entity';
-import { ODataEntitySetResource } from './entity-set';
+import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -36,6 +28,33 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     if (type) segment.type(type);
     query.clear();
     return new ODataActionResource<P, R>(api, segments, query);
+  }
+
+  static fromResource<P, R>(resource: ODataResource<any>, path: string) {
+    let type;
+    let bindingType;
+    const callable = resource.api.findCallableForType(path, resource.type());
+    if (callable !== undefined) {
+      path = callable.path();
+      type = callable.type();
+      bindingType = callable.binding()?.type;
+    }
+    const action = ODataActionResource.factory<P, R>(
+      resource.api,
+      path,
+      type,
+      resource.cloneSegments(),
+      resource.cloneQuery<R>()
+    );
+
+    // Switch entitySet to binding type if available
+    if (bindingType !== undefined && bindingType !== resource.type()) {
+      let entitySet = resource.api.findEntitySetForType(bindingType);
+      if (entitySet !== undefined) {
+        action.segment((s) => s.entitySet().path(entitySet!.name));
+      }
+    }
+    return action;
   }
 
   clone() {

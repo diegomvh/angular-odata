@@ -7,10 +7,10 @@ import {
   VALUE_SEPARATOR,
 } from '../constants';
 import {
-  ODataModelResource,
-  ODataModel,
   ODataCollection,
   ODataCollectionResource,
+  ODataModel,
+  ODataModelResource,
 } from '../models';
 import {
   ODataCallable,
@@ -32,7 +32,7 @@ import {
   ODataEntityAnnotations,
   ODataResponse,
 } from './responses/index';
-import { ODataOptions } from './types';
+import { ODataNavigationPropertyResource, ODataOptions } from './types';
 
 export type EntityKey<T> =
   | {
