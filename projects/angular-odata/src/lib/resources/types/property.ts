@@ -56,13 +56,23 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       }
     }
 
-    return ODataPropertyResource.factory<P>(
+    const property = ODataPropertyResource.factory<P>(
       resource.api,
       path,
       type,
       resource.cloneSegments(),
       resource.cloneQuery<P>()
     );
+
+    // Switch entitySet to binding type if available
+    if (bindingType !== undefined && bindingType !== resource.type()) {
+      let entitySet = resource.api.findEntitySetForType(bindingType);
+      if (entitySet !== undefined) {
+        property.segment((s) => s.entitySet().path(entitySet!.name));
+      }
+    }
+
+    return property;
   }
 
   clone() {

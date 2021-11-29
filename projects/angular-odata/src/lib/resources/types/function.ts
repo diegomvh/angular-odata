@@ -1,22 +1,13 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
-import { ODataCollectionResource } from '../../models';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
 import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
-import { alias as fAlias, ODataQueryOptions } from '../query';
+import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import {
-  ODataEntities,
-  ODataEntitiesAnnotations,
-  ODataEntity,
-  ODataEntityAnnotations,
-  ODataProperty,
-} from '../responses';
-import { ODataEntityResource } from './entity';
-import { ODataEntitySetResource } from './entity-set';
+import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -93,9 +84,11 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     const segment = segments.get(PathSegmentNames.function);
     let parameters = params !== null ? this.encode(params) : null;
     if (alias && parameters !== null) {
-      parameters = Object.entries(parameters).reduce((acc, [name, param]) => {
-        return Object.assign(acc, { [name]: fAlias(param, name) });
-      }, {});
+      this.query((q) => {
+        parameters = Object.entries(parameters).reduce((acc, [name, param]) => {
+          return Object.assign(acc, { [name]: q.alias(param, name) });
+        }, {});
+      });
     }
     segment.parameters(parameters);
     return new ODataFunctionResource<P, R>(

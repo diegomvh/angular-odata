@@ -54,13 +54,23 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         }
       }
     }
-    return ODataNavigationPropertyResource.factory<N>(
+    const navigation = ODataNavigationPropertyResource.factory<N>(
       resource.api,
       path,
       type,
       resource.cloneSegments(),
       resource.cloneQuery<N>()
     );
+
+    // Switch entitySet to binding type if available
+    if (bindingType !== undefined && bindingType !== resource.type()) {
+      let entitySet = resource.api.findEntitySetForType(bindingType);
+      if (entitySet !== undefined) {
+        navigation.segment((s) => s.entitySet().path(entitySet!.name));
+      }
+    }
+
+    return navigation;
   }
 
   clone() {
