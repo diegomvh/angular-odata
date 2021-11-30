@@ -26,6 +26,14 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     return new ODataReferenceResource<P>(api, segments, options);
   }
 
+  static fromResource<P>(resource: ODataResource<any>) {
+    return ODataReferenceResource.factory<P>(
+      resource.api,
+      resource.cloneSegments(),
+      resource.cloneQuery<P>()
+    );
+  }
+
   clone() {
     return new ODataReferenceResource<T>(
       this.api,

@@ -112,12 +112,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   value() {
-    return ODataValueResource.factory<T>(
-      this.api,
-      this.type(),
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return ODataValueResource.fromResource<T>(this);
   }
 
   navigationProperty<N>(path: string) {

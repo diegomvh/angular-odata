@@ -55,12 +55,6 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return entity;
   }
 
-  cast<C>(type: string) {
-    let segments = this.cloneSegments();
-    segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataEntitySetResource<C>(this.api, segments, this.cloneQuery());
-  }
-
   action<P, R>(path: string) {
     return ODataActionResource.fromResource<P, R>(this, path);
   }
@@ -70,11 +64,13 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   count() {
-    return ODataCountResource.factory<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return ODataCountResource.fromResource<T>(this);
+  }
+
+  cast<C>(type: string) {
+    let segments = this.cloneSegments();
+    segments.add(PathSegmentNames.type, type).type(type);
+    return new ODataEntitySetResource<C>(this.api, segments, this.cloneQuery());
   }
 
   //#region Requests

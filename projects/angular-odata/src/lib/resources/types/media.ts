@@ -19,6 +19,14 @@ export class ODataMediaResource extends ODataResource<any> {
     return new ODataMediaResource(api, segments, options);
   }
 
+  static fromResource<V>(resource: ODataResource<any>) {
+    return ODataMediaResource.factory<V>(
+      resource.api,
+      resource.cloneSegments(),
+      resource.cloneQuery<V>()
+    );
+  }
+
   clone() {
     return new ODataMediaResource(
       this.api,

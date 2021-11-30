@@ -66,11 +66,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   media() {
-    return ODataMediaResource.factory<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return ODataMediaResource.fromResource<T>(this);
   }
 
   navigationProperty<N>(path: string) {
@@ -89,7 +85,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 
-  //TODO: Check
+  //TODO: Check if the type is subtype of
   cast<C>(type: string) {
     let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);

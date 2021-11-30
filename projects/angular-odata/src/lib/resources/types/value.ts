@@ -21,6 +21,15 @@ export class ODataValueResource<T> extends ODataResource<T> {
     return new ODataValueResource<V>(api, segments, options);
   }
 
+  static fromResource<V>(resource: ODataResource<any>) {
+    return ODataValueResource.factory<V>(
+      resource.api,
+      resource.type(),
+      resource.cloneSegments(),
+      resource.cloneQuery<V>()
+    );
+  }
+
   clone() {
     return new ODataValueResource<T>(
       this.api,

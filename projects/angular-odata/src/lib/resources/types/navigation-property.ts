@@ -111,19 +111,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   media() {
-    return ODataMediaResource.factory<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return ODataMediaResource.fromResource<T>(this);
   }
 
   reference() {
-    return ODataReferenceResource.factory<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return ODataReferenceResource.fromResource<T>(this);
   }
 
   navigationProperty<N>(path: string) {
@@ -135,11 +127,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   count() {
-    return ODataCountResource.factory<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return ODataCountResource.fromResource<T>(this);
   }
 
   cast<C>(type: string) {

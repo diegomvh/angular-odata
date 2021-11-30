@@ -19,6 +19,14 @@ export class ODataCountResource<T> extends ODataResource<T> {
     return new ODataCountResource<T>(api, segments, query);
   }
 
+  static fromResource<T>(resource: ODataResource<any>) {
+    return ODataCountResource.factory<T>(
+      resource.api,
+      resource.cloneSegments(),
+      resource.cloneQuery<T>()
+    );
+  }
+
   clone() {
     return new ODataCountResource<T>(
       this.api,
