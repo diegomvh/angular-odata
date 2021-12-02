@@ -33,6 +33,10 @@ export class Expression<T> implements Renderable {
     return 'Expression';
   }
 
+  static s<T extends object>(): T {
+    return Field.factory<T>();
+  }
+
   static e<T>(connector: Connector = 'and') {
     return new Expression<T>({ connector });
   }

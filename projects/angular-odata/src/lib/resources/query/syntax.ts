@@ -26,7 +26,7 @@ export class Field<T extends object> implements ProxyHandler<T> {
 
   names: string[] = [];
   get(target: T, p: string | symbol): any {
-    if (p === '_render') {
+    if (p === 'render') {
       return this.render.bind(this);
     }
     let h = (target as any)['_field'];
@@ -77,7 +77,11 @@ function render(
   if (typeof value === 'function') {
     return render(value(syntax), { aliases, normalize });
   }
-  if (typeof value === 'object' && value !== null && 'render' in value) {
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    value.render !== undefined
+  ) {
     return render(value.render({ aliases, escape }), {
       aliases,
       normalize,

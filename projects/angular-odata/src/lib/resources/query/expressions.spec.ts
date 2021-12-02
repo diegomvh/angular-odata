@@ -31,6 +31,7 @@ describe('OData filter builder', () => {
   }
 
   const e = Expression.e;
+  const s = Expression.s;
   const not = Expression.not;
   const f = Expression.f;
   const o = Expression.o;
@@ -84,17 +85,16 @@ describe('OData filter builder', () => {
     });
 
     describe('navigate main', () => {
-      let s = Field.factory<Person>();
       it('navigate', () => {
-        const compare1 = e<Person>('and').eq(s.Car!.Model!.Id, 1);
+        const compare1 = e<Person>('and').eq(s<Person>().Car!.Model!.Id, 1);
         expect(compare1.render()).toBe('Car/Model/Id eq 1');
       });
 
       it('combination navigate', () => {
         const compare1 = e<Person>('and')
-          .eq(s.Car!.Model!.Id, 1)
+          .eq(s<Person>().Car!.Model!.Id, 1)
           .ne('Id', 1)
-          .or(e<Person>().endsWith(s.Name, 'John'));
+          .or(e<Person>().endsWith(s<Person>().Name, 'John'));
         expect(compare1.render()).toBe(
           "(Car/Model/Id eq 1 and Id ne 1) or endswith(Name, 'John')"
         );
@@ -102,8 +102,8 @@ describe('OData filter builder', () => {
 
       it('combination and.or()', () => {
         const compare1 = e<Person>('and')
-          .eq(s.Car!.Model!.Id, 1)
-          .or(e<Person>().endsWith(s.Name, 'John'));
+          .eq(s<Person>().Car!.Model!.Id, 1)
+          .or(e<Person>().endsWith(s<Person>().Name, 'John'));
         expect(compare1.render()).toBe(
           "Car/Model/Id eq 1 or endswith(Name, 'John')"
         );
@@ -249,7 +249,7 @@ describe('OData filter builder', () => {
           const s = Field.factory<Person>();
           const func = e<any>().eq(f<Person>().length(s.Car!.Year), 19);
 
-          expect(func.render()).toBe('length(CompanyName) eq 19');
+          expect(func.render()).toBe('length(Car/Year) eq 19');
         });
 
         it('toTower', () => {

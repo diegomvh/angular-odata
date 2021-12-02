@@ -3,13 +3,7 @@ import { Objects, Types } from '../../utils';
 import { alias, Expand, Filter, OrderBy, Select, Transform } from './builder';
 import { Connector, Expression } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
-import {
-  Field,
-  functions,
-  ODataFunctions,
-  ODataOperators,
-  operators,
-} from './syntax';
+import { ODataFunctions, ODataOperators } from './syntax';
 
 export class ODataQueryOptionHandler<T> {
   constructor(
@@ -178,7 +172,7 @@ export class ODataQueryOptionsHandler<T> {
   filter(
     opts: (e: {
       s: T;
-      e: (connector: Connector) => Expression<T>;
+      e: (connector?: Connector) => Expression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
     }) => Expression<T>
@@ -190,8 +184,8 @@ export class ODataQueryOptionsHandler<T> {
       return this.options.expression(
         QueryOptionNames.filter,
         opts({
-          s: Field.factory(),
-          e: (connector?: Connector) => Expression.e<T>(connector),
+          s: Expression.s,
+          e: Expression.e,
           o: Expression.o,
           f: Expression.f,
         }) as Expression<T>
