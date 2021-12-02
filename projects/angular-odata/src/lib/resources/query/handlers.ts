@@ -1,8 +1,15 @@
 import { QueryOptionNames } from '../../types';
 import { Objects, Types } from '../../utils';
 import { alias, Expand, Filter, OrderBy, Select, Transform } from './builder';
-import { Expression } from './expressions';
+import { Connector, Expression } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
+import {
+  Field,
+  functions,
+  ODataFunctions,
+  ODataOperators,
+  operators,
+} from './syntax';
 
 export class ODataQueryOptionHandler<T> {
   constructor(
@@ -130,12 +137,7 @@ export class ODataQueryOptionsHandler<T> {
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    */
   compute(
-    opts: (e: {
-      e: Expression<T>;
-      and: Expression<T>;
-      or: Expression<T>;
-      not: typeof Expression.not;
-    }) => Expression<T>
+    opts: (e: { e: Expression<T>; not: typeof Expression.not }) => Expression<T>
   ): Expression<T>;
   compute(opts: string): ODataQueryOptionHandler<T>;
   compute(): ODataQueryOptionHandler<T>;
@@ -145,8 +147,6 @@ export class ODataQueryOptionsHandler<T> {
         QueryOptionNames.compute,
         opts({
           e: () => Expression.e<T>(),
-          and: () => Expression.and<T>(),
-          or: () => Expression.or<T>(),
           not: (e: Expression<T>) => Expression.not(e),
         }) as Expression<T>
       );
@@ -177,10 +177,10 @@ export class ODataQueryOptionsHandler<T> {
 
   filter(
     opts: (e: {
-      e: () => Expression<T>;
-      and: () => Expression<T>;
-      or: () => Expression<T>;
-      not: (e: Expression<T>) => Expression<T>;
+      s: T;
+      e: (connector: Connector) => Expression<T>;
+      o: ODataOperators<T>;
+      f: ODataFunctions<T>;
     }) => Expression<T>
   ): Expression<T>;
   filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
@@ -190,10 +190,10 @@ export class ODataQueryOptionsHandler<T> {
       return this.options.expression(
         QueryOptionNames.filter,
         opts({
-          e: () => Expression.e<T>(),
-          and: () => Expression.and<T>(),
-          or: () => Expression.or<T>(),
-          not: (e: Expression<T>) => Expression.not(e),
+          s: Field.factory(),
+          e: (connector?: Connector) => Expression.e<T>(connector),
+          o: Expression.o,
+          f: Expression.f,
         }) as Expression<T>
       );
     }
@@ -203,8 +203,6 @@ export class ODataQueryOptionsHandler<T> {
   orderBy(
     opts: (e: {
       e: () => Expression<T>;
-      and: () => Expression<T>;
-      or: () => Expression<T>;
       not: (e: Expression<T>) => Expression<T>;
     }) => Expression<T>
   ): Expression<T>;
@@ -216,8 +214,6 @@ export class ODataQueryOptionsHandler<T> {
         QueryOptionNames.orderBy,
         opts({
           e: () => Expression.e<T>(),
-          and: () => Expression.and<T>(),
-          or: () => Expression.or<T>(),
           not: (e: Expression<T>) => Expression.not(e),
         }) as Expression<T>
       );

@@ -1,11 +1,15 @@
 import type { QueryCustomType } from './builder';
-import type { Field, Renderable } from './syntax';
+import {
+  Field,
+  functions,
+  ODataFunctions,
+  ODataOperators,
+  operators,
+  Renderable,
+} from './syntax';
 import { syntax } from './syntax';
 
-export enum Connector {
-  AND = 'and',
-  OR = 'or',
-}
+export type Connector = 'and' | 'or';
 
 export class Expression<T> implements Renderable {
   private _connector: Connector;
@@ -21,7 +25,7 @@ export class Expression<T> implements Renderable {
     negated?: boolean;
   } = {}) {
     this._children = children || [];
-    this._connector = connector || Connector.AND;
+    this._connector = connector || 'and';
     this._negated = negated || false;
   }
 
@@ -29,16 +33,16 @@ export class Expression<T> implements Renderable {
     return 'Expression';
   }
 
-  static e<T>() {
-    return new Expression<T>({ connector: Connector.AND });
+  static e<T>(connector: Connector = 'and') {
+    return new Expression<T>({ connector });
   }
 
-  static and<T>() {
-    return new Expression<T>({ connector: Connector.AND });
+  static o<T>(): ODataOperators<T> {
+    return operators;
   }
 
-  static or<T>() {
-    return new Expression<T>({ connector: Connector.OR });
+  static f<T>(): ODataFunctions<T> {
+    return functions;
   }
 
   static not<T>(exp: Expression<T>) {
@@ -134,81 +138,64 @@ export class Expression<T> implements Renderable {
     return this;
   }
 
-  or(
-    exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
-  ): Expression<T> {
-    return this._add(
-      typeof exp === 'function' ? exp(new Expression<T>()) : exp,
-      Connector.OR
-    );
+  or(exp: Expression<T>): Expression<T> {
+    return this._add(exp, 'or');
   }
 
-  and(
-    exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
-  ): Expression<T> {
-    return this._add(
-      typeof exp === 'function' ? exp(new Expression<T>()) : exp,
-      Connector.AND
-    );
+  and(exp: Expression<T>): Expression<T> {
+    return this._add(exp, 'and');
   }
 
-  not(
-    exp: Expression<T> | ((x: Expression<T>) => Expression<T>)
-  ): Expression<T> {
-    return this._add(
-      Expression.not(
-        typeof exp === 'function' ? exp(new Expression<T>()) : exp
-      ),
-      this._connector
-    );
+  not(exp: Expression<T>): Expression<T> {
+    return this._add(Expression.not(exp), this._connector);
   }
 
-  eq(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.eq(left, right, normalize));
+  eq(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.eq(left, right, normalize));
   }
 
-  ne(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.ne(left, right, normalize));
+  ne(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.ne(left, right, normalize));
   }
 
-  gt(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.gt(left, right, normalize));
+  gt(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.gt(left, right, normalize));
   }
 
-  ge(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.ge(left, right, normalize));
+  ge(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.ge(left, right, normalize));
   }
 
-  lt(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.lt(left, right, normalize));
+  lt(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.lt(left, right, normalize));
   }
 
-  le(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.le(left, right, normalize));
+  le(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.le(left, right, normalize));
   }
 
-  has(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.has(left, right, normalize));
+  has(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.has(left, right, normalize));
   }
 
-  in(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.in(left, right, normalize));
+  in(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.in(left, right, normalize));
   }
 
-  contains(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.contains(left, right, normalize));
+  contains(left: any, right: any, normalize?: boolean) {
+    return this._add(functions.contains(left, right, normalize));
   }
 
-  startsWith(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.startsWith(left, right, normalize));
+  startsWith(left: any, right: any, normalize?: boolean) {
+    return this._add(functions.startsWith(left, right, normalize));
   }
 
-  endsWith(left: Field<T>, right: any, normalize?: boolean) {
-    return this._add(syntax.endsWith(left, right, normalize));
+  endsWith(left: any, right: any, normalize?: boolean) {
+    return this._add(functions.endsWith(left, right, normalize));
   }
 
   any<N>(
-    left: Field<T>,
+    left: any,
     exp: Expression<N> | ((x: Expression<N>) => Expression<N>)
   ) {
     return this._add(
@@ -220,7 +207,7 @@ export class Expression<T> implements Renderable {
   }
 
   all<N>(
-    left: Field<T>,
+    left: any,
     exp: Expression<N> | ((x: Expression<N>) => Expression<N>)
   ) {
     return this._add(
@@ -232,7 +219,7 @@ export class Expression<T> implements Renderable {
   }
 
   isof(type: string): Expression<T>;
-  isof(left: Field<T>, type: string): Expression<T>;
+  isof(left: T, type: string): Expression<T>;
   isof(left: any, type?: string): Expression<T> {
     return this._add(syntax.isof(left, type));
   }

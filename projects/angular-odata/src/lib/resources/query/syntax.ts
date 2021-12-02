@@ -15,8 +15,39 @@ export interface Renderable {
 
 export type Funcs<T> = (
   x: ODataSyntax<T>
-) => Function<T> | Operator<T> | Grouping<T> | Navigation<T, any>;
-export type Field<T> = keyof T | Funcs<keyof T>;
+) => Function<T> | Operator<T> | Grouping<T>;
+//export type Field<T> = keyof T | Funcs<keyof T>;
+
+export class Field<T extends object> implements ProxyHandler<T> {
+  static factory<T extends object>() {
+    const h = new Field<T>();
+    return new Proxy({ _field: h } as T & { _field: Field<T> }, h);
+  }
+
+  names: string[] = [];
+  get(target: T, p: string | symbol): any {
+    if (p === '_render') {
+      return this.render.bind(this);
+    }
+    let h = (target as any)['_field'];
+    h.push(p);
+    return new Proxy({ _field: this } as any & { _field: Field<any> }, this);
+  }
+
+  render({
+    aliases,
+    escape,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+  }): string {
+    return this.names.join('/');
+  }
+
+  push(field: string) {
+    this.names.push(field);
+  }
+}
 
 function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {
@@ -97,31 +128,31 @@ export class Function<T> implements Renderable {
 }
 
 export class StringAndCollectionFunctions<T> {
-  concat(field: T, value: any, normalize?: boolean) {
+  concat(field: any, value: any, normalize?: boolean) {
     return new Function<T>('concat', [field, value], normalize);
   }
 
-  contains(field: T, value: any, normalize?: boolean) {
+  contains(field: any, value: any, normalize?: boolean) {
     return new Function<T>('contains', [field, value], normalize);
   }
 
-  endsWith(field: T, value: any, normalize?: boolean) {
+  endsWith(field: any, value: any, normalize?: boolean) {
     return new Function<T>('endswith', [field, value], normalize);
   }
 
-  indexOf(field: T, value: any, normalize?: boolean) {
+  indexOf(field: any, value: any, normalize?: boolean) {
     return new Function<T>('indexof', [field, value], normalize);
   }
 
-  length(value: T, normalize?: boolean) {
+  length(value: any, normalize?: boolean) {
     return new Function<T>('length', [value], normalize);
   }
 
-  startsWith(field: T, value: any, normalize?: boolean) {
+  startsWith(field: any, value: any, normalize?: boolean) {
     return new Function<T>('startswith', [field, value], normalize);
   }
 
-  subString(field: T, start: number, length?: number) {
+  subString(field: any, start: number, length?: number) {
     let values = [field, start];
     if (length !== undefined) {
       values.push(length);
@@ -309,12 +340,14 @@ export class LogicalOperators<T> {
   le(left: any, right: any, normalize?: boolean) {
     return new Operator('le', [left, right], normalize);
   }
+  /*
   and(left: any, right: any, normalize?: boolean) {
     return new Operator('and', [left, right], normalize);
   }
   or(left: any, right: any, normalize?: boolean) {
     return new Operator('or', [left, right], normalize);
   }
+  */
   not(value: any, normalize?: boolean) {
     return new Operator<T>('not', [value], normalize);
   }
@@ -371,6 +404,7 @@ export class Grouping<T> implements Renderable {
   }
 }
 
+/*
 export class Navigation<T, N> implements Renderable {
   constructor(protected field: T, protected value: Field<N>) {}
 
@@ -395,15 +429,18 @@ export class Navigation<T, N> implements Renderable {
     return `${this.field}/${render(this.value, { aliases, escape })}`;
   }
 }
+*/
 
-export class GroupingAndNavigationOperators<T> {
+export class GroupingOperators<T> {
   grouping(value: any) {
     return new Grouping(value);
   }
 
+  /*
   navigation<N>(field: T, value: Field<N>) {
     return new Navigation<T, N>(field, value);
   }
+  */
 }
 
 export class Lambda<T> extends Operator<T> {
@@ -451,13 +488,13 @@ export class ODataOperators<T> {}
 export interface ODataOperators<T>
   extends LogicalOperators<T>,
     ArithmeticOperators<T>,
-    GroupingAndNavigationOperators<T>,
+    GroupingOperators<T>,
     LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
   ArithmeticOperators,
-  GroupingAndNavigationOperators,
+  GroupingOperators,
   LambdaOperators,
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();

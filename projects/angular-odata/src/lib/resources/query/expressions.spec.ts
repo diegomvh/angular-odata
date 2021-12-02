@@ -1,4 +1,5 @@
 import { Expression } from './expressions';
+import { Field } from './syntax';
 
 describe('OData filter builder', () => {
   interface Pet {
@@ -30,20 +31,20 @@ describe('OData filter builder', () => {
   }
 
   const e = Expression.e;
-  const and = Expression.and;
-  const or = Expression.or;
   const not = Expression.not;
+  const f = Expression.f;
+  const o = Expression.o;
 
   describe('base condition', () => {
     describe('as factory function', () => {
       it('and', () => {
-        const compare1 = and<Person>().eq('Id', 1).ne('Car', 3);
+        const compare1 = e<Person>('and').eq('Id', 1).ne('Car', 3);
 
         expect(compare1.render()).toBe('Id eq 1 and Car ne 3');
       });
 
       it('or', () => {
-        const compare1 = or<Person>().eq('Id', 1).ne('Car', 3);
+        const compare1 = e<Person>('or').eq('Id', 1).ne('Car', 3);
 
         expect(compare1.render()).toBe('Id eq 1 or Car ne 3');
       });
@@ -83,41 +84,26 @@ describe('OData filter builder', () => {
     });
 
     describe('navigate main', () => {
+      let s = Field.factory<Person>();
       it('navigate', () => {
-        const compare1 = and<Person>().eq(
-          (x) =>
-            x.navigation<Car>('Car', (x) => x.navigation<Model>('Model', 'Id')),
-          1
-        );
+        const compare1 = e<Person>('and').eq(s.Car!.Model!.Id, 1);
         expect(compare1.render()).toBe('Car/Model/Id eq 1');
       });
 
       it('combination navigate', () => {
-        const compare1 = and<Person>()
-          .eq(
-            (x) =>
-              x.navigation<Car>('Car', (x) =>
-                x.navigation<Model>('Model', 'Id')
-              ),
-            1
-          )
+        const compare1 = e<Person>('and')
+          .eq(s.Car!.Model!.Id, 1)
           .ne('Id', 1)
-          .or((x) => x.endsWith('Name', 'John'));
+          .or(e<Person>().endsWith(s.Name, 'John'));
         expect(compare1.render()).toBe(
           "(Car/Model/Id eq 1 and Id ne 1) or endswith(Name, 'John')"
         );
       });
 
       it('combination and.or()', () => {
-        const compare1 = and<Person>()
-          .eq(
-            (x) =>
-              x.navigation<Car>('Car', (x) =>
-                x.navigation<Model>('Model', 'Id')
-              ),
-            1
-          )
-          .or((x) => x.endsWith('Name', 'John'));
+        const compare1 = e<Person>('and')
+          .eq(s.Car!.Model!.Id, 1)
+          .or(e<Person>().endsWith(s.Name, 'John'));
         expect(compare1.render()).toBe(
           "Car/Model/Id eq 1 or endswith(Name, 'John')"
         );
@@ -126,12 +112,16 @@ describe('OData filter builder', () => {
 
     describe('lambdas basics', () => {
       it('any', () => {
-        const compare1 = and<Person>().any<Pet>('Pets', (x) => x.eq('Age', 1));
+        const compare1 = e<Person>('and').any<Pet>('Pets', (x) =>
+          x.eq('Age', 1)
+        );
         expect(compare1.render()).toBe('Pets/any(pets:pets/Age eq 1)');
       });
 
       it('all', () => {
-        const compare1 = and<Person>().all<Pet>('Pets', (x) => x.ne('Age', 1));
+        const compare1 = e<Person>('and').all<Pet>('Pets', (x) =>
+          x.ne('Age', 1)
+        );
         expect(compare1.render()).toBe('Pets/all(pets:pets/Age ne 1)');
       });
     });
@@ -141,7 +131,7 @@ describe('OData filter builder', () => {
       const functions = ['contains', 'startsWith', 'endsWith'];
 
       it('in', () => {
-        const compare1 = and<Person>().in('Age', [1, 2, '3']);
+        const compare1 = e<Person>().in('Age', [1, 2, '3']);
         expect(compare1.render()).toBe("Age in (1,2,'3')");
       });
 
@@ -202,7 +192,7 @@ describe('OData filter builder', () => {
         });
 
         it('or', () => {
-          const compare = or<any>()
+          const compare = e<any>('or')
             .eq('Id', 1)
             .ne('Type/Id', 3)
             .endsWith('Name', 'a');
@@ -215,7 +205,7 @@ describe('OData filter builder', () => {
 
       describe('combination f().and(f().eq(...))', () => {
         it('and', () => {
-          const compare = or<any>()
+          const compare = e<any>('or')
             .and(e<any>().eq('Id', 1))
             .and(e<any>().ne('Type/Id', 3))
             .and(e<any>().contains('Name', 'a'));
@@ -256,14 +246,15 @@ describe('OData filter builder', () => {
         });
 
         it('length', () => {
-          const func = e<any>().eq((x) => x.length('CompanyName'), 19);
+          const s = Field.factory<Person>();
+          const func = e<any>().eq(f<Person>().length(s.Car!.Year), 19);
 
           expect(func.render()).toBe('length(CompanyName) eq 19');
         });
 
         it('toTower', () => {
           const func = e<any>().eq(
-            (x) => x.toLower('CompanyName'),
+            f<any>().toLower('CompanyName'),
             'alfreds futterkiste'
           );
 
@@ -274,7 +265,7 @@ describe('OData filter builder', () => {
 
         it('toUpper', () => {
           const func = e<any>().eq(
-            (x) => x.toUpper('CompanyName'),
+            f<any>().toUpper('CompanyName'),
             'ALFREDS FUTTERKISTE'
           );
 
@@ -285,7 +276,7 @@ describe('OData filter builder', () => {
 
         it('trim', () => {
           const func = e<any>().eq(
-            (x) => x.trim('CompanyName'),
+            f<any>().trim('CompanyName'),
             'CompanyName',
             false
           );
@@ -295,7 +286,7 @@ describe('OData filter builder', () => {
 
         it('indexOf', () => {
           const func1 = e<any>().eq(
-            (x) => x.indexOf('CompanyName', 'lfreds'),
+            f<any>().indexOf('CompanyName', 'lfreds'),
             1
           );
           const expectedString = "indexof(CompanyName, 'lfreds') eq 1";
@@ -305,14 +296,14 @@ describe('OData filter builder', () => {
 
         it('substring', () => {
           const func1 = e<any>().eq(
-            (x) => x.subString('CompanyName', 1),
+            f<any>().subString('CompanyName', 1),
             'lfreds Futterkiste'
           );
           const expectedString1 =
             "substring(CompanyName, 1) eq 'lfreds Futterkiste'";
 
           const func3 = e<any>().eq(
-            (x) => x.subString('CompanyName', 1, 2),
+            f<any>().subString('CompanyName', 1, 2),
             'lf'
           );
           const expectedString2 = "substring(CompanyName, 1, 2) eq 'lf'";
@@ -327,12 +318,7 @@ describe('OData filter builder', () => {
 
         it('concat', () => {
           const func = e<any>().eq(
-            (x) =>
-              x.concat(
-                ((y: any) => y.concat('City', ', ')) as any,
-                'Country',
-                false
-              ),
+            f<any>().concat(f<any>().concat('City', ', '), 'Country', false),
             'Berlin, Germany'
           );
 
