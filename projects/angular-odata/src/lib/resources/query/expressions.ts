@@ -49,12 +49,20 @@ export class Expression<T> implements Renderable {
     return functions;
   }
 
-  static not<T>(exp: Expression<T>) {
-    return new Expression<T>({
-      children: exp.children(),
-      connector: exp.connector(),
-      negated: true,
-    });
+  static filter<T extends object>(
+    opts: (e: {
+      s: T;
+      e: (connector?: Connector) => Expression<T>;
+      o: ODataOperators<T>;
+      f: ODataFunctions<T>;
+    }) => Expression<T>
+  ): Expression<T> {
+    return opts({
+      s: Field.factory<T>(),
+      e: Expression.e,
+      o: operators,
+      f: functions,
+    }) as Expression<T>;
   }
 
   toJSON() {
@@ -151,7 +159,13 @@ export class Expression<T> implements Renderable {
   }
 
   not(exp: Expression<T>): Expression<T> {
-    return this._add(Expression.not(exp), this._connector);
+    const notExp = new Expression<T>({
+      children: exp.children(),
+      connector: exp.connector(),
+      negated: true,
+    });
+
+    return this._add(notExp, this._connector);
   }
 
   eq(left: any, right: any, normalize?: boolean) {

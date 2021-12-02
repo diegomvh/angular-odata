@@ -130,9 +130,7 @@ export class ODataQueryOptionsHandler<T> {
   /**
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    */
-  compute(
-    opts: (e: { e: Expression<T>; not: typeof Expression.not }) => Expression<T>
-  ): Expression<T>;
+  compute(opts: (e: { e: Expression<T> }) => Expression<T>): Expression<T>;
   compute(opts: string): ODataQueryOptionHandler<T>;
   compute(): ODataQueryOptionHandler<T>;
   compute(opts?: any): any {
@@ -141,7 +139,6 @@ export class ODataQueryOptionsHandler<T> {
         QueryOptionNames.compute,
         opts({
           e: () => Expression.e<T>(),
-          not: (e: Expression<T>) => Expression.not(e),
         }) as Expression<T>
       );
     }
@@ -208,7 +205,6 @@ export class ODataQueryOptionsHandler<T> {
         QueryOptionNames.orderBy,
         opts({
           e: () => Expression.e<T>(),
-          not: (e: Expression<T>) => Expression.not(e),
         }) as Expression<T>
       );
     }

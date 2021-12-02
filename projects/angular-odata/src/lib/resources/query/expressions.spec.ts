@@ -30,22 +30,20 @@ describe('OData filter builder', () => {
     Pets?: Pet[];
   }
 
-  const e = Expression.e;
-  const s = Expression.s;
-  const not = Expression.not;
-  const f = Expression.f;
-  const o = Expression.o;
-
   describe('base condition', () => {
     describe('as factory function', () => {
       it('and', () => {
-        const compare1 = e<Person>('and').eq('Id', 1).ne('Car', 3);
+        const compare1 = Expression.filter<Person>(({ e }) =>
+          e('and').eq('Id', 1).ne('Car', 3)
+        );
 
         expect(compare1.render()).toBe('Id eq 1 and Car ne 3');
       });
 
       it('or', () => {
-        const compare1 = e<Person>('or').eq('Id', 1).ne('Car', 3);
+        const compare1 = Expression.filter<Person>(({ e }) =>
+          e('or').eq('Id', 1).ne('Car', 3)
+        );
 
         expect(compare1.render()).toBe('Id eq 1 or Car ne 3');
       });
