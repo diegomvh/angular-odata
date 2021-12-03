@@ -58,10 +58,10 @@ export class Expression<T> implements Renderable {
     }) => Expression<T>
   ): Expression<T> {
     return opts({
-      s: Field.factory<T>(),
+      s: Expression.s<T>(),
       e: Expression.e,
-      o: operators,
-      f: functions,
+      o: Expression.o<T>(),
+      f: Expression.f<T>(),
     }) as Expression<T>;
   }
 
@@ -92,12 +92,14 @@ export class Expression<T> implements Renderable {
   render({
     aliases,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
+    prefix?: string;
   } = {}): string {
     let content = this._children
-      .map((n) => n.render({ aliases, escape }))
+      .map((n) => n.render({ aliases, escape, prefix }))
       .join(` ${this._connector} `);
     if (this._negated) {
       content = `not (${content})`;
@@ -212,28 +214,34 @@ export class Expression<T> implements Renderable {
     return this._add(functions.endsWith(left, right, normalize));
   }
 
-  any<N>(
-    left: any,
-    exp: Expression<N> | ((x: Expression<N>) => Expression<N>)
-  ) {
-    return this._add(
-      syntax.any(
-        left,
-        typeof exp === 'function' ? exp(new Expression<N>()) : exp
-      )
-    );
+  any<N extends object>(
+    left: N[],
+    opts: (e: {
+      s: N;
+      e: (connector?: Connector) => Expression<N>;
+    }) => Expression<N>,
+    alias?: string
+  ): Expression<T> {
+    const exp = opts({
+      s: Field.factory<N>(),
+      e: Expression.e,
+    }) as Expression<N>;
+    return this._add(syntax.any(left, exp, alias));
   }
 
-  all<N>(
-    left: any,
-    exp: Expression<N> | ((x: Expression<N>) => Expression<N>)
-  ) {
-    return this._add(
-      syntax.all(
-        left,
-        typeof exp === 'function' ? exp(new Expression<N>()) : exp
-      )
-    );
+  all<N extends object>(
+    left: N[],
+    opts: (e: {
+      s: N;
+      e: (connector?: Connector) => Expression<N>;
+    }) => Expression<N>,
+    alias?: string
+  ): Expression<T> {
+    const exp = opts({
+      s: Field.factory<N>(),
+      e: Expression.e,
+    }) as Expression<N>;
+    return this._add(syntax.all(left, exp, alias));
   }
 
   isof(type: string): Expression<T>;

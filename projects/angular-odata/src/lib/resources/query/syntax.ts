@@ -5,9 +5,11 @@ export interface Renderable {
   render({
     aliases,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
+    prefix?: string;
   }): string;
   toString(): string;
   toJSON(): any;
@@ -29,7 +31,8 @@ export class Field<T extends object> implements ProxyHandler<T> {
   get(target: T, p: string | symbol): any {
     let name = (target as any)['_name'];
     if (p === 'render') {
-      return () => name;
+      return ({ prefix }: { prefix?: string }) =>
+        prefix ? `${prefix}/${name}` : name;
     }
     name = name ? `${name}/${p as string}` : p;
     return new Proxy({ _name: name } as any, this);
@@ -55,24 +58,27 @@ function render(
     aliases,
     normalize,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
     normalize?: boolean;
     escape?: boolean;
+    prefix?: string;
   } = {}
 ): string | number | boolean | null {
   if (typeof value === 'function') {
-    return render(value(syntax), { aliases, normalize });
+    return render(value(syntax), { aliases, normalize, prefix });
   }
   if (
     typeof value === 'object' &&
     value !== null &&
     value.render !== undefined
   ) {
-    return render(value.render({ aliases, escape }), {
+    return render(value.render({ aliases, escape, prefix }), {
       aliases,
       normalize,
       escape,
+      prefix,
     });
   }
   return normalize ? normalizeValue(value, { aliases, escape }) : value;
@@ -101,17 +107,19 @@ export class Function<T> implements Renderable {
   render({
     aliases,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
     escape?: boolean;
+    prefix?: string;
   }): string {
     let [field, ...values] = this.values;
 
-    field = render(field);
+    field = render(field, { aliases, escape, prefix });
     let params = [
       field,
       ...values.map((v) =>
-        render(v, { aliases, escape, normalize: this.normalize })
+        render(v, { aliases, escape, prefix, normalize: this.normalize })
       ),
     ];
     return `${this.name}(${params.join(', ')})`;
@@ -177,46 +185,46 @@ export class StringFunctions<T> {
 }
 
 export class DateAndTimeFunctions<T> {
-  date(value: T) {
+  date(value: any) {
     return new Function<T>('date', [value]);
   }
-  day(value: T) {
+  day(value: any) {
     return new Function<T>('day', [value]);
   }
-  fractionalseconds(value: T) {
+  fractionalseconds(value: any) {
     return new Function<T>('fractionalseconds', [value]);
   }
-  hour(value: T) {
+  hour(value: any) {
     return new Function<T>('hour', [value]);
   }
-  maxdatetime(value: T) {
+  maxdatetime(value: any) {
     return new Function<T>('maxdatetime', [value]);
   }
-  mindatetime(value: T) {
+  mindatetime(value: any) {
     return new Function<T>('mindatetime', [value]);
   }
-  minute(value: T) {
+  minute(value: any) {
     return new Function<T>('minute', [value]);
   }
-  month(value: T) {
+  month(value: any) {
     return new Function<T>('month', [value]);
   }
   now() {
     return new Function<T>('now', []);
   }
-  second(value: T) {
+  second(value: any) {
     return new Function<T>('second', [value]);
   }
-  time(value: T) {
+  time(value: any) {
     return new Function<T>('time', [value]);
   }
-  totaloffsetminutes(value: T) {
+  totaloffsetminutes(value: any) {
     return new Function<T>('totaloffsetminutes', [value]);
   }
-  totalseconds(value: T) {
+  totalseconds(value: any) {
     return new Function<T>('totalseconds', [value]);
   }
-  year(value: T) {
+  year(value: any) {
     return new Function<T>('year', [value]);
   }
 }
@@ -283,13 +291,15 @@ export class Operator<T> implements Renderable {
   render({
     aliases,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
-    escape: boolean;
+    escape?: boolean;
+    prefix?: string;
   }): string {
     let [left, right] = this.values;
 
-    left = render(left, { aliases, escape });
+    left = render(left, { aliases, escape, prefix });
     if (right !== undefined) {
       right = Array.isArray(right)
         ? `(${right
@@ -297,6 +307,7 @@ export class Operator<T> implements Renderable {
               render(v, {
                 aliases,
                 escape,
+                prefix,
                 normalize: this.normalize,
               })
             )
@@ -304,6 +315,7 @@ export class Operator<T> implements Renderable {
         : render(right, {
             aliases,
             escape,
+            prefix,
             normalize: this.normalize,
           });
       return `${left} ${this.op} ${right}`;
@@ -387,11 +399,13 @@ export class Grouping<T> implements Renderable {
   render({
     aliases,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
-    escape: boolean;
+    escape?: boolean;
+    prefix?: string;
   }): string {
-    return `(${render(this.group, { aliases })})`;
+    return `(${render(this.group, { aliases, escape, prefix })})`;
   }
 }
 
@@ -413,11 +427,13 @@ export class Navigation<T, N> implements Renderable {
   render({
     aliases,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
-    escape: boolean;
+    escape?: boolean;
+    prefix?: string;
   }): string {
-    return `${this.field}/${render(this.value, { aliases, escape })}`;
+    return `${this.field}/${render(this.value, { aliases, escape, prefix })}`;
   }
 }
 */
@@ -434,44 +450,53 @@ export class GroupingOperators<T> {
   */
 }
 
-export class Lambda<T> extends Operator<T> {
+export class Lambda<T> implements Renderable {
   constructor(
     protected op: string,
     protected values: any[],
-    protected normalize: boolean = true
-  ) {
-    super(op, values, normalize);
-  }
+    protected alias?: string
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'Lambda';
   }
 
+  toJSON() {
+    return {
+      op: this.op,
+      values: this.values,
+      alias: this.alias,
+    };
+  }
+
   render({
     aliases,
     escape,
+    prefix,
   }: {
     aliases?: QueryCustomType[];
-    escape: boolean;
+    escape?: boolean;
+    prefix?: string;
   }): string {
     let [left, right] = this.values;
 
-    left = render(left, { aliases, escape });
-    let alias = left.split('/').pop().toLowerCase();
-    return `${left}/${this.op}(${alias}:${alias}/${render(right, {
+    left = render(left, { aliases, escape, prefix });
+    let alias = this.alias || left.split('/').pop().toLowerCase()[0];
+    return `${left}/${this.op}(${alias}:${render(right, {
       aliases,
       escape,
+      prefix: alias,
     })})`;
   }
 }
 
 export class LambdaOperators<T> {
-  any(field: T, value: any) {
-    return new Lambda('any', [field, value]);
+  any(field: T, value: any, alias?: string) {
+    return new Lambda('any', [field, value], alias);
   }
 
-  all(field: T, value: any) {
-    return new Lambda('all', [field, value]);
+  all(field: T, value: any, alias?: string) {
+    return new Lambda('all', [field, value], alias);
   }
 }
 

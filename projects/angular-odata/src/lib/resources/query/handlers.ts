@@ -181,10 +181,10 @@ export class ODataQueryOptionsHandler<T> {
       return this.options.expression(
         QueryOptionNames.filter,
         opts({
-          s: Expression.s,
+          s: Expression.s<any>() as T,
           e: Expression.e,
-          o: Expression.o,
-          f: Expression.f,
+          o: Expression.o<T>(),
+          f: Expression.f<T>(),
         }) as Expression<T>
       );
     }
