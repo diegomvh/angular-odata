@@ -19,33 +19,20 @@ export type Funcs<T> = (
 //export type Field<T> = keyof T | Funcs<keyof T>;
 
 export class Field<T extends object> implements ProxyHandler<T> {
+  constructor(public name: string = '') {}
+
   static factory<T extends object>() {
     const h = new Field<T>();
-    return new Proxy({ _field: h } as T & { _field: Field<T> }, h);
+    return new Proxy({ _name: '' } as T, h);
   }
 
-  names: string[] = [];
   get(target: T, p: string | symbol): any {
+    let name = (target as any)['_name'];
     if (p === 'render') {
-      return this.render.bind(this);
+      return () => name;
     }
-    let h = (target as any)['_field'];
-    h.push(p);
-    return new Proxy({ _field: this } as any & { _field: Field<any> }, this);
-  }
-
-  render({
-    aliases,
-    escape,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-  }): string {
-    return this.names.join('/');
-  }
-
-  push(field: string) {
-    this.names.push(field);
+    name = name ? `${name}/${p as string}` : p;
+    return new Proxy({ _name: name } as any, this);
   }
 }
 

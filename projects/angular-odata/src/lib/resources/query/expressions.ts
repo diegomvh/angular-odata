@@ -51,14 +51,14 @@ export class Expression<T> implements Renderable {
 
   static filter<T extends object>(
     opts: (e: {
-      s: () => T;
+      s: T;
       e: (connector?: Connector) => Expression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
     }) => Expression<T>
   ): Expression<T> {
     return opts({
-      s: () => Field.factory<T>(),
+      s: Field.factory<T>(),
       e: Expression.e,
       o: operators,
       f: functions,
