@@ -126,14 +126,14 @@ describe('OData filter builder', () => {
         const compare1 = Expression.filter<Person>(({ e, s }) =>
           e('and').any<Pet>(s.Pets!, ({ e, s }) => e().eq(s.Age, 1))
         );
-        expect(compare1.render()).toBe('Pets/any(pets:pets/Age eq 1)');
+        expect(compare1.render()).toBe('Pets/any(p:p/Age eq 1)');
       });
 
       it('all', () => {
         const compare1 = Expression.filter<Person>(({ e, s }) =>
           e('and').all<Pet>(s.Pets!, ({ e, s }) => e().ne(s.Age, 1))
         );
-        expect(compare1.render()).toBe('Pets/all(pets:pets/Age ne 1)');
+        expect(compare1.render()).toBe('Pets/all(p:p/Age ne 1)');
       });
     });
 
