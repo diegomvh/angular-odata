@@ -15,7 +15,6 @@ import {
   ODataEntityAnnotations,
   ODataProperty,
 } from '../responses';
-import { ODataNavigationPropertyResource } from './navigation-property';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -115,9 +114,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     return ODataValueResource.fromResource<T>(this);
   }
 
+  /*
   navigationProperty<N>(path: string) {
     return ODataNavigationPropertyResource.fromResource<N>(this, path);
   }
+  */
 
   property<P>(path: string) {
     return ODataPropertyResource.fromResource<P>(this, path);
