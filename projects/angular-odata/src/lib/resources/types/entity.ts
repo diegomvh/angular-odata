@@ -2,6 +2,7 @@ import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataModel } from '../../models';
+import { ODataStructuredType } from '../../schema/structured-type';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
@@ -18,10 +19,15 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(
     api: ODataApi,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<E>
+    {
+      segments,
+      query,
+    }: {
+      segments: ODataPathSegments;
+      query?: ODataQueryOptions<E>;
+    }
   ) {
-    query.keep(
+    query?.keep(
       QueryOptionNames.expand,
       QueryOptionNames.select,
       QueryOptionNames.format
@@ -36,13 +42,6 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     });
   }
   //#endregion
-
-  schema() {
-    let type = this.type();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<T>(type)
-      : undefined;
-  }
 
   key(value: any) {
     const entity = this.clone();
@@ -65,23 +64,62 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   media() {
-    return ODataMediaResource.fromResource<T>(this);
+    return ODataMediaResource.factory<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
 
   navigationProperty<N>(path: string) {
-    return ODataNavigationPropertyResource.fromResource<N>(this, path);
+    let schema: ODataStructuredType<N> | undefined;
+    if (this.schema instanceof ODataStructuredType) {
+      const field = this.schema.findFieldByName<any>(path as keyof T);
+      schema =
+        field !== undefined
+          ? this.schema.findSchemaForField<N>(field)
+          : undefined;
+    }
+    return ODataNavigationPropertyResource.factory<N>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<N>(),
+    });
   }
 
   property<P>(path: string) {
-    return ODataPropertyResource.fromResource<P>(this, path);
+    let schema: ODataStructuredType<P> | undefined;
+    if (this.schema instanceof ODataStructuredType) {
+      const field = this.schema.findFieldByName<any>(path as keyof T);
+      schema =
+        field !== undefined
+          ? this.schema.findSchemaForField<P>(field)
+          : undefined;
+    }
+    return ODataPropertyResource.factory<P>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<P>(),
+    });
   }
 
   action<P, R>(path: string) {
-    return ODataActionResource.fromResource<P, R>(this, path);
+    const schema = this.api.findCallableForType<P>(path, this.type());
+    return ODataActionResource.factory<P, R>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+    });
   }
 
   function<P, R>(path: string) {
-    return ODataFunctionResource.fromResource<P, R>(this, path);
+    const schema = this.api.findCallableForType<P>(path, this.type());
+    return ODataFunctionResource.factory<P, R>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+    });
   }
 
   //TODO: Check if the type is subtype of

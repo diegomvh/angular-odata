@@ -135,7 +135,9 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
     return this.fields({
       include_parents: true,
       include_navigation: true,
-    }).find((f) => f.name === name) as ODataStructuredTypeFieldParser<F>;
+    }).find((f) => f.name === name) as
+      | ODataStructuredTypeFieldParser<F>
+      | undefined;
   }
 
   /**
@@ -146,7 +148,7 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
   findParentSchema(
     predicate: (p: ODataStructuredType<any>) => boolean
   ): ODataStructuredType<any> | undefined {
-    if (predicate(this)) return this;
+    if (predicate(this)) return this as ODataStructuredType<any>;
     if (this.parent === undefined) return undefined;
     return this.parent.findParentSchema(predicate);
   }
@@ -156,13 +158,13 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
    * @param field Field that belongs to the structured type
    * @returns The schema of the field
    */
-  findSchemaForField(field: ODataStructuredTypeFieldParser<any>) {
+  findSchemaForField<E>(field: ODataStructuredTypeFieldParser<any>) {
     return this.findParentSchema(
       (p) =>
         p
           .fields({ include_parents: false, include_navigation: true })
           .find((f) => f === field) !== undefined
-    );
+    ) as ODataStructuredType<E>;
   }
 
   /**

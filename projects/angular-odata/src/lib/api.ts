@@ -159,76 +159,52 @@ export class ODataApi {
 
   /**
    * Build a singleton resource.
-   * @param name Name of the singleton
+   * @param path Name of the singleton
    * @returns
    */
-  singleton<T>(name: string) {
-    const type = this.findEntitySetByName(name)?.entityType;
-    return ODataSingletonResource.factory<T>(
-      this,
-      name,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+  singleton<T>(path: string) {
+    const entitySet = this.findEntitySetByName(path);
+    const schema =
+      entitySet !== undefined
+        ? this.findStructuredTypeForType<T>(entitySet.entityType)
+        : undefined;
+    return ODataSingletonResource.factory<T>(this, { path, schema });
   }
 
   /**
    * Build an entity set resource.
-   * @param name Name of the entity set
+   * @param path Name of the entity set
    * @returns
    */
-  entitySet<T>(name: string): ODataEntitySetResource<T> {
-    const type = this.findEntitySetByName(name)?.entityType;
-    return ODataEntitySetResource.factory<T>(
-      this,
-      name,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+  entitySet<T>(path: string): ODataEntitySetResource<T> {
+    const entitySet = this.findEntitySetByName(path);
+    const schema =
+      entitySet !== undefined
+        ? this.findStructuredTypeForType<T>(entitySet.entityType)
+        : undefined;
+    return ODataEntitySetResource.factory<T>(this, { path, schema });
   }
 
   /**
    * Unbound Action
-   * @param  {string} name?
+   * @param  {string} path?
    * @returns ODataActionResource
    */
-  action<P, R>(name: string): ODataActionResource<P, R> {
+  action<P, R>(path: string): ODataActionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(name);
-    if (callable !== undefined) {
-      name = callable.path();
-      type = callable.type();
-    }
-    return ODataActionResource.factory<P, R>(
-      this,
-      name,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+    const schema = this.findCallableForType<P>(path);
+    return ODataActionResource.factory<P, R>(this, { path, schema });
   }
 
   /**
    * Unbound Function
-   * @param  {string} name?
+   * @param  {string} path?
    * @returns ODataFunctionResource
    */
-  function<P, R>(name: string): ODataFunctionResource<P, R> {
+  function<P, R>(path: string): ODataFunctionResource<P, R> {
     let type;
-    const callable = this.findCallableForType(name);
-    if (callable !== undefined) {
-      name = callable.path();
-      type = callable.type();
-    }
-    return ODataFunctionResource.factory<P, R>(
-      this,
-      name,
-      type,
-      new ODataPathSegments(),
-      new ODataQueryOptions()
-    );
+    const schema = this.findCallableForType<P>(path);
+    return ODataFunctionResource.factory<P, R>(this, { path, schema });
   }
 
   request(req: ODataRequest<any>): Observable<any> {

@@ -3,6 +3,7 @@ import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection } from '../../models/collection';
 import { ODataModel } from '../../models/model';
+import { ODataCallable } from '../../schema/callable';
 import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
@@ -20,41 +21,37 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#region Factory
   static factory<P, R>(
     api: ODataApi,
-    path: string,
-    type: string | undefined,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<R>
-  ) {
-    const segment = segments.add(PathSegmentNames.function, path);
-    if (type) segment.type(type);
-    query.clear();
-    return new ODataFunctionResource<P, R>(api, { segments, query });
-  }
-
-  static fromResource<P, R>(resource: ODataResource<any>, path: string) {
-    let type;
-    let bindingType;
-    const callable = resource.api.findCallableForType(path, resource.type());
-    if (callable !== undefined) {
-      path = callable.path();
-      type = callable.type();
-      bindingType = callable.binding()?.type;
-    }
-    const func = ODataFunctionResource.factory<P, R>(
-      resource.api,
+    {
       path,
-      type,
-      resource.cloneSegments(),
-      resource.cloneQuery<R>()
-    );
+      schema,
+      segments,
+      query,
+    }: {
+      path?: string;
+      schema?: ODataCallable<P>;
+      segments?: ODataPathSegments;
+      query?: ODataQueryOptions<R>;
+    }
+  ) {
+    segments = segments || new ODataPathSegments();
+    path = schema !== undefined ? schema.path() : path;
+    if (path === undefined)
+      throw new Error(`ODataActionResource: path is required`);
+    const baseType = segments.last()?.type();
+    const bindingType = schema?.binding()?.type;
+
+    const segment = segments.add(PathSegmentNames.function, path);
+    if (schema !== undefined) segment.type(schema.type());
+    const func = new ODataFunctionResource<P, R>(api, { segments, query });
 
     // Switch entitySet to binding type if available
-    if (bindingType !== undefined && bindingType !== resource.type()) {
-      let entitySet = resource.api.findEntitySetForType(bindingType);
+    if (bindingType !== undefined && bindingType !== baseType) {
+      let entitySet = api.findEntitySetForType(bindingType);
       if (entitySet !== undefined) {
         func.segment((s) => s.entitySet().path(entitySet!.name));
       }
     }
+
     return func;
   }
 
@@ -67,14 +64,8 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   //#endregion
 
   returnType() {
-    return this.schema()?.parser.return?.type;
-  }
-
-  schema() {
-    //TODO: Binding Type
-    let type = this.type();
-    return type !== undefined
-      ? this.api.findCallableForType<R>(type)
+    return this.schema instanceof ODataCallable
+      ? this.schema.parser.return?.type
       : undefined;
   }
 

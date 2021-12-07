@@ -167,10 +167,6 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   //#endregion
 
-  schema() {
-    return undefined;
-  }
-
   /**
    * Execute the batch request
    * @param ctx The context for the request

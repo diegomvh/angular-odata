@@ -32,8 +32,9 @@ import {
   ODataEntityAnnotations,
   ODataResponse,
 } from './responses/index';
-import { ODataNavigationPropertyResource, ODataOptions } from './types';
+import { ODataOptions } from './types';
 
+export type ODataResourceSchema<T> = ODataStructuredType<T> | ODataCallable<T>;
 export type EntityKey<T> =
   | {
       readonly [P in keyof T]?: T[P];
@@ -45,6 +46,7 @@ export type EntityKey<T> =
 export abstract class ODataResource<T> {
   // VARIABLES
   public api: ODataApi;
+  public schema?: ODataResourceSchema<T>;
   protected pathSegments: ODataPathSegments;
   protected queryOptions: ODataQueryOptions<T>;
   constructor(
@@ -52,11 +54,17 @@ export abstract class ODataResource<T> {
     {
       segments,
       query,
-    }: { segments?: ODataPathSegments; query?: ODataQueryOptions<T> } = {}
+      schema,
+    }: {
+      segments?: ODataPathSegments;
+      query?: ODataQueryOptions<T>;
+      schema?: ODataResourceSchema<T>;
+    } = {}
   ) {
     this.api = api;
     this.pathSegments = segments || new ODataPathSegments();
     this.queryOptions = query || new ODataQueryOptions();
+    this.schema = schema;
   }
 
   /**
@@ -133,7 +141,7 @@ export abstract class ODataResource<T> {
     const selfType = this.type();
     const otherType = other.type();
     if (selfType !== undefined && otherType !== undefined) {
-      const otherParser = other.schema()?.parser as
+      const otherParser = other.schema?.parser as
         | ODataStructuredTypeParser<T>
         | undefined;
       return (
@@ -190,7 +198,6 @@ export abstract class ODataResource<T> {
   }
 
   abstract clone(): ODataResource<T>;
-  abstract schema(): ODataStructuredType<T> | ODataCallable<T> | undefined;
 
   deserialize(value: any, options?: OptionsHelper): any {
     const baseType = this.returnType();
@@ -296,7 +303,7 @@ export abstract class ODataResource<T> {
   }
 
   protected resolveKey(value: any): EntityKey<T> | undefined {
-    return ODataResource.resolveKey<T>(value, this.schema());
+    return ODataResource.resolveKey<T>(value, this.schema);
   }
   //#endregion
 

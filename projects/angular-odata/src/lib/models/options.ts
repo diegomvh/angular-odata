@@ -702,13 +702,11 @@ export class ODataModelOptions<T> {
     baseResource,
   }: { baseResource?: ODataResource<T> } = {}): ODataCollectionResource<T> {
     if (this.entitySet !== undefined)
-      return ODataEntitySetResource.factory<T>(
-        this.api,
-        this.entitySet.name,
-        this.type(),
-        new ODataPathSegments(),
-        baseResource?.cloneQuery<T>() || new ODataQueryOptions<T>()
-      );
+      return ODataEntitySetResource.factory<T>(this.api, {
+        path: this.entitySet.name,
+        schema: this.schema,
+        query: baseResource?.cloneQuery<T>(),
+      });
     if (baseResource === undefined)
       throw new Error("collectionResourceFactory: Can't build resource");
     return baseResource.clone() as ODataCollectionResource<T>;

@@ -11,20 +11,17 @@ export class ODataCountResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<T>(
     api: ODataApi,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<T>
+    {
+      segments,
+      query,
+    }: {
+      segments: ODataPathSegments;
+      query?: ODataQueryOptions<T>;
+    }
   ) {
     segments.add(PathSegmentNames.count, $COUNT).type('Edm.Int32');
-    query.keep(QueryOptionNames.filter, QueryOptionNames.search);
+    query?.keep(QueryOptionNames.filter, QueryOptionNames.search);
     return new ODataCountResource<T>(api, { segments, query });
-  }
-
-  static fromResource<T>(resource: ODataResource<any>) {
-    return ODataCountResource.factory<T>(
-      resource.api,
-      resource.cloneSegments(),
-      resource.cloneQuery<T>()
-    );
   }
 
   clone() {
@@ -34,10 +31,6 @@ export class ODataCountResource<T> extends ODataResource<T> {
     });
   }
   //#endregion
-
-  schema() {
-    return undefined;
-  }
 
   //#region Requests
   protected get(options?: ODataOptions): Observable<number> {

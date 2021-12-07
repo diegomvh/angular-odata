@@ -2,6 +2,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
+import { ODataStructuredType } from '../../schema/structured-type';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
@@ -17,13 +18,19 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<E>(
     api: ODataApi,
-    path: string,
-    type: string | undefined,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<E>
+    {
+      path,
+      schema,
+      query,
+    }: {
+      path: string;
+      schema?: ODataStructuredType<E>;
+      query?: ODataQueryOptions<E>;
+    }
   ) {
+    const segments = new ODataPathSegments();
     const segment = segments.add(PathSegmentNames.entitySet, path);
-    if (type) segment.type(type);
+    if (schema !== undefined) segment.type(schema.type());
     return new ODataEntitySetResource<E>(api, { segments, query });
   }
 
@@ -35,19 +42,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
   //#endregion
 
-  schema() {
-    let type = this.type();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<T>(type)
-      : undefined;
-  }
-
   entity(key?: any) {
-    const entity = ODataEntityResource.factory<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    const entity = ODataEntityResource.factory<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
     if (key !== undefined) {
       return entity.key(key);
     }
@@ -55,15 +54,28 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(path: string) {
-    return ODataActionResource.fromResource<P, R>(this, path);
+    const schema = this.api.findCallableForType<P>(path, this.type());
+    return ODataActionResource.factory<P, R>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+    });
   }
 
   function<P, R>(path: string) {
-    return ODataFunctionResource.fromResource<P, R>(this, path);
+    const schema = this.api.findCallableForType<P>(path, this.type());
+    return ODataFunctionResource.factory<P, R>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+    });
   }
 
   count() {
-    return ODataCountResource.fromResource<T>(this);
+    return ODataCountResource.factory<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
 
   cast<C>(type: string) {

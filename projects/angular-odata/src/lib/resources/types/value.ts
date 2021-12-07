@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { ODataApi } from '../../api';
 import { $VALUE } from '../../constants';
+import { ODataStructuredType } from '../../schema/structured-type';
 import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
@@ -11,23 +12,37 @@ export class ODataValueResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<V>(
     api: ODataApi,
-    type: string | undefined,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<V>
+    {
+      type,
+      schema,
+      segments,
+      query,
+    }: {
+      type?: string;
+      schema?: ODataStructuredType<V>;
+      segments: ODataPathSegments;
+      query?: ODataQueryOptions<V>;
+    }
   ) {
-    const segment = segments.add(PathSegmentNames.value, $VALUE);
-    if (type) segment.type(type);
-    query.clear();
-    return new ODataValueResource<V>(api, { segments, query });
-  }
+    const baseType = type;
+    const bindingType = schema?.type();
 
-  static fromResource<V>(resource: ODataResource<any>) {
-    return ODataValueResource.factory<V>(
-      resource.api,
-      resource.type(),
-      resource.cloneSegments(),
-      resource.cloneQuery<V>()
-    );
+    const segment = segments.add(PathSegmentNames.value, $VALUE);
+    if (schema !== undefined) segment.type(schema.type());
+    else if (type !== undefined) segment.type(type);
+
+    query?.clear();
+    const value = new ODataValueResource<V>(api, { segments, query });
+
+    // Switch entitySet to binding type if available
+    if (bindingType !== undefined && bindingType !== baseType) {
+      let entitySet = api.findEntitySetForType(bindingType);
+      if (entitySet !== undefined) {
+        value.segment((s) => s.entitySet().path(entitySet!.name));
+      }
+    }
+
+    return value;
   }
 
   clone() {
@@ -37,10 +52,6 @@ export class ODataValueResource<T> extends ODataResource<T> {
     });
   }
   //#endregion
-
-  schema() {
-    return undefined;
-  }
 
   //#region Requests
   protected get(options?: ODataOptions): Observable<T> {

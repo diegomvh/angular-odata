@@ -2,12 +2,12 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataModel } from '../../models';
-import { ODataStructuredTypeParser } from '../../schema';
+import { ODataStructuredType } from '../../schema';
 import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntity, ODataEntityAnnotations } from '../responses';
+import { ODataEntity } from '../responses';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigation-property';
@@ -16,17 +16,22 @@ import { ODataPropertyResource } from './property';
 
 export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Factory
-  static factory<R>(
+  static factory<S>(
     api: ODataApi,
-    path: string,
-    type: string | undefined,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<R>
+    {
+      path,
+      schema,
+      query,
+    }: {
+      path: string;
+      schema?: ODataStructuredType<S>;
+      query?: ODataQueryOptions<S>;
+    }
   ) {
+    const segments = new ODataPathSegments();
     const segment = segments.add(PathSegmentNames.singleton, path);
-    if (type !== undefined) segment.type(type);
-    query.keep(QueryOptionNames.format);
-    return new ODataSingletonResource<R>(api, { segments, query });
+    if (schema !== undefined) segment.type(schema.type());
+    return new ODataSingletonResource<S>(api, { segments, query });
   }
 
   clone() {
@@ -36,13 +41,6 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     });
   }
   //#endregion
-
-  schema() {
-    let type = this.type();
-    return type !== undefined
-      ? this.api.findStructuredTypeForType<T>(type)
-      : undefined;
-  }
 
   key(value: any) {
     const singleton = this.clone();
@@ -65,19 +63,55 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(path: string) {
-    return ODataNavigationPropertyResource.fromResource<N>(this, path);
+    let schema: ODataStructuredType<N> | undefined;
+    if (this.schema instanceof ODataStructuredType) {
+      const field = this.schema.findFieldByName<any>(path as keyof T);
+      schema =
+        field !== undefined
+          ? this.schema.findSchemaForField<N>(field)
+          : undefined;
+    }
+    return ODataNavigationPropertyResource.factory<N>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<N>(),
+    });
   }
 
   property<P>(path: string) {
-    return ODataPropertyResource.fromResource<P>(this, path);
+    let schema: ODataStructuredType<P> | undefined;
+    if (this.schema instanceof ODataStructuredType) {
+      const field = this.schema.findFieldByName<any>(path as keyof T);
+      schema =
+        field !== undefined
+          ? this.schema.findSchemaForField<P>(field)
+          : undefined;
+    }
+    return ODataPropertyResource.factory<P>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<P>(),
+    });
   }
 
   action<P, R>(path: string) {
-    return ODataActionResource.fromResource<P, R>(this, path);
+    const schema = this.api.findCallableForType<P>(path, this.type());
+    return ODataActionResource.factory<P, R>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+    });
   }
 
   function<P, R>(path: string) {
-    return ODataActionResource.fromResource<P, R>(this, path);
+    const schema = this.api.findCallableForType<P>(path, this.type());
+    return ODataFunctionResource.factory<P, R>(this.api, {
+      path,
+      schema,
+      segments: this.cloneSegments(),
+    });
   }
 
   //#region Requests

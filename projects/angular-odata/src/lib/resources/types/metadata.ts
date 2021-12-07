@@ -25,10 +25,6 @@ export class ODataMetadataResource extends ODataResource<any> {
   }
   //#endregion
 
-  schema() {
-    return undefined;
-  }
-
   //#region Requests
   protected get(options?: ODataOptions): Observable<ODataMetadata> {
     return super

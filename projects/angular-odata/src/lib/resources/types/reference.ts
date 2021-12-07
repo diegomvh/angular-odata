@@ -18,20 +18,14 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Factory
   static factory<P>(
     api: ODataApi,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<P>
+    {
+      segments,
+      query,
+    }: { segments: ODataPathSegments; query?: ODataQueryOptions<P> }
   ) {
     segments.add(PathSegmentNames.reference, $REF);
-    query.clear();
+    query?.clear();
     return new ODataReferenceResource<P>(api, { segments, query });
-  }
-
-  static fromResource<P>(resource: ODataResource<any>) {
-    return ODataReferenceResource.factory<P>(
-      resource.api,
-      resource.cloneSegments(),
-      resource.cloneQuery<P>()
-    );
   }
 
   clone() {
@@ -41,10 +35,6 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     });
   }
   //#endregion
-
-  schema() {
-    return undefined;
-  }
 
   //#region Requests
   protected post(

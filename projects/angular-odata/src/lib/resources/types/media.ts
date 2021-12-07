@@ -12,19 +12,16 @@ export class ODataMediaResource extends ODataResource<any> {
   //#region Factory
   static factory<V>(
     api: ODataApi,
-    segments: ODataPathSegments,
-    query: ODataQueryOptions<V>
+    {
+      segments,
+      query,
+    }: {
+      segments: ODataPathSegments;
+      query?: ODataQueryOptions<V>;
+    }
   ) {
     segments.add(PathSegmentNames.value, $VALUE);
     return new ODataMediaResource(api, { segments, query });
-  }
-
-  static fromResource<V>(resource: ODataResource<any>) {
-    return ODataMediaResource.factory<V>(
-      resource.api,
-      resource.cloneSegments(),
-      resource.cloneQuery<V>()
-    );
   }
 
   clone() {
@@ -34,10 +31,6 @@ export class ODataMediaResource extends ODataResource<any> {
     });
   }
   //#endregion
-
-  schema() {
-    return undefined;
-  }
 
   //#region Requests
   protected get(
