@@ -125,18 +125,18 @@ export class ODataApi {
     switch (segments.last()?.name as PathSegmentNames) {
       case PathSegmentNames.entitySet:
         if (segments.last()?.hasKey()) {
-          return new ODataEntityResource(this, segments, query);
+          return new ODataEntityResource(this, { segments, query });
         } else {
-          return new ODataEntitySetResource(this, segments, query);
+          return new ODataEntitySetResource(this, { segments, query });
         }
       case PathSegmentNames.navigationProperty:
-        return new ODataNavigationPropertyResource(this, segments, query);
+        return new ODataNavigationPropertyResource(this, { segments, query });
       case PathSegmentNames.singleton:
-        return new ODataSingletonResource(this, segments, query);
+        return new ODataSingletonResource(this, { segments, query });
       case PathSegmentNames.action:
-        return new ODataActionResource(this, segments, query);
+        return new ODataActionResource(this, { segments, query });
       case PathSegmentNames.function:
-        return new ODataFunctionResource(this, segments, query);
+        return new ODataFunctionResource(this, { segments, query });
     }
     throw new Error('No Resource for json');
   }

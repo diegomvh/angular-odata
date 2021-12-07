@@ -49,8 +49,10 @@ export abstract class ODataResource<T> {
   protected queryOptions: ODataQueryOptions<T>;
   constructor(
     api: ODataApi,
-    segments?: ODataPathSegments,
-    query?: ODataQueryOptions<T>
+    {
+      segments,
+      query,
+    }: { segments?: ODataPathSegments; query?: ODataQueryOptions<T> } = {}
   ) {
     this.api = api;
     this.pathSegments = segments || new ODataPathSegments();

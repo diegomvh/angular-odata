@@ -24,15 +24,14 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   ) {
     const segment = segments.add(PathSegmentNames.entitySet, path);
     if (type) segment.type(type);
-    return new ODataEntitySetResource<E>(api, segments, query);
+    return new ODataEntitySetResource<E>(api, { segments, query });
   }
 
   clone() {
-    return new ODataEntitySetResource<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return new ODataEntitySetResource<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
   //#endregion
 
@@ -70,7 +69,10 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   cast<C>(type: string) {
     let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataEntitySetResource<C>(this.api, segments, this.cloneQuery());
+    return new ODataEntitySetResource<C>(this.api, {
+      segments,
+      query: this.cloneQuery(),
+    });
   }
 
   //#region Requests

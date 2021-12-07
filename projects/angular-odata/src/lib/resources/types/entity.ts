@@ -19,22 +19,21 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   static factory<E>(
     api: ODataApi,
     segments: ODataPathSegments,
-    options: ODataQueryOptions<E>
+    query: ODataQueryOptions<E>
   ) {
-    options.keep(
+    query.keep(
       QueryOptionNames.expand,
       QueryOptionNames.select,
       QueryOptionNames.format
     );
-    return new ODataEntityResource<E>(api, segments, options);
+    return new ODataEntityResource<E>(api, { segments, query });
   }
 
   clone() {
-    return new ODataEntityResource<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return new ODataEntityResource<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
   //#endregion
 
@@ -89,7 +88,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   cast<C>(type: string) {
     let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataEntityResource<C>(this.api, segments, this.cloneQuery<C>());
+    return new ODataEntityResource<C>(this.api, {
+      segments,
+      query: this.cloneQuery<C>(),
+    });
   }
 
   //#region Requests

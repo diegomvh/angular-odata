@@ -159,11 +159,11 @@ export class ODataBatchResource extends ODataResource<any> {
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
     segments.add(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(api, segments);
+    return new ODataBatchResource(api, { segments });
   }
 
   clone() {
-    return new ODataBatchResource(this.api, this.cloneSegments());
+    return new ODataBatchResource(this.api, { segments: this.cloneSegments() });
   }
   //#endregion
 

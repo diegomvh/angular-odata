@@ -30,12 +30,12 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions<P>
+    query: ODataQueryOptions<P>
   ) {
     const segment = segments.add(PathSegmentNames.property, path);
     if (type) segment.type(type);
-    options.clear();
-    return new ODataPropertyResource<P>(api, segments, options);
+    query.clear();
+    return new ODataPropertyResource<P>(api, { segments, query });
   }
 
   static fromResource<P>(resource: ODataResource<any>, path: string) {
@@ -75,11 +75,10 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataPropertyResource<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return new ODataPropertyResource<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
   //#endregion
 

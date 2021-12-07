@@ -30,12 +30,12 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions<E>
+    query: ODataQueryOptions<E>
   ) {
     const segment = segments.add(PathSegmentNames.navigationProperty, path);
     if (type) segment.type(type);
-    options.keep(QueryOptionNames.format);
-    return new ODataNavigationPropertyResource<E>(api, segments, options);
+    query.keep(QueryOptionNames.format);
+    return new ODataNavigationPropertyResource<E>(api, { segments, query });
   }
 
   static fromResource<N>(resource: ODataResource<any>, path: string) {
@@ -74,11 +74,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataNavigationPropertyResource<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return new ODataNavigationPropertyResource<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
   //#endregion
 
@@ -133,11 +132,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   cast<C>(type: string) {
     let segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
-    return new ODataNavigationPropertyResource<C>(
-      this.api,
+    return new ODataNavigationPropertyResource<C>(this.api, {
       segments,
-      this.cloneQuery<C>()
-    );
+      query: this.cloneQuery<C>(),
+    });
   }
 
   //#region Requests

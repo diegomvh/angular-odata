@@ -16,7 +16,7 @@ export class ODataCountResource<T> extends ODataResource<T> {
   ) {
     segments.add(PathSegmentNames.count, $COUNT).type('Edm.Int32');
     query.keep(QueryOptionNames.filter, QueryOptionNames.search);
-    return new ODataCountResource<T>(api, segments, query);
+    return new ODataCountResource<T>(api, { segments, query });
   }
 
   static fromResource<T>(resource: ODataResource<any>) {
@@ -28,11 +28,10 @@ export class ODataCountResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataCountResource<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return new ODataCountResource<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
   //#endregion
 

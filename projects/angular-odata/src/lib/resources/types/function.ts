@@ -23,12 +23,12 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions<R>
+    query: ODataQueryOptions<R>
   ) {
     const segment = segments.add(PathSegmentNames.function, path);
     if (type) segment.type(type);
-    options.clear();
-    return new ODataFunctionResource<P, R>(api, segments, options);
+    query.clear();
+    return new ODataFunctionResource<P, R>(api, { segments, query });
   }
 
   static fromResource<P, R>(resource: ODataResource<any>, path: string) {
@@ -59,11 +59,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   clone() {
-    return new ODataFunctionResource<P, R>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<R>()
-    );
+    return new ODataFunctionResource<P, R>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<R>(),
+    });
   }
   //#endregion
 
@@ -91,11 +90,10 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       });
     }
     segment.parameters(parameters);
-    return new ODataFunctionResource<P, R>(
-      this.api,
+    return new ODataFunctionResource<P, R>(this.api, {
       segments,
-      this.cloneQuery<R>()
-    );
+      query: this.cloneQuery<R>(),
+    });
   }
 
   //#region Requests

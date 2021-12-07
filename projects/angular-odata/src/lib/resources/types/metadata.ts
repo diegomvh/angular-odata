@@ -10,7 +10,7 @@ import { ODataOptions } from './options';
 
 export class ODataMetadataResource extends ODataResource<any> {
   constructor(api: ODataApi, segments?: ODataPathSegments) {
-    super(api, segments);
+    super(api, { segments });
   }
 
   //#region Factory

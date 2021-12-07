@@ -13,12 +13,12 @@ export class ODataValueResource<T> extends ODataResource<T> {
     api: ODataApi,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions<V>
+    query: ODataQueryOptions<V>
   ) {
     const segment = segments.add(PathSegmentNames.value, $VALUE);
     if (type) segment.type(type);
-    options.clear();
-    return new ODataValueResource<V>(api, segments, options);
+    query.clear();
+    return new ODataValueResource<V>(api, { segments, query });
   }
 
   static fromResource<V>(resource: ODataResource<any>) {
@@ -31,11 +31,10 @@ export class ODataValueResource<T> extends ODataResource<T> {
   }
 
   clone() {
-    return new ODataValueResource<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return new ODataValueResource<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
   //#endregion
 

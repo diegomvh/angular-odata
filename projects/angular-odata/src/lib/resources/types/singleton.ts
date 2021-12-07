@@ -21,20 +21,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     path: string,
     type: string | undefined,
     segments: ODataPathSegments,
-    options: ODataQueryOptions<R>
+    query: ODataQueryOptions<R>
   ) {
     const segment = segments.add(PathSegmentNames.singleton, path);
     if (type !== undefined) segment.type(type);
-    options.keep(QueryOptionNames.format);
-    return new ODataSingletonResource<R>(api, segments, options);
+    query.keep(QueryOptionNames.format);
+    return new ODataSingletonResource<R>(api, { segments, query });
   }
 
   clone() {
-    return new ODataSingletonResource<T>(
-      this.api,
-      this.cloneSegments(),
-      this.cloneQuery<T>()
-    );
+    return new ODataSingletonResource<T>(this.api, {
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    });
   }
   //#endregion
 
