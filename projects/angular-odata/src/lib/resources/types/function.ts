@@ -28,7 +28,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       query,
     }: {
       path?: string;
-      schema?: ODataCallable<P>;
+      schema?: ODataCallable<R>;
       segments?: ODataPathSegments;
       query?: ODataQueryOptions<R>;
     }
@@ -42,7 +42,11 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
     const segment = segments.add(PathSegmentNames.function, path);
     if (schema !== undefined) segment.type(schema.type());
-    const func = new ODataFunctionResource<P, R>(api, { segments, query });
+    const func = new ODataFunctionResource<P, R>(api, {
+      segments,
+      query,
+      schema,
+    });
 
     // Switch entitySet to binding type if available
     if (bindingType !== undefined && bindingType !== baseType) {
@@ -53,13 +57,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
     }
 
     return func;
-  }
-
-  clone() {
-    return new ODataFunctionResource<P, R>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<R>(),
-    });
   }
   //#endregion
 

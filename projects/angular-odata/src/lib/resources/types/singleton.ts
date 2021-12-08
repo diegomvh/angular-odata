@@ -31,26 +31,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     const segments = new ODataPathSegments();
     const segment = segments.add(PathSegmentNames.singleton, path);
     if (schema !== undefined) segment.type(schema.type());
-    return new ODataSingletonResource<S>(api, { segments, query });
-  }
-
-  clone() {
-    return new ODataSingletonResource<T>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
+    return new ODataSingletonResource<S>(api, { segments, query, schema });
   }
   //#endregion
 
   key(value: any) {
-    const singleton = this.clone();
+    const singleton = this.clone<ODataSingletonResource<T>>();
     var key = this.resolveKey(value);
     if (key !== undefined) singleton.segment((s) => s.singleton().key(key));
     return singleton;
   }
 
   keys(values: any[]) {
-    const singleton = this.clone();
+    const singleton = this.clone<ODataSingletonResource<T>>();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
@@ -97,7 +90,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(path: string) {
-    const schema = this.api.findCallableForType<P>(path, this.type());
+    const schema = this.api.findCallableForType<R>(path, this.type());
     return ODataActionResource.factory<P, R>(this.api, {
       path,
       schema,
@@ -106,7 +99,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   function<P, R>(path: string) {
-    const schema = this.api.findCallableForType<P>(path, this.type());
+    const schema = this.api.findCallableForType<R>(path, this.type());
     return ODataFunctionResource.factory<P, R>(this.api, {
       path,
       schema,

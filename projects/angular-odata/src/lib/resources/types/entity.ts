@@ -20,9 +20,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   static factory<E>(
     api: ODataApi,
     {
+      schema,
       segments,
       query,
     }: {
+      schema?: ODataStructuredType<E>;
       segments: ODataPathSegments;
       query?: ODataQueryOptions<E>;
     }
@@ -32,26 +34,19 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       QueryOptionNames.select,
       QueryOptionNames.format
     );
-    return new ODataEntityResource<E>(api, { segments, query });
-  }
-
-  clone() {
-    return new ODataEntityResource<T>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
+    return new ODataEntityResource<E>(api, { segments, query, schema });
   }
   //#endregion
 
   key(value: any) {
-    const entity = this.clone();
+    const entity = this.clone<ODataEntityResource<T>>();
     var key = this.resolveKey(value);
     if (key !== undefined) entity.segment((s) => s.entitySet().key(key));
     return entity;
   }
 
   keys(values: any[]) {
-    const entity = this.clone();
+    const entity = this.clone<ODataEntityResource<T>>();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
@@ -105,7 +100,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(path: string) {
-    const schema = this.api.findCallableForType<P>(path, this.type());
+    const schema = this.api.findCallableForType<R>(path, this.type());
     return ODataActionResource.factory<P, R>(this.api, {
       path,
       schema,
@@ -114,7 +109,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   function<P, R>(path: string) {
-    const schema = this.api.findCallableForType<P>(path, this.type());
+    const schema = this.api.findCallableForType<R>(path, this.type());
     return ODataFunctionResource.factory<P, R>(this.api, {
       path,
       schema,
@@ -124,7 +119,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   //TODO: Check if the type is subtype of
   cast<C>(type: string) {
-    let segments = this.cloneSegments();
+    //TODO: Resolve schema
+    const segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntityResource<C>(this.api, {
       segments,

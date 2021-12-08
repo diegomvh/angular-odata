@@ -15,7 +15,6 @@ import {
   ODataEntityResource,
   ODataEntitySetResource,
   ODataNavigationPropertyResource,
-  ODataPathSegments,
   ODataPropertyResource,
   ODataQueryOptions,
   ODataQueryOptionsHandler,
@@ -31,16 +30,6 @@ import { Options, OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
-
-export type ODataModelResource<T> =
-  | ODataEntityResource<T>
-  | ODataSingletonResource<T>
-  | ODataNavigationPropertyResource<T>
-  | ODataPropertyResource<T>;
-export type ODataCollectionResource<T> =
-  | ODataEntitySetResource<T>
-  | ODataNavigationPropertyResource<T>
-  | ODataPropertyResource<T>;
 
 export type ODataModelEventType =
   | 'change'
@@ -414,7 +403,7 @@ export class ODataModelField<F> {
   }
 
   resourceFactory<T, F>(
-    base: ODataModelResource<T>
+    base: ODataResource<T>
   ): ODataNavigationPropertyResource<F> | ODataPropertyResource<F> {
     if (
       !(
@@ -608,9 +597,16 @@ export class ODataModelOptions<T> {
     return field;
   }
 
-  attach(self: ODataModel<T>, resource: ODataModelResource<T>) {
+  attach(
+    self: ODataModel<T>,
+    resource:
+      | ODataEntityResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | ODataSingletonResource<T>
+  ) {
     if (
-      self._resource !== undefined &&
+      self._resource !== null &&
       resource.type() !== self._resource.type() &&
       !resource.isSubtypeOf(self._resource)
     )
@@ -619,7 +615,7 @@ export class ODataModelOptions<T> {
       );
 
     const current = self._resource;
-    if (current === undefined || !current.isEqualTo(resource)) {
+    if (current === null || !current.isEqualTo(resource)) {
       self._resource = resource;
       self.events$.emit(
         new ODataModelEvent('attach', {
@@ -659,11 +655,9 @@ export class ODataModelOptions<T> {
 
   static resource<T>(
     child: ODataModel<T> | ODataCollection<T, ODataModel<T>>
-  ): ODataModelResource<T> | ODataCollectionResource<T> {
-    let resource:
-      | ODataModelResource<any>
-      | ODataCollectionResource<any>
-      | undefined = undefined;
+  ): ODataResource<T> | ODataResource<T> {
+    let resource: ODataResource<any> | ODataResource<any> | undefined =
+      undefined;
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource =
         resource ||
@@ -682,7 +676,7 @@ export class ODataModelOptions<T> {
           resource =
             resource instanceof ODataEntitySetResource
               ? resource.entity(key)
-              : resource.key(key);
+              : (resource as ODataEntityResource<T>).key(key);
       }
       if (field === null) {
         const query = model._resource?.cloneQuery<T>().toQueryArguments();
@@ -690,7 +684,7 @@ export class ODataModelOptions<T> {
         continue;
       }
       resource = (field as ODataModelField<any>).resourceFactory<any, any>(
-        resource as ODataModelResource<any>
+        resource as ODataResource<any>
       );
     }
     if (resource === undefined)
@@ -698,39 +692,48 @@ export class ODataModelOptions<T> {
     return resource;
   }
 
-  collectionResourceFactory({
-    baseResource,
-  }: { baseResource?: ODataResource<T> } = {}): ODataCollectionResource<T> {
-    if (this.entitySet !== undefined)
-      return ODataEntitySetResource.factory<T>(this.api, {
-        path: this.entitySet.name,
-        schema: this.schema,
-        query: baseResource?.cloneQuery<T>(),
-      });
-    if (baseResource === undefined)
-      throw new Error("collectionResourceFactory: Can't build resource");
-    return baseResource.clone() as ODataCollectionResource<T>;
-  }
-
-  modelResourceFactory({
-    baseResource,
-  }: {
-    fromSet?: boolean;
-    baseResource?: ODataResource<T>;
-  } = {}): ODataModelResource<T> {
-    const resource = this.collectionResourceFactory({ baseResource });
-    if (resource instanceof ODataEntitySetResource) return resource.entity();
-    return resource as ODataModelResource<T>;
-  }
-
-  entityResource(self: ODataModel<T>): ODataModelResource<T> {
-    let resource = this.modelResourceFactory({
-      baseResource: self._resource,
-      fromSet: true,
+  collectionResourceFactory(
+    query?: ODataQueryOptions<T>
+  ):
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | undefined {
+    if (this.entitySet === undefined) return undefined;
+    return ODataEntitySetResource.factory<T>(this.api, {
+      path: this.entitySet.name,
+      schema: this.schema,
+      query,
     });
+  }
+
+  modelResourceFactory(
+    query?: ODataQueryOptions<T>
+  ):
+    | ODataEntityResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | ODataSingletonResource<T>
+    | undefined {
+    const resource = this.collectionResourceFactory(query);
+    if (resource instanceof ODataEntitySetResource) return resource.entity();
+    return resource as
+      | ODataEntityResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | ODataSingletonResource<T>
+      | undefined;
+  }
+
+  entityResource(self: ODataModel<T>): ODataResource<T> {
+    let resource = this.modelResourceFactory(
+      self._resource !== null ? self._resource.cloneQuery() : undefined
+    );
+    if (resource === undefined)
+      throw new Error(`entityResource: Can't build resource for ${self}`);
     const key = self.key({ field_mapping: true }) as EntityKey<T>;
     if (key !== undefined) return resource.key(key);
-    return resource as ODataModelResource<T>;
+    return resource as ODataResource<T>;
   }
   //#endregion
 
@@ -745,16 +748,26 @@ export class ODataModelOptions<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null
       ];
-      resource?: ODataModelResource<T>;
+      resource?: ODataResource<T>;
       annots?: ODataEntityAnnotations;
     } = {}
   ) {
     // Parent
     if (parent !== undefined) {
       self._parent = parent;
-    } else if (resource !== undefined) {
-      // Resource
-      this.attach(self, resource);
+    }
+
+    // Resource
+    resource = resource || this.modelResourceFactory();
+    if (resource !== undefined) {
+      this.attach(
+        self,
+        resource as
+          | ODataEntityResource<T>
+          | ODataPropertyResource<T>
+          | ODataNavigationPropertyResource<T>
+          | ODataSingletonResource<T>
+      );
     }
 
     // Annotations
@@ -777,7 +790,11 @@ export class ODataModelOptions<T> {
 
   query(
     self: ODataModel<T>,
-    resource: ODataModelResource<T>,
+    resource:
+      | ODataEntityResource<T>
+      | ODataPropertyResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataSingletonResource<T>,
     func: (q: ODataQueryOptionsHandler<T>) => void
   ) {
     resource.query(func);

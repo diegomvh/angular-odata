@@ -27,13 +27,6 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     query?.clear();
     return new ODataReferenceResource<P>(api, { segments, query });
   }
-
-  clone() {
-    return new ODataReferenceResource<T>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
-  }
   //#endregion
 
   //#region Requests

@@ -32,7 +32,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
     else if (type !== undefined) segment.type(type);
 
     query?.clear();
-    const value = new ODataValueResource<V>(api, { segments, query });
+    const value = new ODataValueResource<V>(api, { segments, query, schema });
 
     // Switch entitySet to binding type if available
     if (bindingType !== undefined && bindingType !== baseType) {
@@ -43,13 +43,6 @@ export class ODataValueResource<T> extends ODataResource<T> {
     }
 
     return value;
-  }
-
-  clone() {
-    return new ODataValueResource<T>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
   }
   //#endregion
 

@@ -23,13 +23,6 @@ export class ODataCountResource<T> extends ODataResource<T> {
     query?.keep(QueryOptionNames.filter, QueryOptionNames.search);
     return new ODataCountResource<T>(api, { segments, query });
   }
-
-  clone() {
-    return new ODataCountResource<T>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
-  }
   //#endregion
 
   //#region Requests

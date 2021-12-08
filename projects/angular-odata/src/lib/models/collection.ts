@@ -15,19 +15,18 @@ import {
   ODataPropertyResource,
   ODataQueryArgumentsOptions,
   ODataQueryOptionsHandler,
-} from '../resources/index';
+  ODataResource,
+} from '../resources';
 import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
   BUBBLING,
   INCLUDE_DEEP,
   INCLUDE_SHALLOW,
-  ODataCollectionResource,
   ODataModelEntry,
   ODataModelEvent,
   ODataModelField,
   ODataModelOptions,
-  ODataModelResource,
   ODataModelState,
 } from './options';
 
@@ -41,7 +40,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
         ODataModelField<any> | null
       ]
     | null = null;
-  _resource?: ODataCollectionResource<T>;
+  _resource:
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | null = null;
   _annotations!: ODataEntitiesAnnotations;
   _entries: ODataModelEntry<T, M>[] = [];
   _model: typeof ODataModel;
@@ -68,7 +71,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       reset = false,
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
-      resource?: ODataCollectionResource<T>;
+      resource?: ODataResource<T>;
       annots?: ODataEntitiesAnnotations;
       model?: typeof ODataModel;
       reset?: boolean;
@@ -82,12 +85,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
     // Parent
     if (parent !== undefined) {
       this._parent = parent;
-    } else {
-      // Resource
-      resource = resource || this._model.meta.collectionResourceFactory();
-      if (resource === undefined)
-        throw new Error(`Can't create collection without resource`);
-      this.attach(resource);
+    }
+
+    // Resource
+    resource = (resource || this._model.meta.collectionResourceFactory()) as
+      | ODataEntitySetResource<T>
+      | ODataPropertyResource<T>
+      | ODataNavigationPropertyResource<T>
+      | undefined;
+    if (resource !== undefined) {
+      this.attach(
+        resource as
+          | ODataEntitySetResource<T>
+          | ODataPropertyResource<T>
+          | ODataNavigationPropertyResource<T>
+      );
     }
 
     // Annotations
@@ -110,13 +122,24 @@ export class ODataCollection<T, M extends ODataModel<T>>
     );
   }
 
-  resource(): ODataCollectionResource<T> {
-    return ODataModelOptions.resource<T>(this) as ODataCollectionResource<T>;
+  resource():
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T> {
+    return ODataModelOptions.resource<T>(this) as
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>;
   }
 
-  attach(resource: ODataCollectionResource<T>) {
+  attach(
+    resource:
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+  ) {
     if (
-      this._resource !== undefined &&
+      this._resource !== null &&
       this._resource.type() !== resource.type() &&
       !resource.isSubtypeOf(this._resource)
     )
@@ -125,14 +148,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
 
     this._entries.forEach(({ model }) => {
-      const mr = this._model.meta.modelResourceFactory({
-        baseResource: resource,
-      }) as ODataModelResource<T>;
+      const mr = this._model.meta.modelResourceFactory(
+        resource.cloneQuery<T>()
+      ) as ODataEntityResource<T>;
       model.attach(mr);
     });
 
     const current = this._resource;
-    if (current === undefined || !current.isEqualTo(resource)) {
+    if (current === null || !current.isEqualTo(resource)) {
       this._resource = resource;
       this.events$.emit(
         new ODataModelEvent('attach', {
@@ -243,7 +266,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   clone<C extends ODataCollection<T, M>>() {
     let Ctor = <typeof ODataCollection>this.constructor;
     return new Ctor(this.toEntities(INCLUDE_SHALLOW), {
-      resource: this.resource() as ODataCollectionResource<T>,
+      resource: this.resource(),
       annots: this.annots(),
     }) as C;
   }
@@ -288,7 +311,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   fetchAll(options?: ODataOptions): Observable<this> {
-    const resource = this.resource() as ODataCollectionResource<T> | undefined;
+    const resource = this.resource();
     if (resource === undefined)
       return throwError('fetchAll: Resource is undefined');
 

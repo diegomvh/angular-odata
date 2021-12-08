@@ -31,19 +31,13 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     const segments = new ODataPathSegments();
     const segment = segments.add(PathSegmentNames.entitySet, path);
     if (schema !== undefined) segment.type(schema.type());
-    return new ODataEntitySetResource<E>(api, { segments, query });
-  }
-
-  clone() {
-    return new ODataEntitySetResource<T>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
+    return new ODataEntitySetResource<E>(api, { segments, query, schema });
   }
   //#endregion
 
   entity(key?: any) {
     const entity = ODataEntityResource.factory<T>(this.api, {
+      schema: this.schema as ODataStructuredType<T>,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
     });
@@ -54,7 +48,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(path: string) {
-    const schema = this.api.findCallableForType<P>(path, this.type());
+    const schema = this.api.findCallableForType<R>(path, this.type());
     return ODataActionResource.factory<P, R>(this.api, {
       path,
       schema,
@@ -63,7 +57,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   function<P, R>(path: string) {
-    const schema = this.api.findCallableForType<P>(path, this.type());
+    const schema = this.api.findCallableForType<R>(path, this.type());
     return ODataFunctionResource.factory<P, R>(this.api, {
       path,
       schema,
@@ -79,7 +73,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   cast<C>(type: string) {
-    let segments = this.cloneSegments();
+    //TODO: Resolve schema
+    const segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntitySetResource<C>(this.api, {
       segments,
@@ -151,7 +146,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<T[]> {
-    let res = this.clone();
+    let res = this.clone<ODataEntitySetResource<T>>();
     // Clean Paging
     res.query((q) => q.clearPaging());
     let fetch = (opts?: {

@@ -45,7 +45,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     const segment = segments.add(PathSegmentNames.property, path);
     if (schema !== undefined) segment.type(schema.type());
     query?.clear();
-    const property = new ODataPropertyResource<P>(api, { segments, query });
+    const property = new ODataPropertyResource<P>(api, {
+      segments,
+      query,
+      schema,
+    });
 
     // Switch entitySet to binding type if available
     if (bindingType !== undefined && bindingType !== baseType) {
@@ -57,24 +61,17 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
     return property;
   }
-
-  clone() {
-    return new ODataPropertyResource<T>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<T>(),
-    });
-  }
   //#endregion
 
   key(value: any) {
-    const property = this.clone();
+    const property = this.clone<ODataPropertyResource<T>>();
     var key = this.resolveKey(value);
     if (key !== undefined) property.segment((s) => s.property().key(key));
     return property;
   }
 
   keys(values: any[]) {
-    const property = this.clone();
+    const property = this.clone<ODataPropertyResource<T>>();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
@@ -241,7 +238,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @returns All entities
    */
   fetchAll(options: ODataOptions = {}): Observable<T[]> {
-    let res = this.clone();
+    let res = this.clone<ODataPropertyResource<T>>();
     // Clean Paging
     res.query((q) => q.clearPaging());
     let fetch = (opts?: {

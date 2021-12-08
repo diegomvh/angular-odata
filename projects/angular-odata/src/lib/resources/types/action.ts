@@ -27,7 +27,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       query,
     }: {
       path?: string;
-      schema?: ODataCallable<P>;
+      schema?: ODataCallable<R>;
       segments?: ODataPathSegments;
       query?: ODataQueryOptions<R>;
     }
@@ -41,7 +41,11 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
     const segment = segments.add(PathSegmentNames.action, path);
     if (schema !== undefined) segment.type(schema.type());
-    const action = new ODataActionResource<P, R>(api, { segments, query });
+    const action = new ODataActionResource<P, R>(api, {
+      segments,
+      query,
+      schema,
+    });
 
     // Switch entitySet to binding type if available
     if (bindingType !== undefined && bindingType !== baseType) {
@@ -51,13 +55,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       }
     }
     return action;
-  }
-
-  clone() {
-    return new ODataActionResource<P, R>(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<R>(),
-    });
   }
   //#endregion
 
@@ -102,7 +99,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       ODataPropertyOptions &
       ODataNoneOptions = {}
   ): Observable<any> {
-    return this.clone().post(params, options);
+    return this.clone<ODataActionResource<P, R>>().post(params, options);
   }
 
   /**

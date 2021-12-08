@@ -6,12 +6,7 @@ import {
   QUERY_SEPARATOR,
   VALUE_SEPARATOR,
 } from '../constants';
-import {
-  ODataCollection,
-  ODataCollectionResource,
-  ODataModel,
-  ODataModelResource,
-} from '../models';
+import { ODataCollection, ODataModel } from '../models';
 import {
   ODataCallable,
   ODataStructuredType,
@@ -43,7 +38,7 @@ export type EntityKey<T> =
   | string
   | number;
 
-export abstract class ODataResource<T> {
+export class ODataResource<T> {
   // VARIABLES
   public api: ODataApi;
   public schema?: ODataResourceSchema<T>;
@@ -104,7 +99,7 @@ export abstract class ODataResource<T> {
     entity?: Partial<T> | { [name: string]: any },
     { annots, reset }: { annots?: ODataEntityAnnotations; reset?: boolean } = {}
   ): M {
-    let resource: ODataModelResource<T> = this as any;
+    let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type || this.returnType();
     if (type === undefined) throw Error('');
     const Model = this.api.modelForType(type);
@@ -123,7 +118,7 @@ export abstract class ODataResource<T> {
       reset,
     }: { annots?: ODataEntitiesAnnotations; reset?: boolean } = {}
   ): C {
-    let resource: ODataCollectionResource<T> = this as any;
+    let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type || this.returnType();
     if (type === undefined) throw Error('');
     const Collection = this.api.collectionForType(type);
@@ -197,7 +192,14 @@ export abstract class ODataResource<T> {
     return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
   }
 
-  abstract clone(): ODataResource<T>;
+  clone<R extends ODataResource<T>>(): R {
+    const Ctor = this.constructor as typeof ODataResource;
+    return new Ctor(this.api, {
+      schema: this.schema,
+      segments: this.cloneSegments(),
+      query: this.cloneQuery<T>(),
+    }) as R;
+  }
 
   deserialize(value: any, options?: OptionsHelper): any {
     const baseType = this.returnType();

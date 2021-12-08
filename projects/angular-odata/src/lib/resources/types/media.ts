@@ -23,13 +23,6 @@ export class ODataMediaResource extends ODataResource<any> {
     segments.add(PathSegmentNames.value, $VALUE);
     return new ODataMediaResource(api, { segments, query });
   }
-
-  clone() {
-    return new ODataMediaResource(this.api, {
-      segments: this.cloneSegments(),
-      query: this.cloneQuery(),
-    });
-  }
   //#endregion
 
   //#region Requests

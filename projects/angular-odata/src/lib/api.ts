@@ -191,8 +191,7 @@ export class ODataApi {
    * @returns ODataActionResource
    */
   action<P, R>(path: string): ODataActionResource<P, R> {
-    let type;
-    const schema = this.findCallableForType<P>(path);
+    const schema = this.findCallableForType<R>(path);
     return ODataActionResource.factory<P, R>(this, { path, schema });
   }
 
@@ -202,8 +201,7 @@ export class ODataApi {
    * @returns ODataFunctionResource
    */
   function<P, R>(path: string): ODataFunctionResource<P, R> {
-    let type;
-    const schema = this.findCallableForType<P>(path);
+    const schema = this.findCallableForType<R>(path);
     return ODataFunctionResource.factory<P, R>(this, { path, schema });
   }
 

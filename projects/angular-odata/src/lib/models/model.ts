@@ -11,6 +11,8 @@ import {
   ODataPropertyResource,
   ODataQueryArgumentsOptions,
   ODataQueryOptionsHandler,
+  ODataResource,
+  ODataSingletonResource,
 } from '../resources';
 import { ODataStructuredType } from '../schema';
 import { Objects, Strings, Types } from '../utils';
@@ -23,7 +25,6 @@ import {
   ODataModelField,
   ODataModelOptions,
   ODataModelRelation,
-  ODataModelResource,
 } from './options';
 
 // @dynamic
@@ -69,7 +70,7 @@ export class ODataModel<T> {
   _attributes: { [name: string]: any } = {};
   _changes: { [name: string]: any } = {};
   _relations: { [name: string]: ODataModelRelation<any> } = {};
-  _resource?: ODataModelResource<T>;
+  _resource: ODataResource<T> | null = null;
   _annotations!: ODataEntityAnnotations;
   _reset: boolean = false;
   _reparent: boolean = false;
@@ -90,7 +91,7 @@ export class ODataModel<T> {
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null
       ];
-      resource?: ODataModelResource<T>;
+      resource?: ODataResource<T>;
       annots?: ODataEntityAnnotations;
       reset?: boolean;
     } = {}
@@ -113,8 +114,16 @@ export class ODataModel<T> {
   }
 
   //#region Resources
-  resource(): ODataModelResource<T> {
-    return ODataModelOptions.resource<T>(this) as ODataModelResource<T>;
+  resource():
+    | ODataEntityResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | ODataSingletonResource<T> {
+    return ODataModelOptions.resource<T>(this) as
+      | ODataEntityResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | ODataSingletonResource<T>;
   }
 
   navigationProperty<N>(
@@ -145,7 +154,13 @@ export class ODataModel<T> {
     return field.resourceFactory<T, N>(resource) as ODataPropertyResource<N>;
   }
 
-  attach(resource: ODataModelResource<T>) {
+  attach(
+    resource:
+      | ODataEntityResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | ODataSingletonResource<T>
+  ) {
     return this._meta.attach(this, resource);
   }
   //#endregion
@@ -368,7 +383,7 @@ export class ODataModel<T> {
   clone<M extends ODataModel<T>>() {
     let Ctor = <typeof ODataModel>this.constructor;
     return new Ctor(this.toEntity(INCLUDE_SHALLOW), {
-      resource: this.resource() as ODataModelResource<T>,
+      resource: this.resource() as ODataResource<T>,
       annots: this.annots(),
     }) as M;
   }
