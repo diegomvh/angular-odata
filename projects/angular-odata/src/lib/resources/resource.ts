@@ -12,6 +12,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeParser,
 } from '../schema';
+import { ODataSchemaElement } from '../schema/element';
 import { OptionsHelper, QueryOptionNames } from '../types';
 import { Http, Objects, Types } from '../utils/index';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
@@ -29,7 +30,6 @@ import {
 } from './responses/index';
 import { ODataOptions } from './types';
 
-export type ODataResourceSchema<T> = ODataStructuredType<T> | ODataCallable<T>;
 export type EntityKey<T> =
   | {
       readonly [P in keyof T]?: T[P];
@@ -41,7 +41,7 @@ export type EntityKey<T> =
 export class ODataResource<T> {
   // VARIABLES
   public api: ODataApi;
-  public schema?: ODataResourceSchema<T>;
+  public schema?: ODataSchemaElement;
   protected pathSegments: ODataPathSegments;
   protected queryOptions: ODataQueryOptions<T>;
   constructor(
@@ -53,7 +53,7 @@ export class ODataResource<T> {
     }: {
       segments?: ODataPathSegments;
       query?: ODataQueryOptions<T>;
-      schema?: ODataResourceSchema<T>;
+      schema?: ODataSchemaElement;
     } = {}
   ) {
     this.api = api;
@@ -132,21 +132,13 @@ export class ODataResource<T> {
   //#endregion
 
   isSubtypeOf(other: ODataResource<any>) {
-    const api = this.api;
-    const selfType = this.type();
-    const otherType = other.type();
-    if (selfType !== undefined && otherType !== undefined) {
-      const otherParser = other.schema?.parser as
-        | ODataStructuredTypeParser<T>
-        | undefined;
-      return (
-        otherParser !== undefined &&
-        otherParser.findChildParser((c) => c.isTypeOf(selfType)) !== undefined
-      );
-    }
-    return false;
+    return (
+      this.schema !== undefined &&
+      other.schema !== undefined &&
+      this.schema?.isSubtypeOf(other.schema)
+    );
   }
-
+  /*
   isParentOf(other: ODataResource<any>) {
     const [selfPath] = this.pathAndParams();
     const [otherPath] = other.pathAndParams();
@@ -158,6 +150,7 @@ export class ODataResource<T> {
     const [otherPath] = other.pathAndParams();
     return otherPath !== selfPath && selfPath.startsWith(otherPath);
   }
+  */
 
   isEqualTo(other: ODataResource<any>, test?: 'path' | 'params') {
     const [selfPath, selfParams] = this.pathAndParams();
@@ -292,7 +285,7 @@ export class ODataResource<T> {
 
   static resolveKey<T>(
     value: any,
-    schema?: ODataStructuredType<T> | ODataCallable<T>
+    schema?: ODataStructuredType<T>
   ): EntityKey<T> | undefined {
     if (isQueryCustomType(value)) {
       return value;
@@ -305,7 +298,10 @@ export class ODataResource<T> {
   }
 
   protected resolveKey(value: any): EntityKey<T> | undefined {
-    return ODataResource.resolveKey<T>(value, this.schema);
+    return ODataResource.resolveKey<T>(
+      value,
+      this.schema as ODataStructuredType<T>
+    );
   }
   //#endregion
 

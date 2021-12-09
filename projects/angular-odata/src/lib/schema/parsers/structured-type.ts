@@ -11,7 +11,7 @@ import {
   StructuredTypeFieldOptions,
 } from '../../types';
 import { Objects, Strings, Types } from '../../utils';
-import { ODataAnnotatable } from '../base';
+import { ODataAnnotatable } from '../annotation';
 import { ODataEnumTypeParser } from './enum-type';
 
 // JSON SCHEMA
@@ -386,9 +386,9 @@ export class ODataStructuredTypeParser<T>
     return names.indexOf(type) !== -1;
   }
 
-  isSubTypeOf(type: string): boolean {
+  isSubtypeOf(type: string): boolean {
     if (this.isTypeOf(type)) return true;
-    if (this.parent) return this.parent.isSubTypeOf(type);
+    if (this.parent) return this.parent.isSubtypeOf(type);
     return false;
   }
 

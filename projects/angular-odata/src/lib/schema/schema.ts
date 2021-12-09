@@ -1,7 +1,7 @@
 import { ODataApi } from '../api';
 import { Parser, SchemaConfig } from '../types';
 import { OData } from '../utils/odata';
-import { ODataAnnotatable } from './base';
+import { ODataAnnotatable } from './annotation';
 import { ODataCallable } from './callable';
 import { ODataEntityContainer } from './entity-container';
 import { ODataEntitySet } from './entity-set';
@@ -43,11 +43,6 @@ export class ODataSchema extends ODataAnnotatable {
     );
   }
 
-  isSubTypeOf(type: string, target?: string) {
-    const structuredType = this.api.findStructuredTypeForType(type);
-    return structuredType && target && structuredType.isSubTypeOf(target);
-  }
-
   get entitySets() {
     return this.containers.reduce(
       (acc, container) => [...acc, ...container.entitySets],
@@ -69,12 +64,24 @@ export class ODataSchema extends ODataAnnotatable {
   }
 
   public findCallableForType<T>(type: string, bindingType?: string) {
-    return this.callables.find(
-      (c) =>
-        c.isTypeOf(type) &&
-        (bindingType === undefined ||
-          this.isSubTypeOf(bindingType, c.binding()?.type))
-    ) as ODataCallable<T> | undefined;
+    const bindingStructuredType =
+      bindingType !== undefined
+        ? this.api.findStructuredTypeForType<any>(bindingType)
+        : undefined;
+    return this.callables.find((c) => {
+      const isCallableType = c.isTypeOf(type);
+      const callableBindingType = c.binding()?.type;
+      const callableBindingStructuredType =
+        callableBindingType !== undefined
+          ? this.api.findStructuredTypeForType(callableBindingType)
+          : undefined;
+      return (
+        isCallableType &&
+        (!bindingStructuredType ||
+          (callableBindingStructuredType &&
+            bindingStructuredType.isSubtypeOf(callableBindingStructuredType)))
+      );
+    }) as ODataCallable<T> | undefined;
   }
 
   public findEntitySetForType(type: string) {

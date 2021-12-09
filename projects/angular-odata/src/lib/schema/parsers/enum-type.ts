@@ -8,7 +8,7 @@ import {
   Parser,
 } from '../../types';
 import { Enums, Strings } from '../../utils';
-import { ODataAnnotatable } from '../base';
+import { ODataAnnotatable } from '../annotation';
 
 export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   name: string;

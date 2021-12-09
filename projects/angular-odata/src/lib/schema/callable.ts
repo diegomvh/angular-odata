@@ -1,18 +1,16 @@
 import { CallableConfig, Options, Parser } from '../types';
+import { ODataSchemaElement } from './element';
 import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataCallable<R> {
-  schema: ODataSchema;
-  name: string;
+export class ODataCallable<R> extends ODataSchemaElement {
   entitySetPath?: string;
   bound?: boolean;
   composable?: boolean;
   parser: ODataCallableParser<R>;
 
   constructor(config: CallableConfig, schema: ODataSchema) {
-    this.schema = schema;
-    this.name = config.name;
+    super(config, schema);
     this.entitySetPath = config.entitySetPath;
     this.bound = config.bound;
     this.composable = config.composable;
@@ -33,28 +31,6 @@ export class ODataCallable<R> {
           this.name
         : this.name;
     return path;
-  }
-
-  /**
-   * Returns a full type of the callable including the namespace/alias.
-   * @param alias Use the alias of the namespace instead of the namespace.
-   * @returns The string representation of the type.
-   */
-  type({ alias = false }: { alias?: boolean } = {}) {
-    return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
-  }
-
-  /**
-   * Returns a boolean indicating if the callable is of the given type.
-   * @param type String representation of the type
-   * @returns True if the callable is type of the given type
-   */
-  isTypeOf(type: string) {
-    return this.parser.isTypeOf(type);
-  }
-
-  get api() {
-    return this.schema.api;
   }
 
   configure({

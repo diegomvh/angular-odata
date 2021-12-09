@@ -1,8 +1,7 @@
 import { ODataCollection } from '../models';
 import { ODataModel } from '../models/model';
 import { Options, StructuredTypeConfig } from '../types';
-import { Strings } from '../utils/strings';
-import { ODataAnnotatable } from './base';
+import { ODataSchemaElement } from './element';
 import {
   JsonSchemaOptions,
   ODataEntityTypeKey,
@@ -11,9 +10,7 @@ import {
 } from './parsers';
 import { ODataSchema } from './schema';
 
-export class ODataStructuredType<T> extends ODataAnnotatable {
-  name: string;
-  schema: ODataSchema;
+export class ODataStructuredType<T> extends ODataSchemaElement {
   base?: string;
   open: boolean;
   parent?: ODataStructuredType<any>;
@@ -23,9 +20,7 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
   parser: ODataStructuredTypeParser<T>;
 
   constructor(config: StructuredTypeConfig<T>, schema: ODataSchema) {
-    super(config);
-    this.schema = schema;
-    this.name = config.name;
+    super(config, schema);
     this.base = config.base;
     this.open = config.open || false;
     this.parser = new ODataStructuredTypeParser(
@@ -44,10 +39,6 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
     if (this.collection !== undefined) {
       this.collection.model = this.model;
     }
-  }
-
-  get api() {
-    return this.schema.api;
   }
 
   configure({
@@ -74,40 +65,15 @@ export class ODataStructuredType<T> extends ODataAnnotatable {
   }
 
   /**
-   * Create a nicer looking title.
-   * Titleize is meant for creating pretty output.
-   * @param term The term of the annotation to find.
-   * @returns The titleized string.
-   */
-  titleize(term?: string | RegExp): string {
-    return (term && this.annotatedValue(term)) || Strings.titleCase(this.name);
-  }
-
-  /**
-   * Returns a full type of the structured type including the namespace/alias.
-   * @param alias Use the alias of the namespace instead of the namespace.
-   * @returns The string representation of the type.
-   */
-  type({ alias = false }: { alias?: boolean } = {}) {
-    return `${alias ? this.schema.alias : this.schema.namespace}.${this.name}`;
-  }
-
-  /**
-   * Returns a boolean indicating if the structured type is of the given type.
-   * @param type String representation of the type
-   * @returns True if the callable is type of the given type
-   */
-  isTypeOf(type: string) {
-    return this.parser.isTypeOf(type);
-  }
-
-  /**
    * Returns a boolean indicating if the structured type is a sub type of the given type.
    * @param type String representation of the type
    * @returns True if the callable is type of the given type
    */
-  isSubTypeOf(type: string) {
-    return this.parser.isSubTypeOf(type);
+  isSubtypeOf(schema: ODataStructuredType<any>): boolean {
+    return (
+      super.isSubtypeOf(schema) ||
+      (this.parent !== undefined && this.parent.isSubtypeOf(schema))
+    );
   }
 
   /**
