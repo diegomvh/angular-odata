@@ -29,21 +29,25 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     api: ODataApi,
     {
       path,
+      type,
       schema,
       segments,
       query,
     }: {
       path: string;
+      type?: string;
       schema?: ODataStructuredType<P>;
       segments: ODataPathSegments;
       query?: ODataQueryOptions<P>;
     }
   ) {
-    const baseType = segments.last()?.type();
+    const baseType = type;
     const bindingType = schema?.type();
 
     const segment = segments.add(PathSegmentNames.property, path);
     if (schema !== undefined) segment.type(schema.type());
+    else if (type !== undefined) segment.type(type);
+
     query?.clear();
     const property = new ODataPropertyResource<P>(api, {
       segments,
@@ -84,15 +88,9 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   value() {
-    const type = this.returnType();
-    let schema;
-    if (type !== undefined) {
-      schema = this.api.findStructuredTypeForType<T>(type as string);
-    }
-
     return ODataValueResource.factory<T>(this.api, {
-      type,
-      schema,
+      type: this.returnType(),
+      schema: this.schema as ODataStructuredType<T>,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
     });
@@ -118,9 +116,11 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   */
 
   property<P>(path: string) {
+    let type: string | undefined;
     let schema: ODataStructuredType<P> | undefined;
     if (this.schema instanceof ODataStructuredType) {
       const field = this.schema.findFieldByName<any>(path as keyof T);
+      type = field?.type;
       schema =
         field !== undefined
           ? this.schema.findSchemaForField<P>(field)
@@ -128,6 +128,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     }
     return ODataPropertyResource.factory<P>(this.api, {
       path,
+      type,
       schema,
       segments: this.cloneSegments(),
       query: this.cloneQuery<P>(),

@@ -83,9 +83,11 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   property<P>(path: string) {
+    let type: string | undefined;
     let schema: ODataStructuredType<P> | undefined;
     if (this.schema instanceof ODataStructuredType) {
       const field = this.schema.findFieldByName<any>(path as keyof T);
+      type = field?.type;
       schema =
         field !== undefined
           ? this.schema.findSchemaForField<P>(field)
@@ -93,6 +95,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     }
     return ODataPropertyResource.factory<P>(this.api, {
       path,
+      type,
       schema,
       segments: this.cloneSegments(),
       query: this.cloneQuery<P>(),
