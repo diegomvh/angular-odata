@@ -67,8 +67,6 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   parameters(params: P | null, { alias }: { alias?: boolean } = {}) {
-    const segments = this.cloneSegments();
-    const segment = segments.get(PathSegmentNames.function);
     let parameters = params !== null ? this.encode(params) : null;
     if (alias && parameters !== null) {
       this.query((q) => {
@@ -77,11 +75,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
         }, {});
       });
     }
-    segment.parameters(parameters);
-    return new ODataFunctionResource<P, R>(this.api, {
-      segments,
-      query: this.cloneQuery<R>(),
-    });
+    return this.clone<ODataFunctionResource<P, R>>().segment((s) =>
+      s.function().parameters<P>(parameters)
+    );
   }
 
   //#region Requests
