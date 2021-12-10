@@ -29,35 +29,66 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     api: ODataApi,
     {
       path,
+      type,
       schema,
       segments,
       query,
     }: {
       path: string;
+      type?: string;
       schema?: ODataStructuredType<N>;
       segments: ODataPathSegments;
       query?: ODataQueryOptions<N>;
     }
   ) {
-    const baseType = segments.last()?.type();
-    const bindingType = schema?.type();
-
     const segment = segments.add(PathSegmentNames.navigationProperty, path);
     if (schema !== undefined) segment.type(schema.type());
+    else if (type !== undefined) segment.type(type);
     query?.keep(QueryOptionNames.format);
-    const navigation = new ODataNavigationPropertyResource<N>(api, {
+    return new ODataNavigationPropertyResource<N>(api, {
       segments,
       query,
       schema,
     });
+  }
+
+  static fromResource<N>(resource: ODataResource<any>, path: string) {
+    const baseType = resource.type();
+    let baseSchema = resource.schema as ODataStructuredType<any> | undefined;
+    let fieldType: string | undefined;
+    let fieldSchema: ODataStructuredType<N> | undefined;
+    if (baseSchema !== undefined) {
+      const field = baseSchema.findFieldByName<N>(path);
+      fieldType = field?.type;
+      fieldSchema =
+        fieldType !== undefined
+          ? resource.api.findStructuredTypeForType(fieldType)
+          : undefined;
+      baseSchema =
+        field !== undefined
+          ? baseSchema.findSchemaForField<N>(field)
+          : undefined;
+    }
+
+    const navigation = ODataNavigationPropertyResource.factory<N>(
+      resource.api,
+      {
+        path,
+        type: fieldType,
+        schema: fieldSchema,
+        segments: resource.cloneSegments(),
+        query: resource.cloneQuery<N>(),
+      }
+    );
 
     // Switch entitySet to binding type if available
-    if (bindingType !== undefined && bindingType !== baseType) {
-      let entitySet = api.findEntitySetForType(bindingType);
+    if (baseSchema !== undefined && baseSchema.type() !== baseType) {
+      let entitySet = resource.api.findEntitySetForType(baseSchema.type());
       if (entitySet !== undefined) {
         navigation.segment((s) => s.entitySet().path(entitySet!.name));
       }
     }
+
     return navigation;
   }
   //#endregion
@@ -97,40 +128,11 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(path: string) {
-    let schema: ODataStructuredType<N> | undefined;
-    if (this.schema instanceof ODataStructuredType) {
-      const field = this.schema.findFieldByName<any>(path as keyof T);
-      schema =
-        field !== undefined
-          ? this.schema.findSchemaForField<N>(field)
-          : undefined;
-    }
-    return ODataNavigationPropertyResource.factory<N>(this.api, {
-      path,
-      schema,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<N>(),
-    });
+    return ODataNavigationPropertyResource.fromResource<N>(this, path);
   }
 
   property<P>(path: string) {
-    let type: string | undefined;
-    let schema: ODataStructuredType<P> | undefined;
-    if (this.schema instanceof ODataStructuredType) {
-      const field = this.schema.findFieldByName<any>(path as keyof T);
-      type = field?.type;
-      schema =
-        field !== undefined
-          ? this.schema.findSchemaForField<P>(field)
-          : undefined;
-    }
-    return ODataPropertyResource.factory<P>(this.api, {
-      path,
-      type,
-      schema,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<P>(),
-    });
+    return ODataPropertyResource.fromResource<P>(this, path);
   }
 
   count() {
@@ -141,11 +143,19 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   cast<C>(type: string) {
-    //TODO: Resolve schema
+    const baseSchema = this.schema as ODataStructuredType<T>;
+    const castSchema = this.api.findStructuredTypeForType<C>(type);
+    if (
+      castSchema !== undefined &&
+      baseSchema !== undefined &&
+      !castSchema.isSubtypeOf(baseSchema)
+    )
+      throw new Error(`Cannot cast to ${type}`);
     const segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataNavigationPropertyResource<C>(this.api, {
       segments,
+      schema: castSchema,
       query: this.cloneQuery<C>(),
     });
   }

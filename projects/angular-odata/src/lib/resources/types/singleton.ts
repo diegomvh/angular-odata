@@ -56,58 +56,19 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   }
 
   navigationProperty<N>(path: string) {
-    let schema: ODataStructuredType<N> | undefined;
-    if (this.schema instanceof ODataStructuredType) {
-      const field = this.schema.findFieldByName<any>(path as keyof T);
-      schema =
-        field !== undefined
-          ? this.schema.findSchemaForField<N>(field)
-          : undefined;
-    }
-    return ODataNavigationPropertyResource.factory<N>(this.api, {
-      path,
-      schema,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<N>(),
-    });
+    return ODataNavigationPropertyResource.fromResource<N>(this, path);
   }
 
   property<P>(path: string) {
-    let type: string | undefined;
-    let schema: ODataStructuredType<P> | undefined;
-    if (this.schema instanceof ODataStructuredType) {
-      const field = this.schema.findFieldByName<any>(path as keyof T);
-      type = field?.type;
-      schema =
-        field !== undefined
-          ? this.schema.findSchemaForField<P>(field)
-          : undefined;
-    }
-    return ODataPropertyResource.factory<P>(this.api, {
-      path,
-      type,
-      schema,
-      segments: this.cloneSegments(),
-      query: this.cloneQuery<P>(),
-    });
+    return ODataPropertyResource.fromResource<P>(this, path);
   }
 
   action<P, R>(path: string) {
-    const schema = this.api.findCallableForType<R>(path, this.type());
-    return ODataActionResource.factory<P, R>(this.api, {
-      path,
-      schema,
-      segments: this.cloneSegments(),
-    });
+    return ODataActionResource.fromResource<P, R>(this, path);
   }
 
   function<P, R>(path: string) {
-    const schema = this.api.findCallableForType<R>(path, this.type());
-    return ODataFunctionResource.factory<P, R>(this.api, {
-      path,
-      schema,
-      segments: this.cloneSegments(),
-    });
+    return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 
   //#region Requests

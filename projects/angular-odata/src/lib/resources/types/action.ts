@@ -36,24 +36,35 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     path = schema !== undefined ? schema.path() : path;
     if (path === undefined)
       throw new Error(`ODataActionResource: path is required`);
-    const baseType = segments.last()?.type();
-    const bindingType = schema?.binding()?.type;
 
     const segment = segments.add(PathSegmentNames.action, path);
     if (schema !== undefined) segment.type(schema.type());
-    const action = new ODataActionResource<P, R>(api, {
+    return new ODataActionResource<P, R>(api, {
       segments,
       query,
       schema,
     });
+  }
+
+  static fromResource<P, R>(resource: ODataResource<any>, path: string) {
+    const baseType = resource.type();
+    const actionSchema = resource.api.findCallableForType<R>(path, baseType);
+    const bindingType = actionSchema?.binding()?.type;
+
+    const action = ODataActionResource.factory<P, R>(resource.api, {
+      path,
+      schema: actionSchema,
+      segments: resource.cloneSegments(),
+    });
 
     // Switch entitySet to binding type if available
     if (bindingType !== undefined && bindingType !== baseType) {
-      let entitySet = api.findEntitySetForType(bindingType);
+      let entitySet = resource.api.findEntitySetForType(bindingType);
       if (entitySet !== undefined) {
         action.segment((s) => s.entitySet().path(entitySet!.name));
       }
     }
+
     return action;
   }
   //#endregion

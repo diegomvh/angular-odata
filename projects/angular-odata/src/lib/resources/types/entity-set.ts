@@ -48,21 +48,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   action<P, R>(path: string) {
-    const schema = this.api.findCallableForType<R>(path, this.type());
-    return ODataActionResource.factory<P, R>(this.api, {
-      path,
-      schema,
-      segments: this.cloneSegments(),
-    });
+    return ODataActionResource.fromResource<P, R>(this, path);
   }
 
   function<P, R>(path: string) {
-    const schema = this.api.findCallableForType<R>(path, this.type());
-    return ODataFunctionResource.factory<P, R>(this.api, {
-      path,
-      schema,
-      segments: this.cloneSegments(),
-    });
+    return ODataFunctionResource.fromResource<P, R>(this, path);
   }
 
   count() {
@@ -73,12 +63,20 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   cast<C>(type: string) {
-    //TODO: Resolve schema
+    const baseSchema = this.schema as ODataStructuredType<T>;
+    const castSchema = this.api.findStructuredTypeForType<C>(type);
+    if (
+      castSchema !== undefined &&
+      baseSchema !== undefined &&
+      !castSchema.isSubtypeOf(baseSchema)
+    )
+      throw new Error(`Cannot cast to ${type}`);
     const segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntitySetResource<C>(this.api, {
       segments,
-      query: this.cloneQuery(),
+      schema: castSchema,
+      query: this.cloneQuery<C>(),
     });
   }
 

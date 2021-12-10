@@ -41,23 +41,47 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       query?: ODataQueryOptions<P>;
     }
   ) {
-    const baseType = type;
-    const bindingType = schema?.type();
-
     const segment = segments.add(PathSegmentNames.property, path);
     if (schema !== undefined) segment.type(schema.type());
     else if (type !== undefined) segment.type(type);
 
     query?.clear();
-    const property = new ODataPropertyResource<P>(api, {
+    return new ODataPropertyResource<P>(api, {
       segments,
       query,
       schema,
     });
+  }
+
+  static fromResource<N>(resource: ODataResource<any>, path: string) {
+    const baseType = resource.type();
+    let baseSchema = resource.schema as ODataStructuredType<any> | undefined;
+    let fieldType: string | undefined;
+    let fieldSchema: ODataStructuredType<N> | undefined;
+    if (baseSchema !== undefined) {
+      const field = baseSchema.findFieldByName<N>(path);
+      fieldType = field?.type;
+      fieldSchema =
+        fieldType !== undefined
+          ? resource.api.findStructuredTypeForType(fieldType)
+          : undefined;
+      baseSchema =
+        field !== undefined
+          ? baseSchema.findSchemaForField<N>(field)
+          : undefined;
+    }
+
+    const property = ODataPropertyResource.factory<N>(resource.api, {
+      path,
+      type: fieldType,
+      schema: fieldSchema,
+      segments: resource.cloneSegments(),
+      query: resource.cloneQuery<N>(),
+    });
 
     // Switch entitySet to binding type if available
-    if (bindingType !== undefined && bindingType !== baseType) {
-      let entitySet = api.findEntitySetForType(bindingType);
+    if (baseSchema !== undefined && baseSchema.type() !== baseType) {
+      let entitySet = resource.api.findEntitySetForType(baseSchema.type());
       if (entitySet !== undefined) {
         property.segment((s) => s.entitySet().path(entitySet!.name));
       }
