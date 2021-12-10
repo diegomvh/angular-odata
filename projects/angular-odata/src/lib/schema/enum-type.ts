@@ -1,5 +1,4 @@
 import { EnumTypeConfig, Options } from '../types';
-import { Strings } from '../utils/strings';
 import { ODataSchemaElement } from './element';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 import { ODataSchema } from './schema';

@@ -13,7 +13,7 @@ import {
   ODataStructuredTypeParser,
 } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
-import { OptionsHelper, QueryOptionNames } from '../types';
+import { OptionsHelper, Parser, QueryOptionNames } from '../types';
 import { Http, Objects, Types } from '../utils/index';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
@@ -195,12 +195,26 @@ export class ODataResource<T> {
   }
 
   deserialize(value: any, options?: OptionsHelper): any {
-    const baseType = this.returnType();
+    const resourceType = this.returnType();
+    const resourceSchema = this.schema;
+    const _p = (value: any, options: OptionsHelper): Parser<T> | undefined => {
+      const dataType = Types.isPlainObject(value)
+        ? options.helper.type(value)
+        : undefined;
+      if (dataType !== undefined) {
+        // Parser from data type
+        return this.api.parserForType<T>(dataType);
+      } else if (resourceSchema !== undefined && 'parser' in resourceSchema) {
+        // Parser from resource schema
+        return (<any>resourceSchema).parser as Parser<T> | undefined;
+      } else if (resourceType !== undefined) {
+        // Parser from resource type
+        return this.api.parserForType<T>(resourceType);
+      }
+      return undefined;
+    };
     const _d = (value: any, options: OptionsHelper) => {
-      const type =
-        (Types.isPlainObject(value) && options.helper.type(value)) || baseType;
-      const parser =
-        type !== undefined ? this.api.parserForType<T>(type) : undefined;
+      const parser = _p(value, options);
       return parser !== undefined && 'deserialize' in parser
         ? parser.deserialize(value, options)
         : value;
@@ -211,12 +225,26 @@ export class ODataResource<T> {
   }
 
   serialize(value: any, options?: OptionsHelper): any {
-    const baseType = this.type();
+    const resourceType = this.type();
+    const resourceSchema = this.schema;
+    const _p = (value: any, options: OptionsHelper): Parser<T> | undefined => {
+      const dataType = Types.isPlainObject(value)
+        ? options.helper.type(value)
+        : undefined;
+      if (dataType !== undefined) {
+        // Parser from data type
+        return this.api.parserForType<T>(dataType);
+      } else if (resourceSchema !== undefined && 'parser' in resourceSchema) {
+        // Parser from resource schema
+        return (<any>resourceSchema).parser as Parser<T> | undefined;
+      } else if (resourceType !== undefined) {
+        // Parser from resource type
+        return this.api.parserForType<T>(resourceType);
+      }
+      return undefined;
+    };
     const _s = (value: any, options: OptionsHelper) => {
-      const type =
-        (Types.isPlainObject(value) && options.helper.type(value)) || baseType;
-      const parser =
-        type !== undefined ? this.api.parserForType<T>(type) : undefined;
+      const parser = _p(value, options);
       return parser !== undefined && 'serialize' in parser
         ? parser.serialize(value, options)
         : value;
@@ -227,12 +255,26 @@ export class ODataResource<T> {
   }
 
   encode(value: any, options?: OptionsHelper): any {
-    const baseType = this.type();
+    const resourceType = this.type();
+    const resourceSchema = this.schema;
+    const _p = (value: any, options: OptionsHelper): Parser<T> | undefined => {
+      const dataType = Types.isPlainObject(value)
+        ? options.helper.type(value)
+        : undefined;
+      if (dataType !== undefined) {
+        // Parser from data type
+        return this.api.parserForType<T>(dataType);
+      } else if (resourceSchema !== undefined && 'parser' in resourceSchema) {
+        // Parser from resource schema
+        return (<any>resourceSchema).parser as Parser<T> | undefined;
+      } else if (resourceType !== undefined) {
+        // Parser from resource type
+        return this.api.parserForType<T>(resourceType);
+      }
+      return undefined;
+    };
     const _e = (value: any, options: OptionsHelper) => {
-      const type =
-        (Types.isPlainObject(value) && options.helper.type(value)) || baseType;
-      const parser =
-        type !== undefined ? this.api.parserForType<T>(type) : undefined;
+      const parser = _p(value, options);
       return parser !== undefined && 'encode' in parser
         ? parser.encode(value, options)
         : value;
