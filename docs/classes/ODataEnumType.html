@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -70,7 +70,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                        <code><a href="../classes/ODataAnnotatable.html" target="_self" >ODataAnnotatable</a></code>
+                        <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
             </p>
 
 
@@ -91,10 +91,10 @@
                                 <a href="#members" >members</a>
                             </li>
                             <li>
-                                <a href="#name" >name</a>
+                                <a href="#parser" >parser</a>
                             </li>
                             <li>
-                                <a href="#parser" >parser</a>
+                                <a href="#name" >name</a>
                             </li>
                             <li>
                                 <a href="#schema" >schema</a>
@@ -133,16 +133,19 @@
                                 <a href="#findFieldByValue" >findFieldByValue</a>
                             </li>
                             <li>
-                                <a href="#isTypeOf" >isTypeOf</a>
-                            </li>
-                            <li>
                                 <a href="#mapFields" >mapFields</a>
                             </li>
                             <li>
                                 <a href="#serialize" >serialize</a>
                             </li>
                             <li>
-                                <a href="#titelize" >titelize</a>
+                                <a href="#isSubtypeOf" >isSubtypeOf</a>
+                            </li>
+                            <li>
+                                <a href="#isTypeOf" >isTypeOf</a>
+                            </li>
+                            <li>
+                                <a href="#titleize" >titleize</a>
                             </li>
                             <li>
                                 <a href="#type" >type</a>
@@ -161,20 +164,6 @@
 
 
 
-                    <tr>
-                        <td class="col-md-4">
-                            <h6><b>Accessors</b></h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <ul class="index-list">
-                                <li>
-                                    <a href="#api" >api</a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
         </tbody>
     </table>
 </section>
@@ -190,7 +179,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:8</a></div>
                             </td>
                         </tr>
 
@@ -264,33 +253,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:12</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="name"></a>
-                    <span class="name">
-                        <span ><b>name</b></span>
-                        <a href="#name"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:10</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:8</a></div>
                         </td>
                     </tr>
 
@@ -316,7 +279,40 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:11</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:7</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="name"></a>
+                    <span class="name">
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:7</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -340,9 +336,16 @@
 
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:9</a></div>
+                                <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:8</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -409,8 +412,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:57</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:19</a></div>
                 </td>
             </tr>
 
@@ -446,8 +449,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="102"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:102</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:64</a></div>
                 </td>
             </tr>
 
@@ -539,8 +542,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="122"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:122</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="84"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:84</a></div>
                 </td>
             </tr>
 
@@ -632,8 +635,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="65"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:65</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="27"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:27</a></div>
                 </td>
             </tr>
 
@@ -677,8 +680,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:74</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:36</a></div>
                 </td>
             </tr>
 
@@ -754,8 +757,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="45"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:45</a></div>
                 </td>
             </tr>
 
@@ -815,83 +818,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="isTypeOf"></a>
-                    <span class="name">
-                        <span ><b>isTypeOf</b></span>
-                        <a href="#isTypeOf"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>isTypeOf(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="49"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:49</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Returns a boolean indicating if the enum type is of the given type.</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>type</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>String representation of the type</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>True if the callable is type of the given type</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="mapFields"></a>
                     <span class="name">
                         <span ><b>mapFields</b></span>
@@ -908,8 +834,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="92"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:92</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:54</a></div>
                 </td>
             </tr>
 
@@ -993,8 +919,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="112"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:112</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:74</a></div>
                 </td>
             </tr>
 
@@ -1070,24 +996,191 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="titelize"></a>
+                    <a name="isSubtypeOf"></a>
                     <span class="name">
-                        <span ><b>titelize</b></span>
-                        <a href="#titelize"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>isSubtypeOf</b></span>
+                        <a href="#isSubtypeOf"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>titelize(term: string | RegExp)</code>
+<code>isSubtypeOf(schema: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="31"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:31</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:58</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Returns a boolean indicating if the structured type is a sub type of the given type.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schema</td>
+                                    <td>
+                                                <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>True if the callable is type of the given type</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isTypeOf"></a>
+                    <span class="name">
+                        <span ><b>isTypeOf</b></span>
+                        <a href="#isTypeOf"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isTypeOf(type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:47</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Returns a boolean indicating if the structured type is of the given type.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>String representation of the type</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>True if the callable is type of the given type</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="titleize"></a>
+                    <span class="name">
+                        <span ><b>titleize</b></span>
+                        <a href="#titleize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>titleize(term?: string | RegExp)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:29</a></code>
+</div>
                 </td>
             </tr>
 
@@ -1118,7 +1211,7 @@ Titleize is meant for creating pretty output.</p>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
 
@@ -1164,15 +1257,21 @@ Titleize is meant for creating pretty output.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="40"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:40</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataSchemaElement.html#source" target="_self" >ODataSchemaElement:38</a></code>
+</div>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Returns a full type of the enum type including the namespace/alias.</p>
+                    <div class="io-description"><p>Returns a full type of the structured type including the namespace/alias.</p>
 </div>
 
                     <div class="io-description">
@@ -1399,91 +1498,26 @@ Titleize is meant for creating pretty output.</p>
 
 
 
-            <section>
-    <h3 id="accessors">
-        Accessors
-    </h3>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="api"></a>
-                        <span class="name"><b>api</b><a href="#api"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>api()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:53</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-</section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumTypeConfig, Options } from &#x27;../types&#x27;;
+import { ODataSchemaElement } from &#x27;./element&#x27;;
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from &#x27;./parsers&#x27;;
-
-import { ODataAnnotatable, ODataAnnotation } from &#x27;./base&#x27;;
 import { ODataSchema } from &#x27;./schema&#x27;;
-import { Strings } from &#x27;../utils/strings&#x27;;
 
-export class ODataEnumType&lt;E&gt; extends ODataAnnotatable {
-  schema: ODataSchema;
-  name: string;
+export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
   parser: ODataEnumTypeParser&lt;E&gt;;
   members: { [name: string]: number } | { [value: number]: string };
   constructor(config: EnumTypeConfig&lt;E&gt;, schema: ODataSchema) {
-    super(config);
-    this.schema &#x3D; schema;
-    this.name &#x3D; config.name;
+    super(config, schema);
     this.members &#x3D; config.members;
     this.parser &#x3D; new ODataEnumTypeParser&lt;E&gt;(
       config,
       schema.namespace,
       schema.alias
     );
-  }
-
-  /**
-   * Create a nicer looking title.
-   * Titleize is meant for creating pretty output.
-   * @param term The term of the annotation to find.
-   * @returns The titleized string.
-   */
-  titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || Strings.titleCase(this.name);
-  }
-
-  /**
-   * Returns a full type of the enum type including the namespace/alias.
-   * @param alias Use the alias of the namespace instead of the namespace.
-   * @returns The string representation of the type.
-   */
-  type({ alias &#x3D; false }: { alias?: boolean } &#x3D; {}) {
-    return &#x60;${alias ? this.schema.alias : this.schema.namespace}.${this.name}&#x60;;
-  }
-
-  /**
-   * Returns a boolean indicating if the enum type is of the given type.
-   * @param type String representation of the type
-   * @returns True if the callable is type of the given type
-   */
-  isTypeOf(type: string) {
-    return this.parser.isTypeOf(type);
-  }
-
-  get api() {
-    return this.schema.api;
   }
 
   configure() {
@@ -1579,6 +1613,15 @@ export class ODataEnumType&lt;E&gt; extends ODataAnnotatable {
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

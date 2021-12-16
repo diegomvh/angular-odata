@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -148,10 +148,10 @@
                                 <a href="#serialize" >serialize</a>
                             </li>
                             <li>
-                                <a href="#titelize" >titelize</a>
+                                <a href="#toJsonSchema" >toJsonSchema</a>
                             </li>
                             <li>
-                                <a href="#toJsonSchema" >toJsonSchema</a>
+                                <a href="#ttitelize" >ttitelize</a>
                             </li>
                             <li>
                                 <a href="#validate" >validate</a>
@@ -861,16 +861,53 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="titelize"></a>
+                    <a name="toJsonSchema"></a>
                     <span class="name">
-                        <span ><b>titelize</b></span>
-                        <a href="#titelize"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>toJsonSchema</b></span>
+                        <a href="#toJsonSchema"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>titelize(term: string | RegExp)</code>
+<code>toJsonSchema()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="123"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:123</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ttitelize"></a>
+                    <span class="name">
+                        <span ><b>ttitelize</b></span>
+                        <a href="#ttitelize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>ttitelize(term?: string | RegExp)</code>
                 </td>
             </tr>
 
@@ -909,7 +946,7 @@ Titleize is meant for creating pretty output.</p>
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
 
@@ -929,43 +966,6 @@ Titleize is meant for creating pretty output.</p>
                     </div>
                     <div class="io-description">
                         <p>The titleized string.</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="toJsonSchema"></a>
-                    <span class="name">
-                        <span ><b>toJsonSchema</b></span>
-                        <a href="#toJsonSchema"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>toJsonSchema()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="123"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:123</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                 </td>
@@ -1242,17 +1242,17 @@ Titleize is meant for creating pretty output.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Enums, Strings } from &#x27;../../utils&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataParserOptions } from &#x27;../../options&#x27;;
 import { raw } from &#x27;../../resources/query&#x27;;
-import { ODataAnnotatable } from &#x27;../base&#x27;;
 import {
   EnumTypeConfig,
-  Parser,
-  OptionsHelper,
   EnumTypeFieldConfig,
   Options,
+  OptionsHelper,
+  Parser,
 } from &#x27;../../types&#x27;;
-import { ODataParserOptions } from &#x27;../../options&#x27;;
+import { Enums, Strings } from &#x27;../../utils&#x27;;
+import { ODataAnnotatable } from &#x27;../annotation&#x27;;
 
 export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   name: string;
@@ -1264,8 +1264,8 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
     this.value &#x3D; field.value;
   }
 
-  titleize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+  titleize(term?: string | RegExp): string {
+    return (term &amp;&amp; this.annotatedValue(term)) || this.name;
   }
 }
 
@@ -1299,8 +1299,8 @@ export class ODataEnumTypeParser&lt;T&gt;
    * @param term The term of the annotation to find.
    * @returns The titleized string.
    */
-  titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || Strings.titleCase(this.name);
+  ttitelize(term?: string | RegExp): string {
+    return (term &amp;&amp; this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
   configure({ options }: { options: OptionsHelper }) {
@@ -1417,6 +1417,15 @@ export class ODataEnumTypeParser&lt;T&gt;
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

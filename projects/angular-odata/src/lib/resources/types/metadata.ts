@@ -22,7 +22,7 @@ export class ODataMetadataResource extends ODataResource<any> {
   //#endregion
 
   //#region Requests
-  protected get(options?: ODataOptions): Observable<ODataMetadata> {
+  protected override get(options?: ODataOptions): Observable<ODataMetadata> {
     return super
       .get({ responseType: 'text', ...options })
       .pipe(map((body: any) => new ODataMetadata(body)));

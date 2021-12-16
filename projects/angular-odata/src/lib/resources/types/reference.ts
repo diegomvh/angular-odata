@@ -30,21 +30,21 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  protected post(
+  protected override post(
     target: ODataEntityResource<any>,
     options?: ODataOptions
   ): Observable<any> {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
-  protected put(
+  protected override put(
     target: ODataEntityResource<any>,
     options?: ODataOptions & { etag?: string }
   ): Observable<any> {
     return super.put({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
-  protected delete({
+  protected override delete({
     etag,
     target,
     ...options

@@ -26,13 +26,13 @@ export class ODataMediaResource extends ODataResource<any> {
   //#endregion
 
   //#region Requests
-  protected get(
+  protected override get(
     options: { responseType: any } & ODataOptions
   ): Observable<any> {
     return super.get(options);
   }
 
-  protected put(
+  protected override put(
     data: ArrayBuffer | Blob,
     options: ODataOptions & { etag?: string } = {}
   ): Observable<any> {

@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -96,6 +96,9 @@
                                 <a href="#bodyQueryOptions" >bodyQueryOptions</a>
                             </li>
                             <li>
+                                <a href="#deleteRefBy" >deleteRefBy</a>
+                            </li>
+                            <li>
                                 <a href="#etag" >etag</a>
                             </li>
                             <li>
@@ -163,7 +166,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="88" class="link-to-prism">projects/angular-odata/src/lib/options.ts:88</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">projects/angular-odata/src/lib/options.ts:89</a></div>
                             </td>
                         </tr>
 
@@ -268,6 +271,32 @@
 </div>
                 </td>
             </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteRefBy"></a>
+                    <span class="name">
+                        <span ><b>deleteRefBy</b></span>
+                        <a href="#deleteRefBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>&quot;path&quot; | &quot;id&quot;</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">projects/angular-odata/src/lib/options.ts:89</a></div>
+                        </td>
+                    </tr>
+
 
         </tbody>
     </table>
@@ -583,7 +612,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">projects/angular-odata/src/lib/options.ts:104</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">projects/angular-odata/src/lib/options.ts:106</a></div>
                                 </td>
                             </tr>
 
@@ -682,6 +711,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
      */
     includeAnnotations?: string;
   };
+  deleteRefBy: &#x27;path&#x27; | &#x27;id&#x27;;
 
   constructor(config: ApiOptions) {
     this.version &#x3D; config.version || DEFAULT_VERSION;
@@ -695,6 +725,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.accept &#x3D; config.accept;
     Object.assign(this.etag, config.etag || {});
     this.prefer &#x3D; config.prefer;
+    this.deleteRefBy &#x3D; config.deleteRefBy || &#x27;path&#x27;;
   }
 
   get helper() {
@@ -739,6 +770,15 @@ export class ODataParserOptions implements OptionsHelper {
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

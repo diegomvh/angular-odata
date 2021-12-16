@@ -160,7 +160,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  protected get(
+  protected override get(
     options: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.get(options);

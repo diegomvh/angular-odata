@@ -47,7 +47,7 @@ export class ODataValueResource<T> extends ODataResource<T> {
   //#endregion
 
   //#region Requests
-  protected get(options?: ODataOptions): Observable<T> {
+  protected override get(options?: ODataOptions): Observable<T> {
     return super.get({ responseType: 'value', ...options });
   }
   //#endregion

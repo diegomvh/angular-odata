@@ -40,7 +40,7 @@ export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
     super();
   }
 
-  toString() {
+  override toString() {
     //TODO: Relative or Absolute url ?
     let res = [
       `${this.request.method} ${this.request.pathWithParams} ${HTTP11}`,

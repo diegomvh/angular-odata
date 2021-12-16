@@ -100,34 +100,34 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  protected post(
+  protected override post(
     attrs: Partial<T>,
     options: ODataOptions = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  protected put(
+  protected override put(
     attrs: Partial<T>,
     options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
-  protected patch(
+  protected override patch(
     attrs: Partial<T>,
     options: ODataOptions & { etag?: string } = {}
   ): Observable<ODataEntity<T>> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
-  protected delete(
+  protected override delete(
     options: ODataOptions & { etag?: string } = {}
   ): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
 
-  protected get(
+  protected override get(
     options: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];

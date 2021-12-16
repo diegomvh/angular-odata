@@ -331,42 +331,42 @@ export class ODataModelField<F> {
         (value === null || (value === undefined && method !== 'modify')) && // Is null or undefined without patch?
         !(computed && method === 'create') // Not (Is Computed field and create) ?
       ) {
-        errors.push(`required`);
+        errors['push'](`required`);
       }
       if (
         this.maxLength !== undefined &&
         typeof value === 'string' &&
         value.length > this.maxLength
       ) {
-        errors.push(`maxlength`);
+        errors['push'](`maxlength`);
       }
       if (
         this.minLength !== undefined &&
         typeof value === 'string' &&
         value.length < this.minLength
       ) {
-        errors.push(`minlength`);
+        errors['push'](`minlength`);
       }
       if (
         this.min !== undefined &&
         typeof value === 'number' &&
         value < this.min
       ) {
-        errors.push(`min`);
+        errors['push'](`min`);
       }
       if (
         this.max !== undefined &&
         typeof value === 'number' &&
         value > this.max
       ) {
-        errors.push(`max`);
+        errors['push'](`max`);
       }
       if (
         this.pattern !== undefined &&
         typeof value === 'string' &&
         !this.pattern.test(value)
       ) {
-        errors.push(`pattern`);
+        errors['push'](`pattern`);
       }
       return !Types.isEmpty(errors) ? errors : undefined;
     }

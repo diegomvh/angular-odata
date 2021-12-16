@@ -69,14 +69,14 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  returnType() {
+  override returnType() {
     return this.schema instanceof ODataCallable
       ? this.schema.parser.return?.type
       : undefined;
   }
 
   //#region Requests
-  protected post(
+  protected override post(
     params: P | null,
     options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {

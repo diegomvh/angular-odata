@@ -69,7 +69,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    * @param type String representation of the type
    * @returns True if the callable is type of the given type
    */
-  isSubtypeOf(schema: ODataStructuredType<any>): boolean {
+  override isSubtypeOf(schema: ODataStructuredType<any>): boolean {
     return (
       super.isSubtypeOf(schema) ||
       (this.parent !== undefined && this.parent.isSubtypeOf(schema))

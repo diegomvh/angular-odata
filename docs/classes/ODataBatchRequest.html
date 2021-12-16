@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -110,6 +110,7 @@
                                 <a href="#onLoad" >onLoad</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                 <a href="#toString" >toString</a>
                             </li>
                         </ul>
@@ -135,7 +136,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:38</a></div>
                             </td>
                         </tr>
 
@@ -198,7 +199,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:39</a></div>
                         </td>
                     </tr>
 
@@ -232,8 +233,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="137"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:137</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="136"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:136</a></div>
                 </td>
             </tr>
 
@@ -313,8 +314,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="70"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:70</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:69</a></div>
                 </td>
             </tr>
 
@@ -380,6 +381,7 @@
                 <td class="col-md-4">
                     <a name="toString"></a>
                     <span class="name">
+                        <span class="modifier"></span>
                         <span ><b>toString</b></span>
                         <a href="#toString"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -387,15 +389,16 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toString()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toString()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:44</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="43"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/batch.ts:43</a></div>
                 </td>
             </tr>
 
@@ -422,6 +425,13 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpResponse,
+} from &#x27;@angular/common/http&#x27;;
+import { Observable, Subject } from &#x27;rxjs&#x27;;
+import { ODataApi } from &#x27;../../api&#x27;;
+import {
   $BATCH,
   ACCEPT,
   APPLICATION_HTTP,
@@ -442,29 +452,21 @@
   VERSION_4_0,
   XSSI_PREFIX,
 } from &#x27;../../constants&#x27;;
-import {
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpResponse,
-} from &#x27;@angular/common/http&#x27;;
-import { Observable, Subject } from &#x27;rxjs&#x27;;
-
+import { PathSegmentNames } from &#x27;../../types&#x27;;
 import { Http } from &#x27;../../utils/http&#x27;;
-import { ODataApi } from &#x27;../../api&#x27;;
-import { ODataOptions } from &#x27;./options&#x27;;
+import { Strings } from &#x27;../../utils/strings&#x27;;
 import { ODataPathSegments } from &#x27;../path&#x27;;
 import { ODataRequest } from &#x27;../request&#x27;;
 import { ODataResource } from &#x27;../resource&#x27;;
 import { ODataResponse } from &#x27;../responses&#x27;;
-import { PathSegmentNames } from &#x27;../../types&#x27;;
-import { Strings } from &#x27;../../utils/strings&#x27;;
+import { ODataOptions } from &#x27;./options&#x27;;
 
 export class ODataBatchRequest&lt;T&gt; extends Subject&lt;ODataResponse&lt;T&gt;&gt; {
   constructor(public request: ODataRequest&lt;any&gt;) {
     super();
   }
 
-  toString() {
+  override toString() {
     //TODO: Relative or Absolute url ?
     let res &#x3D; [
       &#x60;${this.request.method} ${this.request.pathWithParams} ${HTTP11}&#x60;,
@@ -583,17 +585,9 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   static factory(api: ODataApi) {
     let segments &#x3D; new ODataPathSegments();
     segments.add(PathSegmentNames.batch, $BATCH);
-    return new ODataBatchResource(api, segments);
-  }
-
-  clone() {
-    return new ODataBatchResource(this.api, this.cloneSegments());
+    return new ODataBatchResource(api, { segments });
   }
   //#endregion
-
-  schema() {
-    return undefined;
-  }
 
   /**
    * Execute the batch request
@@ -820,6 +814,15 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

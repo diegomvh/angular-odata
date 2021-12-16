@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -135,7 +135,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, field: <a href="../classes/Field.html" target="_self">EnumTypeFieldConfig</a>)</code>
+<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, field: <a href="../undefineds/EnumTypeFieldConfig.html" target="_self">EnumTypeFieldConfig</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -173,7 +173,7 @@
                                                         <td>field</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../classes/Field.html" target="_self" >EnumTypeFieldConfig</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#EnumTypeFieldConfig" target="_self" >EnumTypeFieldConfig</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -300,7 +300,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>titleize(term: string | RegExp)</code>
+<code>titleize(term?: string | RegExp)</code>
                 </td>
             </tr>
 
@@ -335,7 +335,7 @@
                                     </td>
 
                                     <td>
-                                        No
+                                        Yes
                                     </td>
 
 
@@ -540,17 +540,17 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Enums, Strings } from &#x27;../../utils&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataParserOptions } from &#x27;../../options&#x27;;
 import { raw } from &#x27;../../resources/query&#x27;;
-import { ODataAnnotatable } from &#x27;../base&#x27;;
 import {
   EnumTypeConfig,
-  Parser,
-  OptionsHelper,
   EnumTypeFieldConfig,
   Options,
+  OptionsHelper,
+  Parser,
 } from &#x27;../../types&#x27;;
-import { ODataParserOptions } from &#x27;../../options&#x27;;
+import { Enums, Strings } from &#x27;../../utils&#x27;;
+import { ODataAnnotatable } from &#x27;../annotation&#x27;;
 
 export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   name: string;
@@ -562,8 +562,8 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
     this.value &#x3D; field.value;
   }
 
-  titleize(term: string | RegExp): string {
-    return this.annotatedValue(term) || this.name;
+  titleize(term?: string | RegExp): string {
+    return (term &amp;&amp; this.annotatedValue(term)) || this.name;
   }
 }
 
@@ -597,8 +597,8 @@ export class ODataEnumTypeParser&lt;T&gt;
    * @param term The term of the annotation to find.
    * @returns The titleized string.
    */
-  titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || Strings.titleCase(this.name);
+  ttitelize(term?: string | RegExp): string {
+    return (term &amp;&amp; this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
   configure({ options }: { options: OptionsHelper }) {
@@ -715,6 +715,15 @@ export class ODataEnumTypeParser&lt;T&gt;
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

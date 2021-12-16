@@ -81,14 +81,14 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   //#region Requests
-  protected post(
+  protected override post(
     attrs: Partial<T>,
     options: ODataOptions = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
-  protected get(
+  protected override get(
     options: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];

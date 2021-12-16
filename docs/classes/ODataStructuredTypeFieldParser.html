@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -225,7 +225,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, structuredType: <a href="../interfaces/Parser.html" target="_self">ODataStructuredTypeParser&lt;any&gt;</a>, field: <a href="../classes/Field.html" target="_self">StructuredTypeFieldConfig</a>)</code>
+<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, structuredType: <a href="../interfaces/Parser.html" target="_self">ODataStructuredTypeParser&lt;any&gt;</a>, field: <a href="../undefineds/StructuredTypeFieldConfig.html" target="_self">StructuredTypeFieldConfig</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -275,7 +275,7 @@
                                                         <td>field</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../classes/Field.html" target="_self" >StructuredTypeFieldConfig</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#StructuredTypeFieldConfig" target="_self" >StructuredTypeFieldConfig</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -942,7 +942,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEnumTypeParser&lt;T&gt;</a></code>
 
                     </div>
                 </td>
@@ -1785,21 +1785,21 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
-import {
-  Parser,
-  StructuredTypeFieldConfig,
-  StructuredTypeConfig,
-  OptionsHelper,
-  NONE_PARSER,
-  StructuredTypeFieldOptions,
-  Options,
-} from &#x27;../../types&#x27;;
-import { ODataEnumTypeParser } from &#x27;./enum-type&#x27;;
-import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from &#x27;../../constants&#x27;;
-import { ODataAnnotatable } from &#x27;../base&#x27;;
-import { raw } from &#x27;../../resources/query&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from &#x27;../../constants&#x27;;
 import { ODataParserOptions } from &#x27;../../options&#x27;;
+import { raw } from &#x27;../../resources/query&#x27;;
+import {
+  NONE_PARSER,
+  Options,
+  OptionsHelper,
+  Parser,
+  StructuredTypeConfig,
+  StructuredTypeFieldConfig,
+  StructuredTypeFieldOptions,
+} from &#x27;../../types&#x27;;
+import { Objects, Strings, Types } from &#x27;../../utils&#x27;;
+import { ODataAnnotatable } from &#x27;../annotation&#x27;;
+import { ODataEnumTypeParser } from &#x27;./enum-type&#x27;;
 
 // JSON SCHEMA
 type JsonSchemaSelect&lt;T&gt; &#x3D; Array&lt;keyof T&gt;;
@@ -2163,8 +2163,8 @@ export class ODataStructuredTypeParser&lt;T&gt;
    * @param term The term of the annotation to find.
    * @returns The titleized string.
    */
-  titelize(term: string | RegExp): string {
-    return this.annotatedValue(term) || Strings.titleCase(this.name);
+  titleize(term?: string | RegExp): string {
+    return (term &amp;&amp; this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
   isTypeOf(type: string) {
@@ -2173,11 +2173,10 @@ export class ODataStructuredTypeParser&lt;T&gt;
     return names.indexOf(type) !&#x3D;&#x3D; -1;
   }
 
-  typeFor(name: string): string | undefined {
-    const field &#x3D; this.fields.find((f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; name);
-    if (field &#x3D;&#x3D;&#x3D; undefined &amp;&amp; this.parent !&#x3D;&#x3D; undefined)
-      return this.parent.typeFor(name);
-    return field !&#x3D;&#x3D; undefined ? field.type : undefined;
+  isSubtypeOf(type: string): boolean {
+    if (this.isTypeOf(type)) return true;
+    if (this.parent) return this.parent.isSubtypeOf(type);
+    return false;
   }
 
   findChildParser(
@@ -2320,7 +2319,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
     let schema: any &#x3D; this.parent?.toJsonSchema(options) || {
       $schema: &#x27;http://json-schema.org/draft-07/schema#&#x27;,
       $id: &#x60;${this.namespace}.${this.name}&#x60;,
-      title: this.titelize(DESCRIPTION),
+      title: this.titleize(DESCRIPTION),
       description: this.annotatedValue(LONG_DESCRIPTION),
       type: &#x27;object&#x27;,
       properties: {},
@@ -2413,6 +2412,15 @@ export class ODataStructuredTypeParser&lt;T&gt;
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

@@ -42,7 +42,7 @@ export class ODataInStorageCache extends ODataCache {
     );
   }
 
-  flush() {
+  override flush() {
     super.flush();
     this.store();
   }

@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -1122,12 +1122,12 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Objects, Types } from &#x27;../../utils&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOptionNames } from &#x27;../../types&#x27;;
+import { Objects, Types } from &#x27;../../utils&#x27;;
 import { alias, Expand, Filter, OrderBy, Select, Transform } from &#x27;./builder&#x27;;
-
-import { QueryOptionNames } from &#x27;../../types&#x27;;
-import { Expression } from &#x27;./expressions&#x27;;
+import { Connector, Expression } from &#x27;./expressions&#x27;;
 import type { ODataQueryArguments, ODataQueryOptions } from &#x27;./options&#x27;;
+import { ODataFunctions, ODataOperators } from &#x27;./syntax&#x27;;
 
 export class ODataQueryOptionHandler&lt;T&gt; {
   constructor(
@@ -1254,14 +1254,7 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   /**
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    */
-  compute(
-    opts: (e: {
-      e: Expression&lt;T&gt;;
-      and: Expression&lt;T&gt;;
-      or: Expression&lt;T&gt;;
-      not: typeof Expression.not;
-    }) &#x3D;&gt; Expression&lt;T&gt;
-  ): Expression&lt;T&gt;;
+  compute(opts: (e: { e: Expression&lt;T&gt; }) &#x3D;&gt; Expression&lt;T&gt;): Expression&lt;T&gt;;
   compute(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   compute(): ODataQueryOptionHandler&lt;T&gt;;
   compute(opts?: any): any {
@@ -1270,9 +1263,6 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOptionNames.compute,
         opts({
           e: () &#x3D;&gt; Expression.e&lt;T&gt;(),
-          and: () &#x3D;&gt; Expression.and&lt;T&gt;(),
-          or: () &#x3D;&gt; Expression.or&lt;T&gt;(),
-          not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression.not(e),
         }) as Expression&lt;T&gt;
       );
     }
@@ -1302,10 +1292,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
 
   filter(
     opts: (e: {
-      e: () &#x3D;&gt; Expression&lt;T&gt;;
-      and: () &#x3D;&gt; Expression&lt;T&gt;;
-      or: () &#x3D;&gt; Expression&lt;T&gt;;
-      not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression&lt;T&gt;;
+      s: T;
+      e: (connector?: Connector) &#x3D;&gt; Expression&lt;T&gt;;
+      o: ODataOperators&lt;T&gt;;
+      f: ODataFunctions&lt;T&gt;;
     }) &#x3D;&gt; Expression&lt;T&gt;
   ): Expression&lt;T&gt;;
   filter(opts: Filter&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
@@ -1315,10 +1305,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
       return this.options.expression(
         QueryOptionNames.filter,
         opts({
-          e: () &#x3D;&gt; Expression.e&lt;T&gt;(),
-          and: () &#x3D;&gt; Expression.and&lt;T&gt;(),
-          or: () &#x3D;&gt; Expression.or&lt;T&gt;(),
-          not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression.not(e),
+          s: Expression.s&lt;any&gt;() as T,
+          e: Expression.e,
+          o: Expression.o&lt;T&gt;(),
+          f: Expression.f&lt;T&gt;(),
         }) as Expression&lt;T&gt;
       );
     }
@@ -1328,8 +1318,6 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   orderBy(
     opts: (e: {
       e: () &#x3D;&gt; Expression&lt;T&gt;;
-      and: () &#x3D;&gt; Expression&lt;T&gt;;
-      or: () &#x3D;&gt; Expression&lt;T&gt;;
       not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression&lt;T&gt;;
     }) &#x3D;&gt; Expression&lt;T&gt;
   ): Expression&lt;T&gt;;
@@ -1341,9 +1329,6 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
         QueryOptionNames.orderBy,
         opts({
           e: () &#x3D;&gt; Expression.e&lt;T&gt;(),
-          and: () &#x3D;&gt; Expression.and&lt;T&gt;(),
-          or: () &#x3D;&gt; Expression.or&lt;T&gt;(),
-          not: (e: Expression&lt;T&gt;) &#x3D;&gt; Expression.not(e),
         }) as Expression&lt;T&gt;
       );
     }
@@ -1430,6 +1415,15 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -166,8 +166,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="8"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:8</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="7"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:7</a></div>
                 </td>
             </tr>
 
@@ -246,8 +246,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="7"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:7</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="6"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:6</a></div>
                 </td>
             </tr>
 
@@ -323,7 +323,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:62</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:61</a></code>
 </div>
                 </td>
             </tr>
@@ -444,7 +444,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:25</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:24</a></code>
 </div>
                 </td>
             </tr>
@@ -552,7 +552,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>fetchNavigationProperty(resource: <a href="../objects/OData.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
+                    <code>fetchNavigationProperty(resource: <a href="../classes/ODataNavigationPropertyResource.html" target="_self">ODataNavigationPropertyResource&lt;S&gt;</a>, responseType, options?: <a href="../interfaces/Options.html" target="_self">ODataQueryArgumentsOptions&lt;S&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -565,7 +565,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:99</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataBaseService.html#source" target="_self" >ODataBaseService:98</a></code>
 </div>
                 </td>
             </tr>
@@ -597,7 +597,7 @@
                                 <tr>
                                     <td>resource</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataNavigationPropertyResource&lt;S&gt;</a></code>
+                                                <code><a href="../classes/ODataNavigationPropertyResource.html" target="_self" >ODataNavigationPropertyResource&lt;S&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -671,7 +671,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:13</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/services/entity.ts:12</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -689,10 +689,9 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EntityKey, ODataResource } from &#x27;../resources&#x27;;
-
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataModel } from &#x27;../models/model&#x27;;
+import { EntityKey, ODataResource } from &#x27;../resources&#x27;;
 import { ODataBaseService } from &#x27;./base&#x27;;
-import { ODataModel } from &#x27;../models/model&#x27;;
 
 export abstract class ODataEntityService&lt;T&gt; extends ODataBaseService {
   public abstract entity(key?: EntityKey&lt;T&gt;): ODataResource&lt;T&gt;;
@@ -731,6 +730,15 @@ export abstract class ODataEntityService&lt;T&gt; extends ODataBaseService {
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

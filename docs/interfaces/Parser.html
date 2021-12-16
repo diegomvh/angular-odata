@@ -9,7 +9,7 @@
 
         <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
 	   <link rel="stylesheet" href="../styles/style.css">
-        <link rel="stylesheet" href="../styles/dark.css" media="(prefers-color-scheme: dark)">
+        <link rel="stylesheet" href="../styles/dark.css">
     </head>
     <body>
 
@@ -125,15 +125,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: OptionsHelper | StructuredTypeFieldOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="94"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:94</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="97"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:97</a></div>
                 </td>
             </tr>
 
@@ -168,7 +168,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../classes/Field.html" target="_self" >OptionsHelper | StructuredTypeFieldOptions</a></code>
+                                            <code>OptionsHelper | StructuredTypeFieldOptions</code>
                                     </td>
 
                                     <td>
@@ -206,15 +206,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: OptionsHelper | StructuredTypeFieldOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="104"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:104</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:107</a></div>
                 </td>
             </tr>
 
@@ -249,7 +249,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../classes/Field.html" target="_self" >OptionsHelper | StructuredTypeFieldOptions</a></code>
+                                            <code>OptionsHelper | StructuredTypeFieldOptions</code>
                                     </td>
 
                                     <td>
@@ -287,15 +287,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../classes/Field.html" target="_self">OptionsHelper | StructuredTypeFieldOptions</a>)</code>
+<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: OptionsHelper | StructuredTypeFieldOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="99"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:99</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="102"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:102</a></div>
                 </td>
             </tr>
 
@@ -330,7 +330,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../classes/Field.html" target="_self" >OptionsHelper | StructuredTypeFieldOptions</a></code>
+                                            <code>OptionsHelper | StructuredTypeFieldOptions</code>
                                     </td>
 
                                     <td>
@@ -433,6 +433,9 @@ export interface ApiOptions extends Options {
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
   bodyQueryOptions?: QueryOptionNames[];
+  //https://github.com/OData/WebApi/issues/1974
+  //https://github.com/OData/WebApi/issues/1647
+  deleteRefBy?: &#x27;path&#x27; | &#x27;id&#x27;;
 }
 
 export interface OptionsHelper extends Options {
@@ -599,6 +602,15 @@ export type EntitySetConfig &#x3D; {
                <!-- END CONTENT -->
            </div>
        </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
 
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;

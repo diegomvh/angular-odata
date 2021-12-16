@@ -70,7 +70,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
   //#endregion
 
-  returnType() {
+  override returnType() {
     return this.schema instanceof ODataCallable
       ? this.schema.parser.return?.type
       : undefined;
@@ -91,7 +91,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
   }
 
   //#region Requests
-  protected get(
+  protected override get(
     options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.get(options);
