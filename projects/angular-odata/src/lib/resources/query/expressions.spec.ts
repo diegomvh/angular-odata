@@ -1,4 +1,4 @@
-import { Expression } from './expressions';
+import { FilterExpression } from './expressions';
 import { Field } from './syntax';
 
 describe('OData filter builder', () => {
@@ -33,7 +33,7 @@ describe('OData filter builder', () => {
   describe('base condition', () => {
     describe('as factory function', () => {
       it('and', () => {
-        const compare1 = Expression.filter<Person>(({ e }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e }) =>
           e('and').eq('Id', 1).ne('Car', 3)
         );
 
@@ -41,7 +41,7 @@ describe('OData filter builder', () => {
       });
 
       it('or', () => {
-        const compare1 = Expression.filter<Person>(({ e }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e }) =>
           e('or').eq('Id', 1).ne('Car', 3)
         );
 
@@ -51,7 +51,7 @@ describe('OData filter builder', () => {
 
     describe('value types', () => {
       it('string', () => {
-        const filter = Expression.filter<Person>(({ e }) =>
+        const filter = FilterExpression.filter<Person>(({ e }) =>
           e().eq('Name', 'test')
         );
 
@@ -59,7 +59,7 @@ describe('OData filter builder', () => {
       });
 
       it('number', () => {
-        const filter = Expression.filter<Person>(({ e }) =>
+        const filter = FilterExpression.filter<Person>(({ e }) =>
           e().eq('Age', 200.55)
         );
 
@@ -67,7 +67,7 @@ describe('OData filter builder', () => {
       });
 
       it('boolean', () => {
-        const filter = Expression.filter<Person>(({ e }) =>
+        const filter = FilterExpression.filter<Person>(({ e }) =>
           e().eq('IsCorrect', true)
         );
 
@@ -75,7 +75,7 @@ describe('OData filter builder', () => {
       });
 
       it('null', () => {
-        const filter = Expression.filter<Person>(({ e }) =>
+        const filter = FilterExpression.filter<Person>(({ e }) =>
           e().eq('EditedOn', null)
         );
         expect(filter.render()).toBe('EditedOn eq null');
@@ -83,7 +83,7 @@ describe('OData filter builder', () => {
 
       it('Date', () => {
         const date = '1995-05-22T21:00:00.000Z';
-        const filter = Expression.filter<Person>(({ e }) =>
+        const filter = FilterExpression.filter<Person>(({ e }) =>
           e().gt('CreatedOn', new Date(date))
         );
 
@@ -93,14 +93,14 @@ describe('OData filter builder', () => {
 
     describe('navigate main', () => {
       it('navigate', () => {
-        const compare1 = Expression.filter<Person>(({ e, s }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e, s }) =>
           e('and').eq(s.Car!.Model!.Id, 1)
         );
         expect(compare1.render()).toBe('Car/Model/Id eq 1');
       });
 
       it('combination navigate', () => {
-        const compare1 = Expression.filter<Person>(({ e, s }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e, s }) =>
           e('and')
             .eq(s.Car!.Model!.Id, 1)
             .ne('Id', 1)
@@ -112,7 +112,7 @@ describe('OData filter builder', () => {
       });
 
       it('combination and.or()', () => {
-        const compare1 = Expression.filter<Person>(({ e, s }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e, s }) =>
           e('and').eq(s.Car!.Model!.Id, 1).or(e().endsWith(s.Name, 'John'))
         );
         expect(compare1.render()).toBe(
@@ -123,14 +123,14 @@ describe('OData filter builder', () => {
 
     describe('lambdas basics', () => {
       it('any', () => {
-        const compare1 = Expression.filter<Person>(({ e, s }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e, s }) =>
           e('and').any<Pet>(s.Pets!, ({ e, s }) => e().eq(s.Age, 1))
         );
         expect(compare1.render()).toBe('Pets/any(p:p/Age eq 1)');
       });
 
       it('all', () => {
-        const compare1 = Expression.filter<Person>(({ e, s }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e, s }) =>
           e('and').all<Pet>(s.Pets!, ({ e, s }) => e().ne(s.Age, 1))
         );
         expect(compare1.render()).toBe('Pets/all(p:p/Age ne 1)');
@@ -142,7 +142,7 @@ describe('OData filter builder', () => {
       const functions = ['contains', 'startsWith', 'endsWith'];
 
       it('in', () => {
-        const compare1 = Expression.filter<Person>(({ e }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e }) =>
           e().in('Age', [1, 2, '3'])
         );
         expect(compare1.render()).toBe("Age in (1,2,'3')");
@@ -151,16 +151,16 @@ describe('OData filter builder', () => {
       describe('simple comparision', () => {
         comparators.forEach((operator) => {
           it(operator, () => {
-            const compareNumber = Expression.filter(({ e }) =>
+            const compareNumber = FilterExpression.filter(({ e }) =>
               (e() as any)[operator]('Id', 1)
             );
 
-            const compareString = Expression.filter(({ e }) =>
+            const compareString = FilterExpression.filter(({ e }) =>
               (e() as any)[operator]('CompanyName', 'Google')
             );
 
             // skip value normalisation
-            const compareString1 = Expression.filter(({ e }) =>
+            const compareString1 = FilterExpression.filter(({ e }) =>
               (e() as any)[operator]('CompanyName', 'OtherCompanyName', false)
             );
 
@@ -179,7 +179,7 @@ describe('OData filter builder', () => {
         describe('simple comparision functions', () => {
           functions.forEach((func) => {
             it(func, () => {
-              const compareNumber = Expression.filter(({ e }) =>
+              const compareNumber = FilterExpression.filter(({ e }) =>
                 (e() as any)[func]('Name', 'a')
               );
 
@@ -195,7 +195,7 @@ describe('OData filter builder', () => {
     describe('multiple compare', () => {
       describe('base condition f.or().eq(...)', () => {
         it('and', () => {
-          const compare = Expression.filter<any>(({ e }) =>
+          const compare = FilterExpression.filter<any>(({ e }) =>
             e().eq('Id', 1).ne('Type/Id', 3).startsWith('Name', 'a')
           );
 
@@ -205,7 +205,7 @@ describe('OData filter builder', () => {
         });
 
         it('or', () => {
-          const compare = Expression.filter<any>(({ e }) =>
+          const compare = FilterExpression.filter<any>(({ e }) =>
             e('or').eq('Id', 1).ne('Type/Id', 3).endsWith('Name', 'a')
           );
 
@@ -217,7 +217,7 @@ describe('OData filter builder', () => {
 
       describe('combination f().and(f().eq(...))', () => {
         it('and', () => {
-          const compare = Expression.filter<any>(({ e }) =>
+          const compare = FilterExpression.filter<any>(({ e }) =>
             e('or')
               .and(e().eq('Id', 1))
               .and(e().ne('Type/Id', 3))
@@ -230,7 +230,7 @@ describe('OData filter builder', () => {
         });
 
         it('or', () => {
-          const compare = Expression.filter<any>(({ e }) =>
+          const compare = FilterExpression.filter<any>(({ e }) =>
             e()
               .or(e().eq('Id', 1))
               .or(e().ne('Type/Id', 3))
@@ -243,7 +243,7 @@ describe('OData filter builder', () => {
         });
 
         it('not', () => {
-          const compare = Expression.filter<any>(({ e }) =>
+          const compare = FilterExpression.filter<any>(({ e }) =>
             e()
               .not(e().eq('Id', 1))
               .not(e().ne('Type/Id', 3))
@@ -258,7 +258,7 @@ describe('OData filter builder', () => {
 
       describe('canonical functions', () => {
         it('startsWith', () => {
-          const func = Expression.filter<any>(({ e }) =>
+          const func = FilterExpression.filter<any>(({ e }) =>
             e().startsWith('CompanyName', '/3/')
           );
 
@@ -267,7 +267,7 @@ describe('OData filter builder', () => {
 
         it('length', () => {
           const s = Field.factory<Person>();
-          const func = Expression.filter<any>(({ e, f }) =>
+          const func = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.length(s.Car!.Year), 19)
           );
 
@@ -275,7 +275,7 @@ describe('OData filter builder', () => {
         });
 
         it('toTower', () => {
-          const func = Expression.filter<any>(({ e, f }) =>
+          const func = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.toLower('CompanyName'), 'alfreds futterkiste')
           );
 
@@ -285,7 +285,7 @@ describe('OData filter builder', () => {
         });
 
         it('toUpper', () => {
-          const func = Expression.filter<any>(({ e, f }) =>
+          const func = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.toUpper('CompanyName'), 'ALFREDS FUTTERKISTE')
           );
 
@@ -295,7 +295,7 @@ describe('OData filter builder', () => {
         });
 
         it('trim', () => {
-          const func = Expression.filter<any>(({ e, f }) =>
+          const func = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.trim('CompanyName'), 'CompanyName', false)
           );
 
@@ -303,7 +303,7 @@ describe('OData filter builder', () => {
         });
 
         it('indexOf', () => {
-          const func1 = Expression.filter<any>(({ e, f }) =>
+          const func1 = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.indexOf('CompanyName', 'lfreds'), 1)
           );
           const expectedString = "indexof(CompanyName, 'lfreds') eq 1";
@@ -312,13 +312,13 @@ describe('OData filter builder', () => {
         });
 
         it('substring', () => {
-          const func1 = Expression.filter<any>(({ e, f }) =>
+          const func1 = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.subString('CompanyName', 1), 'lfreds Futterkiste')
           );
           const expectedString1 =
             "substring(CompanyName, 1) eq 'lfreds Futterkiste'";
 
-          const func3 = Expression.filter<any>(({ e, f }) =>
+          const func3 = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(f.subString('CompanyName', 1, 2), 'lf')
           );
           const expectedString2 = "substring(CompanyName, 1, 2) eq 'lf'";
@@ -332,7 +332,7 @@ describe('OData filter builder', () => {
         // * f().eq(x => x.substring('CompanyName', 1), 'lfreds Futterkiste');
 
         it('concat', () => {
-          const func = Expression.filter<any>(({ e, f }) =>
+          const func = FilterExpression.filter<any>(({ e, f }) =>
             e().eq(
               f.concat(f.concat('City', ', '), 'Country', false),
               'Berlin, Germany'

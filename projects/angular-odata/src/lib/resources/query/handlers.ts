@@ -1,7 +1,12 @@
 import { QueryOptionNames } from '../../types';
 import { Objects, Types } from '../../utils';
 import { alias, Expand, Filter, OrderBy, Select, Transform } from './builder';
-import { Connector, Expression } from './expressions';
+import {
+  ComputeExpression,
+  Connector,
+  FilterExpression,
+  OrderByExpression,
+} from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 import { ODataFunctions, ODataOperators } from './syntax';
 
@@ -130,16 +135,26 @@ export class ODataQueryOptionsHandler<T> {
   /**
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    */
-  compute(opts: (e: { e: Expression<T> }) => Expression<T>): Expression<T>;
+  compute(
+    opts: (e: {
+      s: T;
+      e: () => ComputeExpression<T>;
+      o: ODataOperators<T>;
+      f: ODataFunctions<T>;
+    }) => ComputeExpression<T>
+  ): ComputeExpression<T>;
   compute(opts: string): ODataQueryOptionHandler<T>;
   compute(): ODataQueryOptionHandler<T>;
   compute(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.expression(
+      return this.options.renderable(
         QueryOptionNames.compute,
         opts({
-          e: () => Expression.e<T>(),
-        }) as Expression<T>
+          s: ComputeExpression.s<any>() as T,
+          e: ComputeExpression.e,
+          o: ComputeExpression.o<T>(),
+          f: ComputeExpression.f<T>(),
+        }) as ComputeExpression<T>
       );
     }
     return this.options.option<string>(QueryOptionNames.compute, opts);
@@ -169,43 +184,41 @@ export class ODataQueryOptionsHandler<T> {
   filter(
     opts: (e: {
       s: T;
-      e: (connector?: Connector) => Expression<T>;
+      e: (connector?: Connector) => FilterExpression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
-    }) => Expression<T>
-  ): Expression<T>;
+    }) => FilterExpression<T>
+  ): FilterExpression<T>;
   filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
   filter(): ODataQueryOptionHandler<T>;
   filter(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.expression(
+      return this.options.renderable(
         QueryOptionNames.filter,
         opts({
-          s: Expression.s<any>() as T,
-          e: Expression.e,
-          o: Expression.o<T>(),
-          f: Expression.f<T>(),
-        }) as Expression<T>
+          s: FilterExpression.s<any>() as T,
+          e: FilterExpression.e,
+          o: FilterExpression.o<T>(),
+          f: FilterExpression.f<T>(),
+        }) as FilterExpression<T>
       );
     }
     return this.options.option<Filter<T>>(QueryOptionNames.filter, opts);
   }
 
   orderBy(
-    opts: (e: {
-      e: () => Expression<T>;
-      not: (e: Expression<T>) => Expression<T>;
-    }) => Expression<T>
-  ): Expression<T>;
+    opts: (e: { s: T; e: () => OrderByExpression<T> }) => OrderByExpression<T>
+  ): OrderByExpression<T>;
   orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
   orderBy(): ODataQueryOptionHandler<T>;
   orderBy(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.expression(
+      return this.options.renderable(
         QueryOptionNames.orderBy,
         opts({
-          e: () => Expression.e<T>(),
-        }) as Expression<T>
+          s: OrderByExpression.s<any>() as T,
+          e: () => OrderByExpression.e<T>(),
+        }) as OrderByExpression<T>
       );
     }
     return this.options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);

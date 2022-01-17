@@ -9,8 +9,8 @@ import {
   Select,
   Transform,
 } from './builder';
-import { Expression } from './expressions';
 import { ODataQueryOptionHandler } from './handlers';
+import { Renderable } from './syntax';
 
 export type ODataQueryArguments<T> = {
   [QueryOptionNames.select]?: Select<T>;
@@ -52,7 +52,7 @@ export class ODataQueryOptions<T> {
       .filter((key) => !Types.isEmpty(this.options[key]))
       .reduce((acc, key) => {
         let value = this.options[key];
-        if (Types.rawType(value) === 'Expression') {
+        if (Types.rawType(value) === 'FilterExpression') {
           value = value.render(aliases);
         }
         return Object.assign(acc, { [key]: value });
@@ -75,7 +75,7 @@ export class ODataQueryOptions<T> {
   toJSON() {
     return Object.keys(this.options).reduce((acc, key) => {
       let value = this.options[key];
-      if (Types.rawType(value) === 'Expression') {
+      if (Types.rawType(value) === 'FilterExpression') {
         value = value.toJSON();
       }
       return Object.assign(acc, { [key]: value });
@@ -100,7 +100,7 @@ export class ODataQueryOptions<T> {
   clone<O>() {
     const options = Object.keys(this.options).reduce((acc, key) => {
       let value = this.options[key];
-      if (Types.rawType(value) !== 'Expression') {
+      if (Types.rawType(value) !== 'FilterExpression') {
         value = Objects.clone(value);
       }
       return Object.assign(acc, { [key]: value });
@@ -108,8 +108,8 @@ export class ODataQueryOptions<T> {
     return new ODataQueryOptions<O>(options);
   }
 
-  // Set Expression
-  expression(name: QueryOptionNames, exp: Expression<T>) {
+  // Set Renderable
+  renderable(name: QueryOptionNames, exp: Renderable) {
     return (this.options[name] = exp);
   }
 

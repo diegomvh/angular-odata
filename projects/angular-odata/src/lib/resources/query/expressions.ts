@@ -10,8 +10,9 @@ import {
 import { syntax } from './syntax';
 
 export type Connector = 'and' | 'or';
+export type Order = 'asc' | 'desc';
 
-export class Expression<T> implements Renderable {
+export class FilterExpression<T> implements Renderable {
   private _connector: Connector;
   private _negated: boolean;
   private _children: Renderable[];
@@ -30,7 +31,7 @@ export class Expression<T> implements Renderable {
   }
 
   get [Symbol.toStringTag]() {
-    return 'Expression';
+    return 'FilterExpression';
   }
 
   static s<T extends object>(): T {
@@ -38,7 +39,7 @@ export class Expression<T> implements Renderable {
   }
 
   static e<T>(connector: Connector = 'and') {
-    return new Expression<T>({ connector });
+    return new FilterExpression<T>({ connector });
   }
 
   static o<T>(): ODataOperators<T> {
@@ -52,17 +53,17 @@ export class Expression<T> implements Renderable {
   static filter<T extends object>(
     opts: (e: {
       s: T;
-      e: (connector?: Connector) => Expression<T>;
+      e: (connector?: Connector) => FilterExpression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
-    }) => Expression<T>
-  ): Expression<T> {
+    }) => FilterExpression<T>
+  ): FilterExpression<T> {
     return opts({
-      s: Expression.s<T>(),
-      e: Expression.e,
-      o: Expression.o<T>(),
-      f: Expression.f<T>(),
-    }) as Expression<T>;
+      s: FilterExpression.s<T>(),
+      e: FilterExpression.e,
+      o: FilterExpression.o<T>(),
+      f: FilterExpression.f<T>(),
+    }) as FilterExpression<T>;
   }
 
   toJSON() {
@@ -107,14 +108,14 @@ export class Expression<T> implements Renderable {
     return content;
   }
 
-  private _add(node: Renderable, connector?: Connector): Expression<T> {
+  private _add(node: Renderable, connector?: Connector): FilterExpression<T> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
       if (this._children.length > 0) {
         if (this._children.length === 1) {
           children = [...this._children];
         } else {
-          let exp = new Expression<T>({
+          let exp = new FilterExpression<T>({
             children: this._children,
             connector: this._connector,
             negated: this._negated,
@@ -127,7 +128,7 @@ export class Expression<T> implements Renderable {
         }
       }
       if (
-        node instanceof Expression &&
+        node instanceof FilterExpression &&
         (node.connector() === connector || node.length() === 1)
       ) {
         children = [...children, ...node.children()];
@@ -137,14 +138,14 @@ export class Expression<T> implements Renderable {
       this._connector = connector;
       this._children = children;
     } else if (
-      node instanceof Expression &&
+      node instanceof FilterExpression &&
       !node.negated() &&
       (node.connector() === connector || node.length() === 1)
     ) {
       this._children = [...this._children, ...node.children()];
     } else {
       this._children.push(
-        node instanceof Expression && !node.negated()
+        node instanceof FilterExpression && !node.negated()
           ? syntax.grouping(node)
           : node
       );
@@ -152,16 +153,16 @@ export class Expression<T> implements Renderable {
     return this;
   }
 
-  or(exp: Expression<T>): Expression<T> {
+  or(exp: FilterExpression<T>): FilterExpression<T> {
     return this._add(exp, 'or');
   }
 
-  and(exp: Expression<T>): Expression<T> {
+  and(exp: FilterExpression<T>): FilterExpression<T> {
     return this._add(exp, 'and');
   }
 
-  not(exp: Expression<T>): Expression<T> {
-    const notExp = new Expression<T>({
+  not(exp: FilterExpression<T>): FilterExpression<T> {
+    const notExp = new FilterExpression<T>({
       children: exp.children(),
       connector: exp.connector(),
       negated: true,
@@ -218,14 +219,14 @@ export class Expression<T> implements Renderable {
     left: N[],
     opts: (e: {
       s: N;
-      e: (connector?: Connector) => Expression<N>;
-    }) => Expression<N>,
+      e: (connector?: Connector) => FilterExpression<N>;
+    }) => FilterExpression<N>,
     alias?: string
-  ): Expression<T> {
+  ): FilterExpression<T> {
     const exp = opts({
       s: Field.factory<N>(),
-      e: Expression.e,
-    }) as Expression<N>;
+      e: FilterExpression.e,
+    }) as FilterExpression<N>;
     return this._add(syntax.any(left, exp, alias));
   }
 
@@ -233,60 +234,134 @@ export class Expression<T> implements Renderable {
     left: N[],
     opts: (e: {
       s: N;
-      e: (connector?: Connector) => Expression<N>;
-    }) => Expression<N>,
+      e: (connector?: Connector) => FilterExpression<N>;
+    }) => FilterExpression<N>,
     alias?: string
-  ): Expression<T> {
+  ): FilterExpression<T> {
     const exp = opts({
       s: Field.factory<N>(),
-      e: Expression.e,
-    }) as Expression<N>;
+      e: FilterExpression.e,
+    }) as FilterExpression<N>;
     return this._add(syntax.all(left, exp, alias));
   }
 
-  isof(type: string): Expression<T>;
-  isof(left: T, type: string): Expression<T>;
-  isof(left: any, type?: string): Expression<T> {
+  isof(type: string): FilterExpression<T>;
+  isof(left: T, type: string): FilterExpression<T>;
+  isof(left: any, type?: string): FilterExpression<T> {
     return this._add(syntax.isof(left, type));
   }
 }
 
-/*
-export class FilterExpression<T> extends Expression<T> {
+export class OrderByExpression<T> implements Renderable {
+  private _children: Renderable[];
   constructor({
     children,
-    connector,
-    negated,
   }: {
     children?: Renderable[];
-    connector?: Connector;
-    negated?: boolean;
   } = {}) {
-    super({ children, connector, negated });
-  }
-
-  get [Symbol.toStringTag]() {
-    return 'FilterExpression';
+    this._children = children || [];
   }
 
   static e<T>() {
-    return new FilterExpression<T>({ connector: Connector.AND });
+    return new OrderByExpression<T>();
   }
 
-  static and<T>() {
-    return new FilterExpression<T>({ connector: Connector.AND });
+  static s<T extends object>(): T {
+    return Field.factory<T>();
   }
 
-  static or<T>() {
-    return new FilterExpression<T>({ connector: Connector.OR });
+  get [Symbol.toStringTag]() {
+    return 'OrderByExpression';
   }
 
-  static not<T>(exp: FilterExpression<T>) {
-    return new FilterExpression<T>({
-      children: exp.children(),
-      connector: exp.connector(),
-      negated: true,
-    });
+  private _add(field: Renderable, order?: Order): OrderByExpression<T> {
+    return this;
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[] | undefined;
+    escape?: boolean | undefined;
+    prefix?: string | undefined;
+  } = {}): string {
+    let content = this._children
+      .map((n) => n.render({ aliases, escape, prefix }))
+      .join(`,`);
+    return content;
+  }
+
+  toJSON() {
+    return {
+      children: this._children.map((c) => c.toJSON()),
+    };
+  }
+
+  ascending(field: any) {
+    return this._add(field, 'asc');
+  }
+
+  descending(field: any) {
+    return this._add(field, 'desc');
   }
 }
-*/
+
+export class ComputeExpression<T> implements Renderable {
+  private _children: Renderable[];
+  constructor({
+    children,
+  }: {
+    children?: Renderable[];
+  } = {}) {
+    this._children = children || [];
+  }
+
+  static e<T>() {
+    return new ComputeExpression<T>();
+  }
+
+  static s<T extends object>(): T {
+    return Field.factory<T>();
+  }
+
+  static o<T>(): ODataOperators<T> {
+    return operators;
+  }
+
+  static f<T>(): ODataFunctions<T> {
+    return functions;
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'ComputeExpression';
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[] | undefined;
+    escape?: boolean | undefined;
+    prefix?: string | undefined;
+  } = {}): string {
+    let content = this._children
+      .map((n) => n.render({ aliases, escape, prefix }))
+      .join(`,`);
+    return content;
+  }
+
+  toJSON() {
+    throw new Error('Method not implemented.');
+  }
+
+  private _add(node: Renderable, name: string): ComputeExpression<T> {
+    return this;
+  }
+
+  compute(value: any, name: string) {
+    return this._add(value, name);
+  }
+}
