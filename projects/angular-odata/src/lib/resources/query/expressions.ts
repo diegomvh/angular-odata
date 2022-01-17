@@ -9,11 +9,11 @@ import {
 } from './syntax';
 import { syntax } from './syntax';
 
-export type Connector = 'and' | 'or';
-export type Order = 'asc' | 'desc';
+export type FilterConnector = 'and' | 'or';
+export type SearchConnector = 'AND' | 'OR';
 
 export class FilterExpression<T> implements Renderable {
-  private _connector: Connector;
+  private _connector: FilterConnector;
   private _negated: boolean;
   private _children: Renderable[];
   constructor({
@@ -22,7 +22,7 @@ export class FilterExpression<T> implements Renderable {
     negated,
   }: {
     children?: Renderable[];
-    connector?: Connector;
+    connector?: FilterConnector;
     negated?: boolean;
   } = {}) {
     this._children = children || [];
@@ -38,7 +38,7 @@ export class FilterExpression<T> implements Renderable {
     return Field.factory<T>();
   }
 
-  static e<T>(connector: Connector = 'and') {
+  static e<T>(connector: FilterConnector = 'and') {
     return new FilterExpression<T>({ connector });
   }
 
@@ -53,7 +53,7 @@ export class FilterExpression<T> implements Renderable {
   static filter<T extends object>(
     opts: (e: {
       s: T;
-      e: (connector?: Connector) => FilterExpression<T>;
+      e: (connector?: FilterConnector) => FilterExpression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
     }) => FilterExpression<T>
@@ -108,7 +108,10 @@ export class FilterExpression<T> implements Renderable {
     return content;
   }
 
-  private _add(node: Renderable, connector?: Connector): FilterExpression<T> {
+  private _add(
+    node: Renderable,
+    connector?: FilterConnector
+  ): FilterExpression<T> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
       if (this._children.length > 0) {
@@ -219,7 +222,7 @@ export class FilterExpression<T> implements Renderable {
     left: N[],
     opts: (e: {
       s: N;
-      e: (connector?: Connector) => FilterExpression<N>;
+      e: (connector?: FilterConnector) => FilterExpression<N>;
     }) => FilterExpression<N>,
     alias?: string
   ): FilterExpression<T> {
@@ -234,7 +237,7 @@ export class FilterExpression<T> implements Renderable {
     left: N[],
     opts: (e: {
       s: N;
-      e: (connector?: Connector) => FilterExpression<N>;
+      e: (connector?: FilterConnector) => FilterExpression<N>;
     }) => FilterExpression<N>,
     alias?: string
   ): FilterExpression<T> {
@@ -274,7 +277,10 @@ export class OrderByExpression<T> implements Renderable {
     return 'OrderByExpression';
   }
 
-  private _add(field: Renderable, order?: Order): OrderByExpression<T> {
+  private _add(
+    field: Renderable,
+    order?: 'asc' | 'desc'
+  ): OrderByExpression<T> {
     return this;
   }
 
@@ -354,7 +360,9 @@ export class ComputeExpression<T> implements Renderable {
   }
 
   toJSON() {
-    throw new Error('Method not implemented.');
+    return {
+      children: this._children.map((c) => c.toJSON()),
+    };
   }
 
   private _add(node: Renderable, name: string): ComputeExpression<T> {
@@ -363,5 +371,61 @@ export class ComputeExpression<T> implements Renderable {
 
   compute(value: any, name: string) {
     return this._add(value, name);
+  }
+}
+
+export class SearchExpression<T> implements Renderable {
+  private _connector: SearchConnector;
+  private _children: Renderable[];
+  constructor({
+    children,
+    connector,
+  }: {
+    children?: Renderable[];
+    connector?: SearchConnector;
+  } = {}) {
+    this._children = children || [];
+    this._connector = connector || 'AND';
+  }
+
+  static e<T>() {
+    return new OrderByExpression<T>();
+  }
+
+  static s<T extends object>(): T {
+    return Field.factory<T>();
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'SearchExpression';
+  }
+
+  private _add(
+    field: Renderable,
+    order?: SearchConnector
+  ): SearchExpression<T> {
+    return this;
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[] | undefined;
+    escape?: boolean | undefined;
+    prefix?: string | undefined;
+  } = {}): string {
+    let content = this._children
+      .map((n) => n.render({ aliases, escape, prefix }))
+      .join(` ${this._connector} `);
+    return content;
+  }
+
+  toJSON() {
+    return {
+      children: this._children.map((c) => c.toJSON()),
+      connector: this._connector,
+    };
   }
 }

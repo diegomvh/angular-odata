@@ -3,9 +3,10 @@ import { Objects, Types } from '../../utils';
 import { alias, Expand, Filter, OrderBy, Select, Transform } from './builder';
 import {
   ComputeExpression,
-  Connector,
+  FilterConnector,
   FilterExpression,
   OrderByExpression,
+  SearchExpression,
 } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 import { ODataFunctions, ODataOperators } from './syntax';
@@ -175,16 +176,28 @@ export class ODataQueryOptionsHandler<T> {
     return this.options.option<Transform<T>>(QueryOptionNames.transform, opts);
   }
 
-  search(opts: string): ODataQueryOptionHandler<T>;
+  search(
+    opts: (e: { s: T; e: () => SearchExpression<T> }) => SearchExpression<T>
+  ): SearchExpression<T>;
+  search(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
   search(): ODataQueryOptionHandler<T>;
-  search(opts?: string): any {
+  search(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.renderable(
+        QueryOptionNames.search,
+        opts({
+          s: SearchExpression.s<any>() as T,
+          e: () => SearchExpression.e<T>(),
+        }) as SearchExpression<T>
+      );
+    }
     return this.options.option<string>(QueryOptionNames.search, opts);
   }
 
   filter(
     opts: (e: {
       s: T;
-      e: (connector?: Connector) => FilterExpression<T>;
+      e: (connector?: FilterConnector) => FilterExpression<T>;
       o: ODataOperators<T>;
       f: ODataFunctions<T>;
     }) => FilterExpression<T>
