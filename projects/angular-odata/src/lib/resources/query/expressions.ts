@@ -298,6 +298,15 @@ export class OrderByExpression<T> extends Expression<T> {
     return Field.factory<T>();
   }
 
+  static orderBy<T extends object>(
+    opts: (e: { s: T; e: () => OrderByExpression<T> }) => OrderByExpression<T>
+  ): OrderByExpression<T> {
+    return opts({
+      s: OrderByExpression.s<T>(),
+      e: OrderByExpression.e,
+    }) as OrderByExpression<T>;
+  }
+
   private _add(
     field: Renderable,
     order?: 'asc' | 'desc'
