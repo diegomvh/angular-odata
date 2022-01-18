@@ -52,7 +52,7 @@ export class ODataQueryOptions<T> {
       .filter((key) => !Types.isEmpty(this.options[key]))
       .reduce((acc, key) => {
         let value = this.options[key];
-        if (Types.rawType(value) === 'FilterExpression') {
+        if (Types.rawType(value) === 'Expression') {
           value = value.render(aliases);
         }
         return Object.assign(acc, { [key]: value });
@@ -75,7 +75,7 @@ export class ODataQueryOptions<T> {
   toJSON() {
     return Object.keys(this.options).reduce((acc, key) => {
       let value = this.options[key];
-      if (Types.rawType(value) === 'FilterExpression') {
+      if (Types.rawType(value) === 'Expression') {
         value = value.toJSON();
       }
       return Object.assign(acc, { [key]: value });
@@ -100,7 +100,7 @@ export class ODataQueryOptions<T> {
   clone<O>() {
     const options = Object.keys(this.options).reduce((acc, key) => {
       let value = this.options[key];
-      if (Types.rawType(value) !== 'FilterExpression') {
+      if (Types.rawType(value) !== 'Expression') {
         value = Objects.clone(value);
       }
       return Object.assign(acc, { [key]: value });

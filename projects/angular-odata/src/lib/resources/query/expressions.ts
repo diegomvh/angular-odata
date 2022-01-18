@@ -12,10 +12,48 @@ import { syntax } from './syntax';
 export type FilterConnector = 'and' | 'or';
 export type SearchConnector = 'AND' | 'OR';
 
-export class FilterExpression<T> implements Renderable {
+export abstract class Expression<T> implements Renderable {
+  protected _children: Renderable[];
+  constructor({
+    children,
+  }: {
+    children?: Renderable[];
+  } = {}) {
+    this._children = children || [];
+  }
+
+  get [Symbol.toStringTag]() {
+    return 'Expression';
+  }
+
+  abstract render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[] | undefined;
+    escape?: boolean | undefined;
+    prefix?: string | undefined;
+  }): string;
+
+  children() {
+    return this._children;
+  }
+
+  length() {
+    return this._children.length;
+  }
+
+  toJSON() {
+    return {
+      children: this._children.map((c) => c.toJSON()),
+    };
+  }
+}
+
+export class FilterExpression<T> extends Expression<T> {
   private _connector: FilterConnector;
   private _negated: boolean;
-  private _children: Renderable[];
   constructor({
     children,
     connector,
@@ -25,13 +63,9 @@ export class FilterExpression<T> implements Renderable {
     connector?: FilterConnector;
     negated?: boolean;
   } = {}) {
-    this._children = children || [];
+    super({ children });
     this._connector = connector || 'and';
     this._negated = negated || false;
-  }
-
-  get [Symbol.toStringTag]() {
-    return 'FilterExpression';
   }
 
   static s<T extends object>(): T {
@@ -66,16 +100,12 @@ export class FilterExpression<T> implements Renderable {
     }) as FilterExpression<T>;
   }
 
-  toJSON() {
+  override toJSON() {
     return {
       children: this._children.map((c) => c.toJSON()),
       connector: this._connector,
       negated: this._negated,
     };
-  }
-
-  children() {
-    return this._children;
   }
 
   connector() {
@@ -84,10 +114,6 @@ export class FilterExpression<T> implements Renderable {
 
   negated() {
     return this._negated;
-  }
-
-  length() {
-    return this._children.length;
   }
 
   render({
@@ -255,14 +281,13 @@ export class FilterExpression<T> implements Renderable {
   }
 }
 
-export class OrderByExpression<T> implements Renderable {
-  private _children: Renderable[];
+export class OrderByExpression<T> extends Expression<T> {
   constructor({
     children,
   }: {
     children?: Renderable[];
   } = {}) {
-    this._children = children || [];
+    super({ children });
   }
 
   static e<T>() {
@@ -271,10 +296,6 @@ export class OrderByExpression<T> implements Renderable {
 
   static s<T extends object>(): T {
     return Field.factory<T>();
-  }
-
-  get [Symbol.toStringTag]() {
-    return 'OrderByExpression';
   }
 
   private _add(
@@ -299,12 +320,6 @@ export class OrderByExpression<T> implements Renderable {
     return content;
   }
 
-  toJSON() {
-    return {
-      children: this._children.map((c) => c.toJSON()),
-    };
-  }
-
   ascending(field: any) {
     return this._add(field, 'asc');
   }
@@ -314,14 +329,13 @@ export class OrderByExpression<T> implements Renderable {
   }
 }
 
-export class ComputeExpression<T> implements Renderable {
-  private _children: Renderable[];
+export class ComputeExpression<T> extends Expression<T> {
   constructor({
     children,
   }: {
     children?: Renderable[];
   } = {}) {
-    this._children = children || [];
+    super({ children });
   }
 
   static e<T>() {
@@ -340,10 +354,6 @@ export class ComputeExpression<T> implements Renderable {
     return functions;
   }
 
-  get [Symbol.toStringTag]() {
-    return 'ComputeExpression';
-  }
-
   render({
     aliases,
     escape,
@@ -359,12 +369,6 @@ export class ComputeExpression<T> implements Renderable {
     return content;
   }
 
-  toJSON() {
-    return {
-      children: this._children.map((c) => c.toJSON()),
-    };
-  }
-
   private _add(node: Renderable, name: string): ComputeExpression<T> {
     return this;
   }
@@ -374,9 +378,8 @@ export class ComputeExpression<T> implements Renderable {
   }
 }
 
-export class SearchExpression<T> implements Renderable {
+export class SearchExpression<T> extends Expression<T> {
   private _connector: SearchConnector;
-  private _children: Renderable[];
   constructor({
     children,
     connector,
@@ -384,7 +387,7 @@ export class SearchExpression<T> implements Renderable {
     children?: Renderable[];
     connector?: SearchConnector;
   } = {}) {
-    this._children = children || [];
+    super({ children });
     this._connector = connector || 'AND';
   }
 
@@ -394,10 +397,6 @@ export class SearchExpression<T> implements Renderable {
 
   static s<T extends object>(): T {
     return Field.factory<T>();
-  }
-
-  get [Symbol.toStringTag]() {
-    return 'SearchExpression';
   }
 
   private _add(
@@ -422,7 +421,7 @@ export class SearchExpression<T> implements Renderable {
     return content;
   }
 
-  toJSON() {
+  override toJSON() {
     return {
       children: this._children.map((c) => c.toJSON()),
       connector: this._connector,
