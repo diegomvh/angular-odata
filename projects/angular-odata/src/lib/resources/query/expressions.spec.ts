@@ -403,7 +403,7 @@ describe('OData orderBy builder', () => {
           e().ascending(s.Age).descending(s.CreatedOn)
         );
 
-        expect(compare.render()).toBe('Age asc,CreateOn desc');
+        expect(compare.render()).toBe('Age asc,CreatedOn desc');
       });
     });
 

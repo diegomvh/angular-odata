@@ -9,7 +9,7 @@ import {
   SearchExpression,
 } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
-import { ODataFunctions, ODataOperators } from './syntax';
+import { functions, ODataFunctions, ODataOperators, operators } from './syntax';
 
 export class ODataQueryOptionHandler<T> {
   constructor(
@@ -211,8 +211,8 @@ export class ODataQueryOptionsHandler<T> {
         opts({
           s: FilterExpression.s<any>() as T,
           e: FilterExpression.e,
-          o: FilterExpression.o<T>(),
-          f: FilterExpression.f<T>(),
+          o: operators as ODataOperators<T>,
+          f: functions as ODataFunctions<T>,
         }) as FilterExpression<T>
       );
     }

@@ -15,11 +15,6 @@ export interface Renderable {
   toJSON(): any;
 }
 
-export type Funcs<T> = (
-  x: ODataSyntax<T>
-) => Function<T> | Operator<T> | Grouping<T>;
-//export type Field<T> = keyof T | Funcs<keyof T>;
-
 export class Field<T extends object> implements ProxyHandler<T> {
   constructor(public name: string = '') {}
 
@@ -409,18 +404,17 @@ export class Grouping<T> implements Renderable {
   }
 }
 
-/*
-export class Navigation<T, N> implements Renderable {
-  constructor(protected field: T, protected value: Field<N>) {}
+export class OrderBy<T> implements Renderable {
+  constructor(protected field: Renderable, protected order: 'asc' | 'desc') {}
 
   get [Symbol.toStringTag]() {
-    return 'Navigation';
+    return 'OrderBy';
   }
 
   toJSON() {
     return {
-      field: this.field,
-      value: this.value,
+      field: this.field.toJSON(),
+      order: this.order,
     };
   }
 
@@ -433,21 +427,8 @@ export class Navigation<T, N> implements Renderable {
     escape?: boolean;
     prefix?: string;
   }): string {
-    return `${this.field}/${render(this.value, { aliases, escape, prefix })}`;
+    return `${render(this.field, { aliases, escape, prefix })} ${this.order}`;
   }
-}
-*/
-
-export class GroupingOperators<T> {
-  grouping(value: any) {
-    return new Grouping(value);
-  }
-
-  /*
-  navigation<N>(field: T, value: Field<N>) {
-    return new Navigation<T, N>(field, value);
-  }
-  */
 }
 
 export class Lambda<T> implements Renderable {
@@ -504,13 +485,11 @@ export class ODataOperators<T> {}
 export interface ODataOperators<T>
   extends LogicalOperators<T>,
     ArithmeticOperators<T>,
-    GroupingOperators<T>,
     LambdaOperators<T> {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
   ArithmeticOperators,
-  GroupingOperators,
   LambdaOperators,
 ]);
 export const operators: ODataOperators<any> = new ODataOperators<any>();

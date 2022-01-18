@@ -2,9 +2,11 @@ import type { QueryCustomType } from './builder';
 import {
   Field,
   functions,
+  Grouping,
   ODataFunctions,
   ODataOperators,
   operators,
+  OrderBy,
   Renderable,
 } from './syntax';
 import { syntax } from './syntax';
@@ -76,14 +78,6 @@ export class FilterExpression<T> extends Expression<T> {
     return new FilterExpression<T>({ connector });
   }
 
-  static o<T>(): ODataOperators<T> {
-    return operators;
-  }
-
-  static f<T>(): ODataFunctions<T> {
-    return functions;
-  }
-
   static filter<T extends object>(
     opts: (e: {
       s: T;
@@ -95,8 +89,8 @@ export class FilterExpression<T> extends Expression<T> {
     return opts({
       s: FilterExpression.s<T>(),
       e: FilterExpression.e,
-      o: FilterExpression.o<T>(),
-      f: FilterExpression.f<T>(),
+      o: operators as ODataOperators<T>,
+      f: functions as ODataFunctions<T>,
     }) as FilterExpression<T>;
   }
 
@@ -150,7 +144,7 @@ export class FilterExpression<T> extends Expression<T> {
             negated: this._negated,
           });
           if (exp.length() > 1) {
-            children.push(syntax.grouping(exp));
+            children.push(new Grouping(exp));
           } else {
             children.push(exp);
           }
@@ -162,7 +156,7 @@ export class FilterExpression<T> extends Expression<T> {
       ) {
         children = [...children, ...node.children()];
       } else {
-        children.push(syntax.grouping(node));
+        children.push(new Grouping(node));
       }
       this._connector = connector;
       this._children = children;
@@ -175,7 +169,7 @@ export class FilterExpression<T> extends Expression<T> {
     } else {
       this._children.push(
         node instanceof FilterExpression && !node.negated()
-          ? syntax.grouping(node)
+          ? new Grouping(node)
           : node
       );
     }
@@ -307,10 +301,8 @@ export class OrderByExpression<T> extends Expression<T> {
     }) as OrderByExpression<T>;
   }
 
-  private _add(
-    field: Renderable,
-    order?: 'asc' | 'desc'
-  ): OrderByExpression<T> {
+  private _add(orderBy: Renderable): OrderByExpression<T> {
+    this._children.push(orderBy);
     return this;
   }
 
@@ -330,11 +322,11 @@ export class OrderByExpression<T> extends Expression<T> {
   }
 
   ascending(field: any) {
-    return this._add(field, 'asc');
+    return this._add(new OrderBy(field, 'asc'));
   }
 
   descending(field: any) {
-    return this._add(field, 'desc');
+    return this._add(new OrderBy(field, 'desc'));
   }
 }
 
