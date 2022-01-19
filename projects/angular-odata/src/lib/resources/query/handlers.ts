@@ -153,9 +153,9 @@ export class ODataQueryOptionsHandler<T> {
         opts({
           s: ComputeExpression.s<any>() as T,
           e: ComputeExpression.e,
-          o: ComputeExpression.o<T>(),
-          f: ComputeExpression.f<T>(),
-        }) as ComputeExpression<T>
+          o: operators as ODataOperators<T>,
+          f: functions as ODataFunctions<T>,
+        })as ComputeExpression<T>
       );
     }
     return this.options.option<string>(QueryOptionNames.compute, opts);

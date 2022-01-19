@@ -301,8 +301,8 @@ export class OrderByExpression<T> extends Expression<T> {
     }) as OrderByExpression<T>;
   }
 
-  private _add(orderBy: Renderable): OrderByExpression<T> {
-    this._children.push(orderBy);
+  private _add(node: Renderable): OrderByExpression<T> {
+    this._children.push(node);
     return this;
   }
 
@@ -347,14 +347,6 @@ export class ComputeExpression<T> extends Expression<T> {
     return Field.factory<T>();
   }
 
-  static o<T>(): ODataOperators<T> {
-    return operators;
-  }
-
-  static f<T>(): ODataFunctions<T> {
-    return functions;
-  }
-
   render({
     aliases,
     escape,
@@ -370,12 +362,33 @@ export class ComputeExpression<T> extends Expression<T> {
     return content;
   }
 
-  private _add(node: Renderable, name: string): ComputeExpression<T> {
+  private _add(node: Renderable): ComputeExpression<T> {
+    this._children.push(node);
     return this;
   }
 
-  compute(value: any, name: string) {
-    return this._add(value, name);
+  add(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.add(left, right, normalize));
+  }
+
+  sub(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.sub(left, right, normalize));
+  }
+
+  mul(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.mul(left, right, normalize));
+  }
+
+  div(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.div(left, right, normalize));
+  }
+
+  mod(left: any, right: any, normalize?: boolean) {
+    return this._add(operators.mod(left, right, normalize));
+  }
+
+  neg(value: any, normalize?: boolean) {
+    return this._add(operators.neg(value, normalize));
   }
 }
 
@@ -393,7 +406,7 @@ export class SearchExpression<T> extends Expression<T> {
   }
 
   static e<T>() {
-    return new OrderByExpression<T>();
+    return new SearchExpression<T>();
   }
 
   static s<T extends object>(): T {
@@ -402,7 +415,7 @@ export class SearchExpression<T> extends Expression<T> {
 
   private _add(
     field: Renderable,
-    order?: SearchConnector
+    connector?: SearchConnector
   ): SearchExpression<T> {
     return this;
   }
