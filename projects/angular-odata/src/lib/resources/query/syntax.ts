@@ -404,11 +404,11 @@ export class Grouping<T> implements Renderable {
   }
 }
 
-export class OrderBy<T> implements Renderable {
+export class OrderByField implements Renderable {
   constructor(protected field: Renderable, protected order: 'asc' | 'desc') {}
 
   get [Symbol.toStringTag]() {
-    return 'OrderBy';
+    return 'OrderByField';
   }
 
   toJSON() {
@@ -428,6 +428,32 @@ export class OrderBy<T> implements Renderable {
     prefix?: string;
   }): string {
     return `${render(this.field, { aliases, escape, prefix })} ${this.order}`;
+  }
+}
+
+export class SearchTerm implements Renderable {
+  constructor(protected value: string) {}
+
+  get [Symbol.toStringTag]() {
+    return 'SearchTerm';
+  }
+
+  toJSON() {
+    return {
+      value: this.value,
+    };
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+  }): string {
+    return `${render(this.value, { aliases, escape, prefix })}`;
   }
 }
 

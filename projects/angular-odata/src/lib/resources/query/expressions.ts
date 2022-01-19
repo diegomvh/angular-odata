@@ -6,8 +6,9 @@ import {
   ODataFunctions,
   ODataOperators,
   operators,
-  OrderBy,
+  OrderByField,
   Renderable,
+  SearchTerm,
 } from './syntax';
 import { syntax } from './syntax';
 
@@ -322,11 +323,11 @@ export class OrderByExpression<T> extends Expression<T> {
   }
 
   ascending(field: any) {
-    return this._add(new OrderBy(field, 'asc'));
+    return this._add(new OrderByField(field, 'asc'));
   }
 
   descending(field: any) {
-    return this._add(new OrderBy(field, 'desc'));
+    return this._add(new OrderByField(field, 'desc'));
   }
 }
 
@@ -347,6 +348,22 @@ export class ComputeExpression<T> extends Expression<T> {
     return Field.factory<T>();
   }
 
+  static compute<T extends object>(
+    opts: (e: {
+      s: T;
+      e: () => ComputeExpression<T>;
+      o: ODataOperators<T>;
+      f: ODataFunctions<T>;
+    }) => ComputeExpression<T>
+  ): ComputeExpression<T> {
+    return opts({
+      s: ComputeExpression.s<T>(),
+      e: ComputeExpression.e,
+      o: operators as ODataOperators<T>,
+      f: functions as ODataFunctions<T>,
+    }) as ComputeExpression<T>;
+  }
+
   render({
     aliases,
     escape,
@@ -362,61 +379,112 @@ export class ComputeExpression<T> extends Expression<T> {
     return content;
   }
 
-  private _add(node: Renderable): ComputeExpression<T> {
+  private _add(node: Renderable, name: string): ComputeExpression<T> {
     this._children.push(node);
     return this;
   }
 
-  add(left: any, right: any, normalize?: boolean) {
-    return this._add(operators.add(left, right, normalize));
+  add(left: any, right: any, name: string, normalize?: boolean) {
+    return this._add(operators.add(left, right, normalize), name);
   }
 
-  sub(left: any, right: any, normalize?: boolean) {
-    return this._add(operators.sub(left, right, normalize));
+  sub(left: any, right: any, name: string, normalize?: boolean) {
+    return this._add(operators.sub(left, right, normalize), name);
   }
 
-  mul(left: any, right: any, normalize?: boolean) {
-    return this._add(operators.mul(left, right, normalize));
+  mul(left: any, right: any, name: string, normalize?: boolean) {
+    return this._add(operators.mul(left, right, normalize), name);
   }
 
-  div(left: any, right: any, normalize?: boolean) {
-    return this._add(operators.div(left, right, normalize));
+  div(left: any, right: any, name: string, normalize?: boolean) {
+    return this._add(operators.div(left, right, normalize), name);
   }
 
-  mod(left: any, right: any, normalize?: boolean) {
-    return this._add(operators.mod(left, right, normalize));
+  mod(left: any, right: any, name: string, normalize?: boolean) {
+    return this._add(operators.mod(left, right, normalize), name);
   }
 
-  neg(value: any, normalize?: boolean) {
-    return this._add(operators.neg(value, normalize));
+  neg(value: any, name: string, normalize?: boolean) {
+    return this._add(operators.neg(value, normalize), name);
   }
 }
 
 export class SearchExpression<T> extends Expression<T> {
   private _connector: SearchConnector;
+  private _negated: boolean;
   constructor({
     children,
     connector,
+    negated,
   }: {
     children?: Renderable[];
     connector?: SearchConnector;
+    negated?: boolean;
   } = {}) {
     super({ children });
     this._connector = connector || 'AND';
+    this._negated = negated || false;
   }
 
-  static e<T>() {
-    return new SearchExpression<T>();
+  static e<T>(connector: SearchConnector = 'AND') {
+    return new SearchExpression<T>({ connector });
   }
 
-  static s<T extends object>(): T {
-    return Field.factory<T>();
+  static search<T extends object>(
+    opts: (e: {
+      e: (connector?: SearchConnector) => SearchExpression<T>;
+    }) => SearchExpression<T>
+  ): SearchExpression<T> {
+    return opts({
+      e: SearchExpression.e,
+    }) as SearchExpression<T>;
   }
 
   private _add(
-    field: Renderable,
+    node: Renderable,
     connector?: SearchConnector
   ): SearchExpression<T> {
+    if (connector !== undefined && this._connector !== connector) {
+      let children: Renderable[] = [];
+      if (this._children.length > 0) {
+        if (this._children.length === 1) {
+          children = [...this._children];
+        } else {
+          let exp = new SearchExpression<T>({
+            children: this._children,
+            connector: this._connector,
+            negated: this._negated,
+          });
+          if (exp.length() > 1) {
+            children.push(new Grouping(exp));
+          } else {
+            children.push(exp);
+          }
+        }
+      }
+      if (
+        node instanceof SearchExpression &&
+        (node.connector() === connector || node.length() === 1)
+      ) {
+        children = [...children, ...node.children()];
+      } else {
+        children.push(new Grouping(node));
+      }
+      this._connector = connector;
+      this._children = children;
+    } else if (
+      node instanceof SearchExpression &&
+      !node.negated() &&
+      (node.connector() === connector || node.length() === 1)
+    ) {
+      this._children = [...this._children, ...node.children()];
+    } else {
+      this._children.push(
+        node instanceof SearchExpression && !node.negated()
+          ? new Grouping(node)
+          : node
+      );
+    }
     return this;
   }
 
@@ -439,6 +507,37 @@ export class SearchExpression<T> extends Expression<T> {
     return {
       children: this._children.map((c) => c.toJSON()),
       connector: this._connector,
+      negated: this._negated,
     };
+  }
+
+  connector() {
+    return this._connector;
+  }
+
+  negated() {
+    return this._negated;
+  }
+
+  or(exp: SearchExpression<T>): SearchExpression<T> {
+    return this._add(exp, 'OR');
+  }
+
+  and(exp: SearchExpression<T>): SearchExpression<T> {
+    return this._add(exp, 'AND');
+  }
+
+  not(exp: SearchExpression<T>): SearchExpression<T> {
+    const notExp = new SearchExpression<T>({
+      children: exp.children(),
+      connector: exp.connector(),
+      negated: true,
+    });
+
+    return this._add(notExp, this._connector);
+  }
+
+  term(value: any) {
+    return this._add(new SearchTerm(value));
   }
 }

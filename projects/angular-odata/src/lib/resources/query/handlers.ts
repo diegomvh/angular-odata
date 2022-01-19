@@ -6,6 +6,7 @@ import {
   FilterConnector,
   FilterExpression,
   OrderByExpression,
+  SearchConnector,
   SearchExpression,
 } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
@@ -155,7 +156,7 @@ export class ODataQueryOptionsHandler<T> {
           e: ComputeExpression.e,
           o: operators as ODataOperators<T>,
           f: functions as ODataFunctions<T>,
-        })as ComputeExpression<T>
+        }) as ComputeExpression<T>
       );
     }
     return this.options.option<string>(QueryOptionNames.compute, opts);
@@ -177,17 +178,18 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   search(
-    opts: (e: { s: T; e: () => SearchExpression<T> }) => SearchExpression<T>
+    opts: (e: {
+      e: (connector: SearchConnector) => SearchExpression<T>;
+    }) => SearchExpression<T>
   ): SearchExpression<T>;
-  search(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
+  search(opts: string): ODataQueryOptionHandler<T>;
   search(): ODataQueryOptionHandler<T>;
   search(opts?: any): any {
     if (Types.isFunction(opts)) {
       return this.options.renderable(
         QueryOptionNames.search,
         opts({
-          s: SearchExpression.s<any>() as T,
-          e: () => SearchExpression.e<T>(),
+          e: SearchExpression.e,
         }) as SearchExpression<T>
       );
     }
