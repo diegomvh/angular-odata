@@ -349,18 +349,11 @@ export class ComputeExpression<T> extends Expression<T> {
   }
 
   static compute<T extends object>(
-    opts: (e: {
-      s: T;
-      e: () => ComputeExpression<T>;
-      o: ODataOperators<T>;
-      f: ODataFunctions<T>;
-    }) => ComputeExpression<T>
+    opts: (e: { s: T; e: () => ComputeExpression<T> }) => ComputeExpression<T>
   ): ComputeExpression<T> {
     return opts({
       s: ComputeExpression.s<T>(),
       e: ComputeExpression.e,
-      o: operators as ODataOperators<T>,
-      f: functions as ODataFunctions<T>,
     }) as ComputeExpression<T>;
   }
 
@@ -384,28 +377,15 @@ export class ComputeExpression<T> extends Expression<T> {
     return this;
   }
 
-  add(left: any, right: any, name: string, normalize?: boolean) {
-    return this._add(operators.add(left, right, normalize), name);
-  }
-
-  sub(left: any, right: any, name: string, normalize?: boolean) {
-    return this._add(operators.sub(left, right, normalize), name);
-  }
-
-  mul(left: any, right: any, name: string, normalize?: boolean) {
-    return this._add(operators.mul(left, right, normalize), name);
-  }
-
-  div(left: any, right: any, name: string, normalize?: boolean) {
-    return this._add(operators.div(left, right, normalize), name);
-  }
-
-  mod(left: any, right: any, name: string, normalize?: boolean) {
-    return this._add(operators.mod(left, right, normalize), name);
-  }
-
-  neg(value: any, name: string, normalize?: boolean) {
-    return this._add(operators.neg(value, normalize), name);
+  compute<T extends object>(
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
+    name: string
+  ): ComputeExpression<T> {
+    const node = opts({
+      o: operators as ODataOperators<T>,
+      f: functions as ODataFunctions<T>,
+    });
+    return this._add(node, name);
   }
 }
 

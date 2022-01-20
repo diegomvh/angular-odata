@@ -9,8 +9,8 @@ import {
   Select,
   Transform,
 } from './builder';
+import { Expression } from './expressions';
 import { ODataQueryOptionHandler } from './handlers';
-import { Renderable } from './syntax';
 
 export type ODataQueryArguments<T> = {
   [QueryOptionNames.select]?: Select<T>;
@@ -109,7 +109,7 @@ export class ODataQueryOptions<T> {
   }
 
   // Set Renderable
-  renderable(name: QueryOptionNames, exp: Renderable) {
+  expression(name: QueryOptionNames, exp: Expression<T>) {
     return (this.options[name] = exp);
   }
 

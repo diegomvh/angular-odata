@@ -149,14 +149,9 @@ export class ODataQueryOptionsHandler<T> {
   compute(): ODataQueryOptionHandler<T>;
   compute(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.renderable(
+      return this.options.expression(
         QueryOptionNames.compute,
-        opts({
-          s: ComputeExpression.s<any>() as T,
-          e: ComputeExpression.e,
-          o: operators as ODataOperators<T>,
-          f: functions as ODataFunctions<T>,
-        }) as ComputeExpression<T>
+        ComputeExpression.compute(opts)
       );
     }
     return this.options.option<string>(QueryOptionNames.compute, opts);
@@ -186,11 +181,9 @@ export class ODataQueryOptionsHandler<T> {
   search(): ODataQueryOptionHandler<T>;
   search(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.renderable(
+      return this.options.expression(
         QueryOptionNames.search,
-        opts({
-          e: SearchExpression.e,
-        }) as SearchExpression<T>
+        SearchExpression.search(opts)
       );
     }
     return this.options.option<string>(QueryOptionNames.search, opts);
@@ -208,14 +201,9 @@ export class ODataQueryOptionsHandler<T> {
   filter(): ODataQueryOptionHandler<T>;
   filter(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.renderable(
+      return this.options.expression(
         QueryOptionNames.filter,
-        opts({
-          s: FilterExpression.s<any>() as T,
-          e: FilterExpression.e,
-          o: operators as ODataOperators<T>,
-          f: functions as ODataFunctions<T>,
-        }) as FilterExpression<T>
+        FilterExpression.filter(opts)
       );
     }
     return this.options.option<Filter<T>>(QueryOptionNames.filter, opts);
@@ -228,12 +216,9 @@ export class ODataQueryOptionsHandler<T> {
   orderBy(): ODataQueryOptionHandler<T>;
   orderBy(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.renderable(
+      return this.options.expression(
         QueryOptionNames.orderBy,
-        opts({
-          s: OrderByExpression.s<any>() as T,
-          e: () => OrderByExpression.e<T>(),
-        }) as OrderByExpression<T>
+        OrderByExpression.orderBy(opts)
       );
     }
     return this.options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
