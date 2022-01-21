@@ -8,9 +8,10 @@ import {
   OrderByExpression,
   SearchConnector,
   SearchExpression,
+  ODataFunctions,
+  ODataOperators,
 } from './expressions';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
-import { functions, ODataFunctions, ODataOperators, operators } from './syntax';
 
 export class ODataQueryOptionHandler<T> {
   constructor(
