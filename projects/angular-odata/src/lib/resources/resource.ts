@@ -7,11 +7,7 @@ import {
   VALUE_SEPARATOR,
 } from '../constants';
 import { ODataCollection, ODataModel } from '../models';
-import {
-  ODataCallable,
-  ODataStructuredType,
-  ODataStructuredTypeParser,
-} from '../schema';
+import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
 import { OptionsHelper, Parser, QueryOptionNames } from '../types';
 import { Http, Objects, Types } from '../utils/index';

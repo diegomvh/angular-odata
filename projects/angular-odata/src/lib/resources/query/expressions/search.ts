@@ -1,8 +1,34 @@
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { Grouping, Renderable, SearchTerm } from './syntax';
+import { render, Grouping, Renderable } from './syntax';
 
 export type SearchConnector = 'AND' | 'OR';
+
+export class SearchTerm implements Renderable {
+  constructor(protected value: string) {}
+
+  get [Symbol.toStringTag]() {
+    return 'SearchTerm';
+  }
+
+  toJSON() {
+    return {
+      value: this.value,
+    };
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+  }): string {
+    return `${render(this.value, { aliases, escape, prefix })}`;
+  }
+}
 
 export class SearchExpression<T> extends Expression<T> {
   private _connector: SearchConnector;

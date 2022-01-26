@@ -11,6 +11,8 @@ import {
   ODataFunctions,
   ODataOperators,
 } from './expressions';
+import { ExpandExpression } from './expressions/expand';
+import { SelectExpression } from './expressions/select';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 
 export class ODataQueryOptionHandler<T> {
@@ -123,15 +125,33 @@ export class ODataQueryOptionsHandler<T> {
     return alias(value, name);
   }
 
+  select(
+    opts: (e: { s: T; e: () => SelectExpression<T> }) => SelectExpression<T>
+  ): SelectExpression<T>;
   select(opts: Select<T>): ODataQueryOptionHandler<T>;
   select(): ODataQueryOptionHandler<T>;
-  select(opts?: Select<T>): any {
+  select(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOptionNames.select,
+        SelectExpression.select(opts)
+      );
+    }
     return this.options.option<Select<T>>(QueryOptionNames.select, opts);
   }
 
+  expand(
+    opts: (e: { s: T; e: () => ExpandExpression<T> }) => ExpandExpression<T>
+  ): ExpandExpression<T>;
   expand(opts: Expand<T>): ODataQueryOptionHandler<T>;
   expand(): ODataQueryOptionHandler<T>;
-  expand(opts?: Expand<T>): any {
+  expand(opts?: any): any {
+    if (Types.isFunction(opts)) {
+      return this.options.expression(
+        QueryOptionNames.expand,
+        ExpandExpression.expand(opts)
+      );
+    }
     return this.options.option<Expand<T>>(QueryOptionNames.expand, opts);
   }
 

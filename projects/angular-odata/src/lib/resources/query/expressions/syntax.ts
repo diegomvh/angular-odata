@@ -47,7 +47,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
   });
 }
 
-function render(
+export function render(
   value: any,
   {
     aliases,
@@ -401,59 +401,6 @@ export class Grouping<T> implements Renderable {
     prefix?: string;
   }): string {
     return `(${render(this.group, { aliases, escape, prefix })})`;
-  }
-}
-
-export class OrderByField implements Renderable {
-  constructor(protected field: Renderable, protected order: 'asc' | 'desc') {}
-
-  get [Symbol.toStringTag]() {
-    return 'OrderByField';
-  }
-
-  toJSON() {
-    return {
-      field: this.field.toJSON(),
-      order: this.order,
-    };
-  }
-
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    return `${render(this.field, { aliases, escape, prefix })} ${this.order}`;
-  }
-}
-
-export class SearchTerm implements Renderable {
-  constructor(protected value: string) {}
-
-  get [Symbol.toStringTag]() {
-    return 'SearchTerm';
-  }
-
-  toJSON() {
-    return {
-      value: this.value,
-    };
-  }
-
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    return `${render(this.value, { aliases, escape, prefix })}`;
   }
 }
 

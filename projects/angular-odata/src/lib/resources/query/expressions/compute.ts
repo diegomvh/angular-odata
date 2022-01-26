@@ -10,12 +10,16 @@ import {
 } from './syntax';
 
 export class ComputeExpression<T> extends Expression<T> {
+  names: string[];
   constructor({
     children,
+    names,
   }: {
     children?: Renderable[];
+    names?: string[];
   } = {}) {
     super({ children });
+    this.names = names || [];
   }
 
   static e<T>() {
@@ -44,25 +48,25 @@ export class ComputeExpression<T> extends Expression<T> {
     escape?: boolean | undefined;
     prefix?: string | undefined;
   } = {}): string {
-    let content = this._children
-      .map((n) => n.render({ aliases, escape, prefix }))
-      .join(`,`);
-    return content;
+    let children = this._children
+      .map((n) => n.render({ aliases, escape, prefix }));
+    return this.names.map((name, index) => `${children[index]} as ${name}`).join(',');
   }
 
-  private _add(node: Renderable, name: string): ComputeExpression<T> {
+  private _add(name: string, node: Renderable): ComputeExpression<T> {
+    this.names.push(name);
     this._children.push(node);
     return this;
   }
 
-  compute<T extends object>(
-    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable,
-    name: string
+  add<T extends object>(
+    name: string,
+    opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
   ): ComputeExpression<T> {
     const node = opts({
       o: operators as ODataOperators<T>,
       f: functions as ODataFunctions<T>,
     });
-    return this._add(node, name);
+    return this._add(name, node);
   }
 }

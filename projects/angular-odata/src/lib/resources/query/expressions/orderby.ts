@@ -1,6 +1,33 @@
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { Field, OrderByField, Renderable } from './syntax';
+import { render, Field, Renderable } from './syntax';
+
+export class OrderByField implements Renderable {
+  constructor(protected field: Renderable, protected order: 'asc' | 'desc') {}
+
+  get [Symbol.toStringTag]() {
+    return 'OrderByField';
+  }
+
+  toJSON() {
+    return {
+      field: this.field.toJSON(),
+      order: this.order,
+    };
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+  }): string {
+    return `${render(this.field, { aliases, escape, prefix })} ${this.order}`;
+  }
+}
 
 export class OrderByExpression<T> extends Expression<T> {
   constructor({
