@@ -59,7 +59,7 @@ export class ComputeExpression<T> extends Expression<T> {
     return this;
   }
 
-  add<T extends object>(
+  field<T extends object>(
     name: string,
     opts: (e: { o: ODataOperators<T>; f: ODataFunctions<T> }) => Renderable
   ): ComputeExpression<T> {
