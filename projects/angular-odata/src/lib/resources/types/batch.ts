@@ -203,6 +203,8 @@ export class ODataBatchResource extends ODataResource<any> {
     if (this._requests.length >= 0) {
       const bound = Strings.uniqueId(BATCH_PREFIX);
       const requests = this._requests;
+      // Clean requests
+      this._requests = [];
       const headers = Http.mergeHttpHeaders(
         (options && options.headers) || {},
         {
