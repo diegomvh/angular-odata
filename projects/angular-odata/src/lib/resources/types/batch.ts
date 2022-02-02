@@ -163,17 +163,7 @@ export class ODataBatchResource extends ODataResource<any> {
   }
   //#endregion
 
-  /**
-   * Execute the batch request
-   * @param ctx The context for the request
-   * @param options The options of the batch request
-   * @returns The result of execute the context
-   */
-  exec<R>(
-    ctx: (batch: this) => Observable<R>,
-    options?: ODataOptions
-  ): Observable<R> {
-    // Store original requester
+  private storeRequester() {
     const current = this.api.request;
     // Switch to the batch requester
     this.api.request = (req: ODataRequest<any>): Observable<any> => {
@@ -184,11 +174,32 @@ export class ODataBatchResource extends ODataResource<any> {
       this._requests.push(new ODataBatchRequest<any>(req));
       return this._requests[this._requests.length - 1];
     };
+    return current;
+  }
+
+  private restoreRequester(
+    handler: (req: ODataRequest<any>) => Observable<any>
+  ) {
+    this.api.request = handler;
+  }
+
+  /**
+   * Add to batch request
+   * @param ctx The context for the request
+   * @returns The result of execute the context
+   */
+  add<R>(ctx: (batch: this) => Observable<R>): Observable<R> {
+    // Store original requester
+    var handler = this.storeRequester();
     // Execute the context
     const obs$ = ctx(this);
     // Restore original requester
-    this.api.request = current;
+    this.restoreRequester(handler);
 
+    return obs$;
+  }
+
+  send(options?: ODataOptions) {
     if (this._requests.length >= 0) {
       const bound = Strings.uniqueId(BATCH_PREFIX);
       const requests = this._requests;
@@ -215,6 +226,20 @@ export class ODataBatchResource extends ODataResource<any> {
         ODataBatchResource.handleResponse(requests, response);
       });
     }
+  }
+
+  /**
+   * Execute the batch request
+   * @param ctx The context for the request
+   * @param options The options of the batch request
+   * @returns The result of execute the context
+   */
+  exec<R>(
+    ctx: (batch: this) => Observable<R>,
+    options?: ODataOptions
+  ): Observable<R> {
+    const obs$ = this.add(ctx);
+    this.send(options);
 
     return obs$;
   }
