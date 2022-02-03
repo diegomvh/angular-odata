@@ -95,6 +95,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/CollectionFunctions.html" data-type="entity-link" >CollectionFunctions</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ComputeExpression.html" data-type="entity-link" >ComputeExpression</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/ConditionalFunctions.html" data-type="entity-link" >ConditionalFunctions</a>
                             </li>
                             <li class="link">
@@ -194,6 +197,12 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/DateAndTimeFunctions.html" data-type="entity-link" >DateAndTimeFunctions</a>
                             </li>
                             <li class="link">
+                                <a href="classes/ExpandExpression.html" data-type="entity-link" >ExpandExpression</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/ExpandField.html" data-type="entity-link" >ExpandField</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/Expression.html" data-type="entity-link" >Expression</a>
                             </li>
                             <li class="link">
@@ -203,6 +212,9 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/Field-1.html" data-type="entity-link" >Field</a>
                             </li>
                             <li class="link">
+                                <a href="classes/FilterExpression.html" data-type="entity-link" >FilterExpression</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/Function.html" data-type="entity-link" >Function</a>
                             </li>
                             <li class="link">
@@ -210,9 +222,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                             </li>
                             <li class="link">
                                 <a href="classes/Grouping.html" data-type="entity-link" >Grouping</a>
-                            </li>
-                            <li class="link">
-                                <a href="classes/GroupingOperators.html" data-type="entity-link" >GroupingOperators</a>
                             </li>
                             <li class="link">
                                 <a href="classes/Lambda.html" data-type="entity-link" >Lambda</a>
@@ -410,7 +419,22 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/Operator.html" data-type="entity-link" >Operator</a>
                             </li>
                             <li class="link">
+                                <a href="classes/OrderByExpression.html" data-type="entity-link" >OrderByExpression</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/OrderByField.html" data-type="entity-link" >OrderByField</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/SearchExpression.html" data-type="entity-link" >SearchExpression</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/SearchTerm.html" data-type="entity-link" >SearchTerm</a>
+                            </li>
+                            <li class="link">
                                 <a href="classes/SegmentHandler.html" data-type="entity-link" >SegmentHandler</a>
+                            </li>
+                            <li class="link">
+                                <a href="classes/SelectExpression.html" data-type="entity-link" >SelectExpression</a>
                             </li>
                             <li class="link">
                                 <a href="classes/StringAndCollectionFunctions.html" data-type="entity-link" >StringAndCollectionFunctions</a>

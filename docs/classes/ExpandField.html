@@ -43,7 +43,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li >Expression</li>
+  <li >ExpandField</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,7 +61,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/query/expressions/base.ts</code>
+            <code>projects/angular-odata/src/lib/resources/query/expressions/expand.ts</code>
         </p>
 
 
@@ -79,21 +79,6 @@
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>Properties</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#_children" >_children</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
 
                 <tr>
                     <td class="col-md-4">
@@ -104,17 +89,28 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#children" >children</a>
+                                <a href="#filter" >filter</a>
                             </li>
                             <li>
-                                <a href="#length" >length</a>
+                                <a href="#levels" >levels</a>
                             </li>
                             <li>
-                                    <span class="modifier">Abstract</span>
+                                <a href="#orderBy" >orderBy</a>
+                            </li>
+                            <li>
                                 <a href="#render" >render</a>
                             </li>
                             <li>
+                                <a href="#select" >select</a>
+                            </li>
+                            <li>
+                                <a href="#skip" >skip</a>
+                            </li>
+                            <li>
                                 <a href="#toJSON" >toJSON</a>
+                            </li>
+                            <li>
+                                <a href="#top" >top</a>
                             </li>
                         </ul>
                     </td>
@@ -148,12 +144,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: literal type)</code>
+<code>constructor(field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:5</a></div>
                             </td>
                         </tr>
 
@@ -171,9 +167,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
+                                                        <td>field</td>
                                                   
                                                         <td>
-                                                                    <code>literal type</code>
+                                                                        <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -190,39 +187,6 @@
         </table>
 </section>
 
-            <section>
-    
-    <h3 id="inputs">
-        Properties
-    </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="_children"></a>
-                    <span class="name">
-                            <span class="modifier">Protected</span>
-                        <span ><b>_children</b></span>
-                        <a href="#_children"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Renderable.html" target="_self" >Renderable[]</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:5</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-</section>
 
             <section>
     
@@ -233,24 +197,24 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="children"></a>
+                    <a name="filter"></a>
                     <span class="name">
-                        <span ><b>children</b></span>
-                        <a href="#children"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>filter</b></span>
+                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>children()</code>
+<code>filter()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:28</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="31"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:31</a></div>
                 </td>
             </tr>
 
@@ -259,7 +223,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>    <code>{}</code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                 </td>
@@ -270,16 +234,16 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="length"></a>
+                    <a name="levels"></a>
                     <span class="name">
-                        <span ><b>length</b></span>
-                        <a href="#length"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>levels</b></span>
+                        <a href="#levels"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>length()</code>
+<code>levels()</code>
                 </td>
             </tr>
 
@@ -287,7 +251,7 @@
             <tr>
                 <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:32</a></div>
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:32</a></div>
                 </td>
             </tr>
 
@@ -296,7 +260,44 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orderBy"></a>
+                    <span class="name">
+                        <span ><b>orderBy</b></span>
+                        <a href="#orderBy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>orderBy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:33</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                 </td>
@@ -309,7 +310,6 @@
                 <td class="col-md-4">
                     <a name="render"></a>
                     <span class="name">
-                        <span class="modifier">Abstract</span>
                         <span ><b>render</b></span>
                         <a href="#render"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -317,8 +317,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>render(undefined: literal type)</code>
+<code>render(undefined: literal type)</code>
                 </td>
             </tr>
 
@@ -326,7 +325,7 @@
             <tr>
                 <td class="col-md-4">
                     <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:18</a></div>
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:18</a></div>
                 </td>
             </tr>
 
@@ -377,6 +376,80 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="select"></a>
+                    <span class="name">
+                        <span ><b>select</b></span>
+                        <a href="#select"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>select()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="30"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:30</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="skip"></a>
+                    <span class="name">
+                        <span ><b>skip</b></span>
+                        <a href="#skip"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>skip()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="35"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:35</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="toJSON"></a>
                     <span class="name">
                         <span ><b>toJSON</b></span>
@@ -393,8 +466,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="36"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:36</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="12"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:12</a></div>
                 </td>
             </tr>
 
@@ -403,7 +476,44 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>    <code>{ children: any; }</code>
+                        <b>Returns : </b>    <code>{ field: any; }</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="top"></a>
+                    <span class="name">
+                        <span ><b>top</b></span>
+                        <a href="#top"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>top()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="34"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:34</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
 
                     </div>
                 </td>
@@ -436,7 +546,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:14</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:8</a></div>
                                 </td>
                             </tr>
 
@@ -448,23 +558,69 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
-import { Renderable } from &#x27;./syntax&#x27;;
+import { Expression } from &#x27;./base&#x27;;
+import { Field, render, Renderable } from &#x27;./syntax&#x27;;
 
-export abstract class Expression&lt;T&gt; implements Renderable {
-  protected _children: Renderable[];
+export class ExpandField&lt;T&gt; implements Renderable {
+  constructor(protected field: Renderable) {}
+
+  get [Symbol.toStringTag]() {
+    return &#x27;ExpandField&#x27;;
+  }
+
+  toJSON() {
+    return {
+      field: this.field.toJSON(),
+    };
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+  }): string {
+    return &#x60;${render(this.field, { aliases, escape, prefix })}&#x60;;
+  }
+
+  select() {}
+  filter() {}
+  levels() {}
+  orderBy() {}
+  top() {}
+  skip() {}
+}
+
+export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   constructor({
     children,
   }: {
     children?: Renderable[];
   } &#x3D; {}) {
-    this._children &#x3D; children || [];
+    super({ children });
   }
 
-  get [Symbol.toStringTag]() {
-    return &#x27;Expression&#x27;;
+  static e&lt;T&gt;() {
+    return new ExpandExpression&lt;T&gt;();
   }
 
-  abstract render({
+  static s&lt;T extends object&gt;(): T {
+    return Field.factory&lt;T&gt;();
+  }
+
+  static expand&lt;T extends object&gt;(
+    opts: (e: { s: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; }) &#x3D;&gt; ExpandExpression&lt;T&gt;
+  ): ExpandExpression&lt;T&gt; {
+    return opts({
+      s: ExpandExpression.s&lt;T&gt;(),
+      e: ExpandExpression.e,
+    }) as ExpandExpression&lt;T&gt;;
+  }
+
+  render({
     aliases,
     escape,
     prefix,
@@ -472,20 +628,24 @@ export abstract class Expression&lt;T&gt; implements Renderable {
     aliases?: QueryCustomType[] | undefined;
     escape?: boolean | undefined;
     prefix?: string | undefined;
-  }): string;
-
-  children() {
-    return this._children;
+  } &#x3D; {}): string {
+    return this._children
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .join(&#x27;,&#x27;);
   }
 
-  length() {
-    return this._children.length;
+  private _add(node: Renderable): ExpandExpression&lt;T&gt; {
+    this._children.push(node);
+    return this;
   }
 
-  toJSON() {
-    return {
-      children: this._children.map((c) &#x3D;&gt; c.toJSON()),
-    };
+  field&lt;T extends object&gt;(
+    field: any,
+    opts?: (e: ExpandField&lt;keyof T&gt;) &#x3D;&gt; void
+  ): ExpandExpression&lt;T&gt; {
+    let node &#x3D; new ExpandField(field);
+    if (opts !&#x3D;&#x3D; undefined) opts(node as ExpandField&lt;keyof T&gt;);
+    return this._add(node);
   }
 }
 </code></pre>
@@ -525,7 +685,7 @@ export abstract class Expression&lt;T&gt; implements Renderable {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'Expression.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ExpandField.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

@@ -61,7 +61,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/query/syntax.ts</code>
+            <code>projects/angular-odata/src/lib/resources/query/expressions/syntax.ts</code>
         </p>
 
 
@@ -142,8 +142,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="130"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:130</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:125</a></div>
                 </td>
             </tr>
 
@@ -235,8 +235,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="134"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:134</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="129"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:129</a></div>
                 </td>
             </tr>
 
@@ -328,8 +328,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="138"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:138</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="133"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:133</a></div>
                 </td>
             </tr>
 
@@ -421,8 +421,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="142"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:142</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:137</a></div>
                 </td>
             </tr>
 
@@ -514,8 +514,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="146"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:146</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="141"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:141</a></div>
                 </td>
             </tr>
 
@@ -595,8 +595,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="150"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:150</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="145"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:145</a></div>
                 </td>
             </tr>
 
@@ -688,8 +688,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="154"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:154</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="149"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:149</a></div>
                 </td>
             </tr>
 
@@ -771,8 +771,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;./builder&#x27;;
-import { normalizeValue } from &#x27;./builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+import { normalizeValue } from &#x27;../builder&#x27;;
 
 export interface Renderable {
   render({
@@ -787,11 +787,6 @@ export interface Renderable {
   toString(): string;
   toJSON(): any;
 }
-
-export type Funcs&lt;T&gt; &#x3D; (
-  x: ODataSyntax&lt;T&gt;
-) &#x3D;&gt; Function&lt;T&gt; | Operator&lt;T&gt; | Grouping&lt;T&gt;;
-//export type Field&lt;T&gt; &#x3D; keyof T | Funcs&lt;keyof T&gt;;
 
 export class Field&lt;T extends object&gt; implements ProxyHandler&lt;T&gt; {
   constructor(public name: string &#x3D; &#x27;&#x27;) {}
@@ -825,7 +820,7 @@ function applyMixins(derivedCtor: any, constructors: any[]) {
   });
 }
 
-function render(
+export function render(
   value: any,
   {
     aliases,
@@ -1182,47 +1177,6 @@ export class Grouping&lt;T&gt; implements Renderable {
   }
 }
 
-/*
-export class Navigation&lt;T, N&gt; implements Renderable {
-  constructor(protected field: T, protected value: Field&lt;N&gt;) {}
-
-  get [Symbol.toStringTag]() {
-    return &#x27;Navigation&#x27;;
-  }
-
-  toJSON() {
-    return {
-      field: this.field,
-      value: this.value,
-    };
-  }
-
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    return &#x60;${this.field}/${render(this.value, { aliases, escape, prefix })}&#x60;;
-  }
-}
-*/
-
-export class GroupingOperators&lt;T&gt; {
-  grouping(value: any) {
-    return new Grouping(value);
-  }
-
-  /*
-  navigation&lt;N&gt;(field: T, value: Field&lt;N&gt;) {
-    return new Navigation&lt;T, N&gt;(field, value);
-  }
-  */
-}
-
 export class Lambda&lt;T&gt; implements Renderable {
   constructor(
     protected op: string,
@@ -1277,13 +1231,11 @@ export class ODataOperators&lt;T&gt; {}
 export interface ODataOperators&lt;T&gt;
   extends LogicalOperators&lt;T&gt;,
     ArithmeticOperators&lt;T&gt;,
-    GroupingOperators&lt;T&gt;,
     LambdaOperators&lt;T&gt; {}
 
 applyMixins(ODataOperators, [
   LogicalOperators,
   ArithmeticOperators,
-  GroupingOperators,
   LambdaOperators,
 ]);
 export const operators: ODataOperators&lt;any&gt; &#x3D; new ODataOperators&lt;any&gt;();

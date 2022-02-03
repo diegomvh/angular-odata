@@ -589,17 +589,7 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
   }
   //#endregion
 
-  /**
-   * Execute the batch request
-   * @param ctx The context for the request
-   * @param options The options of the batch request
-   * @returns The result of execute the context
-   */
-  exec&lt;R&gt;(
-    ctx: (batch: this) &#x3D;&gt; Observable&lt;R&gt;,
-    options?: ODataOptions
-  ): Observable&lt;R&gt; {
-    // Store original requester
+  private storeRequester() {
     const current &#x3D; this.api.request;
     // Switch to the batch requester
     this.api.request &#x3D; (req: ODataRequest&lt;any&gt;): Observable&lt;any&gt; &#x3D;&gt; {
@@ -610,14 +600,37 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       this._requests.push(new ODataBatchRequest&lt;any&gt;(req));
       return this._requests[this._requests.length - 1];
     };
+    return current;
+  }
+
+  private restoreRequester(
+    handler: (req: ODataRequest&lt;any&gt;) &#x3D;&gt; Observable&lt;any&gt;
+  ) {
+    this.api.request &#x3D; handler;
+  }
+
+  /**
+   * Add to batch request
+   * @param ctx The context for the request
+   * @returns The result of execute the context
+   */
+  add&lt;R&gt;(ctx: (batch: this) &#x3D;&gt; Observable&lt;R&gt;): Observable&lt;R&gt; {
+    // Store original requester
+    var handler &#x3D; this.storeRequester();
     // Execute the context
     const obs$ &#x3D; ctx(this);
     // Restore original requester
-    this.api.request &#x3D; current;
+    this.restoreRequester(handler);
 
+    return obs$;
+  }
+
+  send(options?: ODataOptions) {
     if (this._requests.length &gt;&#x3D; 0) {
       const bound &#x3D; Strings.uniqueId(BATCH_PREFIX);
       const requests &#x3D; this._requests;
+      // Clean requests
+      this._requests &#x3D; [];
       const headers &#x3D; Http.mergeHttpHeaders(
         (options &amp;&amp; options.headers) || {},
         {
@@ -641,6 +654,20 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
         ODataBatchResource.handleResponse(requests, response);
       });
     }
+  }
+
+  /**
+   * Execute the batch request
+   * @param ctx The context for the request
+   * @param options The options of the batch request
+   * @returns The result of execute the context
+   */
+  exec&lt;R&gt;(
+    ctx: (batch: this) &#x3D;&gt; Observable&lt;R&gt;,
+    options?: ODataOptions
+  ): Observable&lt;R&gt; {
+    const obs$ &#x3D; this.add(ctx);
+    this.send(options);
 
     return obs$;
   }

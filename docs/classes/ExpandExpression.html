@@ -43,7 +43,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li >ODataQueryOptions</li>
+  <li >ExpandExpression</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,11 +61,17 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/query/options.ts</code>
+            <code>projects/angular-odata/src/lib/resources/query/expressions/expand.ts</code>
         </p>
 
 
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+            </p>
 
 
 
@@ -82,7 +88,8 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#options" >options</a>
+                                    <span class="modifier">Protected</span>
+                                <a href="#_children" >_children</a>
                             </li>
                         </ul>
                     </td>
@@ -97,37 +104,35 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#clear" >clear</a>
+                                    <span class="modifier">Private</span>
+                                <a href="#_add" >_add</a>
                             </li>
                             <li>
-                                <a href="#clone" >clone</a>
+                                    <span class="modifier">Static</span>
+                                <a href="#e" >e</a>
                             </li>
                             <li>
-                                <a href="#expression" >expression</a>
+                                    <span class="modifier">Static</span>
+                                <a href="#expand" >expand</a>
                             </li>
                             <li>
-                                <a href="#has" >has</a>
+                                <a href="#field" >field</a>
                             </li>
                             <li>
-                                <a href="#keep" >keep</a>
+                                <a href="#render" >render</a>
                             </li>
                             <li>
-                                <a href="#option" >option</a>
+                                    <span class="modifier">Static</span>
+                                <a href="#s" >s</a>
                             </li>
                             <li>
-                                <a href="#pathAndParams" >pathAndParams</a>
+                                <a href="#children" >children</a>
                             </li>
                             <li>
-                                <a href="#remove" >remove</a>
+                                <a href="#length" >length</a>
                             </li>
                             <li>
                                 <a href="#toJSON" >toJSON</a>
-                            </li>
-                            <li>
-                                <a href="#toQueryArguments" >toQueryArguments</a>
-                            </li>
-                            <li>
-                                <a href="#toString" >toString</a>
                             </li>
                         </ul>
                     </td>
@@ -147,12 +152,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(options?: literal type)</code>
+<code>constructor(undefined: literal type)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:38</a></div>
                             </td>
                         </tr>
 
@@ -170,14 +175,13 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>options</td>
                                                   
                                                         <td>
                                                                     <code>literal type</code>
                                                         </td>
                                                   
                                                     <td>
-                                                            Yes
+                                                            No
                                                     </td>
                                                     
                                                 </tr>
@@ -199,22 +203,30 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="options"></a>
+                    <a name="_children"></a>
                     <span class="name">
-                        <span ><b>options</b></span>
-                        <a href="#options"><span class="icon ion-ios-link"></span></a>
+                            <span class="modifier">Protected</span>
+                        <span ><b>_children</b></span>
+                        <a href="#_children"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>literal type</code>
+                        <i>Type : </i>        <code><a href="../interfaces/Renderable.html" target="_self" >Renderable[]</a></code>
 
                     </td>
                 </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                            </td>
+                        </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:30</a></div>
+                                <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:5</a></code>
+</div>
                         </td>
                     </tr>
 
@@ -232,24 +244,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="clear"></a>
+                    <a name="_add"></a>
                     <span class="name">
-                        <span ><b>clear</b></span>
-                        <a href="#clear"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Private</span>
+                        <span ><b>_add</b></span>
+                        <a href="#_add"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>clear()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_add(node: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="138"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:138</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:78</a></div>
                 </td>
             </tr>
 
@@ -258,8 +272,40 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>node</td>
+                                    <td>
+                                                <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -269,24 +315,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="clone"></a>
+                    <a name="e"></a>
                     <span class="name">
-                        <span ><b>clone</b></span>
-                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Static</span>
+                        <span ><b>e</b></span>
+                        <a href="#e"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>clone()</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>e()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="100"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:100</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="47"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:47</a></div>
                 </td>
             </tr>
 
@@ -294,7 +342,7 @@
                 <td class="col-md-4">
                     <b>Type parameters :</b>
                     <ul class="type-parameters">
-                        <li>O</li>
+                        <li>T</li>
                     </ul>
                 </td>
             </tr>
@@ -303,7 +351,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/Options.html" target="_self" >ODataQueryOptions&lt;O&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
 
                     </div>
                 </td>
@@ -314,243 +362,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="expression"></a>
+                    <a name="expand"></a>
                     <span class="name">
-                        <span ><b>expression</b></span>
-                        <a href="#expression"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Static</span>
+                        <span ><b>expand</b></span>
+                        <a href="#expand"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>expression(name: <a href="../undefineds/QueryOptionNames.html" target="_self">QueryOptionNames</a>, exp: <a href="../classes/Expression.html" target="_self">Expression&lt;T&gt;</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>expand(opts: (e: literal type) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="112"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:112</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-                                    <td>
-                                                <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>exp</td>
-                                    <td>
-                                                <code><a href="../classes/Expression.html" target="_self" >Expression&lt;T&gt;</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/Expression.html" target="_self" >Expression&lt;T&gt;</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="has"></a>
-                    <span class="name">
-                        <span ><b>has</b></span>
-                        <a href="#has"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>has(name: <a href="../undefineds/QueryOptionNames.html" target="_self">QueryOptionNames</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="123"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:123</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-                                    <td>
-                                                <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="keep"></a>
-                    <span class="name">
-                        <span ><b>keep</b></span>
-                        <a href="#keep"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>keep(names: <a href="../undefineds/QueryOptionNames.html" target="_self">QueryOptionNames[]</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="131"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:131</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>names</td>
-                                    <td>
-                                                <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="option"></a>
-                    <span class="name">
-                        <span ><b>option</b></span>
-                        <a href="#option"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>option(name: <a href="../undefineds/QueryOptionNames.html" target="_self">QueryOptionNames</a>, opts?: O)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="117"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:117</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:55</a></div>
                 </td>
             </tr>
 
@@ -558,7 +389,7 @@
                 <td class="col-md-4">
                     <b>Type parameters :</b>
                     <ul class="type-parameters">
-                        <li>O</li>
+                        <li>T</li>
                     </ul>
                 </td>
             </tr>
@@ -579,9 +410,86 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>name</td>
+                                    <td>opts</td>
                                     <td>
-                                                <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames</a></code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="field"></a>
+                    <span class="name">
+                        <span ><b>field</b></span>
+                        <a href="#field"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>field(field: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, opts?: (e?: <a href="../undefineds/Expand.html">ExpandField<T></a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:83</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>field</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                     </td>
 
                                     <td>
@@ -593,7 +501,7 @@
                                 <tr>
                                     <td>opts</td>
                                     <td>
-                                            <code>O</code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
                                     </td>
 
                                     <td>
@@ -608,7 +516,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Expand" target="_self" >ExpandExpression&lt;T&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -622,24 +530,30 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="pathAndParams"></a>
+                    <a name="render"></a>
                     <span class="name">
-                        <span ><b>pathAndParams</b></span>
-                        <a href="#pathAndParams"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>render</b></span>
+                        <a href="#render"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>pathAndParams(escape: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+<code>render(undefined: literal type)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="37"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:37</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:64</a></code>
+</div>
                 </td>
             </tr>
 
@@ -661,9 +575,8 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>escape</td>
                                     <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                            <code>literal type</code>
                                     </td>
 
                                     <td>
@@ -671,7 +584,7 @@
                                     </td>
 
                                     <td>
-                                        <code>false</code>
+                                        <code>{}</code>
                                     </td>
 
                                 </tr>
@@ -679,6 +592,13 @@
                         </table>
                     </div>
                     <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -688,24 +608,77 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="remove"></a>
+                    <a name="s"></a>
                     <span class="name">
-                        <span ><b>remove</b></span>
-                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Static</span>
+                        <span ><b>s</b></span>
+                        <a href="#s"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>remove(names: <a href="../undefineds/QueryOptionNames.html" target="_self">QueryOptionNames[]</a>)</code>
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>s()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="127"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:127</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="51"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:51</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>T</code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="children"></a>
+                    <span class="name">
+                        <span ><b>children</b></span>
+                        <a href="#children"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>children()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:28</a></code>
+</div>
                 </td>
             </tr>
 
@@ -714,40 +687,51 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>names</td>
-                                    <td>
-                                                <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames[]</a></code>
-                                    </td>
+                        <b>Returns : </b>    <code>{}</code>
 
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
-                    <div>
-                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="length"></a>
+                    <span class="name">
+                        <span ><b>length</b></span>
+                        <a href="#length"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>length()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:32</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
-                    </div>
-                    <div class="io-description">
-                        
                     </div>
                 </td>
             </tr>
@@ -773,8 +757,14 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="75"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:75</a></div>
+                    <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:36</a></code>
+</div>
                 </td>
             </tr>
 
@@ -783,81 +773,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="toQueryArguments"></a>
-                    <span class="name">
-                        <span ><b>toQueryArguments</b></span>
-                        <a href="#toQueryArguments"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>toQueryArguments()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="85"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:85</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataQueryArguments&lt;T&gt;</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="toString"></a>
-                    <span class="name">
-                        <span ><b>toString</b></span>
-                        <a href="#toString"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>toString()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="64"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:64</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                        <b>Returns : </b>    <code>{ children: any; }</code>
 
                     </div>
                 </td>
@@ -874,145 +790,95 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOptionNames } from &#x27;../../types&#x27;;
-import { Objects, Types } from &#x27;../../utils&#x27;;
-import {
-  buildPathAndQuery,
-  Expand,
-  Filter,
-  OrderBy,
-  QueryCustomType,
-  Select,
-  Transform,
-} from &#x27;./builder&#x27;;
-import { Expression } from &#x27;./expressions&#x27;;
-import { ODataQueryOptionHandler } from &#x27;./handlers&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+import { Expression } from &#x27;./base&#x27;;
+import { Field, render, Renderable } from &#x27;./syntax&#x27;;
 
-export type ODataQueryArguments&lt;T&gt; &#x3D; {
-  [QueryOptionNames.select]?: Select&lt;T&gt;;
-  [QueryOptionNames.filter]?: Filter&lt;T&gt;;
-  [QueryOptionNames.search]?: string;
-  [QueryOptionNames.compute]?: string;
-  [QueryOptionNames.transform]?: Transform&lt;T&gt;;
-  [QueryOptionNames.orderBy]?: OrderBy&lt;T&gt;;
-  [QueryOptionNames.top]?: number;
-  [QueryOptionNames.skip]?: number;
-  [QueryOptionNames.skiptoken]?: string;
-  [QueryOptionNames.expand]?: Expand&lt;T&gt;;
-  [QueryOptionNames.format]?: string;
-};
+export class ExpandField&lt;T&gt; implements Renderable {
+  constructor(protected field: Renderable) {}
 
-export class ODataQueryOptions&lt;T&gt; {
-  options: { [name: string]: any };
-
-  constructor(options?: { [name: string]: any }) {
-    this.options &#x3D; options || {};
-  }
-
-  // Params
-  pathAndParams(escape: boolean &#x3D; false): [string, { [name: string]: any }] {
-    let aliases: QueryCustomType[] &#x3D; [];
-    let options &#x3D; [
-      QueryOptionNames.select,
-      QueryOptionNames.filter,
-      QueryOptionNames.search,
-      QueryOptionNames.compute,
-      QueryOptionNames.transform,
-      QueryOptionNames.orderBy,
-      QueryOptionNames.top,
-      QueryOptionNames.skip,
-      QueryOptionNames.skiptoken,
-      QueryOptionNames.expand,
-      QueryOptionNames.format,
-    ]
-      .filter((key) &#x3D;&gt; !Types.isEmpty(this.options[key]))
-      .reduce((acc, key) &#x3D;&gt; {
-        let value &#x3D; this.options[key];
-        if (Types.rawType(value) &#x3D;&#x3D;&#x3D; &#x27;Expression&#x27;) {
-          value &#x3D; value.render(aliases);
-        }
-        return Object.assign(acc, { [key]: value });
-      }, {});
-
-    return buildPathAndQuery&lt;any&gt;({ ...options, aliases, escape });
-  }
-
-  toString(): string {
-    const [path, params] &#x3D; this.pathAndParams();
-    return (
-      path +
-      Object.entries(params)
-        .filter(([, value]) &#x3D;&gt; !Types.isEmpty(value))
-        .map(([key, value]) &#x3D;&gt; &#x60;${key}&#x3D;${value}&#x60;)
-        .join(&#x27;&amp;&#x27;)
-    );
+  get [Symbol.toStringTag]() {
+    return &#x27;ExpandField&#x27;;
   }
 
   toJSON() {
-    return Object.keys(this.options).reduce((acc, key) &#x3D;&gt; {
-      let value &#x3D; this.options[key];
-      if (Types.rawType(value) &#x3D;&#x3D;&#x3D; &#x27;Expression&#x27;) {
-        value &#x3D; value.toJSON();
-      }
-      return Object.assign(acc, { [key]: value });
-    }, {});
-  }
-
-  toQueryArguments(): ODataQueryArguments&lt;T&gt; {
     return {
-      select: this.options[QueryOptionNames.select],
-      expand: this.options[QueryOptionNames.expand],
-      transform: this.options[QueryOptionNames.transform],
-      compute: this.options[QueryOptionNames.compute],
-      search: this.options[QueryOptionNames.search],
-      filter: this.options[QueryOptionNames.filter],
-      orderBy: this.options[QueryOptionNames.orderBy],
-      top: this.options[QueryOptionNames.top],
-      skip: this.options[QueryOptionNames.skip],
-      skiptoken: this.options[QueryOptionNames.skiptoken],
-    } as ODataQueryArguments&lt;T&gt;;
+      field: this.field.toJSON(),
+    };
   }
 
-  clone&lt;O&gt;() {
-    const options &#x3D; Object.keys(this.options).reduce((acc, key) &#x3D;&gt; {
-      let value &#x3D; this.options[key];
-      if (Types.rawType(value) !&#x3D;&#x3D; &#x27;Expression&#x27;) {
-        value &#x3D; Objects.clone(value);
-      }
-      return Object.assign(acc, { [key]: value });
-    }, {});
-    return new ODataQueryOptions&lt;O&gt;(options);
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+  }): string {
+    return &#x60;${render(this.field, { aliases, escape, prefix })}&#x60;;
   }
 
-  // Set Renderable
-  expression(name: QueryOptionNames, exp: Expression&lt;T&gt;) {
-    return (this.options[name] &#x3D; exp);
+  select() {}
+  filter() {}
+  levels() {}
+  orderBy() {}
+  top() {}
+  skip() {}
+}
+
+export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
+  constructor({
+    children,
+  }: {
+    children?: Renderable[];
+  } &#x3D; {}) {
+    super({ children });
   }
 
-  // Option Handler
-  option&lt;O&gt;(name: QueryOptionNames, opts?: O) {
-    if (opts !&#x3D;&#x3D; undefined) this.options[name] &#x3D; opts;
-    return new ODataQueryOptionHandler&lt;O&gt;(this.options, name);
+  static e&lt;T&gt;() {
+    return new ExpandExpression&lt;T&gt;();
   }
 
-  // Query Options tools
-  has(name: QueryOptionNames) {
-    return this.options[name] !&#x3D;&#x3D; undefined;
+  static s&lt;T extends object&gt;(): T {
+    return Field.factory&lt;T&gt;();
   }
 
-  remove(...names: QueryOptionNames[]) {
-    names.forEach((name) &#x3D;&gt; this.option(name).clear());
+  static expand&lt;T extends object&gt;(
+    opts: (e: { s: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; }) &#x3D;&gt; ExpandExpression&lt;T&gt;
+  ): ExpandExpression&lt;T&gt; {
+    return opts({
+      s: ExpandExpression.s&lt;T&gt;(),
+      e: ExpandExpression.e,
+    }) as ExpandExpression&lt;T&gt;;
   }
 
-  keep(...names: QueryOptionNames[]) {
-    this.options &#x3D; Object.keys(this.options)
-      .filter((k) &#x3D;&gt; names.indexOf(k as QueryOptionNames) !&#x3D;&#x3D; -1)
-      .reduce((acc, k) &#x3D;&gt; Object.assign(acc, { [k]: this.options[k] }), {});
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[] | undefined;
+    escape?: boolean | undefined;
+    prefix?: string | undefined;
+  } &#x3D; {}): string {
+    return this._children
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .join(&#x27;,&#x27;);
   }
 
-  // Clear
-  clear() {
-    this.options &#x3D; {};
+  private _add(node: Renderable): ExpandExpression&lt;T&gt; {
+    this._children.push(node);
+    return this;
+  }
+
+  field&lt;T extends object&gt;(
+    field: any,
+    opts?: (e: ExpandField&lt;keyof T&gt;) &#x3D;&gt; void
+  ): ExpandExpression&lt;T&gt; {
+    let node &#x3D; new ExpandField(field);
+    if (opts !&#x3D;&#x3D; undefined) opts(node as ExpandField&lt;keyof T&gt;);
+    return this._add(node);
   }
 }
 </code></pre>
@@ -1052,7 +918,7 @@ export class ODataQueryOptions&lt;T&gt; {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'ODataQueryOptions.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'ExpandExpression.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 

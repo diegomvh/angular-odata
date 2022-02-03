@@ -61,18 +61,12 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/query/syntax.ts</code>
+            <code>projects/angular-odata/src/lib/resources/responses/metadata.ts</code>
         </p>
 
 
 
 
-            <p class="comment">
-                <h3>Implements</h3>
-            </p>
-            <p class="comment">
-                        <code>ProxyHandler</code>
-            </p>
 
 
             <section>
@@ -89,30 +83,16 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Public</span>
+                                <a href="#fieldType" >fieldType</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#name" >name</a>
                             </li>
                         </ul>
                     </td>
                 </tr>
 
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>Methods</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                    <span class="modifier">Static</span>
-                                <a href="#factory" >factory</a>
-                            </li>
-                            <li>
-                                <a href="#get" >get</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
 
 
 
@@ -128,12 +108,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, fieldType: <a href="../undefineds/FieldType.html" target="_self">FieldType</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:47</a></div>
                             </td>
                         </tr>
 
@@ -162,6 +142,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>fieldType</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../miscellaneous/enumerations.html#FieldType" target="_self" >FieldType</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -180,6 +172,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="fieldType"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>fieldType</b></span>
+                        <a href="#fieldType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#FieldType" target="_self" >FieldType</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:48</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="name"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
@@ -194,14 +213,9 @@
 
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>&#x27;&#x27;</code>
-                    </td>
-                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:24</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/resources/responses/metadata.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -210,140 +224,7 @@
     </table>
 </section>
 
-            <section>
-    
-    <h3 id="methods">
-        Methods
-    </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="factory"></a>
-                    <span class="name">
-                        <span class="modifier">Static</span>
-                        <span ><b>factory</b></span>
-                        <a href="#factory"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>factory()</code>
-                </td>
-            </tr>
 
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="26"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:26</a></div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>T</li>
-                    </ul>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="get"></a>
-                    <span class="name">
-                        <span ><b>get</b></span>
-                        <a href="#get"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>get(target: T, p: string | symbol)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="31"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/syntax.ts:31</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>target</td>
-                                    <td>
-                                            <code>T</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>p</td>
-                                    <td>
-                                            <code>string | symbol</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</section>
 
 
 
@@ -353,551 +234,844 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;./builder&#x27;;
-import { normalizeValue } from &#x27;./builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  CsdlAction,
+  CsdlActionImport,
+  CsdlFunction,
+  CsdlFunctionImport,
+  CsdlParameter,
+  CsdlReturnType,
+} from &#x27;./csdl/csdl-function-action&#x27;;
+import {
+  CsdlAnnotation,
+  CsdlAnnotations,
+  CsdlTerm,
+} from &#x27;./csdl/csdl-annotation&#x27;;
+import {
+  CsdlComplexType,
+  CsdlEntityType,
+  CsdlKey,
+  CsdlPropertyRef,
+} from &#x27;./csdl/csdl-structured-type&#x27;;
+import { CsdlEnumMember, CsdlEnumType } from &#x27;./csdl/csdl-enum-type&#x27;;
+import {
+  CsdlInclude,
+  CsdlIncludeAnnotations,
+  CsdlReference,
+} from &#x27;./csdl/csdl-reference&#x27;;
+import {
+  CsdlNavigationProperty,
+  CsdlOnDelete,
+  CsdlProperty,
+  CsdlReferentialConstraint,
+} from &#x27;./csdl/csdl-structural-property&#x27;;
 
-export interface Renderable {
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string;
-  toString(): string;
-  toJSON(): any;
+import { CsdlEntityContainer } from &#x27;./csdl/csdl-entity-container&#x27;;
+import { CsdlEntitySet } from &#x27;./csdl/csdl-entity-set&#x27;;
+import { CsdlNavigationPropertyBinding } from &#x27;./csdl/csdl-navigation-property-binding&#x27;;
+import { CsdlSchema } from &#x27;./csdl/csdl-schema&#x27;;
+import { CsdlSingleton } from &#x27;./csdl/csdl-singleton&#x27;;
+import { CsdlTypeDefinition } from &#x27;./csdl/csdl-type-definition&#x27;;
+import { Types } from &#x27;../../utils/types&#x27;;
+import { VERSION_4_0 } from &#x27;../../constants&#x27;;
+
+enum FieldType {
+  ATTRIBUTE,
+  TAG,
 }
 
-export type Funcs&lt;T&gt; &#x3D; (
-  x: ODataSyntax&lt;T&gt;
-) &#x3D;&gt; Function&lt;T&gt; | Operator&lt;T&gt; | Grouping&lt;T&gt;;
-//export type Field&lt;T&gt; &#x3D; keyof T | Funcs&lt;keyof T&gt;;
-
-export class Field&lt;T extends object&gt; implements ProxyHandler&lt;T&gt; {
-  constructor(public name: string &#x3D; &#x27;&#x27;) {}
-
-  static factory&lt;T extends object&gt;() {
-    const h &#x3D; new Field&lt;T&gt;();
-    return new Proxy({ _name: &#x27;&#x27; } as T, h);
-  }
-
-  get(target: T, p: string | symbol): any {
-    let name &#x3D; (target as any)[&#x27;_name&#x27;];
-    if (p &#x3D;&#x3D;&#x3D; &#x27;render&#x27;) {
-      return ({ prefix }: { prefix?: string }) &#x3D;&gt;
-        prefix ? &#x60;${prefix}/${name}&#x60; : name;
-    }
-    name &#x3D; name ? &#x60;${name}/${p as string}&#x60; : p;
-    return new Proxy({ _name: name } as any, this);
-  }
+class Field {
+  constructor(public name: string, public fieldType: FieldType) {}
 }
 
-function applyMixins(derivedCtor: any, constructors: any[]) {
-  constructors.forEach((baseCtor) &#x3D;&gt; {
-    Object.getOwnPropertyNames(baseCtor.prototype).forEach((name) &#x3D;&gt; {
-      Object.defineProperty(
-        derivedCtor.prototype,
-        name,
-        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-          Object.create(null)
+export class ODataMetadata {
+  // TAGS
+  private static readonly TAG_EDMX &#x3D; &#x27;edmx:Edmx&#x27;;
+  private static readonly TAG_DATA_SERVICES &#x3D; &#x27;edmx:DataServices&#x27;;
+  private static readonly TAG_REFERENCE &#x3D; &#x27;edmx:Reference&#x27;;
+  private static readonly TAG_INCLUDE &#x3D; &#x27;edmx:Include&#x27;;
+  private static readonly TAG_INCLUDE_ANNOTATIONS &#x3D; &#x27;edmx:IncludeAnnotations&#x27;;
+  private static readonly TAG_TERM &#x3D; &#x27;Term&#x27;;
+  private static readonly TAG_ANNOTATIONS &#x3D; &#x27;Annotations&#x27;;
+  private static readonly TAG_ANNOTATION &#x3D; &#x27;Annotation&#x27;;
+  private static readonly TAG_SCHEMA &#x3D; &#x27;Schema&#x27;;
+  private static readonly TAG_ENUM_TYPE &#x3D; &#x27;EnumType&#x27;;
+  private static readonly TAG_MEMBER &#x3D; &#x27;Member&#x27;;
+  private static readonly TAG_COMPLEX_TYPE &#x3D; &#x27;ComplexType&#x27;;
+  private static readonly TAG_ENTITY_TYPE &#x3D; &#x27;EntityType&#x27;;
+  private static readonly TAG_PROPERTY &#x3D; &#x27;Property&#x27;;
+  private static readonly TAG_KEY &#x3D; &#x27;Key&#x27;;
+  private static readonly TAG_PROPERTY_REF &#x3D; &#x27;PropertyRef&#x27;;
+  private static readonly TAG_NAVIGATION_PROPERTY &#x3D; &#x27;NavigationProperty&#x27;;
+  private static readonly TAG_REFERENTIAL_CONSTRAINT &#x3D; &#x27;ReferentialConstraint&#x27;;
+  private static readonly TAG_ON_DELETE &#x3D; &#x27;OnDelete&#x27;;
+  private static readonly TAG_FUNCTION &#x3D; &#x27;Function&#x27;;
+  private static readonly TAG_RETURN_TYPE &#x3D; &#x27;ReturnType&#x27;;
+  private static readonly TAG_PARAMETER &#x3D; &#x27;Parameter&#x27;;
+  private static readonly TAG_ACTION &#x3D; &#x27;Action&#x27;;
+  private static readonly TAG_ENTITY_CONTAINER &#x3D; &#x27;EntityContainer&#x27;;
+  private static readonly TAG_ENTITY_SET &#x3D; &#x27;EntitySet&#x27;;
+  private static readonly TAG_SINGLETON &#x3D; &#x27;Singleton&#x27;;
+  private static readonly TAG_FUNCTION_IMPORT &#x3D; &#x27;FunctionImport&#x27;;
+  private static readonly TAG_ACTION_IMPORT &#x3D; &#x27;ActionImport&#x27;;
+  private static readonly TAG_NAVIGATION_PROPERTY_BINDING &#x3D;
+    &#x27;NavigationPropertyBinding&#x27;;
+  private static readonly TAG_TYPE_DEFINITION &#x3D; &#x27;TypeDefinition&#x27;;
+
+  // ATTRIBUTES
+  private static readonly ATTRIBUTE_VERSION &#x3D; &#x27;Version&#x27;;
+  private static readonly ATTRIBUTE_URI &#x3D; &#x27;Uri&#x27;;
+  private static readonly ATTRIBUTE_ALIAS &#x3D; &#x27;Alias&#x27;;
+  private static readonly ATTRIBUTE_NAMESPACE &#x3D; &#x27;Namespace&#x27;;
+  private static readonly ATTRIBUTE_TERM_NAMESPACE &#x3D; &#x27;TermNamespace&#x27;;
+  private static readonly ATTRIBUTE_QUALIFIER &#x3D; &#x27;Qualifier&#x27;;
+  private static readonly ATTRIBUTE_TARGET_NAMESPACE &#x3D; &#x27;TargetNamespace&#x27;;
+  private static readonly ATTRIBUTE_TERM &#x3D; &#x27;Term&#x27;;
+  private static readonly ATTRIBUTE_NAME &#x3D; &#x27;Name&#x27;;
+  private static readonly ATTRIBUTE_VALUE &#x3D; &#x27;Value&#x27;;
+  private static readonly ATTRIBUTE_BASE_TYPE &#x3D; &#x27;BaseType&#x27;;
+  private static readonly ATTRIBUTE_OPEN_TYPE &#x3D; &#x27;OpenType&#x27;;
+  private static readonly ATTRIBUTE_TYPE &#x3D; &#x27;Type&#x27;;
+  private static readonly ATTRIBUTE_NULLABLE &#x3D; &#x27;Nullable&#x27;;
+  private static readonly ATTRIBUTE_MAX_LENGTH &#x3D; &#x27;MaxLength&#x27;;
+  private static readonly ATTRIBUTE_PRECISION &#x3D; &#x27;Precision&#x27;;
+  private static readonly ATTRIBUTE_SCALE &#x3D; &#x27;Scale&#x27;;
+  private static readonly ATTRIBUTE_UNICODE &#x3D; &#x27;Unicode&#x27;;
+  private static readonly ATTRIBUTE_SRID &#x3D; &#x27;SRID&#x27;;
+  private static readonly ATTRIBUTE_DEFAULT_VALUE &#x3D; &#x27;DefaultValue&#x27;;
+  private static readonly ATTRIBUTE_PARTNER &#x3D; &#x27;Partner&#x27;;
+  private static readonly ATTRIBUTE_PROPERTY &#x3D; &#x27;Property&#x27;;
+  private static readonly ATTRIBUTE_REFERENCED_PROPERTY &#x3D; &#x27;ReferencedProperty&#x27;;
+  private static readonly ATTRIBUTE_HAS_STREAM &#x3D; &#x27;HasStream&#x27;;
+  private static readonly ATTRIBUTE_CONTAINS_TARGET &#x3D; &#x27;ContainsTarget&#x27;;
+  private static readonly ATTRIBUTE_IS_BOUND &#x3D; &#x27;IsBound&#x27;;
+  private static readonly ATTRIBUTE_ENTITY_SET_PATH &#x3D; &#x27;EntitySetPath&#x27;;
+  private static readonly ATTRIBUTE_IS_COMPOSABLE &#x3D; &#x27;IsComposable&#x27;;
+  private static readonly ATTRIBUTE_ENTITY_TYPE &#x3D; &#x27;EntityType&#x27;;
+  private static readonly ATTRIBUTE_PATH &#x3D; &#x27;Path&#x27;;
+  private static readonly ATTRIBUTE_TARGET &#x3D; &#x27;Target&#x27;;
+  private static readonly ATTRIBUTE_FUNCTION &#x3D; &#x27;Function&#x27;;
+  private static readonly ATTRIBUTE_ACTION &#x3D; &#x27;Action&#x27;;
+  private static readonly ATTRIBUTE_ENTITY_SET &#x3D; &#x27;EntitySet&#x27;;
+  private static readonly ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT &#x3D;
+    &#x27;IncludeInServiceDocument&#x27;;
+  private static readonly ATTRIBUTE_ABSTRACT &#x3D; &#x27;Abstract&#x27;;
+  private static readonly ATTRIBUTE_UNDERLYING_TYPE &#x3D; &#x27;UnderlyingType&#x27;;
+  private static readonly ATTRIBUTE_IS_FLAGS &#x3D; &#x27;IsFlags&#x27;;
+  private static readonly ATTRIBUTE_EXTENDS &#x3D; &#x27;Extends&#x27;;
+  private static readonly ATTRIBUTE_BASE_TERM &#x3D; &#x27;BaseTerm&#x27;;
+  private static readonly ATTRIBUTE_APPLIES_TO &#x3D; &#x27;AppliesTo&#x27;;
+
+  public readonly version: string;
+  public readonly references: CsdlReference[];
+  public readonly schemas: CsdlSchema[];
+
+  constructor(xml: string) {
+    try {
+      const parser: DOMParser &#x3D; new DOMParser();
+      const document: Document &#x3D; parser.parseFromString(xml, &#x27;text/xml&#x27;);
+
+      this.checkVersion(document);
+
+      this.version &#x3D; this.getFieldValueByAttribute(
+        new Field(ODataMetadata.ATTRIBUTE_VERSION, FieldType.ATTRIBUTE),
+        document.documentElement.attributes
       );
-    });
-  });
-}
 
-function render(
-  value: any,
-  {
-    aliases,
-    normalize,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    normalize?: boolean;
-    escape?: boolean;
-    prefix?: string;
-  } &#x3D; {}
-): string | number | boolean | null {
-  if (typeof value &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {
-    return render(value(syntax), { aliases, normalize, prefix });
-  }
-  if (
-    typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp;
-    value !&#x3D;&#x3D; null &amp;&amp;
-    value.render !&#x3D;&#x3D; undefined
-  ) {
-    return render(value.render({ aliases, escape, prefix }), {
-      aliases,
-      normalize,
-      escape,
-      prefix,
-    });
-  }
-  return normalize ? normalizeValue(value, { aliases, escape }) : value;
-}
+      this.references &#x3D; this.getObjects(
+        document.documentElement,
+        ODataMetadata.TAG_REFERENCE,
+        [
+          new Field(ODataMetadata.ATTRIBUTE_URI, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_INCLUDE, FieldType.TAG),
+          new Field(ODataMetadata.TAG_INCLUDE_ANNOTATIONS, FieldType.TAG),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
+        ]
+      );
 
-export class Function&lt;T&gt; implements Renderable {
-  constructor(
-    protected name: string,
-    protected values: any[],
-    protected normalize: boolean &#x3D; true,
-    protected escape: boolean &#x3D; false
-  ) {}
-
-  get [Symbol.toStringTag]() {
-    return &#x27;Function&#x27;;
-  }
-
-  toJSON() {
-    return {
-      name: this.name,
-      values: this.values,
-      normalize: this.normalize,
-    };
-  }
-
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    let [field, ...values] &#x3D; this.values;
-
-    field &#x3D; render(field, { aliases, escape, prefix });
-    let params &#x3D; [
-      field,
-      ...values.map((v) &#x3D;&gt;
-        render(v, { aliases, escape, prefix, normalize: this.normalize })
-      ),
-    ];
-    return &#x60;${this.name}(${params.join(&#x27;, &#x27;)})&#x60;;
-  }
-}
-
-export class StringAndCollectionFunctions&lt;T&gt; {
-  concat(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;concat&#x27;, [field, value], normalize);
-  }
-
-  contains(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;contains&#x27;, [field, value], normalize);
-  }
-
-  endsWith(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;endswith&#x27;, [field, value], normalize);
-  }
-
-  indexOf(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;indexof&#x27;, [field, value], normalize);
-  }
-
-  length(value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;length&#x27;, [value], normalize);
-  }
-
-  startsWith(field: any, value: any, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;startswith&#x27;, [field, value], normalize);
-  }
-
-  subString(field: any, start: number, length?: number) {
-    let values &#x3D; [field, start];
-    if (length !&#x3D;&#x3D; undefined) {
-      values.push(length);
+      const dataServices: Element &#x3D;
+        document.documentElement.getElementsByTagName(
+          ODataMetadata.TAG_DATA_SERVICES
+        )[0];
+      this.schemas &#x3D; this.getObjects(dataServices, ODataMetadata.TAG_SCHEMA, [
+        new Field(ODataMetadata.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
+        new Field(ODataMetadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
+        new Field(ODataMetadata.TAG_ENUM_TYPE, FieldType.TAG),
+        new Field(ODataMetadata.TAG_COMPLEX_TYPE, FieldType.TAG),
+        new Field(ODataMetadata.TAG_ENTITY_TYPE, FieldType.TAG),
+        new Field(ODataMetadata.TAG_FUNCTION, FieldType.TAG),
+        new Field(ODataMetadata.TAG_ACTION, FieldType.TAG),
+        new Field(ODataMetadata.TAG_ENTITY_CONTAINER, FieldType.TAG),
+        new Field(ODataMetadata.TAG_TYPE_DEFINITION, FieldType.TAG),
+        new Field(ODataMetadata.TAG_TERM, FieldType.TAG),
+        new Field(ODataMetadata.TAG_ANNOTATIONS, FieldType.TAG),
+        new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
+      ]);
+    } catch (error) {
+      throw new Error(&#x27;Unable to parse metadata, &#x27; + error);
     }
-    return new Function&lt;T&gt;(&#x27;substring&#x27;, values);
-  }
-}
-
-export class CollectionFunctions&lt;T&gt; {
-  hasSubset(s1: T, s2: any) {
-    return new Function&lt;T&gt;(&#x27;hassubset&#x27;, [s1, s2]);
-  }
-  hasSubsequence(s1: T, s2: any) {
-    return new Function&lt;T&gt;(&#x27;hassubsequence&#x27;, [s1, s2]);
-  }
-}
-
-export class StringFunctions&lt;T&gt; {
-  matchesPattern(value: T | string, pattern: string) {
-    return new Function&lt;T&gt;(&#x27;matchesPattern&#x27;, [value, pattern]);
-  }
-  toLower(value: T) {
-    return new Function&lt;T&gt;(&#x27;tolower&#x27;, [value]);
-  }
-  toUpper(value: T) {
-    return new Function&lt;T&gt;(&#x27;toupper&#x27;, [value]);
-  }
-  trim(value: T) {
-    return new Function&lt;T&gt;(&#x27;trim&#x27;, [value]);
-  }
-}
-
-export class DateAndTimeFunctions&lt;T&gt; {
-  date(value: any) {
-    return new Function&lt;T&gt;(&#x27;date&#x27;, [value]);
-  }
-  day(value: any) {
-    return new Function&lt;T&gt;(&#x27;day&#x27;, [value]);
-  }
-  fractionalseconds(value: any) {
-    return new Function&lt;T&gt;(&#x27;fractionalseconds&#x27;, [value]);
-  }
-  hour(value: any) {
-    return new Function&lt;T&gt;(&#x27;hour&#x27;, [value]);
-  }
-  maxdatetime(value: any) {
-    return new Function&lt;T&gt;(&#x27;maxdatetime&#x27;, [value]);
-  }
-  mindatetime(value: any) {
-    return new Function&lt;T&gt;(&#x27;mindatetime&#x27;, [value]);
-  }
-  minute(value: any) {
-    return new Function&lt;T&gt;(&#x27;minute&#x27;, [value]);
-  }
-  month(value: any) {
-    return new Function&lt;T&gt;(&#x27;month&#x27;, [value]);
-  }
-  now() {
-    return new Function&lt;T&gt;(&#x27;now&#x27;, []);
-  }
-  second(value: any) {
-    return new Function&lt;T&gt;(&#x27;second&#x27;, [value]);
-  }
-  time(value: any) {
-    return new Function&lt;T&gt;(&#x27;time&#x27;, [value]);
-  }
-  totaloffsetminutes(value: any) {
-    return new Function&lt;T&gt;(&#x27;totaloffsetminutes&#x27;, [value]);
-  }
-  totalseconds(value: any) {
-    return new Function&lt;T&gt;(&#x27;totalseconds&#x27;, [value]);
-  }
-  year(value: any) {
-    return new Function&lt;T&gt;(&#x27;year&#x27;, [value]);
-  }
-}
-
-export class ArithmeticFunctions&lt;T&gt; {
-  ceiling(value: T | string) {
-    return new Function&lt;T&gt;(&#x27;ceiling&#x27;, [value]);
-  }
-  floor(value: T | string) {
-    return new Function&lt;T&gt;(&#x27;floor&#x27;, [value]);
-  }
-  round(value: T | string) {
-    return new Function&lt;T&gt;(&#x27;round&#x27;, [value]);
-  }
-}
-
-export class TypeFunctions&lt;T&gt; {
-  cast(value: T | string, type?: string) {
-    return new Function&lt;T&gt;(&#x27;cast&#x27;, [value, type]);
   }
 
-  isof(value: T | string, type?: string) {
-    return new Function&lt;T&gt;(&#x27;isof&#x27;, [value, type]);
-  }
-}
-
-export class GeoFunctions&lt;T&gt; {
-  geoDistance(value: T, point: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;geo.distance&#x27;, [value, point], normalize);
-  }
-  geoIntersects(value: T, polygon: string, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;geo.intersects&#x27;, [value, polygon], normalize);
-  }
-  geoLength(line: T, normalize?: boolean) {
-    return new Function&lt;T&gt;(&#x27;geo.length&#x27;, [line], normalize);
-  }
-}
-
-export class ConditionalFunctions&lt;T&gt; {
-  case(condition: T | string, value: any) {
-    return new Function&lt;T&gt;(&#x27;case&#x27;, [condition, value]);
-  }
-}
-
-export class Operator&lt;T&gt; implements Renderable {
-  constructor(
-    protected op: string,
-    protected values: any[],
-    protected normalize: boolean &#x3D; true
-  ) {}
-
-  get [Symbol.toStringTag]() {
-    return &#x27;Operator&#x27;;
+  protected checkVersion(document: Document) {
+    // check version
+    const attributes: NamedNodeMap &#x3D; document.documentElement.attributes;
+    if (!attributes) {
+      throw new Error(&#x27;OData version is not specified in the metadata&#x27;);
+    }
+    const attr: Attr | null &#x3D; attributes.getNamedItem(&#x27;Version&#x27;);
+    if (attr &#x3D;&#x3D;&#x3D; null) {
+      throw new Error(&#x27;OData version is not specified in the metadata&#x27;);
+    }
+    const odataVersion &#x3D; attr?.nodeValue;
+    if (odataVersion !&#x3D;&#x3D; VERSION_4_0) {
+      throw new Error(&#x27;OData version &quot;&#x27; + odataVersion + &#x27;&quot; is not supported&#x27;);
+    }
   }
 
-  toJSON() {
-    return {
-      op: this.op,
-      values: this.values,
-      normalize: this.normalize,
-    };
-  }
+  protected getObjects(
+    parentElement: Element,
+    tag: string,
+    fieldNames: Field[]
+  ): any[] {
+    let objects: any[] &#x3D; [];
 
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    let [left, right] &#x3D; this.values;
+    const children: HTMLCollection &#x3D; parentElement.children;
+    for (let index &#x3D; 0; index &lt; children.length; index++) {
+      const element &#x3D; children.item(index);
 
-    left &#x3D; render(left, { aliases, escape, prefix });
-    if (right !&#x3D;&#x3D; undefined) {
-      right &#x3D; Array.isArray(right)
-        ? &#x60;(${right
-            .map((v) &#x3D;&gt;
-              render(v, {
-                aliases,
-                escape,
-                prefix,
-                normalize: this.normalize,
-              })
+      if (!element || element.nodeName !&#x3D;&#x3D; tag) {
+        continue;
+      }
+
+      const attributes: NamedNodeMap &#x3D; element.attributes;
+      const fieldValues: any[] &#x3D; this.getFieldValues(
+        fieldNames,
+        attributes,
+        element
+      );
+      switch (tag) {
+        case ODataMetadata.TAG_REFERENCE:
+          objects.push(
+            new CsdlReference(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3]
             )
-            .join(&#x27;,&#x27;)})&#x60;
-        : render(right, {
-            aliases,
-            escape,
-            prefix,
-            normalize: this.normalize,
-          });
-      return &#x60;${left} ${this.op} ${right}&#x60;;
+          );
+          break;
+        case ODataMetadata.TAG_INCLUDE:
+          objects.push(new CsdlInclude(fieldValues[0], fieldValues[1]));
+          break;
+        case ODataMetadata.TAG_INCLUDE_ANNOTATIONS:
+          objects.push(
+            new CsdlIncludeAnnotations(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_TERM:
+          objects.push(
+            new CsdlTerm(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5],
+              fieldValues[6],
+              fieldValues[7],
+              fieldValues[8],
+              fieldValues[9]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_ANNOTATIONS:
+          objects.push(
+            new CsdlAnnotations(fieldValues[0], fieldValues[1], fieldValues[2])
+          );
+          break;
+        case ODataMetadata.TAG_ANNOTATION:
+          objects.push(new CsdlAnnotation(fieldValues[0], fieldValues[1]));
+          break;
+        case ODataMetadata.TAG_SCHEMA:
+          objects.push(
+            new CsdlSchema(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5],
+              fieldValues[6],
+              fieldValues[7],
+              fieldValues[8],
+              fieldValues[9],
+              fieldValues[10],
+              fieldValues[11]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_ENUM_TYPE:
+          objects.push(
+            new CsdlEnumType(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_COMPLEX_TYPE:
+          objects.push(
+            new CsdlComplexType(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_ENTITY_TYPE:
+          objects.push(
+            new CsdlEntityType(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5],
+              fieldValues[6],
+              fieldValues[7]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_FUNCTION:
+          objects.push(
+            new CsdlFunction(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_MEMBER:
+          objects.push(new CsdlEnumMember(fieldValues[0], fieldValues[1]));
+          break;
+        case ODataMetadata.TAG_PROPERTY:
+          objects.push(
+            new CsdlProperty(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5],
+              fieldValues[6],
+              fieldValues[7],
+              fieldValues[8]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_PROPERTY_REF:
+          objects.push(new CsdlPropertyRef(fieldValues[0], fieldValues[1]));
+          break;
+        case ODataMetadata.TAG_NAVIGATION_PROPERTY:
+          objects.push(
+            new CsdlNavigationProperty(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5],
+              fieldValues[6]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_REFERENTIAL_CONSTRAINT:
+          objects.push(
+            new CsdlReferentialConstraint(fieldValues[0], fieldValues[1])
+          );
+          break;
+        case ODataMetadata.TAG_PARAMETER:
+          objects.push(
+            new CsdlParameter(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5],
+              fieldValues[6]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_ACTION:
+          objects.push(
+            new CsdlAction(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_ENTITY_SET:
+          objects.push(
+            new CsdlEntitySet(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_SINGLETON:
+          objects.push(
+            new CsdlSingleton(fieldValues[0], fieldValues[1], fieldValues[2])
+          );
+          break;
+        case ODataMetadata.TAG_FUNCTION_IMPORT:
+          objects.push(
+            new CsdlFunctionImport(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3]
+            )
+          );
+          break;
+        case ODataMetadata.TAG_ACTION_IMPORT:
+          objects.push(
+            new CsdlActionImport(fieldValues[0], fieldValues[1], fieldValues[2])
+          );
+          break;
+        case ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING:
+          objects.push(
+            new CsdlNavigationPropertyBinding(fieldValues[0], fieldValues[1])
+          );
+          break;
+        case ODataMetadata.TAG_TYPE_DEFINITION:
+          objects.push(
+            new CsdlTypeDefinition(
+              fieldValues[0],
+              fieldValues[1],
+              fieldValues[2],
+              fieldValues[3],
+              fieldValues[4],
+              fieldValues[5],
+              fieldValues[6],
+              fieldValues[7]
+            )
+          );
+          break;
+        default:
+          throw new Error(&#x27;Unknwon tag:&#x27; + tag);
+      }
     }
-    return &#x60;${this.op}(${left})&#x60;;
+
+    return objects;
+  }
+
+  protected getObject(
+    parentElement: Element,
+    tag: string,
+    fieldNames: Field[]
+  ): any {
+    let object: any;
+
+    const children: HTMLCollection &#x3D; parentElement.children;
+    let element: Element | undefined | null;
+    for (let index &#x3D; 0; index &lt; children.length; index++) {
+      if (children &amp;&amp; children.item(index)?.nodeName &#x3D;&#x3D;&#x3D; tag) {
+        if (element !&#x3D;&#x3D; undefined &amp;&amp; element !&#x3D;&#x3D; null) {
+          throw new Error(&#x27;Expected one &#x27; + tag);
+        }
+        element &#x3D; children.item(index);
+      }
+    }
+
+    if (element !&#x3D;&#x3D; undefined &amp;&amp; element !&#x3D;&#x3D; null) {
+      const attributes: NamedNodeMap &#x3D; element.attributes;
+      const fieldValues: any[] &#x3D; this.getFieldValues(
+        fieldNames,
+        attributes,
+        element
+      );
+      switch (tag) {
+        case ODataMetadata.TAG_KEY:
+          object &#x3D; new CsdlKey(fieldValues[0]);
+          break;
+        case ODataMetadata.TAG_RETURN_TYPE:
+          object &#x3D; new CsdlReturnType(
+            fieldValues[0],
+            fieldValues[1],
+            fieldValues[2],
+            fieldValues[3],
+            fieldValues[4],
+            fieldValues[5]
+          );
+          break;
+        case ODataMetadata.TAG_ENTITY_CONTAINER:
+          object &#x3D; new CsdlEntityContainer(
+            fieldValues[0],
+            fieldValues[1],
+            fieldValues[2],
+            fieldValues[3],
+            fieldValues[4],
+            fieldValues[5]
+          );
+          break;
+        case ODataMetadata.TAG_ON_DELETE:
+          object &#x3D; new CsdlOnDelete(fieldValues[0]);
+          break;
+        default:
+          throw new Error(&#x27;Unknwon tag:&#x27; + tag);
+      }
+    }
+
+    return object;
+  }
+
+  protected getFieldValues(
+    fields: Field[],
+    attributes: NamedNodeMap,
+    element: Element
+  ): any[] {
+    const fieldValues: any[] &#x3D; [];
+
+    for (const field of fields) {
+      if (field.fieldType &#x3D;&#x3D;&#x3D; FieldType.TAG) {
+        fieldValues.push(this.getFieldValueByTag(field, element));
+      } else if (field.fieldType &#x3D;&#x3D;&#x3D; FieldType.ATTRIBUTE) {
+        fieldValues.push(this.getFieldValueByAttribute(field, attributes));
+      } else {
+        throw new Error(&#x27;Unknown field type: &#x27; + field.fieldType);
+      }
+    }
+
+    return fieldValues;
+  }
+
+  protected getFieldValueByAttribute(
+    field: Field,
+    attributes: NamedNodeMap
+  ): any {
+    switch (field.name) {
+      case ODataMetadata.ATTRIBUTE_VERSION:
+      case ODataMetadata.ATTRIBUTE_URI:
+      case ODataMetadata.ATTRIBUTE_NAMESPACE:
+      case ODataMetadata.ATTRIBUTE_ALIAS:
+      case ODataMetadata.ATTRIBUTE_TERM_NAMESPACE:
+      case ODataMetadata.ATTRIBUTE_TERM:
+      case ODataMetadata.ATTRIBUTE_QUALIFIER:
+      case ODataMetadata.ATTRIBUTE_TARGET_NAMESPACE:
+      case ODataMetadata.ATTRIBUTE_NAME:
+      case ODataMetadata.ATTRIBUTE_TYPE:
+      case ODataMetadata.ATTRIBUTE_SRID:
+      case ODataMetadata.ATTRIBUTE_DEFAULT_VALUE:
+      case ODataMetadata.ATTRIBUTE_PARTNER:
+      case ODataMetadata.ATTRIBUTE_PROPERTY:
+      case ODataMetadata.ATTRIBUTE_REFERENCED_PROPERTY:
+      case ODataMetadata.ATTRIBUTE_BASE_TYPE:
+      case ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH:
+      case ODataMetadata.ATTRIBUTE_ENTITY_TYPE:
+      case ODataMetadata.ATTRIBUTE_PATH:
+      case ODataMetadata.ATTRIBUTE_TARGET:
+      case ODataMetadata.ATTRIBUTE_FUNCTION:
+      case ODataMetadata.ATTRIBUTE_ACTION:
+      case ODataMetadata.ATTRIBUTE_ENTITY_SET:
+      case ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE:
+      case ODataMetadata.ATTRIBUTE_EXTENDS:
+      case ODataMetadata.ATTRIBUTE_BASE_TERM:
+      case ODataMetadata.ATTRIBUTE_APPLIES_TO:
+        return this.getAttributeValue(attributes, field.name);
+      case ODataMetadata.ATTRIBUTE_NULLABLE:
+      case ODataMetadata.ATTRIBUTE_UNICODE:
+      case ODataMetadata.ATTRIBUTE_OPEN_TYPE:
+      case ODataMetadata.ATTRIBUTE_HAS_STREAM:
+      case ODataMetadata.ATTRIBUTE_IS_BOUND:
+      case ODataMetadata.ATTRIBUTE_IS_COMPOSABLE:
+      case ODataMetadata.ATTRIBUTE_CONTAINS_TARGET:
+      case ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT:
+      case ODataMetadata.ATTRIBUTE_ABSTRACT:
+      case ODataMetadata.ATTRIBUTE_IS_FLAGS:
+        return this.propertyValueToBoolean(
+          this.getAttributeValue(attributes, field.name)
+        );
+      case ODataMetadata.ATTRIBUTE_VALUE:
+      case ODataMetadata.ATTRIBUTE_MAX_LENGTH:
+      case ODataMetadata.ATTRIBUTE_PRECISION:
+      case ODataMetadata.ATTRIBUTE_SCALE:
+        return this.propertyValueToNumber(
+          this.getAttributeValue(attributes, field.name)
+        );
+      default:
+        throw new Error(&#x27;Unknwon attribute:&#x27; + field.name);
+    }
+  }
+
+  protected getFieldValueByTag(field: Field, element: Element): any[] {
+    switch (field.name) {
+      case ODataMetadata.TAG_INCLUDE:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAMESPACE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_INCLUDE_ANNOTATIONS:
+        return this.getObjects(element, field.name, [
+          new Field(
+            ODataMetadata.ATTRIBUTE_TERM_NAMESPACE,
+            FieldType.ATTRIBUTE
+          ),
+          new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.ATTRIBUTE_TARGET_NAMESPACE,
+            FieldType.ATTRIBUTE
+          ),
+        ]);
+      case ODataMetadata.TAG_TERM:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_BASE_TERM, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_APPLIES_TO, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_ANNOTATIONS:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_TARGET, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
+          new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_ANNOTATION:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_TERM, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_QUALIFIER, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_ENUM_TYPE:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_MEMBER, FieldType.TAG),
+          new Field(
+            ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE,
+            FieldType.ATTRIBUTE
+          ),
+          new Field(ODataMetadata.ATTRIBUTE_IS_FLAGS, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_COMPLEX_TYPE:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_PROPERTY, FieldType.TAG),
+          new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
+          new Field(ODataMetadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_ENTITY_TYPE:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_KEY, FieldType.TAG),
+          new Field(ODataMetadata.TAG_PROPERTY, FieldType.TAG),
+          new Field(ODataMetadata.TAG_NAVIGATION_PROPERTY, FieldType.TAG),
+          new Field(ODataMetadata.ATTRIBUTE_BASE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_OPEN_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_HAS_STREAM, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ABSTRACT, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_FUNCTION:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_RETURN_TYPE, FieldType.TAG),
+          new Field(ODataMetadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH,
+            FieldType.ATTRIBUTE
+          ),
+          new Field(ODataMetadata.ATTRIBUTE_IS_COMPOSABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_PARAMETER, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_MEMBER:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_VALUE, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_PROPERTY:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_DEFAULT_VALUE, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_KEY:
+        return this.getObject(element, field.name, [
+          new Field(ODataMetadata.TAG_PROPERTY_REF, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_PROPERTY_REF:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ALIAS, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_NAVIGATION_PROPERTY:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_PARTNER, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.ATTRIBUTE_CONTAINS_TARGET,
+            FieldType.ATTRIBUTE
+          ),
+          new Field(ODataMetadata.TAG_REFERENTIAL_CONSTRAINT, FieldType.TAG),
+          new Field(ODataMetadata.TAG_ON_DELETE, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_REFERENTIAL_CONSTRAINT:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_PROPERTY, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.ATTRIBUTE_REFERENCED_PROPERTY,
+            FieldType.ATTRIBUTE
+          ),
+        ]);
+      case ODataMetadata.TAG_ON_DELETE:
+        return this.getObject(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_ACTION, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_PARAMETER:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_RETURN_TYPE:
+        return this.getObject(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_NULLABLE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_ACTION:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_RETURN_TYPE, FieldType.TAG),
+          new Field(ODataMetadata.ATTRIBUTE_IS_BOUND, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.ATTRIBUTE_ENTITY_SET_PATH,
+            FieldType.ATTRIBUTE
+          ),
+          new Field(ODataMetadata.TAG_PARAMETER, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_ENTITY_CONTAINER:
+        return this.getObject(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_EXTENDS, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ENTITY_SET, FieldType.TAG),
+          new Field(ODataMetadata.TAG_SINGLETON, FieldType.TAG),
+          new Field(ODataMetadata.TAG_FUNCTION_IMPORT, FieldType.TAG),
+          new Field(ODataMetadata.TAG_ACTION_IMPORT, FieldType.TAG),
+        ]);
+      case ODataMetadata.TAG_ENTITY_SET:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ENTITY_TYPE, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING,
+            FieldType.TAG
+          ),
+          new Field(
+            ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT,
+            FieldType.ATTRIBUTE
+          ),
+        ]);
+      case ODataMetadata.TAG_SINGLETON:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_TYPE, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING,
+            FieldType.TAG
+          ),
+        ]);
+      case ODataMetadata.TAG_FUNCTION_IMPORT:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_FUNCTION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.ATTRIBUTE_INCLUDE_IN_SERVICE_DOCUMENT,
+            FieldType.ATTRIBUTE
+          ),
+        ]);
+      case ODataMetadata.TAG_ACTION_IMPORT:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ACTION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_ENTITY_SET, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_NAVIGATION_PROPERTY_BINDING:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_PATH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_TARGET, FieldType.ATTRIBUTE),
+        ]);
+      case ODataMetadata.TAG_TYPE_DEFINITION:
+        return this.getObjects(element, field.name, [
+          new Field(ODataMetadata.ATTRIBUTE_NAME, FieldType.ATTRIBUTE),
+          new Field(
+            ODataMetadata.ATTRIBUTE_UNDERLYING_TYPE,
+            FieldType.ATTRIBUTE
+          ),
+          new Field(ODataMetadata.ATTRIBUTE_MAX_LENGTH, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_PRECISION, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SCALE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_UNICODE, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.ATTRIBUTE_SRID, FieldType.ATTRIBUTE),
+          new Field(ODataMetadata.TAG_ANNOTATION, FieldType.TAG),
+        ]);
+      default:
+        throw new Error(&#x27;Unknwon tag:&#x27; + field.name);
+    }
+  }
+
+  protected getAttributeValue(attributes: NamedNodeMap, attributeName: string) {
+    const attribute: Attr | null &#x3D; attributes.getNamedItem(attributeName);
+    return attribute !&#x3D;&#x3D; null &amp;&amp; attribute.nodeValue
+      ? attribute.nodeValue
+      : undefined;
+  }
+
+  protected propertyValueToNumber(attributeValue?: string) {
+    return attributeValue !&#x3D;&#x3D; undefined ? Number(attributeValue) : undefined;
+  }
+
+  protected propertyValueToBoolean(attributeValue?: string) {
+    return attributeValue !&#x3D;&#x3D; undefined ? attributeValue &#x3D;&#x3D;&#x3D; &#x27;true&#x27; : false;
   }
 }
-
-export class LogicalOperators&lt;T&gt; {
-  eq(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;eq&#x27;, [left, right], normalize);
-  }
-  ne(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;ne&#x27;, [left, right], normalize);
-  }
-  gt(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;gt&#x27;, [left, right], normalize);
-  }
-  ge(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;ge&#x27;, [left, right], normalize);
-  }
-  lt(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;lt&#x27;, [left, right], normalize);
-  }
-  le(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;le&#x27;, [left, right], normalize);
-  }
-  /*
-  and(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;and&#x27;, [left, right], normalize);
-  }
-  or(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;or&#x27;, [left, right], normalize);
-  }
-  */
-  not(value: any, normalize?: boolean) {
-    return new Operator&lt;T&gt;(&#x27;not&#x27;, [value], normalize);
-  }
-  has(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;has&#x27;, [left, right], normalize);
-  }
-  in(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;in&#x27;, [left, right], normalize);
-  }
-}
-
-export class ArithmeticOperators&lt;T&gt; {
-  add(left: any, right: any, normalize?: boolean) {
-    return new Operator&lt;T&gt;(&#x27;add&#x27;, [left, right], normalize);
-  }
-  sub(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;sub&#x27;, [left, right], normalize);
-  }
-  mul(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;mul&#x27;, [left, right], normalize);
-  }
-  div(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;div&#x27;, [left, right], normalize);
-  }
-  mod(left: any, right: any, normalize?: boolean) {
-    return new Operator(&#x27;mod&#x27;, [left, right], normalize);
-  }
-  neg(value: any, normalize?: boolean) {
-    return new Operator(&#x27;-&#x27;, [value], normalize);
-  }
-}
-
-export class Grouping&lt;T&gt; implements Renderable {
-  constructor(protected group: Renderable) {}
-
-  get [Symbol.toStringTag]() {
-    return &#x27;Grouping&#x27;;
-  }
-
-  toJSON() {
-    return {
-      group: this.group.toJSON(),
-    };
-  }
-
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    return &#x60;(${render(this.group, { aliases, escape, prefix })})&#x60;;
-  }
-}
-
-/*
-export class Navigation&lt;T, N&gt; implements Renderable {
-  constructor(protected field: T, protected value: Field&lt;N&gt;) {}
-
-  get [Symbol.toStringTag]() {
-    return &#x27;Navigation&#x27;;
-  }
-
-  toJSON() {
-    return {
-      field: this.field,
-      value: this.value,
-    };
-  }
-
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    return &#x60;${this.field}/${render(this.value, { aliases, escape, prefix })}&#x60;;
-  }
-}
-*/
-
-export class GroupingOperators&lt;T&gt; {
-  grouping(value: any) {
-    return new Grouping(value);
-  }
-
-  /*
-  navigation&lt;N&gt;(field: T, value: Field&lt;N&gt;) {
-    return new Navigation&lt;T, N&gt;(field, value);
-  }
-  */
-}
-
-export class Lambda&lt;T&gt; implements Renderable {
-  constructor(
-    protected op: string,
-    protected values: any[],
-    protected alias?: string
-  ) {}
-
-  get [Symbol.toStringTag]() {
-    return &#x27;Lambda&#x27;;
-  }
-
-  toJSON() {
-    return {
-      op: this.op,
-      values: this.values,
-      alias: this.alias,
-    };
-  }
-
-  render({
-    aliases,
-    escape,
-    prefix,
-  }: {
-    aliases?: QueryCustomType[];
-    escape?: boolean;
-    prefix?: string;
-  }): string {
-    let [left, right] &#x3D; this.values;
-
-    left &#x3D; render(left, { aliases, escape, prefix });
-    let alias &#x3D; this.alias || left.split(&#x27;/&#x27;).pop().toLowerCase()[0];
-    return &#x60;${left}/${this.op}(${alias}:${render(right, {
-      aliases,
-      escape,
-      prefix: alias,
-    })})&#x60;;
-  }
-}
-
-export class LambdaOperators&lt;T&gt; {
-  any(field: T, value: any, alias?: string) {
-    return new Lambda(&#x27;any&#x27;, [field, value], alias);
-  }
-
-  all(field: T, value: any, alias?: string) {
-    return new Lambda(&#x27;all&#x27;, [field, value], alias);
-  }
-}
-
-export class ODataOperators&lt;T&gt; {}
-export interface ODataOperators&lt;T&gt;
-  extends LogicalOperators&lt;T&gt;,
-    ArithmeticOperators&lt;T&gt;,
-    GroupingOperators&lt;T&gt;,
-    LambdaOperators&lt;T&gt; {}
-
-applyMixins(ODataOperators, [
-  LogicalOperators,
-  ArithmeticOperators,
-  GroupingOperators,
-  LambdaOperators,
-]);
-export const operators: ODataOperators&lt;any&gt; &#x3D; new ODataOperators&lt;any&gt;();
-
-export class ODataFunctions&lt;T&gt; {}
-export interface ODataFunctions&lt;T&gt;
-  extends StringAndCollectionFunctions&lt;T&gt;,
-    CollectionFunctions&lt;T&gt;,
-    StringFunctions&lt;T&gt;,
-    DateAndTimeFunctions&lt;T&gt;,
-    ArithmeticFunctions&lt;T&gt;,
-    TypeFunctions&lt;T&gt;,
-    GeoFunctions&lt;T&gt;,
-    ConditionalFunctions&lt;T&gt; {}
-
-applyMixins(ODataFunctions, [
-  StringAndCollectionFunctions,
-  CollectionFunctions,
-  StringFunctions,
-  DateAndTimeFunctions,
-  ArithmeticFunctions,
-  TypeFunctions,
-  GeoFunctions,
-  ConditionalFunctions,
-]);
-export const functions: ODataFunctions&lt;any&gt; &#x3D; new ODataFunctions&lt;any&gt;();
-
-export class ODataSyntax&lt;T&gt; {}
-export interface ODataSyntax&lt;T&gt; extends ODataOperators&lt;T&gt;, ODataFunctions&lt;T&gt; {}
-applyMixins(ODataSyntax, [ODataOperators, ODataFunctions]);
-
-export const syntax: ODataSyntax&lt;any&gt; &#x3D; new ODataSyntax&lt;any&gt;();
 </code></pre>
     </div>
 </div>

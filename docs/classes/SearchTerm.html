@@ -43,7 +43,7 @@
 
 <ol class="breadcrumb">
   <li>Classes</li>
-  <li >Expression</li>
+  <li >SearchTerm</li>
 </ol>
 
 <ul class="nav nav-tabs" role="tablist">
@@ -61,7 +61,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>projects/angular-odata/src/lib/resources/query/expressions/base.ts</code>
+            <code>projects/angular-odata/src/lib/resources/query/expressions/search.ts</code>
         </p>
 
 
@@ -79,21 +79,6 @@
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <h6><b>Properties</b></h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <ul class="index-list">
-                            <li>
-                                    <span class="modifier">Protected</span>
-                                <a href="#_children" >_children</a>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
 
                 <tr>
                     <td class="col-md-4">
@@ -104,13 +89,6 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#children" >children</a>
-                            </li>
-                            <li>
-                                <a href="#length" >length</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Abstract</span>
                                 <a href="#render" >render</a>
                             </li>
                             <li>
@@ -148,12 +126,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(undefined: literal type)</code>
+<code>constructor(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:7</a></div>
                             </td>
                         </tr>
 
@@ -171,9 +149,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
+                                                        <td>value</td>
                                                   
                                                         <td>
-                                                                    <code>literal type</code>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -190,39 +169,6 @@
         </table>
 </section>
 
-            <section>
-    
-    <h3 id="inputs">
-        Properties
-    </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="_children"></a>
-                    <span class="name">
-                            <span class="modifier">Protected</span>
-                        <span ><b>_children</b></span>
-                        <a href="#_children"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Renderable.html" target="_self" >Renderable[]</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:5</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-</section>
 
             <section>
     
@@ -233,83 +179,8 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="children"></a>
-                    <span class="name">
-                        <span ><b>children</b></span>
-                        <a href="#children"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>children()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="28"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:28</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>    <code>{}</code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="length"></a>
-                    <span class="name">
-                        <span ><b>length</b></span>
-                        <a href="#length"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>length()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:32</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="render"></a>
                     <span class="name">
-                        <span class="modifier">Abstract</span>
                         <span ><b>render</b></span>
                         <a href="#render"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -317,16 +188,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>render(undefined: literal type)</code>
+<code>render(undefined: literal type)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="20"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:20</a></div>
                 </td>
             </tr>
 
@@ -393,8 +263,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="36"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:36</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="14"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:14</a></div>
                 </td>
             </tr>
 
@@ -403,7 +273,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>    <code>{ children: any; }</code>
+                        <b>Returns : </b>    <code>{ value: string; }</code>
 
                     </div>
                 </td>
@@ -436,7 +306,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/base.ts:14</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/search.ts:10</a></div>
                                 </td>
                             </tr>
 
@@ -448,23 +318,117 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
-import { Renderable } from &#x27;./syntax&#x27;;
+import { Expression } from &#x27;./base&#x27;;
+import { render, Grouping, Renderable } from &#x27;./syntax&#x27;;
 
-export abstract class Expression&lt;T&gt; implements Renderable {
-  protected _children: Renderable[];
-  constructor({
-    children,
-  }: {
-    children?: Renderable[];
-  } &#x3D; {}) {
-    this._children &#x3D; children || [];
-  }
+export type SearchConnector &#x3D; &#x27;AND&#x27; | &#x27;OR&#x27;;
+
+export class SearchTerm implements Renderable {
+  constructor(protected value: string) {}
 
   get [Symbol.toStringTag]() {
-    return &#x27;Expression&#x27;;
+    return &#x27;SearchTerm&#x27;;
   }
 
-  abstract render({
+  toJSON() {
+    return {
+      value: this.value,
+    };
+  }
+
+  render({
+    aliases,
+    escape,
+    prefix,
+  }: {
+    aliases?: QueryCustomType[];
+    escape?: boolean;
+    prefix?: string;
+  }): string {
+    return &#x60;${render(this.value, { aliases, escape, prefix })}&#x60;;
+  }
+}
+
+export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
+  private _connector: SearchConnector;
+  private _negated: boolean;
+  constructor({
+    children,
+    connector,
+    negated,
+  }: {
+    children?: Renderable[];
+    connector?: SearchConnector;
+    negated?: boolean;
+  } &#x3D; {}) {
+    super({ children });
+    this._connector &#x3D; connector || &#x27;AND&#x27;;
+    this._negated &#x3D; negated || false;
+  }
+
+  static e&lt;T&gt;(connector: SearchConnector &#x3D; &#x27;AND&#x27;) {
+    return new SearchExpression&lt;T&gt;({ connector });
+  }
+
+  static search&lt;T extends object&gt;(
+    opts: (e: {
+      e: (connector?: SearchConnector) &#x3D;&gt; SearchExpression&lt;T&gt;;
+    }) &#x3D;&gt; SearchExpression&lt;T&gt;
+  ): SearchExpression&lt;T&gt; {
+    return opts({
+      e: SearchExpression.e,
+    }) as SearchExpression&lt;T&gt;;
+  }
+
+  private _add(
+    node: Renderable,
+    connector?: SearchConnector
+  ): SearchExpression&lt;T&gt; {
+    if (connector !&#x3D;&#x3D; undefined &amp;&amp; this._connector !&#x3D;&#x3D; connector) {
+      let children: Renderable[] &#x3D; [];
+      if (this._children.length &gt; 0) {
+        if (this._children.length &#x3D;&#x3D;&#x3D; 1) {
+          children &#x3D; [...this._children];
+        } else {
+          let exp &#x3D; new SearchExpression&lt;T&gt;({
+            children: this._children,
+            connector: this._connector,
+            negated: this._negated,
+          });
+          if (exp.length() &gt; 1) {
+            children.push(new Grouping(exp));
+          } else {
+            children.push(exp);
+          }
+        }
+      }
+      if (
+        node instanceof SearchExpression &amp;&amp;
+        (node.connector() &#x3D;&#x3D;&#x3D; connector || node.length() &#x3D;&#x3D;&#x3D; 1)
+      ) {
+        children &#x3D; [...children, ...node.children()];
+      } else {
+        children.push(new Grouping(node));
+      }
+      this._connector &#x3D; connector;
+      this._children &#x3D; children;
+    } else if (
+      node instanceof SearchExpression &amp;&amp;
+      !node.negated() &amp;&amp;
+      (node.connector() &#x3D;&#x3D;&#x3D; connector || node.length() &#x3D;&#x3D;&#x3D; 1)
+    ) {
+      this._children &#x3D; [...this._children, ...node.children()];
+    } else {
+      this._children.push(
+        node instanceof SearchExpression &amp;&amp; !node.negated()
+          ? new Grouping(node)
+          : node
+      );
+    }
+    return this;
+  }
+
+  render({
     aliases,
     escape,
     prefix,
@@ -472,20 +436,49 @@ export abstract class Expression&lt;T&gt; implements Renderable {
     aliases?: QueryCustomType[] | undefined;
     escape?: boolean | undefined;
     prefix?: string | undefined;
-  }): string;
-
-  children() {
-    return this._children;
+  } &#x3D; {}): string {
+    let content &#x3D; this._children
+      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
+      .join(&#x60; ${this._connector} &#x60;);
+    return content;
   }
 
-  length() {
-    return this._children.length;
-  }
-
-  toJSON() {
+  override toJSON() {
     return {
       children: this._children.map((c) &#x3D;&gt; c.toJSON()),
+      connector: this._connector,
+      negated: this._negated,
     };
+  }
+
+  connector() {
+    return this._connector;
+  }
+
+  negated() {
+    return this._negated;
+  }
+
+  or(exp: SearchExpression&lt;T&gt;): SearchExpression&lt;T&gt; {
+    return this._add(exp, &#x27;OR&#x27;);
+  }
+
+  and(exp: SearchExpression&lt;T&gt;): SearchExpression&lt;T&gt; {
+    return this._add(exp, &#x27;AND&#x27;);
+  }
+
+  not(exp: SearchExpression&lt;T&gt;): SearchExpression&lt;T&gt; {
+    const notExp &#x3D; new SearchExpression&lt;T&gt;({
+      children: exp.children(),
+      connector: exp.connector(),
+      negated: true,
+    });
+
+    return this._add(notExp, this._connector);
+  }
+
+  term(value: any) {
+    return this._add(new SearchTerm(value));
   }
 }
 </code></pre>
@@ -525,7 +518,7 @@ export abstract class Expression&lt;T&gt; implements Renderable {
        <script>
             var COMPODOC_CURRENT_PAGE_DEPTH = 1;
             var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
-            var COMPODOC_CURRENT_PAGE_URL = 'Expression.html';
+            var COMPODOC_CURRENT_PAGE_URL = 'SearchTerm.html';
             var MAX_SEARCH_RESULTS = 15;
        </script>
 
