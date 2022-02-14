@@ -141,7 +141,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     if (
       this._resource !== null &&
       this._resource.type() !== resource.type() &&
-      !resource.isSubtypeOf(this._resource)
+      !this._resource.isSubtypeOf(resource)
     )
       throw new Error(
         `Can't reattach ${resource.type()} to ${this._resource.type()}`

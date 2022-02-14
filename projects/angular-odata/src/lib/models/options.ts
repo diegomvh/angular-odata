@@ -608,7 +608,7 @@ export class ODataModelOptions<T> {
     if (
       self._resource !== null &&
       resource.type() !== self._resource.type() &&
-      !resource.isSubtypeOf(self._resource)
+      !self._resource.isSubtypeOf(resource)
     )
       throw new Error(
         `Can't reattach ${resource.type()} to ${self._resource.type()}`
