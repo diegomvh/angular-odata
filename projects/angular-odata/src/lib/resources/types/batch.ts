@@ -161,6 +161,12 @@ export class ODataBatchResource extends ODataResource<any> {
     segments.add(PathSegmentNames.batch, $BATCH);
     return new ODataBatchResource(api, { segments });
   }
+
+  clone() {
+    const resource = this._clone<ODataBatchResource>();
+    resource._requests = [...this._requests];
+    return resource;
+  }
   //#endregion
 
   private storeRequester() {

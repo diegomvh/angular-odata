@@ -36,17 +36,20 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     );
     return new ODataEntityResource<E>(api, { segments, query, schema });
   }
+  clone() {
+    return this._clone<ODataEntityResource<T>>();
+  }
   //#endregion
 
   key(value: any) {
-    const entity = this.clone<ODataEntityResource<T>>();
+    const entity = this.clone();
     var key = this.resolveKey(value);
     if (key !== undefined) entity.segment((s) => s.entitySet().key(key));
     return entity;
   }
 
   keys(values: any[]) {
-    const entity = this.clone<ODataEntityResource<T>>();
+    const entity = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(

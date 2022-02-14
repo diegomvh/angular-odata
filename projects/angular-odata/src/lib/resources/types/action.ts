@@ -67,6 +67,10 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
 
     return action;
   }
+
+  clone() {
+    return this._clone<ODataActionResource<P, R>>();
+  }
   //#endregion
 
   override returnType() {
@@ -110,7 +114,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
       ODataPropertyOptions &
       ODataNoneOptions = {}
   ): Observable<any> {
-    return this.clone<ODataActionResource<P, R>>().post(params, options);
+    return this.clone().post(params, options);
   }
 
   /**

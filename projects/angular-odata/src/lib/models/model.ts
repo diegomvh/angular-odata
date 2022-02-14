@@ -154,14 +154,14 @@ export class ODataModel<T> {
     return field.resourceFactory<T, N>(resource) as ODataPropertyResource<N>;
   }
 
-  attach(
+  attach<R>(
     resource:
-      | ODataEntityResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
-      | ODataSingletonResource<T>
+      | ODataEntityResource<R>
+      | ODataNavigationPropertyResource<R>
+      | ODataPropertyResource<R>
+      | ODataSingletonResource<R>
   ) {
-    return this._meta.attach(this, resource);
+    return this._meta.attach<R>(this, resource);
   }
   //#endregion
 

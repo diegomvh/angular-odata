@@ -68,6 +68,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
     return func;
   }
+  clone() {
+    return this._clone<ODataFunctionResource<P, R>>();
+  }
   //#endregion
 
   override returnType() {
@@ -85,9 +88,7 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
         }, {});
       });
     }
-    return this.clone<ODataFunctionResource<P, R>>().segment((s) =>
-      s.function().parameters<P>(parameters)
-    );
+    return this.clone().segment((s) => s.function().parameters<P>(parameters));
   }
 
   //#region Requests

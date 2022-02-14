@@ -597,13 +597,13 @@ export class ODataModelOptions<T> {
     return field;
   }
 
-  attach(
+  attach<R>(
     self: ODataModel<T>,
     resource:
-      | ODataEntityResource<T>
-      | ODataNavigationPropertyResource<T>
-      | ODataPropertyResource<T>
-      | ODataSingletonResource<T>
+      | ODataEntityResource<R>
+      | ODataNavigationPropertyResource<R>
+      | ODataPropertyResource<R>
+      | ODataSingletonResource<R>
   ) {
     if (
       self._resource !== null &&
@@ -611,12 +611,12 @@ export class ODataModelOptions<T> {
       !self._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `Can't reattach ${resource.type()} to ${self._resource.type()}`
+        `Can't reattach ${self._resource.type()} to ${resource.type()}`
       );
 
     const current = self._resource;
     if (current === null || !current.isEqualTo(resource)) {
-      self._resource = resource;
+      self._resource = resource as ODataResource<any>;
       self.events$.emit(
         new ODataModelEvent('attach', {
           model: self,
@@ -661,7 +661,7 @@ export class ODataModelOptions<T> {
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource =
         resource ||
-        model._resource ||
+        //model._resource FIXME: check
         (ODataModelOptions.isModel(model)
           ? (model as ODataModel<any>)._meta.modelResourceFactory()
           : (

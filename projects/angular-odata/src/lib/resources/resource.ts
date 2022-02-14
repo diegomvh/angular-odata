@@ -134,19 +134,14 @@ export class ODataResource<T> {
       this.schema?.isSubtypeOf(other.schema)
     );
   }
-  /*
-  isParentOf(other: ODataResource<any>) {
-    const [selfPath] = this.pathAndParams();
-    const [otherPath] = other.pathAndParams();
-    return otherPath !== selfPath && otherPath.startsWith(selfPath);
-  }
 
-  isChildOf(other: ODataResource<any>) {
-    const [selfPath] = this.pathAndParams();
-    const [otherPath] = other.pathAndParams();
-    return otherPath !== selfPath && selfPath.startsWith(otherPath);
+  isSupertypeOf(other: ODataResource<any>) {
+    return (
+      this.schema !== undefined &&
+      other.schema !== undefined &&
+      this.schema?.isSupertypeOf(other.schema)
+    );
   }
-  */
 
   isEqualTo(other: ODataResource<any>, test?: 'path' | 'params') {
     const [selfPath, selfParams] = this.pathAndParams();
@@ -181,7 +176,7 @@ export class ODataResource<T> {
     return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
   }
 
-  clone<R extends ODataResource<T>>(): R {
+  protected _clone<R extends ODataResource<T>>() {
     const Ctor = this.constructor as typeof ODataResource;
     return new Ctor(this.api, {
       schema: this.schema,

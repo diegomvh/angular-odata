@@ -65,7 +65,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   }
 
   /**
-   * Returns a boolean indicating if the structured type is a sub type of the given type.
+   * Returns a boolean indicating if the structured type is a subtype of the given type.
    * @param type String representation of the type
    * @returns True if the callable is type of the given type
    */
@@ -73,6 +73,18 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
     return (
       super.isSubtypeOf(schema) ||
       (this.parent !== undefined && this.parent.isSubtypeOf(schema))
+    );
+  }
+
+  /**
+   * Returns a boolean indicating if the structured type is a supertype of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
+  override isSupertypeOf(schema: ODataStructuredType<any>): boolean {
+    return (
+      super.isSupertypeOf(schema) ||
+      this.children.some((c) => c.isSupertypeOf(schema))
     );
   }
 

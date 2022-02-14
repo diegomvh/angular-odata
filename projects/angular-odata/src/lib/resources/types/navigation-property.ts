@@ -91,10 +91,13 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
     return navigation;
   }
+  clone() {
+    return this._clone<ODataNavigationPropertyResource<T>>();
+  }
   //#endregion
 
   key(value: any) {
-    const navigation = this.clone<ODataNavigationPropertyResource<T>>();
+    const navigation = this.clone();
     var key = this.resolveKey(value);
     if (key !== undefined)
       navigation.segment((s) => s.navigationProperty().key(key));
@@ -102,7 +105,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   }
 
   keys(values: any[]) {
-    const navigation = this.clone<ODataNavigationPropertyResource<T>>();
+    const navigation = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
@@ -358,7 +361,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
   ): Observable<T[]> {
-    let res = this.clone<ODataNavigationPropertyResource<T>>();
+    let res = this.clone();
     // Clean Paging
     res.query((q) => q.clearPaging());
     let fetch = (opts?: {

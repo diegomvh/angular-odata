@@ -33,17 +33,20 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     if (schema !== undefined) segment.type(schema.type());
     return new ODataSingletonResource<S>(api, { segments, query, schema });
   }
+  clone() {
+    return this._clone<ODataSingletonResource<T>>();
+  }
   //#endregion
 
   key(value: any) {
-    const singleton = this.clone<ODataSingletonResource<T>>();
+    const singleton = this.clone();
     var key = this.resolveKey(value);
     if (key !== undefined) singleton.segment((s) => s.singleton().key(key));
     return singleton;
   }
 
   keys(values: any[]) {
-    const singleton = this.clone<ODataSingletonResource<T>>();
+    const singleton = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(

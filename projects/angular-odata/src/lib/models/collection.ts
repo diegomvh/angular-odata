@@ -144,7 +144,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       !this._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `Can't reattach ${resource.type()} to ${this._resource.type()}`
+        `Can't reattach ${this._resource.type()} to ${resource.type()}`
       );
 
     this._entries.forEach(({ model }) => {

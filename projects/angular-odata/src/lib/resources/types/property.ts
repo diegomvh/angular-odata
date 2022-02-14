@@ -89,17 +89,20 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
     return property;
   }
+  clone() {
+    return this._clone<ODataPropertyResource<T>>();
+  }
   //#endregion
 
   key(value: any) {
-    const property = this.clone<ODataPropertyResource<T>>();
+    const property = this.clone();
     var key = this.resolveKey(value);
     if (key !== undefined) property.segment((s) => s.property().key(key));
     return property;
   }
 
   keys(values: any[]) {
-    const property = this.clone<ODataPropertyResource<T>>();
+    const property = this.clone();
     const types = this.pathSegments.types({ key: true });
     const keys = values.map((value, index) =>
       ODataResource.resolveKey(
@@ -263,7 +266,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @returns All entities
    */
   fetchAll(options: ODataOptions = {}): Observable<T[]> {
-    let res = this.clone<ODataPropertyResource<T>>();
+    let res = this.clone();
     // Clean Paging
     res.query((q) => q.clearPaging());
     let fetch = (opts?: {

@@ -23,6 +23,9 @@ export class ODataCountResource<T> extends ODataResource<T> {
     query?.keep(QueryOptionNames.filter, QueryOptionNames.search);
     return new ODataCountResource<T>(api, { segments, query });
   }
+  clone() {
+    return this._clone<ODataCountResource<T>>();
+  }
   //#endregion
 
   //#region Requests

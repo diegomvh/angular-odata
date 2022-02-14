@@ -33,6 +33,9 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     if (schema !== undefined) segment.type(schema.type());
     return new ODataEntitySetResource<E>(api, { segments, query, schema });
   }
+  clone() {
+    return this._clone<ODataEntitySetResource<T>>();
+  }
   //#endregion
 
   entity(key?: any) {
@@ -144,7 +147,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<T[]> {
-    let res = this.clone<ODataEntitySetResource<T>>();
+    let res = this.clone();
     // Clean Paging
     res.query((q) => q.clearPaging());
     let fetch = (opts?: {

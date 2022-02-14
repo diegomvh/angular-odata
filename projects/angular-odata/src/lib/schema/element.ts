@@ -51,11 +51,21 @@ export class ODataSchemaElement extends ODataAnnotatable {
   }
 
   /**
-   * Returns a boolean indicating if the structured type is a sub type of the given type.
+   * Returns a boolean indicating if the structured type is a subtype of the given type.
    * @param type String representation of the type
    * @returns True if the callable is type of the given type
    */
   isSubtypeOf(schema: ODataSchemaElement): boolean {
+    if (this.isTypeOf(schema.type())) return true;
+    return false;
+  }
+
+  /**
+   * Returns a boolean indicating if the structured type is a supertype of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
+  isSupertypeOf(schema: ODataSchemaElement): boolean {
     if (this.isTypeOf(schema.type())) return true;
     return false;
   }
