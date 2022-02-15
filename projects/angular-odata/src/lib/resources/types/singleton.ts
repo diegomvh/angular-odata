@@ -33,8 +33,8 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     if (schema !== undefined) segment.type(schema.type());
     return new ODataSingletonResource<S>(api, { segments, query, schema });
   }
-  clone() {
-    return this._clone<ODataSingletonResource<T>>();
+  override clone(): ODataSingletonResource<T> {
+    return super.clone() as ODataSingletonResource<T>;
   }
   //#endregion
 

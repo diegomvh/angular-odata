@@ -19,8 +19,8 @@ export class ODataMetadataResource extends ODataResource<any> {
     segments.add(PathSegmentNames.metadata, $METADATA);
     return new ODataMetadataResource(api, segments);
   }
-  clone() {
-    return this._clone<ODataMetadataResource>();
+  override clone(): ODataMetadataResource {
+    return super.clone() as ODataMetadataResource;
   }
   //#endregion
 

@@ -68,8 +68,8 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     return action;
   }
 
-  clone() {
-    return this._clone<ODataActionResource<P, R>>();
+  override clone(): ODataActionResource<P, R> {
+    return super.clone() as ODataActionResource<P, R>;
   }
   //#endregion
 

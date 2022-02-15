@@ -33,8 +33,8 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     if (schema !== undefined) segment.type(schema.type());
     return new ODataEntitySetResource<E>(api, { segments, query, schema });
   }
-  clone() {
-    return this._clone<ODataEntitySetResource<T>>();
+  override clone(): ODataEntitySetResource<T> {
+    return super.clone() as ODataEntitySetResource<T>;
   }
   //#endregion
 

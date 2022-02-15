@@ -168,13 +168,24 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   asEntitySet<R>(func: (collection: this) => R): R {
-    const parent = this._parent;
+    // Store parent and resource
+    const [parent, resource] = [this._parent, this._resource];
     this._parent = null;
+    this._resource = null;
+    // Execute
     const result = func(this);
     if (result instanceof Observable) {
-      return (result as any).pipe(finalize(() => (this._parent = parent)));
+      return (result as any).pipe(
+        finalize(() => {
+          // Restore
+          this._parent = parent;
+          this._resource = resource;
+        })
+      );
     } else {
+      // Restore
       this._parent = parent;
+      this._resource = resource;
       return result;
     }
   }

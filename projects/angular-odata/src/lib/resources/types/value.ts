@@ -44,8 +44,8 @@ export class ODataValueResource<T> extends ODataResource<T> {
 
     return value;
   }
-  clone() {
-    return this._clone<ODataValueResource<T>>();
+  override clone(): ODataValueResource<T> {
+    return super.clone() as ODataValueResource<T>;
   }
   //#endregion
 

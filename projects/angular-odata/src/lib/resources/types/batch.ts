@@ -162,10 +162,10 @@ export class ODataBatchResource extends ODataResource<any> {
     return new ODataBatchResource(api, { segments });
   }
 
-  clone() {
-    const resource = this._clone<ODataBatchResource>();
-    resource._requests = [...this._requests];
-    return resource;
+  override clone(): ODataBatchResource {
+    const batch = super.clone() as ODataBatchResource;
+    batch._requests = [...this._requests];
+    return batch;
   }
   //#endregion
 

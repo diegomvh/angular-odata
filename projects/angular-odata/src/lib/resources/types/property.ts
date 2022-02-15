@@ -89,8 +89,8 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
     return property;
   }
-  clone() {
-    return this._clone<ODataPropertyResource<T>>();
+  override clone(): ODataPropertyResource<T> {
+    return super.clone() as ODataPropertyResource<T>;
   }
   //#endregion
 

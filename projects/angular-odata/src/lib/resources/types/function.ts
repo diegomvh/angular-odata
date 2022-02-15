@@ -68,8 +68,9 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
 
     return func;
   }
-  clone() {
-    return this._clone<ODataFunctionResource<P, R>>();
+
+  override clone(): ODataFunctionResource<P, R> {
+    return super.clone() as ODataFunctionResource<P, R>;
   }
   //#endregion
 

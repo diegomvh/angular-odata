@@ -176,13 +176,13 @@ export class ODataResource<T> {
     return queryString ? `${path}${QUERY_SEPARATOR}${queryString}` : path;
   }
 
-  protected _clone<R extends ODataResource<T>>() {
+  clone(): ODataResource<T> {
     const Ctor = this.constructor as typeof ODataResource;
     return new Ctor(this.api, {
       schema: this.schema,
       segments: this.cloneSegments(),
       query: this.cloneQuery<T>(),
-    }) as R;
+    });
   }
 
   deserialize(value: any, options?: OptionsHelper): any {

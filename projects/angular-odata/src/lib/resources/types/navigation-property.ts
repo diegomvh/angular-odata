@@ -91,8 +91,8 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
 
     return navigation;
   }
-  clone() {
-    return this._clone<ODataNavigationPropertyResource<T>>();
+  override clone(): ODataNavigationPropertyResource<T> {
+    return super.clone() as ODataNavigationPropertyResource<T>;
   }
   //#endregion
 

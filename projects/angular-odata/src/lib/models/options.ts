@@ -611,7 +611,7 @@ export class ODataModelOptions<T> {
       !self._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `Can't reattach ${self._resource.type()} to ${resource.type()}`
+        `Can't attach ${resource.type()} to ${self._resource.type()}`
       );
 
     const current = self._resource;
@@ -655,13 +655,12 @@ export class ODataModelOptions<T> {
 
   static resource<T>(
     child: ODataModel<T> | ODataCollection<T, ODataModel<T>>
-  ): ODataResource<T> | ODataResource<T> {
-    let resource: ODataResource<any> | ODataResource<any> | undefined =
-      undefined;
+  ): ODataResource<T> {
+    let resource: ODataResource<any> | undefined = undefined;
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource =
         resource ||
-        //model._resource FIXME: check
+        model._resource || //FIXME: check
         (ODataModelOptions.isModel(model)
           ? (model as ODataModel<any>)._meta.modelResourceFactory()
           : (
@@ -680,7 +679,8 @@ export class ODataModelOptions<T> {
       }
       if (field === null) {
         const query = model._resource?.cloneQuery<T>().toQueryArguments();
-        if (query !== undefined) resource.query((q) => q.apply(query));
+        if (query !== undefined && resource !== undefined)
+          resource.query((q) => q.apply(query));
         continue;
       }
       resource = (field as ODataModelField<any>).resourceFactory<any, any>(
@@ -945,13 +945,24 @@ export class ODataModelOptions<T> {
   }
 
   asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {
-    const parent = self._parent;
+    // Store parent and resource
+    const [parent, resource] = [self._parent, self._resource];
     self._parent = null;
+    self._resource = null;
+    // Execute function
     const result = func(self);
     if (result instanceof Observable) {
-      return (result as any).pipe(finalize(() => (self._parent = parent)));
+      return (result as any).pipe(
+        finalize(() => {
+          // Restore parent and resource
+          self._parent = parent;
+          self._resource = resource;
+        })
+      );
     } else {
+      // Restore parent and resource
       self._parent = parent;
+      self._resource = resource;
       return result;
     }
   }
