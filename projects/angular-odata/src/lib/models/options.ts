@@ -658,14 +658,7 @@ export class ODataModelOptions<T> {
   ): ODataResource<T> {
     let resource: ODataResource<any> | undefined = undefined;
     for (let [model, field] of ODataModelOptions.chain(child)) {
-      resource =
-        resource ||
-        model._resource || //FIXME: check
-        (ODataModelOptions.isModel(model)
-          ? (model as ODataModel<any>)._meta.modelResourceFactory()
-          : (
-              model as ODataCollection<any, ODataModel<any>>
-            )._model.meta.collectionResourceFactory());
+      resource = resource || (model._resource as ODataResource<T>);
       if (resource === undefined) break;
       if (ODataModelOptions.isModel(model)) {
         let key = (model as ODataModel<any>).key({
@@ -758,7 +751,8 @@ export class ODataModelOptions<T> {
     }
 
     // Resource
-    resource = resource || this.modelResourceFactory();
+    if (self._parent === null && resource === undefined)
+      resource = this.modelResourceFactory();
     if (resource !== undefined) {
       this.attach(
         self,
@@ -946,23 +940,28 @@ export class ODataModelOptions<T> {
 
   asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {
     // Store parent and resource
-    const [parent, resource] = [self._parent, self._resource];
+    const store = { parent: self._parent, resource: self._resource };
     self._parent = null;
-    self._resource = null;
+    // Build new resource
+    const query = self.resource().cloneQuery<T>();
+    let resource = this.modelResourceFactory(query);
+    if (resource === undefined)
+      throw new Error('Model does not have associated Entity endpoint');
+    self._resource = resource;
     // Execute function
     const result = func(self);
     if (result instanceof Observable) {
       return (result as any).pipe(
         finalize(() => {
           // Restore parent and resource
-          self._parent = parent;
-          self._resource = resource;
+          self._parent = store.parent;
+          self._resource = store.resource;
         })
       );
     } else {
       // Restore parent and resource
-      self._parent = parent;
-      self._resource = resource;
+      self._parent = store.parent;
+      self._resource = store.resource;
       return result;
     }
   }

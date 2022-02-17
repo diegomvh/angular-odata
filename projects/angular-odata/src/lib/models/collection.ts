@@ -88,11 +88,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
 
     // Resource
-    resource = (resource || this._model.meta.collectionResourceFactory()) as
-      | ODataEntitySetResource<T>
-      | ODataPropertyResource<T>
-      | ODataNavigationPropertyResource<T>
-      | undefined;
+    if (this._parent === null && resource === undefined)
+      resource = this._model.meta.collectionResourceFactory() as
+        | ODataEntitySetResource<T>
+        | ODataPropertyResource<T>
+        | ODataNavigationPropertyResource<T>
+        | undefined;
     if (resource !== undefined) {
       this.attach(
         resource as
@@ -169,23 +170,28 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   asEntitySet<R>(func: (collection: this) => R): R {
     // Store parent and resource
-    const [parent, resource] = [this._parent, this._resource];
+    const store = { parent: this._parent, resource: this._resource };
     this._parent = null;
-    this._resource = null;
+    // Build new resource
+    const query = this.resource().cloneQuery<T>();
+    let resource = this._model.meta.collectionResourceFactory(query);
+    if (resource === undefined)
+      throw new Error('Collection does not have associated EntitySet endpoint');
+    this._resource = resource;
     // Execute
     const result = func(this);
     if (result instanceof Observable) {
       return (result as any).pipe(
         finalize(() => {
           // Restore
-          this._parent = parent;
-          this._resource = resource;
+          this._parent = store.parent;
+          this._resource = store.resource;
         })
       );
     } else {
       // Restore
-      this._parent = parent;
-      this._resource = resource;
+      this._parent = store.parent;
+      this._resource = store.resource;
       return result;
     }
   }
