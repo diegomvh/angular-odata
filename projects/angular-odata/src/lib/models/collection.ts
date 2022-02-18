@@ -169,14 +169,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }
 
   asEntitySet<R>(func: (collection: this) => R): R {
-    // Store parent and resource
-    const store = { parent: this._parent, resource: this._resource };
-    this._parent = null;
     // Build new resource
     const query = this.resource().cloneQuery<T>();
     let resource = this._model.meta.collectionResourceFactory(query);
     if (resource === undefined)
       throw new Error('Collection does not have associated EntitySet endpoint');
+    // Store parent and resource
+    const store = { parent: this._parent, resource: this._resource };
+    // Replace parent and resource
+    this._parent = null;
     this._resource = resource;
     // Execute
     const result = func(this);

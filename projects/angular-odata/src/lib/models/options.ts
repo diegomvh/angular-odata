@@ -939,14 +939,15 @@ export class ODataModelOptions<T> {
   }
 
   asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {
-    // Store parent and resource
-    const store = { parent: self._parent, resource: self._resource };
-    self._parent = null;
     // Build new resource
     const query = self.resource().cloneQuery<T>();
     let resource = this.modelResourceFactory(query);
     if (resource === undefined)
       throw new Error('Model does not have associated Entity endpoint');
+    // Store parent and resource
+    const store = { parent: self._parent, resource: self._resource };
+    // Replace parent and resource
+    self._parent = null;
     self._resource = resource;
     // Execute function
     const result = func(self);
