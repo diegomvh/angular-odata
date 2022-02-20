@@ -594,7 +594,7 @@ export class ODataModelOptions<T> {
     );
     //Throw error if not found
     if (field === undefined) throw new Error(`No field with name ${name}`);
-    return field;
+    return field as ODataModelField<F>;
   }
 
   attach<R>(
