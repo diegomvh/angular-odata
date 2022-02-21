@@ -1267,29 +1267,29 @@ export class ODataModelOptions&lt;T&gt; {
     );
     //Throw error if not found
     if (field &#x3D;&#x3D;&#x3D; undefined) throw new Error(&#x60;No field with name ${name}&#x60;);
-    return field;
+    return field as ODataModelField&lt;F&gt;;
   }
 
-  attach(
+  attach&lt;R&gt;(
     self: ODataModel&lt;T&gt;,
     resource:
-      | ODataEntityResource&lt;T&gt;
-      | ODataNavigationPropertyResource&lt;T&gt;
-      | ODataPropertyResource&lt;T&gt;
-      | ODataSingletonResource&lt;T&gt;
+      | ODataEntityResource&lt;R&gt;
+      | ODataNavigationPropertyResource&lt;R&gt;
+      | ODataPropertyResource&lt;R&gt;
+      | ODataSingletonResource&lt;R&gt;
   ) {
     if (
       self._resource !&#x3D;&#x3D; null &amp;&amp;
       resource.type() !&#x3D;&#x3D; self._resource.type() &amp;&amp;
-      !resource.isSubtypeOf(self._resource)
+      !self._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        &#x60;Can&#x27;t reattach ${resource.type()} to ${self._resource.type()}&#x60;
+        &#x60;Can&#x27;t attach ${resource.type()} to ${self._resource.type()}&#x60;
       );
 
     const current &#x3D; self._resource;
     if (current &#x3D;&#x3D;&#x3D; null || !current.isEqualTo(resource)) {
-      self._resource &#x3D; resource;
+      self._resource &#x3D; resource as ODataResource&lt;any&gt;;
       self.events$.emit(
         new ODataModelEvent(&#x27;attach&#x27;, {
           model: self,
@@ -1328,18 +1328,10 @@ export class ODataModelOptions&lt;T&gt; {
 
   static resource&lt;T&gt;(
     child: ODataModel&lt;T&gt; | ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;
-  ): ODataResource&lt;T&gt; | ODataResource&lt;T&gt; {
-    let resource: ODataResource&lt;any&gt; | ODataResource&lt;any&gt; | undefined &#x3D;
-      undefined;
+  ): ODataResource&lt;T&gt; {
+    let resource: ODataResource&lt;any&gt; | undefined &#x3D; undefined;
     for (let [model, field] of ODataModelOptions.chain(child)) {
-      resource &#x3D;
-        resource ||
-        model._resource ||
-        (ODataModelOptions.isModel(model)
-          ? (model as ODataModel&lt;any&gt;)._meta.modelResourceFactory()
-          : (
-              model as ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;
-            )._model.meta.collectionResourceFactory());
+      resource &#x3D; resource || (model._resource as ODataResource&lt;T&gt;);
       if (resource &#x3D;&#x3D;&#x3D; undefined) break;
       if (ODataModelOptions.isModel(model)) {
         let key &#x3D; (model as ODataModel&lt;any&gt;).key({
@@ -1353,7 +1345,8 @@ export class ODataModelOptions&lt;T&gt; {
       }
       if (field &#x3D;&#x3D;&#x3D; null) {
         const query &#x3D; model._resource?.cloneQuery&lt;T&gt;().toQueryArguments();
-        if (query !&#x3D;&#x3D; undefined) resource.query((q) &#x3D;&gt; q.apply(query));
+        if (query !&#x3D;&#x3D; undefined &amp;&amp; resource !&#x3D;&#x3D; undefined)
+          resource.query((q) &#x3D;&gt; q.apply(query));
         continue;
       }
       resource &#x3D; (field as ODataModelField&lt;any&gt;).resourceFactory&lt;any, any&gt;(
@@ -1431,7 +1424,8 @@ export class ODataModelOptions&lt;T&gt; {
     }
 
     // Resource
-    resource &#x3D; resource || this.modelResourceFactory();
+    if (self._parent &#x3D;&#x3D;&#x3D; null &amp;&amp; resource &#x3D;&#x3D;&#x3D; undefined)
+      resource &#x3D; this.modelResourceFactory();
     if (resource !&#x3D;&#x3D; undefined) {
       this.attach(
         self,
@@ -1618,13 +1612,30 @@ export class ODataModelOptions&lt;T&gt; {
   }
 
   asEntity&lt;R, M extends ODataModel&lt;T&gt;&gt;(self: M, func: (model: M) &#x3D;&gt; R): R {
-    const parent &#x3D; self._parent;
+    // Build new resource
+    const query &#x3D; self.resource().cloneQuery&lt;T&gt;();
+    let resource &#x3D; this.modelResourceFactory(query);
+    if (resource &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x27;Model does not have associated Entity endpoint&#x27;);
+    // Store parent and resource
+    const store &#x3D; { parent: self._parent, resource: self._resource };
+    // Replace parent and resource
     self._parent &#x3D; null;
+    self._resource &#x3D; resource;
+    // Execute function
     const result &#x3D; func(self);
     if (result instanceof Observable) {
-      return (result as any).pipe(finalize(() &#x3D;&gt; (self._parent &#x3D; parent)));
+      return (result as any).pipe(
+        finalize(() &#x3D;&gt; {
+          // Restore parent and resource
+          self._parent &#x3D; store.parent;
+          self._resource &#x3D; store.resource;
+        })
+      );
     } else {
-      self._parent &#x3D; parent;
+      // Restore parent and resource
+      self._parent &#x3D; store.parent;
+      self._resource &#x3D; store.resource;
       return result;
     }
   }

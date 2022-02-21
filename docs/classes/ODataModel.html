@@ -1059,7 +1059,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>attach(resource: <a href="../objects/OData.html" target="_self">ODataEntityResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | ODataSingletonResource&lt;T&gt;</a>)</code>
+<code>attach(resource: <a href="../objects/OData.html" target="_self">ODataEntityResource&lt;R&gt; | ODataNavigationPropertyResource&lt;R&gt; | ODataPropertyResource&lt;R&gt; | ODataSingletonResource&lt;R&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1071,6 +1071,14 @@
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>R</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -1090,7 +1098,7 @@
                                 <tr>
                                     <td>resource</td>
                                     <td>
-                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntityResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | ODataSingletonResource&lt;T&gt;</a></code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataEntityResource&lt;R&gt; | ODataNavigationPropertyResource&lt;R&gt; | ODataPropertyResource&lt;R&gt; | ODataSingletonResource&lt;R&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -3823,14 +3831,14 @@ export class ODataModel&lt;T&gt; {
     return field.resourceFactory&lt;T, N&gt;(resource) as ODataPropertyResource&lt;N&gt;;
   }
 
-  attach(
+  attach&lt;R&gt;(
     resource:
-      | ODataEntityResource&lt;T&gt;
-      | ODataNavigationPropertyResource&lt;T&gt;
-      | ODataPropertyResource&lt;T&gt;
-      | ODataSingletonResource&lt;T&gt;
+      | ODataEntityResource&lt;R&gt;
+      | ODataNavigationPropertyResource&lt;R&gt;
+      | ODataPropertyResource&lt;R&gt;
+      | ODataSingletonResource&lt;R&gt;
   ) {
-    return this._meta.attach(this, resource);
+    return this._meta.attach&lt;R&gt;(this, resource);
   }
   //#endregion
 

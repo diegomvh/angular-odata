@@ -17,8 +17,9 @@ Full examples of the library:
 ## Table of contents
 
 - [Installation](#installation)
+- [Without Schema](#without-schema)
+- [With Schema](#with-schema)
 - [Usage](#usage)
-- [Generator](#generator)
 - [OData Version](#odata-version)
 - [Query Builder](#query-builder)
 - [Documentation](#documentation)
@@ -31,9 +32,9 @@ Install from npm:
 npm i angular-odata
 ```
 
-## Usage
+## Without Schema
 
-1. Add module to your project
+Import ODataModule into your application module definition and setup the module for the `serviceRootUrl`.
 
 ```typescript
 import { NgModule } from '@angular/core';
@@ -51,7 +52,33 @@ import { ODataModule } from 'angular-odata';
 export class AppModule {}
 ```
 
-2. Inject and use the ODataServiceFactory
+## With Schema
+
+Use [OData Angular Generator](https://github.com/diegomvh/ODataApiGen) for generate the \<Api\>Config and the \<Api\>Module definition.
+
+Import ODataModule, \<Api\>Config and \<Api\>Module into your application module.
+Setup ODataModule with \<Api\>Config and import it along with \<Api\>Module.
+
+```typescript
+import { NgModule } from '@angular/core';
+
+import { ODataModule } from 'angular-odata';
+import { TripPinConfig, TripPinModule } from './trippin';
+
+@NgModule({
+  imports: [
+    ...
+    ODataModule.forRoot(TripPinConfig),
+    TripPinModule
+  ]
+  ...
+})
+export class AppModule {}
+```
+
+## Usage
+
+Inject and use the ODataServiceFactory
 
 ```typescript
 import { Component } from "@angular/core";
@@ -207,27 +234,6 @@ export class AppComponent {
       .subscribe();
   }
 }
-```
-
-## Generator
-
-If you use [OData Angular Generator](https://github.com/diegomvh/ODataApiGen), import the config and the module from generated source.
-
-```typescript
-import { NgModule } from '@angular/core';
-
-import { ODataModule } from 'angular-odata';
-import { TripPinConfig, TripPinModule } from './trippin';
-
-@NgModule({
-  imports: [
-    ...
-    ODataModule.forRoot(TripPinConfig),
-    TripPinModule
-  ]
-  ...
-})
-export class AppModule {}
 ```
 
 ## OData Version

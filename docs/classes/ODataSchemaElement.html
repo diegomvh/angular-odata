@@ -112,6 +112,9 @@
                                 <a href="#isSubtypeOf" >isSubtypeOf</a>
                             </li>
                             <li>
+                                <a href="#isSupertypeOf" >isSupertypeOf</a>
+                            </li>
+                            <li>
                                 <a href="#isTypeOf" >isTypeOf</a>
                             </li>
                             <li>
@@ -338,7 +341,79 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-description"><p>Returns a boolean indicating if the structured type is a sub type of the given type.</p>
+                    <div class="io-description"><p>Returns a boolean indicating if the structured type is a subtype of the given type.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>schema</td>
+                                    <td>
+                                                <code><a href="../classes/ODataSchemaElement.html" target="_self" >ODataSchemaElement</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>True if the callable is type of the given type</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isSupertypeOf"></a>
+                    <span class="name">
+                        <span ><b>isSupertypeOf</b></span>
+                        <a href="#isSupertypeOf"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isSupertypeOf(schema: <a href="../classes/ODataSchemaElement.html" target="_self">ODataSchemaElement</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/element.ts:68</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Returns a boolean indicating if the structured type is a supertype of the given type.</p>
 </div>
 
                     <div class="io-description">
@@ -876,11 +951,21 @@ export class ODataSchemaElement extends ODataAnnotatable {
   }
 
   /**
-   * Returns a boolean indicating if the structured type is a sub type of the given type.
+   * Returns a boolean indicating if the structured type is a subtype of the given type.
    * @param type String representation of the type
    * @returns True if the callable is type of the given type
    */
   isSubtypeOf(schema: ODataSchemaElement): boolean {
+    if (this.isTypeOf(schema.type())) return true;
+    return false;
+  }
+
+  /**
+   * Returns a boolean indicating if the structured type is a supertype of the given type.
+   * @param type String representation of the type
+   * @returns True if the callable is type of the given type
+   */
+  isSupertypeOf(schema: ODataSchemaElement): boolean {
     if (this.isTypeOf(schema.type())) return true;
     return false;
   }
