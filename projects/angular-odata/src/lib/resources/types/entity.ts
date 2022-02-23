@@ -92,7 +92,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       baseSchema !== undefined &&
       !castSchema.isSubtypeOf(baseSchema)
     )
-      throw new Error(`Cannot cast to ${type}`);
+      throw new Error(`cast: Cannot cast to ${type}`);
     const segments = this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntityResource<C>(this.api, {
@@ -172,7 +172,8 @@ export class ODataEntityResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntity<T>> {
-    if (!this.hasKey()) return throwError('Entity resource without key');
+    if (!this.hasKey())
+      return throwError(() => new Error('fetch: Entity resource without key'));
     return this.get(options);
   }
 

@@ -138,7 +138,7 @@ export abstract class ODataCache implements Cache {
       if (cached) {
         return of(cached);
       } else {
-        return throwError('No Cached');
+        return throwError(() => new Error('No Cached'));
       }
     }
     if (

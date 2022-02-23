@@ -107,7 +107,8 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     options?: ODataOptions & { etag?: string }
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
-    if (!res.hasKey()) return throwError('Resource without key');
+    if (!res.hasKey())
+      return throwError(() => new Error('update: Resource without key'));
     return res.update(attrs, options);
   }
 
@@ -124,7 +125,8 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     options?: ODataOptions & { etag?: string }
   ): Observable<ODataEntity<T>> {
     const res = this.entity(key);
-    if (!res.hasKey()) return throwError('Resource without key');
+    if (!res.hasKey())
+      return throwError(() => new Error('modify: Resource without key'));
     return res.modify(attrs, options);
   }
 
@@ -139,7 +141,8 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     options?: ODataOptions & { etag?: string }
   ) {
     const res = this.entity(key);
-    if (!res.hasKey()) return throwError('Resource without key');
+    if (!res.hasKey())
+      return throwError(() => new Error('destroy: Resource without key'));
     return res.destroy(options);
   }
 
@@ -185,12 +188,17 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     let schema = this.structuredTypeSchema;
     if (method === undefined && schema !== undefined && schema.isCompoundKey())
       return throwError(
-        'Composite key require a specific method, use create/update/patch'
+        () =>
+          new Error(
+            'save: Composite key require a specific method, use create/update/patch'
+          )
       );
     let key = schema && schema.resolveKey(attrs);
     if (method === undefined) method = key !== undefined ? 'update' : 'create';
     if ((method === 'update' || method === 'modify') && key === undefined)
-      return throwError("Can't update/patch entity without key");
+      return throwError(
+        () => new Error("save: Can't update/patch entity without key")
+      );
     return method === 'create'
       ? this.create(attrs, options)
       : method === 'modify'

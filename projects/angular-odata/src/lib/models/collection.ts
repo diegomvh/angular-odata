@@ -79,7 +79,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ) {
     const Klass = this.constructor as typeof ODataCollection;
     if (model === undefined && Klass.model !== null) model = Klass.model;
-    if (model === undefined) throw new Error('Collection need model');
+    if (model === undefined)
+      throw new Error('Collection: Collection need model');
     this._model = model;
 
     // Parent
@@ -145,7 +146,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       !this._resource.isSubtypeOf(resource)
     )
       throw new Error(
-        `Can't reattach ${this._resource.type()} to ${resource.type()}`
+        `attach: Can't reattach ${this._resource.type()} to ${resource.type()}`
       );
 
     this._entries.forEach(({ model }) => {
@@ -173,7 +174,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const query = this.resource().cloneQuery<T>();
     let resource = this._model.meta.collectionResourceFactory(query);
     if (resource === undefined)
-      throw new Error('Collection does not have associated EntitySet endpoint');
+      throw new Error(
+        'asEntitySet: Collection does not have associated EntitySet endpoint'
+      );
     // Store parent and resource
     const store = { parent: this._parent, resource: this._resource };
     // Replace parent and resource
@@ -296,28 +299,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
     withCount?: boolean;
   } = {}): Observable<this> {
     const resource = this.resource();
-    if (resource === undefined)
-      return throwError('fetch: Resource is undefined');
 
-    let obs$: Observable<ODataEntities<any>>;
-    if (resource instanceof ODataEntitySetResource) {
-      obs$ = resource.fetch({ withCount, ...options });
-    } else if (resource instanceof ODataNavigationPropertyResource) {
-      obs$ = resource.fetch({
-        responseType: 'entities',
-        withCount,
-        ...options,
-      });
-    } else {
-      obs$ = resource.fetch({
-        responseType: 'entities',
-        withCount,
-        ...options,
-      });
-    }
+    const obs$ =
+      resource instanceof ODataEntitySetResource
+        ? resource.fetch({ withCount, ...options })
+        : resource.fetch({
+            responseType: 'entities',
+            withCount,
+            ...options,
+          });
+
     this.events$.emit(
       new ODataModelEvent('request', { collection: this, value: obs$ })
     );
+
     return obs$.pipe(
       map(({ entities, annots }) => {
         this._annotations = annots;
@@ -331,10 +326,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
   fetchAll(options?: ODataOptions): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)
-      return throwError('fetchAll: Resource is undefined');
+      return throwError(() => new Error('fetchAll: Resource is undefined'));
 
     if (resource instanceof ODataPropertyResource)
-      return throwError('fetchAll: Resource is ODataPropertyResource');
+      return throwError(
+        () => new Error('fetchAll: Resource is ODataPropertyResource')
+      );
 
     const obs$ = resource.fetchAll(options);
     this.events$.emit(
@@ -376,10 +373,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
   } = {}): Observable<this> {
     const resource = this.resource();
     if (resource === undefined)
-      return throwError('saveAll: Resource is undefined');
+      return throwError(() => new Error('save: Resource is undefined'));
 
     if (resource instanceof ODataPropertyResource)
-      return throwError('fetchAll: Resource is ODataPropertyResource');
+      return throwError(
+        () => new Error('save: Resource is ODataPropertyResource')
+      );
 
     let toDestroyEntity: M[] = [];
     let toRemoveReference: M[] = [];
@@ -885,7 +884,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
           return func.call(params, { responseType, ...options });
       }
     }
-    return throwError(`Can't function without ODataEntitySetResource`);
+    return throwError(
+      () => new Error(`callFunction: Can't function without ODataEntitySetResource`)
+    );
   }
 
   callAction<P, R>(
@@ -895,21 +896,23 @@ export class ODataCollection<T, M extends ODataModel<T>>
     { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
-    if (resource instanceof ODataEntitySetResource) {
-      const action = resource.action<P, R>(name);
-      action.query((q) => q.apply(options));
-      switch (responseType) {
-        case 'property':
-          return action.callProperty(params, options);
-        case 'model':
-          return action.callModel(params, options);
-        case 'collection':
-          return action.callCollection(params, options);
-        default:
-          return action.call(params, { responseType, ...options });
-      }
+    if (!(resource instanceof ODataEntitySetResource)) {
+      return throwError(
+        () => new Error(`callAction: Can't action without ODataEntitySetResource`)
+      );
     }
-    return throwError(`Can't action without ODataEntitySetResource`);
+    const action = resource.action<P, R>(name);
+    action.query((q) => q.apply(options));
+    switch (responseType) {
+      case 'property':
+        return action.callProperty(params, options);
+      case 'model':
+        return action.callModel(params, options);
+      case 'collection':
+        return action.callCollection(params, options);
+      default:
+        return action.call(params, { responseType, ...options });
+    }
   }
 
   private _unsubscribe(entry: ODataModelEntry<T, M>) {
@@ -921,7 +924,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _subscribe(entry: ODataModelEntry<T, M>) {
     if (entry.subscription) {
-      throw new Error('Subscription already exists');
+      throw new Error('Collection: Subscription already exists');
     }
     entry.subscription = entry.model.events$.subscribe(
       (event: ODataModelEvent<T>) => {
