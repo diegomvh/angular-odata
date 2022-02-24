@@ -52,7 +52,7 @@ export class ODataEnumType<E> extends ODataSchemaElement {
    * @returns The fields with the given flag
    */
   findFieldsByValue(value: number) {
-    return this.fields().find((f) => Boolean(f.value & value));
+    return this.fields().filter((f) => Boolean(f.value & value));
   }
 
   /**
