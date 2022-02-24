@@ -47,6 +47,15 @@ export class ODataEnumType<E> extends ODataSchemaElement {
   }
 
   /**
+   * Find a fields by flag.
+   * @param value The value of the field
+   * @returns The fields with the given flag
+   */
+  findFieldsByValue(value: number) {
+    return this.fields().find((f) => Boolean(f.value & value));
+  }
+
+  /**
    * Map the fields of the enum type.
    * @param mapper Function that maps the value to the new value
    * @returns The fields mapped by the mapper

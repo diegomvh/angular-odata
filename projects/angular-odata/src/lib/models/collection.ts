@@ -325,9 +325,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   fetchAll(options?: ODataOptions): Observable<this> {
     const resource = this.resource();
-    if (resource === undefined)
-      return throwError(() => new Error('fetchAll: Resource is undefined'));
-
     if (resource instanceof ODataPropertyResource)
       return throwError(
         () => new Error('fetchAll: Resource is ODataPropertyResource')
@@ -372,9 +369,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
     method?: 'update' | 'modify';
   } = {}): Observable<this> {
     const resource = this.resource();
-    if (resource === undefined)
-      return throwError(() => new Error('save: Resource is undefined'));
-
     if (resource instanceof ODataPropertyResource)
       return throwError(
         () => new Error('save: Resource is ODataPropertyResource')
@@ -885,7 +879,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
       }
     }
     return throwError(
-      () => new Error(`callFunction: Can't function without ODataEntitySetResource`)
+      () =>
+        new Error(`callFunction: Can't function without ODataEntitySetResource`)
     );
   }
 
@@ -898,7 +893,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const resource = this.resource();
     if (!(resource instanceof ODataEntitySetResource)) {
       return throwError(
-        () => new Error(`callAction: Can't action without ODataEntitySetResource`)
+        () =>
+          new Error(`callAction: Can't action without ODataEntitySetResource`)
       );
     }
     const action = resource.action<P, R>(name);
