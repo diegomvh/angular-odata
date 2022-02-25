@@ -8,12 +8,12 @@ import {
   ODataOperators,
   operators,
   Renderable,
+  syntax,
 } from './syntax';
-import { syntax } from './syntax';
 
 export type FilterConnector = 'and' | 'or';
 
-export class FilterExpression<T> extends Expression<T> {
+export class FilterExpression<F> extends Expression<F> {
   private _connector: FilterConnector;
   private _negated: boolean;
   constructor({
@@ -39,19 +39,26 @@ export class FilterExpression<T> extends Expression<T> {
   }
 
   static filter<T extends object>(
-    opts: (e: {
-      s: T;
-      e: (connector?: FilterConnector) => FilterExpression<T>;
-      o: ODataOperators<T>;
-      f: ODataFunctions<T>;
-    }) => FilterExpression<T>
+    opts: (
+      builder: {
+        s: T;
+        e: (connector?: FilterConnector) => FilterExpression<T>;
+        o: ODataOperators<T>;
+        f: ODataFunctions<T>;
+      },
+      current?: FilterExpression<T>
+    ) => FilterExpression<T>,
+    current?: FilterExpression<T>
   ): FilterExpression<T> {
-    return opts({
-      s: FilterExpression.s<T>(),
-      e: FilterExpression.e,
-      o: operators as ODataOperators<T>,
-      f: functions as ODataFunctions<T>,
-    }) as FilterExpression<T>;
+    return opts(
+      {
+        s: FilterExpression.s<T>(),
+        e: FilterExpression.e,
+        o: operators as ODataOperators<T>,
+        f: functions as ODataFunctions<T>,
+      },
+      current
+    ) as FilterExpression<T>;
   }
 
   override toJSON() {
@@ -88,17 +95,25 @@ export class FilterExpression<T> extends Expression<T> {
     return content;
   }
 
+  clone() {
+    return new FilterExpression({
+      children: this._children.map((c) => c.clone()),
+      connector: this._connector,
+      negated: this._negated,
+    });
+  }
+
   private _add(
     node: Renderable,
     connector?: FilterConnector
-  ): FilterExpression<T> {
+  ): FilterExpression<F> {
     if (connector !== undefined && this._connector !== connector) {
       let children: Renderable[] = [];
       if (this._children.length > 0) {
         if (this._children.length === 1) {
           children = [...this._children];
         } else {
-          let exp = new FilterExpression<T>({
+          let exp = new FilterExpression<F>({
             children: this._children,
             connector: this._connector,
             negated: this._negated,
@@ -136,16 +151,16 @@ export class FilterExpression<T> extends Expression<T> {
     return this;
   }
 
-  or(exp: FilterExpression<T>): FilterExpression<T> {
+  or(exp: FilterExpression<F>): FilterExpression<F> {
     return this._add(exp, 'or');
   }
 
-  and(exp: FilterExpression<T>): FilterExpression<T> {
+  and(exp: FilterExpression<F>): FilterExpression<F> {
     return this._add(exp, 'and');
   }
 
-  not(exp: FilterExpression<T>): FilterExpression<T> {
-    const notExp = new FilterExpression<T>({
+  not(exp: FilterExpression<F>): FilterExpression<F> {
+    const notExp = new FilterExpression<F>({
       children: exp.children(),
       connector: exp.connector(),
       negated: true,
@@ -205,7 +220,7 @@ export class FilterExpression<T> extends Expression<T> {
       e: (connector?: FilterConnector) => FilterExpression<N>;
     }) => FilterExpression<N>,
     alias?: string
-  ): FilterExpression<T> {
+  ): FilterExpression<F> {
     const exp = opts({
       s: Field.factory<N>(),
       e: FilterExpression.e,
@@ -220,7 +235,7 @@ export class FilterExpression<T> extends Expression<T> {
       e: (connector?: FilterConnector) => FilterExpression<N>;
     }) => FilterExpression<N>,
     alias?: string
-  ): FilterExpression<T> {
+  ): FilterExpression<F> {
     const exp = opts({
       s: Field.factory<N>(),
       e: FilterExpression.e,
@@ -228,9 +243,9 @@ export class FilterExpression<T> extends Expression<T> {
     return this._add(syntax.all(left, exp, alias));
   }
 
-  isof(type: string): FilterExpression<T>;
-  isof(left: T, type: string): FilterExpression<T>;
-  isof(left: any, type?: string): FilterExpression<T> {
+  isof(type: string): FilterExpression<F>;
+  isof(left: F, type: string): FilterExpression<F>;
+  isof(left: any, type?: string): FilterExpression<F> {
     return this._add(syntax.isof(left, type));
   }
 }

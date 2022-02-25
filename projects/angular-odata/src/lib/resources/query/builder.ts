@@ -56,6 +56,7 @@ export type ExpandOptions<T> = {
   filter?: Filter<T>;
   orderBy?: OrderBy<T>;
   top?: number;
+  skip?: number;
   levels?: number | 'max';
   count?: boolean | Filter<T>;
   expand?: Expand<T>;
@@ -699,6 +700,7 @@ function buildExpand<T>(
             case 'levels':
             case 'count':
             case 'top':
+            case 'skip':
               value = `${(expands as NestedExpandOptions<any>)[key]}`;
               break;
             default:

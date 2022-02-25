@@ -25,6 +25,8 @@ export abstract class Expression<T> implements Renderable {
     prefix?: string | undefined;
   }): string;
 
+  abstract clone(): Expression<T>;
+
   children() {
     return this._children;
   }

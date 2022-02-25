@@ -1,3 +1,4 @@
+import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { render, Grouping, Renderable } from './syntax';
@@ -13,6 +14,7 @@ export class SearchTerm implements Renderable {
 
   toJSON() {
     return {
+      $type: Types.rawType(this),
       value: this.value,
     };
   }
@@ -27,6 +29,10 @@ export class SearchTerm implements Renderable {
     prefix?: string;
   }): string {
     return `${render(this.value, { aliases, escape, prefix })}`;
+  }
+
+  clone() {
+    return new SearchTerm(this.value);
   }
 }
 
@@ -52,13 +58,20 @@ export class SearchExpression<T> extends Expression<T> {
   }
 
   static search<T extends object>(
-    opts: (e: {
-      e: (connector?: SearchConnector) => SearchExpression<T>;
-    }) => SearchExpression<T>
+    opts: (
+      builder: {
+        e: (connector?: SearchConnector) => SearchExpression<T>;
+      },
+      current?: SearchExpression<T>
+    ) => SearchExpression<T>,
+    current?: SearchExpression<T>
   ): SearchExpression<T> {
-    return opts({
-      e: SearchExpression.e,
-    }) as SearchExpression<T>;
+    return opts(
+      {
+        e: SearchExpression.e,
+      },
+      current
+    ) as SearchExpression<T>;
   }
 
   private _add(
@@ -122,6 +135,14 @@ export class SearchExpression<T> extends Expression<T> {
       .map((n) => n.render({ aliases, escape, prefix }))
       .join(` ${this._connector} `);
     return content;
+  }
+
+  clone() {
+    return new SearchExpression({
+      children: this._children.map((c) => c.clone()),
+      connector: this._connector,
+      negated: this._negated,
+    });
   }
 
   override toJSON() {

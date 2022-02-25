@@ -27,6 +27,10 @@ export class OrderByField implements Renderable {
   }): string {
     return `${render(this.field, { aliases, escape, prefix })} ${this.order}`;
   }
+
+  clone() {
+    return new OrderByField(this.field.clone(), this.order);
+  }
 }
 
 export class OrderByExpression<T> extends Expression<T> {
@@ -47,12 +51,19 @@ export class OrderByExpression<T> extends Expression<T> {
   }
 
   static orderBy<T extends object>(
-    opts: (e: { s: T; e: () => OrderByExpression<T> }) => OrderByExpression<T>
+    opts: (
+      builder: { s: T; e: () => OrderByExpression<T> },
+      current?: OrderByExpression<T>
+    ) => OrderByExpression<T>,
+    current?: OrderByExpression<T>
   ): OrderByExpression<T> {
-    return opts({
-      s: OrderByExpression.s<T>(),
-      e: OrderByExpression.e,
-    }) as OrderByExpression<T>;
+    return opts(
+      {
+        s: OrderByExpression.s<T>(),
+        e: OrderByExpression.e,
+      },
+      current
+    ) as OrderByExpression<T>;
   }
 
   private _add(node: Renderable): OrderByExpression<T> {
@@ -73,6 +84,12 @@ export class OrderByExpression<T> extends Expression<T> {
       .map((n) => n.render({ aliases, escape, prefix }))
       .join(`,`);
     return content;
+  }
+
+  clone() {
+    return new OrderByExpression({
+      children: this._children.map((c) => c.clone()),
+    });
   }
 
   ascending(field: any) {

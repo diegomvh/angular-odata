@@ -13,6 +13,7 @@ export interface Renderable {
   }): string;
   toString(): string;
   toJSON(): any;
+  clone(): any;
 }
 
 export class Field<T extends object> implements ProxyHandler<T> {
@@ -118,6 +119,15 @@ export class Function<T> implements Renderable {
       ),
     ];
     return `${this.name}(${params.join(', ')})`;
+  }
+
+  clone() {
+    return new Function<T>(
+      this.name,
+      this.values.map((v) => v.clone()),
+      this.normalize,
+      this.escape
+    );
   }
 }
 
@@ -317,6 +327,14 @@ export class Operator<T> implements Renderable {
     }
     return `${this.op}(${left})`;
   }
+
+  clone() {
+    return new Operator(
+      this.op,
+      this.values.map((v) => v.clone()),
+      this.normalize
+    );
+  }
 }
 
 export class LogicalOperators<T> {
@@ -402,6 +420,10 @@ export class Grouping<T> implements Renderable {
   }): string {
     return `(${render(this.group, { aliases, escape, prefix })})`;
   }
+
+  clone() {
+    return new Grouping(this.group.clone());
+  }
 }
 
 export class Lambda<T> implements Renderable {
@@ -441,6 +463,14 @@ export class Lambda<T> implements Renderable {
       escape,
       prefix: alias,
     })})`;
+  }
+
+  clone() {
+    return new Lambda(
+      this.op,
+      this.values.map((v) => v.clone()),
+      this.alias
+    );
   }
 }
 

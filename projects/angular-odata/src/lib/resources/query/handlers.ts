@@ -126,7 +126,10 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   select(
-    opts: (e: { s: T; e: () => SelectExpression<T> }) => SelectExpression<T>
+    opts: (
+      builder: { s: T; e: () => SelectExpression<T> },
+      current?: SelectExpression<T>
+    ) => SelectExpression<T>
   ): SelectExpression<T>;
   select(opts: Select<T>): ODataQueryOptionHandler<T>;
   select(): ODataQueryOptionHandler<T>;
@@ -134,14 +137,20 @@ export class ODataQueryOptionsHandler<T> {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.select,
-        SelectExpression.select(opts)
+        SelectExpression.select(
+          opts,
+          this.options.expression(QueryOptionNames.select)
+        )
       );
     }
     return this.options.option<Select<T>>(QueryOptionNames.select, opts);
   }
 
   expand(
-    opts: (e: { s: T; e: () => ExpandExpression<T> }) => ExpandExpression<T>
+    opts: (
+      builder: { s: T; e: () => ExpandExpression<T> },
+      current?: ExpandExpression<T>
+    ) => ExpandExpression<T>
   ): ExpandExpression<T>;
   expand(opts: Expand<T>): ODataQueryOptionHandler<T>;
   expand(): ODataQueryOptionHandler<T>;
@@ -149,7 +158,10 @@ export class ODataQueryOptionsHandler<T> {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.expand,
-        ExpandExpression.expand(opts)
+        ExpandExpression.expand(
+          opts,
+          this.options.expression(QueryOptionNames.expand)
+        )
       );
     }
     return this.options.option<Expand<T>>(QueryOptionNames.expand, opts);
@@ -159,12 +171,15 @@ export class ODataQueryOptionsHandler<T> {
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    */
   compute(
-    opts: (e: {
-      s: T;
-      e: () => ComputeExpression<T>;
-      o: ODataOperators<T>;
-      f: ODataFunctions<T>;
-    }) => ComputeExpression<T>
+    opts: (
+      builder: {
+        s: T;
+        e: () => ComputeExpression<T>;
+        o: ODataOperators<T>;
+        f: ODataFunctions<T>;
+      },
+      current?: ComputeExpression<T>
+    ) => ComputeExpression<T>
   ): ComputeExpression<T>;
   compute(opts: string): ODataQueryOptionHandler<T>;
   compute(): ODataQueryOptionHandler<T>;
@@ -172,7 +187,10 @@ export class ODataQueryOptionsHandler<T> {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.compute,
-        ComputeExpression.compute(opts)
+        ComputeExpression.compute(
+          opts,
+          this.options.expression(QueryOptionNames.compute)
+        )
       );
     }
     return this.options.option<string>(QueryOptionNames.compute, opts);
@@ -194,9 +212,12 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   search(
-    opts: (e: {
-      e: (connector: SearchConnector) => SearchExpression<T>;
-    }) => SearchExpression<T>
+    opts: (
+      builder: {
+        e: (connector: SearchConnector) => SearchExpression<T>;
+      },
+      current?: SearchExpression<T>
+    ) => SearchExpression<T>
   ): SearchExpression<T>;
   search(opts: string): ODataQueryOptionHandler<T>;
   search(): ODataQueryOptionHandler<T>;
@@ -204,19 +225,25 @@ export class ODataQueryOptionsHandler<T> {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.search,
-        SearchExpression.search(opts)
+        SearchExpression.search(
+          opts,
+          this.options.expression(QueryOptionNames.search)
+        )
       );
     }
     return this.options.option<string>(QueryOptionNames.search, opts);
   }
 
   filter(
-    opts: (e: {
-      s: T;
-      e: (connector?: FilterConnector) => FilterExpression<T>;
-      o: ODataOperators<T>;
-      f: ODataFunctions<T>;
-    }) => FilterExpression<T>
+    opts: (
+      builder: {
+        s: T;
+        e: (connector?: FilterConnector) => FilterExpression<T>;
+        o: ODataOperators<T>;
+        f: ODataFunctions<T>;
+      },
+      current?: FilterExpression<T>
+    ) => FilterExpression<T>
   ): FilterExpression<T>;
   filter(opts: Filter<T>): ODataQueryOptionHandler<T>;
   filter(): ODataQueryOptionHandler<T>;
@@ -224,22 +251,31 @@ export class ODataQueryOptionsHandler<T> {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.filter,
-        FilterExpression.filter(opts)
+        FilterExpression.filter(
+          opts,
+          this.options.expression(QueryOptionNames.filter)
+        )
       );
     }
     return this.options.option<Filter<T>>(QueryOptionNames.filter, opts);
   }
 
   orderBy(
-    opts: (e: { s: T; e: () => OrderByExpression<T> }) => OrderByExpression<T>
+    opts: (
+      builder: { s: T; e: () => OrderByExpression<T> },
+      current?: OrderByExpression<T>
+    ) => OrderByExpression<T>
   ): OrderByExpression<T>;
   orderBy(opts: OrderBy<T>): ODataQueryOptionHandler<T>;
   orderBy(): ODataQueryOptionHandler<T>;
   orderBy(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.expression(
+      return this.options.option(
         QueryOptionNames.orderBy,
-        OrderByExpression.orderBy(opts)
+        OrderByExpression.orderBy(
+          opts,
+          this.options.expression(QueryOptionNames.orderBy)
+        )
       );
     }
     return this.options.option<OrderBy<T>>(QueryOptionNames.orderBy, opts);
@@ -281,22 +317,22 @@ export class ODataQueryOptionsHandler<T> {
 
   apply(query: ODataQueryArguments<T>) {
     if (query.select !== undefined) {
-      this.select(query.select);
+      this.options.option(QueryOptionNames.select, query.select);
     }
     if (query.expand !== undefined) {
-      this.expand(query.expand);
+      this.options.option(QueryOptionNames.expand, query.expand);
     }
     if (query.transform !== undefined) {
-      this.transform(query.transform);
+      this.options.option(QueryOptionNames.transform, query.transform);
     }
     if (query.search !== undefined) {
-      this.search(query.search);
+      this.options.option(QueryOptionNames.search, query.search);
     }
     if (query.filter !== undefined) {
-      this.filter(query.filter);
+      this.options.option(QueryOptionNames.filter, query.filter);
     }
     if (query.orderBy !== undefined) {
-      this.orderBy(query.orderBy);
+      this.options.option(QueryOptionNames.orderBy, query.orderBy);
     }
     this.paging(query);
   }

@@ -1,5 +1,5 @@
 import { QueryOptionNames } from '../../types';
-import { Objects, Types } from '../../utils';
+import { Types } from '../../utils';
 import {
   buildPathAndQuery,
   Expand,
@@ -9,28 +9,35 @@ import {
   Select,
   Transform,
 } from './builder';
-import { Expression } from './expressions';
+import {
+  Expression,
+  FilterExpression,
+  OrderByExpression,
+  SearchExpression,
+} from './expressions';
+import { ExpandExpression } from './expressions/expand';
+import { SelectExpression } from './expressions/select';
 import { ODataQueryOptionHandler } from './handlers';
 
 export type ODataQueryArguments<T> = {
-  [QueryOptionNames.select]?: Select<T>;
-  [QueryOptionNames.filter]?: Filter<T>;
-  [QueryOptionNames.search]?: string;
+  [QueryOptionNames.select]?: Select<T> | SelectExpression<T>;
+  [QueryOptionNames.filter]?: Filter<T> | FilterExpression<T>;
+  [QueryOptionNames.search]?: string | SearchExpression<T>;
   [QueryOptionNames.compute]?: string;
   [QueryOptionNames.transform]?: Transform<T>;
-  [QueryOptionNames.orderBy]?: OrderBy<T>;
+  [QueryOptionNames.orderBy]?: OrderBy<T> | OrderByExpression<T>;
   [QueryOptionNames.top]?: number;
   [QueryOptionNames.skip]?: number;
   [QueryOptionNames.skiptoken]?: string;
-  [QueryOptionNames.expand]?: Expand<T>;
+  [QueryOptionNames.expand]?: Expand<T> | ExpandExpression<T>;
   [QueryOptionNames.format]?: string;
 };
 
 export class ODataQueryOptions<T> {
-  options: { [name: string]: any };
+  values: { [name: string]: any };
 
   constructor(options?: { [name: string]: any }) {
-    this.options = options || {};
+    this.values = options || {};
   }
 
   // Params
@@ -49,11 +56,11 @@ export class ODataQueryOptions<T> {
       QueryOptionNames.expand,
       QueryOptionNames.format,
     ]
-      .filter((key) => !Types.isEmpty(this.options[key]))
+      .filter((key) => !Types.isEmpty(this.values[key]))
       .reduce((acc, key) => {
-        let value = this.options[key];
+        let value = this.values[key];
         if (Types.rawType(value) === 'Expression') {
-          value = value.render(aliases);
+          value = (value as Expression<T>).render({ aliases });
         }
         return Object.assign(acc, { [key]: value });
       }, {});
@@ -73,8 +80,8 @@ export class ODataQueryOptions<T> {
   }
 
   toJSON() {
-    return Object.keys(this.options).reduce((acc, key) => {
-      let value = this.options[key];
+    return Object.keys(this.values).reduce((acc, key) => {
+      let value = this.values[key];
       if (Types.rawType(value) === 'Expression') {
         value = value.toJSON();
       }
@@ -84,24 +91,24 @@ export class ODataQueryOptions<T> {
 
   toQueryArguments(): ODataQueryArguments<T> {
     return {
-      select: this.options[QueryOptionNames.select],
-      expand: this.options[QueryOptionNames.expand],
-      transform: this.options[QueryOptionNames.transform],
-      compute: this.options[QueryOptionNames.compute],
-      search: this.options[QueryOptionNames.search],
-      filter: this.options[QueryOptionNames.filter],
-      orderBy: this.options[QueryOptionNames.orderBy],
-      top: this.options[QueryOptionNames.top],
-      skip: this.options[QueryOptionNames.skip],
-      skiptoken: this.options[QueryOptionNames.skiptoken],
+      select: this.values[QueryOptionNames.select],
+      expand: this.values[QueryOptionNames.expand],
+      transform: this.values[QueryOptionNames.transform],
+      compute: this.values[QueryOptionNames.compute],
+      search: this.values[QueryOptionNames.search],
+      filter: this.values[QueryOptionNames.filter],
+      orderBy: this.values[QueryOptionNames.orderBy],
+      top: this.values[QueryOptionNames.top],
+      skip: this.values[QueryOptionNames.skip],
+      skiptoken: this.values[QueryOptionNames.skiptoken],
     } as ODataQueryArguments<T>;
   }
 
   clone<O>() {
-    const options = Object.keys(this.options).reduce((acc, key) => {
-      let value = this.options[key];
+    const options = Object.keys(this.values).reduce((acc, key) => {
+      let value = this.values[key];
       if (Types.rawType(value) !== 'Expression') {
-        value = Objects.clone(value);
+        value = value.clone();
       }
       return Object.assign(acc, { [key]: value });
     }, {});
@@ -109,33 +116,36 @@ export class ODataQueryOptions<T> {
   }
 
   // Set Renderable
-  expression(name: QueryOptionNames, exp: Expression<T>) {
-    return (this.options[name] = exp);
+  expression(name: QueryOptionNames, exp?: Expression<T>) {
+    if (exp !== undefined) this.values[name] = exp;
+    return this.values[name];
   }
 
   // Option Handler
   option<O>(name: QueryOptionNames, opts?: O) {
-    if (opts !== undefined) this.options[name] = opts;
-    return new ODataQueryOptionHandler<O>(this.options, name);
+    if (opts !== undefined) this.values[name] = opts;
+    return new ODataQueryOptionHandler<O>(this.values, name);
   }
 
   // Query Options tools
   has(name: QueryOptionNames) {
-    return this.options[name] !== undefined;
+    return this.values[name] !== undefined;
   }
 
   remove(...names: QueryOptionNames[]) {
-    names.forEach((name) => this.option(name).clear());
+    names.forEach((name) => {
+      delete this.values[name];
+    });
   }
 
   keep(...names: QueryOptionNames[]) {
-    this.options = Object.keys(this.options)
+    this.values = Object.keys(this.values)
       .filter((k) => names.indexOf(k as QueryOptionNames) !== -1)
-      .reduce((acc, k) => Object.assign(acc, { [k]: this.options[k] }), {});
+      .reduce((acc, k) => Object.assign(acc, { [k]: this.values[k] }), {});
   }
 
   // Clear
   clear() {
-    this.options = {};
+    this.values = {};
   }
 }
