@@ -1,4 +1,4 @@
-import { QueryOptionNames } from 'angular-odata';
+import { QueryOptionNames } from '../../../types';
 import { Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
