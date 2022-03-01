@@ -1,3 +1,4 @@
+import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { normalizeValue } from '../builder';
 
@@ -19,19 +20,35 @@ export interface Renderable {
 export class Field<T extends object> implements ProxyHandler<T> {
   constructor(public name: string = '') {}
 
-  static factory<T extends object>() {
-    const h = new Field<T>();
-    return new Proxy({ _name: '' } as T, h);
+  static factory<T extends object>(name: string = '') {
+    return new Proxy({ _name: name } as T, new Field<T>());
   }
 
-  get(target: T, p: string | symbol): any {
+  get(target: T, key: string | symbol): any {
     let name = (target as any)['_name'];
-    if (p === 'render') {
+    if (key === 'render') {
       return ({ prefix }: { prefix?: string }) =>
         prefix ? `${prefix}/${name}` : name;
     }
-    name = name ? `${name}/${p as string}` : p;
-    return new Proxy({ _name: name } as any, this);
+    else if (key === 'clone') {
+      return Field.factory(name);
+    }
+    else if (key === Symbol.toStringTag) {
+      return 'Field';
+    }
+    else if (key === 'toJSON') {
+      return {
+        $type: Types.rawType(this),
+        name: name,
+      };
+    } else {
+      name = name ? `${name}/${key as string}` : key;
+      return new Proxy({ _name: name } as any, this);
+    }
+  }
+  
+  has(target: T, key: string): any {
+    return ['toJSON', 'clone'].includes(key) || key in target;
   }
 }
 
@@ -94,6 +111,7 @@ export class Function<T> implements Renderable {
 
   toJSON() {
     return {
+      $type: Types.rawType(this),
       name: this.name,
       values: this.values,
       normalize: this.normalize,
@@ -124,7 +142,7 @@ export class Function<T> implements Renderable {
   clone() {
     return new Function<T>(
       this.name,
-      this.values.map((v) => v.clone()),
+      this.values.map((v) => Objects.clone(v)),
       this.normalize,
       this.escape
     );
@@ -287,6 +305,7 @@ export class Operator<T> implements Renderable {
 
   toJSON() {
     return {
+      $type: Types.rawType(this),
       op: this.op,
       values: this.values,
       normalize: this.normalize,
@@ -331,7 +350,7 @@ export class Operator<T> implements Renderable {
   clone() {
     return new Operator(
       this.op,
-      this.values.map((v) => v.clone()),
+      this.values.map((v) => Objects.clone(v)),
       this.normalize
     );
   }
@@ -405,6 +424,7 @@ export class Grouping<T> implements Renderable {
 
   toJSON() {
     return {
+      $type: Types.rawType(this),
       group: this.group.toJSON(),
     };
   }
@@ -422,7 +442,7 @@ export class Grouping<T> implements Renderable {
   }
 
   clone() {
-    return new Grouping(this.group.clone());
+    return new Grouping(Objects.clone(this.group));
   }
 }
 
@@ -439,6 +459,7 @@ export class Lambda<T> implements Renderable {
 
   toJSON() {
     return {
+      $type: Types.rawType(this),
       op: this.op,
       values: this.values,
       alias: this.alias,
@@ -468,7 +489,7 @@ export class Lambda<T> implements Renderable {
   clone() {
     return new Lambda(
       this.op,
-      this.values.map((v) => v.clone()),
+      this.values.map((v) => Objects.clone(v)),
       this.alias
     );
   }

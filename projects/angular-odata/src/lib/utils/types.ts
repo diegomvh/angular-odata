@@ -130,6 +130,10 @@ export const Types = {
     return arePrimativesEqual();
   },
   clone(target: any) {
+    if (Types.isObject(target) && 'clone' in target) {
+      // target is a cloneable object
+      return target.clone();
+    }
     const constrFun = target.constructor;
     switch (this.rawType(target)) {
       case 'Boolean':

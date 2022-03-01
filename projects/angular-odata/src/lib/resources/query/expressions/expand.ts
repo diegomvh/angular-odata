@@ -1,5 +1,5 @@
 import { QueryOptionNames } from '../../../types';
-import { Types } from '../../../utils';
+import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { FilterConnector, FilterExpression } from './filter';
@@ -15,9 +15,10 @@ import {
 } from './syntax';
 
 export class ExpandField<T> implements Renderable {
-  values: { [name: string]: any } = {};
-
-  constructor(protected field: any) {}
+  constructor(
+    protected field: any,
+    private values: { [name: string]: any } = {}
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'ExpandField';
@@ -51,7 +52,7 @@ export class ExpandField<T> implements Renderable {
       .filter((key) => !Types.isEmpty(this.values[key]))
       .reduce((acc, key) => {
         let value = this.values[key];
-        if (Types.rawType(value) === 'Expression') {
+        if (Types.rawType(value).endsWith('Expression')) {
           value = (value as Expression<T>).render({ aliases, prefix, escape });
         }
         return Object.assign(acc, { [key]: value });
@@ -66,7 +67,12 @@ export class ExpandField<T> implements Renderable {
   }
 
   clone() {
-    return new ExpandField(this.field.clone());
+    const values = Object.keys(this.values).reduce(
+      (acc, key) =>
+        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
+      {}
+    );
+    return new ExpandField(this.field.clone(), values);
   }
 
   select<T extends object>(

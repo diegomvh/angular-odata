@@ -1,5 +1,5 @@
 import { QueryOptionNames } from '../../types';
-import { Types } from '../../utils';
+import { Objects, Types } from '../../utils';
 import {
   buildPathAndQuery,
   Expand,
@@ -59,7 +59,7 @@ export class ODataQueryOptions<T> {
       .filter((key) => !Types.isEmpty(this.values[key]))
       .reduce((acc, key) => {
         let value = this.values[key];
-        if (Types.rawType(value) === 'Expression') {
+        if (Types.rawType(value).endsWith('Expression')) {
           value = (value as Expression<T>).render({ aliases });
         }
         return Object.assign(acc, { [key]: value });
@@ -82,9 +82,8 @@ export class ODataQueryOptions<T> {
   toJSON() {
     return Object.keys(this.values).reduce((acc, key) => {
       let value = this.values[key];
-      if (Types.rawType(value) === 'Expression') {
-        value = value.toJSON();
-      }
+      value =
+        Types.isObject(value) && 'toJSON' in value ? value.toJSON() : value;
       return Object.assign(acc, { [key]: value });
     }, {});
   }
@@ -105,13 +104,11 @@ export class ODataQueryOptions<T> {
   }
 
   clone<O>() {
-    const options = Object.keys(this.values).reduce((acc, key) => {
-      let value = this.values[key];
-      if (Types.rawType(value) !== 'Expression') {
-        value = value.clone();
-      }
-      return Object.assign(acc, { [key]: value });
-    }, {});
+    const options = Object.keys(this.values).reduce(
+      (acc, key) =>
+        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
+      {}
+    );
     return new ODataQueryOptions<O>(options);
   }
 
