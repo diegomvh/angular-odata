@@ -31,16 +31,16 @@ export class Field<T extends object> implements ProxyHandler<T> {
         prefix ? `${prefix}/${name}` : name;
     }
     else if (key === 'clone') {
-      return Field.factory(name);
+      return () => Field.factory(name);
     }
     else if (key === Symbol.toStringTag) {
-      return 'Field';
+      return () => 'Field';
     }
     else if (key === 'toJSON') {
-      return {
-        $type: Types.rawType(this),
-        name: name,
-      };
+      return () => ({
+          $type: Types.rawType(this),
+          name: name,
+        });
     } else {
       name = name ? `${name}/${key as string}` : key;
       return new Proxy({ _name: name } as any, this);
@@ -48,7 +48,7 @@ export class Field<T extends object> implements ProxyHandler<T> {
   }
   
   has(target: T, key: string): any {
-    return ['toJSON', 'clone'].includes(key) || key in target;
+    return ['toJSON', 'clone', 'render'].includes(key) || key in target;
   }
 }
 
@@ -130,7 +130,7 @@ export class Function<T> implements Renderable {
     let [field, ...values] = this.values;
 
     field = render(field, { aliases, escape, prefix });
-    let params = [
+    const params = [
       field,
       ...values.map((v) =>
         render(v, { aliases, escape, prefix, normalize: this.normalize })

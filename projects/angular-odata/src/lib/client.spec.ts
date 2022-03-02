@@ -177,6 +177,7 @@ describe('ODataClient', () => {
         filter: {
           children: [
             {
+              $type: 'Operator',
               op: 'eq',
               values: ['Name', 'John'],
               normalize: true,

@@ -24,11 +24,20 @@ describe('OData compute builder', () => {
     Name?: string;
     Age?: number;
     IsCorrect?: boolean;
-    EditedOn?: boolean;
-    CreatedOn?: boolean;
+    EditedOn?: Date;
+    CreatedOn?: Date;
+    BornOn?: Date;
     Car?: Car;
     Pets?: Pet[];
   }
 
-  describe('base condition', () => {});
+  describe('base condition', () => {
+    it('field', () => {
+      const compare1 = ComputeExpression.compute<Person>(({ s, e }) =>
+        e().field('Class', ({f}) => f.year(s.BornOn))
+      );
+
+      expect(compare1.render()).toBe('year(BornOn) as Class');
+    });
+  });
 });
