@@ -181,6 +181,11 @@ export const Objects = {
       return target;
     }
 
+    if (Types.isObject(target) && 'clone' in target) {
+      // target is a cloneable object
+      return target.clone();
+    }
+
     const type = Types.rawType(target);
     let cloneTarget: any = null;
 

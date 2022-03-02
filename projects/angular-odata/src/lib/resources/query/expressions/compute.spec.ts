@@ -1,5 +1,4 @@
 import { ComputeExpression } from './compute';
-import { Field } from './syntax';
 
 describe('OData compute builder', () => {
   interface Pet {
