@@ -988,12 +988,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
     };
   }
 
-  filter(predicate: (m: M, index: number) => boolean): M[] {
+  filter(predicate: (value: M, index: number, array: M[]) => unknown, thisArg?: any): M[] {
     return this.models().filter(predicate);
   }
 
-  find(predicate: (m: M, index: number) => boolean): M | undefined {
+  map<U>(callbackfn: (value: M, index: number, array: M[]) => U, thisArg?: any): U[] {
+    return this.models().map(callbackfn, thisArg);
+  }
+
+  find(predicate: (value: M, index: number, obj: M[]) => unknown, thisArg?: any): M | undefined {
     return this.models().find(predicate);
+  }
+  
+  reduce<U>(callbackfn: (previousValue: U, currentValue: M, currentIndex: number, array: M[]) => U, initialValue: U): U {
+    return this.models().reduce(callbackfn, initialValue);
   }
 
   first(): M | undefined {
