@@ -45,8 +45,6 @@ export type ODataModelEventType =
 export class ODataModelEvent<T> {
   name: ODataModelEventType;
   bubbling: boolean = true;
-  model?: ODataModel<T>;
-  collection?: ODataCollection<T, ODataModel<T>>;
   chain: [
     ODataModel<any> | ODataCollection<any, ODataModel<any>>,
     string | number | null
@@ -118,6 +116,23 @@ export class ODataModelEvent<T> {
           : ''
       )
       .join('');
+  }
+  
+
+  //Reference to the model which the event was dispatched
+  model?: ODataModel<T>;
+  //Identifies the current model for the event
+  get currentModel(): ODataModel<any> | undefined{
+    const link = this.chain.find(c => ODataModelOptions.isModel(c[0]));
+    return link !== undefined ? link[0] as ODataModel<any> : undefined;
+  }
+
+  //Reference to the collection which the event was dispatched
+  collection?: ODataCollection<T, ODataModel<T>>;
+  //Identifies the current collection for the event
+  get currentCollection(): ODataCollection<any, ODataModel<any>> | undefined{
+    const link = this.chain.find(c => ODataModelOptions.isCollection(c[0]));
+    return link !== undefined ? link[0] as ODataCollection<any, ODataModel<any>> : undefined;
   }
 }
 
