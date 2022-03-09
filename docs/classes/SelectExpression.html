@@ -108,6 +108,9 @@
                                 <a href="#_add" >_add</a>
                             </li>
                             <li>
+                                <a href="#clone" >clone</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Static</span>
                                 <a href="#e" >e</a>
                             </li>
@@ -157,7 +160,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:12</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:5</a></div>
                             </td>
                         </tr>
 
@@ -262,8 +265,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:52</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:58</a></div>
                 </td>
             </tr>
 
@@ -315,6 +318,49 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="clone"></a>
+                    <span class="name">
+                        <span ><b>clone</b></span>
+                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clone()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:52</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >SelectExpression&lt;unknown&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="e"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
@@ -333,8 +379,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="21"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:21</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="14"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:14</a></div>
                 </td>
             </tr>
 
@@ -378,8 +424,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:57</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:63</a></div>
                 </td>
             </tr>
 
@@ -527,8 +573,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="25"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:25</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="18"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:18</a></div>
                 </td>
             </tr>
 
@@ -567,15 +613,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>select(opts: (e: literal type) => void)</code>
+                    <code>select(builder: (b: literal type,c: <a href="../undefineds/Select.html">SelectExpression<T></a>) => void, current?: <a href="../undefineds/Select.html" target="_self">SelectExpression&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="29"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:29</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="22"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/select.ts:22</a></div>
                 </td>
             </tr>
 
@@ -604,13 +650,25 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>opts</td>
+                                    <td>builder</td>
                                     <td>
                                                 <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
                                     </td>
 
                                     <td>
                                         No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>current</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
                                     </td>
 
 
@@ -657,7 +715,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:28</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:30</a></code>
 </div>
                 </td>
             </tr>
@@ -700,7 +758,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:32</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:34</a></code>
 </div>
                 </td>
             </tr>
@@ -743,7 +801,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:36</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:38</a></code>
 </div>
                 </td>
             </tr>
@@ -772,14 +830,7 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import {
-  Field,
-  functions,
-  ODataFunctions,
-  ODataOperators,
-  operators,
-  Renderable,
-} from &#x27;./syntax&#x27;;
+import { Field, Renderable } from &#x27;./syntax&#x27;;
 
 export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
   constructor({
@@ -799,12 +850,19 @@ export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   static select&lt;T extends object&gt;(
-    opts: (e: { s: T; e: () &#x3D;&gt; SelectExpression&lt;T&gt; }) &#x3D;&gt; SelectExpression&lt;T&gt;
+    builder: (
+      b: { s: T; e: () &#x3D;&gt; SelectExpression&lt;T&gt; },
+      c?: SelectExpression&lt;T&gt;
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;,
+    current?: SelectExpression&lt;T&gt;
   ): SelectExpression&lt;T&gt; {
-    return opts({
-      s: SelectExpression.s&lt;T&gt;(),
-      e: SelectExpression.e,
-    }) as SelectExpression&lt;T&gt;;
+    return builder(
+      {
+        s: SelectExpression.s&lt;T&gt;(),
+        e: SelectExpression.e,
+      },
+      current
+    ) as SelectExpression&lt;T&gt;;
   }
 
   render({
@@ -819,6 +877,12 @@ export class SelectExpression&lt;T&gt; extends Expression&lt;T&gt; {
     return this._children
       .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
       .join(&#x27;,&#x27;);
+  }
+
+  clone() {
+    return new SelectExpression({
+      children: this._children.map((c) &#x3D;&gt; c.clone()),
+    });
   }
 
   private _add(node: Renderable): SelectExpression&lt;T&gt; {

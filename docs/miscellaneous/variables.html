@@ -3924,6 +3924,11 @@
       return target;
     }
 
+    if (Types.isObject(target) &amp;&amp; &#x27;clone&#x27; in target) {
+      // target is a cloneable object
+      return target.clone();
+    }
+
     const type &#x3D; Types.rawType(target);
     let cloneTarget: any &#x3D; null;
 

@@ -1513,7 +1513,7 @@ export abstract class ODataCache implements Cache {
       if (cached) {
         return of(cached);
       } else {
-        return throwError(&#x27;No Cached&#x27;);
+        return throwError(() &#x3D;&gt; new Error(&#x27;No Cached&#x27;));
       }
     }
     if (

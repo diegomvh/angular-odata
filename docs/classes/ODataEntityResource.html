@@ -1029,8 +1029,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="179"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity.ts:179</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="180"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity.ts:180</a></div>
                 </td>
             </tr>
 
@@ -1094,8 +1094,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="188"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity.ts:188</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="189"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/types/entity.ts:189</a></div>
                 </td>
             </tr>
 
@@ -3846,7 +3846,7 @@ export class ODataEntityResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       baseSchema !&#x3D;&#x3D; undefined &amp;&amp;
       !castSchema.isSubtypeOf(baseSchema)
     )
-      throw new Error(&#x60;Cannot cast to ${type}&#x60;);
+      throw new Error(&#x60;cast: Cannot cast to ${type}&#x60;);
     const segments &#x3D; this.cloneSegments();
     segments.add(PathSegmentNames.type, type).type(type);
     return new ODataEntityResource&lt;C&gt;(this.api, {
@@ -3926,7 +3926,8 @@ export class ODataEntityResource&lt;T&gt; extends ODataResource&lt;T&gt; {
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
-    if (!this.hasKey()) return throwError(&#x27;Entity resource without key&#x27;);
+    if (!this.hasKey())
+      return throwError(() &#x3D;&gt; new Error(&#x27;fetch: Entity resource without key&#x27;));
     return this.get(options);
   }
 

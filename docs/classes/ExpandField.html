@@ -89,16 +89,29 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                <a href="#clone" >clone</a>
+                            </li>
+                            <li>
+                                <a href="#expand" >expand</a>
+                            </li>
+                            <li>
                                 <a href="#filter" >filter</a>
                             </li>
                             <li>
                                 <a href="#levels" >levels</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#option" >option</a>
+                            </li>
+                            <li>
                                 <a href="#orderBy" >orderBy</a>
                             </li>
                             <li>
                                 <a href="#render" >render</a>
+                            </li>
+                            <li>
+                                <a href="#search" >search</a>
                             </li>
                             <li>
                                 <a href="#select" >select</a>
@@ -144,12 +157,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(field: <a href="../interfaces/Renderable.html" target="_self">Renderable</a>)</code>
+<code>constructor(field: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, values: literal type)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:5</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -170,7 +183,19 @@
                                                         <td>field</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../interfaces/Renderable.html" target="_self" >Renderable</a></code>
+                                                                        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>values</td>
+                                                  
+                                                        <td>
+                                                                    <code>literal type</code>
                                                         </td>
                                                   
                                                     <td>
@@ -197,6 +222,120 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="clone"></a>
+                    <span class="name">
+                        <span ><b>clone</b></span>
+                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clone()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:69</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >ExpandField&lt;unknown&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="expand"></a>
+                    <span class="name">
+                        <span ><b>expand</b></span>
+                        <a href="#expand"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>expand(opts: (builder: literal type,current: <a href="../undefineds/Expand.html">ExpandExpression<T></a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="90"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:90</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="filter"></a>
                     <span class="name">
                         <span ><b>filter</b></span>
@@ -206,25 +345,65 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>filter()</code>
+<code>filter(opts: (builder: literal type,current: <a href="../undefineds/Filter.html">FilterExpression<T></a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="31"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:31</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="102"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:102</a></div>
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -243,15 +422,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>levels()</code>
+<code>levels(n: number | "max")</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="32"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:32</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="150"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:150</a></div>
                 </td>
             </tr>
 
@@ -260,8 +439,131 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>n</td>
+                                    <td>
+                                            <code>number | &quot;max&quot;</code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="option"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>option</b></span>
+                        <a href="#option"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>option(name: <a href="../undefineds/QueryOptionNames.html" target="_self">QueryOptionNames</a>, opts?: O)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:155</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>O</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/enumerations.html#QueryOptionNames" target="_self" >QueryOptionNames</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                            <code>O</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -280,25 +582,65 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>orderBy()</code>
+<code>orderBy(opts: (builder: literal type,current: <a href="../undefineds/OrderBy.html">OrderByExpression<T></a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="33"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:33</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="130"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:130</a></div>
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -324,8 +666,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="18"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:18</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:33</a></div>
                 </td>
             </tr>
 
@@ -376,6 +718,83 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="search"></a>
+                    <span class="name">
+                        <span ><b>search</b></span>
+                        <a href="#search"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>search(opts: (builder: literal type) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="119"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:119</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="select"></a>
                     <span class="name">
                         <span ><b>select</b></span>
@@ -385,25 +804,65 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>select()</code>
+<code>select(opts: (builder: literal type,current: <a href="../undefineds/Select.html">SelectExpression<T></a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="30"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:30</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:78</a></div>
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>opts</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/typealiases.html#Select" target="_self" >SelectExpression&lt;T&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -422,15 +881,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>skip()</code>
+<code>skip(n: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="35"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:35</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="142"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:142</a></div>
                 </td>
             </tr>
 
@@ -439,8 +898,40 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>n</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -466,8 +957,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:12</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="27"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:27</a></div>
                 </td>
             </tr>
 
@@ -496,15 +987,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>top()</code>
+<code>top(n: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="34"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:34</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="146"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:146</a></div>
                 </td>
             </tr>
 
@@ -513,8 +1004,40 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>n</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
 
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -546,7 +1069,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:8</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/expand.ts:23</a></div>
                                 </td>
                             </tr>
 
@@ -557,12 +1080,27 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import type { QueryCustomType } from &#x27;../builder&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { QueryOptionNames } from &#x27;../../../types&#x27;;
+import { Objects, Types } from &#x27;../../../utils&#x27;;
+import type { QueryCustomType } from &#x27;../builder&#x27;;
 import { Expression } from &#x27;./base&#x27;;
-import { Field, render, Renderable } from &#x27;./syntax&#x27;;
+import { FilterConnector, FilterExpression } from &#x27;./filter&#x27;;
+import { OrderByExpression } from &#x27;./orderby&#x27;;
+import { SearchConnector, SearchExpression } from &#x27;./search&#x27;;
+import { SelectExpression } from &#x27;./select&#x27;;
+import {
+  Field,
+  ODataFunctions,
+  ODataOperators,
+  render,
+  Renderable,
+} from &#x27;./syntax&#x27;;
 
 export class ExpandField&lt;T&gt; implements Renderable {
-  constructor(protected field: Renderable) {}
+  constructor(
+    protected field: any,
+    private values: { [name: string]: any } &#x3D; {}
+  ) {}
 
   get [Symbol.toStringTag]() {
     return &#x27;ExpandField&#x27;;
@@ -583,15 +1121,123 @@ export class ExpandField&lt;T&gt; implements Renderable {
     escape?: boolean;
     prefix?: string;
   }): string {
-    return &#x60;${render(this.field, { aliases, escape, prefix })}&#x60;;
+    const params: { [key: string]: string } &#x3D; [
+      QueryOptionNames.select,
+      QueryOptionNames.expand,
+      QueryOptionNames.filter,
+      QueryOptionNames.search,
+      QueryOptionNames.orderBy,
+      QueryOptionNames.skip,
+      QueryOptionNames.top,
+      QueryOptionNames.levels,
+    ]
+      .filter((key) &#x3D;&gt; !Types.isEmpty(this.values[key]))
+      .reduce((acc, key) &#x3D;&gt; {
+        let value &#x3D; this.values[key];
+        if (Types.rawType(value).endsWith(&#x27;Expression&#x27;)) {
+          value &#x3D; (value as Expression&lt;T&gt;).render({ aliases, prefix, escape });
+        }
+        return Object.assign(acc, { [key]: value });
+      }, {});
+    let expand &#x3D; &#x60;${render(this.field, { aliases, escape, prefix })}&#x60;;
+    if (!Types.isEmpty(params)) {
+      expand &#x3D; &#x60;${expand}(${Object.keys(params)
+        .map((key) &#x3D;&gt; &#x60;$${key}&#x3D;${params[key]}&#x60;)
+        .join(&#x27;;&#x27;)})&#x60;;
+    }
+    return expand;
   }
 
-  select() {}
-  filter() {}
-  levels() {}
-  orderBy() {}
-  top() {}
-  skip() {}
+  clone() {
+    const values &#x3D; Object.keys(this.values).reduce(
+      (acc, key) &#x3D;&gt;
+        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
+      {}
+    );
+    return new ExpandField(this.field.clone(), values);
+  }
+
+  select&lt;T extends object&gt;(
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; SelectExpression&lt;T&gt; },
+      current?: SelectExpression&lt;T&gt;
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;
+  ): SelectExpression&lt;T&gt; {
+    return this.option(
+      QueryOptionNames.select,
+      SelectExpression.select&lt;T&gt;(opts, this.values[QueryOptionNames.select])
+    );
+  }
+
+  expand&lt;T extends object&gt;(
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; },
+      current?: ExpandExpression&lt;T&gt;
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;
+  ) {
+    return this.option(
+      QueryOptionNames.expand,
+      ExpandExpression.expand&lt;T&gt;(opts, this.values[QueryOptionNames.expand])
+    );
+  }
+
+  filter&lt;T extends object&gt;(
+    opts: (
+      builder: {
+        s: T;
+        e: (connector?: FilterConnector) &#x3D;&gt; FilterExpression&lt;T&gt;;
+        o: ODataOperators&lt;T&gt;;
+        f: ODataFunctions&lt;T&gt;;
+      },
+      current?: FilterExpression&lt;T&gt;
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;
+  ) {
+    return this.option(
+      QueryOptionNames.filter,
+      FilterExpression.filter&lt;T&gt;(opts, this.values[QueryOptionNames.filter])
+    );
+  }
+
+  search&lt;T extends object&gt;(
+    opts: (builder: {
+      e: (connector?: SearchConnector) &#x3D;&gt; SearchExpression&lt;T&gt;;
+    }) &#x3D;&gt; SearchExpression&lt;T&gt;
+  ) {
+    return this.option(
+      QueryOptionNames.search,
+      SearchExpression.search&lt;T&gt;(opts, this.values[QueryOptionNames.search])
+    );
+  }
+
+  orderBy&lt;T extends object&gt;(
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; OrderByExpression&lt;T&gt; },
+      current?: OrderByExpression&lt;T&gt;
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;
+  ) {
+    return this.option(
+      QueryOptionNames.orderBy,
+      OrderByExpression.orderBy&lt;T&gt;(opts, this.values[QueryOptionNames.orderBy])
+    );
+  }
+
+  skip(n: number) {
+    return this.option&lt;number&gt;(QueryOptionNames.skip, n);
+  }
+
+  top(n: number) {
+    return this.option&lt;number&gt;(QueryOptionNames.top, n);
+  }
+
+  levels(n: number | &#x27;max&#x27;) {
+    return this.option&lt;number | &#x27;max&#x27;&gt;(QueryOptionNames.levels, n);
+  }
+
+  // Option Handler
+  private option&lt;O&gt;(name: QueryOptionNames, opts?: O) {
+    if (opts !&#x3D;&#x3D; undefined) this.values[name] &#x3D; opts;
+    return this.values[name];
+  }
 }
 
 export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
@@ -612,12 +1258,19 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   static expand&lt;T extends object&gt;(
-    opts: (e: { s: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; }) &#x3D;&gt; ExpandExpression&lt;T&gt;
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; },
+      current?: ExpandExpression&lt;T&gt;
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;,
+    current?: ExpandExpression&lt;T&gt;
   ): ExpandExpression&lt;T&gt; {
-    return opts({
-      s: ExpandExpression.s&lt;T&gt;(),
-      e: ExpandExpression.e,
-    }) as ExpandExpression&lt;T&gt;;
+    return opts(
+      {
+        s: ExpandExpression.s&lt;T&gt;(),
+        e: ExpandExpression.e,
+      },
+      current
+    ) as ExpandExpression&lt;T&gt;;
   }
 
   render({
@@ -634,17 +1287,20 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
       .join(&#x27;,&#x27;);
   }
 
+  clone() {
+    return new ExpandExpression({
+      children: this._children.map((c) &#x3D;&gt; c.clone()),
+    });
+  }
+
   private _add(node: Renderable): ExpandExpression&lt;T&gt; {
     this._children.push(node);
     return this;
   }
 
-  field&lt;T extends object&gt;(
-    field: any,
-    opts?: (e: ExpandField&lt;keyof T&gt;) &#x3D;&gt; void
-  ): ExpandExpression&lt;T&gt; {
-    let node &#x3D; new ExpandField(field);
-    if (opts !&#x3D;&#x3D; undefined) opts(node as ExpandField&lt;keyof T&gt;);
+  field&lt;F&gt;(field: F, opts?: (e: ExpandField&lt;F&gt;) &#x3D;&gt; void): ExpandExpression&lt;F&gt; {
+    let node &#x3D; new ExpandField&lt;F&gt;(field);
+    if (opts !&#x3D;&#x3D; undefined) opts(node);
     return this._add(node);
   }
 }

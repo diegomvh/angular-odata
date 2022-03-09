@@ -133,6 +133,9 @@
                                 <a href="#findFieldByValue" >findFieldByValue</a>
                             </li>
                             <li>
+                                <a href="#findFieldsByValue" >findFieldsByValue</a>
+                            </li>
+                            <li>
                                 <a href="#mapFields" >mapFields</a>
                             </li>
                             <li>
@@ -452,8 +455,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="64"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:64</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:73</a></div>
                 </td>
             </tr>
 
@@ -545,8 +548,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="84"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:84</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:93</a></div>
                 </td>
             </tr>
 
@@ -821,6 +824,83 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="findFieldsByValue"></a>
+                    <span class="name">
+                        <span ><b>findFieldsByValue</b></span>
+                        <a href="#findFieldsByValue"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>findFieldsByValue(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:54</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find a fields by flag.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>The value of the field</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The fields with the given flag</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="mapFields"></a>
                     <span class="name">
                         <span ><b>mapFields</b></span>
@@ -837,8 +917,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="63"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:63</a></div>
                 </td>
             </tr>
 
@@ -922,8 +1002,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:74</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="83"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:83</a></div>
                 </td>
             </tr>
 
@@ -1629,6 +1709,15 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
    */
   findFieldByValue(value: number) {
     return this.fields().find((f) &#x3D;&gt; f.value &#x3D;&#x3D;&#x3D; value);
+  }
+
+  /**
+   * Find a fields by flag.
+   * @param value The value of the field
+   * @returns The fields with the given flag
+   */
+  findFieldsByValue(value: number) {
+    return this.fields().filter((f) &#x3D;&gt; Boolean(f.value &amp; value));
   }
 
   /**

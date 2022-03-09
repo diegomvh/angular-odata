@@ -547,8 +547,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="137"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:137</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="139"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:139</a></div>
                 </td>
             </tr>
 
@@ -1010,8 +1010,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="154"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:154</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="157"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:157</a></div>
                 </td>
             </tr>
 
@@ -1124,8 +1124,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="121"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:121</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="122"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:122</a></div>
                 </td>
             </tr>
 
@@ -1233,8 +1233,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="174"
-                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:174</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="177"
+                            class="link-to-prism">projects/angular-odata/src/lib/services/entity-set.ts:177</a></div>
                 </td>
             </tr>
 
@@ -1919,7 +1919,8 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
-    if (!res.hasKey()) return throwError(&#x27;Resource without key&#x27;);
+    if (!res.hasKey())
+      return throwError(() &#x3D;&gt; new Error(&#x27;update: Resource without key&#x27;));
     return res.update(attrs, options);
   }
 
@@ -1936,7 +1937,8 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     options?: ODataOptions &amp; { etag?: string }
   ): Observable&lt;ODataEntity&lt;T&gt;&gt; {
     const res &#x3D; this.entity(key);
-    if (!res.hasKey()) return throwError(&#x27;Resource without key&#x27;);
+    if (!res.hasKey())
+      return throwError(() &#x3D;&gt; new Error(&#x27;modify: Resource without key&#x27;));
     return res.modify(attrs, options);
   }
 
@@ -1951,7 +1953,8 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     options?: ODataOptions &amp; { etag?: string }
   ) {
     const res &#x3D; this.entity(key);
-    if (!res.hasKey()) return throwError(&#x27;Resource without key&#x27;);
+    if (!res.hasKey())
+      return throwError(() &#x3D;&gt; new Error(&#x27;destroy: Resource without key&#x27;));
     return res.destroy(options);
   }
 
@@ -1997,12 +2000,17 @@ export class ODataEntitySetService&lt;T&gt; extends ODataEntityService&lt;T&gt; 
     let schema &#x3D; this.structuredTypeSchema;
     if (method &#x3D;&#x3D;&#x3D; undefined &amp;&amp; schema !&#x3D;&#x3D; undefined &amp;&amp; schema.isCompoundKey())
       return throwError(
-        &#x27;Composite key require a specific method, use create/update/patch&#x27;
+        () &#x3D;&gt;
+          new Error(
+            &#x27;save: Composite key require a specific method, use create/update/patch&#x27;
+          )
       );
     let key &#x3D; schema &amp;&amp; schema.resolveKey(attrs);
     if (method &#x3D;&#x3D;&#x3D; undefined) method &#x3D; key !&#x3D;&#x3D; undefined ? &#x27;update&#x27; : &#x27;create&#x27;;
     if ((method &#x3D;&#x3D;&#x3D; &#x27;update&#x27; || method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;) &amp;&amp; key &#x3D;&#x3D;&#x3D; undefined)
-      return throwError(&quot;Can&#x27;t update/patch entity without key&quot;);
+      return throwError(
+        () &#x3D;&gt; new Error(&quot;save: Can&#x27;t update/patch entity without key&quot;)
+      );
     return method &#x3D;&#x3D;&#x3D; &#x27;create&#x27;
       ? this.create(attrs, options)
       : method &#x3D;&#x3D;&#x3D; &#x27;modify&#x27;

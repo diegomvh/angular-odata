@@ -1250,7 +1250,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   }
 
   select(
-    opts: (e: { s: T; e: () &#x3D;&gt; SelectExpression&lt;T&gt; }) &#x3D;&gt; SelectExpression&lt;T&gt;
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; SelectExpression&lt;T&gt; },
+      current?: SelectExpression&lt;T&gt;
+    ) &#x3D;&gt; SelectExpression&lt;T&gt;
   ): SelectExpression&lt;T&gt;;
   select(opts: Select&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   select(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1258,14 +1261,20 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.select,
-        SelectExpression.select(opts)
+        SelectExpression.select(
+          opts,
+          this.options.expression(QueryOptionNames.select)
+        )
       );
     }
     return this.options.option&lt;Select&lt;T&gt;&gt;(QueryOptionNames.select, opts);
   }
 
   expand(
-    opts: (e: { s: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; }) &#x3D;&gt; ExpandExpression&lt;T&gt;
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; },
+      current?: ExpandExpression&lt;T&gt;
+    ) &#x3D;&gt; ExpandExpression&lt;T&gt;
   ): ExpandExpression&lt;T&gt;;
   expand(opts: Expand&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   expand(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1273,7 +1282,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.expand,
-        ExpandExpression.expand(opts)
+        ExpandExpression.expand(
+          opts,
+          this.options.expression(QueryOptionNames.expand)
+        )
       );
     }
     return this.options.option&lt;Expand&lt;T&gt;&gt;(QueryOptionNames.expand, opts);
@@ -1283,12 +1295,15 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    */
   compute(
-    opts: (e: {
-      s: T;
-      e: () &#x3D;&gt; ComputeExpression&lt;T&gt;;
-      o: ODataOperators&lt;T&gt;;
-      f: ODataFunctions&lt;T&gt;;
-    }) &#x3D;&gt; ComputeExpression&lt;T&gt;
+    opts: (
+      builder: {
+        s: T;
+        e: () &#x3D;&gt; ComputeExpression&lt;T&gt;;
+        o: ODataOperators&lt;T&gt;;
+        f: ODataFunctions&lt;T&gt;;
+      },
+      current?: ComputeExpression&lt;T&gt;
+    ) &#x3D;&gt; ComputeExpression&lt;T&gt;
   ): ComputeExpression&lt;T&gt;;
   compute(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   compute(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1296,7 +1311,10 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.compute,
-        ComputeExpression.compute(opts)
+        ComputeExpression.compute(
+          opts,
+          this.options.expression(QueryOptionNames.compute)
+        )
       );
     }
     return this.options.option&lt;string&gt;(QueryOptionNames.compute, opts);
@@ -1318,9 +1336,12 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
   }
 
   search(
-    opts: (e: {
-      e: (connector: SearchConnector) &#x3D;&gt; SearchExpression&lt;T&gt;;
-    }) &#x3D;&gt; SearchExpression&lt;T&gt;
+    opts: (
+      builder: {
+        e: (connector: SearchConnector) &#x3D;&gt; SearchExpression&lt;T&gt;;
+      },
+      current?: SearchExpression&lt;T&gt;
+    ) &#x3D;&gt; SearchExpression&lt;T&gt;
   ): SearchExpression&lt;T&gt;;
   search(opts: string): ODataQueryOptionHandler&lt;T&gt;;
   search(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1328,19 +1349,25 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.search,
-        SearchExpression.search(opts)
+        SearchExpression.search(
+          opts,
+          this.options.expression(QueryOptionNames.search)
+        )
       );
     }
     return this.options.option&lt;string&gt;(QueryOptionNames.search, opts);
   }
 
   filter(
-    opts: (e: {
-      s: T;
-      e: (connector?: FilterConnector) &#x3D;&gt; FilterExpression&lt;T&gt;;
-      o: ODataOperators&lt;T&gt;;
-      f: ODataFunctions&lt;T&gt;;
-    }) &#x3D;&gt; FilterExpression&lt;T&gt;
+    opts: (
+      builder: {
+        s: T;
+        e: (connector?: FilterConnector) &#x3D;&gt; FilterExpression&lt;T&gt;;
+        o: ODataOperators&lt;T&gt;;
+        f: ODataFunctions&lt;T&gt;;
+      },
+      current?: FilterExpression&lt;T&gt;
+    ) &#x3D;&gt; FilterExpression&lt;T&gt;
   ): FilterExpression&lt;T&gt;;
   filter(opts: Filter&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   filter(): ODataQueryOptionHandler&lt;T&gt;;
@@ -1348,22 +1375,31 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
     if (Types.isFunction(opts)) {
       return this.options.expression(
         QueryOptionNames.filter,
-        FilterExpression.filter(opts)
+        FilterExpression.filter(
+          opts,
+          this.options.expression(QueryOptionNames.filter)
+        )
       );
     }
     return this.options.option&lt;Filter&lt;T&gt;&gt;(QueryOptionNames.filter, opts);
   }
 
   orderBy(
-    opts: (e: { s: T; e: () &#x3D;&gt; OrderByExpression&lt;T&gt; }) &#x3D;&gt; OrderByExpression&lt;T&gt;
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; OrderByExpression&lt;T&gt; },
+      current?: OrderByExpression&lt;T&gt;
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;
   ): OrderByExpression&lt;T&gt;;
   orderBy(opts: OrderBy&lt;T&gt;): ODataQueryOptionHandler&lt;T&gt;;
   orderBy(): ODataQueryOptionHandler&lt;T&gt;;
   orderBy(opts?: any): any {
     if (Types.isFunction(opts)) {
-      return this.options.expression(
+      return this.options.option(
         QueryOptionNames.orderBy,
-        OrderByExpression.orderBy(opts)
+        OrderByExpression.orderBy(
+          opts,
+          this.options.expression(QueryOptionNames.orderBy)
+        )
       );
     }
     return this.options.option&lt;OrderBy&lt;T&gt;&gt;(QueryOptionNames.orderBy, opts);
@@ -1405,22 +1441,22 @@ export class ODataQueryOptionsHandler&lt;T&gt; {
 
   apply(query: ODataQueryArguments&lt;T&gt;) {
     if (query.select !&#x3D;&#x3D; undefined) {
-      this.select(query.select);
+      this.options.option(QueryOptionNames.select, query.select);
     }
     if (query.expand !&#x3D;&#x3D; undefined) {
-      this.expand(query.expand);
+      this.options.option(QueryOptionNames.expand, query.expand);
     }
     if (query.transform !&#x3D;&#x3D; undefined) {
-      this.transform(query.transform);
+      this.options.option(QueryOptionNames.transform, query.transform);
     }
     if (query.search !&#x3D;&#x3D; undefined) {
-      this.search(query.search);
+      this.options.option(QueryOptionNames.search, query.search);
     }
     if (query.filter !&#x3D;&#x3D; undefined) {
-      this.filter(query.filter);
+      this.options.option(QueryOptionNames.filter, query.filter);
     }
     if (query.orderBy !&#x3D;&#x3D; undefined) {
-      this.orderBy(query.orderBy);
+      this.options.option(QueryOptionNames.orderBy, query.orderBy);
     }
     this.paging(query);
   }

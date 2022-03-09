@@ -89,6 +89,9 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                <a href="#clone" >clone</a>
+                            </li>
+                            <li>
                                 <a href="#render" >render</a>
                             </li>
                             <li>
@@ -187,6 +190,43 @@
     <h3 id="methods">
         Methods
     </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clone"></a>
+                    <span class="name">
+                        <span ><b>clone</b></span>
+                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clone()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="31"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/orderby.ts:31</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/OrderByField.html" target="_self" >OrderByField</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -358,6 +398,10 @@ export class OrderByField implements Renderable {
   }): string {
     return &#x60;${render(this.field, { aliases, escape, prefix })} ${this.order}&#x60;;
   }
+
+  clone() {
+    return new OrderByField(this.field.clone(), this.order);
+  }
 }
 
 export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
@@ -378,12 +422,19 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   static orderBy&lt;T extends object&gt;(
-    opts: (e: { s: T; e: () &#x3D;&gt; OrderByExpression&lt;T&gt; }) &#x3D;&gt; OrderByExpression&lt;T&gt;
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; OrderByExpression&lt;T&gt; },
+      current?: OrderByExpression&lt;T&gt;
+    ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
+    current?: OrderByExpression&lt;T&gt;
   ): OrderByExpression&lt;T&gt; {
-    return opts({
-      s: OrderByExpression.s&lt;T&gt;(),
-      e: OrderByExpression.e,
-    }) as OrderByExpression&lt;T&gt;;
+    return opts(
+      {
+        s: OrderByExpression.s&lt;T&gt;(),
+        e: OrderByExpression.e,
+      },
+      current
+    ) as OrderByExpression&lt;T&gt;;
   }
 
   private _add(node: Renderable): OrderByExpression&lt;T&gt; {
@@ -404,6 +455,12 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
       .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }))
       .join(&#x60;,&#x60;);
     return content;
+  }
+
+  clone() {
+    return new OrderByExpression({
+      children: this._children.map((c) &#x3D;&gt; c.clone()),
+    });
   }
 
   ascending(field: any) {

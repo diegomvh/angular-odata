@@ -111,6 +111,9 @@
                                 <a href="#_add" >_add</a>
                             </li>
                             <li>
+                                <a href="#clone" >clone</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Static</span>
                                 <a href="#compute" >compute</a>
                             </li>
@@ -291,8 +294,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:73</a></div>
                 </td>
             </tr>
 
@@ -356,6 +359,49 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="clone"></a>
+                    <span class="name">
+                        <span ><b>clone</b></span>
+                        <a href="#clone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>clone()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Expression.html" target="_self" >Expression</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:66</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/functions.html#now" target="_self" >ComputeExpression&lt;unknown&gt;</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="compute"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
@@ -367,7 +413,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>compute(opts: (e: literal type) => void)</code>
+                    <code>compute(opts: (builder: literal type,current: ComputeExpression<T>) => void, current?: ComputeExpression<T>)</code>
                 </td>
             </tr>
 
@@ -411,6 +457,18 @@
 
                                     <td>
                                         No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>current</td>
+                                    <td>
+                                            <code>ComputeExpression&lt;T&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
                                     </td>
 
 
@@ -498,8 +556,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="62"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:62</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/compute.ts:79</a></div>
                 </td>
             </tr>
 
@@ -593,7 +651,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:42</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:49</a></code>
 </div>
                 </td>
             </tr>
@@ -718,7 +776,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:28</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:30</a></code>
 </div>
                 </td>
             </tr>
@@ -761,7 +819,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:32</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:34</a></code>
 </div>
                 </td>
             </tr>
@@ -804,7 +862,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:36</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/Expression.html#source" target="_self" >Expression:38</a></code>
 </div>
                 </td>
             </tr>
@@ -864,12 +922,19 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
   }
 
   static compute&lt;T extends object&gt;(
-    opts: (e: { s: T; e: () &#x3D;&gt; ComputeExpression&lt;T&gt; }) &#x3D;&gt; ComputeExpression&lt;T&gt;
+    opts: (
+      builder: { s: T; e: () &#x3D;&gt; ComputeExpression&lt;T&gt; },
+      current?: ComputeExpression&lt;T&gt;
+    ) &#x3D;&gt; ComputeExpression&lt;T&gt;,
+    current?: ComputeExpression&lt;T&gt;
   ): ComputeExpression&lt;T&gt; {
-    return opts({
-      s: ComputeExpression.s&lt;T&gt;(),
-      e: ComputeExpression.e,
-    }) as ComputeExpression&lt;T&gt;;
+    return opts(
+      {
+        s: ComputeExpression.s&lt;T&gt;(),
+        e: ComputeExpression.e,
+      },
+      current
+    ) as ComputeExpression&lt;T&gt;;
   }
 
   render({
@@ -881,9 +946,19 @@ export class ComputeExpression&lt;T&gt; extends Expression&lt;T&gt; {
     escape?: boolean | undefined;
     prefix?: string | undefined;
   } &#x3D; {}): string {
-    let children &#x3D; this._children
-      .map((n) &#x3D;&gt; n.render({ aliases, escape, prefix }));
-    return this.names.map((name, index) &#x3D;&gt; &#x60;${children[index]} as ${name}&#x60;).join(&#x27;,&#x27;);
+    let children &#x3D; this._children.map((n) &#x3D;&gt;
+      n.render({ aliases, escape, prefix })
+    );
+    return this.names
+      .map((name, index) &#x3D;&gt; &#x60;${children[index]} as ${name}&#x60;)
+      .join(&#x27;,&#x27;);
+  }
+
+  clone() {
+    return new ComputeExpression({
+      children: this._children.map((c) &#x3D;&gt; c.clone()),
+      names: [...this.names],
+    });
   }
 
   private _add(name: string, node: Renderable): ComputeExpression&lt;T&gt; {
