@@ -44,11 +44,6 @@ export type ODataModelEventType =
   | 'attach';
 export class ODataModelEvent<T> {
   name: ODataModelEventType;
-  bubbling: boolean = true;
-  chain: [
-    ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-    string | number | null
-  ][];
   value?: any;
   previous?: any;
   options?: any;
@@ -86,10 +81,15 @@ export class ODataModelEvent<T> {
     ];
   }
 
+  bubbling: boolean = true;
   stopPropagation() {
     this.bubbling = false;
   }
 
+  chain: [
+    ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+    string | number | null
+  ][];
   push(
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
     track: string | number
