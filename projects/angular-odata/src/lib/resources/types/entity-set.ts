@@ -132,7 +132,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<ODataCollection<T, ODataModel<T>> | null> {
+  ): Observable<C | null> {
     return this.fetch(options).pipe(
       map(({ entities, annots }) =>
         entities
