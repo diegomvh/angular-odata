@@ -2,7 +2,7 @@ import {
   CacheCacheability,
   ODataMetadataType,
   ODataVersion,
-  Options,
+  OptionsHelper,
   ResponseOptions,
 } from '../../types';
 import {
@@ -20,7 +20,6 @@ export class ODataResponseOptions implements ResponseOptions {
   streaming?: boolean;
   // OData
   metadata?: ODataMetadataType;
-  stringAsEnum?: boolean;
   ieee754Compatible?: boolean;
   // Location
   location?: string;
@@ -28,9 +27,8 @@ export class ODataResponseOptions implements ResponseOptions {
   cacheability?: 'public' | 'private' | 'no-cache' | 'no-store';
   maxAge?: number;
 
-  constructor(config: Options) {
+  constructor(config: OptionsHelper) {
     this.version = config.version || DEFAULT_VERSION;
-    this.stringAsEnum = config.stringAsEnum;
   }
 
   get helper() {

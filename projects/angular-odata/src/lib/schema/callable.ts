@@ -1,4 +1,4 @@
-import { CallableConfig, Options, Parser } from '../types';
+import { CallableConfig, OptionsHelper, Parser } from '../types';
 import { ODataSchemaElement } from './element';
 import { ODataCallableParser } from './parsers';
 import { ODataSchema } from './schema';
@@ -38,7 +38,11 @@ export class ODataCallable<R> extends ODataSchemaElement {
   }: {
     parserForType: (type: string) => Parser<any>;
   }) {
-    this.parser.configure({ options: this.api.options, parserForType });
+    this.parser.configure({ 
+      nonParenthesisForEmptyParameterFunction: this.api.options.nonParenthesisForEmptyParameterFunction,
+      options: this.api.options, 
+      parserForType 
+    });
   }
 
   /**
@@ -47,7 +51,7 @@ export class ODataCallable<R> extends ODataSchemaElement {
    * @param options Options for deserialization
    * @returns Deserialized value
    */
-  deserialize(value: any, options?: Options): any {
+  deserialize(value: any, options?: OptionsHelper): any {
     return this.parser.deserialize(value, options);
   }
 
@@ -57,7 +61,7 @@ export class ODataCallable<R> extends ODataSchemaElement {
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: any, options?: Options): any {
+  serialize(value: any, options?: OptionsHelper): any {
     return this.parser.serialize(value, options);
   }
 
@@ -67,7 +71,7 @@ export class ODataCallable<R> extends ODataSchemaElement {
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: any, options?: Options): any {
+  encode(value: any, options?: OptionsHelper): any {
     return this.parser.encode(value, options);
   }
 

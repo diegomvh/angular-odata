@@ -4,8 +4,6 @@ import {
   Person,
   NAMESPACE,
   PersonGender,
-  Trip,
-  Photo,
 } from '../../trippin.spec';
 import { ODataClient } from '../../client';
 import { ODataModule } from '../../module';
@@ -161,12 +159,12 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
-    const parser = client.parserForType(
+    const parser = client.parserForType<Person>(
       `${NAMESPACE}.PersonGender`
-    ) as ODataEnumTypeParser<PersonGender>;
-    parser.flags = true;
+    ) as ODataEnumTypeParser<Person>;
     const options = schema.api.options;
-    options.stringAsEnum = true;
+    // Change parser settings
+    parser.flags = true;
     const field = (schema as ODataStructuredType<Person>).findFieldByName(
       'Gender'
     ) as Parser<PersonGender>;
@@ -201,8 +199,6 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
-    const options = schema.api.options;
-    options.stringAsEnum = false;
     expect(
       schema.parser.validate({
         Gender: 4,
@@ -220,8 +216,6 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
-    const options = schema.api.options;
-    options.stringAsEnum = false;
     expect(
       schema.parser.validate(
         {
@@ -250,8 +244,6 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
-    const options = schema.api.options;
-    options.stringAsEnum = false;
     expect(
       schema.parser.validate(
         <Person>{
@@ -270,8 +262,6 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
-    const options = schema.api.options;
-    options.stringAsEnum = false;
     expect(
       schema.parser.validate(
         {
@@ -287,8 +277,6 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
-    const options = schema.api.options;
-    options.stringAsEnum = false;
     expect(
       schema.parser.validate({
         FirstName: 'FirstName',
@@ -303,8 +291,6 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
-    const options = schema.api.options;
-    options.stringAsEnum = false;
     expect(
       schema.parser.validate(
         <Person>{
@@ -320,8 +306,12 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
     ) as ODataStructuredType<Person>;
+    const parser = client.parserForType<Person>(
+      `${NAMESPACE}.PersonGender`
+    ) as ODataEnumTypeParser<Person>;
     const options = schema.api.options;
-    options.stringAsEnum = false;
+    // Change parser settings
+    parser.configure({stringAsEnum: false, options});
     expect(
       schema.parser.serialize(
         <Person>{

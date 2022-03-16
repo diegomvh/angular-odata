@@ -26,7 +26,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
-import { Options, OptionsHelper } from '../types';
+import { OptionsHelper } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
@@ -393,7 +393,7 @@ export class ODataModelField<F> {
       : this.default;
   }
 
-  deserialize(value: any, options?: Options): F {
+  deserialize(value: any, options?: OptionsHelper): F {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
@@ -401,7 +401,7 @@ export class ODataModelField<F> {
     return this.parser.deserialize(value, parserOptions);
   }
 
-  serialize(value: F, options?: Options): any {
+  serialize(value: F, options?: OptionsHelper): any {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
@@ -409,7 +409,7 @@ export class ODataModelField<F> {
     return this.parser.serialize(value, parserOptions);
   }
 
-  encode(value: F, options?: Options): any {
+  encode(value: F, options?: OptionsHelper): any {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)

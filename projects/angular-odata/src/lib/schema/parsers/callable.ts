@@ -3,7 +3,6 @@ import { ODataParserOptions } from '../../options';
 import {
   CallableConfig,
   NONE_PARSER,
-  Options,
   OptionsHelper,
   Parameter,
   Parser,
@@ -27,7 +26,7 @@ export class ODataParameterParser<T> {
     this.collection = parameter.collection;
   }
 
-  serialize(value: T, options?: Options): any {
+  serialize(value: T, options?: OptionsHelper): any {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
@@ -38,7 +37,7 @@ export class ODataParameterParser<T> {
   }
 
   //Encode
-  encode(value: any, options?: Options): string {
+  encode(value: any, options?: OptionsHelper): string {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
@@ -90,6 +89,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   return?: { type: string; collection?: boolean };
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
+  nonParenthesisForEmptyParameterFunction?: boolean;
   optionsHelper?: OptionsHelper;
 
   constructor(config: CallableConfig, namespace: string, alias?: string) {
@@ -110,7 +110,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   // Deserialize
-  deserialize(value: any, options?: Options): R {
+  deserialize(value: any, options?: OptionsHelper): R {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
@@ -119,7 +119,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   // Serialize
-  serialize(params: any, options?: Options): any {
+  serialize(params: any, options?: OptionsHelper): any {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
@@ -137,7 +137,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   //Encode
-  encode(params: any, options?: Options): any {
+  encode(params: any, options?: OptionsHelper): any {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
@@ -155,12 +155,15 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   configure({
+    nonParenthesisForEmptyParameterFunction,
     parserForType,
     options,
   }: {
+    nonParenthesisForEmptyParameterFunction: boolean;
     parserForType: (type: string) => Parser<any>;
     options: OptionsHelper;
   }) {
+    this.nonParenthesisForEmptyParameterFunction = nonParenthesisForEmptyParameterFunction;
     this.optionsHelper = options;
     if (this.return)
       this.parser = parserForType(this.return.type) || NONE_PARSER;

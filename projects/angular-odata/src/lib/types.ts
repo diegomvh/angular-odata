@@ -42,14 +42,8 @@ export enum QueryOptionNames {
   count = 'count',
 }
 
-export interface Options {
+export interface ApiOptions {
   version?: ODataVersion;
-  stringAsEnum?: boolean;
-  //https://github.com/OData/AspNetCoreOData/issues/171
-  nonParenthesisForEmptyParameterFunction?: boolean;
-}
-
-export interface ApiOptions extends Options {
   params?: { [param: string]: string | string[] };
   headers?: { [param: string]: string | string[] };
   withCredentials?: boolean;
@@ -73,12 +67,16 @@ export interface ApiOptions extends Options {
   stripMetadata?: ODataMetadataType;
   fetchPolicy?: FetchPolicy;
   bodyQueryOptions?: QueryOptionNames[];
+  stringAsEnum?: boolean;
   //https://github.com/OData/WebApi/issues/1974
   //https://github.com/OData/WebApi/issues/1647
   deleteRefBy?: 'path' | 'id';
+  //https://github.com/OData/AspNetCoreOData/issues/171
+  nonParenthesisForEmptyParameterFunction?: boolean;
 }
 
-export interface OptionsHelper extends Options {
+export interface OptionsHelper {
+  version?: ODataVersion;
   helper: ODataVersionHelper;
   exponentialDecimals?: boolean;
   metadata?: ODataMetadataType;

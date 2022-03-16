@@ -1,4 +1,4 @@
-import { EnumTypeConfig, Options } from '../types';
+import { EnumTypeConfig, OptionsHelper } from '../types';
 import { ODataSchemaElement } from './element';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 import { ODataSchema } from './schema';
@@ -17,7 +17,7 @@ export class ODataEnumType<E> extends ODataSchemaElement {
   }
 
   configure() {
-    this.parser.configure({ options: this.api.options });
+    this.parser.configure({ stringAsEnum: this.api.options.stringAsEnum, options: this.api.options });
   }
 
   /**
@@ -70,7 +70,7 @@ export class ODataEnumType<E> extends ODataSchemaElement {
    * @param options Options for deserialization
    * @returns Deserialized value
    */
-  deserialize(value: any, options?: Options): E {
+  deserialize(value: any, options?: OptionsHelper): E {
     return this.parser.deserialize(value, options);
   }
 
@@ -80,7 +80,7 @@ export class ODataEnumType<E> extends ODataSchemaElement {
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: E, options?: Options): any {
+  serialize(value: E, options?: OptionsHelper): any {
     return this.parser.serialize(value, options);
   }
 
@@ -90,7 +90,7 @@ export class ODataEnumType<E> extends ODataSchemaElement {
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: E, options?: Options): any {
+  encode(value: E, options?: OptionsHelper): any {
     return this.parser.encode(value, options);
   }
 }

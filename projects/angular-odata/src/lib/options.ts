@@ -3,7 +3,6 @@ import {
   FetchPolicy,
   ODataMetadataType,
   ODataVersion,
-  Options,
   OptionsHelper,
   QueryOptionNames,
 } from './types';
@@ -23,7 +22,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
   /**
    * Send enum as string in the request
    */
-  stringAsEnum?: boolean;
+  stringAsEnum: boolean;
   /**
    * Strip metadata from the response
    */
@@ -87,11 +86,11 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     includeAnnotations?: string;
   };
   deleteRefBy: 'path' | 'id';
-  parenthesisForEmptyParameterFunction: boolean;
+  nonParenthesisForEmptyParameterFunction: boolean;
 
   constructor(config: ApiOptions) {
     this.version = config.version || DEFAULT_VERSION;
-    this.stringAsEnum = config.stringAsEnum;
+    this.stringAsEnum = config.stringAsEnum || false;
     this.params = config.params || {};
     this.headers = config.headers || {};
     this.withCredentials = config.withCredentials;
@@ -102,7 +101,7 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     Object.assign(this.etag, config.etag || {});
     this.prefer = config.prefer;
     this.deleteRefBy = config.deleteRefBy || 'path';
-    this.parenthesisForEmptyParameterFunction =
+    this.nonParenthesisForEmptyParameterFunction =
       config.nonParenthesisForEmptyParameterFunction || false;
   }
 
@@ -113,11 +112,9 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
 
 export class ODataParserOptions implements OptionsHelper {
   version: ODataVersion;
-  stringAsEnum?: boolean;
 
-  constructor(config: Options) {
+  constructor(config: OptionsHelper) {
     this.version = config.version || DEFAULT_VERSION;
-    this.stringAsEnum = config.stringAsEnum;
   }
 
   get helper() {

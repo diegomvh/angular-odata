@@ -3,7 +3,6 @@ import { raw } from '../../resources/query';
 import {
   EnumTypeConfig,
   EnumTypeFieldConfig,
-  Options,
   OptionsHelper,
   Parser,
 } from '../../types';
@@ -35,6 +34,7 @@ export class ODataEnumTypeParser<T>
   flags?: boolean;
   members: { [name: string]: number } | { [value: number]: string };
   fields: ODataEnumTypeFieldParser[];
+  stringAsEnum?: boolean;
   optionsHelper?: OptionsHelper;
 
   constructor(config: EnumTypeConfig<T>, namespace: string, alias?: string) {
@@ -59,7 +59,8 @@ export class ODataEnumTypeParser<T>
     return (term && this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
-  configure({ options }: { options: OptionsHelper }) {
+  configure({ stringAsEnum, options }: { stringAsEnum: boolean, options: OptionsHelper }) {
+    this.stringAsEnum = stringAsEnum;
     this.optionsHelper = options;
   }
 
@@ -70,7 +71,7 @@ export class ODataEnumTypeParser<T>
   }
 
   // Deserialize
-  deserialize(value: string, options?: Options): T {
+  deserialize(value: string, options?: OptionsHelper): T {
     // string -> number
     const parserOptions =
       options !== undefined
@@ -87,7 +88,7 @@ export class ODataEnumTypeParser<T>
   }
 
   // Serialize
-  serialize(value: T, options?: Options): string {
+  serialize(value: T, options?: OptionsHelper): string {
     // Enum are string | number
     // string | number -> string
     const parserOptions =
@@ -96,25 +97,25 @@ export class ODataEnumTypeParser<T>
         : this.optionsHelper;
     if (this.flags) {
       const names = Enums.toNames(this.members, value);
-      return !parserOptions?.stringAsEnum
+      return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
       const name = Enums.toName(this.members, value);
-      return !parserOptions?.stringAsEnum
+      return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
         : name;
     }
   }
 
   //Encode
-  encode(value: T, options?: Options): any {
+  encode(value: T, options?: OptionsHelper): any {
     const parserOptions =
       options !== undefined
         ? new ODataParserOptions(options)
         : this.optionsHelper;
     const serialized = this.serialize(value, parserOptions);
-    return parserOptions?.stringAsEnum
+    return this.stringAsEnum
       ? raw(`'${serialized}'`)
       : raw(serialized);
   }
