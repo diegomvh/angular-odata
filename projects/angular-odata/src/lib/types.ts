@@ -45,6 +45,8 @@ export enum QueryOptionNames {
 export interface Options {
   version?: ODataVersion;
   stringAsEnum?: boolean;
+  //https://github.com/OData/AspNetCoreOData/issues/171
+  nonParenthesisForEmptyParameterFunction?: boolean;
 }
 
 export interface ApiOptions extends Options {

@@ -76,7 +76,7 @@ describe('ODataPathSegments', () => {
   it('test function', () => {
     const pathSegments: ODataPathSegments = new ODataPathSegments();
     pathSegments.add(PathSegmentNames.function, FUNCTION);
-    expect(pathSegments.toString()).toEqual('GetFavoriteAirline');
+    expect(pathSegments.toString()).toEqual('GetFavoriteAirline()');
   });
 
   it('test action', () => {

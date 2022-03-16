@@ -128,7 +128,7 @@ describe('ODataResource', () => {
     const fun: ODataFunctionResource<any, any> = set.function<any, any>(
       'NS.MyFunction'
     );
-    expect(fun.toString()).toEqual('People/NS.MyFunction');
+    expect(fun.toString()).toEqual('People/NS.MyFunction()');
   });
 
   it('should create entity function', () => {
@@ -140,7 +140,7 @@ describe('ODataResource', () => {
     const fun: ODataFunctionResource<any, any> = entity.function<any, any>(
       'NS.MyFunction'
     );
-    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction()");
   });
 
   it('should create entity function and change parameters', () => {
@@ -164,7 +164,7 @@ describe('ODataResource', () => {
       "People('russellwhyte')/NS.MyFunction(arg1=@arg1,arg2=@arg2)?@arg1=10&@arg2=20"
     );
     fun = fun.parameters(null);
-    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction");
+    expect(fun.toString()).toEqual("People('russellwhyte')/NS.MyFunction()");
   });
 
   it('should create entity function with all parameters', () => {

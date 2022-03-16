@@ -249,7 +249,7 @@ export function buildPathAndQuery<T>({
 
   if (func) {
     if (typeof func === 'string') {
-      path += `/${func}`;
+      path += `/${func}()`;
     } else if (typeof func === 'object') {
       const [funcName] = Object.keys(func);
       const funcArgs = normalizeValue(func[funcName] as Value, {
@@ -257,10 +257,7 @@ export function buildPathAndQuery<T>({
         escape,
       });
 
-      path += `/${funcName}`;
-      if (funcArgs !== '') {
-        path += `(${funcArgs})`;
-      }
+      path += `/${funcName}(${funcArgs})`;
     }
   }
 

@@ -3,12 +3,7 @@ import { NEVER, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ODataCache, ODataInMemoryCache } from './cache/index';
 import { DEFAULT_VERSION } from './constants';
-import {
-  ModelOptions,
-  ODataCollection,
-  ODataModel,
-  ODataModelOptions,
-} from './models/index';
+import { ODataCollection, ODataModel, ODataModelOptions } from './models/index';
 import { ODataApiOptions } from './options';
 import {
   ODataActionResource,

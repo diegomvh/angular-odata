@@ -119,7 +119,7 @@ describe('ODataClient', () => {
     const fun: ODataFunctionResource<any, any> = client.function<any, any>(
       'NS.MyFunction'
     );
-    expect(fun.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyFunction');
+    expect(fun.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyFunction()');
   });
 
   it('should create unbound action resource', () => {

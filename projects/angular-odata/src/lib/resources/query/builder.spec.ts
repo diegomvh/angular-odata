@@ -1366,7 +1366,7 @@ describe('action', () => {
 describe('function', () => {
   it('should support a function on a collection', () => {
     const func = 'Test';
-    const expected = '/Test';
+    const expected = '/Test()';
     const actual = buildQuery({ func });
     expect(actual).toEqual(expected);
   });
@@ -1374,7 +1374,7 @@ describe('function', () => {
   it('should support a function on an entity', () => {
     const key = 1;
     const func = 'Test';
-    const expected = '(1)/Test';
+    const expected = '(1)/Test()';
     const actual = buildQuery({ key, func });
     expect(actual).toEqual(expected);
   });

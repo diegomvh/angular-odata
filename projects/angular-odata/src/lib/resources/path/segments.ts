@@ -15,7 +15,8 @@ export type ODataSegment = {
 
 function pathSegmentsBuilder(
   segment: ODataSegment,
-  escape: boolean = false
+  escape: boolean = false,
+  nonParenthesisForEmptyParameterFunction: boolean = false
 ): [string, { [name: string]: any }] {
   if (segment.name === PathSegmentNames.function) {
     let [path, params] = segment.parameters
@@ -26,6 +27,9 @@ function pathSegmentsBuilder(
       : buildPathAndQuery({ func: segment.path, escape });
     if (path.startsWith(PATH_SEPARATOR)) {
       path = path.slice(1);
+    }
+    if (path.endsWith('()') && nonParenthesisForEmptyParameterFunction) {
+      path = path.substring(0, path.length - 2);
     }
     return [path, params];
   } else {
