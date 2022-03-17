@@ -156,6 +156,7 @@ export class ODataResource<T> {
   pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
     const [spath, sparams] = this.pathSegments.pathAndParams(escape);
     const [, qparams] = this.queryOptions.pathAndParams(escape);
+
     return [spath, { ...sparams, ...qparams }];
   }
 
@@ -185,27 +186,27 @@ export class ODataResource<T> {
     });
   }
 
+  private __parser(value: any, options?: OptionsHelper, type?: string): Parser<T> | undefined {
+    const dataType = options !== undefined && Types.isPlainObject(value)
+      ? options.helper.type(value)
+      : undefined;
+    if (dataType !== undefined) {
+      // Parser from data type
+      return this.api.parserForType<T>(dataType);
+    } else if (this.schema !== undefined && 'parser' in this.schema) {
+      // Parser from resource schema
+      return (<any>this.schema).parser as Parser<T> | undefined;
+    } else if (type !== undefined) {
+      // Parser from resource type
+      return this.api.parserForType<T>(type);
+    }
+    return undefined;
+  }
+
   deserialize(value: any, options?: OptionsHelper): any {
     const resourceType = this.returnType();
-    const resourceSchema = this.schema;
-    const _p = (value: any, options: OptionsHelper): Parser<T> | undefined => {
-      const dataType = Types.isPlainObject(value)
-        ? options.helper.type(value)
-        : undefined;
-      if (dataType !== undefined) {
-        // Parser from data type
-        return this.api.parserForType<T>(dataType);
-      } else if (resourceSchema !== undefined && 'parser' in resourceSchema) {
-        // Parser from resource schema
-        return (<any>resourceSchema).parser as Parser<T> | undefined;
-      } else if (resourceType !== undefined) {
-        // Parser from resource type
-        return this.api.parserForType<T>(resourceType);
-      }
-      return undefined;
-    };
     const _d = (value: any, options: OptionsHelper) => {
-      const parser = _p(value, options);
+      const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'deserialize' in parser
         ? parser.deserialize(value, options)
         : value;
@@ -217,25 +218,8 @@ export class ODataResource<T> {
 
   serialize(value: any, options?: OptionsHelper): any {
     const resourceType = this.type();
-    const resourceSchema = this.schema;
-    const _p = (value: any, options: OptionsHelper): Parser<T> | undefined => {
-      const dataType = Types.isPlainObject(value)
-        ? options.helper.type(value)
-        : undefined;
-      if (dataType !== undefined) {
-        // Parser from data type
-        return this.api.parserForType<T>(dataType);
-      } else if (resourceSchema !== undefined && 'parser' in resourceSchema) {
-        // Parser from resource schema
-        return (<any>resourceSchema).parser as Parser<T> | undefined;
-      } else if (resourceType !== undefined) {
-        // Parser from resource type
-        return this.api.parserForType<T>(resourceType);
-      }
-      return undefined;
-    };
     const _s = (value: any, options: OptionsHelper) => {
-      const parser = _p(value, options);
+      const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'serialize' in parser
         ? parser.serialize(value, options)
         : value;
@@ -247,25 +231,8 @@ export class ODataResource<T> {
 
   encode(value: any, options?: OptionsHelper): any {
     const resourceType = this.type();
-    const resourceSchema = this.schema;
-    const _p = (value: any, options: OptionsHelper): Parser<T> | undefined => {
-      const dataType = Types.isPlainObject(value)
-        ? options.helper.type(value)
-        : undefined;
-      if (dataType !== undefined) {
-        // Parser from data type
-        return this.api.parserForType<T>(dataType);
-      } else if (resourceSchema !== undefined && 'parser' in resourceSchema) {
-        // Parser from resource schema
-        return (<any>resourceSchema).parser as Parser<T> | undefined;
-      } else if (resourceType !== undefined) {
-        // Parser from resource type
-        return this.api.parserForType<T>(resourceType);
-      }
-      return undefined;
-    };
     const _e = (value: any, options: OptionsHelper) => {
-      const parser = _p(value, options);
+      const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'encode' in parser
         ? parser.encode(value, options)
         : value;
