@@ -473,8 +473,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="78"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:78</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:82</a></div>
                 </td>
             </tr>
 
@@ -579,15 +579,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="50"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:50</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="54"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:54</a></div>
                 </td>
             </tr>
 
@@ -629,7 +629,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -672,15 +672,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="70"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:70</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:74</a></div>
                 </td>
             </tr>
 
@@ -722,7 +722,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -802,15 +802,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="60"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:60</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:64</a></div>
                 </td>
             </tr>
 
@@ -852,7 +852,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -1470,7 +1470,7 @@ Titleize is meant for creating pretty output.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CallableConfig, Options, Parser } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { CallableConfig, OptionsHelper, Parser } from &#x27;../types&#x27;;
 import { ODataSchemaElement } from &#x27;./element&#x27;;
 import { ODataCallableParser } from &#x27;./parsers&#x27;;
 import { ODataSchema } from &#x27;./schema&#x27;;
@@ -1510,7 +1510,11 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
   }: {
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
   }) {
-    this.parser.configure({ options: this.api.options, parserForType });
+    this.parser.configure({ 
+      nonParenthesisForEmptyParameterFunction: this.api.options.nonParenthesisForEmptyParameterFunction,
+      options: this.api.options, 
+      parserForType 
+    });
   }
 
   /**
@@ -1519,7 +1523,7 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
    * @param options Options for deserialization
    * @returns Deserialized value
    */
-  deserialize(value: any, options?: Options): any {
+  deserialize(value: any, options?: OptionsHelper): any {
     return this.parser.deserialize(value, options);
   }
 
@@ -1529,7 +1533,7 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: any, options?: Options): any {
+  serialize(value: any, options?: OptionsHelper): any {
     return this.parser.serialize(value, options);
   }
 
@@ -1539,7 +1543,7 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: any, options?: Options): any {
+  encode(value: any, options?: OptionsHelper): any {
     return this.parser.encode(value, options);
   }
 

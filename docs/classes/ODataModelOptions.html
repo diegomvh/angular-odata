@@ -388,7 +388,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ODataModelOptions&lt;any&gt;[]</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModelOptions&lt;any&gt;[]</a></code>
 
                     </td>
                 </tr>
@@ -526,7 +526,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Options.html" target="_self" >ODataModelOptions&lt;any&gt;</a></code>
+                        <i>Type : </i>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModelOptions&lt;any&gt;</a></code>
 
                     </td>
                 </tr>
@@ -1701,7 +1701,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>collectionResourceFactory(query?: <a href="../interfaces/Options.html" target="_self">ODataQueryOptions&lt;T&gt;</a>)</code>
+<code>collectionResourceFactory(query?: <a href="../classes/ODataQueryOptions.html" target="_self">ODataQueryOptions&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1732,7 +1732,7 @@
                                 <tr>
                                     <td>query</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryOptions&lt;T&gt;</a></code>
+                                                <code><a href="../classes/ODataQueryOptions.html" target="_self" >ODataQueryOptions&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -2093,7 +2093,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>findChildOptions(predicate: (options: <a href="../interfaces/Options.html">ODataModelOptions<any></a>) => void)</code>
+<code>findChildOptions(predicate: (options: <a href="../objects/OData.html">ODataModelOptions<any></a>) => void)</code>
                 </td>
             </tr>
 
@@ -2139,7 +2139,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/Options.html" target="_self" >ODataModelOptions | undefined</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModelOptions | undefined</a></code>
 
                     </div>
                     <div class="io-description">
@@ -2459,7 +2459,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>modelResourceFactory(query?: <a href="../interfaces/Options.html" target="_self">ODataQueryOptions&lt;T&gt;</a>)</code>
+<code>modelResourceFactory(query?: <a href="../classes/ODataQueryOptions.html" target="_self">ODataQueryOptions&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -2490,7 +2490,7 @@
                                 <tr>
                                     <td>query</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >ODataQueryOptions&lt;T&gt;</a></code>
+                                                <code><a href="../classes/ODataQueryOptions.html" target="_self" >ODataQueryOptions&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -2528,7 +2528,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>query(self: <a href="../classes/ODataModel.html" target="_self">ODataModel&lt;T&gt;</a>, resource: <a href="../objects/OData.html" target="_self">ODataEntityResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataSingletonResource&lt;T&gt;</a>, func: (q: <a href="../interfaces/Options.html">ODataQueryOptionsHandler<T></a>) => void)</code>
+<code>query(self: <a href="../classes/ODataModel.html" target="_self">ODataModel&lt;T&gt;</a>, resource: <a href="../objects/OData.html" target="_self">ODataEntityResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataSingletonResource&lt;T&gt;</a>, func: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>) => void)</code>
                 </td>
             </tr>
 
@@ -3563,7 +3563,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from &#x27;../schema&#x27;;
-import { Options, OptionsHelper } from &#x27;../types&#x27;;
+import { OptionsHelper } from &#x27;../types&#x27;;
 import { Objects, Types } from &#x27;../utils&#x27;;
 import type { ODataCollection } from &#x27;./collection&#x27;;
 import type { ODataModel } from &#x27;./model&#x27;;
@@ -3930,7 +3930,7 @@ export class ODataModelField&lt;F&gt; {
       : this.default;
   }
 
-  deserialize(value: any, options?: Options): F {
+  deserialize(value: any, options?: OptionsHelper): F {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)
@@ -3938,7 +3938,7 @@ export class ODataModelField&lt;F&gt; {
     return this.parser.deserialize(value, parserOptions);
   }
 
-  serialize(value: F, options?: Options): any {
+  serialize(value: F, options?: OptionsHelper): any {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)
@@ -3946,7 +3946,7 @@ export class ODataModelField&lt;F&gt; {
     return this.parser.serialize(value, parserOptions);
   }
 
-  encode(value: F, options?: Options): any {
+  encode(value: F, options?: OptionsHelper): any {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)

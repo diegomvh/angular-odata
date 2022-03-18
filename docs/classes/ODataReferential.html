@@ -111,7 +111,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:44</a></div>
                             </td>
                         </tr>
 
@@ -172,7 +172,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -198,7 +198,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -222,7 +222,6 @@ import { ODataParserOptions } from &#x27;../../options&#x27;;
 import { raw } from &#x27;../../resources/query&#x27;;
 import {
   NONE_PARSER,
-  Options,
   OptionsHelper,
   Parser,
   StructuredTypeConfig,
@@ -386,7 +385,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options?: Options): T {
+  deserialize(value: any, options?: OptionsHelper): T {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)
@@ -421,7 +420,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     return parser.serialize(value, options);
   }
 
-  serialize(value: T, options?: Options): any {
+  serialize(value: T, options?: OptionsHelper): any {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)
@@ -440,7 +439,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   //#endregion
 
   //#region Encode
-  encode(value: T, options?: Options): string {
+  encode(value: T, options?: OptionsHelper): string {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)
@@ -630,7 +629,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   // Deserialize
-  deserialize(value: any, options?: Options): T {
+  deserialize(value: any, options?: OptionsHelper): T {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)
@@ -654,7 +653,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   // Serialize
-  serialize(value: T, options?: Options): any {
+  serialize(value: T, options?: OptionsHelper): any {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)
@@ -680,7 +679,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   // Encode
-  encode(value: T, options?: Options): any {
+  encode(value: T, options?: OptionsHelper): any {
     const parserOptions &#x3D;
       options !&#x3D;&#x3D; undefined
         ? new ODataParserOptions(options)

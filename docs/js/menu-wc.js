@@ -481,9 +481,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/ODataVersionHelper.html" data-type="entity-link" >ODataVersionHelper</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/Options.html" data-type="entity-link" >Options</a>
-                            </li>
-                            <li class="link">
                                 <a href="interfaces/OptionsHelper.html" data-type="entity-link" >OptionsHelper</a>
                             </li>
                             <li class="link">

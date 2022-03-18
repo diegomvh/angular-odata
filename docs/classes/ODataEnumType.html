@@ -448,7 +448,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -498,7 +498,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -541,7 +541,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: E, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>encode(value: E, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -591,7 +591,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -995,7 +995,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: E, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>serialize(value: E, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -1045,7 +1045,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -1663,7 +1663,7 @@ Titleize is meant for creating pretty output.</p>
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumTypeConfig, Options } from &#x27;../types&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EnumTypeConfig, OptionsHelper } from &#x27;../types&#x27;;
 import { ODataSchemaElement } from &#x27;./element&#x27;;
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from &#x27;./parsers&#x27;;
 import { ODataSchema } from &#x27;./schema&#x27;;
@@ -1682,7 +1682,7 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
   }
 
   configure() {
-    this.parser.configure({ options: this.api.options });
+    this.parser.configure({ stringAsEnum: this.api.options.stringAsEnum, options: this.api.options });
   }
 
   /**
@@ -1735,7 +1735,7 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
    * @param options Options for deserialization
    * @returns Deserialized value
    */
-  deserialize(value: any, options?: Options): E {
+  deserialize(value: any, options?: OptionsHelper): E {
     return this.parser.deserialize(value, options);
   }
 
@@ -1745,7 +1745,7 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: E, options?: Options): any {
+  serialize(value: E, options?: OptionsHelper): any {
     return this.parser.serialize(value, options);
   }
 
@@ -1755,7 +1755,7 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: E, options?: Options): any {
+  encode(value: E, options?: OptionsHelper): any {
     return this.parser.encode(value, options);
   }
 }

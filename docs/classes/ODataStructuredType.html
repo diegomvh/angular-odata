@@ -693,7 +693,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -743,7 +743,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -786,7 +786,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: T, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>encode(value: T, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -836,7 +836,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -1684,7 +1684,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: T, options?: <a href="../interfaces/Options.html" target="_self">Options</a>)</code>
+<code>serialize(value: T, options?: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
                 </td>
             </tr>
 
@@ -1734,7 +1734,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >Options</a></code>
+                                                <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
                                     </td>
 
                                     <td>
@@ -1777,7 +1777,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>toJsonSchema(options: <a href="../interfaces/Options.html" target="_self">JsonSchemaOptions&lt;T&gt;</a>)</code>
+<code>toJsonSchema(options: <a href="../undefineds/JsonSchemaOptions.html" target="_self">JsonSchemaOptions&lt;T&gt;</a>)</code>
                 </td>
             </tr>
 
@@ -1812,7 +1812,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                                <code><a href="../interfaces/Options.html" target="_self" >JsonSchemaOptions&lt;T&gt;</a></code>
+                                                <code><a href="../miscellaneous/typealiases.html#JsonSchemaOptions" target="_self" >JsonSchemaOptions&lt;T&gt;</a></code>
                                     </td>
 
                                     <td>
@@ -2375,7 +2375,7 @@ Titleize is meant for creating pretty output.</p>
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataCollection } from &#x27;../models&#x27;;
 import { ODataModel } from &#x27;../models/model&#x27;;
-import { Options, StructuredTypeConfig } from &#x27;../types&#x27;;
+import { OptionsHelper, StructuredTypeConfig } from &#x27;../types&#x27;;
 import { ODataSchemaElement } from &#x27;./element&#x27;;
 import {
   JsonSchemaOptions,
@@ -2600,7 +2600,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
    * @param options Options for deserialization
    * @returns Deserialized value
    */
-  deserialize(value: any, options?: Options): T {
+  deserialize(value: any, options?: OptionsHelper): T {
     return this.parser.deserialize(value, options);
   }
 
@@ -2610,7 +2610,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: T, options?: Options): any {
+  serialize(value: T, options?: OptionsHelper): any {
     return this.parser.serialize(value, options);
   }
 
@@ -2620,7 +2620,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: T, options?: Options): any {
+  encode(value: T, options?: OptionsHelper): any {
     return this.parser.encode(value, options);
   }
 
