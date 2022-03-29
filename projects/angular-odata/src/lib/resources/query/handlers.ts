@@ -17,7 +17,7 @@ import type { ODataQueryArguments, ODataQueryOptions } from './options';
 
 export class ODataQueryOptionHandler<T> {
   constructor(
-    private o: { [name: string]: any },
+    private o: Map<QueryOptionNames, any>,
     private n: QueryOptionNames
   ) {}
 
@@ -26,24 +26,25 @@ export class ODataQueryOptionHandler<T> {
   }
 
   toJSON() {
-    return this.o[this.n];
+    return this.o.get(this.n);
   }
 
   empty() {
-    return Types.isEmpty(this.o[this.n]);
+    return Types.isEmpty(this.o.get(this.n));
   }
 
   //#region Primitive Value
   value(v?: any) {
-    return (v !== undefined && (this.o[this.n] = v)) || this.o[this.n];
+    if (v !== undefined) this.o.set(this.n, v);
+    return this.o.get(this.n);
   }
   //#endregion
 
   //#region Array Value
   private assertArray(): any[] {
-    if (!Types.isArray(this.o[this.n]))
-      this.o[this.n] = this.o[this.n] !== undefined ? [this.o[this.n]] : [];
-    return this.o[this.n];
+    if (!Types.isArray(this.o.get(this.n)))
+      this.o.set(this.n, this.o.has(this.n) ? [this.o.get(this.n)] : []);
+    return this.o.get(this.n);
   }
 
   push(value: any) {
@@ -51,9 +52,9 @@ export class ODataQueryOptionHandler<T> {
   }
 
   remove(value: any) {
-    this.o[this.n] = this.assertArray().filter((v) => v !== value);
+    this.o.set(this.n, this.assertArray().filter((v) => v !== value));
     // If only one... down to value
-    if (this.o[this.n].length === 1) this.o[this.n] = this.o[this.n][0];
+    if (this.o.get(this.n).length === 1) this.o.set(this.n, this.o.get(this.n)[0]);
   }
 
   at(index: number) {
@@ -63,8 +64,8 @@ export class ODataQueryOptionHandler<T> {
 
   //#region HashMap Value
   private assertObject(create: boolean): { [name: string]: any } {
-    if (!Types.isArray(this.o[this.n]) && Types.isPlainObject(this.o[this.n])) {
-      return this.o[this.n];
+    if (!Types.isArray(this.o.get(this.n)) && Types.isPlainObject(this.o.get(this.n))) {
+      return this.o.get(this.n);
     }
     let arr = this.assertArray();
     let obj = arr.find((v) => Types.isPlainObject(v));
@@ -89,9 +90,9 @@ export class ODataQueryOptionHandler<T> {
     let obj = this.assertObject(true);
     Objects.unset(obj, path);
 
-    if (Types.isArray(this.o[this.n])) {
-      this.o[this.n] = this.o[this.n].filter((v: any) => !Types.isEmpty(v));
-      if (this.o[this.n].length === 1) this.o[this.n] = this.o[this.n][0];
+    if (Types.isArray(this.o.get(this.n))) {
+      this.o.set(this.n, this.o.get(this.n).filter((v: any) => !Types.isEmpty(v)));
+      if (this.o.get(this.n).length === 1) this.o.set(this.n, this.o.get(this.n)[0]);
     }
   }
 
@@ -107,7 +108,7 @@ export class ODataQueryOptionHandler<T> {
   //#endregion
 
   clear() {
-    delete this.o[this.n];
+    this.o.delete(this.n);
   }
 }
 

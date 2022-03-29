@@ -34,10 +34,10 @@ export type ODataQueryArguments<T> = {
 };
 
 export class ODataQueryOptions<T> {
-  values: { [name: string]: any };
+  values: Map<QueryOptionNames, any>;
 
   constructor(options?: { [name: string]: any }) {
-    this.values = options || {};
+    this.values = new Map(Object.entries(options || {}) as Array<[QueryOptionNames, any]>);
   }
 
   // Params
@@ -56,9 +56,9 @@ export class ODataQueryOptions<T> {
       QueryOptionNames.expand,
       QueryOptionNames.format,
     ]
-      .filter((key) => !Types.isEmpty(this.values[key]))
+      .filter((key) => !Types.isEmpty(this.values.get(key)))
       .reduce((acc, key) => {
-        let value = this.values[key];
+        let value = this.values.get(key);
         if (Types.rawType(value).endsWith('Expression')) {
           value = (value as Expression<T>).render({ aliases });
         }
@@ -80,8 +80,8 @@ export class ODataQueryOptions<T> {
   }
 
   toJSON() {
-    return Object.keys(this.values).reduce((acc, key) => {
-      let value = this.values[key];
+    return [...this.values.keys()].reduce((acc, key) => {
+      let value = this.values.get(key);
       value =
         Types.isObject(value) && 'toJSON' in value ? value.toJSON() : value;
       return Object.assign(acc, { [key]: value });
@@ -90,59 +90,58 @@ export class ODataQueryOptions<T> {
 
   toQueryArguments(): ODataQueryArguments<T> {
     return {
-      select: this.values[QueryOptionNames.select],
-      expand: this.values[QueryOptionNames.expand],
-      transform: this.values[QueryOptionNames.transform],
-      compute: this.values[QueryOptionNames.compute],
-      search: this.values[QueryOptionNames.search],
-      filter: this.values[QueryOptionNames.filter],
-      orderBy: this.values[QueryOptionNames.orderBy],
-      top: this.values[QueryOptionNames.top],
-      skip: this.values[QueryOptionNames.skip],
-      skiptoken: this.values[QueryOptionNames.skiptoken],
+      select: this.values.get(QueryOptionNames.select),
+      expand: this.values.get(QueryOptionNames.expand),
+      transform: this.values.get(QueryOptionNames.transform),
+      compute: this.values.get(QueryOptionNames.compute),
+      search: this.values.get(QueryOptionNames.search),
+      filter: this.values.get(QueryOptionNames.filter),
+      orderBy: this.values.get(QueryOptionNames.orderBy),
+      top: this.values.get(QueryOptionNames.top),
+      skip: this.values.get(QueryOptionNames.skip),
+      skiptoken: this.values.get(QueryOptionNames.skiptoken),
     } as ODataQueryArguments<T>;
   }
 
   clone<O>() {
-    const options = Object.keys(this.values).reduce(
-      (acc, key) =>
-        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
-      {}
-    );
-    return new ODataQueryOptions<O>(options);
+    return new ODataQueryOptions<O>(Objects.clone(this.values));
   }
 
   // Set Renderable
-  expression(name: QueryOptionNames, exp?: Expression<T>) {
-    if (exp !== undefined) this.values[name] = exp;
-    return this.values[name];
+  expression(key: QueryOptionNames, exp?: Expression<T>) {
+    if (exp !== undefined) this.values.set(key, exp);
+    return this.values.get(key);
   }
 
   // Option Handler
-  option<O>(name: QueryOptionNames, opts?: O) {
-    if (opts !== undefined) this.values[name] = opts;
-    return new ODataQueryOptionHandler<O>(this.values, name);
+  option<O>(key: QueryOptionNames, opts?: O) {
+    if (opts !== undefined) this.values.set(key, opts);
+    return new ODataQueryOptionHandler<O>(this.values, key);
   }
 
   // Query Options tools
-  has(name: QueryOptionNames) {
-    return this.values[name] !== undefined;
+  has(key: QueryOptionNames) {
+    return this.values.has(key);
   }
 
-  remove(...names: QueryOptionNames[]) {
-    names.forEach((name) => {
-      delete this.values[name];
+  remove(...keys: QueryOptionNames[]) {
+    [...this.values.keys()]
+    .filter(k => keys.indexOf(k) !== -1)
+    .forEach(key => {
+      this.values.delete(key)
+    })
+  }
+
+  keep(...keys: QueryOptionNames[]) {
+    [...this.values.keys()]
+    .filter(k => keys.indexOf(k) === -1)
+    .forEach(key => {
+      this.values.delete(key)
     });
-  }
-
-  keep(...names: QueryOptionNames[]) {
-    this.values = Object.keys(this.values)
-      .filter((k) => names.indexOf(k as QueryOptionNames) !== -1)
-      .reduce((acc, k) => Object.assign(acc, { [k]: this.values[k] }), {});
   }
 
   // Clear
   clear() {
-    this.values = {};
+    this.values.clear();
   }
 }
