@@ -117,22 +117,23 @@ export class ODataModelEvent<T> {
       )
       .join('');
   }
-  
 
   //Reference to the model which the event was dispatched
   model?: ODataModel<T>;
   //Identifies the current model for the event
-  get currentModel(): ODataModel<any> | undefined{
-    const link = this.chain.find(c => ODataModelOptions.isModel(c[0]));
-    return link !== undefined ? link[0] as ODataModel<any> : undefined;
+  get currentModel(): ODataModel<any> | undefined {
+    const link = this.chain.find((c) => ODataModelOptions.isModel(c[0]));
+    return link !== undefined ? (link[0] as ODataModel<any>) : undefined;
   }
 
   //Reference to the collection which the event was dispatched
   collection?: ODataCollection<T, ODataModel<T>>;
   //Identifies the current collection for the event
-  get currentCollection(): ODataCollection<any, ODataModel<any>> | undefined{
-    const link = this.chain.find(c => ODataModelOptions.isCollection(c[0]));
-    return link !== undefined ? link[0] as ODataCollection<any, ODataModel<any>> : undefined;
+  get currentCollection(): ODataCollection<any, ODataModel<any>> | undefined {
+    const link = this.chain.find((c) => ODataModelOptions.isCollection(c[0]));
+    return link !== undefined
+      ? (link[0] as ODataCollection<any, ODataModel<any>>)
+      : undefined;
   }
 }
 
@@ -671,31 +672,35 @@ export class ODataModelOptions<T> {
   static resource<T>(
     child: ODataModel<T> | ODataCollection<T, ODataModel<T>>
   ): ODataResource<T> {
-    let resource: ODataResource<any> | undefined = undefined;
+    let resource: ODataResource<any> | null = null;
+    let prevField: ODataModelField<any> | null = null;
     for (let [model, field] of ODataModelOptions.chain(child)) {
       resource = resource || (model._resource as ODataResource<T>);
-      if (resource === undefined) break;
-      if (ODataModelOptions.isModel(model)) {
-        let key = (model as ODataModel<any>).key({
+      if (resource === null) break;
+      if (
+        ODataModelOptions.isModel(model) &&
+        (prevField === null || prevField.collection)
+      ) {
+        // Resolve key
+        let modelKey = (model as ODataModel<any>).key({
           field_mapping: true,
         }) as EntityKey<any>;
-        if (key !== undefined)
+        if (modelKey !== undefined)
           resource =
             resource instanceof ODataEntitySetResource
-              ? resource.entity(key)
-              : (resource as ODataEntityResource<T>).key(key);
+              ? resource.entity(modelKey)
+              : (resource as ODataEntityResource<T>).key(modelKey);
       }
+      prevField = field;
       if (field === null) {
+        // Apply the query from model to new resource
         const query = model._resource?.cloneQuery<T>().toQueryArguments();
-        if (query !== undefined && resource !== undefined)
-          resource.query((q) => q.apply(query));
+        if (query !== undefined) resource.query((q) => q.apply(query));
         continue;
       }
-      resource = (field as ODataModelField<any>).resourceFactory<any, any>(
-        resource as ODataResource<any>
-      );
+      resource = field.resourceFactory<any, any>(resource);
     }
-    if (resource === undefined)
+    if (resource === null)
       throw new Error(`resource: Can't build resource for ${child}`);
     return resource;
   }

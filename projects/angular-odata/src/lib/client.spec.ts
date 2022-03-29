@@ -44,6 +44,26 @@ describe('ODataClient', () => {
     httpMock.verify();
   });
 
+  it('should create entity navigation to collection', () => {
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
+      'People',
+      `${NAMESPACE}.Person`
+    );
+    const entity = set.entity('russellwhyte');
+    const friends = entity.navigationProperty<Person>('Friends');
+    expect(friends.toString()).toEqual("People('russellwhyte')/Friends");
+  });
+
+  it('should create entity navigation to single', () => {
+    const set: ODataEntitySetResource<Person> = client.entitySet<Person>(
+      'People',
+      `${NAMESPACE}.Person`
+    );
+    const entity = set.entity('russellwhyte');
+    const photo = entity.navigationProperty<Photo>('Photo');
+    expect(photo.toString()).toEqual("People('russellwhyte')/Photo");
+  });
+
   it('should return undefined parser for resource', () => {
     const set: ODataResource<Person> = client.entitySet<Person>('People');
     const api = client.apiFor(set);
