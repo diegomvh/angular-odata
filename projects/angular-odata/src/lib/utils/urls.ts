@@ -6,7 +6,7 @@ export const Urls = {
       let index = param.indexOf(VALUE_SEPARATOR);
       if (index !== -1)
         Object.assign(acc, {
-          [param.substr(0, index)]: param.substr(index + 1),
+          [param.substring(0, index)]: param.substring(index + 1),
         });
       return acc;
     }, {});

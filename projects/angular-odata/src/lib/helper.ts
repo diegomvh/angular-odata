@@ -72,7 +72,7 @@ const ODataVersionBaseHelper = <any>{
     return Object.keys(value)
       .filter((k) => k.startsWith(this.ODATA_FUNCTION_PREFIX))
       .reduce(
-        (acc, key) => Object.assign(acc, { [key.substr(1)]: value[key] }),
+        (acc, key) => Object.assign(acc, { [key.substring(1)]: value[key] }),
         {}
       );
   },
@@ -80,12 +80,12 @@ const ODataVersionBaseHelper = <any>{
     return Object.keys(value)
       .filter((k) => k.indexOf(this.ODATA_ANNOTATION_PREFIX) > 0)
       .reduce((acc: { [name: string]: any }, key) => {
-        let name = key.substr(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
+        let name = key.substring(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
         if (!(name in acc)) {
           acc[name] = {};
         }
         Object.assign(acc[name], {
-          [key.substr(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key],
+          [key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key],
         });
         return acc;
       }, {});
@@ -105,7 +105,7 @@ const ODataVersionBaseHelper = <any>{
   type(value: { [name: string]: any }, type?: string) {
     if (type !== undefined) value[this.ODATA_TYPE] = `#${type}`;
     if (!(this.ODATA_TYPE in value)) return undefined;
-    const t = value[this.ODATA_TYPE].substr(1);
+    const t = value[this.ODATA_TYPE].substring(1);
     const matches = COLLECTION.exec(t);
     if (matches)
       return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
@@ -238,10 +238,10 @@ export const ODataHelper = {
       if (this.ODATA_CONTEXT in value) {
         const str = value[this.ODATA_CONTEXT] as string;
         let index = str.indexOf('$metadata');
-        ctx.serviceRootUrl = str.substr(0, index);
+        ctx.serviceRootUrl = str.substring(0, index);
         index = str.indexOf('#');
-        ctx.metadataUrl = str.substr(0, index);
-        const parts = str.substr(index + 1).split('/');
+        ctx.metadataUrl = str.substring(0, index);
+        const parts = str.substring(index + 1).split('/');
         const col = COLLECTION.exec(parts[0]);
         if (col) {
           ctx.type = col[1];
@@ -286,10 +286,10 @@ export const ODataHelper = {
       if (this.ODATA_CONTEXT in value) {
         const str = value[this.ODATA_CONTEXT] as string;
         let index = str.indexOf('$metadata');
-        ctx.serviceRootUrl = str.substr(0, index);
+        ctx.serviceRootUrl = str.substring(0, index);
         index = str.indexOf('#');
-        ctx.metadataUrl = str.substr(0, index);
-        const parts = str.substr(index + 1).split('/');
+        ctx.metadataUrl = str.substring(0, index);
+        const parts = str.substring(index + 1).split('/');
         ctx.entitySet = parts[0];
       }
       return ctx;

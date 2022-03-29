@@ -15,11 +15,11 @@ import { raw } from './query';
 import { ODataClient } from '../client';
 import { ODataModule } from '../module';
 import { ODataSettings } from '../settings';
-import { Photo } from '../trippin.spec';
 
 const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 const ENTITY_SET = 'People';
 interface Person {}
+interface Photo {}
 
 describe('ODataResource', () => {
   let client: ODataClient;
@@ -28,7 +28,9 @@ describe('ODataResource', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        ODataModule.forRoot({ serviceRootUrl: SERVICE_ROOT }),
+        ODataModule.forRoot({
+          serviceRootUrl: SERVICE_ROOT,
+        }),
         HttpClientTestingModule,
       ],
     });

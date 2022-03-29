@@ -80,13 +80,18 @@ export class ODataFunctionResource<P, R> extends ODataResource<R> {
       : undefined;
   }
 
-  override pathAndParams(escape: boolean = false): [string, { [name: string]: any }] {
+  override pathAndParams(
+    escape: boolean = false
+  ): [string, { [name: string]: any }] {
     let [path, params] = super.pathAndParams(escape);
-    
-    if (path.endsWith('()') && this.api.options.nonParenthesisForEmptyParameterFunction) {
+
+    if (
+      path.endsWith('()') &&
+      this.api.options.nonParenthesisForEmptyParameterFunction
+    ) {
       path = path.substring(0, path.length - 2);
     }
-    
+
     return [path, params];
   }
 
