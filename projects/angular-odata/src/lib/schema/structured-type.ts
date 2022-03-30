@@ -209,14 +209,9 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
     const names = this.fields({ include_parents, include_navigation }).map(
       (f) => f.name
     );
-    let values = Object.keys(attrs)
-      .filter((k) => names.indexOf(k) !== -1)
-      .reduce((acc, k) => Object.assign(acc, { [k]: attrs[k] }), {});
-    if (include_etag) {
-      const etag = this.api.options.helper.etag(attrs);
-      this.api.options.helper.etag(attrs, etag);
-    }
-    return values;
+    return Object.keys(attrs)
+      .filter((key) => names.indexOf(key) !== -1 || (key == this.api.options.helper.ODATA_ETAG && include_etag))
+      .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }
 
   /**

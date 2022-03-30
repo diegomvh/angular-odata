@@ -440,11 +440,11 @@ export class ODataModelField<F> {
     return this.parser.collection
       ? new ODataEntitiesAnnotations(
           base.helper,
-          base.property(this.parser.name) || {}
+          base.property(this.parser.name)
         )
       : new ODataEntityAnnotations(
           base.helper,
-          base.property(this.parser.name) || {}
+          base.property(this.parser.name)
         );
   }
 
@@ -946,8 +946,8 @@ export class ODataModelOptions<T> {
     { include_navigation = false }: { include_navigation?: boolean } = {}
   ): boolean {
     return (
-      !Types.isEmpty(self._changes) ||
-      Object.values(self._relations)
+      self._changes.size != 0 ||
+      [...self._relations.values()]
         .filter(({ field }) => !field.navigation || include_navigation)
         .some(
           ({ field, state, model }) =>
@@ -1019,7 +1019,7 @@ export class ODataModelOptions<T> {
       include_non_field,
     });
 
-    let relations = Object.entries(self._relations)
+    let relations = [...self._relations.entries()]
       .filter(
         // Chain
         ([, { model }]) => chain.every((c) => c !== model)
@@ -1085,7 +1085,7 @@ export class ODataModelOptions<T> {
       }, {});
 
     // Create entity
-    let entity = { ...attrs, ...relations };
+    let entity: T | { [name: string]: any } = { ...attrs, ...relations };
 
     // Add client_id
     if (client_id) {
@@ -1109,7 +1109,7 @@ export class ODataModelOptions<T> {
           (self._parent[0] as ODataCollection<any, ODataModel<any>>)._model
             .meta !== self._meta))
     ) {
-      this.api.options.helper.type(entity, this.schema.type());
+      entity[this.api.options.helper.ODATA_TYPE] = `#${this.schema.type()}`;
     }
 
     return entity;
@@ -1133,12 +1133,12 @@ export class ODataModelOptions<T> {
   ): { [name: string]: any } {
     // Attributes by fields (attributes for the model type)
     const fieldAttrs = this.fields().reduce((acc, f) => {
-      const isChanged = f.name in self._changes;
+      const isChanged = self._changes.has(f.name);
       const name = field_mapping ? f.field : f.name;
       const computed = f.annotatedValue<boolean>(COMPUTED);
       const value = isChanged
-        ? self._changes[f.name]
-        : self._attributes[f.name];
+        ? self._changes.get(f.name)
+        : self._attributes.get(f.name);
       if (f.concurrency && include_concurrency) {
         return Object.assign(acc, { [name]: value });
       } else if (computed && include_computed) {
@@ -1167,10 +1167,10 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     { name, silent = false }: { name?: string; silent?: boolean } = {}
   ) {
-    if (!Types.isEmpty(name) && (name as string) in self._changes) {
-      const value = self._attributes[name as string];
-      const previous = self._changes[name as string];
-      delete self._changes[name as string];
+    if (!Types.isEmpty(name) && self._changes.has(name as string)) {
+      const value = self._attributes.get(name as string);
+      const previous = self._changes.get(name as string);
+      self._changes.delete(name as string);
       if (!silent) {
         self.events$.emit(
           new ODataModelEvent('change', {
@@ -1182,15 +1182,15 @@ export class ODataModelOptions<T> {
         );
       }
     } else if (Types.isEmpty(name)) {
-      const entries = Object.entries(self._changes);
-      self._changes = {};
+      const entries = [...self._changes.entries()];
+      self._changes.clear();
       if (!silent) {
         entries.forEach((entry) => {
           self.events$.emit(
             new ODataModelEvent('change', {
               track: entry[0],
               model: self,
-              value: self._attributes[entry[0]],
+              value: self._attributes.get(entry[0]),
               previous: entry[1],
             })
           );
@@ -1299,7 +1299,7 @@ export class ODataModelOptions<T> {
     field: ODataModelField<F>
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     if (field.isStructuredType()) {
-      return self._relations[field.name]?.model;
+      return self._relations.get(field.name)?.model;
     } else {
       return this.attributes(self, {
         include_concurrency: true,
@@ -1322,14 +1322,14 @@ export class ODataModelOptions<T> {
   ): boolean {
     let changed = false;
     // Ensures that the relation exists
-    if (!(field.name in self._relations)) {
-      self._relations[field.name] = {
+    if (!self._relations.has(field.name)) {
+      self._relations.set(field.name, {
         state: ODataModelState.Unchanged,
         field: field,
-      };
+      });
     }
 
-    const relation = self._relations[field.name];
+    const relation = self._relations.get(field.name)!;
     const currentModel = relation.model;
 
     if (value === null) {
@@ -1436,12 +1436,12 @@ export class ODataModelOptions<T> {
     const currentValue = attrs[field];
     changed = !Types.isEqual(currentValue, value);
     if (self._reset) {
-      delete self._changes[field];
-      self._attributes[field] = value;
-    } else if (Types.isEqual(value, self._attributes[field])) {
-      delete self._changes[field];
+      self._changes.delete(field);
+      self._attributes.set(field, value);
+    } else if (Types.isEqual(value, self._attributes.get(field))) {
+      self._changes.delete(field);
     } else if (changed) {
-      self._changes[field] = value;
+      self._changes.set(field, value);
     }
     if (!self._silent && changed) {
       self.events$.emit(

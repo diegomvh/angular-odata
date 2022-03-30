@@ -188,7 +188,7 @@ export class ODataResource<T> {
 
   private __parser(value: any, options?: OptionsHelper, type?: string): Parser<T> | undefined {
     const dataType = options !== undefined && Types.isPlainObject(value)
-      ? options.helper.type(value)
+      ? value[options.helper.ODATA_TYPE]
       : undefined;
     if (dataType !== undefined) {
       // Parser from data type
@@ -332,7 +332,7 @@ export class ODataResource<T> {
 
     let etag = options.etag;
     if (etag === undefined && Types.isPlainObject(options.body)) {
-      etag = apiOptions.helper.etag(options.body);
+      etag = options.body[apiOptions.helper.ODATA_ETAG];
     }
 
     const request = new ODataRequest({

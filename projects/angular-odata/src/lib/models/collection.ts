@@ -212,7 +212,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const helper = this._annotations.helper;
     const annots = new ODataEntityAnnotations(
       helper,
-      helper.annotations(data) || {}
+      helper.annotations(data)
     );
 
     if (annots?.type !== undefined && Model.meta !== null) {
@@ -786,7 +786,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
             const helper = this._annotations.helper;
             const annots = new ODataEntityAnnotations(
               helper,
-              helper.annotations(obj) || {}
+              helper.annotations(obj)
             );
             const entity = annots.attributes<T>(obj, 'full');
             model._annotations = annots;

@@ -27,115 +27,110 @@ export interface ODataVersionHelper {
   ODATA_ANNOTATION_PREFIX: string;
   ODATA_FUNCTION_PREFIX: string;
   ODATA_ID: string;
+  ODATA_TYPE: string;
   ODATA_COUNT: string;
   ODATA_ETAG: string;
   ODATA_CONTEXT: string;
   ODATA_MEDIA_ETAG: string;
-  entity(value: { [name: string]: any }): any;
-  entities(value: { [name: string]: any }): any;
-  property(value: { [name: string]: any }): any;
-  annotations(value: { [name: string]: any }): { [name: string]: any };
-  attributes(value: { [name: string]: any }, metadata: ODataMetadataType): any;
-  //Get or Set Id
-  id(value: { [name: string]: any }, id?: string): string | undefined;
-  //Get or Set Etag
-  etag(value: { [name: string]: any }, etag?: string): string | undefined;
-  //Get or Set Type
-  type(value: { [name: string]: any }, type?: string): string | undefined;
-  count(value: { [name: string]: any }): number | undefined;
-  context(value: { [name: string]: any }): ODataContext;
-  functions(value: { [name: string]: any }): { [name: string]: any };
-  properties(value: { [name: string]: any }): { [name: string]: any };
-  mediaEtag(value: { [name: string]: any }): string | undefined;
-  metadataEtag(value: { [name: string]: any }): string | undefined;
-  nextLink(value: { [name: string]: any }): string | undefined;
-  readLink(value: { [name: string]: any }): string | undefined;
-  mediaReadLink(value: { [name: string]: any }): string | undefined;
-  editLink(value: { [name: string]: any }): string | undefined;
-  mediaEditLink(value: { [name: string]: any }): string | undefined;
-  mediaContentType(value: { [name: string]: any }): string | undefined;
-  deltaLink(value: { [name: string]: any }): string | undefined;
-  countParam(): { [name: string]: string };
+
+  entity(value: { [key: string]: any }): any;
+  entities(value: { [key: string]: any }): any;
+  property(value: { [key: string]: any }): any;
+  annotations(value: { [key: string]: any }): Map<string, any>;
+  attributes(value: { [key: string]: any }, metadata: ODataMetadataType): any;
+  context(value: { [key: string]: any }): ODataContext;
+
+  id(annots: Map<string, any>): string | undefined;
+  etag(annots: Map<string, any>): string | undefined;
+  type(annots: Map<string, any>): string | undefined;
+  count(annots: Map<string, any>): number | undefined;
+  functions(annots: Map<string, any>): Map<string, any>;
+  properties(annots: Map<string, any>): Map<string, Map<string, any>>;
+  mediaEtag(annots: Map<string, any>): string | undefined;
+  metadataEtag(annots: Map<string, any>): string | undefined;
+  nextLink(annots: Map<string, any>): string | undefined;
+  readLink(annots: Map<string, any>): string | undefined;
+  mediaReadLink(annots: Map<string, any>): string | undefined;
+  editLink(annots: Map<string, any>): string | undefined;
+  mediaEditLink(annots: Map<string, any>): string | undefined;
+  mediaContentType(annots: Map<string, any>): string | undefined;
+  deltaLink(annots: Map<string, any>): string | undefined;
+  countParam(): { [key: string]: string };
 }
 
 const ODataVersionBaseHelper = <any>{
-  entity(data: { [name: string]: any }) {
+  entity(data: { [key: string]: any }) {
     return data;
   },
-  entities(data: { [name: string]: any }) {
+  entities(data: { [key: string]: any }) {
     return data[this.VALUE];
   },
-  property(data: { [name: string]: any }) {
+  property(data: { [key: string]: any }) {
     return this.VALUE in data ? data[this.VALUE] : data;
   },
-  functions(value: { [name: string]: any }) {
-    return Object.keys(value)
-      .filter((k) => k.startsWith(this.ODATA_FUNCTION_PREFIX))
-      .reduce(
-        (acc, key) => Object.assign(acc, { [key.substring(1)]: value[key] }),
-        {}
-      );
+  functions(annots: Map<string, any>) {
+    const funcs = new Map<string, any>();
+    [...annots.keys()]
+      .filter((key) => key.startsWith(this.ODATA_FUNCTION_PREFIX))
+      .forEach(key => funcs.set(key.substring(this.ODATA_FUNCTION_PREFIX.length), annots.get(key)));
+    return funcs;     
   },
-  properties(value: { [name: string]: any }) {
-    return Object.keys(value)
-      .filter((k) => k.indexOf(this.ODATA_ANNOTATION_PREFIX) > 0)
-      .reduce((acc: { [name: string]: any }, key) => {
+  properties(annots: Map<string, any>) {
+    const props = new Map<string, Map<string, any>>();
+    [...annots.keys()]
+      .filter((key) => key.indexOf(this.ODATA_ANNOTATION_PREFIX) > 0)
+      .forEach(key => {
         let name = key.substring(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
-        if (!(name in acc)) {
-          acc[name] = {};
-        }
-        Object.assign(acc[name], {
-          [key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key],
-        });
-        return acc;
-      }, {});
+        let prop = props.has(name) ? props.get(name)! : new Map<string, any>();
+        prop.set(key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)), annots.get(key));
+        props.set(name, prop);
+      }); 
+    return props;     
   },
-  id(value: { [name: string]: any }, id?: string) {
-    if (id !== undefined) value[this.ODATA_ID] = id;
-    return this.ODATA_ID in value
-      ? (value[this.ODATA_ID] as string)
+  id(annots: Map<string, any>) {
+    return annots.has(this.ODATA_ID)
+      ? (annots.get(this.ODATA_ID) as string)
       : undefined;
   },
-  etag(value: { [name: string]: any }, etag?: string) {
-    if (etag !== undefined) value[this.ODATA_ETAG] = etag;
-    return this.ODATA_ETAG in value
-      ? (value[this.ODATA_ETAG] as string)
+  etag(annots: Map<string, any>) {
+    return annots.has(this.ODATA_ETAG)
+      ? (annots.get(this.ODATA_ETAG) as string)
       : undefined;
   },
-  type(value: { [name: string]: any }, type?: string) {
-    if (type !== undefined) value[this.ODATA_TYPE] = `#${type}`;
-    if (!(this.ODATA_TYPE in value)) return undefined;
-    const t = value[this.ODATA_TYPE].substring(1);
+  type(annots: Map<string, any>) {
+    if (!annots.has(this.ODATA_TYPE)) return undefined;
+    const t = annots.get(this.ODATA_TYPE).substring(1);
     const matches = COLLECTION.exec(t);
     if (matches)
       return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
     return t;
   },
-  mediaEtag(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_ETAG in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string)
+  mediaEtag(annots: Map<string, any>) {
+    return annots.has(this.ODATA_MEDIA_ETAG)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_ETAG) as string)
       : undefined;
   },
-  metadataEtag(value: { [name: string]: any }) {
-    return this.ODATA_METADATA_ETAG in value
-      ? decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string)
+  metadataEtag(annots: Map<string, any>) {
+    return annots.has(this.ODATA_METADATA_ETAG)
+      ? decodeURIComponent(annots.get(this.ODATA_METADATA_ETAG) as string)
       : undefined;
   },
-  count(value: { [name: string]: any }) {
-    return this.ODATA_COUNT in value
-      ? Number(value[this.ODATA_COUNT])
+  count(annots: Map<string, any>) {
+    return annots.has(this.ODATA_COUNT)
+      ? Number(annots.get(this.ODATA_COUNT))
       : undefined;
   },
-  annotations(value: { [name: string]: any }) {
-    return Object.keys(value)
+  annotations(value: { [key: string]: any }) {
+    const annots = new Map<string, any>();
+    Object.entries(value)
       .filter(
-        (key) =>
+        ([key, ]) =>
           key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 ||
           key.startsWith(this.ODATA_FUNCTION_PREFIX)
-      )
-      .reduce((acc, key) => Object.assign(acc, { [key]: value[key] }), {});
+      ).forEach(([key, value]) => annots.set(key, value));
+    return annots;
   },
-  attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
+  attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
     return Object.entries(value)
       .filter(
         ([k]) =>
@@ -150,39 +145,39 @@ const ODataVersionBaseHelper = <any>{
       )
       .reduce((acc, e) => ({ ...acc, [e[0]]: e[1] }), {});
   },
-  nextLink(value: { [name: string]: any }) {
-    return this.ODATA_NEXTLINK in value
-      ? decodeURIComponent(value[this.ODATA_NEXTLINK] as string)
+  nextLink(annots: Map<string, any>) {
+    return annots.has(this.ODATA_NEXTLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_NEXTLINK) as string)
       : undefined;
   },
-  readLink(value: { [name: string]: any }) {
-    return this.ODATA_READLINK in value
-      ? decodeURIComponent(value[this.ODATA_READLINK] as string)
+  readLink(annots: Map<string, any>) {
+    return annots.has(this.ODATA_READLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_READLINK) as string)
       : undefined;
   },
-  mediaReadLink(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_READLINK in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_READLINK] as string)
+  mediaReadLink(annots: Map<string, any>) {
+    return annots.has(this.ODATA_MEDIA_READLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_READLINK) as string)
       : undefined;
   },
-  editLink(value: { [name: string]: any }) {
-    return this.ODATA_EDITLINK in value
-      ? decodeURIComponent(value[this.ODATA_EDITLINK] as string)
+  editLink(annots: Map<string, any>) {
+    return annots.has(this.ODATA_EDITLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_EDITLINK) as string)
       : undefined;
   },
-  mediaEditLink(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_EDITLINK in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_EDITLINK] as string)
+  mediaEditLink(annots: Map<string, any>) {
+    return annots.has(this.ODATA_MEDIA_EDITLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_EDITLINK) as string)
       : undefined;
   },
-  deltaLink(value: { [name: string]: any }) {
-    return this.ODATA_DELTALINK in value
-      ? decodeURIComponent(value[this.ODATA_DELTALINK] as string)
+  deltaLink(annots: Map<string, any>) {
+    return annots.has(this.ODATA_DELTALINK)
+      ? decodeURIComponent(annots.get(this.ODATA_DELTALINK) as string)
       : undefined;
   },
-  mediaContentType(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_CONTENTTYPE in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_CONTENTTYPE] as string)
+  mediaContentType(annots: Map<string, any>) {
+    return annots.has(this.ODATA_MEDIA_CONTENTTYPE)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_CONTENTTYPE) as string)
       : undefined;
   },
 };
@@ -202,7 +197,7 @@ export const ODataHelper = {
     //odata.etag: the ETag of the entity
     ODATA_ETAG: '@odata.etag',
     ODATA_METADATA_ETAG: '@odata.metadataEtag',
-    //odata.type: the type of the containing {[name: string]: any} or targeted property if the type of the {[name: string]: any} or targeted property cannot be heuristically determined
+    //odata.type: the type of the containing {[key: string]: any} or targeted property if the type of the {[key: string]: any} or targeted property cannot be heuristically determined
     ODATA_TYPE: '@odata.type',
     //odata.nextLink: the next link of a collection with partial results
     ODATA_NEXTLINK: '@odata.nextLink',
@@ -233,7 +228,7 @@ export const ODataHelper = {
     //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
-    context(value: { [name: string]: any }) {
+    context(value: {[key: string]: any}) {
       let ctx: ODataContext = {};
       if (this.ODATA_CONTEXT in value) {
         const str = value[this.ODATA_CONTEXT] as string;
@@ -281,7 +276,7 @@ export const ODataHelper = {
     ODATA_TYPE: 'odata.type',
     ODATA_COUNT: 'odata.count',
     VALUE: 'value',
-    context(value: { [name: string]: any }) {
+    context(value: {[key: string]: any}) {
       let ctx: ODataContext = {};
       if (this.ODATA_CONTEXT in value) {
         const str = value[this.ODATA_CONTEXT] as string;
@@ -309,11 +304,15 @@ export const ODataHelper = {
     ODATA_DEFERRED: '__deferred',
     ODATA_TYPE: 'type',
     VALUE: 'results',
-    annotations(value: { [name: string]: any }) {
-      if (this.ODATA_ANNOTATION in value) return value[this.ODATA_ANNOTATION];
-      return value;
+    annotations(value: { [key: string]: any }) {
+      const annots = new Map<string, any>();
+      if (this.ODATA_ANNOTATION in value) {
+        Object.entries(value[this.ODATA_ANNOTATION])
+        .forEach(([key, value]) => annots.set(key, value));
+      } 
+      return annots;
     },
-    attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
+    attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
       return value;
     },
     countParam() {

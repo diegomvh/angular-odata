@@ -143,20 +143,20 @@ export class ODataResponse<T> extends HttpResponse<T> {
     return this._context;
   }
 
-  private _annotations?: any;
-  get annotations(): { [name: string]: any } {
+  private _annotations?: Map<string, any>;
+  get annotations(): Map<string, any> {
     if (this._annotations === undefined) {
       const options = this.options;
       this._annotations = options.helper.annotations(this.payload || {});
       let key = Http.resolveHeaderKey(this.headers, ETAG_HEADERS);
       if (key) {
         const etag = this.headers.get(key);
-        if (etag) options.helper.etag(this._annotations, etag);
+        if (etag) this._annotations.set(options.helper.ODATA_ETAG, etag);
       }
       key = Http.resolveHeaderKey(this.headers, ODATA_ENTITYID_HEADERS);
       if (key) {
         const entityId = this.headers.get(key);
-        if (entityId) options.helper.id(this._annotations, entityId);
+        if (entityId) this._annotations.set(options.helper.ODATA_ID, entityId);
       }
     }
     return this._annotations;
