@@ -41,6 +41,7 @@
 
 
 
+
 <ol class="breadcrumb">
   <li>Classes</li>
   <li >ODataStructuredType</li>
@@ -655,8 +656,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="265"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:265</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="260"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:260</a></div>
                 </td>
             </tr>
 
@@ -700,8 +701,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="228"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:228</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="223"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:223</a></div>
                 </td>
             </tr>
 
@@ -793,8 +794,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="248"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:248</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="243"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:243</a></div>
                 </td>
             </tr>
 
@@ -1614,8 +1615,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="257"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:257</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="252"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:252</a></div>
                 </td>
             </tr>
 
@@ -1691,8 +1692,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="238"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:238</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="233"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:233</a></div>
                 </td>
             </tr>
 
@@ -1784,8 +1785,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="274"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:274</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="269"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:269</a></div>
                 </td>
             </tr>
 
@@ -1865,8 +1866,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="284"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:284</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="279"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/structured-type.ts:279</a></div>
                 </td>
             </tr>
 
@@ -2584,14 +2585,9 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
     const names &#x3D; this.fields({ include_parents, include_navigation }).map(
       (f) &#x3D;&gt; f.name
     );
-    let values &#x3D; Object.keys(attrs)
-      .filter((k) &#x3D;&gt; names.indexOf(k) !&#x3D;&#x3D; -1)
-      .reduce((acc, k) &#x3D;&gt; Object.assign(acc, { [k]: attrs[k] }), {});
-    if (include_etag) {
-      const etag &#x3D; this.api.options.helper.etag(attrs);
-      this.api.options.helper.etag(attrs, etag);
-    }
-    return values;
+    return Object.keys(attrs)
+      .filter((key) &#x3D;&gt; names.indexOf(key) !&#x3D;&#x3D; -1 || (key &#x3D;&#x3D; this.api.options.helper.ODATA_ETAG &amp;&amp; include_etag))
+      .reduce((acc, key) &#x3D;&gt; Object.assign(acc, { [key]: attrs[key] }), {});
   }
 
   /**
@@ -2672,6 +2668,7 @@ export class ODataStructuredType&lt;T&gt; extends ODataSchemaElement {
 </code></pre>
     </div>
 </div>
+
 
 
 

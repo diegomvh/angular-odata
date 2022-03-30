@@ -41,6 +41,7 @@
 
 
 
+
 <ol class="breadcrumb">
   <li>Classes</li>
   <li >ODataCollection</li>
@@ -4733,7 +4734,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt;
     const helper &#x3D; this._annotations.helper;
     const annots &#x3D; new ODataEntityAnnotations(
       helper,
-      helper.annotations(data) || {}
+      helper.annotations(data)
     );
 
     if (annots?.type !&#x3D;&#x3D; undefined &amp;&amp; Model.meta !&#x3D;&#x3D; null) {
@@ -5307,7 +5308,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt;
             const helper &#x3D; this._annotations.helper;
             const annots &#x3D; new ODataEntityAnnotations(
               helper,
-              helper.annotations(obj) || {}
+              helper.annotations(obj)
             );
             const entity &#x3D; annots.attributes&lt;T&gt;(obj, &#x27;full&#x27;);
             model._annotations &#x3D; annots;
@@ -5642,6 +5643,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt;
 </code></pre>
     </div>
 </div>
+
 
 
 

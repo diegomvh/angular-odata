@@ -41,6 +41,7 @@
 
 
 
+
 <ol class="breadcrumb">
   <li>Classes</li>
   <li >ODataResource</li>
@@ -2737,7 +2738,7 @@ export class ODataResource&lt;T&gt; {
 
   private __parser(value: any, options?: OptionsHelper, type?: string): Parser&lt;T&gt; | undefined {
     const dataType &#x3D; options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
-      ? options.helper.type(value)
+      ? value[options.helper.ODATA_TYPE]
       : undefined;
     if (dataType !&#x3D;&#x3D; undefined) {
       // Parser from data type
@@ -2881,7 +2882,7 @@ export class ODataResource&lt;T&gt; {
 
     let etag &#x3D; options.etag;
     if (etag &#x3D;&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(options.body)) {
-      etag &#x3D; apiOptions.helper.etag(options.body);
+      etag &#x3D; options.body[apiOptions.helper.ODATA_ETAG];
     }
 
     const request &#x3D; new ODataRequest({
@@ -3012,6 +3013,7 @@ export class ODataResource&lt;T&gt; {
 </code></pre>
     </div>
 </div>
+
 
 
 

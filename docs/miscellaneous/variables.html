@@ -46,6 +46,8 @@
 
 
 
+
+
 <ol class="breadcrumb">
   <li>Miscellaneous</li>
   <li>Variables</li>
@@ -2637,7 +2639,7 @@
     //odata.etag: the ETag of the entity
     ODATA_ETAG: &#x27;@odata.etag&#x27;,
     ODATA_METADATA_ETAG: &#x27;@odata.metadataEtag&#x27;,
-    //odata.type: the type of the containing {[name: string]: any} or targeted property if the type of the {[name: string]: any} or targeted property cannot be heuristically determined
+    //odata.type: the type of the containing {[key: string]: any} or targeted property if the type of the {[key: string]: any} or targeted property cannot be heuristically determined
     ODATA_TYPE: &#x27;@odata.type&#x27;,
     //odata.nextLink: the next link of a collection with partial results
     ODATA_NEXTLINK: &#x27;@odata.nextLink&#x27;,
@@ -2668,15 +2670,15 @@
     //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
-    context(value: { [name: string]: any }) {
+    context(value: {[key: string]: any}) {
       let ctx: ODataContext &#x3D; {};
       if (this.ODATA_CONTEXT in value) {
         const str &#x3D; value[this.ODATA_CONTEXT] as string;
         let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
-        ctx.serviceRootUrl &#x3D; str.substr(0, index);
+        ctx.serviceRootUrl &#x3D; str.substring(0, index);
         index &#x3D; str.indexOf(&#x27;#&#x27;);
-        ctx.metadataUrl &#x3D; str.substr(0, index);
-        const parts &#x3D; str.substr(index + 1).split(&#x27;/&#x27;);
+        ctx.metadataUrl &#x3D; str.substring(0, index);
+        const parts &#x3D; str.substring(index + 1).split(&#x27;/&#x27;);
         const col &#x3D; COLLECTION.exec(parts[0]);
         if (col) {
           ctx.type &#x3D; col[1];
@@ -2716,15 +2718,15 @@
     ODATA_TYPE: &#x27;odata.type&#x27;,
     ODATA_COUNT: &#x27;odata.count&#x27;,
     VALUE: &#x27;value&#x27;,
-    context(value: { [name: string]: any }) {
+    context(value: {[key: string]: any}) {
       let ctx: ODataContext &#x3D; {};
       if (this.ODATA_CONTEXT in value) {
         const str &#x3D; value[this.ODATA_CONTEXT] as string;
         let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
-        ctx.serviceRootUrl &#x3D; str.substr(0, index);
+        ctx.serviceRootUrl &#x3D; str.substring(0, index);
         index &#x3D; str.indexOf(&#x27;#&#x27;);
-        ctx.metadataUrl &#x3D; str.substr(0, index);
-        const parts &#x3D; str.substr(index + 1).split(&#x27;/&#x27;);
+        ctx.metadataUrl &#x3D; str.substring(0, index);
+        const parts &#x3D; str.substring(index + 1).split(&#x27;/&#x27;);
         ctx.entitySet &#x3D; parts[0];
       }
       return ctx;
@@ -2744,11 +2746,15 @@
     ODATA_DEFERRED: &#x27;__deferred&#x27;,
     ODATA_TYPE: &#x27;type&#x27;,
     VALUE: &#x27;results&#x27;,
-    annotations(value: { [name: string]: any }) {
-      if (this.ODATA_ANNOTATION in value) return value[this.ODATA_ANNOTATION];
-      return value;
+    annotations(value: { [key: string]: any }) {
+      const annots &#x3D; new Map&lt;string, any&gt;();
+      if (this.ODATA_ANNOTATION in value) {
+        Object.entries(value[this.ODATA_ANNOTATION])
+        .forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
+      } 
+      return annots;
     },
-    attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
+    attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
       return value;
     },
     countParam() {
@@ -2777,83 +2783,78 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>&lt;any&gt;{
-  entity(data: { [name: string]: any }) {
+  entity(data: { [key: string]: any }) {
     return data;
   },
-  entities(data: { [name: string]: any }) {
+  entities(data: { [key: string]: any }) {
     return data[this.VALUE];
   },
-  property(data: { [name: string]: any }) {
+  property(data: { [key: string]: any }) {
     return this.VALUE in data ? data[this.VALUE] : data;
   },
-  functions(value: { [name: string]: any }) {
-    return Object.keys(value)
-      .filter((k) &#x3D;&gt; k.startsWith(this.ODATA_FUNCTION_PREFIX))
-      .reduce(
-        (acc, key) &#x3D;&gt; Object.assign(acc, { [key.substr(1)]: value[key] }),
-        {}
-      );
+  functions(annots: Map&lt;string, any&gt;) {
+    const funcs &#x3D; new Map&lt;string, any&gt;();
+    [...annots.keys()]
+      .filter((key) &#x3D;&gt; key.startsWith(this.ODATA_FUNCTION_PREFIX))
+      .forEach(key &#x3D;&gt; funcs.set(key.substring(this.ODATA_FUNCTION_PREFIX.length), annots.get(key)));
+    return funcs;     
   },
-  properties(value: { [name: string]: any }) {
-    return Object.keys(value)
-      .filter((k) &#x3D;&gt; k.indexOf(this.ODATA_ANNOTATION_PREFIX) &gt; 0)
-      .reduce((acc: { [name: string]: any }, key) &#x3D;&gt; {
-        let name &#x3D; key.substr(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
-        if (!(name in acc)) {
-          acc[name] &#x3D; {};
-        }
-        Object.assign(acc[name], {
-          [key.substr(key.indexOf(this.ODATA_ANNOTATION_PREFIX))]: value[key],
-        });
-        return acc;
-      }, {});
+  properties(annots: Map&lt;string, any&gt;) {
+    const props &#x3D; new Map&lt;string, Map&lt;string, any&gt;&gt;();
+    [...annots.keys()]
+      .filter((key) &#x3D;&gt; key.indexOf(this.ODATA_ANNOTATION_PREFIX) &gt; 0)
+      .forEach(key &#x3D;&gt; {
+        let name &#x3D; key.substring(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
+        let prop &#x3D; props.has(name) ? props.get(name)! : new Map&lt;string, any&gt;();
+        prop.set(key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)), annots.get(key));
+        props.set(name, prop);
+      }); 
+    return props;     
   },
-  id(value: { [name: string]: any }, id?: string) {
-    if (id !&#x3D;&#x3D; undefined) value[this.ODATA_ID] &#x3D; id;
-    return this.ODATA_ID in value
-      ? (value[this.ODATA_ID] as string)
+  id(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_ID)
+      ? (annots.get(this.ODATA_ID) as string)
       : undefined;
   },
-  etag(value: { [name: string]: any }, etag?: string) {
-    if (etag !&#x3D;&#x3D; undefined) value[this.ODATA_ETAG] &#x3D; etag;
-    return this.ODATA_ETAG in value
-      ? (value[this.ODATA_ETAG] as string)
+  etag(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_ETAG)
+      ? (annots.get(this.ODATA_ETAG) as string)
       : undefined;
   },
-  type(value: { [name: string]: any }, type?: string) {
-    if (type !&#x3D;&#x3D; undefined) value[this.ODATA_TYPE] &#x3D; &#x60;#${type}&#x60;;
-    if (!(this.ODATA_TYPE in value)) return undefined;
-    const t &#x3D; value[this.ODATA_TYPE].substr(1);
+  type(annots: Map&lt;string, any&gt;) {
+    if (!annots.has(this.ODATA_TYPE)) return undefined;
+    const t &#x3D; annots.get(this.ODATA_TYPE).substring(1);
     const matches &#x3D; COLLECTION.exec(t);
     if (matches)
       return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1 ? &#x60;Edm.${matches[1]}&#x60; : matches[1];
     return t;
   },
-  mediaEtag(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_ETAG in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_ETAG] as string)
+  mediaEtag(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_MEDIA_ETAG)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_ETAG) as string)
       : undefined;
   },
-  metadataEtag(value: { [name: string]: any }) {
-    return this.ODATA_METADATA_ETAG in value
-      ? decodeURIComponent(value[this.ODATA_METADATA_ETAG] as string)
+  metadataEtag(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_METADATA_ETAG)
+      ? decodeURIComponent(annots.get(this.ODATA_METADATA_ETAG) as string)
       : undefined;
   },
-  count(value: { [name: string]: any }) {
-    return this.ODATA_COUNT in value
-      ? Number(value[this.ODATA_COUNT])
+  count(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_COUNT)
+      ? Number(annots.get(this.ODATA_COUNT))
       : undefined;
   },
-  annotations(value: { [name: string]: any }) {
-    return Object.keys(value)
+  annotations(value: { [key: string]: any }) {
+    const annots &#x3D; new Map&lt;string, any&gt;();
+    Object.entries(value)
       .filter(
-        (key) &#x3D;&gt;
+        ([key, ]) &#x3D;&gt;
           key.indexOf(this.ODATA_ANNOTATION_PREFIX) !&#x3D;&#x3D; -1 ||
           key.startsWith(this.ODATA_FUNCTION_PREFIX)
-      )
-      .reduce((acc, key) &#x3D;&gt; Object.assign(acc, { [key]: value[key] }), {});
+      ).forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
+    return annots;
   },
-  attributes(value: { [name: string]: any }, metadata: ODataMetadataType) {
+  attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
     return Object.entries(value)
       .filter(
         ([k]) &#x3D;&gt;
@@ -2868,39 +2869,39 @@
       )
       .reduce((acc, e) &#x3D;&gt; ({ ...acc, [e[0]]: e[1] }), {});
   },
-  nextLink(value: { [name: string]: any }) {
-    return this.ODATA_NEXTLINK in value
-      ? decodeURIComponent(value[this.ODATA_NEXTLINK] as string)
+  nextLink(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_NEXTLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_NEXTLINK) as string)
       : undefined;
   },
-  readLink(value: { [name: string]: any }) {
-    return this.ODATA_READLINK in value
-      ? decodeURIComponent(value[this.ODATA_READLINK] as string)
+  readLink(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_READLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_READLINK) as string)
       : undefined;
   },
-  mediaReadLink(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_READLINK in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_READLINK] as string)
+  mediaReadLink(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_MEDIA_READLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_READLINK) as string)
       : undefined;
   },
-  editLink(value: { [name: string]: any }) {
-    return this.ODATA_EDITLINK in value
-      ? decodeURIComponent(value[this.ODATA_EDITLINK] as string)
+  editLink(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_EDITLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_EDITLINK) as string)
       : undefined;
   },
-  mediaEditLink(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_EDITLINK in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_EDITLINK] as string)
+  mediaEditLink(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_MEDIA_EDITLINK)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_EDITLINK) as string)
       : undefined;
   },
-  deltaLink(value: { [name: string]: any }) {
-    return this.ODATA_DELTALINK in value
-      ? decodeURIComponent(value[this.ODATA_DELTALINK] as string)
+  deltaLink(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_DELTALINK)
+      ? decodeURIComponent(annots.get(this.ODATA_DELTALINK) as string)
       : undefined;
   },
-  mediaContentType(value: { [name: string]: any }) {
-    return this.ODATA_MEDIA_CONTENTTYPE in value
-      ? decodeURIComponent(value[this.ODATA_MEDIA_CONTENTTYPE] as string)
+  mediaContentType(annots: Map&lt;string, any&gt;) {
+    return annots.has(this.ODATA_MEDIA_CONTENTTYPE)
+      ? decodeURIComponent(annots.get(this.ODATA_MEDIA_CONTENTTYPE) as string)
       : undefined;
   },
 }</code>
@@ -4284,7 +4285,7 @@
       let index &#x3D; param.indexOf(VALUE_SEPARATOR);
       if (index !&#x3D;&#x3D; -1)
         Object.assign(acc, {
-          [param.substr(0, index)]: param.substr(index + 1),
+          [param.substring(0, index)]: param.substring(index + 1),
         });
       return acc;
     }, {});

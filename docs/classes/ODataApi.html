@@ -41,6 +41,7 @@
 
 
 
+
 <ol class="breadcrumb">
   <li>Classes</li>
   <li >ODataApi</li>
@@ -453,14 +454,19 @@
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
     forType: {
-      enum: {},
-      structured: {},
-      callable: {},
-      entitySet: {},
-      parser: {},
-      options: {},
+      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
+      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
+      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
+      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
+      parser: new Map&lt;string, Parser&lt;any&gt;&gt;(),
+      options: new Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;(),
     },
-    byName: { enum: {}, structured: {}, callable: {}, entitySet: {} },
+    byName: { 
+      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
+      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
+      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
+      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
+    },
   }</code>
                     </td>
                 </tr>
@@ -843,8 +849,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="319"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:319</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="325"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:325</a></div>
                 </td>
             </tr>
 
@@ -1071,8 +1077,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="384"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:384</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="393"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:393</a></div>
                 </td>
             </tr>
 
@@ -1162,8 +1168,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="275"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:275</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="280"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:280</a></div>
                 </td>
             </tr>
 
@@ -1253,8 +1259,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="417"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:417</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="428"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:428</a></div>
                 </td>
             </tr>
 
@@ -1324,8 +1330,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="315"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:315</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="321"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:321</a></div>
                 </td>
             </tr>
 
@@ -1395,8 +1401,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="400"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:400</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="410"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:410</a></div>
                 </td>
             </tr>
 
@@ -1466,8 +1472,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="341"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:341</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="347"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:347</a></div>
                 </td>
             </tr>
 
@@ -1537,8 +1543,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="284"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:284</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="290"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:290</a></div>
                 </td>
             </tr>
 
@@ -1608,8 +1614,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="360"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:360</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="367"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:367</a></div>
                 </td>
             </tr>
 
@@ -1687,8 +1693,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="259"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:259</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="264"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:264</a></div>
                 </td>
             </tr>
 
@@ -1766,8 +1772,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="411"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:411</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="422"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:422</a></div>
                 </td>
             </tr>
 
@@ -1837,8 +1843,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="291"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:291</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="297"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:297</a></div>
                 </td>
             </tr>
 
@@ -1908,8 +1914,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="450"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:450</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="461"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:461</a></div>
                 </td>
             </tr>
 
@@ -1987,8 +1993,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="250"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:250</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="255"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:255</a></div>
                 </td>
             </tr>
 
@@ -2058,8 +2064,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="423"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:423</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="434"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:434</a></div>
                 </td>
             </tr>
 
@@ -2129,8 +2135,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="354"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:354</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="361"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:361</a></div>
                 </td>
             </tr>
 
@@ -2200,8 +2206,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="335"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:335</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="341"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:341</a></div>
                 </td>
             </tr>
 
@@ -2271,8 +2277,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="371"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:371</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="379"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:379</a></div>
                 </td>
             </tr>
 
@@ -2350,8 +2356,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="266"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:266</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="271"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:271</a></div>
                 </td>
             </tr>
 
@@ -2784,8 +2790,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="295"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:295</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="301"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:301</a></div>
                 </td>
             </tr>
 
@@ -2855,8 +2861,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="429"
-                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:429</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="440"
+                            class="link-to-prism">projects/angular-odata/src/lib/api.ts:440</a></div>
                 </td>
             </tr>
 
@@ -3311,29 +3317,34 @@ export class ODataApi {
   // Memoize
   private memo: {
     forType: {
-      enum: { [type: string]: ODataEnumType&lt;any&gt; | undefined };
-      structured: { [type: string]: ODataStructuredType&lt;any&gt; | undefined };
-      callable: { [key: string]: ODataCallable&lt;any&gt; | undefined };
-      entitySet: { [type: string]: ODataEntitySet | undefined };
-      parser: { [type: string]: Parser&lt;any&gt; };
-      options: { [type: string]: ODataModelOptions&lt;any&gt; | undefined };
+      enum: Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;;
+      structured: Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;;
+      callable: Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;;
+      entitySet: Map&lt;string, ODataEntitySet | undefined&gt;;
+      parser: Map&lt;string, Parser&lt;any&gt;&gt;;
+      options: Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;;
     };
     byName: {
-      enum: { [type: string]: ODataEnumType&lt;any&gt; | undefined };
-      structured: { [type: string]: ODataStructuredType&lt;any&gt; | undefined };
-      callable: { [key: string]: ODataCallable&lt;any&gt; | undefined };
-      entitySet: { [type: string]: ODataEntitySet | undefined };
+      enum: Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;;
+      structured: Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;;
+      callable: Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;;
+      entitySet: Map&lt;string, ODataEntitySet | undefined&gt;;
     };
   } &#x3D; {
     forType: {
-      enum: {},
-      structured: {},
-      callable: {},
-      entitySet: {},
-      parser: {},
-      options: {},
+      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
+      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
+      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
+      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
+      parser: new Map&lt;string, Parser&lt;any&gt;&gt;(),
+      options: new Map&lt;string, ODataModelOptions&lt;any&gt; | undefined&gt;(),
     },
-    byName: { enum: {}, structured: {}, callable: {}, entitySet: {} },
+    byName: { 
+      enum: new Map&lt;string, ODataEnumType&lt;any&gt; | undefined&gt;(),
+      structured: new Map&lt;string, ODataStructuredType&lt;any&gt; | undefined&gt;(),
+      callable: new Map&lt;string, ODataCallable&lt;any&gt; | undefined&gt;(),
+      entitySet: new Map&lt;string, ODataEntitySet | undefined&gt;(),
+    },
   };
 
   private findSchemaForType(type: string) {
@@ -3346,35 +3357,36 @@ export class ODataApi {
   }
 
   public findEnumTypeForType&lt;T&gt;(type: string) {
-    if (!(type in this.memo.forType.enum))
-      this.memo.forType.enum[type] &#x3D;
-        this.findSchemaForType(type)?.findEnumTypeForType&lt;T&gt;(type);
-    return this.memo.forType.enum[type] as ODataEnumType&lt;T&gt; | undefined;
+    if (!this.memo.forType.enum.has(type)) {
+      this.memo.forType.enum.set(type, this.findSchemaForType(type)?.findEnumTypeForType&lt;T&gt;(type));
+    }
+    return this.memo.forType.enum.get(type) as ODataEnumType&lt;T&gt; | undefined;
   }
 
   public findStructuredTypeForType&lt;T&gt;(type: string) {
-    if (!(type in this.memo.forType.structured))
-      this.memo.forType.structured[type] &#x3D;
-        this.findSchemaForType(type)?.findStructuredTypeForType&lt;T&gt;(type);
-    return this.memo.forType.structured[type] as
+    if (!this.memo.forType.structured.has(type)) {
+      this.memo.forType.structured.set(type, this.findSchemaForType(type)?.findStructuredTypeForType&lt;T&gt;(type));
+    }
+    return this.memo.forType.structured.get(type) as
       | ODataStructuredType&lt;T&gt;
       | undefined;
   }
 
   public findCallableForType&lt;T&gt;(type: string, bindingType?: string) {
     const key &#x3D; bindingType !&#x3D;&#x3D; undefined ? &#x60;${bindingType}/${type}&#x60; : type;
-    if (!(key in this.memo.forType.callable))
-      this.memo.forType.callable[key] &#x3D; this.findSchemaForType(
+    if (!this.memo.forType.callable.has(key)) {
+      this.memo.forType.callable.set(key, this.findSchemaForType(
         type
-      )?.findCallableForType&lt;T&gt;(type, bindingType);
-    return this.memo.forType.callable[key] as ODataCallable&lt;T&gt; | undefined;
+      )?.findCallableForType&lt;T&gt;(type, bindingType));
+    }
+    return this.memo.forType.callable.get(key) as ODataCallable&lt;T&gt; | undefined;
   }
 
   public findEntitySetForType(type: string) {
-    if (!(type in this.memo.forType.entitySet))
-      this.memo.forType.entitySet[type] &#x3D;
-        this.findSchemaForType(type)?.findEntitySetForType(type);
-    return this.memo.forType.entitySet[type] as ODataEntitySet | undefined;
+    if (!this.memo.forType.entitySet.has(type)) {
+      this.memo.forType.entitySet.set(type, this.findSchemaForType(type)?.findEntitySetForType(type));
+    }
+    return this.memo.forType.entitySet.get(type) as ODataEntitySet | undefined;
   }
 
   public findModelForType(type: string) {
@@ -3428,14 +3440,15 @@ export class ODataApi {
   }
 
   public findEntitySetForEntityType(entityType: string) {
-    if (!(entityType in this.memo.forType.entitySet))
-      this.memo.forType.entitySet[entityType] &#x3D; this.schemas
+    if (!this.memo.forType.entitySet.has(entityType)) {
+      this.memo.forType.entitySet.set(entityType, this.schemas
         .reduce(
           (acc, schema) &#x3D;&gt; [...acc, ...schema.entitySets],
           &lt;ODataEntitySet[]&gt;[]
         )
-        .find((e) &#x3D;&gt; e.entityType &#x3D;&#x3D;&#x3D; entityType);
-    return this.memo.forType.entitySet[entityType] as
+        .find((e) &#x3D;&gt; e.entityType &#x3D;&#x3D;&#x3D; entityType));
+    }
+    return this.memo.forType.entitySet.get(entityType) as
       | ODataEntitySet
       | undefined;
   }
@@ -3447,33 +3460,35 @@ export class ODataApi {
   }
 
   public findEnumTypeByName&lt;T&gt;(name: string) {
-    if (!(name in this.memo.byName.enum))
-      this.memo.byName.enum[name] &#x3D; this.schemas
+    if (!this.memo.byName.enum.has(name)) {
+      this.memo.byName.enum.set(name, this.schemas
         .reduce(
           (acc, schema) &#x3D;&gt; [...acc, ...schema.enums],
           &lt;ODataEnumType&lt;T&gt;[]&gt;[]
         )
-        .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name);
-    return this.memo.byName.enum[name] as ODataEnumType&lt;T&gt; | undefined;
+        .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name));
+    }
+    return this.memo.byName.enum.get(name) as ODataEnumType&lt;T&gt; | undefined;
   }
 
   public findStructuredTypeByName&lt;T&gt;(name: string) {
-    if (!(name in this.memo.byName.structured))
-      this.memo.byName.structured[name] &#x3D; this.schemas
+    if (!this.memo.byName.structured.has(name)) {
+      this.memo.byName.structured.set(name, this.schemas
         .reduce(
           (acc, schema) &#x3D;&gt; [...acc, ...schema.entities],
           &lt;ODataStructuredType&lt;T&gt;[]&gt;[]
         )
-        .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name);
-    return this.memo.byName.structured[name] as
+        .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name));
+    }
+    return this.memo.byName.structured.get(name) as
       | ODataStructuredType&lt;T&gt;
       | undefined;
   }
 
   public findCallableByName&lt;T&gt;(name: string, bindingType?: string) {
     const key &#x3D; bindingType !&#x3D;&#x3D; undefined ? &#x60;${bindingType}/${name}&#x60; : name;
-    if (!(key in this.memo.byName.callable))
-      this.memo.byName.callable[key] &#x3D; this.schemas
+    if (!this.memo.byName.callable.has(key)) {
+      this.memo.byName.callable.set(key, this.schemas
         .reduce(
           (acc, schema) &#x3D;&gt; [...acc, ...schema.callables],
           &lt;ODataCallable&lt;T&gt;[]&gt;[]
@@ -3482,19 +3497,21 @@ export class ODataApi {
           (c) &#x3D;&gt;
             c.name &#x3D;&#x3D;&#x3D; name &amp;&amp;
             (bindingType &#x3D;&#x3D;&#x3D; undefined || c.binding()?.type &#x3D;&#x3D;&#x3D; bindingType)
-        );
-    return this.memo.byName.callable[key] as ODataCallable&lt;T&gt; | undefined;
+        ));
+    }
+    return this.memo.byName.callable.get(key) as ODataCallable&lt;T&gt; | undefined;
   }
 
   public findEntitySetByName(name: string) {
-    if (!(name in this.memo.byName.entitySet))
-      this.memo.byName.entitySet[name] &#x3D; this.schemas
+    if (!this.memo.byName.entitySet.has(name)) {
+      this.memo.byName.entitySet.set(name, this.schemas
         .reduce(
           (acc, schema) &#x3D;&gt; [...acc, ...schema.entitySets],
           &lt;ODataEntitySet[]&gt;[]
         )
-        .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name);
-    return this.memo.byName.entitySet[name] as ODataEntitySet | undefined;
+        .find((e) &#x3D;&gt; e.name &#x3D;&#x3D;&#x3D; name));
+    }
+    return this.memo.byName.entitySet.get(name) as ODataEntitySet | undefined;
   }
 
   public findModelByName(name: string) {
@@ -3517,40 +3534,41 @@ export class ODataApi {
 
   public parserForType&lt;T&gt;(type: string, bindingType?: string) {
     const key &#x3D; bindingType !&#x3D;&#x3D; undefined ? &#x60;${bindingType}/${type}&#x60; : type;
-    if (!(key in this.memo.forType.parser)) {
+    if (!this.memo.forType.parser.has(key)) {
       if (type in this.parsers) {
         // Edm, Base Parsers
-        this.memo.forType.parser[key] &#x3D; this.parsers[type] as Parser&lt;T&gt;;
+        this.memo.forType.parser.set(key, this.parsers[type] as Parser&lt;T&gt;);
       } else if (!type.startsWith(&#x27;Edm.&#x27;)) {
         // EnumType, ComplexType and EntityType Parsers
         let value &#x3D;
           this.findCallableForType&lt;T&gt;(type, bindingType) ||
           this.findEnumTypeForType&lt;T&gt;(type) ||
           this.findStructuredTypeForType&lt;T&gt;(type);
-        this.memo.forType.parser[key] &#x3D; value?.parser as Parser&lt;T&gt;;
+        this.memo.forType.parser.set(key, value?.parser as Parser&lt;T&gt;);
       } else {
         // None Parser
-        this.memo.forType.parser[key] &#x3D; NONE_PARSER;
+        this.memo.forType.parser.set(key, NONE_PARSER);
       }
     }
-    return this.memo.forType.parser[key] as Parser&lt;T&gt;;
+    return this.memo.forType.parser.get(key) as Parser&lt;T&gt;;
   }
 
   public findOptionsForType&lt;T&gt;(type: string) {
     // Strucutred Options
-    if (!(type in this.memo.forType.options)) {
+    if (!this.memo.forType.options.has(type)) {
       let st &#x3D; this.findStructuredTypeForType&lt;T&gt;(type);
-      this.memo.forType.options[type] &#x3D;
+      this.memo.forType.options.set(type, 
         st !&#x3D;&#x3D; undefined &amp;&amp; st.model !&#x3D;&#x3D; undefined &amp;&amp; st.model?.meta !&#x3D;&#x3D; null
           ? st.model.meta
-          : undefined;
+          : undefined);
     }
-    return this.memo.forType.options[type] as ODataModelOptions&lt;T&gt; | undefined;
+    return this.memo.forType.options.get(type) as ODataModelOptions&lt;T&gt; | undefined;
   }
 }
 </code></pre>
     </div>
 </div>
+
 
 
 

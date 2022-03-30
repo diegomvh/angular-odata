@@ -41,6 +41,7 @@
 
 
 
+
 <ol class="breadcrumb">
   <li>Classes</li>
   <li >ODataEntityTypeKey</li>
@@ -376,8 +377,8 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     value: any,
     options?: OptionsHelper
   ): any {
-    const type &#x3D; Types.isPlainObject(value)
-      ? options?.helper.type(value)
+    const type &#x3D; options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
+      ? value[options.helper.ODATA_TYPE]
       : undefined;
     if (type !&#x3D;&#x3D; undefined) {
       return parser
@@ -411,8 +412,8 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     value: any,
     options?: OptionsHelper
   ): any {
-    const type &#x3D; Types.isPlainObject(value)
-      ? options?.helper.type(value)
+    const type &#x3D; options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
+      ? value[options.helper.ODATA_TYPE]
       : undefined;
     if (type !&#x3D;&#x3D; undefined) {
       return parser
@@ -824,6 +825,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
 </code></pre>
     </div>
 </div>
+
 
 
 
