@@ -1,6 +1,14 @@
 import { QueryOptionNames } from '../../types';
 import { Objects, Types } from '../../utils';
-import { alias, Expand, Filter, OrderBy, Select, Transform } from './builder';
+import {
+  alias,
+  Expand,
+  Filter,
+  OrderBy,
+  Select,
+  Transform,
+  normalizeValue,
+} from './builder';
 import {
   ComputeExpression,
   FilterConnector,
@@ -52,9 +60,13 @@ export class ODataQueryOptionHandler<T> {
   }
 
   remove(value: any) {
-    this.o.set(this.n, this.assertArray().filter((v) => v !== value));
+    this.o.set(
+      this.n,
+      this.assertArray().filter((v) => v !== value)
+    );
     // If only one... down to value
-    if (this.o.get(this.n).length === 1) this.o.set(this.n, this.o.get(this.n)[0]);
+    if (this.o.get(this.n).length === 1)
+      this.o.set(this.n, this.o.get(this.n)[0]);
   }
 
   at(index: number) {
@@ -64,7 +76,10 @@ export class ODataQueryOptionHandler<T> {
 
   //#region HashMap Value
   private assertObject(create: boolean): { [name: string]: any } {
-    if (!Types.isArray(this.o.get(this.n)) && Types.isPlainObject(this.o.get(this.n))) {
+    if (
+      !Types.isArray(this.o.get(this.n)) &&
+      Types.isPlainObject(this.o.get(this.n))
+    ) {
       return this.o.get(this.n);
     }
     let arr = this.assertArray();
@@ -91,8 +106,12 @@ export class ODataQueryOptionHandler<T> {
     Objects.unset(obj, path);
 
     if (Types.isArray(this.o.get(this.n))) {
-      this.o.set(this.n, this.o.get(this.n).filter((v: any) => !Types.isEmpty(v)));
-      if (this.o.get(this.n).length === 1) this.o.set(this.n, this.o.get(this.n)[0]);
+      this.o.set(
+        this.n,
+        this.o.get(this.n).filter((v: any) => !Types.isEmpty(v))
+      );
+      if (this.o.get(this.n).length === 1)
+        this.o.set(this.n, this.o.get(this.n)[0]);
     }
   }
 
@@ -124,6 +143,15 @@ export class ODataQueryOptionsHandler<T> {
    */
   alias(value: any, name?: string) {
     return alias(value, name);
+  }
+
+  /**
+   * Normalize the given value to a valid odata value
+   * @param value The value to normalize
+   * @returns The normalized value
+   */
+  normalize(value: any) {
+    return normalizeValue(value);
   }
 
   select(

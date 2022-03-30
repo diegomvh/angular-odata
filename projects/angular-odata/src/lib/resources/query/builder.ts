@@ -596,7 +596,10 @@ function escapeIllegalChars(string: string) {
 
 export function normalizeValue(
   value: Value,
-  { aliases, escape = false }: { aliases?: QueryCustomType[]; escape?: boolean }
+  {
+    aliases,
+    escape = false,
+  }: { aliases?: QueryCustomType[]; escape?: boolean } = {}
 ): any {
   if (typeof value === 'string') {
     return escape ? `'${escapeIllegalChars(value)}'` : `'${value}'`;

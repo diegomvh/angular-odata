@@ -69,7 +69,10 @@ export class ODataModel<T> {
     | null = null;
   _attributes: Map<string, any> = new Map<string, any>();
   _changes: Map<string, any> = new Map<string, any>();
-  _relations: Map<string, ODataModelRelation<any>> = new Map<string, ODataModelRelation<any>>();
+  _relations: Map<string, ODataModelRelation<any>> = new Map<
+    string,
+    ODataModelRelation<any>
+  >();
   _resource: ODataResource<T> | null = null;
   _annotations!: ODataEntityAnnotations;
   _reset: boolean = false;

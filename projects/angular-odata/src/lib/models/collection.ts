@@ -210,10 +210,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ): M {
     let Model = this._model;
     const helper = this._annotations.helper;
-    const annots = new ODataEntityAnnotations(
-      helper,
-      helper.annotations(data)
-    );
+    const annots = new ODataEntityAnnotations(helper, helper.annotations(data));
 
     if (annots?.type !== undefined && Model.meta !== null) {
       let schema = Model.meta.findChildOptions((o) =>
@@ -849,7 +846,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
       );
     }
   }
-
   query(func: (q: ODataQueryOptionsHandler<T>) => void) {
     const resource = this.resource();
     resource.query(func);
@@ -988,19 +984,36 @@ export class ODataCollection<T, M extends ODataModel<T>>
     };
   }
 
-  filter(predicate: (value: M, index: number, array: M[]) => unknown, thisArg?: any): M[] {
+  filter(
+    predicate: (value: M, index: number, array: M[]) => unknown,
+    thisArg?: any
+  ): M[] {
     return this.models().filter(predicate);
   }
 
-  map<U>(callbackfn: (value: M, index: number, array: M[]) => U, thisArg?: any): U[] {
+  map<U>(
+    callbackfn: (value: M, index: number, array: M[]) => U,
+    thisArg?: any
+  ): U[] {
     return this.models().map(callbackfn, thisArg);
   }
 
-  find(predicate: (value: M, index: number, obj: M[]) => unknown, thisArg?: any): M | undefined {
+  find(
+    predicate: (value: M, index: number, obj: M[]) => unknown,
+    thisArg?: any
+  ): M | undefined {
     return this.models().find(predicate);
   }
-  
-  reduce<U>(callbackfn: (previousValue: U, currentValue: M, currentIndex: number, array: M[]) => U, initialValue: U): U {
+
+  reduce<U>(
+    callbackfn: (
+      previousValue: U,
+      currentValue: M,
+      currentIndex: number,
+      array: M[]
+    ) => U,
+    initialValue: U
+  ): U {
     return this.models().reduce(callbackfn, initialValue);
   }
 
