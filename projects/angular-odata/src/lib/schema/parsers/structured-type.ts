@@ -155,9 +155,10 @@ export class ODataStructuredTypeFieldParser<T>
     value: any,
     options?: OptionsHelper
   ): any {
-    const type = options !== undefined && Types.isPlainObject(value)
-      ? value[options.helper.ODATA_TYPE]
-      : undefined;
+    const type =
+      options !== undefined && Types.isPlainObject(value)
+        ? options.helper.type(value)
+        : undefined;
     if (type !== undefined) {
       return parser
         .childParser((c) => c.isTypeOf(type))
@@ -190,9 +191,10 @@ export class ODataStructuredTypeFieldParser<T>
     value: any,
     options?: OptionsHelper
   ): any {
-    const type = options !== undefined && Types.isPlainObject(value)
-      ? value[options.helper.ODATA_TYPE]
-      : undefined;
+    const type =
+      options !== undefined && Types.isPlainObject(value)
+        ? options.helper.type(value)
+        : undefined;
     if (type !== undefined) {
       return parser
         .childParser((c) => c.isTypeOf(type))

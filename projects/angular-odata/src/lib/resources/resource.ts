@@ -186,10 +186,15 @@ export class ODataResource<T> {
     });
   }
 
-  private __parser(value: any, options?: OptionsHelper, type?: string): Parser<T> | undefined {
-    const dataType = options !== undefined && Types.isPlainObject(value)
-      ? value[options.helper.ODATA_TYPE]
-      : undefined;
+  private __parser(
+    value: any,
+    options?: OptionsHelper,
+    type?: string
+  ): Parser<T> | undefined {
+    const dataType =
+      options !== undefined && Types.isPlainObject(value)
+        ? options.helper.type(value)
+        : undefined;
     if (dataType !== undefined) {
       // Parser from data type
       return this.api.parserForType<T>(dataType);
@@ -332,7 +337,7 @@ export class ODataResource<T> {
 
     let etag = options.etag;
     if (etag === undefined && Types.isPlainObject(options.body)) {
-      etag = options.body[apiOptions.helper.ODATA_ETAG];
+      etag = apiOptions.helper.etag(options.body);
     }
 
     const request = new ODataRequest({

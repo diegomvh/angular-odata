@@ -38,11 +38,11 @@ export interface ODataVersionHelper {
   property(value: { [key: string]: any }): any;
   annotations(value: { [key: string]: any }): Map<string, any>;
   attributes(value: { [key: string]: any }, metadata: ODataMetadataType): any;
-  context(value: { [key: string]: any }): ODataContext;
 
-  id(annots: Map<string, any>): string | undefined;
-  etag(annots: Map<string, any>): string | undefined;
-  type(annots: Map<string, any>): string | undefined;
+  context(annots: Map<string, any> | { [key: string]: any }): ODataContext;
+  id(annots: Map<string, any> | { [key: string]: any }): string | undefined;
+  etag(annots: Map<string, any> | { [key: string]: any }): string | undefined;
+  type(annots: Map<string, any> | { [key: string]: any }): string | undefined;
   count(annots: Map<string, any>): number | undefined;
   functions(annots: Map<string, any>): Map<string, any>;
   properties(annots: Map<string, any>): Map<string, Map<string, any>>;
@@ -72,38 +72,50 @@ const ODataVersionBaseHelper = <any>{
     const funcs = new Map<string, any>();
     [...annots.keys()]
       .filter((key) => key.startsWith(this.ODATA_FUNCTION_PREFIX))
-      .forEach(key => funcs.set(key.substring(this.ODATA_FUNCTION_PREFIX.length), annots.get(key)));
-    return funcs;     
+      .forEach((key) =>
+        funcs.set(
+          key.substring(this.ODATA_FUNCTION_PREFIX.length),
+          annots.get(key)
+        )
+      );
+    return funcs;
   },
   properties(annots: Map<string, any>) {
     const props = new Map<string, Map<string, any>>();
     [...annots.keys()]
       .filter((key) => key.indexOf(this.ODATA_ANNOTATION_PREFIX) > 0)
-      .forEach(key => {
+      .forEach((key) => {
         let name = key.substring(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
         let prop = props.has(name) ? props.get(name)! : new Map<string, any>();
-        prop.set(key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)), annots.get(key));
+        prop.set(
+          key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)),
+          annots.get(key)
+        );
         props.set(name, prop);
-      }); 
-    return props;     
+      });
+    return props;
   },
-  id(annots: Map<string, any>) {
-    return annots.has(this.ODATA_ID)
-      ? (annots.get(this.ODATA_ID) as string)
-      : undefined;
+  id(annots: Map<string, any> | { [key: string]: any }) {
+    return annots instanceof Map
+      ? annots.get(this.ODATA_ID)
+      : annots[this.ODATA_ID];
   },
-  etag(annots: Map<string, any>) {
-    return annots.has(this.ODATA_ETAG)
-      ? (annots.get(this.ODATA_ETAG) as string)
-      : undefined;
+  etag(annots: Map<string, any> | { [key: string]: any }) {
+    return annots instanceof Map
+      ? annots.get(this.ODATA_ETAG)
+      : annots[this.ODATA_ETAG];
   },
-  type(annots: Map<string, any>) {
-    if (!annots.has(this.ODATA_TYPE)) return undefined;
-    const t = annots.get(this.ODATA_TYPE).substring(1);
-    const matches = COLLECTION.exec(t);
+  type(annots: Map<string, any> | { [key: string]: any }) {
+    let type =
+      annots instanceof Map
+        ? annots.get(this.ODATA_TYPE)
+        : annots[this.ODATA_TYPE];
+    if (!type) return undefined;
+    type = type.substring(1);
+    const matches = COLLECTION.exec(type);
     if (matches)
       return matches[1].indexOf('.') === -1 ? `Edm.${matches[1]}` : matches[1];
-    return t;
+    return type;
   },
   mediaEtag(annots: Map<string, any>) {
     return annots.has(this.ODATA_MEDIA_ETAG)
@@ -124,10 +136,11 @@ const ODataVersionBaseHelper = <any>{
     const annots = new Map<string, any>();
     Object.entries(value)
       .filter(
-        ([key, ]) =>
+        ([key]) =>
           key.indexOf(this.ODATA_ANNOTATION_PREFIX) !== -1 ||
           key.startsWith(this.ODATA_FUNCTION_PREFIX)
-      ).forEach(([key, value]) => annots.set(key, value));
+      )
+      .forEach(([key, value]) => annots.set(key, value));
     return annots;
   },
   attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
@@ -228,10 +241,13 @@ export const ODataHelper = {
     //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
-    context(value: {[key: string]: any}) {
+    context(annots: Map<string, any> | { [key: string]: any }) {
       let ctx: ODataContext = {};
-      if (this.ODATA_CONTEXT in value) {
-        const str = value[this.ODATA_CONTEXT] as string;
+      const str =
+        annots instanceof Map
+          ? annots.get(this.ODATA_CONTEXT)
+          : annots[this.ODATA_CONTEXT];
+      if (typeof str === 'string') {
         let index = str.indexOf('$metadata');
         ctx.serviceRootUrl = str.substring(0, index);
         index = str.indexOf('#');
@@ -276,10 +292,13 @@ export const ODataHelper = {
     ODATA_TYPE: 'odata.type',
     ODATA_COUNT: 'odata.count',
     VALUE: 'value',
-    context(value: {[key: string]: any}) {
+    context(annots: Map<string, any> | { [key: string]: any }) {
       let ctx: ODataContext = {};
-      if (this.ODATA_CONTEXT in value) {
-        const str = value[this.ODATA_CONTEXT] as string;
+      const str =
+        annots instanceof Map
+          ? annots.get(this.ODATA_CONTEXT)
+          : annots[this.ODATA_CONTEXT];
+      if (typeof str === 'string') {
         let index = str.indexOf('$metadata');
         ctx.serviceRootUrl = str.substring(0, index);
         index = str.indexOf('#');
@@ -307,9 +326,10 @@ export const ODataHelper = {
     annotations(value: { [key: string]: any }) {
       const annots = new Map<string, any>();
       if (this.ODATA_ANNOTATION in value) {
-        Object.entries(value[this.ODATA_ANNOTATION])
-        .forEach(([key, value]) => annots.set(key, value));
-      } 
+        Object.entries(value[this.ODATA_ANNOTATION]).forEach(([key, value]) =>
+          annots.set(key, value)
+        );
+      }
       return annots;
     },
     attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {

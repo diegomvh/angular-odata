@@ -36,8 +36,13 @@ export type ODataQueryArguments<T> = {
 export class ODataQueryOptions<T> {
   values: Map<QueryOptionNames, any>;
 
-  constructor(options?: { [name: string]: any }) {
-    this.values = new Map(Object.entries(options || {}) as Array<[QueryOptionNames, any]>);
+  constructor(values?: Map<QueryOptionNames, any> | { [name: string]: any }) {
+    this.values =
+      values instanceof Map
+        ? values
+        : new Map(
+            Object.entries(values || {}) as Array<[QueryOptionNames, any]>
+          );
   }
 
   // Params
@@ -126,18 +131,18 @@ export class ODataQueryOptions<T> {
 
   remove(...keys: QueryOptionNames[]) {
     [...this.values.keys()]
-    .filter(k => keys.indexOf(k) !== -1)
-    .forEach(key => {
-      this.values.delete(key)
-    })
+      .filter((k) => keys.indexOf(k) !== -1)
+      .forEach((key) => {
+        this.values.delete(key);
+      });
   }
 
   keep(...keys: QueryOptionNames[]) {
     [...this.values.keys()]
-    .filter(k => keys.indexOf(k) === -1)
-    .forEach(key => {
-      this.values.delete(key)
-    });
+      .filter((k) => keys.indexOf(k) === -1)
+      .forEach((key) => {
+        this.values.delete(key);
+      });
   }
 
   // Clear
