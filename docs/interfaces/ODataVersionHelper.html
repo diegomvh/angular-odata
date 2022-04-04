@@ -455,15 +455,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>context(value: literal type)</code>
+<code>context(annots: Map<string | any> | literal type)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="41"
-                            class="link-to-prism">projects/angular-odata/src/lib/helper.ts:41</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="42"
+                            class="link-to-prism">projects/angular-odata/src/lib/helper.ts:42</a></div>
                 </td>
             </tr>
 
@@ -484,9 +484,9 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>value</td>
+                                    <td>annots</td>
                                     <td>
-                                            <code>literal type</code>
+                                            <code>Map&lt;string | any&gt; | literal type</code>
                                     </td>
 
                                     <td>
@@ -906,7 +906,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>etag(annots: Map<string | any>)</code>
+<code>etag(annots: Map<string | any> | literal type)</code>
                 </td>
             </tr>
 
@@ -937,7 +937,7 @@
                                 <tr>
                                     <td>annots</td>
                                     <td>
-                                            <code>Map&lt;string | any&gt;</code>
+                                            <code>Map&lt;string | any&gt; | literal type</code>
                                     </td>
 
                                     <td>
@@ -1044,7 +1044,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>id(annots: Map<string | any>)</code>
+<code>id(annots: Map<string | any> | literal type)</code>
                 </td>
             </tr>
 
@@ -1075,7 +1075,7 @@
                                 <tr>
                                     <td>annots</td>
                                     <td>
-                                            <code>Map&lt;string | any&gt;</code>
+                                            <code>Map&lt;string | any&gt; | literal type</code>
                                     </td>
 
                                     <td>
@@ -1734,7 +1734,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>type(annots: Map<string | any>)</code>
+<code>type(annots: Map<string | any> | literal type)</code>
                 </td>
             </tr>
 
@@ -1765,7 +1765,7 @@
                                 <tr>
                                     <td>annots</td>
                                     <td>
-                                            <code>Map&lt;string | any&gt;</code>
+                                            <code>Map&lt;string | any&gt; | literal type</code>
                                     </td>
 
                                     <td>
@@ -2136,11 +2136,11 @@ export interface ODataVersionHelper {
   property(value: { [key: string]: any }): any;
   annotations(value: { [key: string]: any }): Map&lt;string, any&gt;;
   attributes(value: { [key: string]: any }, metadata: ODataMetadataType): any;
-  context(value: { [key: string]: any }): ODataContext;
 
-  id(annots: Map&lt;string, any&gt;): string | undefined;
-  etag(annots: Map&lt;string, any&gt;): string | undefined;
-  type(annots: Map&lt;string, any&gt;): string | undefined;
+  context(annots: Map&lt;string, any&gt; | { [key: string]: any }): ODataContext;
+  id(annots: Map&lt;string, any&gt; | { [key: string]: any }): string | undefined;
+  etag(annots: Map&lt;string, any&gt; | { [key: string]: any }): string | undefined;
+  type(annots: Map&lt;string, any&gt; | { [key: string]: any }): string | undefined;
   count(annots: Map&lt;string, any&gt;): number | undefined;
   functions(annots: Map&lt;string, any&gt;): Map&lt;string, any&gt;;
   properties(annots: Map&lt;string, any&gt;): Map&lt;string, Map&lt;string, any&gt;&gt;;
@@ -2170,38 +2170,50 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
     const funcs &#x3D; new Map&lt;string, any&gt;();
     [...annots.keys()]
       .filter((key) &#x3D;&gt; key.startsWith(this.ODATA_FUNCTION_PREFIX))
-      .forEach(key &#x3D;&gt; funcs.set(key.substring(this.ODATA_FUNCTION_PREFIX.length), annots.get(key)));
-    return funcs;     
+      .forEach((key) &#x3D;&gt;
+        funcs.set(
+          key.substring(this.ODATA_FUNCTION_PREFIX.length),
+          annots.get(key)
+        )
+      );
+    return funcs;
   },
   properties(annots: Map&lt;string, any&gt;) {
     const props &#x3D; new Map&lt;string, Map&lt;string, any&gt;&gt;();
     [...annots.keys()]
       .filter((key) &#x3D;&gt; key.indexOf(this.ODATA_ANNOTATION_PREFIX) &gt; 0)
-      .forEach(key &#x3D;&gt; {
+      .forEach((key) &#x3D;&gt; {
         let name &#x3D; key.substring(0, key.indexOf(this.ODATA_ANNOTATION_PREFIX));
         let prop &#x3D; props.has(name) ? props.get(name)! : new Map&lt;string, any&gt;();
-        prop.set(key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)), annots.get(key));
+        prop.set(
+          key.substring(key.indexOf(this.ODATA_ANNOTATION_PREFIX)),
+          annots.get(key)
+        );
         props.set(name, prop);
-      }); 
-    return props;     
+      });
+    return props;
   },
-  id(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_ID)
-      ? (annots.get(this.ODATA_ID) as string)
-      : undefined;
+  id(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    return annots instanceof Map
+      ? annots.get(this.ODATA_ID)
+      : annots[this.ODATA_ID];
   },
-  etag(annots: Map&lt;string, any&gt;) {
-    return annots.has(this.ODATA_ETAG)
-      ? (annots.get(this.ODATA_ETAG) as string)
-      : undefined;
+  etag(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    return annots instanceof Map
+      ? annots.get(this.ODATA_ETAG)
+      : annots[this.ODATA_ETAG];
   },
-  type(annots: Map&lt;string, any&gt;) {
-    if (!annots.has(this.ODATA_TYPE)) return undefined;
-    const t &#x3D; annots.get(this.ODATA_TYPE).substring(1);
-    const matches &#x3D; COLLECTION.exec(t);
+  type(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+    let type &#x3D;
+      annots instanceof Map
+        ? annots.get(this.ODATA_TYPE)
+        : annots[this.ODATA_TYPE];
+    if (!type) return undefined;
+    type &#x3D; type.substring(1);
+    const matches &#x3D; COLLECTION.exec(type);
     if (matches)
       return matches[1].indexOf(&#x27;.&#x27;) &#x3D;&#x3D;&#x3D; -1 ? &#x60;Edm.${matches[1]}&#x60; : matches[1];
-    return t;
+    return type;
   },
   mediaEtag(annots: Map&lt;string, any&gt;) {
     return annots.has(this.ODATA_MEDIA_ETAG)
@@ -2222,10 +2234,11 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
     const annots &#x3D; new Map&lt;string, any&gt;();
     Object.entries(value)
       .filter(
-        ([key, ]) &#x3D;&gt;
+        ([key]) &#x3D;&gt;
           key.indexOf(this.ODATA_ANNOTATION_PREFIX) !&#x3D;&#x3D; -1 ||
           key.startsWith(this.ODATA_FUNCTION_PREFIX)
-      ).forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
+      )
+      .forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
     return annots;
   },
   attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
@@ -2326,10 +2339,13 @@ export const ODataHelper &#x3D; {
     //http://nb-mdp-dev01:57970/$metadata#categorias(children(children(children(children(children(children(children(children(children(children()))))))))))/$entity
     //http://nb-mdp-dev01:57970/$metadata#recursos/SIU.Documentos.Documento/$entity
     //http://nb-mdp-dev01:57970/$metadata#SIU.Api.Infrastructure.Storage.Backend.SiuUrls
-    context(value: {[key: string]: any}) {
+    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
       let ctx: ODataContext &#x3D; {};
-      if (this.ODATA_CONTEXT in value) {
-        const str &#x3D; value[this.ODATA_CONTEXT] as string;
+      const str &#x3D;
+        annots instanceof Map
+          ? annots.get(this.ODATA_CONTEXT)
+          : annots[this.ODATA_CONTEXT];
+      if (typeof str &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
         let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
         ctx.serviceRootUrl &#x3D; str.substring(0, index);
         index &#x3D; str.indexOf(&#x27;#&#x27;);
@@ -2374,10 +2390,13 @@ export const ODataHelper &#x3D; {
     ODATA_TYPE: &#x27;odata.type&#x27;,
     ODATA_COUNT: &#x27;odata.count&#x27;,
     VALUE: &#x27;value&#x27;,
-    context(value: {[key: string]: any}) {
+    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
       let ctx: ODataContext &#x3D; {};
-      if (this.ODATA_CONTEXT in value) {
-        const str &#x3D; value[this.ODATA_CONTEXT] as string;
+      const str &#x3D;
+        annots instanceof Map
+          ? annots.get(this.ODATA_CONTEXT)
+          : annots[this.ODATA_CONTEXT];
+      if (typeof str &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {
         let index &#x3D; str.indexOf(&#x27;$metadata&#x27;);
         ctx.serviceRootUrl &#x3D; str.substring(0, index);
         index &#x3D; str.indexOf(&#x27;#&#x27;);
@@ -2405,9 +2424,10 @@ export const ODataHelper &#x3D; {
     annotations(value: { [key: string]: any }) {
       const annots &#x3D; new Map&lt;string, any&gt;();
       if (this.ODATA_ANNOTATION in value) {
-        Object.entries(value[this.ODATA_ANNOTATION])
-        .forEach(([key, value]) &#x3D;&gt; annots.set(key, value));
-      } 
+        Object.entries(value[this.ODATA_ANNOTATION]).forEach(([key, value]) &#x3D;&gt;
+          annots.set(key, value)
+        );
+      }
       return annots;
     },
     attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
