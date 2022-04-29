@@ -1330,53 +1330,69 @@ export class ODataModelOptions<T> {
     }
 
     const relation = self._relations.get(field.name)!;
-    const currentModel = relation.model;
+    const current = relation.model;
 
     if (value === null) {
+      // Unlink old relation
+      this._unlink(self, relation);
+      
+      // New value is null
       relation.model = value as null;
-      changed = currentModel !== value;
-      this._unsubscribe(self, relation);
-    } else if (ODataModelOptions.isCollection(currentModel)) {
+      changed = current !== value;
+    } else if (ODataModelOptions.isCollection(current)) {
+      // Current is collection
+      let currentCollection = current as ODataCollection<F, ODataModel<F>>;
       if (ODataModelOptions.isCollection(value)) {
+        // New value is collection
+        let newCollection = value as ODataCollection<F, ODataModel<F>>;
         if (
-          (currentModel as ODataCollection<F, ODataModel<F>>).equals(
-            value as ODataCollection<F, ODataModel<F>>
-          )
+          currentCollection.equals(newCollection)
         ) {
           changed = false;
+        } else {
+          // Unlink old collection
+          this._unlink(self, relation); 
+          relation.model = newCollection
+          // Link new collection
+          this._link(self, relation);
+          changed = true;
         }
-        this._unsubscribe(self, relation);
-        relation.model = value as ODataCollection<F, ODataModel<F>>;
-        this._subscribe(self, relation);
-        if (self._reparent) relation.model._parent = [self, field];
-        changed = true;
       } else if (Types.isArray(value)) {
+        // New value is array
         changed = this.updateCollection<F>(
           self,
           field,
-          currentModel as ODataCollection<F, ODataModel<F>>,
+          currentCollection,
           value as T[] | { [name: string]: any }[]
         );
       }
-    } else if (ODataModelOptions.isModel(currentModel)) {
+    } else if (ODataModelOptions.isModel(current)) {
+      // Current is model
+      let currentModel = current as ODataModel<F>;
       if (ODataModelOptions.isModel(value)) {
-        if ((currentModel as ODataModel<F>).equals(value as ODataModel<F>)) {
+        // New value is model
+        let newModel = value as ODataModel<F>;
+        if (currentModel.equals(newModel)) {
           changed = false;
+        } else {
+          // Unlink old model
+          this._unlink(self, relation);
+          relation.model = newModel;
+          // Link new model 
+          this._link(self, relation);
+          changed = true;
         }
-        this._unsubscribe(self, relation);
-        relation.model = value as ODataModel<F>;
-        this._subscribe(self, relation);
-        if (self._reparent) relation.model._parent = [self, field];
-        changed = true;
       } else if (Types.isPlainObject(value)) {
         changed = this.updateModel<F>(
           self,
           field,
-          currentModel as ODataModel<F>,
+          currentModel,
           value as F | { [name: string]: any }
         );
       }
     } else {
+      // Current is null or undefined
+      // create new model/collection for given value
       relation.model =
         ODataModelOptions.isCollection(value) ||
         ODataModelOptions.isModel(value)
@@ -1386,10 +1402,12 @@ export class ODataModelOptions<T> {
               value: value,
               reset: self._reset,
             });
+      // Link new model/collection
+      this._link(self, relation);
       changed = true;
-      this._subscribe(self, relation);
-      if (self._reparent) relation.model._parent = [self, field];
     }
+    
+    // Resolve referentials 
     if (!ODataModelOptions.isCollection(relation.model)) {
       var ref = field.meta?.resolveReferential(relation.model, field);
       if (ref !== undefined) {
@@ -1398,6 +1416,8 @@ export class ODataModelOptions<T> {
         );
       }
     }
+    
+    // Update state and emit event 
     relation.state =
       self._reset || !changed
         ? ODataModelState.Unchanged
@@ -1408,10 +1428,11 @@ export class ODataModelOptions<T> {
           track: field.name,
           model: self,
           value: relation.model,
-          previous: currentModel,
+          previous: current,
         })
       );
     }
+    
     return changed;
   }
 
@@ -1474,22 +1495,30 @@ export class ODataModelOptions<T> {
       : this._setValue(self, field.name, value, field.isKey());
   }
 
-  private _unsubscribe<F>(
+  private _unlink<F>(
     self: ODataModel<T>,
     relation: ODataModelRelation<F>
   ) {
-    if (relation.subscription) {
+    if (relation.subscription !== undefined) {
       relation.subscription.unsubscribe();
-      delete relation.subscription;
+      relation.subscription = undefined;
+    }
+    if (relation.model != null) {
+      relation.model._parent = null;
     }
   }
-  private _subscribe<F>(self: ODataModel<T>, relation: ODataModelRelation<F>) {
+
+  private _link<F>(self: ODataModel<T>, relation: ODataModelRelation<F>) {
     if (relation.subscription) {
       throw new Error('Subscription already exists');
     }
     if (relation.model == null) {
       throw new Error('Subscription model is null');
     }
+
+    if (self._reparent) 
+      relation.model._parent = [self, relation.field];
+
     relation.subscription = relation.model.events$.subscribe(
       (event: ODataModelEvent<any>) => {
         if (

@@ -498,7 +498,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     // Set Parent
     if (reparent) model._parent = [this, null];
     // Subscribe
-    this._subscribe(entry);
+    this._link(entry);
     // Now add
     if (position >= 0) this._entries.splice(position, 0, entry);
     else this._entries.push(entry);
@@ -613,7 +613,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       entry.state = ODataModelState.Removed;
       this._entries.push(entry);
     }
-    this._unsubscribe(entry);
+    this._unlink(entry);
     return entry.model;
   }
 
@@ -907,14 +907,14 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  private _unsubscribe(entry: ODataModelEntry<T, M>) {
+  private _unlink(entry: ODataModelEntry<T, M>) {
     if (entry.subscription) {
       entry.subscription.unsubscribe();
-      delete entry.subscription;
+      entry.subscription = undefined;
     }
   }
 
-  private _subscribe(entry: ODataModelEntry<T, M>) {
+  private _link(entry: ODataModelEntry<T, M>) {
     if (entry.subscription) {
       throw new Error('Collection: Subscription already exists');
     }
