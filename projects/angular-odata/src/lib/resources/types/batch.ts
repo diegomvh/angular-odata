@@ -3,7 +3,7 @@ import {
   HttpHeaders,
   HttpResponse,
 } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { map, Observable, of, Subject, switchMap } from 'rxjs';
 import { ODataApi } from '../../api';
 import {
   $BATCH,
@@ -205,35 +205,37 @@ export class ODataBatchResource extends ODataResource<any> {
     return obs$;
   }
 
-  send(options?: ODataOptions) {
-    if (this._requests.length >= 0) {
-      const bound = Strings.uniqueId(BATCH_PREFIX);
-      const requests = this._requests;
-      // Clean requests
-      this._requests = [];
-      const headers = Http.mergeHttpHeaders(
-        (options && options.headers) || {},
-        {
-          [ODATA_VERSION]: VERSION_4_0,
-          [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
-          [ACCEPT]: MULTIPART_MIXED,
-        }
-      );
-      const request = new ODataRequest({
-        method: 'POST',
-        body: ODataBatchResource.buildBody(bound, requests),
-        api: this.api,
-        resource: this,
-        observe: 'response',
-        responseType: 'text',
-        headers: headers,
-        params: options ? options.params : undefined,
-        withCredentials: options ? options.withCredentials : undefined,
-      });
-      this.api.request(request).subscribe((response) => {
-        ODataBatchResource.handleResponse(requests, response);
-      });
+  send(options?: ODataOptions): Observable<null | ODataResponse<string>> {
+    if (this._requests.length == 0) {
+      return of(null);
     }
+
+    const bound = Strings.uniqueId(BATCH_PREFIX);
+    const requests = this._requests;
+    // Clean requests
+    this._requests = [];
+    const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
+      [ODATA_VERSION]: VERSION_4_0,
+      [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
+      [ACCEPT]: MULTIPART_MIXED,
+    });
+    const request = new ODataRequest({
+      method: 'POST',
+      body: ODataBatchResource.buildBody(bound, requests),
+      api: this.api,
+      resource: this,
+      observe: 'response',
+      responseType: 'text',
+      headers: headers,
+      params: options ? options.params : undefined,
+      withCredentials: options ? options.withCredentials : undefined,
+    });
+    return this.api.request(request).pipe(
+      map((response: ODataResponse<string>) => {
+        ODataBatchResource.handleResponse(requests, response);
+        return response;
+      })
+    );
   }
 
   /**
@@ -247,9 +249,7 @@ export class ODataBatchResource extends ODataResource<any> {
     options?: ODataOptions
   ): Observable<R> {
     const obs$ = this.add(ctx);
-    this.send(options);
-
-    return obs$;
+    return this.send(options).pipe(switchMap(() => obs$));
   }
 
   body() {
@@ -326,14 +326,14 @@ export class ODataBatchResource extends ODataResource<any> {
 
   static handleResponse(
     requests: ODataBatchRequest<any>[],
-    response: ODataResponse<any>
+    response: ODataResponse<string>
   ) {
     let chunks: string[][] = [];
     const contentType: string = response.headers.get(CONTENT_TYPE) || '';
     const batchBoundary: string = Http.boundaryDelimiter(contentType);
     const endLine: string = Http.boundaryEnd(batchBoundary);
 
-    const lines: string[] = response.body.split(NEWLINE_REGEXP);
+    const lines: string[] = (response.body || '').split(NEWLINE_REGEXP);
 
     let changesetResponses: string[][] | null = null;
     let contentId: number | null = null;
