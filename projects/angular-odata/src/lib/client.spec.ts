@@ -4,6 +4,7 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { combineLatest, forkJoin } from 'rxjs';
 import { ODataClient } from './client';
 import { ODataModule } from './module';
 import {
@@ -524,7 +525,7 @@ describe('ODataClient', () => {
     req.flush('');
   });
 
-  it('should execute batch', () => {
+  it('should execute one batch', () => {
     const payload = {
       '@odata.context':
         'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
@@ -564,6 +565,61 @@ ${JSON.stringify(payload)}
       'Content-Length': data.length.toString(),
       'Content-Type':
         'multipart/mixed; boundary=batchresponse_6520643b-3c13-4889-aa60-b4422cf2b82b',
+    });
+    const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
+    expect(req.request.method).toBe('POST');
+    req.flush(data, { headers });
+  });
+  
+  it('should execute two batch', () => {
+    const payload = {
+      '@odata.context':
+        'http://services.odata.org/V4/TripPinServiceRW/$metadata#People/$entity',
+      '@odata.id':
+        "http://services.odata.org/V4/TripPinServiceRW/People('russellwhyte')",
+      '@odata.etag': 'W/"08D814450D6BDB6F"',
+      UserName: 'russellwhyte',
+      FirstName: 'Russell',
+      LastName: 'Whyte',
+      Emails: ['Russell@example.com', 'Russell@contoso.com'],
+    };
+    const data = `--batch_6520643b-3c13-4889-aa60-b4422cf2b82b
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+Content-Type: application/json; odata.metadata=minimal
+OData-Version: 4.0
+
+${JSON.stringify(payload)}
+
+--batch_6520643b-3c13-4889-aa60-b4422cf2b82b
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+Content-Type: application/json; odata.metadata=minimal
+OData-Version: 4.0
+
+${JSON.stringify(payload)}
+--batch_6520643b-3c13-4889-aa60-b4422cf2b82b--`;
+    const entity: ODataEntityResource<Person> = client
+      .entitySet<Person>('People', `${NAMESPACE}.Person`)
+      .entity('russellwhyte');
+    client
+      .batch()
+      .exec(() => combineLatest({
+        one: entity.fetch(),
+        two: entity.fetch()
+      }))
+      .subscribe((resp) => {
+        console.log(resp);
+      });
+
+    const headers = new HttpHeaders({
+      'Content-Length': data.length.toString(),
+      'Content-Type':
+        'multipart/mixed; boundary=batch_6520643b-3c13-4889-aa60-b4422cf2b82b',
     });
     const req = httpMock.expectOne(`${SERVICE_ROOT}$batch`);
     expect(req.request.method).toBe('POST');

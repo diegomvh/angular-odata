@@ -2,6 +2,7 @@ import {
   HttpErrorResponse,
   HttpHeaders,
   HttpResponse,
+  HttpResponseBase,
 } from '@angular/common/http';
 import {
   firstValueFrom,
@@ -10,7 +11,6 @@ import {
   of,
   Subject,
   switchMap,
-  tap,
 } from 'rxjs';
 import { ODataApi } from '../../api';
 import {
@@ -43,7 +43,7 @@ import { ODataResource } from '../resource';
 import { ODataResponse } from '../responses';
 import { ODataOptions } from './options';
 
-export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
+export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
   constructor(public request: ODataRequest<any>) {
     super();
   }
@@ -74,81 +74,19 @@ export class ODataBatchRequest<T> extends Subject<ODataResponse<T>> {
     return res.join(NEWLINE);
   }
 
-  onLoad(content: string[], status: { code: number; message: string }) {
-    let headers: HttpHeaders = new HttpHeaders();
-    var index = 1;
-    for (; index < content.length; index++) {
-      const batchBodyLine: string = content[index];
-
-      if (batchBodyLine === '') {
-        break;
-      }
-
-      const batchBodyLineParts: string[] = batchBodyLine.split(': ');
-      headers = headers.append(
-        batchBodyLineParts[0].trim(),
-        batchBodyLineParts[1].trim()
-      );
-    }
-
-    let body: string | { error: any; text: string } = '';
-    for (; index < content.length; index++) {
-      body += content[index];
-    }
-
-    if (status.code === 0) {
-      status.code = !!body ? 200 : 0;
-    }
-
-    let ok = status.code >= 200 && status.code < 300;
-    if (this.request.responseType === 'json' && typeof body === 'string') {
-      const originalBody = body;
-      body = body.replace(XSSI_PREFIX, '');
-      try {
-        body = body !== '' ? JSON.parse(body) : null;
-      } catch (error) {
-        body = originalBody;
-
-        if (ok) {
-          ok = false;
-          body = { error, text: body };
-        }
-      }
-    }
-
-    if (ok) {
-      let res = new HttpResponse<any>({
-        body,
-        headers,
-        status: status.code,
-        statusText: status.message,
-        url: this.request.urlWithParams,
-      });
-      this.next(ODataResponse.fromHttpResponse(this.request, res));
+  onLoad(response: HttpResponseBase) {
+    //console.log(response);
+    if (response.ok) {
+      this.next(response);
       this.complete();
     } else {
       // An unsuccessful request is delivered on the error channel.
-      this.error(
-        new HttpErrorResponse({
-          // The error in this case is the response body (error from the server).
-          error: body,
-          headers,
-          status: status.code,
-          statusText: status.message,
-          url: this.request.urlWithParams,
-        })
-      );
+      this.error(response as HttpErrorResponse);
     }
   }
 
-  onError(content: string[], status: { code: number; text: string }) {
-    const res = new HttpErrorResponse({
-      error: content.join(NEWLINE),
-      status: status.code || 0,
-      statusText: status.text || 'Unknown Error',
-      url: this.request.urlWithParams || undefined,
-    });
-    this.error(res);
+  onError(response: HttpErrorResponse) {
+    this.error(response);
   }
 }
 
@@ -163,9 +101,9 @@ export class ODataBatchResource extends ODataResource<any> {
     return this._requests.map((r) => r.request);
   }
 
-  private _responses: HttpResponse<any> | null = null;
+  private _responses: HttpResponseBase | null = null;
   responses() {
-    return this._requests.map((r) => r.request);
+    return this._responses;
   }
 
   //#region Factory
@@ -245,7 +183,11 @@ export class ODataBatchResource extends ODataResource<any> {
     });
     return this.api.request(request).pipe(
       map((response: ODataResponse<string>) => {
-        ODataBatchResource.handleResponse(requests, response);
+        let responses = ODataBatchResource.parseResponse(requests, response);
+        requests.forEach((req, index) => {
+          let res = responses[index];
+          req.onLoad(res);
+        });
         return response;
       })
     );
@@ -261,9 +203,9 @@ export class ODataBatchResource extends ODataResource<any> {
     ctx: (batch: this) => Observable<R>,
     options?: ODataOptions
   ): Observable<R> {
-    let obs$ = this.add(ctx);
-    firstValueFrom(this.send(options));
-    return obs$;
+    let ctx$ = this.add(ctx);
+    let send$ = this.send(options);
+    return send$.pipe(switchMap(()=> ctx$));
   }
 
   body() {
@@ -338,10 +280,10 @@ export class ODataBatchResource extends ODataResource<any> {
     return res.join(NEWLINE);
   }
 
-  static handleResponse(
+  static parseResponse(
     requests: ODataBatchRequest<any>[],
     response: ODataResponse<string>
-  ) {
+  ): HttpResponseBase[] {
     let chunks: string[][] = [];
     const contentType: string = response.headers.get(CONTENT_TYPE) || '';
     const batchBoundary: string = Http.boundaryDelimiter(contentType);
@@ -404,10 +346,68 @@ export class ODataBatchResource extends ODataResource<any> {
         }
       }
     }
-    chunks.forEach((chunk, index) => {
-      const req = requests[index];
-      const { code, message } = Http.parseResponseStatus(chunk[0]);
-      req.onLoad(chunk.slice(1), { code, message });
+    return chunks.map((chunk: string[], index: number) => {
+      let request = requests[index].request;
+      let { code, message } = Http.parseResponseStatus(chunk[0]);
+      chunk = chunk.slice(1);
+
+      let headers: HttpHeaders = new HttpHeaders();
+      var index = 1;
+      for (; index < chunk.length; index++) {
+        const batchBodyLine: string = chunk[index];
+
+        if (batchBodyLine === '') {
+          break;
+        }
+
+        const batchBodyLineParts: string[] = batchBodyLine.split(': ');
+        headers = headers.append(
+          batchBodyLineParts[0].trim(),
+          batchBodyLineParts[1].trim()
+        );
+      }
+
+      let body: string | { error: any; text: string } = '';
+      for (; index < chunk.length; index++) {
+        body += chunk[index];
+      }
+
+      if (code === 0) {
+        code = !!body ? 200 : 0;
+      }
+
+      let ok = code >= 200 && code < 300;
+      if (request.responseType === 'json' && typeof body === 'string') {
+        const originalBody = body;
+        body = body.replace(XSSI_PREFIX, '');
+        try {
+          body = body !== '' ? JSON.parse(body) : null;
+        } catch (error) {
+          body = originalBody;
+
+          if (ok) {
+            ok = false;
+            body = { error, text: body };
+          }
+        }
+      }
+
+      return (ok) ?
+        new HttpResponse<any>({
+          body,
+          headers,
+          status: code,
+          statusText: message,
+          url: request.urlWithParams,
+        }) :
+        new HttpErrorResponse({
+          // The error in this case is the response body (error from the server).
+          error: body,
+          headers,
+          status: code,
+          statusText: message,
+          url: request.urlWithParams,
+        });
     });
   }
 }
