@@ -209,7 +209,7 @@ export class ODataModel<T> {
       field_mapping = false,
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
-  ): { [name: string]: any } | undefined {
+  ): { [name: string]: any } | null | undefined {
     return this._meta.resolveReferential(this, field, {
       field_mapping,
       resolve,
@@ -222,7 +222,7 @@ export class ODataModel<T> {
       field_mapping = false,
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
-  ): { [name: string]: any } | undefined {
+  ): { [name: string]: any } | null | undefined {
     return this._meta.resolveReferenced(this, field, {
       field_mapping,
       resolve,
@@ -749,17 +749,21 @@ export class ODataModel<T> {
 
   getReference<P>(
     name: keyof T | string
-  ): ODataModel<P> | ODataCollection<P, ODataModel<P>> {
+  ): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)
       throw Error(`getReference: Can't find navigation property ${name}`);
 
     let model = (this as any)[name] as
       | ODataModel<P>
-      | ODataCollection<P, ODataModel<P>>;
+      | ODataCollection<P, ODataModel<P>>
+      | null;
     if (model === undefined) {
       const value = field.collection ? [] : this.referenced(field);
-      model = field.modelCollectionFactory<T, P>({ parent: this, value });
+      model =
+        value !== null
+          ? field.modelCollectionFactory<T, P>({ parent: this, value })
+          : null;
       (this as any)[name] = model;
     }
     return model;

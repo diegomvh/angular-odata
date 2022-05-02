@@ -3,7 +3,15 @@ import {
   HttpHeaders,
   HttpResponse,
 } from '@angular/common/http';
-import { map, Observable, of, Subject, switchMap } from 'rxjs';
+import {
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { ODataApi } from '../../api';
 import {
   $BATCH,
@@ -155,6 +163,11 @@ export class ODataBatchResource extends ODataResource<any> {
     return this._requests.map((r) => r.request);
   }
 
+  private _responses: HttpResponse<any> | null = null;
+  responses() {
+    return this._requests.map((r) => r.request);
+  }
+
   //#region Factory
   static factory(api: ODataApi) {
     let segments = new ODataPathSegments();
@@ -248,8 +261,9 @@ export class ODataBatchResource extends ODataResource<any> {
     ctx: (batch: this) => Observable<R>,
     options?: ODataOptions
   ): Observable<R> {
-    const obs$ = this.add(ctx);
-    return this.send(options).pipe(switchMap(() => obs$));
+    let obs$ = this.add(ctx);
+    firstValueFrom(this.send(options));
+    return obs$;
   }
 
   body() {

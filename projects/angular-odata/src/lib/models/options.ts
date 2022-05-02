@@ -858,7 +858,7 @@ export class ODataModelOptions<T> {
       field_mapping = false,
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
-  ): { [name: string]: any } | undefined {
+  ): { [name: string]: any } | null | undefined {
     const referential: any = {};
     for (var ref of field.referentials) {
       let from = this.fields({ include_parents: true }).find(
@@ -873,6 +873,8 @@ export class ODataModelOptions<T> {
       }
     }
     if (Types.isEmpty(referential)) return undefined;
+    const values = Object.values(referential);
+    if (values.length === 1 && values[0] === null) return null;
     return resolve
       ? Objects.resolveKey(referential, { single: false })
       : referential;
@@ -885,7 +887,7 @@ export class ODataModelOptions<T> {
       field_mapping = false,
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
-  ): { [name: string]: any } | undefined {
+  ): { [name: string]: any } | null | undefined {
     const referenced: any = {};
     for (var ref of field.referentials) {
       let from = this.fields({ include_parents: true }).find(
@@ -903,6 +905,8 @@ export class ODataModelOptions<T> {
       }
     }
     if (Types.isEmpty(referenced)) return undefined;
+    const values = Object.values(referenced);
+    if (values.length === 1 && values[0] === null) return null;
     return resolve
       ? Objects.resolveKey(referenced, { single: false })
       : referenced;
@@ -1170,6 +1174,7 @@ export class ODataModelOptions<T> {
     if (!Types.isEmpty(name) && self._changes.has(name as string)) {
       const value = self._attributes.get(name as string);
       const previous = self._changes.get(name as string);
+      self._relations.delete(name as string);
       self._changes.delete(name as string);
       if (!silent) {
         self.events$.emit(
@@ -1183,6 +1188,7 @@ export class ODataModelOptions<T> {
       }
     } else if (Types.isEmpty(name)) {
       const entries = [...self._changes.entries()];
+      self._relations.clear();
       self._changes.clear();
       if (!silent) {
         entries.forEach((entry) => {
@@ -1211,6 +1217,10 @@ export class ODataModelOptions<T> {
     self._reset = reset;
     self._reparent = reparent;
     self._silent = silent;
+
+    if (reset) {
+      this.reset(self, { silent: true });
+    }
 
     const changes: string[] = [];
 
@@ -1335,7 +1345,7 @@ export class ODataModelOptions<T> {
     if (value === null) {
       // Unlink old relation
       this._unlink(self, relation);
-      
+
       // New value is null
       relation.model = value as null;
       changed = current !== value;
@@ -1345,14 +1355,12 @@ export class ODataModelOptions<T> {
       if (ODataModelOptions.isCollection(value)) {
         // New value is collection
         let newCollection = value as ODataCollection<F, ODataModel<F>>;
-        if (
-          currentCollection.equals(newCollection)
-        ) {
+        if (currentCollection.equals(newCollection)) {
           changed = false;
         } else {
           // Unlink old collection
-          this._unlink(self, relation); 
-          relation.model = newCollection
+          this._unlink(self, relation);
+          relation.model = newCollection;
           // Link new collection
           this._link(self, relation);
           changed = true;
@@ -1378,7 +1386,7 @@ export class ODataModelOptions<T> {
           // Unlink old model
           this._unlink(self, relation);
           relation.model = newModel;
-          // Link new model 
+          // Link new model
           this._link(self, relation);
           changed = true;
         }
@@ -1406,18 +1414,18 @@ export class ODataModelOptions<T> {
       this._link(self, relation);
       changed = true;
     }
-    
-    // Resolve referentials 
+
+    // Resolve referentials
     if (!ODataModelOptions.isCollection(relation.model)) {
       var ref = field.meta?.resolveReferential(relation.model, field);
-      if (ref !== undefined) {
+      if (ref !== null && ref !== undefined) {
         Object.entries(ref).forEach(([k, v]) =>
           this._setValue(self, k, v, false)
         );
       }
     }
-    
-    // Update state and emit event 
+
+    // Update state and emit event
     relation.state =
       self._reset || !changed
         ? ODataModelState.Unchanged
@@ -1432,7 +1440,7 @@ export class ODataModelOptions<T> {
         })
       );
     }
-    
+
     return changed;
   }
 
@@ -1457,7 +1465,6 @@ export class ODataModelOptions<T> {
     const currentValue = attrs[field];
     changed = !Types.isEqual(currentValue, value);
     if (self._reset) {
-      self._changes.delete(field);
       self._attributes.set(field, value);
     } else if (Types.isEqual(value, self._attributes.get(field))) {
       self._changes.delete(field);
@@ -1495,10 +1502,7 @@ export class ODataModelOptions<T> {
       : this._setValue(self, field.name, value, field.isKey());
   }
 
-  private _unlink<F>(
-    self: ODataModel<T>,
-    relation: ODataModelRelation<F>
-  ) {
+  private _unlink<F>(self: ODataModel<T>, relation: ODataModelRelation<F>) {
     if (relation.subscription !== undefined) {
       relation.subscription.unsubscribe();
       relation.subscription = undefined;
@@ -1516,8 +1520,7 @@ export class ODataModelOptions<T> {
       throw new Error('Subscription model is null');
     }
 
-    if (self._reparent) 
-      relation.model._parent = [self, relation.field];
+    if (self._reparent) relation.model._parent = [self, relation.field];
 
     relation.subscription = relation.model.events$.subscribe(
       (event: ODataModelEvent<any>) => {
@@ -1535,7 +1538,7 @@ export class ODataModelOptions<T> {
               var ref = (relation.model as ODataModel<any>).referential(
                 relation.field
               );
-              if (ref !== undefined) {
+              if (ref !== null && ref !== undefined) {
                 Object.entries(ref).forEach(([k, v]) =>
                   this._setValue(self, k, v, false)
                 );
