@@ -824,7 +824,7 @@ export class ODataModelOptions<T> {
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): EntityKey<T> | { [name: string]: any } | undefined {
     const keyTypes = this.schema.keys({ include_parents: true });
-    const key: any = {};
+    const key = new Map<string, any>();
     for (var kt of keyTypes) {
       let v = value as any;
       let options = this as ODataModelOptions<any>;
@@ -845,10 +845,10 @@ export class ODataModelOptions<T> {
       if (field === undefined) return undefined;
       let name = field_mapping ? field.field : field.name;
       if (kt.alias !== undefined) name = kt.alias;
-      key[name] = v;
+      key.set(name, v);
     }
-    if (Types.isEmpty(key)) return undefined;
-    return resolve ? Objects.resolveKey(key) : key;
+    if (key.size === 0) return undefined;
+    return resolve ? Objects.resolveKey(key) : Object.fromEntries(key);
   }
 
   resolveReferential(
@@ -859,7 +859,7 @@ export class ODataModelOptions<T> {
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
-    const referential: any = {};
+    const referential = new Map<string, any>();
     for (var ref of field.referentials) {
       let from = this.fields({ include_parents: true }).find(
         (p: any) => p.field === ref.referencedProperty
@@ -869,15 +869,14 @@ export class ODataModelOptions<T> {
         .find((field: ODataModelField<any>) => field.field === ref.property);
       if (from !== undefined && to !== undefined) {
         let name = field_mapping ? to.field : to.name;
-        referential[name] = value && (value as any)[from.name];
+        referential.set(name, value && (value as any)[from.name]);
       }
     }
-    if (Types.isEmpty(referential)) return undefined;
-    const values = Object.values(referential);
-    if (values.length === 1 && values[0] === null) return null;
+    if (referential.size === 0) return undefined;
+    if (referential.size === 1 && [...referential.values()][0] === null) return null;
     return resolve
       ? Objects.resolveKey(referential, { single: false })
-      : referential;
+      : Object.fromEntries(referential);
   }
 
   resolveReferenced(
@@ -888,7 +887,7 @@ export class ODataModelOptions<T> {
       resolve = true,
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
-    const referenced: any = {};
+    const referenced = new Map<string, any>();
     for (var ref of field.referentials) {
       let from = this.fields({ include_parents: true }).find(
         (field: ODataModelField<any>) => field.field === ref.property
@@ -901,15 +900,14 @@ export class ODataModelOptions<T> {
         );
       if (from !== undefined && to !== undefined) {
         let name = field_mapping ? to.field : to.name;
-        referenced[name] = value && (value as any)[from.name];
+        referenced.set(name, value && (value as any)[from.name]);
       }
     }
-    if (Types.isEmpty(referenced)) return undefined;
-    const values = Object.values(referenced);
-    if (values.length === 1 && values[0] === null) return null;
+    if (referenced.size === 0) return undefined;
+    if (referenced.size === 1 && [...referenced.values()][0] === null) return null;
     return resolve
       ? Objects.resolveKey(referenced, { single: false })
-      : referenced;
+      : Object.fromEntries(referenced);
   }
 
   validate(

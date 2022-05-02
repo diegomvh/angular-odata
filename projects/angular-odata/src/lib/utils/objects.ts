@@ -159,11 +159,12 @@ export const Objects = {
   },
 
   resolveKey(key: any, { single = true }: { single?: boolean } = {}) {
-    if (['number', 'string'].indexOf(typeof key) !== -1) return key;
-    if (!Types.isPlainObject(key)) {
+    const type = Types.rawType(key);
+    if (['number', 'string'].indexOf(type) !== -1) return key;
+    if (type !== 'Map' && type !== 'Object') {
       return undefined;
     }
-    const values = Object.values(key);
+    const values = type === 'Map' ? [...key.values()] : Object.values(key);
     if (values.length === 1 && single) {
       // Single primitive key value
       key = values[0];
@@ -171,7 +172,8 @@ export const Objects = {
       // Compose key, needs all values
       return undefined;
     }
-    return !Types.isEmpty(key) ? key : undefined;
+    const obj = type === 'Map' ? Object.fromEntries(key) : key;
+    return !Types.isEmpty(obj) ? obj : undefined;
   },
 
   clone(target: any, map?: WeakMap<object, any>) {

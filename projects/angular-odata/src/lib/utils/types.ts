@@ -36,11 +36,16 @@ export const Types = {
     return Array.isArray(value);
   },
 
+  isMap(value: any): boolean {
+    return value instanceof Map;
+  },
+
   isEmpty(value: any): boolean {
     return (
       value === undefined ||
       value === null ||
       (typeof value === 'string' && !value.length) ||
+      (Types.isMap(value) && !value.size) ||
       (Types.isArray(value) && !value.length) ||
       (Types.isFunction(value.isEmpty) && value.isEmpty()) ||
       (Types.isArray(value) &&
