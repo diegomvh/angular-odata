@@ -37,7 +37,7 @@ export const Types = {
   },
 
   isMap(value: any): boolean {
-    return value instanceof Map;
+    return this.rawType(value) === 'Map';
   },
 
   isEmpty(value: any): boolean {
