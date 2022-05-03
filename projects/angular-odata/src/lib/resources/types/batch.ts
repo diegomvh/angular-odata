@@ -4,14 +4,7 @@ import {
   HttpResponse,
   HttpResponseBase,
 } from '@angular/common/http';
-import {
-  firstValueFrom,
-  map,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-} from 'rxjs';
+import { firstValueFrom, map, Observable, of, Subject, switchMap } from 'rxjs';
 import { ODataApi } from '../../api';
 import {
   $BATCH,
@@ -35,6 +28,7 @@ import {
   XSSI_PREFIX,
 } from '../../constants';
 import { PathSegmentNames } from '../../types';
+import { Arrays } from '../../utils/arrays';
 import { Http } from '../../utils/http';
 import { Strings } from '../../utils/strings';
 import { ODataPathSegments } from '../path';
@@ -75,7 +69,6 @@ export class ODataBatchRequest<T> extends Subject<HttpResponseBase> {
   }
 
   onLoad(response: HttpResponseBase) {
-    //console.log(response);
     if (response.ok) {
       this.next(response);
       this.complete();
@@ -101,7 +94,7 @@ export class ODataBatchResource extends ODataResource<any> {
     return this._requests.map((r) => r.request);
   }
 
-  private _responses: HttpResponseBase | null = null;
+  private _responses: HttpResponseBase[] | null = null;
   responses() {
     return this._responses;
   }
@@ -121,9 +114,9 @@ export class ODataBatchResource extends ODataResource<any> {
   //#endregion
 
   private storeRequester() {
-    const current = this.api.request;
+    const current = this.api.requester;
     // Switch to the batch requester
-    this.api.request = (req: ODataRequest<any>): Observable<any> => {
+    this.api.requester = (req: ODataRequest<any>): Observable<any> => {
       if (req.api !== this.api)
         throw new Error('Batch Request are for the same api.');
       if (req.observe === 'events')
@@ -135,9 +128,9 @@ export class ODataBatchResource extends ODataResource<any> {
   }
 
   private restoreRequester(
-    handler: (req: ODataRequest<any>) => Observable<any>
+    handler: ((req: ODataRequest<any>) => Observable<any>) | undefined
   ) {
-    this.api.request = handler;
+    this.api.requester = handler;
   }
 
   /**
@@ -162,9 +155,6 @@ export class ODataBatchResource extends ODataResource<any> {
     }
 
     const bound = Strings.uniqueId(BATCH_PREFIX);
-    const requests = this._requests;
-    // Clean requests
-    this._requests = [];
     const headers = Http.mergeHttpHeaders((options && options.headers) || {}, {
       [ODATA_VERSION]: VERSION_4_0,
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
@@ -172,7 +162,7 @@ export class ODataBatchResource extends ODataResource<any> {
     });
     const request = new ODataRequest({
       method: 'POST',
-      body: ODataBatchResource.buildBody(bound, requests),
+      body: ODataBatchResource.buildBody(bound, this._requests),
       api: this.api,
       resource: this,
       observe: 'response',
@@ -183,10 +173,15 @@ export class ODataBatchResource extends ODataResource<any> {
     });
     return this.api.request(request).pipe(
       map((response: ODataResponse<string>) => {
-        let responses = ODataBatchResource.parseResponse(requests, response);
-        requests.forEach((req, index) => {
-          let res = responses[index];
-          req.onLoad(res);
+        if (this._responses == null) {
+          this._responses = [];
+        }
+        this._responses = [
+          ...this._responses,
+          ...ODataBatchResource.parseResponse(this._requests, response),
+        ];
+        Arrays.zip(this._requests, this._responses).forEach((tuple) => {
+          if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
         });
         return response;
       })
@@ -205,7 +200,9 @@ export class ODataBatchResource extends ODataResource<any> {
   ): Observable<R> {
     let ctx$ = this.add(ctx);
     let send$ = this.send(options);
-    return send$.pipe(switchMap(()=> ctx$));
+    firstValueFrom(send$);
+    return ctx$;
+    //return this.send(options).pipe(switchMap(() => ctx$));
   }
 
   body() {
@@ -392,22 +389,22 @@ export class ODataBatchResource extends ODataResource<any> {
         }
       }
 
-      return (ok) ?
-        new HttpResponse<any>({
-          body,
-          headers,
-          status: code,
-          statusText: message,
-          url: request.urlWithParams,
-        }) :
-        new HttpErrorResponse({
-          // The error in this case is the response body (error from the server).
-          error: body,
-          headers,
-          status: code,
-          statusText: message,
-          url: request.urlWithParams,
-        });
+      return ok
+        ? new HttpResponse<any>({
+            body,
+            headers,
+            status: code,
+            statusText: message,
+            url: request.urlWithParams,
+          })
+        : new HttpErrorResponse({
+            // The error in this case is the response body (error from the server).
+            error: body,
+            headers,
+            status: code,
+            statusText: message,
+            url: request.urlWithParams,
+          });
     });
   }
 }

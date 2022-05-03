@@ -570,7 +570,7 @@ ${JSON.stringify(payload)}
     expect(req.request.method).toBe('POST');
     req.flush(data, { headers });
   });
-  
+
   it('should execute two batch', () => {
     const payload = {
       '@odata.context':
@@ -608,13 +608,13 @@ ${JSON.stringify(payload)}
       .entity('russellwhyte');
     client
       .batch()
-      .exec(() => combineLatest({
-        one: entity.fetch(),
-        two: entity.fetch()
-      }))
-      .subscribe((resp) => {
-        console.log(resp);
-      });
+      .exec(() =>
+        combineLatest({
+          one: entity.fetch(),
+          two: entity.fetch(),
+        })
+      )
+      .subscribe((resp) => {});
 
     const headers = new HttpHeaders({
       'Content-Length': data.length.toString(),

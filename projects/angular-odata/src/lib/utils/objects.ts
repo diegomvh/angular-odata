@@ -164,16 +164,19 @@ export const Objects = {
     if (type !== 'Map' && type !== 'Object') {
       return undefined;
     }
-    const values = type === 'Map' ? [...key.values()] : Object.values(key);
+    const values =
+      type === 'Map' ? Array.from(key.values()) : Object.values(key);
     if (values.length === 1 && single) {
       // Single primitive key value
       key = values[0];
+      return !Types.isEmpty(key) ? key : undefined;
     } else if (values.some((v) => v === undefined)) {
       // Compose key, needs all values
       return undefined;
+    } else {
+      const obj = type === 'Map' ? Object.fromEntries(key) : key;
+      return !Types.isEmpty(obj) ? obj : undefined;
     }
-    const obj = type === 'Map' ? Object.fromEntries(key) : key;
-    return !Types.isEmpty(obj) ? obj : undefined;
   },
 
   clone(target: any, map?: WeakMap<object, any>) {

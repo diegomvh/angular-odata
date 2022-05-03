@@ -873,7 +873,8 @@ export class ODataModelOptions<T> {
       }
     }
     if (referential.size === 0) return undefined;
-    if (referential.size === 1 && [...referential.values()][0] === null) return null;
+    if (referential.size === 1 && Array.from(referential.values())[0] === null)
+      return null;
     return resolve
       ? Objects.resolveKey(referential, { single: false })
       : Object.fromEntries(referential);
@@ -904,7 +905,8 @@ export class ODataModelOptions<T> {
       }
     }
     if (referenced.size === 0) return undefined;
-    if (referenced.size === 1 && [...referenced.values()][0] === null) return null;
+    if (referenced.size === 1 && Array.from(referenced.values())[0] === null)
+      return null;
     return resolve
       ? Objects.resolveKey(referenced, { single: false })
       : Object.fromEntries(referenced);
