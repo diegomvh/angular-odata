@@ -825,7 +825,7 @@ export class ODataModelOptions<T> {
   ): EntityKey<T> | { [name: string]: any } | undefined {
     const keyTypes = this.schema.keys({ include_parents: true });
     const key = new Map<string, any>();
-    for (var kt of keyTypes) {
+    for (let kt of keyTypes) {
       let v = value as any;
       let options = this as ODataModelOptions<any>;
       let field: ODataModelField<any> | undefined;
@@ -860,7 +860,7 @@ export class ODataModelOptions<T> {
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
     const referential = new Map<string, any>();
-    for (var ref of field.referentials) {
+    for (let ref of field.referentials) {
       let from = this.fields({ include_parents: true }).find(
         (p: any) => p.field === ref.referencedProperty
       );
@@ -889,7 +889,7 @@ export class ODataModelOptions<T> {
     }: { field_mapping?: boolean; resolve?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
     const referenced = new Map<string, any>();
-    for (var ref of field.referentials) {
+    for (let ref of field.referentials) {
       let from = this.fields({ include_parents: true }).find(
         (field: ODataModelField<any>) => field.field === ref.property
       );
@@ -1218,10 +1218,6 @@ export class ODataModelOptions<T> {
     self._reparent = reparent;
     self._silent = silent;
 
-    if (reset) {
-      this.reset(self, { silent: true });
-    }
-
     const changes: string[] = [];
 
     // Apply entity
@@ -1309,7 +1305,20 @@ export class ODataModelOptions<T> {
     field: ODataModelField<F>
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     if (field.isStructuredType()) {
-      return self._relations.get(field.name)?.model;
+      const relation = self._relations.get(field.name);
+      if (ODataModelOptions.isModel(relation?.model)) {
+        const referenced = this.resolveReferenced(self, field);
+        if (referenced !== null && referenced !== undefined) {
+          (relation!.model as ODataModel<F>).assign(referenced as Partial<F>, {
+            silent: true,
+          });
+        } else if (referenced === null) {
+          this._unlink(self, relation as ODataModelRelation<F>);
+          // New value is null
+          (relation as ODataModelRelation<F>).model = null;
+        }
+      }
+      return relation?.model;
     } else {
       return this.attributes(self, {
         include_concurrency: true,
@@ -1417,7 +1426,7 @@ export class ODataModelOptions<T> {
 
     // Resolve referentials
     if (!ODataModelOptions.isCollection(relation.model)) {
-      var ref = field.meta?.resolveReferential(relation.model, field);
+      let ref = field.meta?.resolveReferential(relation.model, field);
       if (ref !== null && ref !== undefined) {
         Object.entries(ref).forEach(([k, v]) =>
           this._setValue(self, k, v, false)
@@ -1465,6 +1474,7 @@ export class ODataModelOptions<T> {
     const currentValue = attrs[field];
     changed = !Types.isEqual(currentValue, value);
     if (self._reset) {
+      self._changes.delete(field);
       self._attributes.set(field, value);
     } else if (Types.isEqual(value, self._attributes.get(field))) {
       self._changes.delete(field);
@@ -1535,7 +1545,7 @@ export class ODataModelOptions<T> {
               relation.field.navigation &&
               event.options?.key
             ) {
-              var ref = (relation.model as ODataModel<any>).referential(
+              let ref = (relation.model as ODataModel<any>).referential(
                 relation.field
               );
               if (ref !== null && ref !== undefined) {

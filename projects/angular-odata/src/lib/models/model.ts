@@ -750,7 +750,7 @@ export class ODataModel<T> {
   getReference<P>(
     name: keyof T | string
   ): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
-    const field = this._meta.field(name);
+    const field = this._meta.field<P>(name);
     if (field === undefined || !field.navigation)
       throw Error(`getReference: Can't find navigation property ${name}`);
 
@@ -758,8 +758,9 @@ export class ODataModel<T> {
       | ODataModel<P>
       | ODataCollection<P, ODataModel<P>>
       | null;
+    if (model === null) return null;
     if (model === undefined) {
-      const value = field.collection ? [] : this.referenced(field);
+      const value = field.collection ? [] : (this.referenced(field) as P);
       model =
         value !== null
           ? field.modelCollectionFactory<T, P>({ parent: this, value })
