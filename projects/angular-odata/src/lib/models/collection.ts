@@ -751,7 +751,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
   ) {
     const Model = this._model;
 
-    let toAdd: M[] = [];
+    let toAdd: [M, number][] = [];
     let toMerge: M[] = [];
     let toRemove: M[] = [];
     let toSort: [M, number][] = [];
@@ -803,7 +803,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           : this.modelFactory(obj as Partial<T> | { [name: string]: any }, {
               reset,
             });
-        toAdd.push(model);
+        toAdd.push([model, index]);
       }
       modelMap.push((<any>model)[Model.meta.cid]);
     });
@@ -817,7 +817,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       this._removeModel(m, { silent, reset });
     });
     toAdd.forEach((m) => {
-      this._addModel(m, { silent, reset, reparent });
+      this._addModel(m[0], { silent, reset, reparent, position: m[1] });
     });
     toSort.forEach((m) => {
       this._removeModel(m[0], { silent: true, reset });
