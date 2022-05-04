@@ -2,10 +2,12 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../api';
 import {
+  DEFAULT_VERSION,
   PARAM_SEPARATOR,
   QUERY_SEPARATOR,
   VALUE_SEPARATOR,
 } from '../constants';
+import { ODataHelper } from '../helper';
 import { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
@@ -193,7 +195,7 @@ export class ODataResource<T> {
   ): Parser<T> | undefined {
     const dataType =
       options !== undefined && Types.isPlainObject(value)
-        ? options.helper.type(value)
+        ? ODataHelper[options.version || DEFAULT_VERSION].type(value)
         : undefined;
     if (dataType !== undefined) {
       // Parser from data type

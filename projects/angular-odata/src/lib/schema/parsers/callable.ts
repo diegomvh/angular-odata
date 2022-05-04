@@ -1,5 +1,4 @@
 import { CALLABLE_BINDING_PARAMETER } from '../../constants';
-import { ODataParserOptions } from '../../options';
 import {
   CallableConfig,
   NONE_PARSER,
@@ -27,10 +26,7 @@ export class ODataParameterParser<T> {
   }
 
   serialize(value: T, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     return Array.isArray(value)
       ? value.map((v) => this.parser.serialize(v, parserOptions))
       : this.parser.serialize(value, parserOptions);
@@ -38,10 +34,7 @@ export class ODataParameterParser<T> {
 
   //Encode
   encode(value: any, options?: OptionsHelper): string {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     return Array.isArray(value)
       ? value.map((v) => this.parser.encode(v, parserOptions))
       : this.parser.encode(value, parserOptions);
@@ -111,19 +104,13 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   // Deserialize
   deserialize(value: any, options?: OptionsHelper): R {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     return this.parser.deserialize(value, parserOptions);
   }
 
   // Serialize
   serialize(params: any, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     const parameters = this.parameters
       .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter((p) => p.name in params && params[p.name] !== undefined);
@@ -138,10 +125,7 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   //Encode
   encode(params: any, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     const parameters = this.parameters
       .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter((p) => p.name in params && params[p.name] !== undefined);

@@ -1,5 +1,5 @@
-import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from '../../constants';
-import { ODataParserOptions } from '../../options';
+import { COMPUTED, DEFAULT_VERSION, DESCRIPTION, LONG_DESCRIPTION } from '../../constants';
+import { ODataHelper } from '../../helper';
 import { raw } from '../../resources/query';
 import {
   NONE_PARSER,
@@ -157,7 +157,7 @@ export class ODataStructuredTypeFieldParser<T>
   ): any {
     const type =
       options !== undefined && Types.isPlainObject(value)
-        ? options.helper.type(value)
+        ? ODataHelper[options?.version || DEFAULT_VERSION].type(value)
         : undefined;
     if (type !== undefined) {
       return parser
@@ -168,10 +168,7 @@ export class ODataStructuredTypeFieldParser<T>
   }
 
   deserialize(value: any, options?: OptionsHelper): T {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value)
@@ -193,7 +190,7 @@ export class ODataStructuredTypeFieldParser<T>
   ): any {
     const type =
       options !== undefined && Types.isPlainObject(value)
-        ? options.helper.type(value)
+        ? ODataHelper[options?.version || DEFAULT_VERSION].type(value)
         : undefined;
     if (type !== undefined) {
       return parser
@@ -204,10 +201,7 @@ export class ODataStructuredTypeFieldParser<T>
   }
 
   serialize(value: T, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value)
@@ -223,10 +217,7 @@ export class ODataStructuredTypeFieldParser<T>
 
   //#region Encode
   encode(value: T, options?: OptionsHelper): string {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     return this.parser.encode(value, {
       field: this,
       ...parserOptions,
@@ -413,10 +404,7 @@ export class ODataStructuredTypeParser<T>
 
   // Deserialize
   deserialize(value: any, options?: OptionsHelper): T {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     if (this.parent !== undefined)
       value = this.parent.deserialize(value, parserOptions);
     const fields = this.fields.filter(
@@ -437,10 +425,7 @@ export class ODataStructuredTypeParser<T>
 
   // Serialize
   serialize(value: T, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     if (this.parent !== undefined)
       value = this.parent.serialize(value, parserOptions);
     const fields = this.fields.filter(
@@ -463,10 +448,7 @@ export class ODataStructuredTypeParser<T>
 
   // Encode
   encode(value: T, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     return raw(JSON.stringify(this.serialize(value, parserOptions)));
   }
 

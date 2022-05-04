@@ -1,4 +1,3 @@
-import { ODataParserOptions } from '../../options';
 import { raw } from '../../resources/query';
 import {
   EnumTypeConfig,
@@ -73,10 +72,7 @@ export class ODataEnumTypeParser<T>
   // Deserialize
   deserialize(value: string, options?: OptionsHelper): T {
     // string -> number
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     if (this.flags) {
       return Enums.toValues(this.members, value).reduce(
         (acc, v) => acc | v,
@@ -91,10 +87,7 @@ export class ODataEnumTypeParser<T>
   serialize(value: T, options?: OptionsHelper): string {
     // Enum are string | number
     // string | number -> string
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     if (this.flags) {
       const names = Enums.toNames(this.members, value);
       return !this.stringAsEnum
@@ -110,10 +103,7 @@ export class ODataEnumTypeParser<T>
 
   //Encode
   encode(value: T, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+    const parserOptions = options || this.optionsHelper;
     const serialized = this.serialize(value, parserOptions);
     return this.stringAsEnum
       ? raw(`'${serialized}'`)

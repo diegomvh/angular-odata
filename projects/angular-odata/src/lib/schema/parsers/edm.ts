@@ -76,6 +76,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   //Edm.Decimal Numeric values with fixed precision and scale
   'Edm.Decimal': EdmParser<number>(
     (v: any, o: StructuredTypeFieldOptions) => {
+      debugger;
       if (typeof v === 'string' && o.ieee754Compatible) {
         return parseFloat(v);
       }

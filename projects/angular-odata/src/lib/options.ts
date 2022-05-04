@@ -8,6 +8,7 @@ import {
 } from './types';
 import {
   DEFAULT_FETCH_POLICY,
+  DEFAULT_METADATA,
   DEFAULT_STRIP_METADATA,
   DEFAULT_VERSION,
 } from './constants';
@@ -103,18 +104,6 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.deleteRefBy = config.deleteRefBy || 'path';
     this.nonParenthesisForEmptyParameterFunction =
       config.nonParenthesisForEmptyParameterFunction || false;
-  }
-
-  get helper() {
-    return ODataHelper[this.version];
-  }
-}
-
-export class ODataParserOptions implements OptionsHelper {
-  version: ODataVersion;
-
-  constructor(config: OptionsHelper) {
-    this.version = config.version || DEFAULT_VERSION;
   }
 
   get helper() {

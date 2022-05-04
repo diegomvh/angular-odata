@@ -77,7 +77,6 @@ export interface ApiOptions {
 
 export interface OptionsHelper {
   version?: ODataVersion;
-  helper: ODataVersionHelper;
   exponentialDecimals?: boolean;
   metadata?: ODataMetadataType;
   ieee754Compatible?: boolean;

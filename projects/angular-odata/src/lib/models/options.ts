@@ -7,7 +7,6 @@ import {
   OPTIMISTIC_CONCURRENCY,
 } from '../constants';
 import { ODataHelper } from '../helper';
-import { ODataParserOptions } from '../options';
 import {
   EntityKey,
   ODataEntitiesAnnotations,
@@ -395,26 +394,17 @@ export class ODataModelField<F> {
   }
 
   deserialize(value: any, options?: OptionsHelper): F {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
+    const parserOptions = options || {version: this.api.options.version, ...this.api.options.accept};
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: F, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
+    const parserOptions = options || {version: this.api.options.version, ...this.api.options.accept};
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: F, options?: OptionsHelper): any {
-    const parserOptions =
-      options !== undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
+    const parserOptions = options || {version: this.api.options.version, ...this.api.options.accept};
     return this.parser.encode(value, parserOptions);
   }
 
@@ -1171,37 +1161,28 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     { name, silent = false }: { name?: string; silent?: boolean } = {}
   ) {
-    if (!Types.isEmpty(name) && self._changes.has(name as string)) {
-      const value = self._attributes.get(name as string);
-      const previous = self._changes.get(name as string);
-      self._relations.delete(name as string);
-      self._changes.delete(name as string);
-      if (!silent) {
-        self.events$.emit(
-          new ODataModelEvent('change', {
-            model: self,
-            track: name,
-            value,
-            previous,
-          })
-        );
-      }
-    } else if (Types.isEmpty(name)) {
-      const entries = [...self._changes.entries()];
+    let changes: string[] = [];
+    if (name !== undefined) {
+      // Reset value
+      const value = self._attributes.get(name);
+      const change = self._changes.get(name);
+      if (value !== change)
+        changes = [name];
+      self._relations.delete(name);
+      self._changes.delete(name);
+    } else {
+      // reset all
+      changes = [...self._changes.keys()];
       self._relations.clear();
       self._changes.clear();
-      if (!silent) {
-        entries.forEach((entry) => {
-          self.events$.emit(
-            new ODataModelEvent('change', {
-              track: entry[0],
-              model: self,
-              value: self._attributes.get(entry[0]),
-              previous: entry[1],
-            })
-          );
-        });
-      }
+    }
+    if (!silent && changes.length > 0) {
+      self.events$.emit(
+        new ODataModelEvent('reset', {
+          model: self,
+          options: { changes },
+        })
+      );
     }
   }
 
