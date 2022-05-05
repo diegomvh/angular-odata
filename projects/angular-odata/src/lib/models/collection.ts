@@ -5,7 +5,6 @@ import { DEFAULT_VERSION } from '../constants';
 import { ODataHelper } from '../helper';
 import {
   EntityKey,
-  ODataEntities,
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
   ODataEntityResource,
@@ -727,43 +726,69 @@ export class ODataCollection<T, M extends ODataModel<T>>
     path,
     silent = false,
   }: { path?: string | string[]; silent?: boolean } = {}) {
-    let toAdd: M[] = [];
-    let toChange: M[] = [];
-    let toRemove: M[] = [];
+    let toAdd: ODataModelEntry<T, M>[] = [];
+    let toChange: ODataModelEntry<T, M>[] = [];
+    let toRemove: ODataModelEntry<T, M>[] = [];
+
     if (path !== undefined) {
       // Reset by path 
-      const Model = this._model;
       const pathArray = (
         Types.isArray(path) ? path : `${path}`.match(/([^[.\]])+/g)
       ) as any[];
-      const value = this.models()[Number(pathArray[0])];
-      if (ODataModelOptions.isModel(value)) {
-        if (value.hasChanged()) {
-          toChange = [value];
+      const index = Number(pathArray[0]);
+      if (!Number.isNaN(index)) {
+        const model = this.models()[index];
+        if (ODataModelOptions.isModel(model)) {
+          const entry = this._findEntry({model}) as ODataModelEntry<T, M>;
+          if (entry.state === ODataModelState.Changed || (entry.state === ODataModelState.Unchanged && entry.model.hasChanged())) {
+            toChange = [entry];
+          }
+          path = pathArray.slice(1);
         }
-        value.reset({ path: pathArray.slice(1), silent });
       }
     } else {
       // Reset all
-      toAdd = this._entries.filter((e) => e.state === ODataModelState.Removed).map(e => e.model);
+      toAdd = this._entries.filter((e) => e.state === ODataModelState.Removed);
       toChange = this._entries.filter((e) => 
-        e.state === ODataModelState.Changed || (e.state === ODataModelState.Unchanged && e.model.hasChanged())).map(e => e.model);
-      toRemove = this._entries.filter((e) => e.state === ODataModelState.Added).map(e => e.model);
-      this._entries = this._entries.filter((e) => e.state !== ODataModelState.Added);
-      this._entries.forEach((e) => {
-        e.model.reset({ silent }); 
-        e.state = ODataModelState.Unchanged;
-      });
+        e.state === ODataModelState.Changed || (e.state === ODataModelState.Unchanged && e.model.hasChanged()));
+      toRemove = this._entries.filter((e) => e.state === ODataModelState.Added);
     }
+
+    toRemove.forEach((entry) => {
+      this._removeModel(entry.model, { silent });
+    });
+    toAdd.forEach((entry) => {
+      this._addModel(entry.model, { silent });
+    });
+    toChange.forEach((entry) => {
+      entry.model.reset({ path, silent }); 
+      entry.state = ODataModelState.Unchanged;
+    });
     if (!silent && (toAdd.length > 0 || toRemove.length > 0 || toChange.length > 0)) {
       this.events$.emit(
         new ODataModelEvent('reset', {
           collection: this,
           options: {
-            added: toAdd,
-            removed: toRemove,
-            changed: toChange,
+            added: toAdd.map(e => e.model),
+            removed: toRemove.map(e => e.model),
+            changed: toChange.map(e => e.model),
           },
+        })
+      );
+    }
+  }
+  
+  clear({ silent = false, }: { silent?: boolean } = {}) {
+    let toRemove: M[] = this.models();
+    toRemove.forEach(m => {
+      this._removeModel(m, {silent});
+    });
+    this._entries = [];
+    if (!silent) {
+      this.events$.emit(
+        new ODataModelEvent('update', {
+          collection: this,
+          options: { removed: toRemove },
         })
       );
     }
