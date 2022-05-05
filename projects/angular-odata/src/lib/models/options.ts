@@ -224,6 +224,8 @@ export class ODataModelField<F> {
   min?: number;
   max?: number;
   pattern?: RegExp;
+  parserOptions?: ParserOptions;
+
   constructor(
     options: ODataModelOptions<any>,
     { name, field, parser, ...opts }: ODataModelFieldOptions<F>
@@ -272,6 +274,7 @@ export class ODataModelField<F> {
     options: ParserOptions;
   }) {
     this.meta = findOptionsForType(this.parser.type);
+    this.parserOptions = options;
     if (concurrency) this.concurrency = concurrency;
     if (this.default !== undefined)
       this.default = this.deserialize(this.default, options);
@@ -394,17 +397,17 @@ export class ODataModelField<F> {
   }
 
   deserialize(value: any, options?: ParserOptions): F {
-    const parserOptions = options || this.api.options.parserOptions
+    const parserOptions = options || this.parserOptions
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: F, options?: ParserOptions): any {
-    const parserOptions = options || this.api.options.parserOptions
+    const parserOptions = options || this.parserOptions
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: F, options?: ParserOptions): any {
-    const parserOptions = options || this.api.options.parserOptions
+    const parserOptions = options || this.parserOptions
     return this.parser.encode(value, parserOptions);
   }
 
