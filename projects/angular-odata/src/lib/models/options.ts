@@ -394,26 +394,17 @@ export class ODataModelField<F> {
   }
 
   deserialize(value: any, options?: ParserOptions): F {
-    const parserOptions = options || {
-      version: this.api.options.version,
-      ...this.api.options.accept,
-    };
+    const parserOptions = options || this.api.options.parserOptions
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: F, options?: ParserOptions): any {
-    const parserOptions = options || {
-      version: this.api.options.version,
-      ...this.api.options.accept,
-    };
+    const parserOptions = options || this.api.options.parserOptions
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: F, options?: ParserOptions): any {
-    const parserOptions = options || {
-      version: this.api.options.version,
-      ...this.api.options.accept,
-    };
+    const parserOptions = options || this.api.options.parserOptions
     return this.parser.encode(value, parserOptions);
   }
 

@@ -3,6 +3,7 @@ import {
   FetchPolicy,
   ODataMetadataType,
   ODataVersion,
+  ParserOptions,
   QueryOptionNames,
 } from './types';
 import {
@@ -103,6 +104,11 @@ export class ODataApiOptions implements ApiOptions {
     this.nonParenthesisForEmptyParameterFunction =
       config.nonParenthesisForEmptyParameterFunction || false;
   }
+  
+  get parserOptions(): ParserOptions {
+    return {version: this.version, ...this.accept};
+  }
+
   get helper() {
     return ODataHelper[this.version];
   }

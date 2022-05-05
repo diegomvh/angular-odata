@@ -15,7 +15,7 @@ export class ODataParameterParser<T> {
   private parser: Parser<T>;
   collection?: boolean;
   nullable?: boolean;
-  optionsHelper?: ParserOptions;
+  parserOptions?: ParserOptions;
 
   constructor(name: string, parameter: Parameter) {
     this.name = name;
@@ -26,7 +26,7 @@ export class ODataParameterParser<T> {
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions = options || this.optionsHelper;
+    const parserOptions = options || this.parserOptions;
     return Array.isArray(value)
       ? value.map((v) => this.parser.serialize(v, parserOptions))
       : this.parser.serialize(value, parserOptions);
@@ -34,7 +34,7 @@ export class ODataParameterParser<T> {
 
   //Encode
   encode(value: any, options?: ParserOptions): string {
-    const parserOptions = options || this.optionsHelper;
+    const parserOptions = options || this.parserOptions;
     return Array.isArray(value)
       ? value.map((v) => this.parser.encode(v, parserOptions))
       : this.parser.encode(value, parserOptions);
@@ -47,7 +47,7 @@ export class ODataParameterParser<T> {
     parserForType: (type: string) => Parser<any>;
     options: ParserOptions;
   }) {
-    this.optionsHelper = options;
+    this.parserOptions = options;
     this.parser = parserForType(this.type);
   }
 
@@ -83,7 +83,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
   nonParenthesisForEmptyParameterFunction?: boolean;
-  optionsHelper?: ParserOptions;
+  parserOptions?: ParserOptions;
 
   constructor(config: CallableConfig, namespace: string, alias?: string) {
     this.name = config.name;
@@ -104,13 +104,13 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   // Deserialize
   deserialize(value: any, options?: ParserOptions): R {
-    const parserOptions = options || this.optionsHelper;
+    const parserOptions = options || this.parserOptions;
     return this.parser.deserialize(value, parserOptions);
   }
 
   // Serialize
   serialize(params: any, options?: ParserOptions): any {
-    const parserOptions = options || this.optionsHelper;
+    const parserOptions = options || this.parserOptions;
     const parameters = this.parameters
       .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter((p) => p.name in params && params[p.name] !== undefined);
@@ -125,7 +125,7 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   //Encode
   encode(params: any, options?: ParserOptions): any {
-    const parserOptions = options || this.optionsHelper;
+    const parserOptions = options || this.parserOptions;
     const parameters = this.parameters
       .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter((p) => p.name in params && params[p.name] !== undefined);
@@ -149,7 +149,7 @@ export class ODataCallableParser<R> implements Parser<R> {
   }) {
     this.nonParenthesisForEmptyParameterFunction =
       nonParenthesisForEmptyParameterFunction;
-    this.optionsHelper = options;
+    this.parserOptions = options;
     if (this.return)
       this.parser = parserForType(this.return.type) || NONE_PARSER;
     this.parameters.forEach((p) => p.configure({ parserForType, options }));

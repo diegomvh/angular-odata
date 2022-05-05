@@ -92,7 +92,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   private _options?: ODataResponseOptions;
   get options(): ODataResponseOptions {
     if (this._options === undefined) {
-      this._options = new ODataResponseOptions(this.api.options);
+      this._options = new ODataResponseOptions(this.api.options.parserOptions);
       const contentType = this.headers.get(CONTENT_TYPE);
       if (contentType && contentType.indexOf(APPLICATION_JSON) !== -1) {
         const features = contentType

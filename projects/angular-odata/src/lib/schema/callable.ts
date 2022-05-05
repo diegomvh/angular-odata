@@ -41,7 +41,7 @@ export class ODataCallable<R> extends ODataSchemaElement {
     this.parser.configure({
       nonParenthesisForEmptyParameterFunction:
         this.api.options.nonParenthesisForEmptyParameterFunction,
-      options: this.api.options,
+      options: this.api.options.parserOptions,
       parserForType,
     });
   }

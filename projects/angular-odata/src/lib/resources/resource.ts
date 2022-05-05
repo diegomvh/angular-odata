@@ -211,6 +211,7 @@ export class ODataResource<T> {
   }
 
   deserialize(value: any, options?: ParserOptions): any {
+    const parserOptions = options || this.api.options.parserOptions;
     const resourceType = this.returnType();
     const _d = (value: any, options: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
@@ -219,11 +220,12 @@ export class ODataResource<T> {
         : value;
     };
     return Array.isArray(value)
-      ? value.map((v) => _d(v, options || this.api.options))
-      : _d(value, options || this.api.options);
+      ? value.map((v) => _d(v, parserOptions))
+      : _d(value, parserOptions);
   }
 
   serialize(value: any, options?: ParserOptions): any {
+    const parserOptions = options || this.api.options.parserOptions;
     const resourceType = this.type();
     const _s = (value: any, options: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
@@ -232,11 +234,12 @@ export class ODataResource<T> {
         : value;
     };
     return Array.isArray(value)
-      ? value.map((v) => _s(v, options || this.api.options))
-      : _s(value, options || this.api.options);
+      ? value.map((v) => _s(v, parserOptions))
+      : _s(value, parserOptions);
   }
 
   encode(value: any, options?: ParserOptions): any {
+    const parserOptions = options || this.api.options.parserOptions;
     const resourceType = this.type();
     const _e = (value: any, options: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
@@ -245,8 +248,8 @@ export class ODataResource<T> {
         : value;
     };
     return Array.isArray(value)
-      ? value.map((v) => _e(v, options || this.api.options))
-      : _e(value, options || this.api.options);
+      ? value.map((v) => _e(v, parserOptions))
+      : _e(value, parserOptions);
   }
 
   toJSON() {

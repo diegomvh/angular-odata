@@ -19,7 +19,7 @@ export class ODataEnumType<E> extends ODataSchemaElement {
   configure() {
     this.parser.configure({
       stringAsEnum: this.api.options.stringAsEnum,
-      options: this.api.options,
+      options: this.api.options.parserOptions,
     });
   }
 

@@ -310,7 +310,7 @@ export class ODataApi {
       // Configure
       Model.meta.configure({
         findOptionsForType: (type: string) => this.findOptionsForType(type),
-        options: this.options,
+        options: this.options.parserOptions,
       });
       // Store New Model for next time
       schema.model = Model;
