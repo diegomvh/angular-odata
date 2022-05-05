@@ -11,7 +11,7 @@ import { ODataHelper } from '../helper';
 import { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
-import { OptionsHelper, Parser, QueryOptionNames } from '../types';
+import { ParserOptions, Parser, QueryOptionNames } from '../types';
 import { Http, Objects, Types } from '../utils/index';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
@@ -190,7 +190,7 @@ export class ODataResource<T> {
 
   private __parser(
     value: any,
-    options?: OptionsHelper,
+    options?: ParserOptions,
     type?: string
   ): Parser<T> | undefined {
     const dataType =
@@ -210,9 +210,9 @@ export class ODataResource<T> {
     return undefined;
   }
 
-  deserialize(value: any, options?: OptionsHelper): any {
+  deserialize(value: any, options?: ParserOptions): any {
     const resourceType = this.returnType();
-    const _d = (value: any, options: OptionsHelper) => {
+    const _d = (value: any, options: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'deserialize' in parser
         ? parser.deserialize(value, options)
@@ -223,9 +223,9 @@ export class ODataResource<T> {
       : _d(value, options || this.api.options);
   }
 
-  serialize(value: any, options?: OptionsHelper): any {
+  serialize(value: any, options?: ParserOptions): any {
     const resourceType = this.type();
-    const _s = (value: any, options: OptionsHelper) => {
+    const _s = (value: any, options: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'serialize' in parser
         ? parser.serialize(value, options)
@@ -236,9 +236,9 @@ export class ODataResource<T> {
       : _s(value, options || this.api.options);
   }
 
-  encode(value: any, options?: OptionsHelper): any {
+  encode(value: any, options?: ParserOptions): any {
     const resourceType = this.type();
-    const _e = (value: any, options: OptionsHelper) => {
+    const _e = (value: any, options: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'encode' in parser
         ? parser.encode(value, options)

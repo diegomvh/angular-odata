@@ -25,7 +25,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
-import { OptionsHelper } from '../types';
+import { ParserOptions } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
@@ -269,7 +269,7 @@ export class ODataModelField<F> {
   }: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
     concurrency: boolean;
-    options: OptionsHelper;
+    options: ParserOptions;
   }) {
     this.meta = findOptionsForType(this.parser.type);
     if (concurrency) this.concurrency = concurrency;
@@ -393,18 +393,27 @@ export class ODataModelField<F> {
       : this.default;
   }
 
-  deserialize(value: any, options?: OptionsHelper): F {
-    const parserOptions = options || {version: this.api.options.version, ...this.api.options.accept};
+  deserialize(value: any, options?: ParserOptions): F {
+    const parserOptions = options || {
+      version: this.api.options.version,
+      ...this.api.options.accept,
+    };
     return this.parser.deserialize(value, parserOptions);
   }
 
-  serialize(value: F, options?: OptionsHelper): any {
-    const parserOptions = options || {version: this.api.options.version, ...this.api.options.accept};
+  serialize(value: F, options?: ParserOptions): any {
+    const parserOptions = options || {
+      version: this.api.options.version,
+      ...this.api.options.accept,
+    };
     return this.parser.serialize(value, parserOptions);
   }
 
-  encode(value: F, options?: OptionsHelper): any {
-    const parserOptions = options || {version: this.api.options.version, ...this.api.options.accept};
+  encode(value: F, options?: ParserOptions): any {
+    const parserOptions = options || {
+      version: this.api.options.version,
+      ...this.api.options.accept,
+    };
     return this.parser.encode(value, parserOptions);
   }
 
@@ -550,7 +559,7 @@ export class ODataModelOptions<T> {
     options,
   }: {
     findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
-    options: OptionsHelper;
+    options: ParserOptions;
   }) {
     if (this.base) {
       const parent = findOptionsForType(this.base) as ODataModelOptions<any>;
@@ -1166,8 +1175,7 @@ export class ODataModelOptions<T> {
       // Reset value
       const value = self._attributes.get(name);
       const change = self._changes.get(name);
-      if (value !== change)
-        changes = [name];
+      if (value !== change) changes = [name];
       self._relations.delete(name);
       self._changes.delete(name);
     } else {

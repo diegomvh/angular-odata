@@ -2,7 +2,7 @@ import { raw } from '../../resources/query';
 import {
   EnumTypeConfig,
   EnumTypeFieldConfig,
-  OptionsHelper,
+  ParserOptions,
   Parser,
 } from '../../types';
 import { Enums, Strings } from '../../utils';
@@ -34,7 +34,7 @@ export class ODataEnumTypeParser<T>
   members: { [name: string]: number } | { [value: number]: string };
   fields: ODataEnumTypeFieldParser[];
   stringAsEnum?: boolean;
-  optionsHelper?: OptionsHelper;
+  optionsHelper?: ParserOptions;
 
   constructor(config: EnumTypeConfig<T>, namespace: string, alias?: string) {
     super(config);
@@ -58,7 +58,13 @@ export class ODataEnumTypeParser<T>
     return (term && this.annotatedValue(term)) || Strings.titleCase(this.name);
   }
 
-  configure({ stringAsEnum, options }: { stringAsEnum: boolean, options: OptionsHelper }) {
+  configure({
+    stringAsEnum,
+    options,
+  }: {
+    stringAsEnum: boolean;
+    options: ParserOptions;
+  }) {
     this.stringAsEnum = stringAsEnum;
     this.optionsHelper = options;
   }
@@ -70,7 +76,7 @@ export class ODataEnumTypeParser<T>
   }
 
   // Deserialize
-  deserialize(value: string, options?: OptionsHelper): T {
+  deserialize(value: string, options?: ParserOptions): T {
     // string -> number
     const parserOptions = options || this.optionsHelper;
     if (this.flags) {
@@ -84,7 +90,7 @@ export class ODataEnumTypeParser<T>
   }
 
   // Serialize
-  serialize(value: T, options?: OptionsHelper): string {
+  serialize(value: T, options?: ParserOptions): string {
     // Enum are string | number
     // string | number -> string
     const parserOptions = options || this.optionsHelper;
@@ -102,12 +108,10 @@ export class ODataEnumTypeParser<T>
   }
 
   //Encode
-  encode(value: T, options?: OptionsHelper): any {
+  encode(value: T, options?: ParserOptions): any {
     const parserOptions = options || this.optionsHelper;
     const serialized = this.serialize(value, parserOptions);
-    return this.stringAsEnum
-      ? raw(`'${serialized}'`)
-      : raw(serialized);
+    return this.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
   }
 
   // Json Schema

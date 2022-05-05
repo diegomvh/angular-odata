@@ -1,6 +1,6 @@
 import { ODataCollection } from '../models';
 import { ODataModel } from '../models/model';
-import { OptionsHelper, StructuredTypeConfig } from '../types';
+import { ParserOptions, StructuredTypeConfig } from '../types';
 import { ODataSchemaElement } from './element';
 import {
   JsonSchemaOptions,
@@ -210,7 +210,11 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
       (f) => f.name
     );
     return Object.keys(attrs)
-      .filter((key) => names.indexOf(key) !== -1 || (key == this.api.options.helper.ODATA_ETAG && include_etag))
+      .filter(
+        (key) =>
+          names.indexOf(key) !== -1 ||
+          (key == this.api.options.helper.ODATA_ETAG && include_etag)
+      )
       .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }
 
@@ -220,7 +224,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    * @param options Options for deserialization
    * @returns Deserialized value
    */
-  deserialize(value: any, options?: OptionsHelper): T {
+  deserialize(value: any, options?: ParserOptions): T {
     return this.parser.deserialize(value, options);
   }
 
@@ -230,7 +234,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    * @param options Options for serialization
    * @returns Serialized value
    */
-  serialize(value: T, options?: OptionsHelper): any {
+  serialize(value: T, options?: ParserOptions): any {
     return this.parser.serialize(value, options);
   }
 
@@ -240,7 +244,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    * @param options Options for encoding
    * @returns Encoded value
    */
-  encode(value: T, options?: OptionsHelper): any {
+  encode(value: T, options?: ParserOptions): any {
     return this.parser.encode(value, options);
   }
 

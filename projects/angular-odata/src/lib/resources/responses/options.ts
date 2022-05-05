@@ -2,7 +2,7 @@ import {
   CacheCacheability,
   ODataMetadataType,
   ODataVersion,
-  OptionsHelper,
+  ParserOptions,
   ResponseOptions,
 } from '../../types';
 import {
@@ -27,7 +27,7 @@ export class ODataResponseOptions implements ResponseOptions {
   cacheability?: 'public' | 'private' | 'no-cache' | 'no-store';
   maxAge?: number;
 
-  constructor(config: OptionsHelper) {
+  constructor(config: ParserOptions) {
     this.version = config.version || DEFAULT_VERSION;
   }
 

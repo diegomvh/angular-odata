@@ -1,4 +1,3 @@
-import { ODataVersionHelper } from './helper';
 import { Observable } from 'rxjs';
 
 export type ODataVersion = '2.0' | '3.0' | '4.0';
@@ -75,7 +74,7 @@ export interface ApiOptions {
   nonParenthesisForEmptyParameterFunction?: boolean;
 }
 
-export interface OptionsHelper {
+export interface ParserOptions {
   version?: ODataVersion;
   exponentialDecimals?: boolean;
   metadata?: ODataMetadataType;
@@ -83,12 +82,12 @@ export interface OptionsHelper {
   streaming?: boolean;
 }
 
-export interface ResponseOptions extends OptionsHelper {
+export interface ResponseOptions extends ParserOptions {
   cacheability?: CacheCacheability;
   maxAge?: number;
 }
 
-export interface StructuredTypeFieldOptions extends OptionsHelper {
+export interface StructuredTypeFieldOptions extends ParserOptions {
   field: StructuredTypeFieldConfig;
 }
 
@@ -96,15 +95,15 @@ export interface Parser<T> {
   // Deserialize value/s from request body.
   deserialize(
     value: any,
-    options?: OptionsHelper | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): T;
   // Serialize value/s for request body.
   serialize(
     value: any,
-    options?: OptionsHelper | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): any;
   //Encode value/s for URL parameter or query-string.
-  encode(value: any, options?: OptionsHelper | StructuredTypeFieldOptions): any;
+  encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
 }
 
 export const NONE_PARSER = {

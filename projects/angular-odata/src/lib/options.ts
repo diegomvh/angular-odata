@@ -3,19 +3,17 @@ import {
   FetchPolicy,
   ODataMetadataType,
   ODataVersion,
-  OptionsHelper,
   QueryOptionNames,
 } from './types';
 import {
   DEFAULT_FETCH_POLICY,
-  DEFAULT_METADATA,
   DEFAULT_STRIP_METADATA,
   DEFAULT_VERSION,
 } from './constants';
 
 import { ODataHelper } from './helper';
 
-export class ODataApiOptions implements ApiOptions, OptionsHelper {
+export class ODataApiOptions implements ApiOptions {
   /**
    * Default OData version
    */
@@ -105,7 +103,6 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
     this.nonParenthesisForEmptyParameterFunction =
       config.nonParenthesisForEmptyParameterFunction || false;
   }
-
   get helper() {
     return ODataHelper[this.version];
   }
