@@ -376,6 +376,19 @@ export class ODataModel<T> {
     }
   }
 
+  clear({ silent = false }: { silent?: boolean } = {}) {
+    this._attributes.clear();
+    this._changes.clear();
+    this._relations.clear();
+    if (!silent) {
+      this.events$.emit(
+        new ODataModelEvent('update', {
+          model: this,
+        })
+      );
+    }
+  }
+
   assign(
     entity: Partial<T> | { [name: string]: any },
     {
