@@ -397,17 +397,17 @@ export class ODataModelField<F> {
   }
 
   deserialize(value: any, options?: ParserOptions): F {
-    const parserOptions = options || this.parserOptions
+    const parserOptions = options || this.parserOptions;
     return this.parser.deserialize(value, parserOptions);
   }
 
   serialize(value: F, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions
+    const parserOptions = options || this.parserOptions;
     return this.parser.serialize(value, parserOptions);
   }
 
   encode(value: F, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions
+    const parserOptions = options || this.parserOptions;
     return this.parser.encode(value, parserOptions);
   }
 
@@ -1289,16 +1289,27 @@ export class ODataModelOptions<T> {
   ): F | ODataModel<F> | ODataCollection<F, ODataModel<F>> | null | undefined {
     if (field.isStructuredType()) {
       const relation = self._relations.get(field.name);
-      if (ODataModelOptions.isModel(relation?.model)) {
+      if (
+        relation?.model === null ||
+        ODataModelOptions.isModel(relation?.model)
+      ) {
+        // Check for reference
         const referenced = this.resolveReferenced(self, field);
-        if (referenced !== null && referenced !== undefined) {
+        if (
+          relation?.model !== null &&
+          referenced !== null &&
+          referenced !== undefined
+        ) {
           (relation!.model as ODataModel<F>).assign(referenced as Partial<F>, {
             silent: true,
           });
-        } else if (referenced === null) {
+        } else if (relation?.model !== null && referenced === null) {
           this._unlink(self, relation as ODataModelRelation<F>);
           // New value is null
           (relation as ODataModelRelation<F>).model = null;
+        } else if (relation?.model === null && referenced !== null) {
+          // New value is undefined
+          (relation as ODataModelRelation<F>).model = undefined;
         }
       }
       return relation?.model;

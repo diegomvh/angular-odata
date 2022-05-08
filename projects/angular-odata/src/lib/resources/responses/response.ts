@@ -199,7 +199,6 @@ export class ODataResponse<T> extends HttpResponse<T> {
       this.context
     );
     let entities = payload ? annots.data(payload) : null;
-    console.log(options);
     if (entities !== null)
       entities = this.resource.deserialize(entities, options) as T[];
     return { entities, annots };
