@@ -90,17 +90,19 @@ export class ODataEnumTypeParser<T>
   }
 
   // Serialize
-  serialize(value: T, options?: ParserOptions): string {
+  serialize(value: T, options?: ParserOptions): string | undefined {
     // Enum are string | number
     // string | number -> string
     const parserOptions = options || this.parserOptions;
     if (this.flags) {
       const names = Enums.toNames(this.members, value);
+      if (names.length === 0) return undefined;
       return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
       const name = Enums.toName(this.members, value);
+      if (name === undefined) return undefined;
       return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
         : name;
@@ -111,6 +113,7 @@ export class ODataEnumTypeParser<T>
   encode(value: T, options?: ParserOptions): any {
     const parserOptions = options || this.parserOptions;
     const serialized = this.serialize(value, parserOptions);
+    if (serialized === undefined) return undefined;
     return this.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
   }
 

@@ -7,10 +7,10 @@ export const Enums = {
     return Object.values(Enum).filter((v) => typeof v === 'number');
   },
 
-  toValue<E>(Enum: E, value: any): number {
+  toValue<E>(Enum: E, value: any): number | undefined {
     if (value in Enum)
       return typeof value === 'string' ? (Enum as any)[value] : value;
-    return NaN;
+    return undefined;
   },
 
   toValues<E>(Enum: E, value: any): number[] {
@@ -21,22 +21,22 @@ export const Enums = {
       value = value.split(',').map((o) => o.trim());
     }
     if (Array.isArray(value) && value.every((v) => v in Enum)) {
-      return value.map((o) => this.toValue(Enum, o));
+      return value.map((o) => this.toValue(Enum, o) as number);
     }
     return [];
   },
 
-  toName<E>(Enum: E, value: any): string {
+  toName<E>(Enum: E, value: any): string | undefined {
     if (value in Enum)
       return typeof value === 'number' ? (Enum as any)[value] : value;
-    return '';
+    return undefined;
   },
 
   toNames<E>(Enum: E, value: any): string[] {
     if (typeof value === 'number') {
       return this.values(Enum)
         .filter((v) => (value & v) === v)
-        .map((v) => this.toName(Enum, v));
+        .map((v) => this.toName(Enum, v) as string);
     }
     if (typeof value === 'string') {
       value = value.split(',').map((o) => o.trim());

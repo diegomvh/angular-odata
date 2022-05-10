@@ -129,9 +129,14 @@ describe('Enums', () => {
     ).toEqual(['Mask3', 'Mask7', 'Mask9']);
   });
 
-  it('should return NaN type enums for wrong input', () => {
-    expect(Enums.toValue(EnumTypes, 'Mask32')).toBeNaN();
-    expect(Enums.toValue(EnumTypes, 12)).toBeNaN();
+  it('should return Undefined type enums for wrong value input', () => {
+    expect(Enums.toValue(EnumTypes, 'Mask32')).toBeUndefined();
+    expect(Enums.toValue(EnumTypes, 12)).toBeUndefined();
+  });
+
+  it('should return Undefined type enums for wrong name input', () => {
+    expect(Enums.toName(EnumTypes, 'Mask32')).toBeUndefined();
+    expect(Enums.toName(EnumTypes, 12)).toBeUndefined();
   });
 
   it('should return empty array of values on flag enums for wrong input', () => {
