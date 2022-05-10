@@ -29,24 +29,21 @@ export class Field<T extends object> implements ProxyHandler<T> {
     if (key === 'render') {
       return ({ prefix }: { prefix?: string }) =>
         prefix ? `${prefix}/${name}` : name;
-    }
-    else if (key === 'clone') {
+    } else if (key === 'clone') {
       return () => Field.factory(name);
-    }
-    else if (key === Symbol.toStringTag) {
+    } else if (key === Symbol.toStringTag) {
       return () => 'Field';
-    }
-    else if (key === 'toJSON') {
+    } else if (key === 'toJSON') {
       return () => ({
-          $type: Types.rawType(this),
-          name: name,
-        });
+        $type: Types.rawType(this),
+        name: name,
+      });
     } else {
       name = name ? `${name}/${key as string}` : key;
       return new Proxy({ _name: name } as any, this);
     }
   }
-  
+
   has(target: T, key: string): any {
     return ['toJSON', 'clone', 'render'].includes(key) || key in target;
   }

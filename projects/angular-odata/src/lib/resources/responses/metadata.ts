@@ -36,7 +36,6 @@ import { CsdlNavigationPropertyBinding } from './csdl/csdl-navigation-property-b
 import { CsdlSchema } from './csdl/csdl-schema';
 import { CsdlSingleton } from './csdl/csdl-singleton';
 import { CsdlTypeDefinition } from './csdl/csdl-type-definition';
-import { Types } from '../../utils/types';
 import { VERSION_4_0 } from '../../constants';
 
 enum FieldType {

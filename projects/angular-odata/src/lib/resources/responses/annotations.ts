@@ -5,7 +5,7 @@ import { ODataMetadataType } from '../../types';
 export abstract class ODataAnnotations {
   constructor(
     public helper: ODataVersionHelper,
-    protected annotations: Map<string, any> = new Map<string, any>(), 
+    protected annotations: Map<string, any> = new Map<string, any>(),
     protected context?: ODataContext
   ) {}
 

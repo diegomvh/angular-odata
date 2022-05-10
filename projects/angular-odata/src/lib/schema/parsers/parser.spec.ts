@@ -311,7 +311,7 @@ describe('ODataClient', () => {
     ) as ODataEnumTypeParser<Person>;
     const options = schema.api.options;
     // Change parser settings
-    parser.configure({stringAsEnum: false, options});
+    parser.configure({ stringAsEnum: false, options });
     expect(
       schema.parser.serialize(
         <Person>{

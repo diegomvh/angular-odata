@@ -46,6 +46,7 @@ export class ODataModelEvent<T> {
   value?: any;
   previous?: any;
   options?: any;
+
   constructor(
     name: ODataModelEventType,
     {

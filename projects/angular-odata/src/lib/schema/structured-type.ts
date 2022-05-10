@@ -55,7 +55,10 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
       parent.children.push(this);
       this.parent = parent;
     }
-    this.parser.configure({ parserForType, options: this.api.options.parserOptions });
+    this.parser.configure({
+      parserForType,
+      options: this.api.options.parserOptions,
+    });
     if (this.model !== undefined && this.model.options !== null) {
       this.model.meta.configure({
         findOptionsForType,

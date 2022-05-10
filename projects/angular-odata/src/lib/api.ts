@@ -244,7 +244,7 @@ export class ODataApi {
       parser: new Map<string, Parser<any>>(),
       options: new Map<string, ODataModelOptions<any> | undefined>(),
     },
-    byName: { 
+    byName: {
       enum: new Map<string, ODataEnumType<any> | undefined>(),
       structured: new Map<string, ODataStructuredType<any> | undefined>(),
       callable: new Map<string, ODataCallable<any> | undefined>(),
@@ -263,14 +263,20 @@ export class ODataApi {
 
   public findEnumTypeForType<T>(type: string) {
     if (!this.memo.forType.enum.has(type)) {
-      this.memo.forType.enum.set(type, this.findSchemaForType(type)?.findEnumTypeForType<T>(type));
+      this.memo.forType.enum.set(
+        type,
+        this.findSchemaForType(type)?.findEnumTypeForType<T>(type)
+      );
     }
     return this.memo.forType.enum.get(type) as ODataEnumType<T> | undefined;
   }
 
   public findStructuredTypeForType<T>(type: string) {
     if (!this.memo.forType.structured.has(type)) {
-      this.memo.forType.structured.set(type, this.findSchemaForType(type)?.findStructuredTypeForType<T>(type));
+      this.memo.forType.structured.set(
+        type,
+        this.findSchemaForType(type)?.findStructuredTypeForType<T>(type)
+      );
     }
     return this.memo.forType.structured.get(type) as
       | ODataStructuredType<T>
@@ -280,16 +286,20 @@ export class ODataApi {
   public findCallableForType<T>(type: string, bindingType?: string) {
     const key = bindingType !== undefined ? `${bindingType}/${type}` : type;
     if (!this.memo.forType.callable.has(key)) {
-      this.memo.forType.callable.set(key, this.findSchemaForType(
-        type
-      )?.findCallableForType<T>(type, bindingType));
+      this.memo.forType.callable.set(
+        key,
+        this.findSchemaForType(type)?.findCallableForType<T>(type, bindingType)
+      );
     }
     return this.memo.forType.callable.get(key) as ODataCallable<T> | undefined;
   }
 
   public findEntitySetForType(type: string) {
     if (!this.memo.forType.entitySet.has(type)) {
-      this.memo.forType.entitySet.set(type, this.findSchemaForType(type)?.findEntitySetForType(type));
+      this.memo.forType.entitySet.set(
+        type,
+        this.findSchemaForType(type)?.findEntitySetForType(type)
+      );
     }
     return this.memo.forType.entitySet.get(type) as ODataEntitySet | undefined;
   }
@@ -346,12 +356,15 @@ export class ODataApi {
 
   public findEntitySetForEntityType(entityType: string) {
     if (!this.memo.forType.entitySet.has(entityType)) {
-      this.memo.forType.entitySet.set(entityType, this.schemas
-        .reduce(
-          (acc, schema) => [...acc, ...schema.entitySets],
-          <ODataEntitySet[]>[]
-        )
-        .find((e) => e.entityType === entityType));
+      this.memo.forType.entitySet.set(
+        entityType,
+        this.schemas
+          .reduce(
+            (acc, schema) => [...acc, ...schema.entitySets],
+            <ODataEntitySet[]>[]
+          )
+          .find((e) => e.entityType === entityType)
+      );
     }
     return this.memo.forType.entitySet.get(entityType) as
       | ODataEntitySet
@@ -366,24 +379,30 @@ export class ODataApi {
 
   public findEnumTypeByName<T>(name: string) {
     if (!this.memo.byName.enum.has(name)) {
-      this.memo.byName.enum.set(name, this.schemas
-        .reduce(
-          (acc, schema) => [...acc, ...schema.enums],
-          <ODataEnumType<T>[]>[]
-        )
-        .find((e) => e.name === name));
+      this.memo.byName.enum.set(
+        name,
+        this.schemas
+          .reduce(
+            (acc, schema) => [...acc, ...schema.enums],
+            <ODataEnumType<T>[]>[]
+          )
+          .find((e) => e.name === name)
+      );
     }
     return this.memo.byName.enum.get(name) as ODataEnumType<T> | undefined;
   }
 
   public findStructuredTypeByName<T>(name: string) {
     if (!this.memo.byName.structured.has(name)) {
-      this.memo.byName.structured.set(name, this.schemas
-        .reduce(
-          (acc, schema) => [...acc, ...schema.entities],
-          <ODataStructuredType<T>[]>[]
-        )
-        .find((e) => e.name === name));
+      this.memo.byName.structured.set(
+        name,
+        this.schemas
+          .reduce(
+            (acc, schema) => [...acc, ...schema.entities],
+            <ODataStructuredType<T>[]>[]
+          )
+          .find((e) => e.name === name)
+      );
     }
     return this.memo.byName.structured.get(name) as
       | ODataStructuredType<T>
@@ -393,28 +412,34 @@ export class ODataApi {
   public findCallableByName<T>(name: string, bindingType?: string) {
     const key = bindingType !== undefined ? `${bindingType}/${name}` : name;
     if (!this.memo.byName.callable.has(key)) {
-      this.memo.byName.callable.set(key, this.schemas
-        .reduce(
-          (acc, schema) => [...acc, ...schema.callables],
-          <ODataCallable<T>[]>[]
-        )
-        .find(
-          (c) =>
-            c.name === name &&
-            (bindingType === undefined || c.binding()?.type === bindingType)
-        ));
+      this.memo.byName.callable.set(
+        key,
+        this.schemas
+          .reduce(
+            (acc, schema) => [...acc, ...schema.callables],
+            <ODataCallable<T>[]>[]
+          )
+          .find(
+            (c) =>
+              c.name === name &&
+              (bindingType === undefined || c.binding()?.type === bindingType)
+          )
+      );
     }
     return this.memo.byName.callable.get(key) as ODataCallable<T> | undefined;
   }
 
   public findEntitySetByName(name: string) {
     if (!this.memo.byName.entitySet.has(name)) {
-      this.memo.byName.entitySet.set(name, this.schemas
-        .reduce(
-          (acc, schema) => [...acc, ...schema.entitySets],
-          <ODataEntitySet[]>[]
-        )
-        .find((e) => e.name === name));
+      this.memo.byName.entitySet.set(
+        name,
+        this.schemas
+          .reduce(
+            (acc, schema) => [...acc, ...schema.entitySets],
+            <ODataEntitySet[]>[]
+          )
+          .find((e) => e.name === name)
+      );
     }
     return this.memo.byName.entitySet.get(name) as ODataEntitySet | undefined;
   }
@@ -462,11 +487,15 @@ export class ODataApi {
     // Strucutred Options
     if (!this.memo.forType.options.has(type)) {
       let st = this.findStructuredTypeForType<T>(type);
-      this.memo.forType.options.set(type, 
+      this.memo.forType.options.set(
+        type,
         st !== undefined && st.model !== undefined && st.model?.meta !== null
           ? st.model.meta
-          : undefined);
+          : undefined
+      );
     }
-    return this.memo.forType.options.get(type) as ODataModelOptions<T> | undefined;
+    return this.memo.forType.options.get(type) as
+      | ODataModelOptions<T>
+      | undefined;
   }
 }
