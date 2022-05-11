@@ -4,6 +4,13 @@ import { CACHE_KEY_SEPARATOR, DEFAULT_TIMEOUT } from '../constants';
 import { ODataBatchResource, ODataRequest, ODataResponse } from '../resources';
 import { Cache, PathSegmentNames } from '../types';
 
+/**
+ * A cache entry that holds a payload, a last read time, and a timeout for the entry.
+ * @param payload The payload to cache.
+ * @param lastRead The last read time.
+ * @param timeout The timeout.
+ * @param tags Some tags to identify the entry.
+ */
 export interface ODataCacheEntry<T> {
   payload: T;
   lastRead: number;
@@ -23,6 +30,11 @@ export abstract class ODataCache implements Cache {
   abstract getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined;
   abstract putResponse(req: ODataRequest<any>, res: ODataResponse<any>): void;
 
+  /**
+   * Using the resource on the request build an array of string to identify the scope of the request 
+   * @param req The request with the resource to build the scope
+   * @returns Array of string to identify the scope of the request 
+   */
   scope(req: ODataRequest<any>): string[] {
     const segments = req.resource.cloneSegments();
     return segments.segments({ key: true }).reduce(
@@ -35,7 +47,12 @@ export abstract class ODataCache implements Cache {
     );
   }
 
-  tags(req: ODataRequest<any>, res: ODataResponse<any>): string[] {
+  /**
+   * Using the odata context on the response build an array of string to identify the tags of the response
+   * @param res The response to build the tags
+   * @returns Array of string to identify the tags of the response
+   */
+  tags(res: ODataResponse<any>): string[] {
     const tags = [];
     const context = res.context;
     if (context.entitySet) {
@@ -47,6 +64,13 @@ export abstract class ODataCache implements Cache {
     return tags;
   }
 
+  /**
+   * Build an entry from a payload and some options 
+   * @param payload The payload to store in the cache
+   * @param timeout The timeout for the entry
+   * @param tags The tags for the entry 
+   * @returns The entry to store in the cache 
+   */
   buildEntry<T>(
     payload: T,
     { timeout, tags }: { timeout?: number; tags?: string[] }
@@ -59,10 +83,23 @@ export abstract class ODataCache implements Cache {
     };
   }
 
+  /**
+   * Build a key from store an entry in the cache 
+   * @param names The names of the entry
+   * @returns The key for the entry 
+   */
   buildKey(names: string[]): string {
     return names.join(CACHE_KEY_SEPARATOR);
   }
 
+  /**
+   * Put some payload in the cache 
+   * @param name The name for the entry 
+   * @param payload The payload to store in the cache 
+   * @param timeout The timeout for the entry 
+   * @param scope The scope for the entry 
+   * @param tags The tags for the entry
+   */
   put<T>(
     name: string,
     payload: T,
@@ -78,6 +115,12 @@ export abstract class ODataCache implements Cache {
     this.forget();
   }
 
+  /**
+   * Return the payload from the cache if it exists and is not expired
+   * @param name The name of the entry
+   * @param scope The scope of the entry
+   * @returns The payload of the entry 
+   */
   get<T>(name: string, { scope }: { scope?: string[] } = {}): T {
     const key = this.buildKey([...(scope || []), name]);
     const entry = this.entries.get(key);
@@ -86,12 +129,15 @@ export abstract class ODataCache implements Cache {
       : undefined;
   }
 
+  /**
+   * Remove all cache entries that are matching with the given options 
+   * @param options The options to forget
+   */
   forget({
     name,
     scope = [],
     tags = [],
   }: { name?: string; scope?: string[]; tags?: string[] } = {}) {
-    // Remove expired cache entries
     if (name !== undefined) scope.push(name);
     const key = scope.length > 0 ? this.buildKey(scope) : undefined;
     this.entries.forEach((entry, k) => {
@@ -105,15 +151,28 @@ export abstract class ODataCache implements Cache {
     });
   }
 
+  /**
+   * Remove all cache entries
+   */
   flush() {
-    // Remove all cache entries
     this.entries = new Map<string, ODataCacheEntry<any>>();
   }
 
+  /**
+   * Check if the entry is expired 
+   * @param entry The cache entry
+   * @returns Boolean indicating if the entry is expired 
+   */
   isExpired(entry: ODataCacheEntry<any>) {
     return entry.lastRead < Date.now() - (entry.timeout || this.timeout) * 1000;
   }
 
+  /**
+   * Using the request, handle the fetching of the response
+   * @param req The request to fetch
+   * @param res$ Observable of the response
+   * @returns 
+   */
   handleRequest(
     req: ODataRequest<any>,
     res$: Observable<ODataResponse<any>>

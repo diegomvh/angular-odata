@@ -49,7 +49,7 @@ export class ODataInStorageCache extends ODataCache {
 
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     const scope = this.scope(req);
-    const tags = this.tags(req, res);
+    const tags = this.tags(res);
     this.put<ResponseJson>(req.pathWithParams, res.toJSON(), {
       timeout: res.options.maxAge,
       scope,
