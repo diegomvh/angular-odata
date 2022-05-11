@@ -465,14 +465,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent = false,
       reset = false,
       reparent = false,
+      merge = false,
       position = -1,
     }: {
       silent?: boolean;
       reset?: boolean;
       reparent?: boolean;
+      merge?: boolean;
       position?: number;
     } = {}
-  ): M | undefined {
+  ): M {
     const key = model.key();
     let entry = this._findEntry({
       model,
@@ -480,7 +482,10 @@ export class ODataCollection<T, M extends ODataModel<T>>
       cid: (<any>model)[this._model.meta.cid],
     });
     if (entry !== undefined && entry.state !== ODataModelState.Removed) {
-      return undefined;
+      if (merge) {
+        entry.model.assign(model.toEntity() as T);
+      }
+      return entry.model;
     }
 
     if (entry !== undefined && entry.state === ODataModelState.Removed) {
@@ -516,16 +521,24 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent = false,
       reset = false,
       reparent = false,
+      merge = false,
       position = -1,
     }: {
       silent?: boolean;
       reset?: boolean;
       reparent?: boolean;
+      merge?: boolean;
       position?: number;
     } = {}
-  ) {
+  ): M {
     if (position < 0) position = this._bisect(model);
-    const added = this._addModel(model, { silent, reset, position, reparent });
+    const added = this._addModel(model, {
+      silent,
+      reset,
+      merge,
+      position,
+      reparent,
+    });
     if (!silent && added !== undefined) {
       this.events$.emit(
         new ODataModelEvent('update', {
@@ -534,6 +547,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         })
       );
     }
+    return added;
   }
 
   add(
@@ -542,24 +556,30 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent = false,
       reparent = false,
       server = true,
+      merge = false,
       position = -1,
     }: {
       silent?: boolean;
       reparent?: boolean;
       server?: boolean;
+      merge?: boolean;
       position?: number;
     } = {}
-  ): Observable<this> {
+  ): Observable<M> {
     if (server) {
       return this.addReference(model).pipe(
         map((model) => {
-          this.addModel(model, { silent, position, reparent, reset: true });
-          return this;
+          return this.addModel(model, {
+            silent,
+            position,
+            reparent,
+            merge,
+            reset: true,
+          });
         })
       );
     } else {
-      this.addModel(model, { silent, position, reparent });
-      return of(this);
+      return of(this.addModel(model, { silent, position, merge, reparent }));
     }
   }
 
@@ -587,7 +607,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent = false,
       reset = false,
     }: { silent?: boolean; reset?: boolean } = {}
-  ): M | undefined {
+  ): M {
     const key = model.key();
     let entry = this._findEntry({
       model,
@@ -595,7 +615,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       cid: (<any>model)[this._model.meta.cid],
     });
     if (entry === undefined || entry.state === ODataModelState.Removed) {
-      return undefined;
+      return model;
     }
 
     // Emit Event
@@ -622,7 +642,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent = false,
       reset = false,
     }: { silent?: boolean; reset?: boolean } = {}
-  ) {
+  ): M {
     const removed = this._removeModel(model, { silent, reset });
     if (!silent && removed !== undefined) {
       this.events$.emit(
@@ -632,6 +652,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
         })
       );
     }
+    return removed;
   }
 
   remove(
@@ -640,17 +661,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
       silent = false,
       server = true,
     }: { silent?: boolean; server?: boolean } = {}
-  ): Observable<this> {
+  ): Observable<M> {
     if (server) {
       return this.removeReference(model).pipe(
-        map((model) => {
-          this.removeModel(model, { silent, reset: true });
-          return this;
-        })
+        map((model) => this.removeModel(model, { silent, reset: true }))
       );
     } else {
-      this.removeModel(model, { silent });
-      return of(this);
+      return of(this.removeModel(model, { silent }));
     }
   }
 
