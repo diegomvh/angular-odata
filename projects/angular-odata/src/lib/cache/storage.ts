@@ -29,6 +29,9 @@ export class ODataInStorageCache extends ODataCache {
     window.addEventListener('beforeunload', () => this.store());
   }
 
+  /**
+   * Store the cache in the storage
+   */
   store() {
     this.storage.setItem(
       this.name,
@@ -36,17 +39,28 @@ export class ODataInStorageCache extends ODataCache {
     );
   }
 
+  /**
+   * Restore the cache from the storage
+   */
   restore() {
     this.entries = new Map<string, ODataCacheEntry<any>>(
       JSON.parse(this.storage.getItem(this.name) || '[]')
     );
   }
 
+  /**
+   * Flush the cache and clean the storage
+   */
   override flush() {
     super.flush();
     this.store();
   }
 
+  /**
+   * Store the response in the cache
+   * @param req The request with the resource to store the response
+   * @param res The response to store in the cache
+   */
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     const scope = this.scope(req);
     const tags = this.tags(res);
@@ -57,6 +71,11 @@ export class ODataInStorageCache extends ODataCache {
     });
   }
 
+  /**
+   * Restore the response from the cache 
+   * @param req The request with the resource to get the response
+   * @returns The response from the cache
+   */
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
     const scope = this.scope(req);
     const data = this.get<ResponseJson>(req.pathWithParams, { scope });
