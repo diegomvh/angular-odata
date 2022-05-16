@@ -73,7 +73,6 @@
             </p>
             <p class="comment">
                             <code><a href="../interfaces/ApiOptions.html" target="_self" >ApiOptions</a></code>
-                            <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
             </p>
 
 
@@ -148,6 +147,9 @@
                     <tr>
                         <td class="col-md-4">
                             <ul class="index-list">
+                                <li>
+                                    <a href="#parserOptions" >parserOptions</a>
+                                </li>
                                 <li>
                                     <a href="#helper" >helper</a>
                                 </li>
@@ -628,6 +630,28 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
+                        <a name="parserOptions"></a>
+                        <span class="name"><b>parserOptions</b><a href="#parserOptions"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>parserOptions()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">projects/angular-odata/src/lib/options.ts:108</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
                         <a name="helper"></a>
                         <span class="name"><b>helper</b><a href="#helper"><span class="icon ion-ios-link"></span></a></span>
                     </td>
@@ -640,7 +664,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="108" class="link-to-prism">projects/angular-odata/src/lib/options.ts:108</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="112" class="link-to-prism">projects/angular-odata/src/lib/options.ts:112</a></div>
                                 </td>
                             </tr>
 
@@ -656,7 +680,7 @@
   FetchPolicy,
   ODataMetadataType,
   ODataVersion,
-  OptionsHelper,
+  ParserOptions,
   QueryOptionNames,
 } from &#x27;./types&#x27;;
 import {
@@ -667,7 +691,7 @@ import {
 
 import { ODataHelper } from &#x27;./helper&#x27;;
 
-export class ODataApiOptions implements ApiOptions, OptionsHelper {
+export class ODataApiOptions implements ApiOptions {
   /**
    * Default OData version
    */
@@ -758,16 +782,8 @@ export class ODataApiOptions implements ApiOptions, OptionsHelper {
       config.nonParenthesisForEmptyParameterFunction || false;
   }
 
-  get helper() {
-    return ODataHelper[this.version];
-  }
-}
-
-export class ODataParserOptions implements OptionsHelper {
-  version: ODataVersion;
-
-  constructor(config: OptionsHelper) {
-    this.version &#x3D; config.version || DEFAULT_VERSION;
+  get parserOptions(): ParserOptions {
+    return { version: this.version, ...this.accept };
   }
 
   get helper() {

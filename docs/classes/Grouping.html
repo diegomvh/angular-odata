@@ -135,7 +135,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="418" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:418</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="415" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:415</a></div>
                             </td>
                         </tr>
 
@@ -199,8 +199,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="444"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:444</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="441"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:441</a></div>
                 </td>
             </tr>
 
@@ -236,8 +236,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="432"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:432</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="429"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:429</a></div>
                 </td>
             </tr>
 
@@ -304,8 +304,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="425"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:425</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="422"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:422</a></div>
                 </td>
             </tr>
 
@@ -347,7 +347,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="421" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:421</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="418" class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:418</a></div>
                                 </td>
                             </tr>
 
@@ -389,24 +389,21 @@ export class Field&lt;T extends object&gt; implements ProxyHandler&lt;T&gt; {
     if (key &#x3D;&#x3D;&#x3D; &#x27;render&#x27;) {
       return ({ prefix }: { prefix?: string }) &#x3D;&gt;
         prefix ? &#x60;${prefix}/${name}&#x60; : name;
-    }
-    else if (key &#x3D;&#x3D;&#x3D; &#x27;clone&#x27;) {
+    } else if (key &#x3D;&#x3D;&#x3D; &#x27;clone&#x27;) {
       return () &#x3D;&gt; Field.factory(name);
-    }
-    else if (key &#x3D;&#x3D;&#x3D; Symbol.toStringTag) {
+    } else if (key &#x3D;&#x3D;&#x3D; Symbol.toStringTag) {
       return () &#x3D;&gt; &#x27;Field&#x27;;
-    }
-    else if (key &#x3D;&#x3D;&#x3D; &#x27;toJSON&#x27;) {
+    } else if (key &#x3D;&#x3D;&#x3D; &#x27;toJSON&#x27;) {
       return () &#x3D;&gt; ({
-          $type: Types.rawType(this),
-          name: name,
-        });
+        $type: Types.rawType(this),
+        name: name,
+      });
     } else {
       name &#x3D; name ? &#x60;${name}/${key as string}&#x60; : key;
       return new Proxy({ _name: name } as any, this);
     }
   }
-  
+
   has(target: T, key: string): any {
     return [&#x27;toJSON&#x27;, &#x27;clone&#x27;, &#x27;render&#x27;].includes(key) || key in target;
   }

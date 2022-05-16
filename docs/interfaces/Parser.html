@@ -126,15 +126,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: OptionsHelper | StructuredTypeFieldOptions)</code>
+<code>deserialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: ParserOptions | StructuredTypeFieldOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="98"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:98</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="96"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:96</a></div>
                 </td>
             </tr>
 
@@ -169,7 +169,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                            <code>OptionsHelper | StructuredTypeFieldOptions</code>
+                                            <code>ParserOptions | StructuredTypeFieldOptions</code>
                                     </td>
 
                                     <td>
@@ -207,15 +207,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: OptionsHelper | StructuredTypeFieldOptions)</code>
+<code>encode(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: ParserOptions | StructuredTypeFieldOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="108"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:108</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="106"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:106</a></div>
                 </td>
             </tr>
 
@@ -250,7 +250,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                            <code>OptionsHelper | StructuredTypeFieldOptions</code>
+                                            <code>ParserOptions | StructuredTypeFieldOptions</code>
                                     </td>
 
                                     <td>
@@ -288,15 +288,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: OptionsHelper | StructuredTypeFieldOptions)</code>
+<code>serialize(value: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, options?: ParserOptions | StructuredTypeFieldOptions)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="103"
-                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:103</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="101"
+                            class="link-to-prism">projects/angular-odata/src/lib/types.ts:101</a></div>
                 </td>
             </tr>
 
@@ -331,7 +331,7 @@
                                 <tr>
                                     <td>options</td>
                                     <td>
-                                            <code>OptionsHelper | StructuredTypeFieldOptions</code>
+                                            <code>ParserOptions | StructuredTypeFieldOptions</code>
                                     </td>
 
                                     <td>
@@ -362,8 +362,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataVersionHelper } from &#x27;./helper&#x27;;
-import { Observable } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -439,21 +438,20 @@ export interface ApiOptions {
   nonParenthesisForEmptyParameterFunction?: boolean;
 }
 
-export interface OptionsHelper {
+export interface ParserOptions {
   version?: ODataVersion;
-  helper: ODataVersionHelper;
   exponentialDecimals?: boolean;
   metadata?: ODataMetadataType;
   ieee754Compatible?: boolean;
   streaming?: boolean;
 }
 
-export interface ResponseOptions extends OptionsHelper {
+export interface ResponseOptions extends ParserOptions {
   cacheability?: CacheCacheability;
   maxAge?: number;
 }
 
-export interface StructuredTypeFieldOptions extends OptionsHelper {
+export interface StructuredTypeFieldOptions extends ParserOptions {
   field: StructuredTypeFieldConfig;
 }
 
@@ -461,15 +459,15 @@ export interface Parser&lt;T&gt; {
   // Deserialize value/s from request body.
   deserialize(
     value: any,
-    options?: OptionsHelper | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): T;
   // Serialize value/s for request body.
   serialize(
     value: any,
-    options?: OptionsHelper | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): any;
   //Encode value/s for URL parameter or query-string.
-  encode(value: any, options?: OptionsHelper | StructuredTypeFieldOptions): any;
+  encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
 }
 
 export const NONE_PARSER &#x3D; {

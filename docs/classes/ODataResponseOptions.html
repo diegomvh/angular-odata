@@ -174,7 +174,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(config: <a href="../interfaces/OptionsHelper.html" target="_self">OptionsHelper</a>)</code>
+<code>constructor(config: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -200,7 +200,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
+                                                                        <code><a href="../interfaces/ParserOptions.html" target="_self" >ParserOptions</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -771,7 +771,7 @@
   CacheCacheability,
   ODataMetadataType,
   ODataVersion,
-  OptionsHelper,
+  ParserOptions,
   ResponseOptions,
 } from &#x27;../../types&#x27;;
 import {
@@ -796,7 +796,7 @@ export class ODataResponseOptions implements ResponseOptions {
   cacheability?: &#x27;public&#x27; | &#x27;private&#x27; | &#x27;no-cache&#x27; | &#x27;no-store&#x27;;
   maxAge?: number;
 
-  constructor(config: OptionsHelper) {
+  constructor(config: ParserOptions) {
     this.version &#x3D; config.version || DEFAULT_VERSION;
   }
 

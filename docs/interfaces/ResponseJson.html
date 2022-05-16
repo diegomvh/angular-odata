@@ -325,6 +325,9 @@ export class ODataInStorageCache extends ODataCache {
     window.addEventListener(&#x27;beforeunload&#x27;, () &#x3D;&gt; this.store());
   }
 
+  /**
+   * Store the cache in the storage
+   */
   store() {
     this.storage.setItem(
       this.name,
@@ -332,20 +335,31 @@ export class ODataInStorageCache extends ODataCache {
     );
   }
 
+  /**
+   * Restore the cache from the storage
+   */
   restore() {
     this.entries &#x3D; new Map&lt;string, ODataCacheEntry&lt;any&gt;&gt;(
       JSON.parse(this.storage.getItem(this.name) || &#x27;[]&#x27;)
     );
   }
 
+  /**
+   * Flush the cache and clean the storage
+   */
   override flush() {
     super.flush();
     this.store();
   }
 
+  /**
+   * Store the response in the cache
+   * @param req The request with the resource to store the response
+   * @param res The response to store in the cache
+   */
   putResponse(req: ODataRequest&lt;any&gt;, res: ODataResponse&lt;any&gt;) {
     const scope &#x3D; this.scope(req);
-    const tags &#x3D; this.tags(req, res);
+    const tags &#x3D; this.tags(res);
     this.put&lt;ResponseJson&gt;(req.pathWithParams, res.toJSON(), {
       timeout: res.options.maxAge,
       scope,
@@ -353,6 +367,11 @@ export class ODataInStorageCache extends ODataCache {
     });
   }
 
+  /**
+   * Restore the response from the cache 
+   * @param req The request with the resource to get the response
+   * @returns The response from the cache
+   */
   getResponse(req: ODataRequest&lt;any&gt;): ODataResponse&lt;any&gt; | undefined {
     const scope &#x3D; this.scope(req);
     const data &#x3D; this.get&lt;ResponseJson&gt;(req.pathWithParams, { scope });

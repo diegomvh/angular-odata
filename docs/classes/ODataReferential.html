@@ -112,7 +112,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:49</a></div>
                             </td>
                         </tr>
 
@@ -173,7 +173,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:43</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -199,7 +199,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -218,12 +218,17 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { COMPUTED, DESCRIPTION, LONG_DESCRIPTION } from &#x27;../../constants&#x27;;
-import { ODataParserOptions } from &#x27;../../options&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  COMPUTED,
+  DEFAULT_VERSION,
+  DESCRIPTION,
+  LONG_DESCRIPTION,
+} from &#x27;../../constants&#x27;;
+import { ODataHelper } from &#x27;../../helper&#x27;;
 import { raw } from &#x27;../../resources/query&#x27;;
 import {
   NONE_PARSER,
-  OptionsHelper,
+  ParserOptions,
   Parser,
   StructuredTypeConfig,
   StructuredTypeFieldConfig,
@@ -290,7 +295,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   precision?: number;
   scale?: number;
   referentials: ODataReferential[];
-  optionsHelper?: OptionsHelper;
+  parserOptions?: ParserOptions;
 
   constructor(
     name: string,
@@ -373,11 +378,11 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   private parse(
     parser: ODataStructuredTypeParser&lt;T&gt;,
     value: any,
-    options?: OptionsHelper
+    options?: ParserOptions
   ): any {
     const type &#x3D;
       options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
-        ? options.helper.type(value)
+        ? ODataHelper[options?.version || DEFAULT_VERSION].type(value)
         : undefined;
     if (type !&#x3D;&#x3D; undefined) {
       return parser
@@ -387,11 +392,8 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     return parser.deserialize(value, options);
   }
 
-  deserialize(value: any, options?: OptionsHelper): T {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+  deserialize(value: any, options?: ParserOptions): T {
+    const parserOptions &#x3D; options || this.parserOptions;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser &#x3D; this.parser as ODataStructuredTypeParser&lt;T&gt;;
       return Array.isArray(value)
@@ -409,11 +411,11 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   private toJson(
     parser: ODataStructuredTypeParser&lt;T&gt;,
     value: any,
-    options?: OptionsHelper
+    options?: ParserOptions
   ): any {
     const type &#x3D;
       options !&#x3D;&#x3D; undefined &amp;&amp; Types.isPlainObject(value)
-        ? options.helper.type(value)
+        ? ODataHelper[options?.version || DEFAULT_VERSION].type(value)
         : undefined;
     if (type !&#x3D;&#x3D; undefined) {
       return parser
@@ -423,11 +425,8 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     return parser.serialize(value, options);
   }
 
-  serialize(value: T, options?: OptionsHelper): any {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+  serialize(value: T, options?: ParserOptions): any {
+    const parserOptions &#x3D; options || this.parserOptions;
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser &#x3D; this.parser as ODataStructuredTypeParser&lt;T&gt;;
       return Array.isArray(value)
@@ -442,11 +441,8 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   //#endregion
 
   //#region Encode
-  encode(value: T, options?: OptionsHelper): string {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+  encode(value: T, options?: ParserOptions): string {
+    const parserOptions &#x3D; options || this.parserOptions;
     return this.parser.encode(value, {
       field: this,
       ...parserOptions,
@@ -459,9 +455,9 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
     options,
   }: {
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
-    options: OptionsHelper;
+    options: ParserOptions;
   }) {
-    this.optionsHelper &#x3D; options;
+    this.parserOptions &#x3D; options;
     this.parser &#x3D; parserForType(this.type);
     if (this.default !&#x3D;&#x3D; undefined) {
       this.default &#x3D; this.deserialize(this.default, options);
@@ -569,7 +565,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
   parent?: ODataStructuredTypeParser&lt;any&gt;;
   keys?: ODataEntityTypeKey[];
   fields: ODataStructuredTypeFieldParser&lt;any&gt;[];
-  optionsHelper?: OptionsHelper;
+  parserOptions?: ParserOptions;
 
   constructor(
     config: StructuredTypeConfig&lt;T&gt;,
@@ -632,11 +628,8 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   // Deserialize
-  deserialize(value: any, options?: OptionsHelper): T {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+  deserialize(value: any, options?: ParserOptions): T {
+    const parserOptions &#x3D; options || this.parserOptions;
     if (this.parent !&#x3D;&#x3D; undefined)
       value &#x3D; this.parent.deserialize(value, parserOptions);
     const fields &#x3D; this.fields.filter(
@@ -656,11 +649,8 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   // Serialize
-  serialize(value: T, options?: OptionsHelper): any {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+  serialize(value: T, options?: ParserOptions): any {
+    const parserOptions &#x3D; options || this.parserOptions;
     if (this.parent !&#x3D;&#x3D; undefined)
       value &#x3D; this.parent.serialize(value, parserOptions);
     const fields &#x3D; this.fields.filter(
@@ -682,11 +672,8 @@ export class ODataStructuredTypeParser&lt;T&gt;
   }
 
   // Encode
-  encode(value: T, options?: OptionsHelper): any {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.optionsHelper;
+  encode(value: T, options?: ParserOptions): any {
+    const parserOptions &#x3D; options || this.parserOptions;
     return raw(JSON.stringify(this.serialize(value, parserOptions)));
   }
 
@@ -695,9 +682,9 @@ export class ODataStructuredTypeParser&lt;T&gt;
     options,
   }: {
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
-    options: OptionsHelper;
+    options: ParserOptions;
   }) {
-    this.optionsHelper &#x3D; options;
+    this.parserOptions &#x3D; options;
     if (this.base) {
       const parent &#x3D; parserForType(this.base) as ODataStructuredTypeParser&lt;any&gt;;
       parent.children.push(this);

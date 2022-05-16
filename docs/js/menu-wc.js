@@ -352,9 +352,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/ODataParameterParser.html" data-type="entity-link" >ODataParameterParser</a>
                             </li>
                             <li class="link">
-                                <a href="classes/ODataParserOptions.html" data-type="entity-link" >ODataParserOptions</a>
-                            </li>
-                            <li class="link">
                                 <a href="classes/ODataPathSegments.html" data-type="entity-link" >ODataPathSegments</a>
                             </li>
                             <li class="link">
@@ -486,10 +483,10 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/ODataVersionHelper.html" data-type="entity-link" >ODataVersionHelper</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/OptionsHelper.html" data-type="entity-link" >OptionsHelper</a>
+                                <a href="interfaces/Parser.html" data-type="entity-link" >Parser</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/Parser.html" data-type="entity-link" >Parser</a>
+                                <a href="interfaces/ParserOptions.html" data-type="entity-link" >ParserOptions</a>
                             </li>
                             <li class="link">
                                 <a href="interfaces/Renderable.html" data-type="entity-link" >Renderable</a>

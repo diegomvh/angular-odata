@@ -131,8 +131,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="278"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:278</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="275"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:275</a></div>
                 </td>
             </tr>
 
@@ -224,8 +224,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="281"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:281</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="278"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:278</a></div>
                 </td>
             </tr>
 
@@ -317,8 +317,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="284"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:284</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="281"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:281</a></div>
                 </td>
             </tr>
 
@@ -419,24 +419,21 @@ export class Field&lt;T extends object&gt; implements ProxyHandler&lt;T&gt; {
     if (key &#x3D;&#x3D;&#x3D; &#x27;render&#x27;) {
       return ({ prefix }: { prefix?: string }) &#x3D;&gt;
         prefix ? &#x60;${prefix}/${name}&#x60; : name;
-    }
-    else if (key &#x3D;&#x3D;&#x3D; &#x27;clone&#x27;) {
+    } else if (key &#x3D;&#x3D;&#x3D; &#x27;clone&#x27;) {
       return () &#x3D;&gt; Field.factory(name);
-    }
-    else if (key &#x3D;&#x3D;&#x3D; Symbol.toStringTag) {
+    } else if (key &#x3D;&#x3D;&#x3D; Symbol.toStringTag) {
       return () &#x3D;&gt; &#x27;Field&#x27;;
-    }
-    else if (key &#x3D;&#x3D;&#x3D; &#x27;toJSON&#x27;) {
+    } else if (key &#x3D;&#x3D;&#x3D; &#x27;toJSON&#x27;) {
       return () &#x3D;&gt; ({
-          $type: Types.rawType(this),
-          name: name,
-        });
+        $type: Types.rawType(this),
+        name: name,
+      });
     } else {
       name &#x3D; name ? &#x60;${name}/${key as string}&#x60; : key;
       return new Proxy({ _name: name } as any, this);
     }
   }
-  
+
   has(target: T, key: string): any {
     return [&#x27;toJSON&#x27;, &#x27;clone&#x27;, &#x27;render&#x27;].includes(key) || key in target;
   }

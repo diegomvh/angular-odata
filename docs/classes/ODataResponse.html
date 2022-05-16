@@ -710,8 +710,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="212"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:212</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="211"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:211</a></div>
                 </td>
             </tr>
 
@@ -791,8 +791,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="236"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:236</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="235"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:235</a></div>
                 </td>
             </tr>
 
@@ -1012,7 +1012,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   private _options?: ODataResponseOptions;
   get options(): ODataResponseOptions {
     if (this._options &#x3D;&#x3D;&#x3D; undefined) {
-      this._options &#x3D; new ODataResponseOptions(this.api.options);
+      this._options &#x3D; new ODataResponseOptions(this.api.options.parserOptions);
       const contentType &#x3D; this.headers.get(CONTENT_TYPE);
       if (contentType &amp;&amp; contentType.indexOf(APPLICATION_JSON) !&#x3D;&#x3D; -1) {
         const features &#x3D; contentType
@@ -1119,7 +1119,6 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
       this.context
     );
     let entities &#x3D; payload ? annots.data(payload) : null;
-
     if (entities !&#x3D;&#x3D; null)
       entities &#x3D; this.resource.deserialize(entities, options) as T[];
     return { entities, annots };

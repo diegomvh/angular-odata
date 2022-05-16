@@ -175,7 +175,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:48</a></div>
                             </td>
                         </tr>
 
@@ -359,7 +359,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -386,7 +386,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -413,7 +413,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:48</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -440,7 +440,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:47</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -731,7 +731,6 @@ import {
   OPTIMISTIC_CONCURRENCY,
 } from &#x27;../constants&#x27;;
 import { ODataHelper } from &#x27;../helper&#x27;;
-import { ODataParserOptions } from &#x27;../options&#x27;;
 import {
   EntityKey,
   ODataEntitiesAnnotations,
@@ -750,7 +749,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from &#x27;../schema&#x27;;
-import { OptionsHelper } from &#x27;../types&#x27;;
+import { ParserOptions } from &#x27;../types&#x27;;
 import { Objects, Types } from &#x27;../utils&#x27;;
 import type { ODataCollection } from &#x27;./collection&#x27;;
 import type { ODataModel } from &#x27;./model&#x27;;
@@ -771,6 +770,7 @@ export class ODataModelEvent&lt;T&gt; {
   value?: any;
   previous?: any;
   options?: any;
+
   constructor(
     name: ODataModelEventType,
     {
@@ -949,6 +949,8 @@ export class ODataModelField&lt;F&gt; {
   min?: number;
   max?: number;
   pattern?: RegExp;
+  parserOptions?: ParserOptions;
+
   constructor(
     options: ODataModelOptions&lt;any&gt;,
     { name, field, parser, ...opts }: ODataModelFieldOptions&lt;F&gt;
@@ -994,9 +996,10 @@ export class ODataModelField&lt;F&gt; {
   }: {
     findOptionsForType: (type: string) &#x3D;&gt; ODataModelOptions&lt;any&gt; | undefined;
     concurrency: boolean;
-    options: OptionsHelper;
+    options: ParserOptions;
   }) {
     this.meta &#x3D; findOptionsForType(this.parser.type);
+    this.parserOptions &#x3D; options;
     if (concurrency) this.concurrency &#x3D; concurrency;
     if (this.default !&#x3D;&#x3D; undefined)
       this.default &#x3D; this.deserialize(this.default, options);
@@ -1118,27 +1121,18 @@ export class ODataModelField&lt;F&gt; {
       : this.default;
   }
 
-  deserialize(value: any, options?: OptionsHelper): F {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
+  deserialize(value: any, options?: ParserOptions): F {
+    const parserOptions &#x3D; options || this.parserOptions;
     return this.parser.deserialize(value, parserOptions);
   }
 
-  serialize(value: F, options?: OptionsHelper): any {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
+  serialize(value: F, options?: ParserOptions): any {
+    const parserOptions &#x3D; options || this.parserOptions;
     return this.parser.serialize(value, parserOptions);
   }
 
-  encode(value: F, options?: OptionsHelper): any {
-    const parserOptions &#x3D;
-      options !&#x3D;&#x3D; undefined
-        ? new ODataParserOptions(options)
-        : this.api.options;
+  encode(value: F, options?: ParserOptions): any {
+    const parserOptions &#x3D; options || this.parserOptions;
     return this.parser.encode(value, parserOptions);
   }
 
@@ -1284,7 +1278,7 @@ export class ODataModelOptions&lt;T&gt; {
     options,
   }: {
     findOptionsForType: (type: string) &#x3D;&gt; ODataModelOptions&lt;any&gt; | undefined;
-    options: OptionsHelper;
+    options: ParserOptions;
   }) {
     if (this.base) {
       const parent &#x3D; findOptionsForType(this.base) as ODataModelOptions&lt;any&gt;;
@@ -1548,8 +1542,8 @@ export class ODataModelOptions&lt;T&gt; {
     }: { field_mapping?: boolean; resolve?: boolean } &#x3D; {}
   ): EntityKey&lt;T&gt; | { [name: string]: any } | undefined {
     const keyTypes &#x3D; this.schema.keys({ include_parents: true });
-    const key: any &#x3D; {};
-    for (var kt of keyTypes) {
+    const key &#x3D; new Map&lt;string, any&gt;();
+    for (let kt of keyTypes) {
       let v &#x3D; value as any;
       let options &#x3D; this as ODataModelOptions&lt;any&gt;;
       let field: ODataModelField&lt;any&gt; | undefined;
@@ -1569,10 +1563,10 @@ export class ODataModelOptions&lt;T&gt; {
       if (field &#x3D;&#x3D;&#x3D; undefined) return undefined;
       let name &#x3D; field_mapping ? field.field : field.name;
       if (kt.alias !&#x3D;&#x3D; undefined) name &#x3D; kt.alias;
-      key[name] &#x3D; v;
+      key.set(name, v);
     }
-    if (Types.isEmpty(key)) return undefined;
-    return resolve ? Objects.resolveKey(key) : key;
+    if (key.size &#x3D;&#x3D;&#x3D; 0) return undefined;
+    return resolve ? Objects.resolveKey(key) : Object.fromEntries(key);
   }
 
   resolveReferential(
@@ -1582,9 +1576,9 @@ export class ODataModelOptions&lt;T&gt; {
       field_mapping &#x3D; false,
       resolve &#x3D; true,
     }: { field_mapping?: boolean; resolve?: boolean } &#x3D; {}
-  ): { [name: string]: any } | undefined {
-    const referential: any &#x3D; {};
-    for (var ref of field.referentials) {
+  ): { [name: string]: any } | null | undefined {
+    const referential &#x3D; new Map&lt;string, any&gt;();
+    for (let ref of field.referentials) {
       let from &#x3D; this.fields({ include_parents: true }).find(
         (p: any) &#x3D;&gt; p.field &#x3D;&#x3D;&#x3D; ref.referencedProperty
       );
@@ -1593,13 +1587,15 @@ export class ODataModelOptions&lt;T&gt; {
         .find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; ref.property);
       if (from !&#x3D;&#x3D; undefined &amp;&amp; to !&#x3D;&#x3D; undefined) {
         let name &#x3D; field_mapping ? to.field : to.name;
-        referential[name] &#x3D; value &amp;&amp; (value as any)[from.name];
+        referential.set(name, value &amp;&amp; (value as any)[from.name]);
       }
     }
-    if (Types.isEmpty(referential)) return undefined;
+    if (referential.size &#x3D;&#x3D;&#x3D; 0) return undefined;
+    if (referential.size &#x3D;&#x3D;&#x3D; 1 &amp;&amp; Array.from(referential.values())[0] &#x3D;&#x3D;&#x3D; null)
+      return null;
     return resolve
       ? Objects.resolveKey(referential, { single: false })
-      : referential;
+      : Object.fromEntries(referential);
   }
 
   resolveReferenced(
@@ -1609,9 +1605,9 @@ export class ODataModelOptions&lt;T&gt; {
       field_mapping &#x3D; false,
       resolve &#x3D; true,
     }: { field_mapping?: boolean; resolve?: boolean } &#x3D; {}
-  ): { [name: string]: any } | undefined {
-    const referenced: any &#x3D; {};
-    for (var ref of field.referentials) {
+  ): { [name: string]: any } | null | undefined {
+    const referenced &#x3D; new Map&lt;string, any&gt;();
+    for (let ref of field.referentials) {
       let from &#x3D; this.fields({ include_parents: true }).find(
         (field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; ref.property
       );
@@ -1623,13 +1619,15 @@ export class ODataModelOptions&lt;T&gt; {
         );
       if (from !&#x3D;&#x3D; undefined &amp;&amp; to !&#x3D;&#x3D; undefined) {
         let name &#x3D; field_mapping ? to.field : to.name;
-        referenced[name] &#x3D; value &amp;&amp; (value as any)[from.name];
+        referenced.set(name, value &amp;&amp; (value as any)[from.name]);
       }
     }
-    if (Types.isEmpty(referenced)) return undefined;
+    if (referenced.size &#x3D;&#x3D;&#x3D; 0) return undefined;
+    if (referenced.size &#x3D;&#x3D;&#x3D; 1 &amp;&amp; Array.from(referenced.values())[0] &#x3D;&#x3D;&#x3D; null)
+      return null;
     return resolve
       ? Objects.resolveKey(referenced, { single: false })
-      : referenced;
+      : Object.fromEntries(referenced);
   }
 
   validate(
@@ -1891,35 +1889,27 @@ export class ODataModelOptions&lt;T&gt; {
     self: ODataModel&lt;T&gt;,
     { name, silent &#x3D; false }: { name?: string; silent?: boolean } &#x3D; {}
   ) {
-    if (!Types.isEmpty(name) &amp;&amp; self._changes.has(name as string)) {
-      const value &#x3D; self._attributes.get(name as string);
-      const previous &#x3D; self._changes.get(name as string);
-      self._changes.delete(name as string);
-      if (!silent) {
-        self.events$.emit(
-          new ODataModelEvent(&#x27;change&#x27;, {
-            model: self,
-            track: name,
-            value,
-            previous,
-          })
-        );
-      }
-    } else if (Types.isEmpty(name)) {
-      const entries &#x3D; [...self._changes.entries()];
+    let changes: string[] &#x3D; [];
+    if (name !&#x3D;&#x3D; undefined) {
+      // Reset value
+      const value &#x3D; self._attributes.get(name);
+      const change &#x3D; self._changes.get(name);
+      if (value !&#x3D;&#x3D; change) changes &#x3D; [name];
+      self._relations.delete(name);
+      self._changes.delete(name);
+    } else {
+      // reset all
+      changes &#x3D; [...self._changes.keys()];
+      self._relations.clear();
       self._changes.clear();
-      if (!silent) {
-        entries.forEach((entry) &#x3D;&gt; {
-          self.events$.emit(
-            new ODataModelEvent(&#x27;change&#x27;, {
-              track: entry[0],
-              model: self,
-              value: self._attributes.get(entry[0]),
-              previous: entry[1],
-            })
-          );
-        });
-      }
+    }
+    if (!silent &amp;&amp; changes.length &gt; 0) {
+      self.events$.emit(
+        new ODataModelEvent(&#x27;reset&#x27;, {
+          model: self,
+          options: { changes },
+        })
+      );
     }
   }
 
@@ -2023,7 +2013,31 @@ export class ODataModelOptions&lt;T&gt; {
     field: ODataModelField&lt;F&gt;
   ): F | ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; | null | undefined {
     if (field.isStructuredType()) {
-      return self._relations.get(field.name)?.model;
+      const relation &#x3D; self._relations.get(field.name);
+      if (
+        relation?.model &#x3D;&#x3D;&#x3D; null ||
+        ODataModelOptions.isModel(relation?.model)
+      ) {
+        // Check for reference
+        const referenced &#x3D; this.resolveReferenced(self, field);
+        if (
+          relation?.model !&#x3D;&#x3D; null &amp;&amp;
+          referenced !&#x3D;&#x3D; null &amp;&amp;
+          referenced !&#x3D;&#x3D; undefined
+        ) {
+          (relation!.model as ODataModel&lt;F&gt;).assign(referenced as Partial&lt;F&gt;, {
+            silent: true,
+          });
+        } else if (relation?.model !&#x3D;&#x3D; null &amp;&amp; referenced &#x3D;&#x3D;&#x3D; null) {
+          this._unlink(self, relation as ODataModelRelation&lt;F&gt;);
+          // New value is null
+          (relation as ODataModelRelation&lt;F&gt;).model &#x3D; null;
+        } else if (relation?.model &#x3D;&#x3D;&#x3D; null &amp;&amp; referenced !&#x3D;&#x3D; null) {
+          // New value is undefined
+          (relation as ODataModelRelation&lt;F&gt;).model &#x3D; undefined;
+        }
+      }
+      return relation?.model;
     } else {
       return this.attributes(self, {
         include_concurrency: true,
@@ -2054,53 +2068,67 @@ export class ODataModelOptions&lt;T&gt; {
     }
 
     const relation &#x3D; self._relations.get(field.name)!;
-    const currentModel &#x3D; relation.model;
+    const current &#x3D; relation.model;
 
     if (value &#x3D;&#x3D;&#x3D; null) {
+      // Unlink old relation
+      this._unlink(self, relation);
+
+      // New value is null
       relation.model &#x3D; value as null;
-      changed &#x3D; currentModel !&#x3D;&#x3D; value;
-      this._unsubscribe(self, relation);
-    } else if (ODataModelOptions.isCollection(currentModel)) {
+      changed &#x3D; current !&#x3D;&#x3D; value;
+    } else if (ODataModelOptions.isCollection(current)) {
+      // Current is collection
+      let currentCollection &#x3D; current as ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;;
       if (ODataModelOptions.isCollection(value)) {
-        if (
-          (currentModel as ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;).equals(
-            value as ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;
-          )
-        ) {
+        // New value is collection
+        let newCollection &#x3D; value as ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;;
+        if (currentCollection.equals(newCollection)) {
           changed &#x3D; false;
+        } else {
+          // Unlink old collection
+          this._unlink(self, relation);
+          relation.model &#x3D; newCollection;
+          // Link new collection
+          this._link(self, relation);
+          changed &#x3D; true;
         }
-        this._unsubscribe(self, relation);
-        relation.model &#x3D; value as ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;;
-        this._subscribe(self, relation);
-        if (self._reparent) relation.model._parent &#x3D; [self, field];
-        changed &#x3D; true;
       } else if (Types.isArray(value)) {
+        // New value is array
         changed &#x3D; this.updateCollection&lt;F&gt;(
           self,
           field,
-          currentModel as ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;,
+          currentCollection,
           value as T[] | { [name: string]: any }[]
         );
       }
-    } else if (ODataModelOptions.isModel(currentModel)) {
+    } else if (ODataModelOptions.isModel(current)) {
+      // Current is model
+      let currentModel &#x3D; current as ODataModel&lt;F&gt;;
       if (ODataModelOptions.isModel(value)) {
-        if ((currentModel as ODataModel&lt;F&gt;).equals(value as ODataModel&lt;F&gt;)) {
+        // New value is model
+        let newModel &#x3D; value as ODataModel&lt;F&gt;;
+        if (currentModel.equals(newModel)) {
           changed &#x3D; false;
+        } else {
+          // Unlink old model
+          this._unlink(self, relation);
+          relation.model &#x3D; newModel;
+          // Link new model
+          this._link(self, relation);
+          changed &#x3D; true;
         }
-        this._unsubscribe(self, relation);
-        relation.model &#x3D; value as ODataModel&lt;F&gt;;
-        this._subscribe(self, relation);
-        if (self._reparent) relation.model._parent &#x3D; [self, field];
-        changed &#x3D; true;
       } else if (Types.isPlainObject(value)) {
         changed &#x3D; this.updateModel&lt;F&gt;(
           self,
           field,
-          currentModel as ODataModel&lt;F&gt;,
+          currentModel,
           value as F | { [name: string]: any }
         );
       }
     } else {
+      // Current is null or undefined
+      // create new model/collection for given value
       relation.model &#x3D;
         ODataModelOptions.isCollection(value) ||
         ODataModelOptions.isModel(value)
@@ -2110,18 +2138,22 @@ export class ODataModelOptions&lt;T&gt; {
               value: value,
               reset: self._reset,
             });
+      // Link new model/collection
+      this._link(self, relation);
       changed &#x3D; true;
-      this._subscribe(self, relation);
-      if (self._reparent) relation.model._parent &#x3D; [self, field];
     }
+
+    // Resolve referentials
     if (!ODataModelOptions.isCollection(relation.model)) {
-      var ref &#x3D; field.meta?.resolveReferential(relation.model, field);
-      if (ref !&#x3D;&#x3D; undefined) {
+      let ref &#x3D; field.meta?.resolveReferential(relation.model, field);
+      if (ref !&#x3D;&#x3D; null &amp;&amp; ref !&#x3D;&#x3D; undefined) {
         Object.entries(ref).forEach(([k, v]) &#x3D;&gt;
           this._setValue(self, k, v, false)
         );
       }
     }
+
+    // Update state and emit event
     relation.state &#x3D;
       self._reset || !changed
         ? ODataModelState.Unchanged
@@ -2132,10 +2164,11 @@ export class ODataModelOptions&lt;T&gt; {
           track: field.name,
           model: self,
           value: relation.model,
-          previous: currentModel,
+          previous: current,
         })
       );
     }
+
     return changed;
   }
 
@@ -2198,22 +2231,26 @@ export class ODataModelOptions&lt;T&gt; {
       : this._setValue(self, field.name, value, field.isKey());
   }
 
-  private _unsubscribe&lt;F&gt;(
-    self: ODataModel&lt;T&gt;,
-    relation: ODataModelRelation&lt;F&gt;
-  ) {
-    if (relation.subscription) {
+  private _unlink&lt;F&gt;(self: ODataModel&lt;T&gt;, relation: ODataModelRelation&lt;F&gt;) {
+    if (relation.subscription !&#x3D;&#x3D; undefined) {
       relation.subscription.unsubscribe();
-      delete relation.subscription;
+      relation.subscription &#x3D; undefined;
+    }
+    if (relation.model !&#x3D; null) {
+      relation.model._parent &#x3D; null;
     }
   }
-  private _subscribe&lt;F&gt;(self: ODataModel&lt;T&gt;, relation: ODataModelRelation&lt;F&gt;) {
+
+  private _link&lt;F&gt;(self: ODataModel&lt;T&gt;, relation: ODataModelRelation&lt;F&gt;) {
     if (relation.subscription) {
       throw new Error(&#x27;Subscription already exists&#x27;);
     }
     if (relation.model &#x3D;&#x3D; null) {
       throw new Error(&#x27;Subscription model is null&#x27;);
     }
+
+    if (self._reparent) relation.model._parent &#x3D; [self, relation.field];
+
     relation.subscription &#x3D; relation.model.events$.subscribe(
       (event: ODataModelEvent&lt;any&gt;) &#x3D;&gt; {
         if (
@@ -2227,10 +2264,10 @@ export class ODataModelOptions&lt;T&gt; {
               relation.field.navigation &amp;&amp;
               event.options?.key
             ) {
-              var ref &#x3D; (relation.model as ODataModel&lt;any&gt;).referential(
+              let ref &#x3D; (relation.model as ODataModel&lt;any&gt;).referential(
                 relation.field
               );
-              if (ref !&#x3D;&#x3D; undefined) {
+              if (ref !&#x3D;&#x3D; null &amp;&amp; ref !&#x3D;&#x3D; undefined) {
                 Object.entries(ref).forEach(([k, v]) &#x3D;&gt;
                   this._setValue(self, k, v, false)
                 );

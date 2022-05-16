@@ -74,7 +74,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                        <code><a href="../interfaces/OptionsHelper.html" target="_self" >OptionsHelper</a></code>
+                        <code><a href="../interfaces/ParserOptions.html" target="_self" >ParserOptions</a></code>
             </p>
 
         <section>
@@ -195,8 +195,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataVersionHelper } from &#x27;./helper&#x27;;
-import { Observable } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable } from &#x27;rxjs&#x27;;
 
 export type ODataVersion &#x3D; &#x27;2.0&#x27; | &#x27;3.0&#x27; | &#x27;4.0&#x27;;
 export type FetchPolicy &#x3D;
@@ -272,21 +271,20 @@ export interface ApiOptions {
   nonParenthesisForEmptyParameterFunction?: boolean;
 }
 
-export interface OptionsHelper {
+export interface ParserOptions {
   version?: ODataVersion;
-  helper: ODataVersionHelper;
   exponentialDecimals?: boolean;
   metadata?: ODataMetadataType;
   ieee754Compatible?: boolean;
   streaming?: boolean;
 }
 
-export interface ResponseOptions extends OptionsHelper {
+export interface ResponseOptions extends ParserOptions {
   cacheability?: CacheCacheability;
   maxAge?: number;
 }
 
-export interface StructuredTypeFieldOptions extends OptionsHelper {
+export interface StructuredTypeFieldOptions extends ParserOptions {
   field: StructuredTypeFieldConfig;
 }
 
@@ -294,15 +292,15 @@ export interface Parser&lt;T&gt; {
   // Deserialize value/s from request body.
   deserialize(
     value: any,
-    options?: OptionsHelper | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): T;
   // Serialize value/s for request body.
   serialize(
     value: any,
-    options?: OptionsHelper | StructuredTypeFieldOptions
+    options?: ParserOptions | StructuredTypeFieldOptions
   ): any;
   //Encode value/s for URL parameter or query-string.
-  encode(value: any, options?: OptionsHelper | StructuredTypeFieldOptions): any;
+  encode(value: any, options?: ParserOptions | StructuredTypeFieldOptions): any;
 }
 
 export const NONE_PARSER &#x3D; {
