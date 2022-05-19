@@ -1,4 +1,4 @@
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
@@ -279,6 +279,10 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
         bodyQueryOptions?: QueryOptionNames[];
       } = {}
   ): Observable<any> {
+    if (!this.hasEntityKey())
+      return throwError(
+        () => new Error('fetch: Navigation resource without entity key')
+      );
     return this.get(options);
   }
 

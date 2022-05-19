@@ -11,7 +11,12 @@ import { ODataHelper } from '../helper';
 import { ODataCollection, ODataModel } from '../models';
 import { ODataStructuredType } from '../schema';
 import { ODataSchemaElement } from '../schema/element';
-import { ParserOptions, Parser, QueryOptionNames } from '../types';
+import {
+  ParserOptions,
+  Parser,
+  QueryOptionNames,
+  PathSegmentNames,
+} from '../types';
 import { Http, Objects, Types } from '../utils/index';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
@@ -86,6 +91,10 @@ export class ODataResource<T> {
    */
   hasKey() {
     return Boolean(this.pathSegments.last({ key: true })?.hasKey());
+  }
+
+  hasEntityKey() {
+    return Boolean(this.pathSegments.get(PathSegmentNames.entitySet)?.hasKey());
   }
 
   clearKey() {

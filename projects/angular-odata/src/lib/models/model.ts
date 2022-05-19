@@ -443,10 +443,6 @@ export class ODataModel<T> {
 
     let obs$: Observable<ODataEntity<T>>;
     if (resource instanceof ODataEntityResource) {
-      if (!resource.hasKey())
-        return throwError(
-          () => new Error("fetch: Can't fetch model without key")
-        );
       obs$ = resource.fetch(options);
     } else if (resource instanceof ODataNavigationPropertyResource) {
       obs$ = resource.fetch({ responseType: 'entity', ...options });
