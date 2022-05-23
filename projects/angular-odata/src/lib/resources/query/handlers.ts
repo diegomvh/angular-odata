@@ -8,6 +8,9 @@ import {
   Select,
   Transform,
   normalizeValue,
+  raw,
+  duration,
+  binary,
 } from './builder';
 import {
   ComputeExpression,
@@ -45,7 +48,7 @@ export class ODataQueryOptionHandler<T> {
   }
 
   /**
-   * Returns a boolean indicating if the managed odata query option is empty. 
+   * Returns a boolean indicating if the managed odata query option is empty.
    * @returns True if the managed odata query option is empty.
    */
   empty() {
@@ -56,7 +59,7 @@ export class ODataQueryOptionHandler<T> {
   /**
    * Get or Set the value of the managed odata query option.
    * @param v The value to set.
-   * @returns 
+   * @returns
    */
   value(v?: any) {
     if (v !== undefined) this.o.set(this.n, v);
@@ -72,7 +75,7 @@ export class ODataQueryOptionHandler<T> {
   }
 
   /**
-   * Push value to the managed odata query option. 
+   * Push value to the managed odata query option.
    * @param value Value to push
    */
   push(value: any) {
@@ -80,8 +83,8 @@ export class ODataQueryOptionHandler<T> {
   }
 
   /**
-   * Remove value from the managed odata query option. 
-   * @param value Value to remove 
+   * Remove value from the managed odata query option.
+   * @param value Value to remove
    */
   remove(value: any) {
     this.o.set(
@@ -94,7 +97,7 @@ export class ODataQueryOptionHandler<T> {
   }
 
   /**
-   * Return value at index of the managed odata query option. 
+   * Return value at index of the managed odata query option.
    * @param index Index of the value
    * @returns The value
    */
@@ -121,7 +124,7 @@ export class ODataQueryOptionHandler<T> {
   }
 
   /**
-   * Set the value for path in the managed odata query option. 
+   * Set the value for path in the managed odata query option.
    * @param path Path for set the value
    * @param value Value to set
    */
@@ -131,10 +134,10 @@ export class ODataQueryOptionHandler<T> {
   }
 
   /**
-   * Get the value for path from the managed odata query option. 
+   * Get the value for path from the managed odata query option.
    * @param path The path from get the value
    * @param def Default if not found
-   * @returns 
+   * @returns
    */
   get(path: string, def?: any): any {
     let obj = this.assertObject(false) || {};
@@ -142,8 +145,8 @@ export class ODataQueryOptionHandler<T> {
   }
 
   /**
-   * Unset the value for path in the managed odata query option. 
-   * @param path 
+   * Unset the value for path in the managed odata query option.
+   * @param path
    */
   unset(path: string) {
     let obj = this.assertObject(true);
@@ -172,7 +175,7 @@ export class ODataQueryOptionHandler<T> {
   /**
    * Merge values from object into the managed odata query option.
    * @param values Object to merge
-   * @returns 
+   * @returns
    */
   assign(values: { [attr: string]: any }) {
     let obj = this.assertObject(true);
@@ -192,6 +195,15 @@ export class ODataQueryOptionsHandler<T> {
   constructor(protected options: ODataQueryOptions<T>) {}
 
   /**
+   * Create a raw odata value
+   * @param value The value to raw
+   * @returns The raw value
+   */
+  raw(value: any) {
+    return raw(value);
+  }
+
+  /**
    * Create a new odata alias parameter
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_ParameterAliases
    * @param value The value of the alias
@@ -200,6 +212,14 @@ export class ODataQueryOptionsHandler<T> {
    */
   alias(value: any, name?: string) {
     return alias(value, name);
+  }
+
+  duration(value: any) {
+    return duration(value);
+  }
+
+  binary(value: any) {
+    return binary(value);
   }
 
   /**
@@ -213,7 +233,7 @@ export class ODataQueryOptionsHandler<T> {
 
   /**
    * Build and return a handler for modifying the $select option.
-   * If opts is given then set te value as new value for $select. 
+   * If opts is given then set te value as new value for $select.
    * @param opts Select<T> value or builder function for SelectExpression<T>
    */
   select(
@@ -238,7 +258,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Build and return a handler for modifying the $expand option. 
+   * Build and return a handler for modifying the $expand option.
    * If opts is given then set te value as new value for $expand.
    * @param opts Expand<T> value or builder function for ExpandExpression<T>
    */
@@ -264,7 +284,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Build and return a handler for modifying the $compute option. 
+   * Build and return a handler for modifying the $compute option.
    * If opts is given then set te value as new value for $compute.
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptioncompute
    * @param opts string value or builder function for ComputeExpression<T>
@@ -296,10 +316,10 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Build and return a handler for modifying the $format option. 
+   * Build and return a handler for modifying the $format option.
    * If opts is given then set te value as new value for $format.
    * @link https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionformat
-   * @param opts string value for format 
+   * @param opts string value for format
    */
   format(opts: string): ODataQueryOptionHandler<T>;
   format(): ODataQueryOptionHandler<T>;
@@ -308,7 +328,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Build and return a handler for modifying the $transform option. 
+   * Build and return a handler for modifying the $transform option.
    * If opts is given then set te value as new value for $transform.
    * @param opts string value for transform
    */
@@ -347,7 +367,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Build and return a handler for modifying the $filter option. 
+   * Build and return a handler for modifying the $filter option.
    * If opts is given then set te value as new value for $filter.
    * @param opts Filter<T> value or builder function for FilterExpression<T>
    */
@@ -378,7 +398,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Build and return a handler for modifying the $orderby option. 
+   * Build and return a handler for modifying the $orderby option.
    * If opts is given then set te value as new value for $orderby.
    * @param opts OrderBy<T> value or builder function for OrderByExpression<T>
    */
@@ -451,7 +471,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Shortcut for clear pagination by unset $top, $skip, $skiptoken. 
+   * Shortcut for clear pagination by unset $top, $skip, $skiptoken.
    */
   clearPaging() {
     this.skip().clear();
