@@ -529,12 +529,22 @@ export class ODataModelOptions<T> {
     return this.schema.api;
   }
 
-  type() {
-    return this.schema.type();
+  type({ alias = false }: { alias?: boolean } = {}) {
+    return this.schema.type({alias});
   }
 
   isTypeOf(type: string) {
     return this.schema.isTypeOf(type);
+  }
+
+  isModelFor(entity: T | { [name: string]: any }) {
+    // Resolve By Type
+    let type = this.api.options.helper.type(entity);
+    if (type && this.isTypeOf(type)) return true;
+    // Resolve By fields
+    let keys = Object.keys(entity);
+    let names = this.fields({include_navigation: true, include_parents: true}).map(f => f.name);
+    return keys.every(key => names.includes(key));
   }
 
   findChildOptions(
