@@ -17,6 +17,10 @@ export type ODataEntitiesOptions = ODataOptions & {
 };
 export type ODataPropertyOptions = ODataOptions & { responseType?: 'property' };
 export type ODataNoneOptions = ODataOptions & { responseType?: 'none' };
-export type ODataQueryArgumentsOptions<T> = ODataQueryArguments<T> & {
+
+export type ODataQueryArgumentsOptions<T> = ODataOptions &
+  ODataQueryArguments<T>;
+export type ODataActionOptions<T> = ODataQueryArgumentsOptions<T>;
+export type ODataFunctionOptions<T> = ODataQueryArgumentsOptions<T> & {
   alias?: boolean;
-} & ODataOptions;
+};

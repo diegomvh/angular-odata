@@ -3,9 +3,11 @@ import { forkJoin, NEVER, Observable, of, throwError } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
   EntityKey,
+  ODataActionOptions,
   ODataEntity,
   ODataEntityAnnotations,
   ODataEntityResource,
+  ODataFunctionOptions,
   ODataNavigationPropertyResource,
   ODataOptions,
   ODataPropertyResource,
@@ -596,7 +598,7 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
+    { ...options }: {} & ODataFunctionOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
@@ -624,7 +626,7 @@ export class ODataModel<T> {
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
+    { ...options }: {} & ODataActionOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())

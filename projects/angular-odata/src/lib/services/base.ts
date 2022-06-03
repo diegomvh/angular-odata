@@ -1,9 +1,11 @@
 import { Observable } from 'rxjs';
 import { ODataClient } from '../client';
 import {
+  ODataActionOptions,
   ODataActionResource,
   ODataEntities,
   ODataEntity,
+  ODataFunctionOptions,
   ODataFunctionResource,
   ODataNavigationPropertyResource,
   ODataProperty,
@@ -25,31 +27,31 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'entity',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataFunctionOptions<R>
   ): Observable<ODataEntity<R>>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'entities',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataFunctionOptions<R>
   ): Observable<ODataEntities<R>>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'property',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataFunctionOptions<R>
   ): Observable<ODataProperty<R>>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'none',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataFunctionOptions<R>
   ): Observable<null>;
   protected callFunction<P, R>(
     params: P | null,
     resource: ODataFunctionResource<P, R>,
     responseType: 'property' | 'entity' | 'entities' | 'none',
-    options: ODataQueryArgumentsOptions<R> = {}
+    options: ODataFunctionOptions<R> = {}
   ): Observable<any> {
     resource.query((q) => q.apply(options));
     return resource.call(params, {
@@ -62,31 +64,31 @@ export abstract class ODataBaseService {
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'entity',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataActionOptions<R>
   ): Observable<ODataEntity<R>>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'entities',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataActionOptions<R>
   ): Observable<ODataEntities<R>>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'property',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataActionOptions<R>
   ): Observable<ODataProperty<R>>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'none',
-    options?: ODataQueryArgumentsOptions<R>
+    options?: ODataActionOptions<R>
   ): Observable<null>;
   protected callAction<P, R>(
     params: P | null,
     resource: ODataActionResource<P, R>,
     responseType: 'property' | 'entity' | 'entities' | 'none',
-    options: ODataQueryArgumentsOptions<R> = {}
+    options: ODataActionOptions<R> = {}
   ): Observable<any> {
     resource.query((q) => q.apply(options));
     return resource.call(params, {

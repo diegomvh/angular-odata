@@ -5,14 +5,15 @@ import { DEFAULT_VERSION } from '../constants';
 import { ODataHelper } from '../helper';
 import {
   EntityKey,
+  ODataActionOptions,
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
   ODataEntityResource,
   ODataEntitySetResource,
+  ODataFunctionOptions,
   ODataNavigationPropertyResource,
   ODataOptions,
   ODataPropertyResource,
-  ODataQueryArgumentsOptions,
   ODataQueryOptionsHandler,
   ODataResource,
 } from '../resources';
@@ -939,7 +940,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
+    { ...options }: {} & ODataFunctionOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (resource instanceof ODataEntitySetResource) {
@@ -966,7 +967,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     name: string,
     params: P | null,
     responseType: 'property' | 'model' | 'collection' | 'none',
-    { ...options }: {} & ODataQueryArgumentsOptions<R> = {}
+    { ...options }: {} & ODataActionOptions<R> = {}
   ): Observable<R | ODataModel<R> | ODataCollection<R, ODataModel<R>> | null> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntitySetResource)) {
