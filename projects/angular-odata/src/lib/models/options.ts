@@ -54,12 +54,12 @@ export class ODataModelEvent<T> {
       collection,
       previous,
       value,
-      track,
+      field,
       options,
     }: {
       model?: ODataModel<T>;
       collection?: ODataCollection<T, ODataModel<T>>;
-      track?: string | number;
+      field?: ODataModelField<any> | number;
       previous?: any;
       value?: any;
       options?: any;
@@ -76,7 +76,7 @@ export class ODataModelEvent<T> {
         (this.collection || this.model) as
           | ODataModel<any>
           | ODataCollection<any, ODataModel<any>>,
-        track || null,
+        field || null,
       ],
     ];
   }
@@ -88,15 +88,23 @@ export class ODataModelEvent<T> {
 
   chain: [
     ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-    string | number | null
+    ODataModelField<any> | number | null
   ][];
   push(
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-    track: string | number
+    field: ODataModelField<any> | number
   ) {
-    this.chain.splice(0, 0, [model, track]);
+    let event = new ODataModelEvent(this.name, {
+      model: this.model,
+      collection: this.collection,
+      previous: this.previous,
+      value: this.value,
+      options: this.options,
+    });
+    event.chain = [...this.chain];
+    event.chain.splice(0, 0, [model, field]);
+    return event;
   }
-
   visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
     return (
       this.chain.some((c) => c[0] === model) &&
@@ -106,13 +114,13 @@ export class ODataModelEvent<T> {
 
   get path() {
     return this.chain
-      .map(([, track], index) =>
-        typeof track === 'number'
-          ? `[${track}]`
-          : typeof track === 'string'
+      .map(([, field], index) =>
+        typeof field === 'number'
+          ? `[${field}]`
+          : field instanceof ODataModelField
           ? index === 0
-            ? track
-            : `.${track}`
+            ? field.name
+            : `.${field.name}`
           : ''
       )
       .join('');
@@ -530,7 +538,7 @@ export class ODataModelOptions<T> {
   }
 
   type({ alias = false }: { alias?: boolean } = {}) {
-    return this.schema.type({alias});
+    return this.schema.type({ alias });
   }
 
   isTypeOf(type: string) {
@@ -543,8 +551,11 @@ export class ODataModelOptions<T> {
     if (type && this.isTypeOf(type)) return true;
     // Resolve By fields
     let keys = Object.keys(entity);
-    let names = this.fields({include_navigation: true, include_parents: true}).map(f => f.name);
-    return keys.every(key => names.includes(key));
+    let names = this.fields({
+      include_navigation: true,
+      include_parents: true,
+    }).map((f) => f.name);
+    return keys.every((key) => names.includes(key));
   }
 
   findChildOptions(
@@ -1433,9 +1444,7 @@ export class ODataModelOptions<T> {
     if (!ODataModelOptions.isCollection(relation.model)) {
       let ref = field.meta?.resolveReferential(relation.model, field);
       if (ref !== null && ref !== undefined) {
-        Object.entries(ref).forEach(([k, v]) =>
-          this._setValue(self, k, v, false)
-        );
+        Object.assign(self, ref);
       }
     }
 
@@ -1447,7 +1456,7 @@ export class ODataModelOptions<T> {
     if (!self._silent && changed) {
       self.events$.emit(
         new ODataModelEvent('change', {
-          track: field.name,
+          field: field,
           model: self,
           value: relation.model,
           previous: current,
@@ -1460,7 +1469,7 @@ export class ODataModelOptions<T> {
 
   private _setValue<F>(
     self: ODataModel<T>,
-    field: string,
+    field: ODataModelField<F>,
     value:
       | F
       | F[]
@@ -1476,20 +1485,21 @@ export class ODataModelOptions<T> {
       include_concurrency: true,
       include_computed: true,
     });
-    const currentValue = attrs[field];
+    const name = field.name;
+    const currentValue = attrs[name];
     changed = !Types.isEqual(currentValue, value);
     if (self._reset) {
-      self._changes.delete(field);
-      self._attributes.set(field, value);
-    } else if (Types.isEqual(value, self._attributes.get(field))) {
-      self._changes.delete(field);
+      self._changes.delete(name);
+      self._attributes.set(name, value);
+    } else if (Types.isEqual(value, self._attributes.get(name))) {
+      self._changes.delete(name);
     } else if (changed) {
-      self._changes.set(field, value);
+      self._changes.set(name, value);
     }
     if (!self._silent && changed) {
       self.events$.emit(
         new ODataModelEvent('change', {
-          track: field,
+          field: field,
           model: self,
           value,
           previous: currentValue,
@@ -1514,7 +1524,7 @@ export class ODataModelOptions<T> {
   ): boolean {
     return field.isStructuredType()
       ? this._setStructured(self, field, value)
-      : this._setValue(self, field.name, value, field.isKey());
+      : this._setValue(self, field, value, field.isKey());
   }
 
   private _unlink<F>(self: ODataModel<T>, relation: ODataModelRelation<F>) {
@@ -1554,15 +1564,12 @@ export class ODataModelOptions<T> {
                 relation.field
               );
               if (ref !== null && ref !== undefined) {
-                Object.entries(ref).forEach(([k, v]) =>
-                  this._setValue(self, k, v, false)
-                );
+                Object.assign(self, ref);
               }
             }
           }
 
-          event.push(self, relation.field.name);
-          self.events$.emit(event);
+          self.events$.emit(event.push(self, relation.field));
         }
       }
     );

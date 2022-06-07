@@ -1017,8 +1017,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
           }
 
           const index = this.models().indexOf(entry.model);
-          event.push(this, index);
-          this.events$.emit(event);
+          this.events$.emit(event.push(this, index));
         }
       }
     );
