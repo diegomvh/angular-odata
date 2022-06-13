@@ -136,7 +136,7 @@ export class ODataModel<T> {
   ): ODataNavigationPropertyResource<N> {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)
-      throw Error(`navigationProperty: Can't find navigation property ${name}`);
+      throw Error(`navigationProperty: Can't find navigation property ${name as string}`);
 
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
@@ -687,7 +687,7 @@ export class ODataModel<T> {
   ): Observable<P | ODataModel<P> | ODataCollection<P, ODataModel<P>> | null> {
     const field = this._meta.field(name);
     if (field === undefined || field.navigation)
-      throw Error(`getValue: Can't find property ${name}`);
+      throw Error(`getValue: Can't find property ${name as string}`);
 
     let value = (this as any)[name] as
       | P
@@ -763,7 +763,7 @@ export class ODataModel<T> {
   ): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
     const field = this._meta.field<P>(name);
     if (field === undefined || !field.navigation)
-      throw Error(`getReference: Can't find navigation property ${name}`);
+      throw Error(`getReference: Can't find navigation property ${name as string}`);
 
     let model = (this as any)[name] as
       | ODataModel<P>

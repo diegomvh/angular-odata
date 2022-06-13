@@ -824,7 +824,7 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
           ? value.join(' ')
           : value
       )
-      .map((v) => `${prefix}${v}`)
+      .map((v) => `${prefix}${v as string}`)
       .join(',');
   } else if (typeof orderBy === 'object') {
     return Object.entries(orderBy)
@@ -832,7 +832,7 @@ function buildOrderBy<T>(orderBy: OrderBy<T>, prefix: string = ''): string {
       .map((v) => `${prefix}${v}`)
       .join(',');
   }
-  return `${prefix}${orderBy}`;
+  return `${prefix}${orderBy as string}`;
 }
 
 function buildUrl(path: string, params: { [name: string]: any }): string {

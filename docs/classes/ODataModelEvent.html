@@ -306,7 +306,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:130</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="138" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:138</a></div>
                         </td>
                     </tr>
 
@@ -333,7 +333,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:122</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:130</a></div>
                         </td>
                     </tr>
 
@@ -467,7 +467,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>push(model: <a href="../objects/OData.html" target="_self">ODataModel&lt;any&gt; | ODataCollection&lt;any | ODataModel&lt;any&gt;&gt;</a>, track: string | number)</code>
+<code>push(model: <a href="../objects/OData.html" target="_self">ODataModel&lt;any&gt; | ODataCollection&lt;any | ODataModel&lt;any&gt;&gt;</a>, field: <a href="../objects/OData.html" target="_self">ODataModelField&lt;any&gt; | number</a>)</code>
                 </td>
             </tr>
 
@@ -508,9 +508,9 @@
 
                                 </tr>
                                 <tr>
-                                    <td>track</td>
+                                    <td>field</td>
                                     <td>
-                                            <code>string | number</code>
+                                                <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModelField&lt;any&gt; | number</a></code>
                                     </td>
 
                                     <td>
@@ -525,7 +525,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModelEvent&lt;unknown&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -592,8 +592,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="100"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:100</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:108</a></div>
                 </td>
             </tr>
 
@@ -667,7 +667,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="107" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:107</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:115</a></div>
                                 </td>
                             </tr>
 
@@ -689,7 +689,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="124" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:124</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:132</a></div>
                                 </td>
                             </tr>
 
@@ -711,7 +711,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:132</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="140" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:140</a></div>
                                 </td>
                             </tr>
 
@@ -778,12 +778,12 @@ export class ODataModelEvent&lt;T&gt; {
       collection,
       previous,
       value,
-      track,
+      field,
       options,
     }: {
       model?: ODataModel&lt;T&gt;;
       collection?: ODataCollection&lt;T, ODataModel&lt;T&gt;&gt;;
-      track?: string | number;
+      field?: ODataModelField&lt;any&gt; | number;
       previous?: any;
       value?: any;
       options?: any;
@@ -800,7 +800,7 @@ export class ODataModelEvent&lt;T&gt; {
         (this.collection || this.model) as
           | ODataModel&lt;any&gt;
           | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
-        track || null,
+        field || null,
       ],
     ];
   }
@@ -812,15 +812,23 @@ export class ODataModelEvent&lt;T&gt; {
 
   chain: [
     ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
-    string | number | null
+    ODataModelField&lt;any&gt; | number | null
   ][];
   push(
     model: ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
-    track: string | number
+    field: ODataModelField&lt;any&gt; | number
   ) {
-    this.chain.splice(0, 0, [model, track]);
+    let event &#x3D; new ODataModelEvent(this.name, {
+      model: this.model,
+      collection: this.collection,
+      previous: this.previous,
+      value: this.value,
+      options: this.options,
+    });
+    event.chain &#x3D; [...this.chain];
+    event.chain.splice(0, 0, [model, field]);
+    return event;
   }
-
   visited(model: ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;) {
     return (
       this.chain.some((c) &#x3D;&gt; c[0] &#x3D;&#x3D;&#x3D; model) &amp;&amp;
@@ -830,13 +838,13 @@ export class ODataModelEvent&lt;T&gt; {
 
   get path() {
     return this.chain
-      .map(([, track], index) &#x3D;&gt;
-        typeof track &#x3D;&#x3D;&#x3D; &#x27;number&#x27;
-          ? &#x60;[${track}]&#x60;
-          : typeof track &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
+      .map(([, field], index) &#x3D;&gt;
+        typeof field &#x3D;&#x3D;&#x3D; &#x27;number&#x27;
+          ? &#x60;[${field}]&#x60;
+          : field instanceof ODataModelField
           ? index &#x3D;&#x3D;&#x3D; 0
-            ? track
-            : &#x60;.${track}&#x60;
+            ? field.name
+            : &#x60;.${field.name}&#x60;
           : &#x27;&#x27;
       )
       .join(&#x27;&#x27;);
@@ -1253,12 +1261,25 @@ export class ODataModelOptions&lt;T&gt; {
     return this.schema.api;
   }
 
-  type() {
-    return this.schema.type();
+  type({ alias &#x3D; false }: { alias?: boolean } &#x3D; {}) {
+    return this.schema.type({ alias });
   }
 
   isTypeOf(type: string) {
     return this.schema.isTypeOf(type);
+  }
+
+  isModelFor(entity: T | { [name: string]: any }) {
+    // Resolve By Type
+    let type &#x3D; this.api.options.helper.type(entity);
+    if (type &amp;&amp; this.isTypeOf(type)) return true;
+    // Resolve By fields
+    let keys &#x3D; Object.keys(entity);
+    let names &#x3D; this.fields({
+      include_navigation: true,
+      include_parents: true,
+    }).map((f) &#x3D;&gt; f.name);
+    return keys.every((key) &#x3D;&gt; names.includes(key));
   }
 
   findChildOptions(
@@ -1327,7 +1348,7 @@ export class ODataModelOptions&lt;T&gt; {
         modelField.name &#x3D;&#x3D;&#x3D; name || modelField.field &#x3D;&#x3D;&#x3D; name
     );
     //Throw error if not found
-    if (field &#x3D;&#x3D;&#x3D; undefined) throw new Error(&#x60;No field with name ${name}&#x60;);
+    if (field &#x3D;&#x3D;&#x3D; undefined) throw new Error(&#x60;No field with name ${name as string}&#x60;);
     return field as ODataModelField&lt;F&gt;;
   }
 
@@ -2147,9 +2168,7 @@ export class ODataModelOptions&lt;T&gt; {
     if (!ODataModelOptions.isCollection(relation.model)) {
       let ref &#x3D; field.meta?.resolveReferential(relation.model, field);
       if (ref !&#x3D;&#x3D; null &amp;&amp; ref !&#x3D;&#x3D; undefined) {
-        Object.entries(ref).forEach(([k, v]) &#x3D;&gt;
-          this._setValue(self, k, v, false)
-        );
+        Object.assign(self, ref);
       }
     }
 
@@ -2161,7 +2180,7 @@ export class ODataModelOptions&lt;T&gt; {
     if (!self._silent &amp;&amp; changed) {
       self.events$.emit(
         new ODataModelEvent(&#x27;change&#x27;, {
-          track: field.name,
+          field: field,
           model: self,
           value: relation.model,
           previous: current,
@@ -2174,7 +2193,7 @@ export class ODataModelOptions&lt;T&gt; {
 
   private _setValue&lt;F&gt;(
     self: ODataModel&lt;T&gt;,
-    field: string,
+    field: ODataModelField&lt;F&gt;,
     value:
       | F
       | F[]
@@ -2190,20 +2209,21 @@ export class ODataModelOptions&lt;T&gt; {
       include_concurrency: true,
       include_computed: true,
     });
-    const currentValue &#x3D; attrs[field];
+    const name &#x3D; field.name;
+    const currentValue &#x3D; attrs[name];
     changed &#x3D; !Types.isEqual(currentValue, value);
     if (self._reset) {
-      self._changes.delete(field);
-      self._attributes.set(field, value);
-    } else if (Types.isEqual(value, self._attributes.get(field))) {
-      self._changes.delete(field);
+      self._changes.delete(name);
+      self._attributes.set(name, value);
+    } else if (Types.isEqual(value, self._attributes.get(name))) {
+      self._changes.delete(name);
     } else if (changed) {
-      self._changes.set(field, value);
+      self._changes.set(name, value);
     }
     if (!self._silent &amp;&amp; changed) {
       self.events$.emit(
         new ODataModelEvent(&#x27;change&#x27;, {
-          track: field,
+          field: field,
           model: self,
           value,
           previous: currentValue,
@@ -2228,7 +2248,7 @@ export class ODataModelOptions&lt;T&gt; {
   ): boolean {
     return field.isStructuredType()
       ? this._setStructured(self, field, value)
-      : this._setValue(self, field.name, value, field.isKey());
+      : this._setValue(self, field, value, field.isKey());
   }
 
   private _unlink&lt;F&gt;(self: ODataModel&lt;T&gt;, relation: ODataModelRelation&lt;F&gt;) {
@@ -2268,15 +2288,12 @@ export class ODataModelOptions&lt;T&gt; {
                 relation.field
               );
               if (ref !&#x3D;&#x3D; null &amp;&amp; ref !&#x3D;&#x3D; undefined) {
-                Object.entries(ref).forEach(([k, v]) &#x3D;&gt;
-                  this._setValue(self, k, v, false)
-                );
+                Object.assign(self, ref);
               }
             }
           }
 
-          event.push(self, relation.field.name);
-          self.events$.emit(event);
+          self.events$.emit(event.push(self, relation.field));
         }
       }
     );

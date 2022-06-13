@@ -624,7 +624,7 @@ export class ODataModelOptions<T> {
         modelField.name === name || modelField.field === name
     );
     //Throw error if not found
-    if (field === undefined) throw new Error(`No field with name ${name}`);
+    if (field === undefined) throw new Error(`No field with name ${name as string}`);
     return field as ODataModelField<F>;
   }
 
