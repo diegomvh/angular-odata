@@ -464,19 +464,51 @@ export class ODataQueryOptionsHandler<T> {
     skip,
     skiptoken,
     top,
-  }: { skip?: number; skiptoken?: string; top?: number } = {}) {
-    if (skiptoken !== undefined) this.skiptoken(skiptoken);
-    else if (skip !== undefined) this.skip(skip);
-    if (top !== undefined) this.top(top);
+  }: { skip?: number | null; skiptoken?: string | null; top?: number | null } = {}) {
+    if (skiptoken !== undefined) {
+      if (skiptoken !== null) {
+        this.skiptoken(skiptoken);
+      } else {
+        this.options.remove(QueryOptionNames.skiptoken);
+      } 
+    }
+    else if (skip !== undefined) {
+      if (skip !== null) {
+        this.skip(skip);
+      } else {
+        this.options.remove(QueryOptionNames.skip);
+      } 
+    } 
+    if (top !== undefined) {
+      if (top !== null) {
+        this.top(top);
+      } else {
+        this.options.remove(QueryOptionNames.top);
+      } 
+    }
   }
 
   /**
    * Shortcut for clear pagination by unset $top, $skip, $skiptoken.
    */
   clearPaging() {
-    this.skip().clear();
-    this.top().clear();
-    this.skiptoken().clear();
+    this.options.remove(QueryOptionNames.skip);
+    this.options.remove(QueryOptionNames.top);
+    this.options.remove(QueryOptionNames.skiptoken);
+  }
+
+  /**
+   * Shortcut for clear query. 
+   */
+  clear() {
+    this.options.clear();
+  }
+
+  /**
+   * Retrun the query.
+   */
+  query() {
+    return this.options.toQueryArguments();
   }
 
   /**
@@ -485,22 +517,65 @@ export class ODataQueryOptionsHandler<T> {
    */
   apply(query: ODataQueryArguments<T>) {
     if (query.select !== undefined) {
-      this.options.option(QueryOptionNames.select, query.select);
+      if (query.select instanceof SelectExpression) {
+        this.options.expression(QueryOptionNames.select, query.select as SelectExpression<T>);
+      } else if (query.select !== null) {
+        this.options.option(QueryOptionNames.select, query.select);
+      } else {
+        this.options.remove(QueryOptionNames.select);
+      }
     }
     if (query.expand !== undefined) {
-      this.options.option(QueryOptionNames.expand, query.expand);
+      if (query.expand instanceof ExpandExpression) {
+        this.options.expression(QueryOptionNames.expand, query.expand as ExpandExpression<T>);
+      } else if (query.expand !== null) {
+        this.options.option(QueryOptionNames.expand, query.expand);
+      } else {
+        this.options.remove(QueryOptionNames.expand);
+      }
+    }
+    if (query.compute !== undefined) {
+      if (query.compute instanceof ComputeExpression) {
+        this.options.expression(QueryOptionNames.compute, query.compute as ComputeExpression<T>);
+      } else if (query.compute !== null) {
+        this.options.option(QueryOptionNames.compute, query.compute);
+      } else {
+        this.options.remove(QueryOptionNames.compute);
+      }
     }
     if (query.transform !== undefined) {
-      this.options.option(QueryOptionNames.transform, query.transform);
+      if (query.transform !== null) {
+        this.options.option(QueryOptionNames.transform, query.transform);
+      } else {
+        this.options.remove(QueryOptionNames.transform);
+      }
     }
     if (query.search !== undefined) {
-      this.options.option(QueryOptionNames.search, query.search);
+      if (query.search instanceof SearchExpression) {
+        this.options.expression(QueryOptionNames.search, query.search as SearchExpression<T>);
+      } else if (query.search !== null) {
+        this.options.option(QueryOptionNames.search, query.search);
+      } else {
+        this.options.remove(QueryOptionNames.search);
+      }
     }
     if (query.filter !== undefined) {
-      this.options.option(QueryOptionNames.filter, query.filter);
+      if (query.filter instanceof FilterExpression) {
+        this.options.expression(QueryOptionNames.filter, query.filter as FilterExpression<T>);
+      } else if (query.filter !== null) {
+        this.options.option(QueryOptionNames.filter, query.filter);
+      } else {
+        this.options.remove(QueryOptionNames.filter);
+      }
     }
     if (query.orderBy !== undefined) {
-      this.options.option(QueryOptionNames.orderBy, query.orderBy);
+      if (query.orderBy instanceof OrderByExpression) {
+        this.options.expression(QueryOptionNames.orderBy, query.orderBy as OrderByExpression<T>);
+      } else if (query.orderBy !== null) {
+        this.options.option(QueryOptionNames.orderBy, query.orderBy);
+      } else {
+        this.options.remove(QueryOptionNames.orderBy);
+      }
     }
     this.paging(query);
   }
