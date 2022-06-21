@@ -464,27 +464,31 @@ export class ODataQueryOptionsHandler<T> {
     skip,
     skiptoken,
     top,
-  }: { skip?: number | null; skiptoken?: string | null; top?: number | null } = {}) {
+  }: {
+    skip?: number | null;
+    skiptoken?: string | null;
+    top?: number | null;
+  } = {}) {
     if (skiptoken !== undefined) {
       if (skiptoken !== null) {
         this.skiptoken(skiptoken);
       } else {
         this.options.remove(QueryOptionNames.skiptoken);
-      } 
+      }
     }
-    else if (skip !== undefined) {
+    if (skip !== undefined) {
       if (skip !== null) {
         this.skip(skip);
       } else {
         this.options.remove(QueryOptionNames.skip);
-      } 
-    } 
+      }
+    }
     if (top !== undefined) {
       if (top !== null) {
         this.top(top);
       } else {
         this.options.remove(QueryOptionNames.top);
-      } 
+      }
     }
   }
 
@@ -498,7 +502,7 @@ export class ODataQueryOptionsHandler<T> {
   }
 
   /**
-   * Shortcut for clear query. 
+   * Shortcut for clear query.
    */
   clear() {
     this.options.clear();
@@ -518,7 +522,10 @@ export class ODataQueryOptionsHandler<T> {
   apply(query: ODataQueryArguments<T>) {
     if (query.select !== undefined) {
       if (query.select instanceof SelectExpression) {
-        this.options.expression(QueryOptionNames.select, query.select as SelectExpression<T>);
+        this.options.expression(
+          QueryOptionNames.select,
+          query.select as SelectExpression<T>
+        );
       } else if (query.select !== null) {
         this.options.option(QueryOptionNames.select, query.select);
       } else {
@@ -527,7 +534,10 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (query.expand !== undefined) {
       if (query.expand instanceof ExpandExpression) {
-        this.options.expression(QueryOptionNames.expand, query.expand as ExpandExpression<T>);
+        this.options.expression(
+          QueryOptionNames.expand,
+          query.expand as ExpandExpression<T>
+        );
       } else if (query.expand !== null) {
         this.options.option(QueryOptionNames.expand, query.expand);
       } else {
@@ -536,7 +546,10 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (query.compute !== undefined) {
       if (query.compute instanceof ComputeExpression) {
-        this.options.expression(QueryOptionNames.compute, query.compute as ComputeExpression<T>);
+        this.options.expression(
+          QueryOptionNames.compute,
+          query.compute as ComputeExpression<T>
+        );
       } else if (query.compute !== null) {
         this.options.option(QueryOptionNames.compute, query.compute);
       } else {
@@ -552,7 +565,10 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (query.search !== undefined) {
       if (query.search instanceof SearchExpression) {
-        this.options.expression(QueryOptionNames.search, query.search as SearchExpression<T>);
+        this.options.expression(
+          QueryOptionNames.search,
+          query.search as SearchExpression<T>
+        );
       } else if (query.search !== null) {
         this.options.option(QueryOptionNames.search, query.search);
       } else {
@@ -561,7 +577,10 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (query.filter !== undefined) {
       if (query.filter instanceof FilterExpression) {
-        this.options.expression(QueryOptionNames.filter, query.filter as FilterExpression<T>);
+        this.options.expression(
+          QueryOptionNames.filter,
+          query.filter as FilterExpression<T>
+        );
       } else if (query.filter !== null) {
         this.options.option(QueryOptionNames.filter, query.filter);
       } else {
@@ -570,7 +589,10 @@ export class ODataQueryOptionsHandler<T> {
     }
     if (query.orderBy !== undefined) {
       if (query.orderBy instanceof OrderByExpression) {
-        this.options.expression(QueryOptionNames.orderBy, query.orderBy as OrderByExpression<T>);
+        this.options.expression(
+          QueryOptionNames.orderBy,
+          query.orderBy as OrderByExpression<T>
+        );
       } else if (query.orderBy !== null) {
         this.options.option(QueryOptionNames.orderBy, query.orderBy);
       } else {
