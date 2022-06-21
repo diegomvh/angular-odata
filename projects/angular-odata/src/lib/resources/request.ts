@@ -218,63 +218,55 @@ export class ODataRequest<T> {
   }
 
   get path() {
-    return this._queryBody ? `${this._path}/${$QUERY}` : this._path;
+    return this.isQueryBody() ? `${this._path}/${$QUERY}` : this._path;
   }
 
   get method() {
-    return this._queryBody ? 'POST' : this._method;
+    return this.isQueryBody() ? 'POST' : this._method;
   }
 
   get body() {
-    if (this._queryBody) {
-      let [, bodyParams] = Http.splitHttpParams(
+    return (this.isQueryBody()) ?
+      Http.splitHttpParams(
         this._params,
         this.bodyQueryOptions.map((name) => `$${name}`)
-      );
-      return bodyParams.toString();
-    } else {
-      return this._body;
-    }
+      )[1].toString() :
+      this._body;
   }
 
   get params() {
-    if (this._queryBody) {
-      let [queryParams] = Http.splitHttpParams(
+    return (this.isQueryBody()) ?
+      Http.splitHttpParams(
         this._params,
         this.bodyQueryOptions.map((name) => `$${name}`)
-      );
-      return queryParams;
-    } else {
-      return this._params;
-    }
+      )[0] :
+      this._params;
   }
 
   get headers() {
-    if (this._queryBody) {
-      return Http.mergeHttpHeaders(this._headers, { CONTENT_TYPE: TEXT_PLAIN });
-    } else {
-      return this._headers;
-    }
+    return (this.isQueryBody()) ?
+      Http.mergeHttpHeaders(this._headers, { CONTENT_TYPE: TEXT_PLAIN }) :
+      this._headers;
   }
 
   get pathWithParams() {
-    let path = this._path;
-    if (this._params.keys().length > 0) {
-      path = `${path}?${this._params}`;
-    }
-    return path;
+    return (this._params.keys().length > 0) ? `${this.path}?${this._params}` : this.path;
   }
 
   get url() {
-    return `${this.api.serviceRootUrl}${this._path}`;
+    return `${this.api.serviceRootUrl}${this.path}`;
   }
 
   get urlWithParams() {
     return `${this.api.serviceRootUrl}${this.pathWithParams}`;
   }
 
+  isQueryBody() {
+    return this._queryBody;
+  }
+
   isBatch() {
-    return this._path.endsWith($BATCH);
+    return this.path.endsWith($BATCH);
   }
 
   isFetch() {
