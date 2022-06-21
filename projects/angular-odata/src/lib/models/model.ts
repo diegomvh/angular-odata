@@ -570,7 +570,7 @@ export class ODataModel<T> {
    * Create an execution context for change the internal query of a resource
    * @param func Function to execute
    */
-  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
+  query(func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void) {
     return this._meta.query(this, this.resource(), func) as this;
   }
 

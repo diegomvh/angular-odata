@@ -14,7 +14,7 @@ export class ODataInMemoryCache extends ODataCache {
   putResponse(req: ODataRequest<any>, res: ODataResponse<any>) {
     let scope = this.scope(req);
     let tags = this.tags(res);
-    this.put(req.pathWithParams, res, {
+    this.put(req.cacheKey, res, {
       timeout: res.options.maxAge,
       scope,
       tags,
@@ -28,6 +28,6 @@ export class ODataInMemoryCache extends ODataCache {
    */
   getResponse(req: ODataRequest<any>): ODataResponse<any> | undefined {
     let scope = this.scope(req);
-    return this.get(req.pathWithParams, { scope });
+    return this.get(req.cacheKey, { scope });
   }
 }

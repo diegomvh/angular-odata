@@ -40,7 +40,6 @@ export class ODataRequest<T> {
   private readonly _headers: HttpHeaders;
   private readonly _params: HttpParams;
   private readonly _path: string;
-  private readonly _queryBody: boolean;
 
   constructor(init: {
     method: string;
@@ -89,8 +88,8 @@ export class ODataRequest<T> {
         ? this.api.options.withCredentials
         : init.withCredentials;
     this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
-    this.bodyQueryOptions =
-      init.bodyQueryOptions || this.api.options.bodyQueryOptions;
+    this.bodyQueryOptions = 
+      [...(this.api.options.bodyQueryOptions || []), ...(init.bodyQueryOptions || [])];
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = this.resource.pathAndParams();
@@ -202,10 +201,6 @@ export class ODataRequest<T> {
         : params;
     //#endregion
 
-    this._queryBody =
-      this._method === 'GET' &&
-      this.bodyQueryOptions.length > 0 &&
-      this.bodyQueryOptions.some((name) => this._params.has(`$${name}`));
   }
 
   get responseType(): 'arraybuffer' | 'blob' | 'json' | 'text' {
@@ -250,7 +245,7 @@ export class ODataRequest<T> {
   }
 
   get pathWithParams() {
-    return (this._params.keys().length > 0) ? `${this.path}?${this._params}` : this.path;
+    return (this.params.keys().length > 0) ? `${this.path}?${this.params}` : this.path;
   }
 
   get url() {
@@ -261,8 +256,14 @@ export class ODataRequest<T> {
     return `${this.api.serviceRootUrl}${this.pathWithParams}`;
   }
 
+  get cacheKey() {
+    return (this._params.keys().length > 0) ? `${this._path}?${this._params}` : this._path;
+  }
+
   isQueryBody() {
-    return this._queryBody;
+    return this._method === 'GET' &&
+      this.bodyQueryOptions.length > 0 &&
+      this.bodyQueryOptions.some((name) => this._params.has(`$${name}`));
   }
 
   isBatch() {

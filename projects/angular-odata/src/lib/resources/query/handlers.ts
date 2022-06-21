@@ -214,10 +214,20 @@ export class ODataQueryOptionsHandler<T> {
     return alias(value, name);
   }
 
+  /**
+   * Create a duration odata value
+   * @param value The value to duration
+   * @returns The duration value
+   */
   duration(value: any) {
     return duration(value);
   }
 
+  /**
+   * Create a binary odata value
+   * @param value The value to binary
+   * @returns The binary value
+   */
   binary(value: any) {
     return binary(value);
   }

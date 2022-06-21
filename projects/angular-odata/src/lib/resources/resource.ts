@@ -287,8 +287,12 @@ export class ODataResource<T> {
    * @param f Function context for handle the segments
    * @returns ODataActionResource
    */
-  segment(f: (q: ODataPathSegmentsHandler<T>) => void) {
-    f(new ODataPathSegmentsHandler<T>(this.pathSegments));
+  segment(f: (q: ODataPathSegmentsHandler<T>, s?: ODataStructuredType<T>) => void) {
+    /*
+    const type = this.type();
+    const schema = type ? this.api.findStructuredTypeForType<T>(type) : undefined;
+    */
+    f(new ODataPathSegmentsHandler<T>(this.pathSegments), this.schema instanceof ODataStructuredType ? this.schema : undefined);
     return this;
   }
 
@@ -297,8 +301,12 @@ export class ODataResource<T> {
    * Create an object handler for mutate the query options of the resource
    * @param f Function context for handle the query options
    */
-  query(f: (q: ODataQueryOptionsHandler<T>) => void) {
-    f(new ODataQueryOptionsHandler<T>(this.queryOptions));
+  query(f: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void) {
+    /*
+    const type = this.returnType();
+    const schema = type ? this.api.findStructuredTypeForType<T>(type) : undefined;
+    */
+    f(new ODataQueryOptionsHandler<T>(this.queryOptions), this.schema instanceof ODataStructuredType ? this.schema : undefined);
     return this;
   }
 
