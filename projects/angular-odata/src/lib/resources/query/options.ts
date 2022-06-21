@@ -120,13 +120,13 @@ export class ODataQueryOptions<T> {
   }
 
   // Set Renderable
-  expression(key: QueryOptionNames, exp?: Expression<T> | null) {
+  expression(key: QueryOptionNames, exp?: Expression<T>) {
     if (exp !== undefined) this.values.set(key, exp);
     return this.values.get(key);
   }
 
   // Option Handler
-  option<O>(key: QueryOptionNames, opts?: O | null) {
+  option<O>(key: QueryOptionNames, opts?: O) {
     if (opts !== undefined) this.values.set(key, opts);
     return new ODataQueryOptionHandler<O>(this.values, key);
   }
