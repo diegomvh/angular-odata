@@ -104,6 +104,18 @@ export class ODataQueryOptionHandler<T> {
   at(index: number) {
     return this.assertArray()[index];
   }
+
+  some(predicate: (value: any) => boolean) {
+    return this.assertArray().some(predicate);
+  }
+
+  every(predicate: (value: any) => boolean) {
+    return this.assertArray().every(predicate);
+  }
+
+  find(predicate: (value: any) => boolean) {
+    return this.assertArray().find(predicate);
+  }
   //#endregion
 
   //#region HashMap Value
