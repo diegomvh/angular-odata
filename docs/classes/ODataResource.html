@@ -911,8 +911,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="464"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:464</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="472"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:472</a></div>
                 </td>
             </tr>
 
@@ -1217,8 +1217,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="389"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:389</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="397"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:397</a></div>
                 </td>
             </tr>
 
@@ -1587,8 +1587,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="445"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:445</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="453"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:453</a></div>
                 </td>
             </tr>
 
@@ -1741,8 +1741,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="408"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:408</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="416"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:416</a></div>
                 </td>
             </tr>
 
@@ -1829,8 +1829,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="426"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:426</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="434"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:434</a></div>
                 </td>
             </tr>
 
@@ -1908,15 +1908,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>query(f: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>) => void)</code>
+<code>query(f: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>,s: <a href="../classes/ODataStructuredType.html">ODataStructuredType<T></a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="300"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:300</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="304"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:304</a></div>
                 </td>
             </tr>
 
@@ -1994,8 +1994,8 @@ Create an object handler for mutate the query options of the resource</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="328"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:328</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="336"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:336</a></div>
                 </td>
             </tr>
 
@@ -2076,8 +2076,8 @@ Create an object handler for mutate the query options of the resource</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="305"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:305</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="313"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:313</a></div>
                 </td>
             </tr>
 
@@ -2167,8 +2167,8 @@ Create an object handler for mutate the query options of the resource</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="319"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:319</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="327"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/resource.ts:327</a></div>
                 </td>
             </tr>
 
@@ -2272,7 +2272,7 @@ Create an object handler for mutate the query options of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>segment(f: (q: <a href="../objects/OData.html">ODataPathSegmentsHandler<T></a>) => void)</code>
+<code>segment(f: (q: <a href="../objects/OData.html">ODataPathSegmentsHandler<T></a>,s: <a href="../classes/ODataStructuredType.html">ODataStructuredType<T></a>) => void)</code>
                 </td>
             </tr>
 
@@ -2877,8 +2877,12 @@ export class ODataResource&lt;T&gt; {
    * @param f Function context for handle the segments
    * @returns ODataActionResource
    */
-  segment(f: (q: ODataPathSegmentsHandler&lt;T&gt;) &#x3D;&gt; void) {
-    f(new ODataPathSegmentsHandler&lt;T&gt;(this.pathSegments));
+  segment(f: (q: ODataPathSegmentsHandler&lt;T&gt;, s?: ODataStructuredType&lt;T&gt;) &#x3D;&gt; void) {
+    /*
+    const type &#x3D; this.type();
+    const schema &#x3D; type ? this.api.findStructuredTypeForType&lt;T&gt;(type) : undefined;
+    */
+    f(new ODataPathSegmentsHandler&lt;T&gt;(this.pathSegments), this.schema instanceof ODataStructuredType ? this.schema : undefined);
     return this;
   }
 
@@ -2887,8 +2891,12 @@ export class ODataResource&lt;T&gt; {
    * Create an object handler for mutate the query options of the resource
    * @param f Function context for handle the query options
    */
-  query(f: (q: ODataQueryOptionsHandler&lt;T&gt;) &#x3D;&gt; void) {
-    f(new ODataQueryOptionsHandler&lt;T&gt;(this.queryOptions));
+  query(f: (q: ODataQueryOptionsHandler&lt;T&gt;, s?: ODataStructuredType&lt;T&gt;) &#x3D;&gt; void) {
+    /*
+    const type &#x3D; this.returnType();
+    const schema &#x3D; type ? this.api.findStructuredTypeForType&lt;T&gt;(type) : undefined;
+    */
+    f(new ODataQueryOptionsHandler&lt;T&gt;(this.queryOptions), this.schema instanceof ODataStructuredType ? this.schema : undefined);
     return this;
   }
 

@@ -2601,7 +2601,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>query(self: <a href="../classes/ODataModel.html" target="_self">ODataModel&lt;T&gt;</a>, resource: <a href="../objects/OData.html" target="_self">ODataEntityResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataSingletonResource&lt;T&gt;</a>, func: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>) => void)</code>
+<code>query(self: <a href="../classes/ODataModel.html" target="_self">ODataModel&lt;T&gt;</a>, resource: <a href="../objects/OData.html" target="_self">ODataEntityResource&lt;T&gt; | ODataPropertyResource&lt;T&gt; | ODataNavigationPropertyResource&lt;T&gt; | ODataSingletonResource&lt;T&gt;</a>, func: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>,s: <a href="../classes/ODataStructuredType.html">ODataStructuredType<T></a>) => void)</code>
                 </td>
             </tr>
 
@@ -4469,7 +4469,7 @@ export class ODataModelOptions&lt;T&gt; {
       | ODataPropertyResource&lt;T&gt;
       | ODataNavigationPropertyResource&lt;T&gt;
       | ODataSingletonResource&lt;T&gt;,
-    func: (q: ODataQueryOptionsHandler&lt;T&gt;) &#x3D;&gt; void
+    func: (q: ODataQueryOptionsHandler&lt;T&gt;, s?: ODataStructuredType&lt;T&gt;) &#x3D;&gt; void
   ) {
     resource.query(func);
     this.attach(self, resource);

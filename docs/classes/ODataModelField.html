@@ -2663,7 +2663,7 @@ export class ODataModelOptions&lt;T&gt; {
       | ODataPropertyResource&lt;T&gt;
       | ODataNavigationPropertyResource&lt;T&gt;
       | ODataSingletonResource&lt;T&gt;,
-    func: (q: ODataQueryOptionsHandler&lt;T&gt;) &#x3D;&gt; void
+    func: (q: ODataQueryOptionsHandler&lt;T&gt;, s?: ODataStructuredType&lt;T&gt;) &#x3D;&gt; void
   ) {
     resource.query(func);
     this.attach(self, resource);

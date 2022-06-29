@@ -2905,7 +2905,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>query(func: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>) => void)</code>
+<code>query(func: (q: <a href="../objects/OData.html">ODataQueryOptionsHandler<T></a>,s: <a href="../classes/ODataStructuredType.html">ODataStructuredType<T></a>) => void)</code>
                 </td>
             </tr>
 
@@ -4326,7 +4326,7 @@ export class ODataModel&lt;T&gt; {
    * Create an execution context for change the internal query of a resource
    * @param func Function to execute
    */
-  query(func: (q: ODataQueryOptionsHandler&lt;T&gt;) &#x3D;&gt; void) {
+  query(func: (q: ODataQueryOptionsHandler&lt;T&gt;, s?: ODataStructuredType&lt;T&gt;) &#x3D;&gt; void) {
     return this._meta.query(this, this.resource(), func) as this;
   }
 
