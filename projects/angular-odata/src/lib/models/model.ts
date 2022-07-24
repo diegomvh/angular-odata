@@ -136,7 +136,9 @@ export class ODataModel<T> {
   ): ODataNavigationPropertyResource<N> {
     const field = this._meta.field(name);
     if (field === undefined || !field.navigation)
-      throw Error(`navigationProperty: Can't find navigation property ${name as string}`);
+      throw Error(
+        `navigationProperty: Can't find navigation property ${name as string}`
+      );
 
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource) || !resource.hasKey())
@@ -570,7 +572,9 @@ export class ODataModel<T> {
    * Create an execution context for change the internal query of a resource
    * @param func Function to execute
    */
-  query(func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void) {
+  query(
+    func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+  ) {
     return this._meta.query(this, this.resource(), func) as this;
   }
 
@@ -763,7 +767,9 @@ export class ODataModel<T> {
   ): ODataModel<P> | ODataCollection<P, ODataModel<P>> | null {
     const field = this._meta.field<P>(name);
     if (field === undefined || !field.navigation)
-      throw Error(`getReference: Can't find navigation property ${name as string}`);
+      throw Error(
+        `getReference: Can't find navigation property ${name as string}`
+      );
 
     let model = (this as any)[name] as
       | ODataModel<P>

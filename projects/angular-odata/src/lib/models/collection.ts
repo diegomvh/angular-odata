@@ -17,6 +17,7 @@ import {
   ODataQueryOptionsHandler,
   ODataResource,
 } from '../resources';
+import { ODataStructuredType } from '../schema/structured-type';
 import { Types } from '../utils/types';
 import { ODataModel } from './model';
 import {
@@ -929,7 +930,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }
   }
 
-  query(func: (q: ODataQueryOptionsHandler<T>) => void) {
+  query(
+    func: (q: ODataQueryOptionsHandler<T>, s?: ODataStructuredType<T>) => void
+  ) {
     const resource = this.resource();
     resource.query(func);
     this.attach(resource);

@@ -88,8 +88,10 @@ export class ODataRequest<T> {
         ? this.api.options.withCredentials
         : init.withCredentials;
     this.fetchPolicy = init.fetchPolicy || this.api.options.fetchPolicy;
-    this.bodyQueryOptions = 
-      [...(this.api.options.bodyQueryOptions || []), ...(init.bodyQueryOptions || [])];
+    this.bodyQueryOptions = [
+      ...(this.api.options.bodyQueryOptions || []),
+      ...(init.bodyQueryOptions || []),
+    ];
 
     // The Path and Params from resource
     const [resourcePath, resourceParams] = this.resource.pathAndParams();
@@ -200,7 +202,6 @@ export class ODataRequest<T> {
           ])
         : params;
     //#endregion
-
   }
 
   get responseType(): 'arraybuffer' | 'blob' | 'json' | 'text' {
@@ -221,31 +222,33 @@ export class ODataRequest<T> {
   }
 
   get body() {
-    return (this.isQueryBody()) ?
-      Http.splitHttpParams(
-        this._params,
-        this.bodyQueryOptions.map((name) => `$${name}`)
-      )[1].toString() :
-      this._body;
+    return this.isQueryBody()
+      ? Http.splitHttpParams(
+          this._params,
+          this.bodyQueryOptions.map((name) => `$${name}`)
+        )[1].toString()
+      : this._body;
   }
 
   get params() {
-    return (this.isQueryBody()) ?
-      Http.splitHttpParams(
-        this._params,
-        this.bodyQueryOptions.map((name) => `$${name}`)
-      )[0] :
-      this._params;
+    return this.isQueryBody()
+      ? Http.splitHttpParams(
+          this._params,
+          this.bodyQueryOptions.map((name) => `$${name}`)
+        )[0]
+      : this._params;
   }
 
   get headers() {
-    return (this.isQueryBody()) ?
-      Http.mergeHttpHeaders(this._headers, { CONTENT_TYPE: TEXT_PLAIN }) :
-      this._headers;
+    return this.isQueryBody()
+      ? Http.mergeHttpHeaders(this._headers, { CONTENT_TYPE: TEXT_PLAIN })
+      : this._headers;
   }
 
   get pathWithParams() {
-    return (this.params.keys().length > 0) ? `${this.path}?${this.params}` : this.path;
+    return this.params.keys().length > 0
+      ? `${this.path}?${this.params}`
+      : this.path;
   }
 
   get url() {
@@ -257,13 +260,17 @@ export class ODataRequest<T> {
   }
 
   get cacheKey() {
-    return (this._params.keys().length > 0) ? `${this._path}?${this._params}` : this._path;
+    return this._params.keys().length > 0
+      ? `${this._path}?${this._params}`
+      : this._path;
   }
 
   isQueryBody() {
-    return this._method === 'GET' &&
+    return (
+      this._method === 'GET' &&
       this.bodyQueryOptions.length > 0 &&
-      this.bodyQueryOptions.some((name) => this._params.has(`$${name}`));
+      this.bodyQueryOptions.some((name) => this._params.has(`$${name}`))
+    );
   }
 
   isBatch() {

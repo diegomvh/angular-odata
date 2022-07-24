@@ -36,10 +36,7 @@ describe('ODataClient', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        ODataModule.forRoot(TripPinConfig), 
-        HttpClientTestingModule
-      ],
+      imports: [ODataModule.forRoot(TripPinConfig), HttpClientTestingModule],
     });
 
     client = TestBed.inject<ODataClient>(ODataClient);
@@ -531,22 +528,26 @@ describe('ODataClient', () => {
   });
 
   it('should get by passing query options in the request body using api options', () => {
-    const people: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
+    const people: ODataEntitySetResource<Person> = client.entitySet<Person>(
+      'People',
+      `${NAMESPACE}.Person`
+    );
     const api = client.apiFor(people);
-    api.options.bodyQueryOptions = [QueryOptionNames.select, QueryOptionNames.expand]
+    api.options.bodyQueryOptions = [
+      QueryOptionNames.select,
+      QueryOptionNames.expand,
+    ];
     people
-      .query(q => {
-        q.select(['FistName', 'LastName']); 
-        q.expand({Friends: {}});
+      .query((q) => {
+        q.select(['FistName', 'LastName']);
+        q.expand({ Friends: {} });
       })
       .fetchAll()
       .subscribe((people) => {
         expect(people).toBeDefined();
       });
 
-    const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People/$query`
-    );
+    const req = httpMock.expectOne(`${SERVICE_ROOT}People/$query`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBe('$select=FistName,LastName&$expand=Friends');
     req.flush('');
@@ -555,34 +556,41 @@ describe('ODataClient', () => {
   it('should get by passing query options in the request body using fetch options', () => {
     client
       .entitySet<Person>('People', `${NAMESPACE}.Person`)
-      .query(q => {
-        q.select(['FistName', 'LastName']); 
-        q.expand({Friends: {}});
+      .query((q) => {
+        q.select(['FistName', 'LastName']);
+        q.expand({ Friends: {} });
       })
-      .fetchAll({bodyQueryOptions: [QueryOptionNames.select, QueryOptionNames.expand]})
+      .fetchAll({
+        bodyQueryOptions: [QueryOptionNames.select, QueryOptionNames.expand],
+      })
       .subscribe((people) => {
         expect(people).toBeDefined();
       });
 
-    const req = httpMock.expectOne(
-      `${SERVICE_ROOT}People/$query`
-    );
+    const req = httpMock.expectOne(`${SERVICE_ROOT}People/$query`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toBe('$select=FistName,LastName&$expand=Friends');
     req.flush('');
   });
 
   it('should get by passing query options in the request body using mixed options', () => {
-    const people: ODataEntitySetResource<Person> = client.entitySet<Person>('People', `${NAMESPACE}.Person`);
+    const people: ODataEntitySetResource<Person> = client.entitySet<Person>(
+      'People',
+      `${NAMESPACE}.Person`
+    );
     const api = client.apiFor(people);
-    api.options.bodyQueryOptions = [QueryOptionNames.select]
+    api.options.bodyQueryOptions = [QueryOptionNames.select];
     people
       .query((q, s) => {
-        q.select(['FistName', 'LastName']); 
-        q.expand({Friends: {}});
-        q.filter({Gender: s?.findFieldByName<PersonGender>('Gender')?.encode(PersonGender.Male)})
+        q.select(['FistName', 'LastName']);
+        q.expand({ Friends: {} });
+        q.filter({
+          Gender: s
+            ?.findFieldByName<PersonGender>('Gender')
+            ?.encode(PersonGender.Male),
+        });
       })
-      .fetchAll({bodyQueryOptions: [QueryOptionNames.filter]})
+      .fetchAll({ bodyQueryOptions: [QueryOptionNames.filter] })
       .subscribe((people) => {
         expect(people).toBeDefined();
       });
@@ -591,7 +599,9 @@ describe('ODataClient', () => {
       `${SERVICE_ROOT}People/$query?$expand=Friends`
     );
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toBe("$select=FistName,LastName&$filter=Gender%20eq%20'Male'");
+    expect(req.request.body).toBe(
+      "$select=FistName,LastName&$filter=Gender%20eq%20'Male'"
+    );
     req.flush('');
   });
 
