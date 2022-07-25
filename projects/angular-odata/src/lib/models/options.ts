@@ -1313,8 +1313,8 @@ export class ODataModelOptions<T> {
     if (field.isStructuredType()) {
       const relation = self._relations.get(field.name);
       if (
-        relation?.model === null ||
-        ODataModelOptions.isModel(relation?.model)
+        field.navigation &&
+        (relation?.model === null || ODataModelOptions.isModel(relation?.model))
       ) {
         // Check for reference
         const referenced = this.resolveReferenced(self, field);
