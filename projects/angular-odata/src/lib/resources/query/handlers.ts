@@ -14,16 +14,18 @@ import {
 } from './builder';
 import {
   ComputeExpression,
-  FilterConnector,
+  ComputeExpressionBuilder,
   FilterExpression,
+  FilterExpressionBuilder,
   OrderByExpression,
-  SearchConnector,
+  OrderByExpressionBuilder,
   SearchExpression,
-  ODataFunctions,
-  ODataOperators,
+  SearchExpressionBuilder,
+  ExpandExpression,
+  ExpandExpressionBuilder,
+  SelectExpression,
+  SelectExpressionBuilder,
 } from './expressions';
-import { ExpandExpression } from './expressions/expand';
-import { SelectExpression } from './expressions/select';
 import type { ODataQueryArguments, ODataQueryOptions } from './options';
 
 export class ODataQueryOptionHandler<T> {
@@ -261,12 +263,7 @@ export class ODataQueryOptionsHandler<T> {
    * If opts is given then set te value as new value for $select.
    * @param opts Select<T> value or builder function for SelectExpression<T>
    */
-  select(
-    opts: (
-      builder: { s: T; e: () => SelectExpression<T> },
-      current?: SelectExpression<T>
-    ) => SelectExpression<T>
-  ): SelectExpression<T>;
+  select(opts: SelectExpressionBuilder<T>): SelectExpression<T>;
   select(opts: Select<T>): ODataQueryOptionHandler<T>;
   select(): ODataQueryOptionHandler<T>;
   select(opts?: any): any {
@@ -287,12 +284,7 @@ export class ODataQueryOptionsHandler<T> {
    * If opts is given then set te value as new value for $expand.
    * @param opts Expand<T> value or builder function for ExpandExpression<T>
    */
-  expand(
-    opts: (
-      builder: { s: T; e: () => ExpandExpression<T> },
-      current?: ExpandExpression<T>
-    ) => ExpandExpression<T>
-  ): ExpandExpression<T>;
+  expand(opts: ExpandExpressionBuilder<T>): ExpandExpression<T>;
   expand(opts: Expand<T>): ODataQueryOptionHandler<T>;
   expand(): ODataQueryOptionHandler<T>;
   expand(opts?: any): any {
@@ -316,12 +308,7 @@ export class ODataQueryOptionsHandler<T> {
    */
   compute(
     opts: (
-      builder: {
-        s: T;
-        e: () => ComputeExpression<T>;
-        o: ODataOperators<T>;
-        f: ODataFunctions<T>;
-      },
+      builder: ComputeExpressionBuilder<T>,
       current?: ComputeExpression<T>
     ) => ComputeExpression<T>
   ): ComputeExpression<T>;
@@ -370,9 +357,7 @@ export class ODataQueryOptionsHandler<T> {
    */
   search(
     opts: (
-      builder: {
-        e: (connector: SearchConnector) => SearchExpression<T>;
-      },
+      builder: SearchExpressionBuilder<T>,
       current?: SearchExpression<T>
     ) => SearchExpression<T>
   ): SearchExpression<T>;
@@ -398,12 +383,7 @@ export class ODataQueryOptionsHandler<T> {
    */
   filter(
     opts: (
-      builder: {
-        s: T;
-        e: (connector?: FilterConnector) => FilterExpression<T>;
-        o: ODataOperators<T>;
-        f: ODataFunctions<T>;
-      },
+      builder: FilterExpressionBuilder<T>,
       current?: FilterExpression<T>
     ) => FilterExpression<T>
   ): FilterExpression<T>;
@@ -429,7 +409,7 @@ export class ODataQueryOptionsHandler<T> {
    */
   orderBy(
     opts: (
-      builder: { s: T; e: () => OrderByExpression<T> },
+      builder: OrderByExpressionBuilder<T>, 
       current?: OrderByExpression<T>
     ) => OrderByExpression<T>
   ): OrderByExpression<T>;

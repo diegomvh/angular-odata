@@ -2,17 +2,11 @@ import { QueryOptionNames } from '../../../types';
 import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
-import { FilterConnector, FilterExpression } from './filter';
-import { OrderByExpression } from './orderby';
-import { SearchConnector, SearchExpression } from './search';
-import { SelectExpression } from './select';
-import {
-  Field,
-  ODataFunctions,
-  ODataOperators,
-  render,
-  Renderable,
-} from './syntax';
+import { FilterExpression, FilterExpressionBuilder } from './filter';
+import { OrderByExpression, OrderByExpressionBuilder } from './orderby';
+import { SearchExpression, SearchExpressionBuilder } from './search';
+import { SelectExpression, SelectExpressionBuilder } from './select';
+import { Field, render, Renderable } from './syntax';
 
 export class ExpandField<T> implements Renderable {
   constructor(
@@ -51,7 +45,7 @@ export class ExpandField<T> implements Renderable {
     ]
       .filter((key) => !Types.isEmpty(this.values[key]))
       .reduce((acc, key) => {
-        let value = this.values[key];
+        let value: any = this.values[key];
         if (Types.rawType(value).endsWith('Expression')) {
           value = (value as Expression<T>).render({ aliases, prefix, escape });
         }
@@ -77,7 +71,7 @@ export class ExpandField<T> implements Renderable {
 
   select<T extends object>(
     opts: (
-      builder: { s: T; e: () => SelectExpression<T> },
+      builder: SelectExpressionBuilder<T>,
       current?: SelectExpression<T>
     ) => SelectExpression<T>
   ): SelectExpression<T> {
@@ -89,7 +83,7 @@ export class ExpandField<T> implements Renderable {
 
   expand<T extends object>(
     opts: (
-      builder: { s: T; e: () => ExpandExpression<T> },
+      builder: ExpandExpressionBuilder<T>,
       current?: ExpandExpression<T>
     ) => ExpandExpression<T>
   ) {
@@ -101,12 +95,7 @@ export class ExpandField<T> implements Renderable {
 
   filter<T extends object>(
     opts: (
-      builder: {
-        s: T;
-        e: (connector?: FilterConnector) => FilterExpression<T>;
-        o: ODataOperators<T>;
-        f: ODataFunctions<T>;
-      },
+      builder: FilterExpressionBuilder<T>,
       current?: FilterExpression<T>
     ) => FilterExpression<T>
   ) {
@@ -117,9 +106,7 @@ export class ExpandField<T> implements Renderable {
   }
 
   search<T extends object>(
-    opts: (builder: {
-      e: (connector?: SearchConnector) => SearchExpression<T>;
-    }) => SearchExpression<T>
+    opts: (builder: SearchExpressionBuilder<T>) => SearchExpression<T>
   ) {
     return this.option(
       QueryOptionNames.search,
@@ -129,7 +116,7 @@ export class ExpandField<T> implements Renderable {
 
   orderBy<T extends object>(
     opts: (
-      builder: { s: T; e: () => OrderByExpression<T> },
+      builder: OrderByExpressionBuilder<T>,
       current?: OrderByExpression<T>
     ) => OrderByExpression<T>
   ) {
@@ -158,6 +145,7 @@ export class ExpandField<T> implements Renderable {
   }
 }
 
+export type ExpandExpressionBuilder<T> = { t: T; e: () => ExpandExpression<T> };
 export class ExpandExpression<T> extends Expression<T> {
   constructor({
     children,
@@ -167,25 +155,25 @@ export class ExpandExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  static e<T>() {
+  static expression<T>() {
     return new ExpandExpression<T>();
   }
 
-  static s<T extends object>(): T {
+  static type<T extends object>(): T {
     return Field.factory<T>();
   }
 
   static expand<T extends object>(
     opts: (
-      builder: { s: T; e: () => ExpandExpression<T> },
+      builder: ExpandExpressionBuilder<T>,
       current?: ExpandExpression<T>
     ) => ExpandExpression<T>,
     current?: ExpandExpression<T>
   ): ExpandExpression<T> {
     return opts(
       {
-        s: ExpandExpression.s<T>(),
-        e: ExpandExpression.e,
+        t: ExpandExpression.type<T>(),
+        e: ExpandExpression.expression,
       },
       current
     ) as ExpandExpression<T>;

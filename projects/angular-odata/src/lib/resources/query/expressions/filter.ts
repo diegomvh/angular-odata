@@ -13,6 +13,12 @@ import {
 
 export type FilterConnector = 'and' | 'or';
 
+export type FilterExpressionBuilder<T> = {
+  t: T;
+  e: (connector?: FilterConnector) => FilterExpression<T>;
+  o: ODataOperators<T>;
+  f: ODataFunctions<T>;
+};
 export class FilterExpression<F> extends Expression<F> {
   private _connector: FilterConnector;
   private _negated: boolean;
@@ -30,30 +36,25 @@ export class FilterExpression<F> extends Expression<F> {
     this._negated = negated || false;
   }
 
-  static s<T extends object>(): T {
+  static type<T extends object>(): T {
     return Field.factory<T>();
   }
 
-  static e<T>(connector: FilterConnector = 'and') {
+  static expression<T>(connector: FilterConnector = 'and') {
     return new FilterExpression<T>({ connector });
   }
 
   static filter<T extends object>(
     opts: (
-      builder: {
-        s: T;
-        e: (connector?: FilterConnector) => FilterExpression<T>;
-        o: ODataOperators<T>;
-        f: ODataFunctions<T>;
-      },
+      builder: FilterExpressionBuilder<T>,
       current?: FilterExpression<T>
     ) => FilterExpression<T>,
     current?: FilterExpression<T>
   ): FilterExpression<T> {
     return opts(
       {
-        s: FilterExpression.s<T>(),
-        e: FilterExpression.e,
+        t: FilterExpression.type<T>(),
+        e: FilterExpression.expression,
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
@@ -223,7 +224,7 @@ export class FilterExpression<F> extends Expression<F> {
   ): FilterExpression<F> {
     const exp = opts({
       s: Field.factory<N>(),
-      e: FilterExpression.e,
+      e: FilterExpression.expression,
     }) as FilterExpression<N>;
     return this._add(syntax.any(left, exp, alias));
   }
@@ -238,7 +239,7 @@ export class FilterExpression<F> extends Expression<F> {
   ): FilterExpression<F> {
     const exp = opts({
       s: Field.factory<N>(),
-      e: FilterExpression.e,
+      e: FilterExpression.expression,
     }) as FilterExpression<N>;
     return this._add(syntax.all(left, exp, alias));
   }

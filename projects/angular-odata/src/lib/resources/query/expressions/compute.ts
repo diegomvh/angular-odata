@@ -9,6 +9,10 @@ import {
   Renderable,
 } from './syntax';
 
+export type ComputeExpressionBuilder<T> = {
+  t: T;
+  e: () => ComputeExpression<T>;
+};
 export class ComputeExpression<T> extends Expression<T> {
   names: string[];
   constructor({
@@ -22,25 +26,25 @@ export class ComputeExpression<T> extends Expression<T> {
     this.names = names || [];
   }
 
-  static e<T>() {
+  static expression<T>() {
     return new ComputeExpression<T>();
   }
 
-  static s<T extends object>(): T {
+  static type<T extends object>(): T {
     return Field.factory<T>();
   }
 
   static compute<T extends object>(
     opts: (
-      builder: { s: T; e: () => ComputeExpression<T> },
+      builder: ComputeExpressionBuilder<T>,
       current?: ComputeExpression<T>
     ) => ComputeExpression<T>,
     current?: ComputeExpression<T>
   ): ComputeExpression<T> {
     return opts(
       {
-        s: ComputeExpression.s<T>(),
-        e: ComputeExpression.e,
+        t: ComputeExpression.type<T>(),
+        e: ComputeExpression.expression,
       },
       current
     ) as ComputeExpression<T>;
