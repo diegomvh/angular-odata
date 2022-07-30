@@ -37,7 +37,7 @@ export class SearchTerm implements Renderable {
 }
 
 export type SearchExpressionBuilder<T> = {
-  e: (connector: SearchConnector) => SearchExpression<T>;
+  e: (connector?: SearchConnector) => SearchExpression<T>;
 };
 export class SearchExpression<T> extends Expression<T> {
   private _connector: SearchConnector;

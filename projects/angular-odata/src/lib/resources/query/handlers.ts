@@ -409,7 +409,7 @@ export class ODataQueryOptionsHandler<T> {
    */
   orderBy(
     opts: (
-      builder: OrderByExpressionBuilder<T>, 
+      builder: OrderByExpressionBuilder<T>,
       current?: OrderByExpression<T>
     ) => OrderByExpression<T>
   ): OrderByExpression<T>;

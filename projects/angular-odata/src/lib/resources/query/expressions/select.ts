@@ -2,7 +2,7 @@ import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { Field, Renderable } from './syntax';
 
-export type SelectExpressionBuilder<T> = { t: T, e: () => SelectExpression<T> };
+export type SelectExpressionBuilder<T> = { t: T; e: () => SelectExpression<T> };
 export class SelectExpression<T> extends Expression<T> {
   constructor({
     children,
