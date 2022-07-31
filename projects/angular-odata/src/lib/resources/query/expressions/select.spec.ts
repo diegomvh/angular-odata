@@ -34,8 +34,8 @@ describe('OData search builder', () => {
   describe('base condition', () => {
     describe('as factory function', () => {
       it('select', () => {
-        const compare1 = SelectExpression.select<Person>(({ t: s, e }) =>
-          e().field(s.Car).field(s.Name)
+        const compare1 = SelectExpression.select<Person>(({ t, e }) =>
+          e().field(t.Car).field(t.Name)
         );
 
         expect(compare1.render()).toBe('Car,Name');
@@ -44,8 +44,8 @@ describe('OData search builder', () => {
 
     describe('navigation e().field(...)', () => {
       it('navigate', () => {
-        const compare = SelectExpression.select<Person>(({ t: s, e }) =>
-          e().field(s.Car?.Model?.Name).field(s.Age)
+        const compare = SelectExpression.select<Person>(({ t, e }) =>
+          e().field(t.Car?.Model?.Name).field(t.Age)
         );
 
         expect(compare.render()).toBe('Car/Model/Name,Age');

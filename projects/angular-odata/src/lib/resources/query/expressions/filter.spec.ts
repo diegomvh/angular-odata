@@ -93,18 +93,18 @@ describe('OData filter builder', () => {
 
     describe('navigate main', () => {
       it('navigate', () => {
-        const compare1 = FilterExpression.filter<Person>(({ e, t: s }) =>
-          e('and').eq(s.Car!.Model!.Id, 1)
+        const compare1 = FilterExpression.filter<Person>(({ e, t }) =>
+          e('and').eq(t.Car!.Model!.Id, 1)
         );
         expect(compare1.render()).toBe('Car/Model/Id eq 1');
       });
 
       it('combination navigate', () => {
-        const compare1 = FilterExpression.filter<Person>(({ e, t: s }) =>
+        const compare1 = FilterExpression.filter<Person>(({ e, t }) =>
           e('and')
-            .eq(s.Car!.Model!.Id, 1)
+            .eq(t.Car!.Model!.Id, 1)
             .ne('Id', 1)
-            .or(e().endsWith(s.Name, 'John'))
+            .or(e().endsWith(t.Name, 'John'))
         );
         expect(compare1.render()).toBe(
           "(Car/Model/Id eq 1 and Id ne 1) or endswith(Name, 'John')"
@@ -112,8 +112,8 @@ describe('OData filter builder', () => {
       });
 
       it('combination and.or()', () => {
-        const compare1 = FilterExpression.filter<Person>(({ e, t: s }) =>
-          e('and').eq(s.Car!.Model!.Id, 1).or(e().endsWith(s.Name, 'John'))
+        const compare1 = FilterExpression.filter<Person>(({ e, t }) =>
+          e('and').eq(t.Car!.Model!.Id, 1).or(e().endsWith(t.Name, 'John'))
         );
         expect(compare1.render()).toBe(
           "Car/Model/Id eq 1 or endswith(Name, 'John')"
@@ -123,15 +123,15 @@ describe('OData filter builder', () => {
 
     describe('lambdas basics', () => {
       it('any', () => {
-        const compare1 = FilterExpression.filter<Person>(({ e, t: s }) =>
-          e('and').any<Pet>(s.Pets!, ({ e, s }) => e().eq(s.Age, 1))
+        const compare1 = FilterExpression.filter<Person>(({ e, t }) =>
+          e('and').any<Pet>(t.Pets!, ({ e, s }) => e().eq(t.Age, 1))
         );
         expect(compare1.render()).toBe('Pets/any(p:p/Age eq 1)');
       });
 
       it('all', () => {
-        const compare1 = FilterExpression.filter<Person>(({ e, t: s }) =>
-          e('and').all<Pet>(s.Pets!, ({ e, s }) => e().ne(s.Age, 1))
+        const compare1 = FilterExpression.filter<Person>(({ e, t }) =>
+          e('and').all<Pet>(t.Pets!, ({ e, s }) => e().ne(t.Age, 1))
         );
         expect(compare1.render()).toBe('Pets/all(p:p/Age ne 1)');
       });
@@ -266,9 +266,9 @@ describe('OData filter builder', () => {
         });
 
         it('length', () => {
-          const s = Field.factory<Person>();
+          const t = Field.factory<Person>();
           const func = FilterExpression.filter<any>(({ e, f }) =>
-            e().eq(f.length(s.Car!.Year), 19)
+            e().eq(f.length(t.Car!.Year), 19)
           );
 
           expect(func.render()).toBe('length(Car/Year) eq 19');
