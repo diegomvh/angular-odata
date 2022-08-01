@@ -113,12 +113,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    * @returns The field parser
    */
   findFieldByName<F>(name: keyof T) {
-    return this.fields({
-      include_parents: true,
-      include_navigation: true,
-    }).find((f) => f.name === name) as
-      | ODataStructuredTypeFieldParser<F>
-      | undefined;
+    return this.parser.findFieldByName<F>(name);
   }
 
   /**
@@ -149,47 +144,6 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   }
 
   /**
-   * Returns all fields of the structured type.
-   * @param include_navigation Include navigation properties in the result.
-   * @param include_parents Include the parent types in the result.
-   * @returns All fields of the structured type.
-   */
-  fields({
-    include_navigation,
-    include_parents,
-  }: {
-    include_parents: boolean;
-    include_navigation: boolean;
-  }): ODataStructuredTypeFieldParser<any>[] {
-    return [
-      ...(include_parents && this.parent !== undefined
-        ? this.parent.fields({ include_parents, include_navigation })
-        : []),
-      ...this.parser.fields.filter(
-        (field) => include_navigation || !field.navigation
-      ),
-    ];
-  }
-
-  /**
-   * Returns the keys of the structured type.
-   * @param include_parents Include the parent fields
-   * @returns The keys of the structured type
-   */
-  keys({
-    include_parents = true,
-  }: {
-    include_parents?: boolean;
-  } = {}): ODataEntityTypeKey[] {
-    return [
-      ...(include_parents && this.parent !== undefined
-        ? this.parent.keys({ include_parents })
-        : []),
-      ...(this.parser.keys || []),
-    ];
-  }
-
-  /**
    * Picks the fields from attributes.
    * @param attrs
    * @param include_parents Include the parent fields
@@ -209,16 +163,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
       include_etag?: boolean;
     } = {}
   ): Partial<T> {
-    const names = this.fields({ include_parents, include_navigation }).map(
-      (f) => f.name
-    );
-    return Object.keys(attrs)
-      .filter(
-        (key) =>
-          names.indexOf(key) !== -1 ||
-          (key == this.api.options.helper.ODATA_ETAG && include_etag)
-      )
-      .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
+    return this.parser.pick(attrs, {include_etag, include_navigation, include_parents, options: this.api.options });
   }
 
   /**
@@ -249,6 +194,35 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    */
   encode(value: T, options?: ParserOptions): any {
     return this.parser.encode(value, options);
+  }
+
+  /**
+   * Returns all fields of the structured type.
+   * @param include_navigation Include navigation properties in the result.
+   * @param include_parents Include the parent types in the result.
+   * @returns All fields of the structured type.
+   */
+  fields({
+    include_navigation,
+    include_parents,
+  }: {
+    include_parents: boolean;
+    include_navigation: boolean;
+  }): ODataStructuredTypeFieldParser<any>[] {
+    return this.parser.fields({include_navigation, include_parents});
+  }
+
+  /**
+   * Returns the keys of the structured type.
+   * @param include_parents Include the parent fields
+   * @returns The keys of the structured type
+   */
+  keys({
+    include_parents = true,
+  }: {
+    include_parents?: boolean;
+  } = {}): ODataEntityTypeKey[] {
+    return this.parser.keys({include_parents});
   }
 
   /**

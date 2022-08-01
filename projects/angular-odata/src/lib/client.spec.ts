@@ -27,6 +27,8 @@ import {
   SERVICE_ROOT,
   Trip,
   TripPinConfig,
+  Flight,
+  CONFIG_NAME
 } from './trippin.spec';
 import { QueryOptionNames } from './types';
 
@@ -152,17 +154,22 @@ describe('ODataClient', () => {
     expect(act.endpointUrl()).toEqual(SERVICE_ROOT + 'NS.MyAction');
   });
 
-  it('should return parser for resource', () => {
-    const set: ODataResource<Person> = client.entitySet<Person>(
-      'People',
-      `${NAMESPACE}.Person`
-    );
-    const api = client.apiFor(set);
-    const parser = api.parserForType<Person>(
-      set.type() as string
-    ) as ODataStructuredTypeParser<Person>;
+  it('should return parser for People', () => {
+    const api = client.apiFor(CONFIG_NAME);
+    const parser = api.parserForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
-    expect(parser.fields.length).toEqual(9);
+    expect(parser.fields({include_navigation: true, include_parents: false}).length).toEqual(9);
+    expect(parser.fields({include_navigation: false, include_parents: false}).length).toEqual(6);
+  });
+
+  it('should return parser for Flight', () => {
+    const api = client.apiFor(CONFIG_NAME);
+    const parser = api.parserForType<Flight>(`${NAMESPACE}.Flight`) as ODataStructuredTypeParser<Flight>;
+    expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
+    expect(parser.fields({include_navigation: false, include_parents: false}).length).toEqual(1);
+    expect(parser.fields({include_navigation: true, include_parents: false}).length).toEqual(4);
+    expect(parser.fields({include_navigation: false, include_parents: true}).length).toEqual(7);
+    expect(parser.fields({include_navigation: true, include_parents: true}).length).toEqual(10);
   });
 
   it('should convert resource to json', () => {

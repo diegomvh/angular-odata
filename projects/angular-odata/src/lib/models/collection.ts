@@ -109,7 +109,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     this._annotations =
       annots ||
       new ODataEntitiesAnnotations(
-        resource?.api.options.helper || ODataHelper[DEFAULT_VERSION]
+        ODataHelper[resource?.api?.options.version || DEFAULT_VERSION]
       );
 
     entities = entities || [];
@@ -338,7 +338,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return obs$.pipe(
       map((entities) => {
         this._annotations = new ODataEntitiesAnnotations(
-          resource?.api.options.helper
+          ODataHelper[resource?.api?.options.version || DEFAULT_VERSION]
         );
         this.assign(entities || [], { reset: true });
         this.events$.emit(
