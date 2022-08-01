@@ -56,11 +56,20 @@ export interface Airline {
 
 export const AirlineEntityConfig = {
   name: 'Airline',
-  keys: [{name: 'AirlineCode'}],
+  keys: [{ name: 'AirlineCode' }],
   fields: {
-    AirlineCode: {type: 'Edm.String', nullable: false, annotations: [{"term":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    Name: {type: 'Edm.String', nullable: false}
-  }
+    AirlineCode: {
+      type: 'Edm.String',
+      nullable: false,
+      annotations: [
+        {
+          term: 'Org.OData.Core.V1.Permissions',
+          permissions: ['Org.OData.Core.V1.Permission/Read'],
+        },
+      ],
+    },
+    Name: { type: 'Edm.String', nullable: false },
+  },
 } as StructuredTypeConfig<Airline>;
 
 export interface Airport {
@@ -71,12 +80,25 @@ export interface Airport {
 
 export const AirportEntityConfig = {
   name: 'Airport',
-  keys: [{name: 'IcaoCode'}],
+  keys: [{ name: 'IcaoCode' }],
   fields: {
-    IcaoCode: {type: 'Edm.String', nullable: false, annotations: [{"term":"Org.OData.Core.V1.Permissions","permissions":["Org.OData.Core.V1.Permission/Read"]}]},
-    Name: {type: 'Edm.String', nullable: false},
-    IataCode: {type: 'Edm.String', nullable: false, annotations: [{"term":"Org.OData.Core.V1.Immutable","bool":true}]},
-  }
+    IcaoCode: {
+      type: 'Edm.String',
+      nullable: false,
+      annotations: [
+        {
+          term: 'Org.OData.Core.V1.Permissions',
+          permissions: ['Org.OData.Core.V1.Permission/Read'],
+        },
+      ],
+    },
+    Name: { type: 'Edm.String', nullable: false },
+    IataCode: {
+      type: 'Edm.String',
+      nullable: false,
+      annotations: [{ term: 'Org.OData.Core.V1.Immutable', bool: true }],
+    },
+  },
 } as StructuredTypeConfig<Airport>;
 
 export interface PlanItem {
@@ -116,8 +138,8 @@ export const PublicTransportationEntityConfig = {
   name: 'PublicTransportation',
   base: `${NAMESPACE}.PlanItem`,
   fields: {
-    SeatNumber: {type: 'Edm.String'}
-  }
+    SeatNumber: { type: 'Edm.String' },
+  },
 } as StructuredTypeConfig<PublicTransportation>;
 
 export interface Flight extends PublicTransportation {
@@ -131,11 +153,11 @@ export const FlightEntityConfig = {
   name: 'Flight',
   base: `${NAMESPACE}.PublicTransportation`,
   fields: {
-    FlightNumber: {type: 'Edm.String', nullable: false},
-    From: {type: `${NAMESPACE}.Airport`, navigation: true},
-    To: {type: `${NAMESPACE}.Airport`, navigation: true},
-    Airline: {type: `${NAMESPACE}.Airline`, navigation: true}
-  }
+    FlightNumber: { type: 'Edm.String', nullable: false },
+    From: { type: `${NAMESPACE}.Airport`, navigation: true },
+    To: { type: `${NAMESPACE}.Airport`, navigation: true },
+    Airline: { type: `${NAMESPACE}.Airline`, navigation: true },
+  },
 } as StructuredTypeConfig<Flight>;
 
 export interface Trip {
@@ -257,7 +279,16 @@ export const TripPinConfig = {
     {
       namespace: `${NAMESPACE}`,
       enums: [PersonGenderConfig],
-      entities: [PhotoConfig, PersonConfig, PlanItemConfig, TripConfig, PublicTransportationEntityConfig, FlightEntityConfig, AirlineEntityConfig, AirportEntityConfig],
+      entities: [
+        PhotoConfig,
+        PersonConfig,
+        PlanItemConfig,
+        TripConfig,
+        PublicTransportationEntityConfig,
+        FlightEntityConfig,
+        AirlineEntityConfig,
+        AirportEntityConfig,
+      ],
       containers: [
         {
           entitySets: [PeopleConfig],

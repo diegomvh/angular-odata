@@ -28,7 +28,7 @@ import {
   Trip,
   TripPinConfig,
   Flight,
-  CONFIG_NAME
+  CONFIG_NAME,
 } from './trippin.spec';
 import { QueryOptionNames } from './types';
 
@@ -156,20 +156,38 @@ describe('ODataClient', () => {
 
   it('should return parser for People', () => {
     const api = client.apiFor(CONFIG_NAME);
-    const parser = api.parserForType<Person>(`${NAMESPACE}.Person`) as ODataStructuredTypeParser<Person>;
+    const parser = api.parserForType<Person>(
+      `${NAMESPACE}.Person`
+    ) as ODataStructuredTypeParser<Person>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
-    expect(parser.fields({include_navigation: true, include_parents: false}).length).toEqual(9);
-    expect(parser.fields({include_navigation: false, include_parents: false}).length).toEqual(6);
+    expect(
+      parser.fields({ include_navigation: true, include_parents: false }).length
+    ).toEqual(9);
+    expect(
+      parser.fields({ include_navigation: false, include_parents: false })
+        .length
+    ).toEqual(6);
   });
 
   it('should return parser for Flight', () => {
     const api = client.apiFor(CONFIG_NAME);
-    const parser = api.parserForType<Flight>(`${NAMESPACE}.Flight`) as ODataStructuredTypeParser<Flight>;
+    const parser = api.parserForType<Flight>(
+      `${NAMESPACE}.Flight`
+    ) as ODataStructuredTypeParser<Flight>;
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
-    expect(parser.fields({include_navigation: false, include_parents: false}).length).toEqual(1);
-    expect(parser.fields({include_navigation: true, include_parents: false}).length).toEqual(4);
-    expect(parser.fields({include_navigation: false, include_parents: true}).length).toEqual(7);
-    expect(parser.fields({include_navigation: true, include_parents: true}).length).toEqual(10);
+    expect(
+      parser.fields({ include_navigation: false, include_parents: false })
+        .length
+    ).toEqual(1);
+    expect(
+      parser.fields({ include_navigation: true, include_parents: false }).length
+    ).toEqual(4);
+    expect(
+      parser.fields({ include_navigation: false, include_parents: true }).length
+    ).toEqual(7);
+    expect(
+      parser.fields({ include_navigation: true, include_parents: true }).length
+    ).toEqual(10);
   });
 
   it('should convert resource to json', () => {

@@ -300,7 +300,8 @@ export class ODataStructuredTypeFieldParser<T>
 
   isKey() {
     return (
-      this.structuredType.keys()?.find((k) => k.name === this.name) !== undefined
+      this.structuredType.keys()?.find((k) => k.name === this.name) !==
+      undefined
     );
   }
 
@@ -478,8 +479,13 @@ export class ODataStructuredTypeParser<T>
    * @param name Name of the field
    * @returns The field parser
    */
-  findFieldByName<F>(name: keyof T): ODataStructuredTypeFieldParser<F> | undefined{
-    return this.fields({ include_parents: true, include_navigation: true }).find((f) => f.name === name);
+  findFieldByName<F>(
+    name: keyof T
+  ): ODataStructuredTypeFieldParser<F> | undefined {
+    return this.fields({
+      include_parents: true,
+      include_navigation: true,
+    }).find((f) => f.name === name);
   }
 
   /**
@@ -537,7 +543,7 @@ export class ODataStructuredTypeParser<T>
       include_parents = true,
       include_navigation = false,
       include_etag = true,
-      options
+      options,
     }: {
       include_parents?: boolean;
       include_navigation?: boolean;
@@ -553,7 +559,9 @@ export class ODataStructuredTypeParser<T>
       .filter(
         (key) =>
           names.indexOf(key) !== -1 ||
-          (key == ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG && include_etag)
+          (key ==
+            ODataHelper[parserOptions?.version || DEFAULT_VERSION].ODATA_ETAG &&
+            include_etag)
       )
       .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }

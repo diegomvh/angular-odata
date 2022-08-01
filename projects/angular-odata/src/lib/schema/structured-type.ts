@@ -163,7 +163,12 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
       include_etag?: boolean;
     } = {}
   ): Partial<T> {
-    return this.parser.pick(attrs, {include_etag, include_navigation, include_parents, options: this.api.options });
+    return this.parser.pick(attrs, {
+      include_etag,
+      include_navigation,
+      include_parents,
+      options: this.api.options,
+    });
   }
 
   /**
@@ -209,7 +214,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
     include_parents: boolean;
     include_navigation: boolean;
   }): ODataStructuredTypeFieldParser<any>[] {
-    return this.parser.fields({include_navigation, include_parents});
+    return this.parser.fields({ include_navigation, include_parents });
   }
 
   /**
@@ -222,7 +227,7 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   }: {
     include_parents?: boolean;
   } = {}): ODataEntityTypeKey[] {
-    return this.parser.keys({include_parents});
+    return this.parser.keys({ include_parents });
   }
 
   /**
