@@ -124,14 +124,14 @@ describe('OData filter builder', () => {
     describe('lambdas basics', () => {
       it('any', () => {
         const compare1 = FilterExpression.filter<Person>(({ e, t }) =>
-          e('and').any<Pet>(t.Pets!, ({ e, s }) => e().eq(t.Age, 1))
+          e('and').any<Pet>(t.Pets!, ({ e, t }) => e().eq(t.Age, 1))
         );
         expect(compare1.render()).toBe('Pets/any(p:p/Age eq 1)');
       });
 
       it('all', () => {
         const compare1 = FilterExpression.filter<Person>(({ e, t }) =>
-          e('and').all<Pet>(t.Pets!, ({ e, s }) => e().ne(t.Age, 1))
+          e('and').all<Pet>(t.Pets!, ({ e, t }) => e().ne(t.Age, 1))
         );
         expect(compare1.render()).toBe('Pets/all(p:p/Age ne 1)');
       });

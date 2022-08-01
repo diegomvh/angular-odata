@@ -217,13 +217,13 @@ export class FilterExpression<F> extends Expression<F> {
   any<N extends object>(
     left: N[],
     opts: (e: {
-      s: N;
       e: (connector?: FilterConnector) => FilterExpression<N>;
+      t: N;
     }) => FilterExpression<N>,
     alias?: string
   ): FilterExpression<F> {
     const exp = opts({
-      s: Field.factory<N>(),
+      t: Field.factory<N>(),
       e: FilterExpression.expression,
     }) as FilterExpression<N>;
     return this._add(syntax.any(left, exp, alias));
@@ -232,13 +232,13 @@ export class FilterExpression<F> extends Expression<F> {
   all<N extends object>(
     left: N[],
     opts: (e: {
-      s: N;
+      t: N;
       e: (connector?: FilterConnector) => FilterExpression<N>;
     }) => FilterExpression<N>,
     alias?: string
   ): FilterExpression<F> {
     const exp = opts({
-      s: Field.factory<N>(),
+      t: Field.factory<N>(),
       e: FilterExpression.expression,
     }) as FilterExpression<N>;
     return this._add(syntax.all(left, exp, alias));
