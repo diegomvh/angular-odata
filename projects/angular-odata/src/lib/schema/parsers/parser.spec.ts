@@ -4,6 +4,7 @@ import {
   Person,
   NAMESPACE,
   PersonGender,
+  Flight,
 } from '../../trippin.spec';
 import { ODataClient } from '../../client';
 import { ODataModule } from '../../module';
@@ -389,5 +390,21 @@ describe('ODataClient', () => {
         },
       ],
     });
+  });
+
+  it('should defaults attrs for entity', () => {
+    const schema = client.structuredTypeForType<Flight>(
+      `${NAMESPACE}.Flight`
+    ) as ODataStructuredType<Flight>;
+    expect(
+      schema.parser.defaults()
+    ).toEqual({
+      PlanItemId: 1,
+	    ConfirmationCode: '0',
+	    StartsAt: new Date("2022-08-05T15:50:12.052Z"),
+	    Duration: 'M',
+	    SeatNumber: '0',
+	    FlightNumber: '0'
+     });
   });
 });
