@@ -117,6 +117,7 @@ export const PlanItemConfig = {
     PlanItemId: {
       type: 'Edm.Int64',
       nullable: false,
+      default: '1',
       annotations: [
         {
           term: 'Org.OData.Core.V1.Permissions',
@@ -124,10 +125,10 @@ export const PlanItemConfig = {
         },
       ],
     },
-    ConfirmationCode: { type: 'Edm.String' },
-    StartsAt: { type: 'Edm.DateTimeOffset' },
+    ConfirmationCode: { type: 'Edm.String', default: '0' },
+    StartsAt: { type: 'Edm.DateTimeOffset', default: '2022-08-05T15:50:12.052Z' },
     EndsAt: { type: 'Edm.DateTimeOffset' },
-    Duration: { type: 'Edm.String' },
+    Duration: { type: 'Edm.String', default: "M" },
   },
 } as StructuredTypeConfig<PlanItem>;
 export interface PublicTransportation extends PlanItem {
@@ -138,7 +139,7 @@ export const PublicTransportationEntityConfig = {
   name: 'PublicTransportation',
   base: `${NAMESPACE}.PlanItem`,
   fields: {
-    SeatNumber: { type: 'Edm.String' },
+    SeatNumber: { type: 'Edm.String', default: '0' },
   },
 } as StructuredTypeConfig<PublicTransportation>;
 
@@ -153,7 +154,7 @@ export const FlightEntityConfig = {
   name: 'Flight',
   base: `${NAMESPACE}.PublicTransportation`,
   fields: {
-    FlightNumber: { type: 'Edm.String', nullable: false },
+    FlightNumber: { type: 'Edm.String', nullable: false, default: '0' },
     From: { type: `${NAMESPACE}.Airport`, navigation: true },
     To: { type: `${NAMESPACE}.Airport`, navigation: true },
     Airline: { type: `${NAMESPACE}.Airline`, navigation: true },
@@ -296,5 +297,5 @@ export const TripPinConfig = {
       ],
     },
   ],
-  parsers: EDM_PARSERS,
+  parsers: EDM_PARSERS
 } as ApiConfig;
