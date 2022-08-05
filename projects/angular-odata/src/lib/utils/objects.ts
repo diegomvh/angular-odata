@@ -186,7 +186,7 @@ export const Objects = {
       return target;
     }
 
-    if (Types.isObject(target) && 'clone' in target) {
+    if ('clone' in target) {
       // target is a cloneable object
       return target.clone();
     }

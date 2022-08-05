@@ -92,8 +92,7 @@ export class ODataQueryOptions<T> {
   toJSON() {
     return [...this.values.keys()].reduce((acc, key) => {
       let value = this.values.get(key);
-      value =
-        Types.isObject(value) && 'toJSON' in value ? value.toJSON() : value;
+      value = 'toJSON' in value ? value.toJSON() : value;
       return Object.assign(acc, { [key]: value });
     }, {});
   }
