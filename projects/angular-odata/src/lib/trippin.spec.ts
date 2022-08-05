@@ -112,12 +112,11 @@ export interface PlanItem {
 }
 export const PlanItemConfig = {
   name: 'PlanItem',
-  annotations: [],
+  keys: [{ name: 'PlanItemId' }],
   fields: {
     PlanItemId: {
       type: 'Edm.Int64',
       nullable: false,
-      default: '1',
       annotations: [
         {
           term: 'Org.OData.Core.V1.Permissions',

@@ -213,6 +213,20 @@ describe('ODataClient', () => {
     });
   });
 
+  it('should validate entity inheritance', () => {
+    const schema = client.structuredTypeForType<Flight>(
+      `${NAMESPACE}.Flight`
+    ) as ODataStructuredType<Flight>;
+    expect(
+      schema.parser.validate({
+        ConfirmationCode: '0',
+        FlightNumber: '0'
+      })
+    ).toEqual({
+      PlanItemId: [ 'required' ]
+    });
+  });
+
   it('should validate entity with collection', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
@@ -399,7 +413,6 @@ describe('ODataClient', () => {
     expect(
       schema.parser.defaults()
     ).toEqual({
-      PlanItemId: 1,
 	    ConfirmationCode: '0',
 	    StartsAt: new Date("2022-08-05T15:50:12.052Z"),
 	    Duration: 'M',
@@ -407,4 +420,37 @@ describe('ODataClient', () => {
 	    FlightNumber: '0'
      });
   });
+
+  it('should resolve single key for entity', () => {
+    const schema = client.structuredTypeForType<Flight>(
+      `${NAMESPACE}.Flight`
+    ) as ODataStructuredType<Flight>;
+    expect(
+      schema.parser.resolveKey({
+        PlanItemId: 34,
+	      ConfirmationCode: '0',
+	      StartsAt: new Date("2022-08-05T15:50:12.052Z"),
+	      Duration: 'M',
+	      SeatNumber: '0',
+	      FlightNumber: '0'
+      })
+    ).toEqual(34);
+  });
+
+  it('should resolve key for entity', () => {
+    const schema = client.structuredTypeForType<Flight>(
+      `${NAMESPACE}.Flight`
+    ) as ODataStructuredType<Flight>;
+    expect(
+      schema.parser.resolveKey({
+        PlanItemId: 34,
+	      ConfirmationCode: '0',
+	      StartsAt: new Date("2022-08-05T15:50:12.052Z"),
+	      Duration: 'M',
+	      SeatNumber: '0',
+	      FlightNumber: '0'
+      }, {single: false})
+    ).toEqual({PlanItemId: 34});
+  });
+
 });
