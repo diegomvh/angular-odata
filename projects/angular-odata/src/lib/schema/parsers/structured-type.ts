@@ -566,30 +566,31 @@ export class ODataStructuredTypeParser<T>
       .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }
 
-  resolveKey(value: any): any {
-    let key = this.parent?.resolveKey(value) || {};
-    if (Array.isArray(this._keys) && this._keys.length > 0) {
-      for (var k of this._keys) {
-        let v = value as any;
-        let structured = this as ODataStructuredTypeParser<any> | undefined;
-        let field: ODataStructuredTypeFieldParser<any> | undefined;
-        for (let name of k.name.split('/')) {
-          if (structured === undefined) break;
-          field = structured._fields.find((f) => f.name === name);
-          if (field !== undefined) {
-            v = Types.isPlainObject(v) ? v[field.name] : v;
-            structured = field.isStructuredType()
-              ? field.structured()
-              : undefined;
-          }
-        }
-        if (field !== undefined && v !== undefined) {
-          key[k.alias || field.name] = field.encode(v);
+  resolveKey(value: any, { resolve = true, single = true }: { resolve?: boolean, single?: boolean } = {}): any {
+    const keyTypes = this.keys({ include_parents: true });
+    const key = new Map<string, any>();
+    for (var kt of keyTypes) {
+      let v = value as any;
+      let structured = this as ODataStructuredTypeParser<any> | undefined;
+      let field: ODataStructuredTypeFieldParser<any> | undefined;
+      for (let name of kt.name.split('/')) {
+        if (structured === undefined) break;
+        field = structured
+          .fields({include_navigation: false, include_parents: true})
+          .find((f: ODataStructuredTypeFieldParser<any>) => f.name === name);
+        if (field !== undefined) {
+          v = Types.isPlainObject(v) ? v[field.name] : v;
+          structured = field.isStructuredType()
+            ? field.structured()
+            : undefined;
         }
       }
+      if (field !== undefined && v !== undefined) {
+        key.set(kt.alias || field.name, field.encode(v));
+      }
     }
-    if (Types.isEmpty(key)) return undefined;
-    return Objects.resolveKey(key);
+    if (key.size === 0) return undefined;
+    return resolve ? Objects.resolveKey(key, {single}) : Object.fromEntries(key);
   }
 
   defaults(): { [name: string]: any } {
