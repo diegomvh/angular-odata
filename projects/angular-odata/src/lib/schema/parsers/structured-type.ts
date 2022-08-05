@@ -300,7 +300,7 @@ export class ODataStructuredTypeFieldParser<T>
 
   isKey() {
     return (
-      this.structuredType.keys()?.find((k) => k.name === this.name) !==
+      this.structuredType.keys({include_parents: true})?.find((k) => k.name === this.name) !==
       undefined
     );
   }
@@ -411,9 +411,7 @@ export class ODataStructuredTypeParser<T>
   // Deserialize
   deserialize(value: any, options?: ParserOptions): T {
     const parserOptions = options || this.parserOptions;
-    if (this.parent !== undefined)
-      value = this.parent.deserialize(value, parserOptions);
-    const fields = this._fields.filter(
+    const fields = this.fields({include_navigation: true, include_parents: true}).filter(
       (f) =>
         f.name in value && value[f.name] !== undefined && value[f.name] !== null
     );
@@ -432,9 +430,7 @@ export class ODataStructuredTypeParser<T>
   // Serialize
   serialize(value: T, options?: ParserOptions): any {
     const parserOptions = options || this.parserOptions;
-    if (this.parent !== undefined)
-      value = this.parent.serialize(value, parserOptions);
-    const fields = this._fields.filter(
+    const fields = this.fields({include_navigation: true, include_parents: true}).filter(
       (f) =>
         f.name in value &&
         (value as any)[f.name] !== undefined &&
@@ -496,7 +492,7 @@ export class ODataStructuredTypeParser<T>
    */
   fields({
     include_navigation,
-    include_parents,
+    include_parents
   }: {
     include_parents: boolean;
     include_navigation: boolean;
@@ -517,10 +513,10 @@ export class ODataStructuredTypeParser<T>
    * @returns The keys of the structured type
    */
   keys({
-    include_parents = true,
+    include_parents,
   }: {
-    include_parents?: boolean;
-  } = {}): ODataEntityTypeKey[] {
+    include_parents: boolean;
+  }): ODataEntityTypeKey[] {
     return [
       ...(include_parents && this.parent !== undefined
         ? this.parent.keys({ include_parents })
@@ -594,14 +590,12 @@ export class ODataStructuredTypeParser<T>
   }
 
   defaults(): { [name: string]: any } {
-    let value = this.parent?.defaults() || {};
-    let fields = this._fields.filter(
+    let fields = this.fields({include_navigation: false, include_parents: true}).filter(
       (f) => f.default !== undefined || f.isStructuredType()
     );
     return {
-      ...value,
       ...fields.reduce((acc, f) => {
-        let value = f.isStructuredType()
+        let value: any = f.isStructuredType()
           ? f.structured().defaults()
           : f.default;
         return Types.isEmpty(value) ? acc : { ...acc, [f.name]: value };
@@ -611,7 +605,7 @@ export class ODataStructuredTypeParser<T>
 
   // Json Schema
   toJsonSchema(options: JsonSchemaOptions<T> = {}) {
-    let schema: any = this.parent?.toJsonSchema(options) || {
+    let schema: any = {
       $schema: 'http://json-schema.org/draft-07/schema#',
       $id: `${this.namespace}.${this.name}`,
       title: this.titleize(DESCRIPTION),
@@ -620,7 +614,7 @@ export class ODataStructuredTypeParser<T>
       properties: {},
       required: [],
     };
-    const fields = this._fields.filter(
+    const fields = this.fields({include_navigation: true, include_parents: true}).filter(
       (f) =>
         (!f.navigation || (options.expand && f.name in options.expand)) &&
         (!options.select || (<string[]>options.select).indexOf(f.name) !== -1)
@@ -670,9 +664,8 @@ export class ODataStructuredTypeParser<T>
       navigation?: boolean;
     } = {}
   ): { [name: string]: any } | undefined {
-    const errors = (this.parent?.validate(attrs, { method, navigation }) ||
-      {}) as { [name: string]: any };
-    const fields = this._fields.filter((f) => !f.navigation || navigation);
+    const errors = {} as { [name: string]: any };
+    const fields = this.fields({include_navigation: true, include_parents: true}).filter((f) => !f.navigation || navigation);
     for (var field of fields) {
       const value = attrs[field.name as keyof T];
       const errs = field.validate(value, { method, navigation });

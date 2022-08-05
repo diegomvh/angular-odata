@@ -599,12 +599,12 @@ export class ODataModelOptions<T> {
   }
 
   fields({
-    include_navigation = false,
-    include_parents = true,
+    include_navigation,
+    include_parents,
   }: {
-    include_parents?: boolean;
-    include_navigation?: boolean;
-  } = {}): ODataModelField<any>[] {
+    include_parents: boolean;
+    include_navigation: boolean;
+  }): ODataModelField<any>[] {
     return [
       ...(include_parents && this.parent !== undefined
         ? this.parent.fields({ include_navigation, include_parents })
@@ -837,7 +837,8 @@ export class ODataModelOptions<T> {
     {
       field_mapping = false,
       resolve = true,
-    }: { field_mapping?: boolean; resolve?: boolean } = {}
+      single = true,
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } = {}
   ): EntityKey<T> | { [name: string]: any } | undefined {
     const keyTypes = this.schema.keys({ include_parents: true });
     const key = new Map<string, any>();
@@ -848,7 +849,7 @@ export class ODataModelOptions<T> {
       for (let name of kt.name.split('/')) {
         if (options === undefined) break;
         field = options
-          .fields({ include_parents: true })
+          .fields({ include_navigation: false, include_parents: true })
           .find((field: ODataModelField<any>) => field.field === name);
         if (field !== undefined) {
           v =
@@ -864,7 +865,7 @@ export class ODataModelOptions<T> {
       key.set(name, v);
     }
     if (key.size === 0) return undefined;
-    return resolve ? Objects.resolveKey(key) : Object.fromEntries(key);
+    return resolve ? Objects.resolveKey(key, {single}) : Object.fromEntries(key);
   }
 
   resolveReferential(
@@ -873,15 +874,16 @@ export class ODataModelOptions<T> {
     {
       field_mapping = false,
       resolve = true,
-    }: { field_mapping?: boolean; resolve?: boolean } = {}
+      single = false
+    }: { field_mapping?: boolean; resolve?: boolean, single?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
     const referential = new Map<string, any>();
     for (let ref of field.referentials) {
-      let from = this.fields({ include_parents: true }).find(
+      let from = this.fields({ include_navigation: false, include_parents: true }).find(
         (p: any) => p.field === ref.referencedProperty
       );
       let to = field.options
-        .fields({ include_parents: true })
+        .fields({ include_navigation: false, include_parents: true })
         .find((field: ODataModelField<any>) => field.field === ref.property);
       if (from !== undefined && to !== undefined) {
         let name = field_mapping ? to.field : to.name;
@@ -892,7 +894,7 @@ export class ODataModelOptions<T> {
     if (referential.size === 1 && Array.from(referential.values())[0] === null)
       return null;
     return resolve
-      ? Objects.resolveKey(referential, { single: false })
+      ? Objects.resolveKey(referential, { single })
       : Object.fromEntries(referential);
   }
 
@@ -902,15 +904,16 @@ export class ODataModelOptions<T> {
     {
       field_mapping = false,
       resolve = true,
-    }: { field_mapping?: boolean; resolve?: boolean } = {}
+      single = false
+    }: { field_mapping?: boolean; resolve?: boolean, single?: boolean } = {}
   ): { [name: string]: any } | null | undefined {
     const referenced = new Map<string, any>();
     for (let ref of field.referentials) {
-      let from = this.fields({ include_parents: true }).find(
+      let from = this.fields({ include_navigation: false, include_parents: true }).find(
         (field: ODataModelField<any>) => field.field === ref.property
       );
       let to = (field.meta as ODataModelOptions<any>)
-        .fields({ include_parents: true })
+        .fields({ include_navigation: false, include_parents: true })
         .find(
           (field: ODataModelField<any>) =>
             field.field === ref.referencedProperty
@@ -924,7 +927,7 @@ export class ODataModelOptions<T> {
     if (referenced.size === 1 && Array.from(referenced.values())[0] === null)
       return null;
     return resolve
-      ? Objects.resolveKey(referenced, { single: false })
+      ? Objects.resolveKey(referenced, { single })
       : Object.fromEntries(referenced);
   }
 
@@ -952,7 +955,7 @@ export class ODataModelOptions<T> {
   }
 
   defaults(): T | { [name: string]: any } | undefined {
-    const defs = this.fields().reduce((acc, field) => {
+    const defs = this.fields({include_navigation: false, include_parents: true}).reduce((acc, field) => {
       let value = field.defaults();
       return value !== undefined
         ? Object.assign(acc, { [field.name]: value })
@@ -1097,7 +1100,7 @@ export class ODataModelOptions<T> {
       })
       .reduce((acc, [k, v]) => {
         const name = field_mapping
-          ? this.fields().find(
+          ? this.fields({include_navigation: false, include_parents: true}).find(
               (field: ODataModelField<any>) => field.name === k
             )?.field || k
           : k;
@@ -1152,7 +1155,7 @@ export class ODataModelOptions<T> {
     } = {}
   ): { [name: string]: any } {
     // Attributes by fields (attributes for the model type)
-    const fieldAttrs = this.fields().reduce((acc, f) => {
+    const fieldAttrs = this.fields({include_navigation: false, include_parents: true}).reduce((acc, f) => {
       const isChanged = self._changes.has(f.name);
       const name = field_mapping ? f.field : f.name;
       const computed = f.annotatedValue<boolean>(COMPUTED);
