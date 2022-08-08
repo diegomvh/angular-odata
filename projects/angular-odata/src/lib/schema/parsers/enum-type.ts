@@ -74,6 +74,7 @@ export class ODataEnumTypeParser<E>
     if (this.alias) names.push(`${this.alias}.${this.name}`);
     return names.indexOf(type) !== -1;
   }
+
   fields(value?: E): ODataEnumTypeFieldParser<E>[] {
     return [
       ...this._fields.filter(
@@ -82,8 +83,8 @@ export class ODataEnumTypeParser<E>
     ];
   }
 
-  field(enu: string | E) {
-    let field = this.fields().find((f) => f.name === enu || f.value === enu);
+  field(nameValue: string | E) {
+    let field = this.fields().find((f) => f.name === nameValue || f.value === nameValue);
     //Throw error if not found
     if (field === undefined)
       throw new Error(`${this.name} has no field named ${String(name)}`);

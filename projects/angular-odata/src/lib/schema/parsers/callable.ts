@@ -73,6 +73,14 @@ export class ODataParameterParser<T> {
       throw new Error('Field are not StrucuturedType');
     return this.parser as ODataStructuredTypeParser<T>;
   }
+
+  field<F>(name: string) {
+    if (this.isStructuredType())
+      return (this.parser as ODataStructuredTypeParser<T>).field<F>(name as keyof T);
+    else if (this.isEnumType())
+      return (this.parser as ODataEnumTypeParser<T>).field(name);
+    throw new Error(`The field ${this.name} is not related to a StructuredType or an EnumType`);
+  }
 }
 
 export class ODataCallableParser<R> implements Parser<R> {
