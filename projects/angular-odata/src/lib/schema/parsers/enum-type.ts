@@ -4,6 +4,7 @@ import {
   EnumTypeFieldConfig,
   ParserOptions,
   Parser,
+  StructuredTypeFieldOptions,
 } from '../../types';
 import { Enums, Strings } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
@@ -84,7 +85,9 @@ export class ODataEnumTypeParser<E>
   }
 
   field(nameValue: string | E) {
-    let field = this.fields().find((f) => f.name === nameValue || f.value === nameValue);
+    let field = this.fields().find(
+      (f) => f.name === nameValue || f.value === nameValue
+    );
     //Throw error if not found
     if (field === undefined)
       throw new Error(`${this.name} has no field named ${String(name)}`);

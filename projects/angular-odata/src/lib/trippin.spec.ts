@@ -125,9 +125,12 @@ export const PlanItemConfig = {
       ],
     },
     ConfirmationCode: { type: 'Edm.String', default: '0' },
-    StartsAt: { type: 'Edm.DateTimeOffset', default: '2022-08-05T15:50:12.052Z' },
+    StartsAt: {
+      type: 'Edm.DateTimeOffset',
+      default: '2022-08-05T15:50:12.052Z',
+    },
     EndsAt: { type: 'Edm.DateTimeOffset' },
-    Duration: { type: 'Edm.String', default: "M" },
+    Duration: { type: 'Edm.String', default: 'M' },
   },
 } as StructuredTypeConfig<PlanItem>;
 export interface PublicTransportation extends PlanItem {
@@ -296,5 +299,5 @@ export const TripPinConfig = {
       ],
     },
   ],
-  parsers: EDM_PARSERS
+  parsers: EDM_PARSERS,
 } as ApiConfig;
