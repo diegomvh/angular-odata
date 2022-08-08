@@ -59,7 +59,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     let fieldType: string | undefined;
     let fieldSchema: ODataStructuredType<N> | undefined;
     if (baseSchema !== undefined) {
-      const field = baseSchema.findFieldByName<N>(path);
+      const field = baseSchema.field<N>(path);
       fieldType = field?.type;
       fieldSchema =
         fieldType !== undefined
@@ -127,7 +127,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
   navigationProperty<N>(path: string) {
     let schema: ODataStructuredType<N> | undefined;
     if (this.schema instanceof ODataStructuredType) {
-      const field = this.schema.findFieldByName<any>(path as keyof T);
+      const field = this.schema.field<any>(path as keyof T);
       schema =
         field !== undefined
           ? this.schema.findSchemaForField<N>(field)
@@ -146,7 +146,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
     let type: string | undefined;
     let schema: ODataStructuredType<P> | undefined;
     if (this.schema instanceof ODataStructuredType) {
-      const field = this.schema.findFieldByName<any>(path as keyof T);
+      const field = this.schema.field<any>(path as keyof T);
       type = field?.type;
       schema =
         field !== undefined

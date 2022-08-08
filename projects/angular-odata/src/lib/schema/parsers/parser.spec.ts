@@ -133,9 +133,7 @@ describe('ODataClient', () => {
   it('should serialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
     expect(schema !== null).toBeTruthy();
-    const field = (schema as ODataStructuredType<Person>).findFieldByName(
-      'Gender'
-    );
+    const field = (schema as ODataStructuredType<Person>).field('Gender');
     expect(field !== undefined).toBeTruthy();
     expect(
       (field as ODataStructuredTypeFieldParser<any>).serialize(
@@ -147,7 +145,7 @@ describe('ODataClient', () => {
 
   it('should deserialize enum', () => {
     const schema = client.structuredTypeForType<Person>(`${NAMESPACE}.Person`);
-    const field = schema.findFieldByName(
+    const field = schema.field(
       'Gender'
     ) as ODataStructuredTypeFieldParser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
@@ -166,7 +164,7 @@ describe('ODataClient', () => {
     const options = schema.api.options;
     // Change parser settings
     parser.flags = true;
-    const field = (schema as ODataStructuredType<Person>).findFieldByName(
+    const field = (schema as ODataStructuredType<Person>).field(
       'Gender'
     ) as Parser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
@@ -187,7 +185,7 @@ describe('ODataClient', () => {
       `${NAMESPACE}.PersonGender`
     ) as ODataEnumTypeParser<PersonGender>;
     parser.flags = true;
-    const field = (schema as ODataStructuredType<Person>).findFieldByName(
+    const field = (schema as ODataStructuredType<Person>).field(
       'Gender'
     ) as Parser<PersonGender>;
     expect(field !== undefined).toBeTruthy();
@@ -220,10 +218,10 @@ describe('ODataClient', () => {
     expect(
       schema.parser.validate({
         ConfirmationCode: '0',
-        FlightNumber: '0'
+        FlightNumber: '0',
       })
     ).toEqual({
-      PlanItemId: [ 'required' ]
+      PlanItemId: ['required'],
     });
   });
 
@@ -410,15 +408,13 @@ describe('ODataClient', () => {
     const schema = client.structuredTypeForType<Flight>(
       `${NAMESPACE}.Flight`
     ) as ODataStructuredType<Flight>;
-    expect(
-      schema.parser.defaults()
-    ).toEqual({
-	    ConfirmationCode: '0',
-	    StartsAt: new Date("2022-08-05T15:50:12.052Z"),
-	    Duration: 'M',
-	    SeatNumber: '0',
-	    FlightNumber: '0'
-     });
+    expect(schema.parser.defaults()).toEqual({
+      ConfirmationCode: '0',
+      StartsAt: new Date('2022-08-05T15:50:12.052Z'),
+      Duration: 'M',
+      SeatNumber: '0',
+      FlightNumber: '0',
+    });
   });
 
   it('should resolve single key for entity', () => {
@@ -428,11 +424,11 @@ describe('ODataClient', () => {
     expect(
       schema.parser.resolveKey({
         PlanItemId: 34,
-	      ConfirmationCode: '0',
-	      StartsAt: new Date("2022-08-05T15:50:12.052Z"),
-	      Duration: 'M',
-	      SeatNumber: '0',
-	      FlightNumber: '0'
+        ConfirmationCode: '0',
+        StartsAt: new Date('2022-08-05T15:50:12.052Z'),
+        Duration: 'M',
+        SeatNumber: '0',
+        FlightNumber: '0',
       })
     ).toEqual(34);
   });
@@ -442,15 +438,17 @@ describe('ODataClient', () => {
       `${NAMESPACE}.Flight`
     ) as ODataStructuredType<Flight>;
     expect(
-      schema.parser.resolveKey({
-        PlanItemId: 34,
-	      ConfirmationCode: '0',
-	      StartsAt: new Date("2022-08-05T15:50:12.052Z"),
-	      Duration: 'M',
-	      SeatNumber: '0',
-	      FlightNumber: '0'
-      }, {single: false})
-    ).toEqual({PlanItemId: 34});
+      schema.parser.resolveKey(
+        {
+          PlanItemId: 34,
+          ConfirmationCode: '0',
+          StartsAt: new Date('2022-08-05T15:50:12.052Z'),
+          Duration: 'M',
+          SeatNumber: '0',
+          FlightNumber: '0',
+        },
+        { single: false }
+      )
+    ).toEqual({ PlanItemId: 34 });
   });
-
 });

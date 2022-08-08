@@ -112,8 +112,8 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
    * @param name Name of the field
    * @returns The field parser
    */
-  findFieldByName<F>(name: keyof T) {
-    return this.parser.findFieldByName<F>(name);
+  field<F>(name: keyof T) {
+    return this.parser.field<F>(name);
   }
 
   /**

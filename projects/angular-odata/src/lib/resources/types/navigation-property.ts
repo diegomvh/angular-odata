@@ -58,7 +58,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     let fieldType: string | undefined;
     let fieldSchema: ODataStructuredType<N> | undefined;
     if (baseSchema !== undefined) {
-      const field = baseSchema.findFieldByName<N>(path);
+      const field = baseSchema.field<N>(path);
       fieldType = field?.type;
       fieldSchema =
         fieldType !== undefined

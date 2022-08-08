@@ -8,11 +8,11 @@ import {
 import { Enums, Strings } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
 
-export class ODataEnumTypeFieldParser extends ODataAnnotatable {
+export class ODataEnumTypeFieldParser<E> extends ODataAnnotatable {
   name: string;
-  value: number;
+  value: E;
 
-  constructor(name: string, field: EnumTypeFieldConfig) {
+  constructor(name: string, field: EnumTypeFieldConfig<E>) {
     super(field);
     this.name = name;
     this.value = field.value;
@@ -23,27 +23,27 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   }
 }
 
-export class ODataEnumTypeParser<T>
+export class ODataEnumTypeParser<E>
   extends ODataAnnotatable
-  implements Parser<T>
+  implements Parser<E>
 {
   name: string;
   namespace: string;
   alias?: string;
   flags?: boolean;
-  members: { [name: string]: number } | { [value: number]: string };
-  fields: ODataEnumTypeFieldParser[];
+  members: { [name: string]: E } | { [value: number]: string };
+  private _fields: ODataEnumTypeFieldParser<E>[];
   stringAsEnum?: boolean;
   parserOptions?: ParserOptions;
 
-  constructor(config: EnumTypeConfig<T>, namespace: string, alias?: string) {
+  constructor(config: EnumTypeConfig<E>, namespace: string, alias?: string) {
     super(config);
     this.name = config.name;
     this.namespace = namespace;
     this.alias = alias;
     this.flags = config.flags;
     this.members = config.members;
-    this.fields = Object.entries(config.fields).map(
+    this._fields = Object.entries(config.fields).map(
       ([name, f]) => new ODataEnumTypeFieldParser(name, f)
     );
   }
@@ -74,23 +74,47 @@ export class ODataEnumTypeParser<T>
     if (this.alias) names.push(`${this.alias}.${this.name}`);
     return names.indexOf(type) !== -1;
   }
+  fields(value?: E): ODataEnumTypeFieldParser<E>[] {
+    return [
+      ...this._fields.filter(
+        (f) => value === undefined || Boolean((<any>f.value) & (<any>value))
+      ),
+    ];
+  }
+
+  field(enu: string | E) {
+    let field = this.fields().find((f) => f.name === enu || f.value === enu);
+    //Throw error if not found
+    if (field === undefined)
+      throw new Error(`${this.name} has no field named ${String(name)}`);
+    return field;
+  }
+
+  /**
+   * Map the fields of the enum type.
+   * @param mapper Function that maps the value to the new value
+   * @returns The fields mapped by the mapper
+   */
+  mapFields<R>(mapper: (field: ODataEnumTypeFieldParser<E>) => R) {
+    return this.fields().map(mapper);
+  }
 
   // Deserialize
-  deserialize(value: string, options?: ParserOptions): T {
+  deserialize(value: string, options?: ParserOptions): E {
     // string -> number
     const parserOptions = options || this.parserOptions;
     if (this.flags) {
-      return Enums.toValues(this.members, value).reduce(
+      return Enums.toValues<E>(this.members as any, value).reduce(
         (acc, v) => acc | v,
         0
       ) as any;
     } else {
-      return Enums.toValue(this.members, value) as any;
+      return Enums.toValue<E>(this.members as any, value) as any;
     }
   }
 
   // Serialize
-  serialize(value: T, options?: ParserOptions): string | undefined {
+  serialize(value: E, options?: ParserOptions): string | undefined {
     // Enum are string | number
     // string | number -> string
     const parserOptions = options || this.parserOptions;
@@ -110,7 +134,7 @@ export class ODataEnumTypeParser<T>
   }
 
   //Encode
-  encode(value: T, options?: ParserOptions): any {
+  encode(value: E, options?: ParserOptions): any {
     const parserOptions = options || this.parserOptions;
     const serialized = this.serialize(value, parserOptions);
     if (serialized === undefined) return undefined;
@@ -123,7 +147,7 @@ export class ODataEnumTypeParser<T>
       title: this.name,
       type: 'string',
     };
-    property.enum = this.fields.map((f) => f.name);
+    property.enum = this._fields.map((f) => f.name);
     return property;
   }
 

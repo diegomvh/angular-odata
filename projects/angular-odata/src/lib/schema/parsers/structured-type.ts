@@ -300,8 +300,9 @@ export class ODataStructuredTypeFieldParser<T>
 
   isKey() {
     return (
-      this.structuredType.keys({include_parents: true})?.find((k) => k.name === this.name) !==
-      undefined
+      this.structuredType
+        .keys({ include_parents: true })
+        ?.find((k) => k.name === this.name) !== undefined
     );
   }
 
@@ -411,7 +412,10 @@ export class ODataStructuredTypeParser<T>
   // Deserialize
   deserialize(value: any, options?: ParserOptions): T {
     const parserOptions = options || this.parserOptions;
-    const fields = this.fields({include_navigation: true, include_parents: true}).filter(
+    const fields = this.fields({
+      include_navigation: true,
+      include_parents: true,
+    }).filter(
       (f) =>
         f.name in value && value[f.name] !== undefined && value[f.name] !== null
     );
@@ -430,7 +434,10 @@ export class ODataStructuredTypeParser<T>
   // Serialize
   serialize(value: T, options?: ParserOptions): any {
     const parserOptions = options || this.parserOptions;
-    const fields = this.fields({include_navigation: true, include_parents: true}).filter(
+    const fields = this.fields({
+      include_navigation: true,
+      include_parents: true,
+    }).filter(
       (f) =>
         f.name in value &&
         (value as any)[f.name] !== undefined &&
@@ -471,20 +478,6 @@ export class ODataStructuredTypeParser<T>
   }
 
   /**
-   * Find the field parser for the given field name.
-   * @param name Name of the field
-   * @returns The field parser
-   */
-  findFieldByName<F>(
-    name: keyof T
-  ): ODataStructuredTypeFieldParser<F> | undefined {
-    return this.fields({
-      include_parents: true,
-      include_navigation: true,
-    }).find((f) => f.name === name);
-  }
-
-  /**
    * Returns all fields of the structured type.
    * @param include_navigation Include navigation properties in the result.
    * @param include_parents Include the parent types in the result.
@@ -492,7 +485,7 @@ export class ODataStructuredTypeParser<T>
    */
   fields({
     include_navigation,
-    include_parents
+    include_parents,
   }: {
     include_parents: boolean;
     include_navigation: boolean;
@@ -523,6 +516,22 @@ export class ODataStructuredTypeParser<T>
         : []),
       ...(this._keys || []),
     ];
+  }
+
+  /**
+   * Find the field parser for the given field name.
+   * @param name Name of the field
+   * @returns The field parser
+   */
+  field<F>(name: keyof T): ODataStructuredTypeFieldParser<F> {
+    let field = this.fields({
+      include_parents: true,
+      include_navigation: true,
+    }).find((field: ODataStructuredTypeFieldParser<F>) => field.name === name);
+    //Throw error if not found
+    if (field === undefined)
+      throw new Error(`${this.name} has no field named ${String(name)}`);
+    return field;
   }
 
   /**
@@ -562,7 +571,13 @@ export class ODataStructuredTypeParser<T>
       .reduce((acc, key) => Object.assign(acc, { [key]: attrs[key] }), {});
   }
 
-  resolveKey(value: any, { resolve = true, single = true }: { resolve?: boolean, single?: boolean } = {}): any {
+  resolveKey(
+    value: any,
+    {
+      resolve = true,
+      single = true,
+    }: { resolve?: boolean; single?: boolean } = {}
+  ): any {
     const keyTypes = this.keys({ include_parents: true });
     const key = new Map<string, any>();
     for (var kt of keyTypes) {
@@ -572,7 +587,7 @@ export class ODataStructuredTypeParser<T>
       for (let name of kt.name.split('/')) {
         if (structured === undefined) break;
         field = structured
-          .fields({include_navigation: false, include_parents: true})
+          .fields({ include_navigation: false, include_parents: true })
           .find((f: ODataStructuredTypeFieldParser<any>) => f.name === name);
         if (field !== undefined) {
           v = Types.isPlainObject(v) ? v[field.name] : v;
@@ -586,13 +601,16 @@ export class ODataStructuredTypeParser<T>
       }
     }
     if (key.size === 0) return undefined;
-    return resolve ? Objects.resolveKey(key, {single}) : Object.fromEntries(key);
+    return resolve
+      ? Objects.resolveKey(key, { single })
+      : Object.fromEntries(key);
   }
 
   defaults(): { [name: string]: any } {
-    let fields = this.fields({include_navigation: false, include_parents: true}).filter(
-      (f) => f.default !== undefined || f.isStructuredType()
-    );
+    let fields = this.fields({
+      include_navigation: false,
+      include_parents: true,
+    }).filter((f) => f.default !== undefined || f.isStructuredType());
     return {
       ...fields.reduce((acc, f) => {
         let value: any = f.isStructuredType()
@@ -614,7 +632,10 @@ export class ODataStructuredTypeParser<T>
       properties: {},
       required: [],
     };
-    const fields = this.fields({include_navigation: true, include_parents: true}).filter(
+    const fields = this.fields({
+      include_navigation: true,
+      include_parents: true,
+    }).filter(
       (f) =>
         (!f.navigation || (options.expand && f.name in options.expand)) &&
         (!options.select || (<string[]>options.select).indexOf(f.name) !== -1)
@@ -665,7 +686,10 @@ export class ODataStructuredTypeParser<T>
     } = {}
   ): { [name: string]: any } | undefined {
     const errors = {} as { [name: string]: any };
-    const fields = this.fields({include_navigation: true, include_parents: true}).filter((f) => !f.navigation || navigation);
+    const fields = this.fields({
+      include_navigation: true,
+      include_parents: true,
+    }).filter((f) => !f.navigation || navigation);
     for (var field of fields) {
       const value = attrs[field.name as keyof T];
       const errs = field.validate(value, { method, navigation });

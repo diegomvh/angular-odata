@@ -610,9 +610,7 @@ describe('ODataClient', () => {
         q.select(['FistName', 'LastName']);
         q.expand({ Friends: {} });
         q.filter({
-          Gender: s
-            ?.findFieldByName<PersonGender>('Gender')
-            ?.encode(PersonGender.Male),
+          Gender: s?.field<PersonGender>('Gender')?.encode(PersonGender.Male),
         });
       })
       .fetchAll({ bodyQueryOptions: [QueryOptionNames.filter] })

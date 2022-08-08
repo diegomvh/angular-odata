@@ -5,7 +5,7 @@ import { ODataSchema } from './schema';
 
 export class ODataEnumType<E> extends ODataSchemaElement {
   parser: ODataEnumTypeParser<E>;
-  members: { [name: string]: number } | { [value: number]: string };
+  members: { [name: string]: E } | { [value: number]: string };
   constructor(config: EnumTypeConfig<E>, schema: ODataSchema) {
     super(config, schema);
     this.members = config.members;
@@ -27,35 +27,17 @@ export class ODataEnumType<E> extends ODataSchemaElement {
    * Returns the fields of the enum type.
    * @returns The fields of the enum type.
    */
-  fields(): ODataEnumTypeFieldParser[] {
-    return this.parser.fields;
+  fields(value?: E): ODataEnumTypeFieldParser<E>[] {
+    return this.parser.fields(value);
   }
 
   /**
-   * Find a field by name.
-   * @param name The name of the field
-   * @returns The field with the given name
+   * Find a field by name or value.
+   * @param enu The name or value of the field
+   * @returns The field with the given name or value
    */
-  findFieldByName(name: string) {
-    return this.fields().find((f) => f.name === name);
-  }
-
-  /**
-   * Find a field by value.
-   * @param value The value of the field
-   * @returns The field with the given value
-   */
-  findFieldByValue(value: number) {
-    return this.fields().find((f) => f.value === value);
-  }
-
-  /**
-   * Find a fields by flag.
-   * @param value The value of the field
-   * @returns The fields with the given flag
-   */
-  findFieldsByValue(value: number) {
-    return this.fields().filter((f) => Boolean(f.value & value));
+  field(enu: string | E) {
+    return this.parser.field(enu);
   }
 
   /**
@@ -63,8 +45,8 @@ export class ODataEnumType<E> extends ODataSchemaElement {
    * @param mapper Function that maps the value to the new value
    * @returns The fields mapped by the mapper
    */
-  mapFields<T>(mapper: (field: ODataEnumTypeFieldParser) => T) {
-    return this.fields().map(mapper);
+  mapFields<T>(mapper: (field: ODataEnumTypeFieldParser<E>) => T) {
+    return this.parser.mapFields(mapper);
   }
 
   /**

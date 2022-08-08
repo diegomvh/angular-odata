@@ -154,17 +154,17 @@ export type EntityContainerConfig = {
   entitySets?: EntitySetConfig[];
 };
 
-export type EnumTypeFieldConfig = {
-  value: number;
+export type EnumTypeFieldConfig<E> = {
+  value: E;
   annotations?: AnnotationConfig[];
 };
 
-export type EnumTypeConfig<T> = {
+export type EnumTypeConfig<E> = {
   name: string;
   flags?: boolean;
   annotations?: AnnotationConfig[];
-  members: { [name: string]: number } | { [value: number]: string };
-  fields: { [member: string]: EnumTypeFieldConfig };
+  members: { [name: string]: E } | { [value: number]: string };
+  fields: { [member: string]: EnumTypeFieldConfig<E> };
 };
 
 export type StructuredTypeFieldConfig = {
