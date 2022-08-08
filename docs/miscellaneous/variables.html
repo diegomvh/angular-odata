@@ -4021,7 +4021,7 @@
       return target;
     }
 
-    if (Types.isObject(target) &amp;&amp; &#x27;clone&#x27; in target) {
+    if (&#x27;clone&#x27; in target) {
       // target is a cloneable object
       return target.clone();
     }
@@ -4212,11 +4212,6 @@
     return Object.prototype.toString.call(value).slice(8, -1);
   },
 
-  isObject(value: any): boolean {
-    var type &#x3D; typeof value;
-    return value !&#x3D; null &amp;&amp; (type &#x3D;&#x3D;&#x3D; &#x27;object&#x27; || type &#x3D;&#x3D;&#x3D; &#x27;function&#x27;);
-  },
-
   isPlainObject(value: any) {
     if (this.rawType(value) !&#x3D;&#x3D; &#x27;Object&#x27;) {
       return false;
@@ -4243,13 +4238,12 @@
       value &#x3D;&#x3D;&#x3D; undefined ||
       value &#x3D;&#x3D;&#x3D; null ||
       (typeof value &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; !value.length) ||
+      (value instanceof Date &amp;&amp; isNaN(value.valueOf())) ||
       (Types.isMap(value) &amp;&amp; !value.size) ||
       (Types.isArray(value) &amp;&amp; !value.length) ||
       (Types.isFunction(value.isEmpty) &amp;&amp; value.isEmpty()) ||
       (Types.isArray(value) &amp;&amp;
         (value as any[]).every((v) &#x3D;&gt; Types.isEmpty(v))) ||
-      (Types.isObject(value) &amp;&amp;
-        !Object.keys(value).filter((k) &#x3D;&gt; value.hasOwnProperty(k)).length) ||
       (Types.isPlainObject(value) &amp;&amp;
         !Object.keys(value).filter((k) &#x3D;&gt; value.hasOwnProperty(k)).length)
     );

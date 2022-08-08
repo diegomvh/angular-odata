@@ -518,17 +518,17 @@ export type EntityContainerConfig &#x3D; {
   entitySets?: EntitySetConfig[];
 };
 
-export type EnumTypeFieldConfig &#x3D; {
-  value: number;
+export type EnumTypeFieldConfig&lt;E&gt; &#x3D; {
+  value: E;
   annotations?: AnnotationConfig[];
 };
 
-export type EnumTypeConfig&lt;T&gt; &#x3D; {
+export type EnumTypeConfig&lt;E&gt; &#x3D; {
   name: string;
   flags?: boolean;
   annotations?: AnnotationConfig[];
-  members: { [name: string]: number } | { [value: number]: string };
-  fields: { [member: string]: EnumTypeFieldConfig };
+  members: { [name: string]: E } | { [value: number]: string };
+  fields: { [member: string]: EnumTypeFieldConfig&lt;E&gt; };
 };
 
 export type StructuredTypeFieldConfig &#x3D; {

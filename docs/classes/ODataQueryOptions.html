@@ -249,8 +249,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="156"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:156</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:155</a></div>
                 </td>
             </tr>
 
@@ -286,8 +286,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="118"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:118</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="117"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:117</a></div>
                 </td>
             </tr>
 
@@ -331,8 +331,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="123"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:123</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="122"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:122</a></div>
                 </td>
             </tr>
 
@@ -412,8 +412,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="135"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:135</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="134"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:134</a></div>
                 </td>
             </tr>
 
@@ -481,8 +481,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="147"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:147</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="146"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:146</a></div>
                 </td>
             </tr>
 
@@ -550,8 +550,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="129"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:129</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="128"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:128</a></div>
                 </td>
             </tr>
 
@@ -705,8 +705,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="139"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:139</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="138"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:138</a></div>
                 </td>
             </tr>
 
@@ -811,8 +811,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="101"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:101</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="100"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:100</a></div>
                 </td>
             </tr>
 
@@ -969,8 +969,7 @@ export class ODataQueryOptions&lt;T&gt; {
   toJSON() {
     return [...this.values.keys()].reduce((acc, key) &#x3D;&gt; {
       let value &#x3D; this.values.get(key);
-      value &#x3D;
-        Types.isObject(value) &amp;&amp; &#x27;toJSON&#x27; in value ? value.toJSON() : value;
+      value &#x3D; &#x27;toJSON&#x27; in value ? value.toJSON() : value;
       return Object.assign(acc, { [key]: value });
     }, {});
   }

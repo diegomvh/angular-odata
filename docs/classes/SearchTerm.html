@@ -396,6 +396,9 @@ export class SearchTerm implements Renderable {
   }
 }
 
+export type SearchExpressionBuilder&lt;T&gt; &#x3D; {
+  e: (connector?: SearchConnector) &#x3D;&gt; SearchExpression&lt;T&gt;;
+};
 export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
   private _connector: SearchConnector;
   private _negated: boolean;
@@ -413,22 +416,20 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     this._negated &#x3D; negated || false;
   }
 
-  static e&lt;T&gt;(connector: SearchConnector &#x3D; &#x27;AND&#x27;) {
+  static expression&lt;T&gt;(connector: SearchConnector &#x3D; &#x27;AND&#x27;) {
     return new SearchExpression&lt;T&gt;({ connector });
   }
 
   static search&lt;T extends object&gt;(
     opts: (
-      builder: {
-        e: (connector?: SearchConnector) &#x3D;&gt; SearchExpression&lt;T&gt;;
-      },
+      builder: SearchExpressionBuilder&lt;T&gt;,
       current?: SearchExpression&lt;T&gt;
     ) &#x3D;&gt; SearchExpression&lt;T&gt;,
     current?: SearchExpression&lt;T&gt;
   ): SearchExpression&lt;T&gt; {
     return opts(
       {
-        e: SearchExpression.e,
+        e: SearchExpression.expression,
       },
       current
     ) as SearchExpression&lt;T&gt;;

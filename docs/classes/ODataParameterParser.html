@@ -126,6 +126,9 @@
                                 <a href="#enum" >enum</a>
                             </li>
                             <li>
+                                <a href="#field" >field</a>
+                            </li>
+                            <li>
                                 <a href="#isEdmType" >isEdmType</a>
                             </li>
                             <li>
@@ -575,6 +578,83 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="field"></a>
+                    <span class="name">
+                        <span ><b>field</b></span>
+                        <a href="#field"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>field(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="77"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:77</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>F</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>name</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="isEdmType"></a>
                     <span class="name">
                         <span ><b>isEdmType</b></span>
@@ -884,6 +964,16 @@ export class ODataParameterParser&lt;T&gt; {
     if (!this.isStructuredType())
       throw new Error(&#x27;Field are not StrucuturedType&#x27;);
     return this.parser as ODataStructuredTypeParser&lt;T&gt;;
+  }
+
+  field&lt;F&gt;(name: string) {
+    if (this.isStructuredType())
+      return (this.parser as ODataStructuredTypeParser&lt;T&gt;).field&lt;F&gt;(
+        name as keyof T
+      );
+    throw new Error(
+      &#x60;The field ${this.name} is not related to a StructuredType&#x60;
+    );
   }
 }
 

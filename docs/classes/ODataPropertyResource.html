@@ -2260,7 +2260,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:472</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:482</a></code>
 </div>
                 </td>
             </tr>
@@ -2919,7 +2919,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:453</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:463</a></code>
 </div>
                 </td>
             </tr>
@@ -3085,7 +3085,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:416</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:426</a></code>
 </div>
                 </td>
             </tr>
@@ -3179,7 +3179,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:434</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:444</a></code>
 </div>
                 </td>
             </tr>
@@ -3271,7 +3271,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:304</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:309</a></code>
 </div>
                 </td>
             </tr>
@@ -3356,7 +3356,7 @@ Create an object handler for mutate the query options of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:336</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:346</a></code>
 </div>
                 </td>
             </tr>
@@ -3444,7 +3444,7 @@ Create an object handler for mutate the query options of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:313</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:323</a></code>
 </div>
                 </td>
             </tr>
@@ -3988,7 +3988,7 @@ export class ODataPropertyResource&lt;T&gt; extends ODataResource&lt;T&gt; {
     let fieldType: string | undefined;
     let fieldSchema: ODataStructuredType&lt;N&gt; | undefined;
     if (baseSchema !&#x3D;&#x3D; undefined) {
-      const field &#x3D; baseSchema.findFieldByName&lt;N&gt;(path);
+      const field &#x3D; baseSchema.field&lt;N&gt;(path);
       fieldType &#x3D; field?.type;
       fieldSchema &#x3D;
         fieldType !&#x3D;&#x3D; undefined
@@ -4056,7 +4056,7 @@ export class ODataPropertyResource&lt;T&gt; extends ODataResource&lt;T&gt; {
   navigationProperty&lt;N&gt;(path: string) {
     let schema: ODataStructuredType&lt;N&gt; | undefined;
     if (this.schema instanceof ODataStructuredType) {
-      const field &#x3D; this.schema.findFieldByName&lt;any&gt;(path as keyof T);
+      const field &#x3D; this.schema.field&lt;any&gt;(path as keyof T);
       schema &#x3D;
         field !&#x3D;&#x3D; undefined
           ? this.schema.findSchemaForField&lt;N&gt;(field)
@@ -4075,7 +4075,7 @@ export class ODataPropertyResource&lt;T&gt; extends ODataResource&lt;T&gt; {
     let type: string | undefined;
     let schema: ODataStructuredType&lt;P&gt; | undefined;
     if (this.schema instanceof ODataStructuredType) {
-      const field &#x3D; this.schema.findFieldByName&lt;any&gt;(path as keyof T);
+      const field &#x3D; this.schema.field&lt;any&gt;(path as keyof T);
       type &#x3D; field?.type;
       schema &#x3D;
         field !&#x3D;&#x3D; undefined

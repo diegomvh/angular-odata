@@ -125,16 +125,10 @@
                                 <a href="#encode" >encode</a>
                             </li>
                             <li>
+                                <a href="#field" >field</a>
+                            </li>
+                            <li>
                                 <a href="#fields" >fields</a>
-                            </li>
-                            <li>
-                                <a href="#findFieldByName" >findFieldByName</a>
-                            </li>
-                            <li>
-                                <a href="#findFieldByValue" >findFieldByValue</a>
-                            </li>
-                            <li>
-                                <a href="#findFieldsByValue" >findFieldsByValue</a>
                             </li>
                             <li>
                                 <a href="#mapFields" >mapFields</a>
@@ -456,8 +450,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="76"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:76</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:58</a></div>
                 </td>
             </tr>
 
@@ -549,8 +543,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="96"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:96</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:78</a></div>
                 </td>
             </tr>
 
@@ -626,6 +620,83 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="field"></a>
+                    <span class="name">
+                        <span ><b>field</b></span>
+                        <a href="#field"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>field(enu: string | E)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="39"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:39</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Find a field by name or value.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>enu</td>
+                                    <td>
+                                            <code>string | E</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>The name or value of the field</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The field with the given name or value</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="fields"></a>
                     <span class="name">
                         <span ><b>fields</b></span>
@@ -635,7 +706,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>fields()</code>
+<code>fields(value?: E)</code>
                 </td>
             </tr>
 
@@ -653,6 +724,33 @@
                     <div class="io-description"><p>Returns the fields of the enum type.</p>
 </div>
 
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                            <code>E</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div>
                     </div>
                     <div class="io-description">
@@ -661,237 +759,6 @@
                     </div>
                     <div class="io-description">
                         <p>The fields of the enum type.</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findFieldByName"></a>
-                    <span class="name">
-                        <span ><b>findFieldByName</b></span>
-                        <a href="#findFieldByName"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findFieldByName(name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="39"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:39</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Find a field by name.</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>name</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>The name of the field</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>The field with the given name</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findFieldByValue"></a>
-                    <span class="name">
-                        <span ><b>findFieldByValue</b></span>
-                        <a href="#findFieldByValue"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findFieldByValue(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="48"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:48</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Find a field by value.</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>value</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>The value of the field</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>The field with the given value</p>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findFieldsByValue"></a>
-                    <span class="name">
-                        <span ><b>findFieldsByValue</b></span>
-                        <a href="#findFieldsByValue"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-<code>findFieldsByValue(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:57</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Find a fields by flag.</p>
-</div>
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                    <td>Description</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>value</td>
-                                    <td>
-                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                    <td>
-                                        <p>The value of the field</p>
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        <p>The fields with the given flag</p>
 
                     </div>
                 </td>
@@ -911,15 +778,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>mapFields(mapper: (field: <a href="../interfaces/Parser.html">ODataEnumTypeFieldParser</a>) => void)</code>
+<code>mapFields(mapper: (field: <a href="../interfaces/Parser.html">ODataEnumTypeFieldParser<E></a>) => void)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="66"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:66</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="48"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:48</a></div>
                 </td>
             </tr>
 
@@ -1003,8 +870,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="86"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:86</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/enum-type.ts:68</a></div>
                 </td>
             </tr>
 
@@ -1671,7 +1538,7 @@ import { ODataSchema } from &#x27;./schema&#x27;;
 
 export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
   parser: ODataEnumTypeParser&lt;E&gt;;
-  members: { [name: string]: number } | { [value: number]: string };
+  members: { [name: string]: E } | { [value: number]: string };
   constructor(config: EnumTypeConfig&lt;E&gt;, schema: ODataSchema) {
     super(config, schema);
     this.members &#x3D; config.members;
@@ -1693,35 +1560,17 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
    * Returns the fields of the enum type.
    * @returns The fields of the enum type.
    */
-  fields(): ODataEnumTypeFieldParser[] {
-    return this.parser.fields;
+  fields(value?: E): ODataEnumTypeFieldParser&lt;E&gt;[] {
+    return this.parser.fields(value);
   }
 
   /**
-   * Find a field by name.
-   * @param name The name of the field
-   * @returns The field with the given name
+   * Find a field by name or value.
+   * @param enu The name or value of the field
+   * @returns The field with the given name or value
    */
-  findFieldByName(name: string) {
-    return this.fields().find((f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; name);
-  }
-
-  /**
-   * Find a field by value.
-   * @param value The value of the field
-   * @returns The field with the given value
-   */
-  findFieldByValue(value: number) {
-    return this.fields().find((f) &#x3D;&gt; f.value &#x3D;&#x3D;&#x3D; value);
-  }
-
-  /**
-   * Find a fields by flag.
-   * @param value The value of the field
-   * @returns The fields with the given flag
-   */
-  findFieldsByValue(value: number) {
-    return this.fields().filter((f) &#x3D;&gt; Boolean(f.value &amp; value));
+  field(enu: string | E) {
+    return this.parser.field(enu);
   }
 
   /**
@@ -1729,8 +1578,8 @@ export class ODataEnumType&lt;E&gt; extends ODataSchemaElement {
    * @param mapper Function that maps the value to the new value
    * @returns The fields mapped by the mapper
    */
-  mapFields&lt;T&gt;(mapper: (field: ODataEnumTypeFieldParser) &#x3D;&gt; T) {
-    return this.fields().map(mapper);
+  mapFields&lt;T&gt;(mapper: (field: ODataEnumTypeFieldParser&lt;E&gt;) &#x3D;&gt; T) {
+    return this.parser.mapFields(mapper);
   }
 
   /**

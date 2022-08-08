@@ -3735,7 +3735,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:304</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:309</a></code>
 </div>
                 </td>
             </tr>
@@ -3820,7 +3820,7 @@ Create an object handler for mutate the query options of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:336</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:346</a></code>
 </div>
                 </td>
             </tr>
@@ -3908,7 +3908,7 @@ Create an object handler for mutate the query options of the resource</p>
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:313</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataResource.html#source" target="_self" >ODataResource:323</a></code>
 </div>
                 </td>
             </tr>
@@ -4451,7 +4451,7 @@ export class ODataNavigationPropertyResource&lt;T&gt; extends ODataResource&lt;T
     let fieldType: string | undefined;
     let fieldSchema: ODataStructuredType&lt;N&gt; | undefined;
     if (baseSchema !&#x3D;&#x3D; undefined) {
-      const field &#x3D; baseSchema.findFieldByName&lt;N&gt;(path);
+      const field &#x3D; baseSchema.field&lt;N&gt;(path);
       fieldType &#x3D; field?.type;
       fieldSchema &#x3D;
         fieldType !&#x3D;&#x3D; undefined

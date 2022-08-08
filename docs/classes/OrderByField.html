@@ -405,6 +405,10 @@ export class OrderByField implements Renderable {
   }
 }
 
+export type OrderByExpressionBuilder&lt;T&gt; &#x3D; {
+  t: T;
+  e: () &#x3D;&gt; OrderByExpression&lt;T&gt;;
+};
 export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
   constructor({
     children,
@@ -414,25 +418,25 @@ export class OrderByExpression&lt;T&gt; extends Expression&lt;T&gt; {
     super({ children });
   }
 
-  static e&lt;T&gt;() {
+  static expression&lt;T&gt;() {
     return new OrderByExpression&lt;T&gt;();
   }
 
-  static s&lt;T extends object&gt;(): T {
+  static type&lt;T extends object&gt;(): T {
     return Field.factory&lt;T&gt;();
   }
 
   static orderBy&lt;T extends object&gt;(
     opts: (
-      builder: { s: T; e: () &#x3D;&gt; OrderByExpression&lt;T&gt; },
+      builder: OrderByExpressionBuilder&lt;T&gt;,
       current?: OrderByExpression&lt;T&gt;
     ) &#x3D;&gt; OrderByExpression&lt;T&gt;,
     current?: OrderByExpression&lt;T&gt;
   ): OrderByExpression&lt;T&gt; {
     return opts(
       {
-        s: OrderByExpression.s&lt;T&gt;(),
-        e: OrderByExpression.e,
+        t: OrderByExpression.type&lt;T&gt;(),
+        e: OrderByExpression.expression,
       },
       current
     ) as OrderByExpression&lt;T&gt;;

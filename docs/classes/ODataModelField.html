@@ -2365,7 +2365,7 @@ export class ODataModelOptions&lt;T&gt; {
       const { field, ...opts } &#x3D; options;
       if (field &#x3D;&#x3D;&#x3D; undefined || name &#x3D;&#x3D;&#x3D; undefined)
         throw new Error(&#x27;Model Properties need name and field&#x27;);
-      const parser &#x3D; this.schema.findFieldByName&lt;T&gt;(field as keyof T);
+      const parser &#x3D; this.schema.field&lt;T&gt;(field as keyof T);
       if (parser &#x3D;&#x3D;&#x3D; undefined)
         throw new Error(&#x60;No parser for ${field} with name &#x3D; ${name}&#x60;);
       return new ODataModelField&lt;T&gt;(this, { name, field, parser, ...opts });
@@ -2438,12 +2438,12 @@ export class ODataModelOptions&lt;T&gt; {
   }
 
   fields({
-    include_navigation &#x3D; false,
-    include_parents &#x3D; true,
+    include_navigation,
+    include_parents,
   }: {
-    include_parents?: boolean;
-    include_navigation?: boolean;
-  } &#x3D; {}): ODataModelField&lt;any&gt;[] {
+    include_parents: boolean;
+    include_navigation: boolean;
+  }): ODataModelField&lt;any&gt;[] {
     return [
       ...(include_parents &amp;&amp; this.parent !&#x3D;&#x3D; undefined
         ? this.parent.fields({ include_navigation, include_parents })
@@ -2463,7 +2463,8 @@ export class ODataModelOptions&lt;T&gt; {
         modelField.name &#x3D;&#x3D;&#x3D; name || modelField.field &#x3D;&#x3D;&#x3D; name
     );
     //Throw error if not found
-    if (field &#x3D;&#x3D;&#x3D; undefined) throw new Error(&#x60;No field with name ${name as string}&#x60;);
+    if (field &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x60;No field with name ${name as string}&#x60;);
     return field as ODataModelField&lt;F&gt;;
   }
 
@@ -2675,7 +2676,8 @@ export class ODataModelOptions&lt;T&gt; {
     {
       field_mapping &#x3D; false,
       resolve &#x3D; true,
-    }: { field_mapping?: boolean; resolve?: boolean } &#x3D; {}
+      single &#x3D; true,
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } &#x3D; {}
   ): EntityKey&lt;T&gt; | { [name: string]: any } | undefined {
     const keyTypes &#x3D; this.schema.keys({ include_parents: true });
     const key &#x3D; new Map&lt;string, any&gt;();
@@ -2686,7 +2688,7 @@ export class ODataModelOptions&lt;T&gt; {
       for (let name of kt.name.split(&#x27;/&#x27;)) {
         if (options &#x3D;&#x3D;&#x3D; undefined) break;
         field &#x3D; options
-          .fields({ include_parents: true })
+          .fields({ include_navigation: false, include_parents: true })
           .find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; name);
         if (field !&#x3D;&#x3D; undefined) {
           v &#x3D;
@@ -2702,7 +2704,9 @@ export class ODataModelOptions&lt;T&gt; {
       key.set(name, v);
     }
     if (key.size &#x3D;&#x3D;&#x3D; 0) return undefined;
-    return resolve ? Objects.resolveKey(key) : Object.fromEntries(key);
+    return resolve
+      ? Objects.resolveKey(key, { single })
+      : Object.fromEntries(key);
   }
 
   resolveReferential(
@@ -2711,15 +2715,17 @@ export class ODataModelOptions&lt;T&gt; {
     {
       field_mapping &#x3D; false,
       resolve &#x3D; true,
-    }: { field_mapping?: boolean; resolve?: boolean } &#x3D; {}
+      single &#x3D; false,
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } &#x3D; {}
   ): { [name: string]: any } | null | undefined {
     const referential &#x3D; new Map&lt;string, any&gt;();
     for (let ref of field.referentials) {
-      let from &#x3D; this.fields({ include_parents: true }).find(
-        (p: any) &#x3D;&gt; p.field &#x3D;&#x3D;&#x3D; ref.referencedProperty
-      );
+      let from &#x3D; this.fields({
+        include_navigation: false,
+        include_parents: true,
+      }).find((p: any) &#x3D;&gt; p.field &#x3D;&#x3D;&#x3D; ref.referencedProperty);
       let to &#x3D; field.options
-        .fields({ include_parents: true })
+        .fields({ include_navigation: false, include_parents: true })
         .find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; ref.property);
       if (from !&#x3D;&#x3D; undefined &amp;&amp; to !&#x3D;&#x3D; undefined) {
         let name &#x3D; field_mapping ? to.field : to.name;
@@ -2730,7 +2736,7 @@ export class ODataModelOptions&lt;T&gt; {
     if (referential.size &#x3D;&#x3D;&#x3D; 1 &amp;&amp; Array.from(referential.values())[0] &#x3D;&#x3D;&#x3D; null)
       return null;
     return resolve
-      ? Objects.resolveKey(referential, { single: false })
+      ? Objects.resolveKey(referential, { single })
       : Object.fromEntries(referential);
   }
 
@@ -2740,15 +2746,17 @@ export class ODataModelOptions&lt;T&gt; {
     {
       field_mapping &#x3D; false,
       resolve &#x3D; true,
-    }: { field_mapping?: boolean; resolve?: boolean } &#x3D; {}
+      single &#x3D; false,
+    }: { field_mapping?: boolean; resolve?: boolean; single?: boolean } &#x3D; {}
   ): { [name: string]: any } | null | undefined {
     const referenced &#x3D; new Map&lt;string, any&gt;();
     for (let ref of field.referentials) {
-      let from &#x3D; this.fields({ include_parents: true }).find(
-        (field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; ref.property
-      );
+      let from &#x3D; this.fields({
+        include_navigation: false,
+        include_parents: true,
+      }).find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.field &#x3D;&#x3D;&#x3D; ref.property);
       let to &#x3D; (field.meta as ODataModelOptions&lt;any&gt;)
-        .fields({ include_parents: true })
+        .fields({ include_navigation: false, include_parents: true })
         .find(
           (field: ODataModelField&lt;any&gt;) &#x3D;&gt;
             field.field &#x3D;&#x3D;&#x3D; ref.referencedProperty
@@ -2762,7 +2770,7 @@ export class ODataModelOptions&lt;T&gt; {
     if (referenced.size &#x3D;&#x3D;&#x3D; 1 &amp;&amp; Array.from(referenced.values())[0] &#x3D;&#x3D;&#x3D; null)
       return null;
     return resolve
-      ? Objects.resolveKey(referenced, { single: false })
+      ? Objects.resolveKey(referenced, { single })
       : Object.fromEntries(referenced);
   }
 
@@ -2790,7 +2798,10 @@ export class ODataModelOptions&lt;T&gt; {
   }
 
   defaults(): T | { [name: string]: any } | undefined {
-    const defs &#x3D; this.fields().reduce((acc, field) &#x3D;&gt; {
+    const defs &#x3D; this.fields({
+      include_navigation: false,
+      include_parents: true,
+    }).reduce((acc, field) &#x3D;&gt; {
       let value &#x3D; field.defaults();
       return value !&#x3D;&#x3D; undefined
         ? Object.assign(acc, { [field.name]: value })
@@ -2935,9 +2946,11 @@ export class ODataModelOptions&lt;T&gt; {
       })
       .reduce((acc, [k, v]) &#x3D;&gt; {
         const name &#x3D; field_mapping
-          ? this.fields().find(
-              (field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.name &#x3D;&#x3D;&#x3D; k
-            )?.field || k
+          ? this.fields({
+              include_navigation: false,
+              include_parents: true,
+            }).find((field: ODataModelField&lt;any&gt;) &#x3D;&gt; field.name &#x3D;&#x3D;&#x3D; k)?.field ||
+            k
           : k;
         return Object.assign(acc, { [name]: v });
       }, {});
@@ -2990,7 +3003,10 @@ export class ODataModelOptions&lt;T&gt; {
     } &#x3D; {}
   ): { [name: string]: any } {
     // Attributes by fields (attributes for the model type)
-    const fieldAttrs &#x3D; this.fields().reduce((acc, f) &#x3D;&gt; {
+    const fieldAttrs &#x3D; this.fields({
+      include_navigation: false,
+      include_parents: true,
+    }).reduce((acc, f) &#x3D;&gt; {
       const isChanged &#x3D; self._changes.has(f.name);
       const name &#x3D; field_mapping ? f.field : f.name;
       const computed &#x3D; f.annotatedValue&lt;boolean&gt;(COMPUTED);
@@ -3151,8 +3167,8 @@ export class ODataModelOptions&lt;T&gt; {
     if (field.isStructuredType()) {
       const relation &#x3D; self._relations.get(field.name);
       if (
-        relation?.model &#x3D;&#x3D;&#x3D; null ||
-        ODataModelOptions.isModel(relation?.model)
+        field.navigation &amp;&amp;
+        (relation?.model &#x3D;&#x3D;&#x3D; null || ODataModelOptions.isModel(relation?.model))
       ) {
         // Check for reference
         const referenced &#x3D; this.resolveReferenced(self, field);

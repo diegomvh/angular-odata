@@ -95,11 +95,12 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Optional</span>
-                                <a href="#alias" >alias</a>
+                                    <span class="modifier">Private</span>
+                                <a href="#_fields" >_fields</a>
                             </li>
                             <li>
-                                <a href="#fields" >fields</a>
+                                    <span class="modifier">Optional</span>
+                                <a href="#alias" >alias</a>
                             </li>
                             <li>
                                     <span class="modifier">Optional</span>
@@ -147,7 +148,16 @@
                                 <a href="#encode" >encode</a>
                             </li>
                             <li>
+                                <a href="#field" >field</a>
+                            </li>
+                            <li>
+                                <a href="#fields" >fields</a>
+                            </li>
+                            <li>
                                 <a href="#isTypeOf" >isTypeOf</a>
+                            </li>
+                            <li>
+                                <a href="#mapFields" >mapFields</a>
                             </li>
                             <li>
                                 <a href="#serialize" >serialize</a>
@@ -185,12 +195,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(config: <a href="../undefineds/EnumTypeConfig.html" target="_self">EnumTypeConfig&lt;T&gt;</a>, namespace: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>constructor(config: <a href="../undefineds/EnumTypeConfig.html" target="_self">EnumTypeConfig&lt;E&gt;</a>, namespace: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, alias?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:38</a></div>
                             </td>
                         </tr>
 
@@ -211,7 +221,7 @@
                                                         <td>config</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../miscellaneous/typealiases.html#EnumTypeConfig" target="_self" >EnumTypeConfig&lt;T&gt;</a></code>
+                                                                        <code><a href="../miscellaneous/typealiases.html#EnumTypeConfig" target="_self" >EnumTypeConfig&lt;E&gt;</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -261,6 +271,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="_fields"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_fields</b></span>
+                        <a href="#_fields"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEnumTypeFieldParser&lt;E&gt;[]</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="alias"></a>
                     <span class="name">
                             <span class="modifier">Optional</span>
@@ -277,33 +314,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:32</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="fields"></a>
-                    <span class="name">
-                        <span ><b>fields</b></span>
-                        <a href="#fields"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEnumTypeFieldParser[]</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -330,7 +341,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:33</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -356,7 +367,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -382,7 +393,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -408,7 +419,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -435,7 +446,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -462,7 +473,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -529,8 +540,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="61"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:61</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="62"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:62</a></div>
                 </td>
             </tr>
 
@@ -597,8 +608,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="79"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:79</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:107</a></div>
                 </td>
             </tr>
 
@@ -648,7 +659,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>T</code>
+                        <b>Returns : </b>    <code>E</code>
 
                     </div>
                     <div class="io-description">
@@ -671,15 +682,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>encode(value: T, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>encode(value: E, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="113"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:113</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="141"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:141</a></div>
                 </td>
             </tr>
 
@@ -702,7 +713,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                            <code>T</code>
+                                            <code>E</code>
                                     </td>
 
                                     <td>
@@ -743,6 +754,144 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="field"></a>
+                    <span class="name">
+                        <span ><b>field</b></span>
+                        <a href="#field"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>field(nameValue: string | E)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="87"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:87</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>nameValue</td>
+                                    <td>
+                                            <code>string | E</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fields"></a>
+                    <span class="name">
+                        <span ><b>fields</b></span>
+                        <a href="#fields"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>fields(value?: E)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:79</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>value</td>
+                                    <td>
+                                            <code>E</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/Parser.html" target="_self" >ODataEnumTypeFieldParser[]</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="isTypeOf"></a>
                     <span class="name">
                         <span ><b>isTypeOf</b></span>
@@ -759,8 +908,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="72"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:72</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:73</a></div>
                 </td>
             </tr>
 
@@ -812,6 +961,91 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="mapFields"></a>
+                    <span class="name">
+                        <span ><b>mapFields</b></span>
+                        <a href="#mapFields"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>mapFields(mapper: (field: <a href="../interfaces/Parser.html">ODataEnumTypeFieldParser<E></a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="102"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:102</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>R</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Map the fields of the enum type.</p>
+</div>
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Description</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>mapper</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                    <td>
+                                        <p>Function that maps the value to the new value</p>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        <p>The fields mapped by the mapper</p>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="serialize"></a>
                     <span class="name">
                         <span ><b>serialize</b></span>
@@ -821,15 +1055,15 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>serialize(value: T, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
+<code>serialize(value: E, options?: <a href="../interfaces/ParserOptions.html" target="_self">ParserOptions</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="93"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:93</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="121"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:121</a></div>
                 </td>
             </tr>
 
@@ -852,7 +1086,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                            <code>T</code>
+                                            <code>E</code>
                                     </td>
 
                                     <td>
@@ -909,8 +1143,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="121"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:121</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="149"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:149</a></div>
                 </td>
             </tr>
 
@@ -946,8 +1180,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:57</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:58</a></div>
                 </td>
             </tr>
 
@@ -1024,8 +1258,8 @@ Titleize is meant for creating pretty output.</p>
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="130"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:130</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="158"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/enum-type.ts:158</a></div>
                 </td>
             </tr>
 
@@ -1280,15 +1514,16 @@ import {
   EnumTypeFieldConfig,
   ParserOptions,
   Parser,
+  StructuredTypeFieldOptions,
 } from &#x27;../../types&#x27;;
 import { Enums, Strings } from &#x27;../../utils&#x27;;
 import { ODataAnnotatable } from &#x27;../annotation&#x27;;
 
-export class ODataEnumTypeFieldParser extends ODataAnnotatable {
+export class ODataEnumTypeFieldParser&lt;E&gt; extends ODataAnnotatable {
   name: string;
-  value: number;
+  value: E;
 
-  constructor(name: string, field: EnumTypeFieldConfig) {
+  constructor(name: string, field: EnumTypeFieldConfig&lt;E&gt;) {
     super(field);
     this.name &#x3D; name;
     this.value &#x3D; field.value;
@@ -1299,27 +1534,27 @@ export class ODataEnumTypeFieldParser extends ODataAnnotatable {
   }
 }
 
-export class ODataEnumTypeParser&lt;T&gt;
+export class ODataEnumTypeParser&lt;E&gt;
   extends ODataAnnotatable
-  implements Parser&lt;T&gt;
+  implements Parser&lt;E&gt;
 {
   name: string;
   namespace: string;
   alias?: string;
   flags?: boolean;
-  members: { [name: string]: number } | { [value: number]: string };
-  fields: ODataEnumTypeFieldParser[];
+  members: { [name: string]: E } | { [value: number]: string };
+  private _fields: ODataEnumTypeFieldParser&lt;E&gt;[];
   stringAsEnum?: boolean;
   parserOptions?: ParserOptions;
 
-  constructor(config: EnumTypeConfig&lt;T&gt;, namespace: string, alias?: string) {
+  constructor(config: EnumTypeConfig&lt;E&gt;, namespace: string, alias?: string) {
     super(config);
     this.name &#x3D; config.name;
     this.namespace &#x3D; namespace;
     this.alias &#x3D; alias;
     this.flags &#x3D; config.flags;
     this.members &#x3D; config.members;
-    this.fields &#x3D; Object.entries(config.fields).map(
+    this._fields &#x3D; Object.entries(config.fields).map(
       ([name, f]) &#x3D;&gt; new ODataEnumTypeFieldParser(name, f)
     );
   }
@@ -1351,22 +1586,49 @@ export class ODataEnumTypeParser&lt;T&gt;
     return names.indexOf(type) !&#x3D;&#x3D; -1;
   }
 
+  fields(value?: E): ODataEnumTypeFieldParser&lt;E&gt;[] {
+    return [
+      ...this._fields.filter(
+        (f) &#x3D;&gt; value &#x3D;&#x3D;&#x3D; undefined || Boolean((&lt;any&gt;f.value) &amp; (&lt;any&gt;value))
+      ),
+    ];
+  }
+
+  field(nameValue: string | E) {
+    let field &#x3D; this.fields().find(
+      (f) &#x3D;&gt; f.name &#x3D;&#x3D;&#x3D; nameValue || f.value &#x3D;&#x3D;&#x3D; nameValue
+    );
+    //Throw error if not found
+    if (field &#x3D;&#x3D;&#x3D; undefined)
+      throw new Error(&#x60;${this.name} has no field named ${String(name)}&#x60;);
+    return field;
+  }
+
+  /**
+   * Map the fields of the enum type.
+   * @param mapper Function that maps the value to the new value
+   * @returns The fields mapped by the mapper
+   */
+  mapFields&lt;R&gt;(mapper: (field: ODataEnumTypeFieldParser&lt;E&gt;) &#x3D;&gt; R) {
+    return this.fields().map(mapper);
+  }
+
   // Deserialize
-  deserialize(value: string, options?: ParserOptions): T {
+  deserialize(value: string, options?: ParserOptions): E {
     // string -&gt; number
     const parserOptions &#x3D; options || this.parserOptions;
     if (this.flags) {
-      return Enums.toValues(this.members, value).reduce(
+      return Enums.toValues&lt;E&gt;(this.members as any, value).reduce(
         (acc, v) &#x3D;&gt; acc | v,
         0
       ) as any;
     } else {
-      return Enums.toValue(this.members, value) as any;
+      return Enums.toValue&lt;E&gt;(this.members as any, value) as any;
     }
   }
 
   // Serialize
-  serialize(value: T, options?: ParserOptions): string | undefined {
+  serialize(value: E, options?: ParserOptions): string | undefined {
     // Enum are string | number
     // string | number -&gt; string
     const parserOptions &#x3D; options || this.parserOptions;
@@ -1386,7 +1648,7 @@ export class ODataEnumTypeParser&lt;T&gt;
   }
 
   //Encode
-  encode(value: T, options?: ParserOptions): any {
+  encode(value: E, options?: ParserOptions): any {
     const parserOptions &#x3D; options || this.parserOptions;
     const serialized &#x3D; this.serialize(value, parserOptions);
     if (serialized &#x3D;&#x3D;&#x3D; undefined) return undefined;
@@ -1399,7 +1661,7 @@ export class ODataEnumTypeParser&lt;T&gt;
       title: this.name,
       type: &#x27;string&#x27;,
     };
-    property.enum &#x3D; this.fields.map((f) &#x3D;&gt; f.name);
+    property.enum &#x3D; this._fields.map((f) &#x3D;&gt; f.name);
     return property;
   }
 
