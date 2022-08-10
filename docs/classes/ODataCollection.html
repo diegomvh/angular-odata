@@ -4769,7 +4769,7 @@ export class ODataCollection&lt;T, M extends ODataModel&lt;T&gt;&gt;
 
   asEntitySet&lt;R&gt;(func: (collection: this) &#x3D;&gt; R): R {
     // Build new resource
-    const query &#x3D; this.resource().cloneQuery&lt;T&gt;();
+    const query &#x3D; this._resource?.cloneQuery&lt;T&gt;();
     let resource &#x3D; this._model.meta.collectionResourceFactory(query);
     if (resource &#x3D;&#x3D;&#x3D; undefined)
       throw new Error(

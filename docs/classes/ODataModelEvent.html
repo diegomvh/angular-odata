@@ -1714,7 +1714,7 @@ export class ODataModelOptions&lt;T&gt; {
 
   asEntity&lt;R, M extends ODataModel&lt;T&gt;&gt;(self: M, func: (model: M) &#x3D;&gt; R): R {
     // Build new resource
-    const query &#x3D; self.resource().cloneQuery&lt;T&gt;();
+    const query &#x3D; self._resource?.cloneQuery&lt;T&gt;();
     let resource &#x3D; this.modelResourceFactory(query);
     if (resource &#x3D;&#x3D;&#x3D; undefined)
       throw new Error(&#x27;Model does not have associated Entity endpoint&#x27;);
