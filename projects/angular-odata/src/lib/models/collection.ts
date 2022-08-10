@@ -172,7 +172,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   asEntitySet<R>(func: (collection: this) => R): R {
     // Build new resource
-    const query = this.resource().cloneQuery<T>();
+    const query = this._resource?.cloneQuery<T>();
     let resource = this._model.meta.collectionResourceFactory(query);
     if (resource === undefined)
       throw new Error(
