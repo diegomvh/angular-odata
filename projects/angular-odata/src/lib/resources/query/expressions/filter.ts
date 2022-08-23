@@ -216,16 +216,19 @@ export class FilterExpression<F> extends Expression<F> {
 
   any<N extends object>(
     left: N[],
-    opts: (e: {
+    opts?: (e: {
       e: (connector?: FilterConnector) => FilterExpression<N>;
       t: N;
     }) => FilterExpression<N>,
     alias?: string
   ): FilterExpression<F> {
-    const exp = opts({
-      t: Field.factory<N>(),
-      e: FilterExpression.expression,
-    }) as FilterExpression<N>;
+    let exp = undefined;
+    if (opts !== undefined) {
+      exp = opts({
+        t: Field.factory<N>(),
+        e: FilterExpression.expression,
+      }) as FilterExpression<N>;
+    }
     return this._add(syntax.any(left, exp, alias));
   }
 

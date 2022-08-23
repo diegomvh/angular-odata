@@ -475,12 +475,16 @@ export class Lambda<T> implements Renderable {
     let [left, right] = this.values;
 
     left = render(left, { aliases, escape, prefix });
-    let alias = this.alias || left.split('/').pop().toLowerCase()[0];
-    return `${left}/${this.op}(${alias}:${render(right, {
-      aliases,
-      escape,
-      prefix: alias,
-    })})`;
+    if (right) {
+      let alias = this.alias || left.split('/').pop().toLowerCase()[0];
+      return `${left}/${this.op}(${alias}:${render(right, {
+        aliases,
+        escape,
+        prefix: alias,
+      })})`;
+    } else {
+      return `${left}/${this.op}()`;
+    }
   }
 
   clone() {
