@@ -73,7 +73,7 @@ export class ODataStructuredTypeFieldParser<T>
   nullable: boolean;
   navigation: boolean;
   precision?: number;
-  scale?: number;
+  scale?: number | 'variable';
   referentials: ODataReferential[];
   parserOptions?: ParserOptions;
 

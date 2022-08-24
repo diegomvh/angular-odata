@@ -83,17 +83,21 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
     },
     (v: number, o: StructuredTypeFieldOptions) => {
       if (o.ieee754Compatible) {
-        return parseFloat(v.toPrecision(o.field.precision)).toFixed(
-          o.field.scale
-        );
+        let vstr = v.toPrecision(o.field.precision);
+        if (typeof o.field.scale === 'number') {
+          vstr = parseFloat(vstr).toFixed(o.field.scale);
+        }
+        return vstr;
       }
       return v;
     },
     (v: number, o: StructuredTypeFieldOptions) => {
       if (o.ieee754Compatible) {
-        return parseFloat(v.toPrecision(o.field.precision)).toFixed(
-          o.field.scale
-        );
+        let vstr = v.toPrecision(o.field.precision);
+        if (typeof o.field.scale === 'number') {
+          vstr = parseFloat(vstr).toFixed(o.field.scale);
+        }
+        return vstr;
       }
       return v;
     }
