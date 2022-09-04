@@ -14,11 +14,22 @@ export const SERVICE_ROOT = 'https://services.odata.org/v4/TripPinServiceRW/';
 export const NAMESPACE = 'TripPin';
 
 //#region Enum
+export enum FlagEnums {
+  Flag1 = 1 << 0,
+  Flag2 = 1 << 1,
+  Flag4 = 1 << 2,
+}
 export enum PersonGender {
   Male = 0,
   Female = 1,
   Unknown = 2,
 }
+export const FlagEnumsConfig = {
+  name: 'FlagEnums',
+  flags: true,
+  members: FlagEnums,
+  fields: {},
+} as EnumTypeConfig<FlagEnums>;
 export const PersonGenderConfig = {
   name: 'PersonGender',
   members: PersonGender,
@@ -281,7 +292,7 @@ export const TripPinConfig = {
   schemas: [
     {
       namespace: `${NAMESPACE}`,
-      enums: [PersonGenderConfig],
+      enums: [PersonGenderConfig, FlagEnumsConfig],
       entities: [
         PhotoConfig,
         PersonConfig,

@@ -124,13 +124,13 @@ export class ODataEnumTypeParser<E>
     const parserOptions = options || this.parserOptions;
     if (this.flags) {
       const names = Enums.toNames(this.members, value);
-      if (names.length === 0) return undefined;
+      if (names.length === 0) return `${value}`;
       return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
       const name = Enums.toName(this.members, value);
-      if (name === undefined) return undefined;
+      if (name === undefined) return `${value}`;
       return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
         : name;

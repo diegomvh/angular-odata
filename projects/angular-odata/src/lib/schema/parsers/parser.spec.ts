@@ -5,6 +5,7 @@ import {
   NAMESPACE,
   PersonGender,
   Flight,
+  FlagEnums,
 } from '../../trippin.spec';
 import { ODataClient } from '../../client';
 import { ODataModule } from '../../module';
@@ -118,6 +119,13 @@ describe('ODataClient', () => {
     api.configure();
   });
 
+  /*
+  it('should return parser for type', () => {
+    const parser = client.parserForType(`Edm.String`);
+    expect(parser.serialize("O'Reilly")).toEqual("O''Reilly");
+  });
+  */
+
   it('should return parser for type', () => {
     const parser = client.parserForType(`${NAMESPACE}.Person`);
     expect(parser instanceof ODataStructuredTypeParser).toBeTruthy();
@@ -155,43 +163,24 @@ describe('ODataClient', () => {
   });
 
   it('should serialize flags', () => {
-    const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`
-    ) as ODataStructuredType<Person>;
-    const parser = client.parserForType<Person>(
-      `${NAMESPACE}.PersonGender`
-    ) as ODataEnumTypeParser<Person>;
-    const options = schema.api.options;
-    // Change parser settings
-    parser.flags = true;
-    const field = (schema as ODataStructuredType<Person>).field(
-      'Gender'
-    ) as Parser<PersonGender>;
-    expect(field !== undefined).toBeTruthy();
-    expect(field.serialize(3, options)).toEqual('Male, Female, Unknown');
-    expect(
-      field.serialize(
-        PersonGender.Male | PersonGender.Female | PersonGender.Unknown,
-        options
-      )
-    ).toEqual('Male, Female, Unknown');
+    const parser = client.parserForType(
+      `${NAMESPACE}.FlagEnums`
+    ) as ODataEnumTypeParser<FlagEnums>;
+    expect(parser !== undefined).toBeTruthy();
+    expect(parser.serialize(3)).toEqual('Flag1, Flag2');
+    expect(parser.serialize(0)).toEqual('0');
+    expect(parser.serialize(FlagEnums.Flag1 | FlagEnums.Flag4)).toEqual(
+      'Flag1, Flag4'
+    );
   });
 
   it('should deserialize flags', () => {
-    const schema = client.structuredTypeForType<Person>(
-      `${NAMESPACE}.Person`
-    ) as ODataStructuredType<Person>;
     const parser = client.parserForType(
-      `${NAMESPACE}.PersonGender`
-    ) as ODataEnumTypeParser<PersonGender>;
-    parser.flags = true;
-    const field = (schema as ODataStructuredType<Person>).field(
-      'Gender'
-    ) as Parser<PersonGender>;
-    expect(field !== undefined).toBeTruthy();
-    expect(
-      field.deserialize('Male, Female, Unknown', schema.api.options)
-    ).toEqual(3);
+      `${NAMESPACE}.FlagEnums`
+    ) as ODataEnumTypeParser<FlagEnums>;
+    expect(parser !== undefined).toBeTruthy();
+    expect(parser.deserialize('Flag4')).toEqual(FlagEnums.Flag4);
+    expect(parser.deserialize('0')).toEqual(0);
   });
 
   it('should validate entity', () => {
