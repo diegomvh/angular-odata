@@ -1,10 +1,14 @@
 export const Enums = {
   names<E>(Enum: E): string[] {
-    return Object.values(Enum).filter((v) => typeof v === 'string');
+    return Object.values<string>(Enum as any).filter(
+      (v) => typeof v === 'string'
+    );
   },
 
   values<E>(Enum: E): number[] {
-    return Object.values(Enum).filter((v) => typeof v === 'number');
+    return Object.values<number>(Enum as any).filter(
+      (v) => typeof v === 'number'
+    );
   },
 
   toValue<E>(Enum: E, value: any): number | undefined {

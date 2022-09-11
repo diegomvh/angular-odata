@@ -49,16 +49,6 @@ export class ODataEnumTypeParser<E>
     );
   }
 
-  /**
-   * Create a nicer looking title.
-   * Titleize is meant for creating pretty output.
-   * @param term The term of the annotation to find.
-   * @returns The titleized string.
-   */
-  ttitelize(term?: string | RegExp): string {
-    return (term && this.annotatedValue(term)) || Strings.titleCase(this.name);
-  }
-
   configure({
     stringAsEnum,
     options,
@@ -123,14 +113,14 @@ export class ODataEnumTypeParser<E>
     // string | number -> string
     const parserOptions = options || this.parserOptions;
     if (this.flags) {
-      const names = Enums.toNames(this.members, value);
-      if (names.length === 0) return `${value}`;
+      let names = Enums.toNames(this.members, value);
+      if (names.length === 0) names = [`${value}`];
       return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
-      const name = Enums.toName(this.members, value);
-      if (name === undefined) return `${value}`;
+      let name = Enums.toName(this.members, value);
+      if (name === undefined) name = `${value}`;
       return !this.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
         : name;
@@ -173,5 +163,16 @@ export class ODataEnumTypeParser<E>
     } else {
       return !(member in this.members) ? ['mismatch'] : undefined;
     }
+  }
+
+  unpack(value: E): number[] {
+    return Enums.toValues(this.members, value);
+  }
+
+  pack(value: number[]): E {
+    return Enums.toValues(this.members, value).reduce(
+      (acc, v) => acc | v,
+      0
+    ) as any;
   }
 }

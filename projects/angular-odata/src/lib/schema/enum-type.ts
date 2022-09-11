@@ -78,4 +78,12 @@ export class ODataEnumType<E> extends ODataSchemaElement {
   encode(value: E, options?: ParserOptions): any {
     return this.parser.encode(value, options);
   }
+
+  unpack(value: E) {
+    return this.parser.unpack(value);
+  }
+
+  pack(value: number[]) {
+    return this.parser.pack(value);
+  }
 }

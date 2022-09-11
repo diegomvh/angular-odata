@@ -183,6 +183,20 @@ describe('ODataClient', () => {
     expect(parser.deserialize('0')).toEqual(0);
   });
 
+  it('should pack flags', () => {
+    const parser = client.parserForType(
+      `${NAMESPACE}.FlagEnums`
+    ) as ODataEnumTypeParser<FlagEnums>;
+    expect(parser !== undefined).toBeTruthy();
+    expect(parser.unpack(FlagEnums.Flag1 | FlagEnums.Flag2)).toEqual([
+      FlagEnums.Flag1,
+      FlagEnums.Flag2,
+    ]);
+    expect(parser.pack([FlagEnums.Flag1, FlagEnums.Flag2])).toEqual(
+      FlagEnums.Flag1 | FlagEnums.Flag2
+    );
+  });
+
   it('should validate entity', () => {
     const schema = client.structuredTypeForType<Person>(
       `${NAMESPACE}.Person`
