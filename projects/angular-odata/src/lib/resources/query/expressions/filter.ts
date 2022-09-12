@@ -14,7 +14,7 @@ import {
 export type FilterConnector = 'and' | 'or';
 
 export type FilterExpressionBuilder<T> = {
-  t: T;
+  t: Readonly<Required<T>>;
   e: (connector?: FilterConnector) => FilterExpression<T>;
   o: ODataOperators<T>;
   f: ODataFunctions<T>;
@@ -36,14 +36,6 @@ export class FilterExpression<F> extends Expression<F> {
     this._negated = negated || false;
   }
 
-  static type<T extends object>(): T {
-    return Field.factory<T>();
-  }
-
-  static expression<T>(connector: FilterConnector = 'and') {
-    return new FilterExpression<T>({ connector });
-  }
-
   static filter<T extends object>(
     opts: (
       builder: FilterExpressionBuilder<T>,
@@ -53,8 +45,8 @@ export class FilterExpression<F> extends Expression<F> {
   ): FilterExpression<T> {
     return opts(
       {
-        t: FilterExpression.type<T>(),
-        e: FilterExpression.expression,
+        t: Field.factory<Readonly<Required<T>>>(),
+        e: (connector: FilterConnector = 'and') => new FilterExpression<T>({ connector }),
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
@@ -225,8 +217,8 @@ export class FilterExpression<F> extends Expression<F> {
     let exp = undefined;
     if (opts !== undefined) {
       exp = opts({
-        t: Field.factory<N>(),
-        e: FilterExpression.expression,
+        t: Field.factory<Readonly<Required<N>>>(),
+        e: (connector: FilterConnector = 'and') => new FilterExpression<N>({ connector }),
       }) as FilterExpression<N>;
     }
     return this._add(syntax.any(left, exp, alias));
@@ -241,8 +233,8 @@ export class FilterExpression<F> extends Expression<F> {
     alias?: string
   ): FilterExpression<F> {
     const exp = opts({
-      t: Field.factory<N>(),
-      e: FilterExpression.expression,
+      t: Field.factory<Readonly<Required<N>>>(),
+      e: (connector: FilterConnector = 'and') => new FilterExpression<N>({ connector }),
     }) as FilterExpression<N>;
     return this._add(syntax.all(left, exp, alias));
   }

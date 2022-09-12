@@ -1,4 +1,3 @@
-import { SearchExpression } from './search';
 import { SelectExpression } from './select';
 
 describe('OData search builder', () => {

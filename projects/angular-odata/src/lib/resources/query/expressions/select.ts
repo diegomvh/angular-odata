@@ -2,7 +2,7 @@ import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
 import { Field, Renderable } from './syntax';
 
-export type SelectExpressionBuilder<T> = { t: T; e: () => SelectExpression<T> };
+export type SelectExpressionBuilder<T> = { t: Readonly<Required<T>>; e: () => SelectExpression<T> };
 export class SelectExpression<T> extends Expression<T> {
   constructor({
     children,
@@ -10,14 +10,6 @@ export class SelectExpression<T> extends Expression<T> {
     children?: Renderable[];
   } = {}) {
     super({ children });
-  }
-
-  static expression<T>() {
-    return new SelectExpression<T>();
-  }
-
-  static type<T extends object>(): T {
-    return Field.factory<T>();
   }
 
   static select<T extends object>(
@@ -29,8 +21,8 @@ export class SelectExpression<T> extends Expression<T> {
   ): SelectExpression<T> {
     return opts(
       {
-        t: SelectExpression.type<T>(),
-        e: SelectExpression.expression,
+        t: Field.factory<Readonly<Required<T>>>(),
+        e: () => new SelectExpression<T>(),
       },
       current
     ) as SelectExpression<T>;

@@ -145,7 +145,7 @@ export class ExpandField<T> implements Renderable {
   }
 }
 
-export type ExpandExpressionBuilder<T> = { t: T; e: () => ExpandExpression<T> };
+export type ExpandExpressionBuilder<T> = { t: Readonly<Required<T>>; e: () => ExpandExpression<T> };
 export class ExpandExpression<T> extends Expression<T> {
   constructor({
     children,
@@ -153,14 +153,6 @@ export class ExpandExpression<T> extends Expression<T> {
     children?: Renderable[];
   } = {}) {
     super({ children });
-  }
-
-  static expression<T>() {
-    return new ExpandExpression<T>();
-  }
-
-  static type<T extends object>(): T {
-    return Field.factory<T>();
   }
 
   static expand<T extends object>(
@@ -172,8 +164,8 @@ export class ExpandExpression<T> extends Expression<T> {
   ): ExpandExpression<T> {
     return opts(
       {
-        t: ExpandExpression.type<T>(),
-        e: ExpandExpression.expression,
+        t: Field.factory<Readonly<Required<T>>>(),
+        e: () => new ExpandExpression<T>(),
       },
       current
     ) as ExpandExpression<T>;

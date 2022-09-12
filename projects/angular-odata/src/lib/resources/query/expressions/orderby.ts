@@ -34,7 +34,7 @@ export class OrderByField implements Renderable {
 }
 
 export type OrderByExpressionBuilder<T> = {
-  t: T;
+  t: Readonly<Required<T>>;
   e: () => OrderByExpression<T>;
 };
 export class OrderByExpression<T> extends Expression<T> {
@@ -46,14 +46,6 @@ export class OrderByExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  static expression<T>() {
-    return new OrderByExpression<T>();
-  }
-
-  static type<T extends object>(): T {
-    return Field.factory<T>();
-  }
-
   static orderBy<T extends object>(
     opts: (
       builder: OrderByExpressionBuilder<T>,
@@ -63,8 +55,8 @@ export class OrderByExpression<T> extends Expression<T> {
   ): OrderByExpression<T> {
     return opts(
       {
-        t: OrderByExpression.type<T>(),
-        e: OrderByExpression.expression,
+        t: Field.factory<Readonly<Required<T>>>(),
+        e: () => new OrderByExpression<T>(),
       },
       current
     ) as OrderByExpression<T>;

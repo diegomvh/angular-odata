@@ -10,7 +10,7 @@ import {
 } from './syntax';
 
 export type ComputeExpressionBuilder<T> = {
-  t: T;
+  t: Required<Readonly<T>>;
   e: () => ComputeExpression<T>;
 };
 export class ComputeExpression<T> extends Expression<T> {
@@ -26,14 +26,6 @@ export class ComputeExpression<T> extends Expression<T> {
     this.names = names || [];
   }
 
-  static expression<T>() {
-    return new ComputeExpression<T>();
-  }
-
-  static type<T extends object>(): T {
-    return Field.factory<T>();
-  }
-
   static compute<T extends object>(
     opts: (
       builder: ComputeExpressionBuilder<T>,
@@ -43,8 +35,8 @@ export class ComputeExpression<T> extends Expression<T> {
   ): ComputeExpression<T> {
     return opts(
       {
-        t: ComputeExpression.type<T>(),
-        e: ComputeExpression.expression,
+        t: Field.factory<Readonly<Required<T>>>(),
+        e: () => new ComputeExpression<T>()
       },
       current
     ) as ComputeExpression<T>;

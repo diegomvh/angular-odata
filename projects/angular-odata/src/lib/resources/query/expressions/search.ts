@@ -56,9 +56,6 @@ export class SearchExpression<T> extends Expression<T> {
     this._negated = negated || false;
   }
 
-  static expression<T>(connector: SearchConnector = 'AND') {
-    return new SearchExpression<T>({ connector });
-  }
 
   static search<T extends object>(
     opts: (
@@ -69,7 +66,7 @@ export class SearchExpression<T> extends Expression<T> {
   ): SearchExpression<T> {
     return opts(
       {
-        e: SearchExpression.expression,
+        e: (connector: SearchConnector = 'AND') => new SearchExpression<T>({ connector }),
       },
       current
     ) as SearchExpression<T>;
