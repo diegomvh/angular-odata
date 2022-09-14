@@ -36,7 +36,7 @@ export class ComputeExpression<T> extends Expression<T> {
     return opts(
       {
         t: Field.factory<Readonly<Required<T>>>(),
-        e: () => new ComputeExpression<T>()
+        e: () => new ComputeExpression<T>(),
       },
       current
     ) as ComputeExpression<T>;

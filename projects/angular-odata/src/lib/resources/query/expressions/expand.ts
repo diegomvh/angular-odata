@@ -145,7 +145,10 @@ export class ExpandField<T> implements Renderable {
   }
 }
 
-export type ExpandExpressionBuilder<T> = { t: Readonly<Required<T>>; e: () => ExpandExpression<T> };
+export type ExpandExpressionBuilder<T> = {
+  t: Readonly<Required<T>>;
+  e: () => ExpandExpression<T>;
+};
 export class ExpandExpression<T> extends Expression<T> {
   constructor({
     children,

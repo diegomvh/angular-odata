@@ -46,7 +46,8 @@ export class FilterExpression<F> extends Expression<F> {
     return opts(
       {
         t: Field.factory<Readonly<Required<T>>>(),
-        e: (connector: FilterConnector = 'and') => new FilterExpression<T>({ connector }),
+        e: (connector: FilterConnector = 'and') =>
+          new FilterExpression<T>({ connector }),
         o: operators as ODataOperators<T>,
         f: functions as ODataFunctions<T>,
       },
@@ -218,7 +219,8 @@ export class FilterExpression<F> extends Expression<F> {
     if (opts !== undefined) {
       exp = opts({
         t: Field.factory<Readonly<Required<N>>>(),
-        e: (connector: FilterConnector = 'and') => new FilterExpression<N>({ connector }),
+        e: (connector: FilterConnector = 'and') =>
+          new FilterExpression<N>({ connector }),
       }) as FilterExpression<N>;
     }
     return this._add(syntax.any(left, exp, alias));
@@ -234,7 +236,8 @@ export class FilterExpression<F> extends Expression<F> {
   ): FilterExpression<F> {
     const exp = opts({
       t: Field.factory<Readonly<Required<N>>>(),
-      e: (connector: FilterConnector = 'and') => new FilterExpression<N>({ connector }),
+      e: (connector: FilterConnector = 'and') =>
+        new FilterExpression<N>({ connector }),
     }) as FilterExpression<N>;
     return this._add(syntax.all(left, exp, alias));
   }

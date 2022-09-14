@@ -777,12 +777,13 @@ export class ODataModel<T> {
       | null;
     if (model === null) return null;
     if (model === undefined) {
-      const value = field.collection ? [] : (this.referenced(field) as P);
-      model =
-        value !== null
-          ? field.modelCollectionFactory<T, P>({ parent: this, value })
-          : null;
-      (this as any)[name] = model;
+      if (field.collection) {
+        (this as any)[name] = field.collectionFactory({ parent: this });
+      } else {
+        const value = this.referenced(field) as P;
+        (this as any)[name] =
+          value !== null ? field.modelFactory({ parent: this, value }) : value;
+      }
     }
     return model;
   }

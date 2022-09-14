@@ -210,8 +210,8 @@ export class ODataCollection<T, M extends ODataModel<T>>
     { reset = false }: { reset?: boolean } = {}
   ): M {
     let Model = this._model;
-    const helper = this._annotations.helper;
-    const annots = new ODataEntityAnnotations(helper, helper.annotations(data));
+    const annots = new ODataEntityAnnotations(this._annotations.helper);
+    annots.update(data);
 
     if (annots?.type !== undefined && Model.meta !== null) {
       let schema = Model.meta.findChildOptions((o) =>
@@ -249,7 +249,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     changes_only?: boolean;
     field_mapping?: boolean;
     chain?: (ODataModel<any> | ODataCollection<any, ODataModel<any>>)[];
-  } = {}): (T | { [name: string]: any })[] {
+  } = {}): (Partial<T> | { [name: string]: any })[] {
     return this._entries
       .filter(
         ({ model, state }) =>

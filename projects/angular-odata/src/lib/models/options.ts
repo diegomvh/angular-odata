@@ -456,32 +456,65 @@ export class ODataModelField<F> {
     return this.api.findStructuredTypeForType(this.parser.type);
   }
 
-  modelCollectionFactory<T, F>({
+  modelFactory<F>({
     parent,
     value,
     reset,
   }: {
     parent: ODataModel<any>;
-    value?: F | F[] | { [name: string]: any } | { [name: string]: any }[];
+    value?: Partial<F> | { [name: string]: any };
+    reset?: boolean;
+  }): ODataModel<F> {
+    // Model
+    const annots = this.annotationsFactory(
+      parent.annots()
+    ) as ODataEntityAnnotations;
+    let Model = this.api.modelForType(this.parser.type);
+    if (Model === undefined) throw Error(`No Model type for ${this.name}`);
+    if (value !== undefined) {
+      annots.update(value);
+    }
+
+    if (annots?.type !== undefined && Model.meta !== null) {
+      let schema = Model.meta.findChildOptions((o) =>
+        o.isTypeOf(annots.type as string)
+      )?.schema;
+      if (schema !== undefined && schema.model !== undefined)
+        // Change to child model
+        Model = schema.model;
+    }
+
+    return new Model((value || {}) as Partial<F> | { [name: string]: any }, {
+      annots,
+      reset,
+      parent: [parent, this],
+    });
+  }
+
+  collectionFactory<F>({
+    parent,
+    value,
+    reset,
+  }: {
+    parent: ODataModel<any>;
+    value?: Partial<F>[] | { [name: string]: any }[];
     reset?: boolean;
   }): ODataModel<F> | ODataCollection<F, ODataModel<F>> {
-    const annots = this.annotationsFactory(parent.annots());
-    const Model = this.api.modelForType(this.parser.type);
+    // Collection Factory
+    const annots = this.annotationsFactory(
+      parent.annots()
+    ) as ODataEntitiesAnnotations;
     const Collection = this.api.collectionForType(this.parser.type);
-
-    if (Model === undefined || Collection === undefined)
-      throw Error(`No model for ${this.name}`);
-    return this.parser.collection
-      ? (new Collection((value || []) as F[], {
-          annots: annots as ODataEntitiesAnnotations,
-          parent: [parent, this],
-          reset,
-        }) as ODataCollection<F, ODataModel<F>>)
-      : (new Model((value || {}) as F, {
-          annots: annots as ODataEntityAnnotations,
-          parent: [parent, this],
-          reset,
-        }) as ODataModel<F>);
+    if (Collection === undefined)
+      throw Error(`No Collection type for ${this.name}`);
+    return new Collection(
+      (value || []) as Partial<F>[] | { [name: string]: any }[],
+      {
+        annots: annots,
+        parent: [parent, this],
+        reset,
+      }
+    );
   }
 }
 
@@ -547,10 +580,10 @@ export class ODataModelOptions<T> {
 
   isModelFor(entity: T | { [name: string]: any }) {
     // Resolve By Type
-    let type = this.api.options.helper.type(entity);
+    let type = this.api.options.helper.type(entity as { [name: string]: any });
     if (type && this.isTypeOf(type)) return true;
     // Resolve By fields
-    let keys = Object.keys(entity);
+    let keys = Object.keys(entity as { [name: string]: any });
     let names = this.fields({
       include_navigation: true,
       include_parents: true,
@@ -1292,12 +1325,12 @@ export class ODataModelOptions<T> {
     self: ODataModel<T>,
     field: ODataModelField<F>,
     collection: ODataCollection<F, ODataModel<F>>,
-    value: T[] | { [name: string]: any }[]
+    value: Partial<T>[] | { [name: string]: any }[]
   ) {
     collection._annotations = field.annotationsFactory(
       self.annots()
     ) as ODataEntitiesAnnotations;
-    collection.assign(value as T[] | { [name: string]: any }[], {
+    collection.assign(value as Partial<T>[] | { [name: string]: any }[], {
       reset: self._reset,
       reparent: self._reparent,
       silent: self._silent,
@@ -1446,7 +1479,13 @@ export class ODataModelOptions<T> {
         ODataModelOptions.isCollection(value) ||
         ODataModelOptions.isModel(value)
           ? (value as ODataModel<F> | ODataCollection<F, ODataModel<F>>)
-          : field.modelCollectionFactory<T, F>({
+          : field.collection
+          ? field.collectionFactory<F>({
+              parent: self,
+              value: value as F[] | { [name: string]: any }[],
+              reset: self._reset,
+            })
+          : field.modelFactory<F>({
               parent: self,
               value: value,
               reset: self._reset,
