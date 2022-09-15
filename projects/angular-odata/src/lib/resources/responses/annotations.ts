@@ -16,7 +16,7 @@ export abstract class ODataAnnotations {
   update(data: { [key: string]: any }) {
     this.annotations = new Map<string, any>([
       ...this.annotations,
-      ...Object.entries(this.helper.annotations(data)),
+      ...this.helper.annotations(data),
     ]);
   }
 
