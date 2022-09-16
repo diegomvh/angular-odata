@@ -60,6 +60,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this.models().length;
   }
 
+  isEmpty() {
+    // Local length and if exists remote length
+    return (
+      this.length === 0 &&
+      this.annots().count !== undefined &&
+      this.annots().count === 0
+    );
+  }
+
   //Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(
