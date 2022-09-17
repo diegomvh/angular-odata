@@ -67,10 +67,19 @@ export class ODataQueryOptions<T> {
       QueryOptionNames.count,
     ]
       .filter((key) => !Types.isEmpty(this.values.get(key)))
-      .reduce(
-        (acc, key) => Object.assign(acc, { [key]: this.values.get(key) }),
-        {}
-      );
+      .reduce((acc, key) => {
+        let value = this.values.get(key);
+        if (
+          Types.rawType(value).endsWith('Expression') ||
+          (Types.isArray(value) &&
+            value.some((v: any) => Types.rawType(v).endsWith('Expression')))
+        ) {
+          value = Types.isArray(value)
+            ? value.map((v: Expression<T>) => v.render({ aliases }))
+            : (value as Expression<T>).render({ aliases });
+        }
+        return Object.assign(acc, { [key]: value });
+      }, {});
 
     return buildPathAndQuery<any>({ ...options, aliases, escape });
   }
