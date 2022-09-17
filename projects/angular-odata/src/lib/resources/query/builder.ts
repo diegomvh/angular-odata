@@ -1,3 +1,6 @@
+import { Types } from '../../utils/types';
+import { Expression } from './expressions';
+
 const COMPARISON_OPERATORS = ['eq', 'ne', 'gt', 'ge', 'lt', 'le'];
 const LOGICAL_OPERATORS = ['and', 'or', 'not'];
 const COLLECTION_OPERATORS = ['any', 'all'];
@@ -310,11 +313,13 @@ function buildFilter(
     (Array.isArray(filters) ? filters : [filters]).reduce(
       (acc: string[], filter) => {
         if (filter) {
-          const builtFilter = buildFilterCore(filter, {
-            aliases,
-            propPrefix,
-            escape,
-          });
+          const builtFilter = Types.rawType(filter).endsWith('Expression')
+            ? (filter as Expression<any>).render({ aliases })
+            : buildFilterCore(filter, {
+                aliases,
+                propPrefix,
+                escape,
+              });
           if (builtFilter) {
             acc.push(builtFilter);
           }

@@ -67,13 +67,10 @@ export class ODataQueryOptions<T> {
       QueryOptionNames.count,
     ]
       .filter((key) => !Types.isEmpty(this.values.get(key)))
-      .reduce((acc, key) => {
-        let value = this.values.get(key);
-        if (Types.rawType(value).endsWith('Expression')) {
-          value = (value as Expression<T>).render({ aliases });
-        }
-        return Object.assign(acc, { [key]: value });
-      }, {});
+      .reduce(
+        (acc, key) => Object.assign(acc, { [key]: this.values.get(key) }),
+        {}
+      );
 
     return buildPathAndQuery<any>({ ...options, aliases, escape });
   }
