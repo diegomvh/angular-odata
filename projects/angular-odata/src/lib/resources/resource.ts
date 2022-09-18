@@ -220,45 +220,42 @@ export class ODataResource<T> {
   }
 
   deserialize(value: any, options?: ParserOptions): any {
-    const parserOptions = options || this.api.options.parserOptions;
     const resourceType = this.returnType();
-    const _d = (value: any, options: ParserOptions) => {
+    const _d = (value: any, options?: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'deserialize' in parser
         ? parser.deserialize(value, options)
         : value;
     };
     return Array.isArray(value)
-      ? value.map((v) => _d(v, parserOptions))
-      : _d(value, parserOptions);
+      ? value.map((v) => _d(v, options))
+      : _d(value, options);
   }
 
   serialize(value: any, options?: ParserOptions): any {
-    const parserOptions = options || this.api.options.parserOptions;
     const resourceType = this.type();
-    const _s = (value: any, options: ParserOptions) => {
+    const _s = (value: any, options?: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'serialize' in parser
         ? parser.serialize(value, options)
         : value;
     };
     return Array.isArray(value)
-      ? value.map((v) => _s(v, parserOptions))
-      : _s(value, parserOptions);
+      ? value.map((v) => _s(v, options))
+      : _s(value, options);
   }
 
   encode(value: any, options?: ParserOptions): any {
-    const parserOptions = options || this.api.options.parserOptions;
     const resourceType = this.type();
-    const _e = (value: any, options: ParserOptions) => {
+    const _e = (value: any, options?: ParserOptions) => {
       const parser = this.__parser(value, options, resourceType);
       return parser !== undefined && 'encode' in parser
         ? parser.encode(value, options)
         : value;
     };
     return Array.isArray(value)
-      ? value.map((v) => _e(v, parserOptions))
-      : _e(value, parserOptions);
+      ? value.map((v) => _e(v, options))
+      : _e(value, options);
   }
 
   toJSON() {

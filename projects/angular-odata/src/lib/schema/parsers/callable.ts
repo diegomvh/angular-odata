@@ -26,7 +26,7 @@ export class ODataParameterParser<T> {
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = {...this.parserOptions, ...options};
     return Array.isArray(value)
       ? value.map((v) => this.parser.serialize(v, parserOptions))
       : this.parser.serialize(value, parserOptions);
@@ -34,18 +34,20 @@ export class ODataParameterParser<T> {
 
   //Encode
   encode(value: any, options?: ParserOptions): string {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = {...this.parserOptions, ...options};
     return Array.isArray(value)
       ? value.map((v) => this.parser.encode(v, parserOptions))
       : this.parser.encode(value, parserOptions);
   }
 
   configure({
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    parserForType: (type: string) => Parser<any>;
     options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
   }) {
     this.parserOptions = options;
     this.parser = parserForType(this.type);
@@ -92,7 +94,6 @@ export class ODataCallableParser<R> implements Parser<R> {
   return?: { type: string; collection?: boolean };
   parser: Parser<any>;
   parameters: ODataParameterParser<any>[];
-  nonParenthesisForEmptyParameterFunction?: boolean;
   parserOptions?: ParserOptions;
 
   constructor(config: CallableConfig, namespace: string, alias?: string) {
@@ -114,13 +115,13 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   // Deserialize
   deserialize(value: any, options?: ParserOptions): R {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     return this.parser.deserialize(value, parserOptions);
   }
 
   // Serialize
   serialize(params: any, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     const parameters = this.parameters
       .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter((p) => p.name in params && params[p.name] !== undefined);
@@ -135,7 +136,7 @@ export class ODataCallableParser<R> implements Parser<R> {
 
   //Encode
   encode(params: any, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     const parameters = this.parameters
       .filter((p) => p.name !== CALLABLE_BINDING_PARAMETER)
       .filter((p) => p.name in params && params[p.name] !== undefined);
@@ -149,20 +150,20 @@ export class ODataCallableParser<R> implements Parser<R> {
   }
 
   configure({
-    nonParenthesisForEmptyParameterFunction,
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    nonParenthesisForEmptyParameterFunction: boolean;
-    parserForType: (type: string) => Parser<any>;
     options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
   }) {
-    this.nonParenthesisForEmptyParameterFunction =
-      nonParenthesisForEmptyParameterFunction;
     this.parserOptions = options;
     if (this.return)
       this.parser = parserForType(this.return.type) || NONE_PARSER;
-    this.parameters.forEach((p) => p.configure({ parserForType, options }));
+    this.parameters.forEach((p) =>
+      p.configure({ options, parserForType, findOptionsForType })
+    );
   }
 
   binding() {

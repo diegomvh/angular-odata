@@ -173,7 +173,7 @@ export class ODataStructuredTypeFieldParser<T>
   }
 
   deserialize(value: any, options?: ParserOptions): T {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value)
@@ -206,7 +206,7 @@ export class ODataStructuredTypeFieldParser<T>
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser = this.parser as ODataStructuredTypeParser<T>;
       return Array.isArray(value)
@@ -222,7 +222,7 @@ export class ODataStructuredTypeFieldParser<T>
 
   //#region Encode
   encode(value: T, options?: ParserOptions): string {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     return this.parser.encode(value, {
       field: this,
       ...parserOptions,
@@ -231,11 +231,13 @@ export class ODataStructuredTypeFieldParser<T>
   //#endregion
 
   configure({
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    parserForType: (type: string) => Parser<any>;
     options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
   }) {
     this.parserOptions = options;
     this.parser = parserForType(this.type);
@@ -421,7 +423,7 @@ export class ODataStructuredTypeParser<T>
 
   // Deserialize
   deserialize(value: any, options?: ParserOptions): T {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     const fields = this.fields({
       include_navigation: true,
       include_parents: true,
@@ -443,7 +445,7 @@ export class ODataStructuredTypeParser<T>
 
   // Serialize
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     const fields = this.fields({
       include_navigation: true,
       include_parents: true,
@@ -467,16 +469,18 @@ export class ODataStructuredTypeParser<T>
 
   // Encode
   encode(value: T, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     return raw(JSON.stringify(this.serialize(value, parserOptions)));
   }
 
   configure({
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    parserForType: (type: string) => Parser<any>;
     options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
   }) {
     this.parserOptions = options;
     if (this.base) {
@@ -484,7 +488,9 @@ export class ODataStructuredTypeParser<T>
       parent.children.push(this);
       this.parent = parent;
     }
-    this._fields.forEach((f) => f.configure({ parserForType, options }));
+    this._fields.forEach((f) =>
+      f.configure({ options, parserForType, findOptionsForType })
+    );
   }
 
   /**

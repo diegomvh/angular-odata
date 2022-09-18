@@ -80,6 +80,9 @@ export interface ParserOptions {
   metadata?: ODataMetadataType;
   ieee754Compatible?: boolean;
   streaming?: boolean;
+  stringAsEnum?: boolean;
+  deleteRefBy?: 'path' | 'id';
+  nonParenthesisForEmptyParameterFunction?: boolean;
 }
 
 export interface ResponseOptions extends ParserOptions {

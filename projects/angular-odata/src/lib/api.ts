@@ -93,6 +93,7 @@ export class ODataApi {
     this.requester = settings.requester;
     this.schemas.forEach((schema) => {
       schema.configure({
+        options: this.options.parserOptions,
         parserForType: (type: string) => this.parserForType(type),
         findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
@@ -323,8 +324,9 @@ export class ODataApi {
       Model.buildMeta({ schema });
       // Configure
       Model.meta.configure({
-        findOptionsForType: (type: string) => this.findOptionsForType(type),
         options: this.options.parserOptions,
+        parserForType: (type: string) => this.parserForType(type),
+        findOptionsForType: (type: string) => this.findOptionsForType(type),
       });
       // Store New Model for next time
       schema.model = Model;

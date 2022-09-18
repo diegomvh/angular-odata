@@ -25,7 +25,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from '../schema';
-import { ParserOptions } from '../types';
+import { Parser, ParserOptions } from '../types';
 import { Objects, Types } from '../utils';
 import type { ODataCollection } from './collection';
 import type { ODataModel } from './model';
@@ -604,11 +604,13 @@ export class ODataModelOptions<T> {
   }
 
   configure({
-    findOptionsForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
     options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => ODataModelOptions<any> | undefined;
   }) {
     if (this.base) {
       const parent = findOptionsForType(this.base) as ODataModelOptions<any>;

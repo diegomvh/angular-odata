@@ -1,6 +1,6 @@
 import { ODataCollection } from '../models';
 import { ODataModel } from '../models/model';
-import { ParserOptions, StructuredTypeConfig } from '../types';
+import { Parser, ParserOptions, StructuredTypeConfig } from '../types';
 import { ODataSchemaElement } from './element';
 import {
   JsonSchemaOptions,
@@ -42,10 +42,12 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
   }
 
   configure({
+    options,
     parserForType,
     findOptionsForType,
   }: {
-    parserForType: (type: string) => any;
+    options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
     findOptionsForType: (type: string) => any;
   }) {
     if (this.base) {
@@ -56,13 +58,15 @@ export class ODataStructuredType<T> extends ODataSchemaElement {
       this.parent = parent;
     }
     this.parser.configure({
+      options,
       parserForType,
-      options: this.api.options.parserOptions,
+      findOptionsForType,
     });
     if (this.model !== undefined && this.model.options !== null) {
       this.model.meta.configure({
+        options,
+        parserForType,
         findOptionsForType,
-        options: this.api.options.parserOptions,
       });
     }
   }

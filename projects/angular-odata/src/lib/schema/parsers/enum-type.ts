@@ -34,7 +34,6 @@ export class ODataEnumTypeParser<E>
   flags?: boolean;
   members: { [name: string]: E } | { [value: number]: string };
   private _fields: ODataEnumTypeFieldParser<E>[];
-  stringAsEnum?: boolean;
   parserOptions?: ParserOptions;
 
   constructor(config: EnumTypeConfig<E>, namespace: string, alias?: string) {
@@ -50,13 +49,14 @@ export class ODataEnumTypeParser<E>
   }
 
   configure({
-    stringAsEnum,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    stringAsEnum: boolean;
     options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
   }) {
-    this.stringAsEnum = stringAsEnum;
     this.parserOptions = options;
   }
 
@@ -96,7 +96,7 @@ export class ODataEnumTypeParser<E>
   // Deserialize
   deserialize(value: string, options?: ParserOptions): E {
     // string -> number
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
       return Enums.toValues<E>(this.members as any, value).reduce(
         (acc, v) => acc | v,
@@ -111,17 +111,17 @@ export class ODataEnumTypeParser<E>
   serialize(value: E, options?: ParserOptions): string | undefined {
     // Enum are string | number
     // string | number -> string
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     if (this.flags) {
       let names = Enums.toNames(this.members, value);
       if (names.length === 0) names = [`${value}`];
-      return !this.stringAsEnum
+      return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${names.join(', ')}'`
         : names.join(', ');
     } else {
       let name = Enums.toName(this.members, value);
       if (name === undefined) name = `${value}`;
-      return !this.stringAsEnum
+      return !parserOptions?.stringAsEnum
         ? `${this.namespace}.${this.name}'${name}'`
         : name;
     }
@@ -129,10 +129,12 @@ export class ODataEnumTypeParser<E>
 
   //Encode
   encode(value: E, options?: ParserOptions): any {
-    const parserOptions = options || this.parserOptions;
+    const parserOptions = { ...this.parserOptions, ...options };
     const serialized = this.serialize(value, parserOptions);
     if (serialized === undefined) return undefined;
-    return this.stringAsEnum ? raw(`'${serialized}'`) : raw(serialized);
+    return parserOptions?.stringAsEnum
+      ? raw(`'${serialized}'`)
+      : raw(serialized);
   }
 
   // Json Schema

@@ -1,4 +1,4 @@
-import { EnumTypeConfig, ParserOptions } from '../types';
+import { EnumTypeConfig, Parser, ParserOptions } from '../types';
 import { ODataSchemaElement } from './element';
 import { ODataEnumTypeFieldParser, ODataEnumTypeParser } from './parsers';
 import { ODataSchema } from './schema';
@@ -16,11 +16,16 @@ export class ODataEnumType<E> extends ODataSchemaElement {
     );
   }
 
-  configure() {
-    this.parser.configure({
-      stringAsEnum: this.api.options.stringAsEnum,
-      options: this.api.options.parserOptions,
-    });
+  configure({
+    options,
+    parserForType,
+    findOptionsForType,
+  }: {
+    options: ParserOptions;
+    parserForType: (type: string) => Parser<any>;
+    findOptionsForType: (type: string) => any;
+  }) {
+    this.parser.configure({ options, parserForType, findOptionsForType });
   }
 
   /**

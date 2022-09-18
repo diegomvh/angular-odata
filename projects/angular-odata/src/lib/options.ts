@@ -24,6 +24,14 @@ export class ODataApiOptions implements ApiOptions {
    */
   stringAsEnum: boolean;
   /**
+   * Delete reference by path or by id
+   */
+  deleteRefBy: 'path' | 'id';
+  /**
+   * No use parenthesis for empty parameters functions
+   */
+  nonParenthesisForEmptyParameterFunction: boolean;
+  /**
    * Strip metadata from the response
    */
   stripMetadata: ODataMetadataType;
@@ -85,8 +93,6 @@ export class ODataApiOptions implements ApiOptions {
      */
     includeAnnotations?: string;
   };
-  deleteRefBy: 'path' | 'id';
-  nonParenthesisForEmptyParameterFunction: boolean;
 
   constructor(config: ApiOptions) {
     this.version = config.version || DEFAULT_VERSION;
@@ -106,7 +112,14 @@ export class ODataApiOptions implements ApiOptions {
   }
 
   get parserOptions(): ParserOptions {
-    return { version: this.version, ...this.accept };
+    return {
+      version: this.version,
+      stringAsEnum: this.stringAsEnum,
+      deleteRefBy: this.deleteRefBy,
+      nonParenthesisForEmptyParameterFunction:
+        this.nonParenthesisForEmptyParameterFunction,
+      ...this.accept,
+    };
   }
 
   get helper() {

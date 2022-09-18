@@ -325,9 +325,7 @@ describe('ODataClient', () => {
     const parser = client.parserForType<Person>(
       `${NAMESPACE}.PersonGender`
     ) as ODataEnumTypeParser<Person>;
-    const options = schema.api.options;
     // Change parser settings
-    parser.configure({ stringAsEnum: false, options });
     expect(
       schema.parser.serialize(
         <Person>{
@@ -337,7 +335,7 @@ describe('ODataClient', () => {
           Emails: [],
           Gender: PersonGender.Male,
         },
-        options
+        { stringAsEnum: false }
       )
     ).toEqual({
       FirstName: 'Name',

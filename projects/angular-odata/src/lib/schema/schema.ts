@@ -1,5 +1,5 @@
 import { ODataApi } from '../api';
-import { Parser, SchemaConfig } from '../types';
+import { Parser, ParserOptions, SchemaConfig } from '../types';
 import { OData } from '../utils/odata';
 import { ODataAnnotatable } from './annotation';
 import { ODataCallable } from './callable';
@@ -90,19 +90,25 @@ export class ODataSchema extends ODataAnnotatable {
   //#endregion
 
   configure({
+    options,
     parserForType,
     findOptionsForType,
   }: {
+    options: ParserOptions;
     parserForType: (type: string) => Parser<any>;
     findOptionsForType: (type: string) => any;
   }) {
     // Configure Enums
-    this.enums.forEach((enu) => enu.configure());
+    this.enums.forEach((enu) =>
+      enu.configure({ options, parserForType, findOptionsForType })
+    );
     // Configure Entities
     this.entities.forEach((config) =>
-      config.configure({ parserForType, findOptionsForType })
+      config.configure({ options, parserForType, findOptionsForType })
     );
     // Configure callables
-    this.callables.forEach((callable) => callable.configure({ parserForType }));
+    this.callables.forEach((callable) =>
+      callable.configure({ options, parserForType, findOptionsForType })
+    );
   }
 }

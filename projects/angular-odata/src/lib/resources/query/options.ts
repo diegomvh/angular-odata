@@ -75,7 +75,11 @@ export class ODataQueryOptions<T> {
             value.some((v: any) => Types.rawType(v).endsWith('Expression')))
         ) {
           value = Types.isArray(value)
-            ? value.map((v: Expression<T>) => v.render({ aliases }))
+            ? value.map((v: Expression<T>) =>
+                Types.rawType(v).endsWith('Expression')
+                  ? v.render({ aliases })
+                  : v
+              )
             : (value as Expression<T>).render({ aliases });
         }
         return Object.assign(acc, { [key]: value });
