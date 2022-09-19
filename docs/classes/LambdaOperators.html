@@ -128,8 +128,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="500"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:500</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="504"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:504</a></div>
                 </td>
             </tr>
 
@@ -221,8 +221,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="496"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:496</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="500"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/expressions/syntax.ts:500</a></div>
                 </td>
             </tr>
 
@@ -781,12 +781,16 @@ export class Lambda&lt;T&gt; implements Renderable {
     let [left, right] &#x3D; this.values;
 
     left &#x3D; render(left, { aliases, escape, prefix });
-    let alias &#x3D; this.alias || left.split(&#x27;/&#x27;).pop().toLowerCase()[0];
-    return &#x60;${left}/${this.op}(${alias}:${render(right, {
-      aliases,
-      escape,
-      prefix: alias,
-    })})&#x60;;
+    if (right) {
+      let alias &#x3D; this.alias || left.split(&#x27;/&#x27;).pop().toLowerCase()[0];
+      return &#x60;${left}/${this.op}(${alias}:${render(right, {
+        aliases,
+        escape,
+        prefix: alias,
+      })})&#x60;;
+    } else {
+      return &#x60;${left}/${this.op}()&#x60;;
+    }
   }
 
   clone() {

@@ -1137,7 +1137,7 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ODataApi } from &#x27;../api&#x27;;
-import { Parser, SchemaConfig } from &#x27;../types&#x27;;
+import { Parser, ParserOptions, SchemaConfig } from &#x27;../types&#x27;;
 import { OData } from &#x27;../utils/odata&#x27;;
 import { ODataAnnotatable } from &#x27;./annotation&#x27;;
 import { ODataCallable } from &#x27;./callable&#x27;;
@@ -1228,20 +1228,26 @@ export class ODataSchema extends ODataAnnotatable {
   //#endregion
 
   configure({
+    options,
     parserForType,
     findOptionsForType,
   }: {
+    options: ParserOptions;
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
     findOptionsForType: (type: string) &#x3D;&gt; any;
   }) {
     // Configure Enums
-    this.enums.forEach((enu) &#x3D;&gt; enu.configure());
+    this.enums.forEach((enu) &#x3D;&gt;
+      enu.configure({ options, parserForType, findOptionsForType })
+    );
     // Configure Entities
     this.entities.forEach((config) &#x3D;&gt;
-      config.configure({ parserForType, findOptionsForType })
+      config.configure({ options, parserForType, findOptionsForType })
     );
     // Configure callables
-    this.callables.forEach((callable) &#x3D;&gt; callable.configure({ parserForType }));
+    this.callables.forEach((callable) &#x3D;&gt;
+      callable.configure({ options, parserForType, findOptionsForType })
+    );
   }
 }
 </code></pre>

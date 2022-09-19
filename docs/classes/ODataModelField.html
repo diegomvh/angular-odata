@@ -151,6 +151,9 @@
                                 <a href="#annotationsFactory" >annotationsFactory</a>
                             </li>
                             <li>
+                                <a href="#collectionFactory" >collectionFactory</a>
+                            </li>
+                            <li>
                                 <a href="#configure" >configure</a>
                             </li>
                             <li>
@@ -178,7 +181,7 @@
                                 <a href="#isStructuredType" >isStructuredType</a>
                             </li>
                             <li>
-                                <a href="#modelCollectionFactory" >modelCollectionFactory</a>
+                                <a href="#modelFactory" >modelFactory</a>
                             </li>
                             <li>
                                 <a href="#resourceFactory" >resourceFactory</a>
@@ -827,6 +830,82 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="collectionFactory"></a>
+                    <span class="name">
+                        <span ><b>collectionFactory</b></span>
+                        <a href="#collectionFactory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>collectionFactory(undefined: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="494"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:494</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>F</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModel | ODataCollection</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="configure"></a>
                     <span class="name">
                         <span ><b>configure</b></span>
@@ -1279,16 +1358,16 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="modelCollectionFactory"></a>
+                    <a name="modelFactory"></a>
                     <span class="name">
-                        <span ><b>modelCollectionFactory</b></span>
-                        <a href="#modelCollectionFactory"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>modelFactory</b></span>
+                        <a href="#modelFactory"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>modelCollectionFactory(undefined: literal type)</code>
+<code>modelFactory(undefined: literal type)</code>
                 </td>
             </tr>
 
@@ -1304,7 +1383,6 @@
                 <td class="col-md-4">
                     <b>Type parameters :</b>
                     <ul class="type-parameters">
-                        <li>T</li>
                         <li>F</li>
                     </ul>
                 </td>
@@ -1342,7 +1420,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../miscellaneous/variables.html#OData" target="_self" >ODataModel | ODataCollection</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataModel.html" target="_self" >ODataModel&lt;F&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -1864,7 +1942,7 @@ import {
   ODataStructuredType,
   ODataStructuredTypeFieldParser,
 } from &#x27;../schema&#x27;;
-import { ParserOptions } from &#x27;../types&#x27;;
+import { Parser, ParserOptions } from &#x27;../types&#x27;;
 import { Objects, Types } from &#x27;../utils&#x27;;
 import type { ODataCollection } from &#x27;./collection&#x27;;
 import type { ODataModel } from &#x27;./model&#x27;;
@@ -2295,32 +2373,65 @@ export class ODataModelField&lt;F&gt; {
     return this.api.findStructuredTypeForType(this.parser.type);
   }
 
-  modelCollectionFactory&lt;T, F&gt;({
+  modelFactory&lt;F&gt;({
     parent,
     value,
     reset,
   }: {
     parent: ODataModel&lt;any&gt;;
-    value?: F | F[] | { [name: string]: any } | { [name: string]: any }[];
+    value?: Partial&lt;F&gt; | { [name: string]: any };
+    reset?: boolean;
+  }): ODataModel&lt;F&gt; {
+    // Model
+    const annots &#x3D; this.annotationsFactory(
+      parent.annots()
+    ) as ODataEntityAnnotations;
+    let Model &#x3D; this.api.modelForType(this.parser.type);
+    if (Model &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x60;No Model type for ${this.name}&#x60;);
+    if (value !&#x3D;&#x3D; undefined) {
+      annots.update(value);
+    }
+
+    if (annots?.type !&#x3D;&#x3D; undefined &amp;&amp; Model.meta !&#x3D;&#x3D; null) {
+      let schema &#x3D; Model.meta.findChildOptions((o) &#x3D;&gt;
+        o.isTypeOf(annots.type as string)
+      )?.schema;
+      if (schema !&#x3D;&#x3D; undefined &amp;&amp; schema.model !&#x3D;&#x3D; undefined)
+        // Change to child model
+        Model &#x3D; schema.model;
+    }
+
+    return new Model((value || {}) as Partial&lt;F&gt; | { [name: string]: any }, {
+      annots,
+      reset,
+      parent: [parent, this],
+    });
+  }
+
+  collectionFactory&lt;F&gt;({
+    parent,
+    value,
+    reset,
+  }: {
+    parent: ODataModel&lt;any&gt;;
+    value?: Partial&lt;F&gt;[] | { [name: string]: any }[];
     reset?: boolean;
   }): ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt; {
-    const annots &#x3D; this.annotationsFactory(parent.annots());
-    const Model &#x3D; this.api.modelForType(this.parser.type);
+    // Collection Factory
+    const annots &#x3D; this.annotationsFactory(
+      parent.annots()
+    ) as ODataEntitiesAnnotations;
     const Collection &#x3D; this.api.collectionForType(this.parser.type);
-
-    if (Model &#x3D;&#x3D;&#x3D; undefined || Collection &#x3D;&#x3D;&#x3D; undefined)
-      throw Error(&#x60;No model for ${this.name}&#x60;);
-    return this.parser.collection
-      ? (new Collection((value || []) as F[], {
-          annots: annots as ODataEntitiesAnnotations,
-          parent: [parent, this],
-          reset,
-        }) as ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;)
-      : (new Model((value || {}) as F, {
-          annots: annots as ODataEntityAnnotations,
-          parent: [parent, this],
-          reset,
-        }) as ODataModel&lt;F&gt;);
+    if (Collection &#x3D;&#x3D;&#x3D; undefined)
+      throw Error(&#x60;No Collection type for ${this.name}&#x60;);
+    return new Collection(
+      (value || []) as Partial&lt;F&gt;[] | { [name: string]: any }[],
+      {
+        annots: annots,
+        parent: [parent, this],
+        reset,
+      }
+    );
   }
 }
 
@@ -2386,10 +2497,10 @@ export class ODataModelOptions&lt;T&gt; {
 
   isModelFor(entity: T | { [name: string]: any }) {
     // Resolve By Type
-    let type &#x3D; this.api.options.helper.type(entity);
+    let type &#x3D; this.api.options.helper.type(entity as { [name: string]: any });
     if (type &amp;&amp; this.isTypeOf(type)) return true;
     // Resolve By fields
-    let keys &#x3D; Object.keys(entity);
+    let keys &#x3D; Object.keys(entity as { [name: string]: any });
     let names &#x3D; this.fields({
       include_navigation: true,
       include_parents: true,
@@ -2410,11 +2521,13 @@ export class ODataModelOptions&lt;T&gt; {
   }
 
   configure({
-    findOptionsForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    findOptionsForType: (type: string) &#x3D;&gt; ODataModelOptions&lt;any&gt; | undefined;
     options: ParserOptions;
+    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
+    findOptionsForType: (type: string) &#x3D;&gt; ODataModelOptions&lt;any&gt; | undefined;
   }) {
     if (this.base) {
       const parent &#x3D; findOptionsForType(this.base) as ODataModelOptions&lt;any&gt;;
@@ -3131,12 +3244,12 @@ export class ODataModelOptions&lt;T&gt; {
     self: ODataModel&lt;T&gt;,
     field: ODataModelField&lt;F&gt;,
     collection: ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;,
-    value: T[] | { [name: string]: any }[]
+    value: Partial&lt;T&gt;[] | { [name: string]: any }[]
   ) {
     collection._annotations &#x3D; field.annotationsFactory(
       self.annots()
     ) as ODataEntitiesAnnotations;
-    collection.assign(value as T[] | { [name: string]: any }[], {
+    collection.assign(value as Partial&lt;T&gt;[] | { [name: string]: any }[], {
       reset: self._reset,
       reparent: self._reparent,
       silent: self._silent,
@@ -3285,7 +3398,13 @@ export class ODataModelOptions&lt;T&gt; {
         ODataModelOptions.isCollection(value) ||
         ODataModelOptions.isModel(value)
           ? (value as ODataModel&lt;F&gt; | ODataCollection&lt;F, ODataModel&lt;F&gt;&gt;)
-          : field.modelCollectionFactory&lt;T, F&gt;({
+          : field.collection
+          ? field.collectionFactory&lt;F&gt;({
+              parent: self,
+              value: value as F[] | { [name: string]: any }[],
+              reset: self._reset,
+            })
+          : field.modelFactory&lt;F&gt;({
               parent: self,
               value: value,
               reset: self._reset,

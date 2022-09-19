@@ -577,7 +577,6 @@ export class ODataEnumTypeParser&lt;E&gt;
   flags?: boolean;
   members: { [name: string]: E } | { [value: number]: string };
   private _fields: ODataEnumTypeFieldParser&lt;E&gt;[];
-  stringAsEnum?: boolean;
   parserOptions?: ParserOptions;
 
   constructor(config: EnumTypeConfig&lt;E&gt;, namespace: string, alias?: string) {
@@ -592,24 +591,15 @@ export class ODataEnumTypeParser&lt;E&gt;
     );
   }
 
-  /**
-   * Create a nicer looking title.
-   * Titleize is meant for creating pretty output.
-   * @param term The term of the annotation to find.
-   * @returns The titleized string.
-   */
-  ttitelize(term?: string | RegExp): string {
-    return (term &amp;&amp; this.annotatedValue(term)) || Strings.titleCase(this.name);
-  }
-
   configure({
-    stringAsEnum,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    stringAsEnum: boolean;
     options: ParserOptions;
+    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
+    findOptionsForType: (type: string) &#x3D;&gt; any;
   }) {
-    this.stringAsEnum &#x3D; stringAsEnum;
     this.parserOptions &#x3D; options;
   }
 
@@ -649,7 +639,7 @@ export class ODataEnumTypeParser&lt;E&gt;
   // Deserialize
   deserialize(value: string, options?: ParserOptions): E {
     // string -&gt; number
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     if (this.flags) {
       return Enums.toValues&lt;E&gt;(this.members as any, value).reduce(
         (acc, v) &#x3D;&gt; acc | v,
@@ -664,17 +654,17 @@ export class ODataEnumTypeParser&lt;E&gt;
   serialize(value: E, options?: ParserOptions): string | undefined {
     // Enum are string | number
     // string | number -&gt; string
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     if (this.flags) {
-      const names &#x3D; Enums.toNames(this.members, value);
-      if (names.length &#x3D;&#x3D;&#x3D; 0) return undefined;
-      return !this.stringAsEnum
+      let names &#x3D; Enums.toNames(this.members, value);
+      if (names.length &#x3D;&#x3D;&#x3D; 0) names &#x3D; [&#x60;${value}&#x60;];
+      return !parserOptions?.stringAsEnum
         ? &#x60;${this.namespace}.${this.name}&#x27;${names.join(&#x27;, &#x27;)}&#x27;&#x60;
         : names.join(&#x27;, &#x27;);
     } else {
-      const name &#x3D; Enums.toName(this.members, value);
-      if (name &#x3D;&#x3D;&#x3D; undefined) return undefined;
-      return !this.stringAsEnum
+      let name &#x3D; Enums.toName(this.members, value);
+      if (name &#x3D;&#x3D;&#x3D; undefined) name &#x3D; &#x60;${value}&#x60;;
+      return !parserOptions?.stringAsEnum
         ? &#x60;${this.namespace}.${this.name}&#x27;${name}&#x27;&#x60;
         : name;
     }
@@ -682,10 +672,12 @@ export class ODataEnumTypeParser&lt;E&gt;
 
   //Encode
   encode(value: E, options?: ParserOptions): any {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     const serialized &#x3D; this.serialize(value, parserOptions);
     if (serialized &#x3D;&#x3D;&#x3D; undefined) return undefined;
-    return this.stringAsEnum ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;) : raw(serialized);
+    return parserOptions?.stringAsEnum
+      ? raw(&#x60;&#x27;${serialized}&#x27;&#x60;)
+      : raw(serialized);
   }
 
   // Json Schema
@@ -716,6 +708,17 @@ export class ODataEnumTypeParser&lt;E&gt;
     } else {
       return !(member in this.members) ? [&#x27;mismatch&#x27;] : undefined;
     }
+  }
+
+  unpack(value: E): number[] {
+    return Enums.toValues(this.members, value);
+  }
+
+  pack(value: number[]): E {
+    return Enums.toValues(this.members, value).reduce(
+      (acc, v) &#x3D;&gt; acc | v,
+      0
+    ) as any;
   }
 }
 </code></pre>

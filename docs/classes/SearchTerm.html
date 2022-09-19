@@ -416,10 +416,6 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
     this._negated &#x3D; negated || false;
   }
 
-  static expression&lt;T&gt;(connector: SearchConnector &#x3D; &#x27;AND&#x27;) {
-    return new SearchExpression&lt;T&gt;({ connector });
-  }
-
   static search&lt;T extends object&gt;(
     opts: (
       builder: SearchExpressionBuilder&lt;T&gt;,
@@ -429,7 +425,8 @@ export class SearchExpression&lt;T&gt; extends Expression&lt;T&gt; {
   ): SearchExpression&lt;T&gt; {
     return opts(
       {
-        e: SearchExpression.expression,
+        e: (connector: SearchConnector &#x3D; &#x27;AND&#x27;) &#x3D;&gt;
+          new SearchExpression&lt;T&gt;({ connector }),
       },
       current
     ) as SearchExpression&lt;T&gt;;

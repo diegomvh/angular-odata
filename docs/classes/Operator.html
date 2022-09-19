@@ -859,12 +859,16 @@ export class Lambda&lt;T&gt; implements Renderable {
     let [left, right] &#x3D; this.values;
 
     left &#x3D; render(left, { aliases, escape, prefix });
-    let alias &#x3D; this.alias || left.split(&#x27;/&#x27;).pop().toLowerCase()[0];
-    return &#x60;${left}/${this.op}(${alias}:${render(right, {
-      aliases,
-      escape,
-      prefix: alias,
-    })})&#x60;;
+    if (right) {
+      let alias &#x3D; this.alias || left.split(&#x27;/&#x27;).pop().toLowerCase()[0];
+      return &#x60;${left}/${this.op}(${alias}:${render(right, {
+        aliases,
+        escape,
+        prefix: alias,
+      })})&#x60;;
+    } else {
+      return &#x60;${left}/${this.op}()&#x60;;
+    }
   }
 
   clone() {

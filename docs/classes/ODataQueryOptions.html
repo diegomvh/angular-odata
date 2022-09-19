@@ -249,8 +249,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="155"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:155</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="165"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:165</a></div>
                 </td>
             </tr>
 
@@ -286,8 +286,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="117"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:117</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="127"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:127</a></div>
                 </td>
             </tr>
 
@@ -331,8 +331,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="122"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:122</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="132"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:132</a></div>
                 </td>
             </tr>
 
@@ -412,8 +412,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="134"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:134</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="144"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:144</a></div>
                 </td>
             </tr>
 
@@ -481,8 +481,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="146"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:146</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="156"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:156</a></div>
                 </td>
             </tr>
 
@@ -550,8 +550,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="128"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:128</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="138"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:138</a></div>
                 </td>
             </tr>
 
@@ -705,8 +705,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="138"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:138</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="148"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:148</a></div>
                 </td>
             </tr>
 
@@ -774,8 +774,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="92"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:92</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="102"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:102</a></div>
                 </td>
             </tr>
 
@@ -811,8 +811,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="100"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:100</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:110</a></div>
                 </td>
             </tr>
 
@@ -848,8 +848,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="81"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:81</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="91"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/query/options.ts:91</a></div>
                 </td>
             </tr>
 
@@ -946,8 +946,18 @@ export class ODataQueryOptions&lt;T&gt; {
       .filter((key) &#x3D;&gt; !Types.isEmpty(this.values.get(key)))
       .reduce((acc, key) &#x3D;&gt; {
         let value &#x3D; this.values.get(key);
-        if (Types.rawType(value).endsWith(&#x27;Expression&#x27;)) {
-          value &#x3D; (value as Expression&lt;T&gt;).render({ aliases });
+        if (
+          Types.rawType(value).endsWith(&#x27;Expression&#x27;) ||
+          (Types.isArray(value) &amp;&amp;
+            value.some((v: any) &#x3D;&gt; Types.rawType(v).endsWith(&#x27;Expression&#x27;)))
+        ) {
+          value &#x3D; Types.isArray(value)
+            ? value.map((v: Expression&lt;T&gt;) &#x3D;&gt;
+                Types.rawType(v).endsWith(&#x27;Expression&#x27;)
+                  ? v.render({ aliases })
+                  : v
+              )
+            : (value as Expression&lt;T&gt;).render({ aliases });
         }
         return Object.assign(acc, { [key]: value });
       }, {});

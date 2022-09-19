@@ -2697,7 +2697,7 @@
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   //#region Version 4.0
-  [VERSION_4_0]: &lt;ODataVersionHelper&gt;Object.assign({}, ODataVersionBaseHelper, {
+  [VERSION_4_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
     VALUE: &#x27;value&#x27;,
     ODATA_ANNOTATION_PREFIX: &#x27;@odata&#x27;,
     ODATA_FUNCTION_PREFIX: &#x27;#&#x27;,
@@ -2779,10 +2779,10 @@
     countParam() {
       return { [$COUNT]: &#x27;true&#x27; };
     },
-  }),
+  },
   //#endregion
   //#region Version 3.0
-  [VERSION_3_0]: &lt;ODataVersionHelper&gt;Object.assign({}, ODataVersionBaseHelper, {
+  [VERSION_3_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
     ODATA_ANNOTATION_PREFIX: &#x27;odata.&#x27;,
     ODATA_FUNCTION_PREFIX: &#x27;&#x27;,
     ODATA_ID: &#x27;odata.id&#x27;,
@@ -2811,10 +2811,10 @@
     countParam() {
       return { [$INLINECOUNT]: &#x27;allpages&#x27; };
     },
-  }),
+  },
   //#endregion
   //#region Version 2.0
-  [VERSION_2_0]: &lt;ODataVersionHelper&gt;Object.assign({}, ODataVersionBaseHelper, {
+  [VERSION_2_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
     ODATA_ID: &#x27;id&#x27;,
     ODATA_ETAG: &#x27;etag&#x27;,
     ODATA_ANNOTATION: &#x27;__metadata&#x27;,
@@ -2838,7 +2838,7 @@
     countParam() {
       return { [$INLINECOUNT]: &#x27;allpages&#x27; };
     },
-  }),
+  },
   //#endregion
 }</code>
                     </td>
@@ -3244,17 +3244,21 @@
     },
     (v: number, o: StructuredTypeFieldOptions) &#x3D;&gt; {
       if (o.ieee754Compatible) {
-        return parseFloat(v.toPrecision(o.field.precision)).toFixed(
-          o.field.scale
-        );
+        let vstr &#x3D; v.toPrecision(o.field.precision);
+        if (typeof o.field.scale &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+          vstr &#x3D; parseFloat(vstr).toFixed(o.field.scale);
+        }
+        return vstr;
       }
       return v;
     },
     (v: number, o: StructuredTypeFieldOptions) &#x3D;&gt; {
       if (o.ieee754Compatible) {
-        return parseFloat(v.toPrecision(o.field.precision)).toFixed(
-          o.field.scale
-        );
+        let vstr &#x3D; v.toPrecision(o.field.precision);
+        if (typeof o.field.scale &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+          vstr &#x3D; parseFloat(vstr).toFixed(o.field.scale);
+        }
+        return vstr;
       }
       return v;
     }
@@ -3448,11 +3452,15 @@
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   names&lt;E&gt;(Enum: E): string[] {
-    return Object.values(Enum).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;);
+    return Object.values&lt;string&gt;(Enum as any).filter(
+      (v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;string&#x27;
+    );
   },
 
   values&lt;E&gt;(Enum: E): number[] {
-    return Object.values(Enum).filter((v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
+    return Object.values&lt;number&gt;(Enum as any).filter(
+      (v) &#x3D;&gt; typeof v &#x3D;&#x3D;&#x3D; &#x27;number&#x27;
+    );
   },
 
   toValue&lt;E&gt;(Enum: E, value: any): number | undefined {

@@ -557,8 +557,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="62"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:62</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:64</a></div>
                 </td>
             </tr>
 
@@ -594,8 +594,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="77"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:77</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="79"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:79</a></div>
                 </td>
             </tr>
 
@@ -671,8 +671,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="54"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:54</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="56"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:56</a></div>
                 </td>
             </tr>
 
@@ -708,8 +708,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="58"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:58</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:60</a></div>
                 </td>
             </tr>
 
@@ -745,8 +745,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="67"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:67</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:69</a></div>
                 </td>
             </tr>
 
@@ -863,8 +863,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/callable.ts:73</a></div>
                 </td>
             </tr>
 
@@ -918,7 +918,7 @@ export class ODataParameterParser&lt;T&gt; {
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; {...this.parserOptions, ...options};
     return Array.isArray(value)
       ? value.map((v) &#x3D;&gt; this.parser.serialize(v, parserOptions))
       : this.parser.serialize(value, parserOptions);
@@ -926,18 +926,20 @@ export class ODataParameterParser&lt;T&gt; {
 
   //Encode
   encode(value: any, options?: ParserOptions): string {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; {...this.parserOptions, ...options};
     return Array.isArray(value)
       ? value.map((v) &#x3D;&gt; this.parser.encode(v, parserOptions))
       : this.parser.encode(value, parserOptions);
   }
 
   configure({
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
     options: ParserOptions;
+    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
+    findOptionsForType: (type: string) &#x3D;&gt; any;
   }) {
     this.parserOptions &#x3D; options;
     this.parser &#x3D; parserForType(this.type);
@@ -984,7 +986,6 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
   return?: { type: string; collection?: boolean };
   parser: Parser&lt;any&gt;;
   parameters: ODataParameterParser&lt;any&gt;[];
-  nonParenthesisForEmptyParameterFunction?: boolean;
   parserOptions?: ParserOptions;
 
   constructor(config: CallableConfig, namespace: string, alias?: string) {
@@ -1006,13 +1007,13 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
 
   // Deserialize
   deserialize(value: any, options?: ParserOptions): R {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     return this.parser.deserialize(value, parserOptions);
   }
 
   // Serialize
   serialize(params: any, options?: ParserOptions): any {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     const parameters &#x3D; this.parameters
       .filter((p) &#x3D;&gt; p.name !&#x3D;&#x3D; CALLABLE_BINDING_PARAMETER)
       .filter((p) &#x3D;&gt; p.name in params &amp;&amp; params[p.name] !&#x3D;&#x3D; undefined);
@@ -1027,7 +1028,7 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
 
   //Encode
   encode(params: any, options?: ParserOptions): any {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     const parameters &#x3D; this.parameters
       .filter((p) &#x3D;&gt; p.name !&#x3D;&#x3D; CALLABLE_BINDING_PARAMETER)
       .filter((p) &#x3D;&gt; p.name in params &amp;&amp; params[p.name] !&#x3D;&#x3D; undefined);
@@ -1041,20 +1042,20 @@ export class ODataCallableParser&lt;R&gt; implements Parser&lt;R&gt; {
   }
 
   configure({
-    nonParenthesisForEmptyParameterFunction,
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    nonParenthesisForEmptyParameterFunction: boolean;
-    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
     options: ParserOptions;
+    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
+    findOptionsForType: (type: string) &#x3D;&gt; any;
   }) {
-    this.nonParenthesisForEmptyParameterFunction &#x3D;
-      nonParenthesisForEmptyParameterFunction;
     this.parserOptions &#x3D; options;
     if (this.return)
       this.parser &#x3D; parserForType(this.return.type) || NONE_PARSER;
-    this.parameters.forEach((p) &#x3D;&gt; p.configure({ parserForType, options }));
+    this.parameters.forEach((p) &#x3D;&gt;
+      p.configure({ options, parserForType, findOptionsForType })
+    );
   }
 
   binding() {

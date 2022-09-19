@@ -1,6 +1,6 @@
 {
   "name": "angular-odata",
-  "version": "0.102.6",
+  "version": "0.105.0",
   "license": "MIT",
   "description": "Client side OData typescript library for Angular",
   "repository": {

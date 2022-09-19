@@ -1228,7 +1228,10 @@ export class ExpandField&lt;T&gt; implements Renderable {
   }
 }
 
-export type ExpandExpressionBuilder&lt;T&gt; &#x3D; { t: T; e: () &#x3D;&gt; ExpandExpression&lt;T&gt; };
+export type ExpandExpressionBuilder&lt;T&gt; &#x3D; {
+  t: Readonly&lt;Required&lt;T&gt;&gt;;
+  e: () &#x3D;&gt; ExpandExpression&lt;T&gt;;
+};
 export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   constructor({
     children,
@@ -1236,14 +1239,6 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
     children?: Renderable[];
   } &#x3D; {}) {
     super({ children });
-  }
-
-  static expression&lt;T&gt;() {
-    return new ExpandExpression&lt;T&gt;();
-  }
-
-  static type&lt;T extends object&gt;(): T {
-    return Field.factory&lt;T&gt;();
   }
 
   static expand&lt;T extends object&gt;(
@@ -1255,8 +1250,8 @@ export class ExpandExpression&lt;T&gt; extends Expression&lt;T&gt; {
   ): ExpandExpression&lt;T&gt; {
     return opts(
       {
-        t: ExpandExpression.type&lt;T&gt;(),
-        e: ExpandExpression.expression,
+        t: Field.factory&lt;Readonly&lt;Required&lt;T&gt;&gt;&gt;(),
+        e: () &#x3D;&gt; new ExpandExpression&lt;T&gt;(),
       },
       current
     ) as ExpandExpression&lt;T&gt;;

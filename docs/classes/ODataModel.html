@@ -1738,8 +1738,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="808"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:808</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="810"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:810</a></div>
                 </td>
             </tr>
 
@@ -1880,8 +1880,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="791"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:791</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="793"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:793</a></div>
                 </td>
             </tr>
 
@@ -2761,8 +2761,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="815"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:815</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="817"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:817</a></div>
                 </td>
             </tr>
 
@@ -2798,8 +2798,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="819"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:819</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="821"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:821</a></div>
                 </td>
             </tr>
 
@@ -3743,7 +3743,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="804" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:804</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="806" class="link-to-prism">projects/angular-odata/src/lib/models/model.ts:806</a></div>
                                 </td>
                             </tr>
 
@@ -4533,11 +4533,13 @@ export class ODataModel&lt;T&gt; {
       | null;
     if (model &#x3D;&#x3D;&#x3D; null) return null;
     if (model &#x3D;&#x3D;&#x3D; undefined) {
-      const value &#x3D; field.collection ? [] : (this.referenced(field) as P);
-      model &#x3D;
-        value !&#x3D;&#x3D; null
-          ? field.modelCollectionFactory&lt;T, P&gt;({ parent: this, value })
-          : null;
+      if (field.collection) {
+        model &#x3D; field.collectionFactory({ parent: this });
+      } else {
+        const value &#x3D; this.referenced(field) as P;
+        model &#x3D;
+          value &#x3D;&#x3D;&#x3D; null ? null : field.modelFactory({ parent: this, value });
+      }
       (this as any)[name] &#x3D; model;
     }
     return model;

@@ -766,6 +766,9 @@ export interface ParserOptions {
   metadata?: ODataMetadataType;
   ieee754Compatible?: boolean;
   streaming?: boolean;
+  stringAsEnum?: boolean;
+  deleteRefBy?: &#x27;path&#x27; | &#x27;id&#x27;;
+  nonParenthesisForEmptyParameterFunction?: boolean;
 }
 
 export interface ResponseOptions extends ParserOptions {
@@ -863,7 +866,7 @@ export type StructuredTypeFieldConfig &#x3D; {
   navigation?: boolean;
   precision?: number;
   annotations?: AnnotationConfig[];
-  scale?: number;
+  scale?: number | &#x27;variable&#x27;;
   referentials?: { property: string; referencedProperty: string }[];
   referential?: string;
   referenced?: string;

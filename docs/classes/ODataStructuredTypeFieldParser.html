@@ -580,7 +580,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                        <i>Type : </i>    <code>number | &quot;variable&quot;</code>
 
                     </td>
                 </tr>
@@ -936,8 +936,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="321"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:321</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="323"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:323</a></div>
                 </td>
             </tr>
 
@@ -973,8 +973,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="336"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:336</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="338"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:338</a></div>
                 </td>
             </tr>
 
@@ -1050,8 +1050,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="309"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:309</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="311"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:311</a></div>
                 </td>
             </tr>
 
@@ -1087,8 +1087,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="313"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:313</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="315"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:315</a></div>
                 </td>
             </tr>
 
@@ -1124,8 +1124,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="317"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:317</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="319"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:319</a></div>
                 </td>
             </tr>
 
@@ -1161,8 +1161,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="301"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:301</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="303"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:303</a></div>
                 </td>
             </tr>
 
@@ -1198,8 +1198,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="326"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:326</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="328"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:328</a></div>
                 </td>
             </tr>
 
@@ -1411,8 +1411,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="330"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:330</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="332"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:332</a></div>
                 </td>
             </tr>
 
@@ -1543,8 +1543,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="249"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:249</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="251"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/parsers/structured-type.ts:251</a></div>
                 </td>
             </tr>
 
@@ -1941,7 +1941,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   nullable: boolean;
   navigation: boolean;
   precision?: number;
-  scale?: number;
+  scale?: number | &#x27;variable&#x27;;
   referentials: ODataReferential[];
   parserOptions?: ParserOptions;
 
@@ -2041,7 +2041,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   }
 
   deserialize(value: any, options?: ParserOptions): T {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser &#x3D; this.parser as ODataStructuredTypeParser&lt;T&gt;;
       return Array.isArray(value)
@@ -2074,7 +2074,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     if (this.parser instanceof ODataStructuredTypeParser) {
       const parser &#x3D; this.parser as ODataStructuredTypeParser&lt;T&gt;;
       return Array.isArray(value)
@@ -2090,7 +2090,7 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
 
   //#region Encode
   encode(value: T, options?: ParserOptions): string {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     return this.parser.encode(value, {
       field: this,
       ...parserOptions,
@@ -2099,11 +2099,13 @@ export class ODataStructuredTypeFieldParser&lt;T&gt;
   //#endregion
 
   configure({
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
     options: ParserOptions;
+    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
+    findOptionsForType: (type: string) &#x3D;&gt; any;
   }) {
     this.parserOptions &#x3D; options;
     this.parser &#x3D; parserForType(this.type);
@@ -2289,7 +2291,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
 
   // Deserialize
   deserialize(value: any, options?: ParserOptions): T {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     const fields &#x3D; this.fields({
       include_navigation: true,
       include_parents: true,
@@ -2311,7 +2313,7 @@ export class ODataStructuredTypeParser&lt;T&gt;
 
   // Serialize
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     const fields &#x3D; this.fields({
       include_navigation: true,
       include_parents: true,
@@ -2335,16 +2337,18 @@ export class ODataStructuredTypeParser&lt;T&gt;
 
   // Encode
   encode(value: T, options?: ParserOptions): any {
-    const parserOptions &#x3D; options || this.parserOptions;
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     return raw(JSON.stringify(this.serialize(value, parserOptions)));
   }
 
   configure({
-    parserForType,
     options,
+    parserForType,
+    findOptionsForType,
   }: {
-    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
     options: ParserOptions;
+    parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
+    findOptionsForType: (type: string) &#x3D;&gt; any;
   }) {
     this.parserOptions &#x3D; options;
     if (this.base) {
@@ -2352,7 +2356,9 @@ export class ODataStructuredTypeParser&lt;T&gt;
       parent.children.push(this);
       this.parent &#x3D; parent;
     }
-    this._fields.forEach((f) &#x3D;&gt; f.configure({ parserForType, options }));
+    this._fields.forEach((f) &#x3D;&gt;
+      f.configure({ options, parserForType, findOptionsForType })
+    );
   }
 
   /**

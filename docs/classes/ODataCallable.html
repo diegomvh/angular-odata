@@ -474,8 +474,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:86</a></div>
                 </td>
             </tr>
 
@@ -587,8 +587,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="55"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:55</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="58"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:58</a></div>
                 </td>
             </tr>
 
@@ -680,8 +680,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="75"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:75</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="78"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:78</a></div>
                 </td>
             </tr>
 
@@ -810,8 +810,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="65"
-                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:65</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">projects/angular-odata/src/lib/schema/callable.ts:68</a></div>
                 </td>
             </tr>
 
@@ -1507,15 +1507,18 @@ export class ODataCallable&lt;R&gt; extends ODataSchemaElement {
   }
 
   configure({
+    options,
     parserForType,
+    findOptionsForType,
   }: {
+    options: ParserOptions;
     parserForType: (type: string) &#x3D;&gt; Parser&lt;any&gt;;
+    findOptionsForType: (type: string) &#x3D;&gt; any;
   }) {
     this.parser.configure({
-      nonParenthesisForEmptyParameterFunction:
-        this.api.options.nonParenthesisForEmptyParameterFunction,
-      options: this.api.options.parserOptions,
+      options,
       parserForType,
+      findOptionsForType,
     });
   }
 
