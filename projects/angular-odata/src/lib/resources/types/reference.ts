@@ -35,14 +35,14 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     target: ODataEntityResource<any>,
-    options?: ODataOptions
+    options?: ODataOptions & { observe?: 'body' | 'events' | 'response' }
   ): Observable<any> {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
   protected override put(
     target: ODataEntityResource<any>,
-    options?: ODataOptions & { etag?: string }
+    options?: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response' }
   ): Observable<any> {
     return super.put({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
@@ -54,7 +54,8 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   }: {
     etag?: string;
     target?: ODataEntityResource<any>;
-  } & ODataOptions = {}): Observable<any> {
+  } & 
+    ODataOptions & { observe?: 'body' | 'events' | 'response' } = {}): Observable<any> {
     if (target) {
       options.params = { [$ID]: target.endpointUrl(false) };
     }

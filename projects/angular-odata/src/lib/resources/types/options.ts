@@ -1,10 +1,11 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { FetchPolicy } from '../../types';
 import { ODataQueryArguments } from '../query';
 
 export type ODataOptions = {
-  headers?: HttpHeaders | { [header: string]: string | string[] };
-  params?: HttpParams | { [param: string]: string | string[] };
+  context?: HttpContext,
+  headers?: HttpHeaders | {[header: string]: string | string[]},
+  params?: HttpParams | {[param: string]: string | number | boolean | ReadonlyArray<string|number|boolean>},
   reportProgress?: boolean;
   withCredentials?: boolean;
   fetchPolicy?: FetchPolicy;

@@ -31,7 +31,7 @@ export const Http = {
 
   // Merge Params
   mergeHttpParams(
-    ...values: (HttpParams | { [param: string]: string | string[] })[]
+    ...values: (HttpParams | {[param: string]: string | number | boolean | ReadonlyArray<string|number|boolean>})[]
   ): HttpParams {
     let params = new HttpParams();
     values.forEach((value) => {

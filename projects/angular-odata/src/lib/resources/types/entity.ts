@@ -1,3 +1,4 @@
+import { HttpEvent } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
@@ -7,6 +8,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
+import { ODataResponse } from '../responses';
 import { ODataEntity } from '../responses/types';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
@@ -105,27 +107,27 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     attrs: Partial<T>,
-    options: ODataOptions = {}
-  ): Observable<ODataEntity<T>> {
+    options: ODataOptions & {observe?: 'body' | 'events' | 'response';} = {}
+  ): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   protected override put(
     attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
-  ): Observable<ODataEntity<T>> {
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response';} = {}
+  ): Observable<any> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
   protected override patch(
     attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
-  ): Observable<ODataEntity<T>> {
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response';} = {}
+  ): Observable<any> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
   protected override delete(
-    options: ODataOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response';} = {}
   ): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
@@ -133,9 +135,10 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   protected override get(
     options: ODataOptions & {
       etag?: string;
+      observe?: 'body' | 'events' | 'response';
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
-  ): Observable<ODataEntity<T>> {
+  ): Observable<any> {
     return super.get({ responseType: 'entity', ...options });
   }
   //#endregion
@@ -167,11 +170,31 @@ export class ODataEntityResource<T> extends ODataResource<T> {
   }
 
   fetch(
+    options: ODataOptions & {
+      etag?: string;
+      observe: 'response';
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataResponse<T>>;
+  fetch(
+    options: ODataOptions & {
+      etag?: string;
+      observe: 'events';
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<HttpEvent<T>>;
+  fetch(
     options?: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<ODataEntity<T>> {
+  ): Observable<ODataEntity<T>>;
+  fetch(
+    options?: ODataOptions & {
+      etag?: string;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<any> {
     if (!this.hasKey())
       return throwError(() => new Error('fetch: Entity resource without key'));
     return this.get(options);

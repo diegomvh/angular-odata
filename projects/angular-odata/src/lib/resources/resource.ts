@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../api';
@@ -354,6 +355,7 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
+      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
@@ -372,10 +374,13 @@ export class ODataResource<T> {
     const request = new ODataRequest({
       method,
       etag,
+      context: options.context,
       body: options.body,
       api: this.api,
       resource: this,
-      observe: 'response',
+      observe: (options.observe !== 'body' ? options.observe : 'response') as
+        | 'events'
+        | 'response',
       headers: options.headers,
       reportProgress: options.reportProgress,
       params: params,
@@ -386,19 +391,97 @@ export class ODataResource<T> {
     });
 
     const res$ = this.api.request(request);
-    switch (options.responseType) {
-      case 'entities':
-        return res$.pipe(map((res: ODataResponse<T>) => res.entities()));
-      case 'entity':
-        return res$.pipe(map((res: ODataResponse<T>) => res.entity()));
-      case 'property':
-        return res$.pipe(map((res: ODataResponse<T>) => res.property()));
-      case 'value':
-        return res$.pipe(map((res: ODataResponse<T>) => res.value() as T));
-      default:
-        // Other responseTypes (arraybuffer, blob, json, text) return body
-        return res$.pipe(map((res: ODataResponse<T>) => res.body));
+
+    if (options.observe === 'events') {
+      return res$;
     }
+
+    switch (options.observe || 'body') {
+      case 'body':
+        switch (options.responseType) {
+          case 'entities':
+            return res$.pipe(map((res: ODataResponse<T>) => res.entities()));
+          case 'entity':
+            return res$.pipe(map((res: ODataResponse<T>) => res.entity()));
+          case 'property':
+            return res$.pipe(map((res: ODataResponse<T>) => res.property()));
+          case 'value':
+            return res$.pipe(map((res: ODataResponse<T>) => res.value() as T));
+          default:
+            // Other responseTypes (arraybuffer, blob, json, text) return body
+            return res$.pipe(map((res: ODataResponse<T>) => res.body));
+        }
+      case 'response':
+        // The response stream was requested directly, so return it.
+        return res$;
+      default:
+        // Guard against new future observe types being added.
+        throw new Error(
+          `Unreachable: unhandled observe type ${options.observe}}`
+        );
+    }
+  }
+
+  protected head(
+    options: ODataOptions & {
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      observe?: 'body' | 'events' | 'response';
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    } = {}
+  ): Observable<any> {
+    return this.request('HEAD', options);
+  }
+
+  protected options(
+    options: ODataOptions & {
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      observe?: 'body' | 'events' | 'response';
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    } = {}
+  ): Observable<any> {
+    return this.request('OPTIONS', options);
+  }
+
+  protected jsonp(callbackParam: string,
+    options: {
+      etag?: string;
+      responseType?:
+        | 'json'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    } = {}
+    ): Observable<any> {
+    return this.request('JSONP', {
+      etag: options.etag,
+      params: new HttpParams().append(callbackParam, 'JSONP_CALLBACK'),
+      observe: 'body',
+      responseType: options.responseType,
+      bodyQueryOptions: options.bodyQueryOptions
+    });
   }
 
   protected get(
@@ -413,6 +496,7 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
+      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
@@ -432,6 +516,7 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
+      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
@@ -451,6 +536,7 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
+      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
@@ -470,6 +556,7 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
+      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
@@ -488,6 +575,7 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
+      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {

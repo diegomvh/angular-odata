@@ -1,19 +1,18 @@
+import { HttpEvent } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
-import { ODataStructuredType, ODataStructuredTypeParser } from '../../schema';
-//import { ODataNavigationPropertyResource } from './navigation-property';
+import { ODataStructuredType } from '../../schema';
 import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
 import {
   ODataEntities,
-  ODataEntitiesAnnotations,
   ODataEntity,
-  ODataEntityAnnotations,
   ODataProperty,
+  ODataResponse,
 } from '../responses';
 import {
   ODataEntitiesOptions,
@@ -164,7 +163,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   //#region Requests
   protected override get(
-    options: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
+    options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions & { observe?: 'body' | 'events' | 'response' }
   ): Observable<any> {
     return super.get(options);
   }
@@ -176,11 +175,19 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @return The entity / entities / property value
    */
-  fetch(
-    options?: ODataEntityOptions & { etag?: string }
-  ): Observable<ODataEntity<T>>;
+  fetch(options?: ODataEntityOptions & { etag?: string }): Observable<ODataEntity<T>>;
   fetch(options?: ODataEntitiesOptions): Observable<ODataEntities<T>>;
   fetch(options?: ODataPropertyOptions): Observable<ODataProperty<T>>;
+  fetch(
+    options: ODataEntityOptions &
+      ODataEntitiesOptions &
+      ODataPropertyOptions & { etag?: string, observe: 'response' }
+  ): Observable<ODataResponse<T>>;
+  fetch(
+    options: ODataEntityOptions &
+      ODataEntitiesOptions &
+      ODataPropertyOptions & { etag?: string, observe: 'events' }
+  ): Observable<HttpEvent<T>>;
   fetch(
     options: ODataEntityOptions &
       ODataEntitiesOptions &

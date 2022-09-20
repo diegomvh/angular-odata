@@ -73,6 +73,7 @@ export class ODataClient {
       requester: (req: ODataRequest<any>): Observable<any> =>
         this.http.request(req.method, `${req.url}`, {
           body: req.body,
+          context: req.context,
           headers: req.headers,
           observe: req.observe,
           params: req.params,

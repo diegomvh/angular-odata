@@ -1,4 +1,4 @@
-import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpContext, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ODataApi } from '../api';
 import {
   $BATCH,
@@ -16,6 +16,7 @@ import { ODataResource } from './resource';
 export class ODataRequest<T> {
   readonly api: ODataApi;
   readonly observe: 'events' | 'response';
+  readonly context?: HttpContext;
   readonly reportProgress?: boolean;
   readonly withCredentials?: boolean;
   readonly bodyQueryOptions: QueryOptionNames[];
@@ -47,10 +48,11 @@ export class ODataRequest<T> {
     resource: ODataResource<T>;
     body: any;
     observe: 'events' | 'response';
+    context?: HttpContext;
     etag?: string;
     headers?: HttpHeaders | { [header: string]: string | string[] };
     reportProgress?: boolean;
-    params?: HttpParams | { [param: string]: string | string[] };
+    params?: HttpParams | {[param: string]: string | number | boolean | ReadonlyArray<string|number|boolean>};
     responseType?:
       | 'arraybuffer'
       | 'blob'
@@ -75,6 +77,7 @@ export class ODataRequest<T> {
     this.api = init.api;
     this.reportProgress = init.reportProgress;
     this.observe = init.observe;
+    this.context = init.context;
 
     // Response Type
     this._responseType = init.responseType;

@@ -1,3 +1,4 @@
+import { HttpEvent } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
@@ -7,7 +8,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity } from '../responses';
+import { ODataEntities, ODataEntity, ODataResponse } from '../responses';
 import { ODataCountResource } from './count';
 import { ODataMediaResource } from './media';
 import {
@@ -166,27 +167,27 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     attrs: Partial<T>,
-    options: ODataOptions = {}
+    options: ODataOptions & { observe?: 'body' | 'events' | 'response'; } = {}
   ): Observable<ODataEntity<T>> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   protected override put(
     attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response'; } = {}
   ): Observable<ODataEntity<T>> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
   protected override patch(
     attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response'; } = {}
   ): Observable<ODataEntity<T>> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
   protected override delete(
-    options: ODataOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response'; } = {}
   ): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
@@ -195,6 +196,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
     options: ODataEntityOptions &
       ODataEntitiesOptions & {
         etag?: string;
+        observe?: 'body' | 'events' | 'response';
         bodyQueryOptions?: QueryOptionNames[];
       } = {}
   ): Observable<any> {
@@ -272,6 +274,20 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntities<T>>;
+  fetch(
+    options: ODataEntitiesOptions & ODataEntityOptions & {
+      etag?: string;
+      observe: 'response',
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataResponse<T>>;
+  fetch(
+    options: ODataEntitiesOptions & ODataEntityOptions & {
+      etag?: string;
+      observe: 'events',
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<HttpEvent<T>>;
   fetch(
     options: ODataEntityOptions &
       ODataEntitiesOptions & {

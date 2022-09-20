@@ -77,27 +77,27 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     attrs: Partial<T>,
-    options: ODataOptions = {}
-  ): Observable<ODataEntity<T>> {
+    options: ODataOptions & { observe?: 'body' | 'events' | 'response' } = {}
+  ): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   protected override put(
     attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
-  ): Observable<ODataEntity<T>> {
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response'; } = {}
+  ): Observable<any> {
     return super.put(attrs, { responseType: 'entity', ...options });
   }
 
   protected override patch(
     attrs: Partial<T>,
-    options: ODataOptions & { etag?: string } = {}
-  ): Observable<ODataEntity<T>> {
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response'; } = {}
+  ): Observable<any> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
   protected override delete(
-    options: ODataOptions & { etag?: string } = {}
+    options: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response'; } = {}
   ): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
@@ -105,9 +105,10 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
   protected override get(
     options: ODataOptions & {
       etag?: string;
+      observe?: 'body' | 'events' | 'response';
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
-  ): Observable<ODataEntity<T>> {
+  ): Observable<any> {
     return super.get({ responseType: 'entity', ...options });
   }
   //#endregion

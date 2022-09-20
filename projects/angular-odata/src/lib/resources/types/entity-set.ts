@@ -1,3 +1,4 @@
+import { HttpEvent } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 import { concatMap, expand, map, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
@@ -7,7 +8,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity } from '../responses';
+import { ODataEntities, ODataEntity, ODataResponse } from '../responses';
 import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
@@ -86,17 +87,18 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     attrs: Partial<T>,
-    options: ODataOptions = {}
-  ): Observable<ODataEntity<T>> {
+    options: ODataOptions & { observe?: 'body' | 'events' | 'response'; } = {}
+  ): Observable<any> {
     return super.post(attrs, { responseType: 'entity', ...options });
   }
 
   protected override get(
     options: ODataOptions & {
       withCount?: boolean;
+      observe?: 'body' | 'events' | 'response';
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
-  ): Observable<ODataEntities<T>> {
+  ): Observable<any> {
     return super.get({ responseType: 'entities', ...options });
   }
   //#endregion
@@ -110,11 +112,31 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
   }
 
   fetch(
+    options: ODataOptions & {
+      withCount?: boolean;
+      observer: 'response',
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataResponse<T>>;
+  fetch(
+    options: ODataOptions & {
+      withCount?: boolean;
+      observer: 'events',
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<HttpEvent<T>>;
+  fetch(
     options?: ODataOptions & {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<ODataEntities<T>> {
+  ): Observable<ODataEntities<T>>;
+  fetch(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<any> {
     return this.get(options);
   }
 

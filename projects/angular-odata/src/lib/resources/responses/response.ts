@@ -219,7 +219,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
     const data = payload ? (annots.data(payload) as T) : null;
     let property = (
       data !== null && Types.isPlainObject(data)
-        ? options.helper.attributes(data, this.api.options.stripMetadata)
+        ? options.helper.attributes(data as {[key:string]: any}, this.api.options.stripMetadata)
         : data
     ) as T | null;
 
