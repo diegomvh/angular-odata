@@ -60,15 +60,6 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this.models().length;
   }
 
-  isEmpty() {
-    // Local length and if exists remote length
-    return (
-      this.length === 0 &&
-      this.annots().count !== undefined &&
-      this.annots().count === 0
-    );
-  }
-
   //Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
   constructor(
@@ -1152,6 +1143,15 @@ export class ODataCollection<T, M extends ODataModel<T>>
     const models = this.models();
     const m = models.find((m) => m.equals(model));
     return m === undefined ? -1 : models.indexOf(m);
+  }
+
+  isEmpty() {
+    // Local length and if exists remote length
+    return (
+      this.length === 0 &&
+      this.annots().count !== undefined &&
+      this.annots().count === 0
+    );
   }
 
   //#region Sort
