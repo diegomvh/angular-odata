@@ -10,8 +10,9 @@ import {
   TEXT_PLAIN,
 } from '../constants';
 import { QueryOptionNames } from '../types';
-import { Http } from '../utils';
+import { Http, Types } from '../utils';
 import { ODataResource } from './resource';
+import { ODataOptions } from './types';
 
 export class ODataRequest<T> {
   readonly api: ODataApi;
@@ -205,6 +206,53 @@ export class ODataRequest<T> {
           ])
         : params;
     //#endregion
+  }
+
+  static factory(api: ODataApi, method: string, resource: ODataResource<any>,
+    options: ODataOptions & {
+      body?: any;
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      observe: 'events' | 'response';
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    }) {
+
+    const apiOptions = api.options;
+    let params = options.params || {};
+    if (options.withCount) {
+      params = Http.mergeHttpParams(params, apiOptions.helper.countParam());
+    }
+
+    let etag = options.etag;
+    if (etag === undefined && Types.isPlainObject(options.body)) {
+      etag = apiOptions.helper.etag(options.body);
+    }
+
+    return new ODataRequest({
+      method,
+      etag,
+      api,
+      resource,
+      params,
+      context: options.context,
+      body: options.body,
+      observe: options.observe,
+      headers: options.headers,
+      reportProgress: options.reportProgress,
+      responseType: options.responseType,
+      fetchPolicy: options.fetchPolicy,
+      withCredentials: options.withCredentials,
+      bodyQueryOptions: options.bodyQueryOptions,
+    });
   }
 
   get responseType(): 'arraybuffer' | 'blob' | 'json' | 'text' {

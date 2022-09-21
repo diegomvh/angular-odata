@@ -340,150 +340,6 @@ export class ODataResource<T> {
   }
   //#endregion
 
-  // Base Requests
-  protected request(
-    method: string,
-    options: ODataOptions & {
-      body?: any;
-      etag?: string;
-      responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
-      observe?: 'body' | 'events' | 'response';
-      withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
-    }
-  ): Observable<any> {
-    const apiOptions = this.api.options;
-    let params = options.params || {};
-    if (options.withCount) {
-      params = Http.mergeHttpParams(params, apiOptions.helper.countParam());
-    }
-
-    let etag = options.etag;
-    if (etag === undefined && Types.isPlainObject(options.body)) {
-      etag = apiOptions.helper.etag(options.body);
-    }
-
-    const request = new ODataRequest({
-      method,
-      etag,
-      context: options.context,
-      body: options.body,
-      api: this.api,
-      resource: this,
-      observe: (options.observe === 'events' ? 'events' : 'response') as
-        | 'events'
-        | 'response',
-      headers: options.headers,
-      reportProgress: options.reportProgress,
-      params: params,
-      responseType: options.responseType,
-      fetchPolicy: options.fetchPolicy,
-      withCredentials: options.withCredentials,
-      bodyQueryOptions: options.bodyQueryOptions,
-    });
-
-    const res$ = this.api.request(request);
-
-    if (options.observe === 'events') {
-      return res$;
-    }
-
-    switch (options.observe || 'body') {
-      case 'body':
-        switch (options.responseType) {
-          case 'entities':
-            return res$.pipe(map((res: ODataResponse<T>) => res.entities()));
-          case 'entity':
-            return res$.pipe(map((res: ODataResponse<T>) => res.entity()));
-          case 'property':
-            return res$.pipe(map((res: ODataResponse<T>) => res.property()));
-          case 'value':
-            return res$.pipe(map((res: ODataResponse<T>) => res.value() as T));
-          default:
-            // Other responseTypes (arraybuffer, blob, json, text) return body
-            return res$.pipe(map((res: ODataResponse<T>) => res.body));
-        }
-      case 'response':
-        // The response stream was requested directly, so return it.
-        return res$;
-      default:
-        // Guard against new future observe types being added.
-        throw new Error(
-          `Unreachable: unhandled observe type ${options.observe}}`
-        );
-    }
-  }
-
-  protected head(
-    options: ODataOptions & {
-      etag?: string;
-      responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
-      observe?: 'body' | 'events' | 'response';
-      withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
-    } = {}
-  ): Observable<any> {
-    return this.request('HEAD', options);
-  }
-
-  protected options(
-    options: ODataOptions & {
-      etag?: string;
-      responseType?:
-        | 'arraybuffer'
-        | 'blob'
-        | 'json'
-        | 'text'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
-      observe?: 'body' | 'events' | 'response';
-      withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
-    } = {}
-  ): Observable<any> {
-    return this.request('OPTIONS', options);
-  }
-
-  protected jsonp(callbackParam: string,
-    options: {
-      etag?: string;
-      responseType?:
-        | 'json'
-        | 'value'
-        | 'property'
-        | 'entity'
-        | 'entities';
-      withCount?: boolean;
-      bodyQueryOptions?: QueryOptionNames[];
-    } = {}
-    ): Observable<any> {
-    return this.request('JSONP', {
-      etag: options.etag,
-      params: new HttpParams().append(callbackParam, 'JSONP_CALLBACK'),
-      observe: 'body',
-      responseType: options.responseType,
-      bodyQueryOptions: options.bodyQueryOptions
-    });
-  }
-
   protected get(
     options: ODataOptions & {
       etag?: string;
@@ -496,12 +352,11 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
-      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
   ): Observable<any> {
-    return this.request('GET', options);
+    return this.api.request<T>('GET', this, options);
   }
 
   protected post(
@@ -516,11 +371,10 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
-      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('POST', { body, ...options });
+    return this.api.request<T>('POST', this, { body, ...options });
   }
 
   protected put(
@@ -536,11 +390,10 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
-      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('PUT', { body, ...options });
+    return this.api.request<T>('PUT', this, { body, ...options });
   }
 
   protected patch(
@@ -556,11 +409,10 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
-      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('PATCH', { body, ...options });
+    return this.api.request<T>('PATCH', this, { body, ...options });
   }
 
   protected delete(
@@ -575,10 +427,9 @@ export class ODataResource<T> {
         | 'property'
         | 'entity'
         | 'entities';
-      observe?: 'body' | 'events' | 'response';
       withCount?: boolean;
     } = {}
   ): Observable<any> {
-    return this.request('DELETE', options);
+    return this.api.request<T>('DELETE', this, options);
   }
 }

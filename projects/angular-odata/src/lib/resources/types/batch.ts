@@ -160,18 +160,14 @@ export class ODataBatchResource extends ODataResource<any> {
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
       [ACCEPT]: MULTIPART_MIXED,
     });
-    const request = new ODataRequest({
-      method: 'POST',
+    return this.api.request('POST', this, {
       body: ODataBatchResource.buildBody(bound, this._requests),
-      api: this.api,
-      resource: this,
-      observe: 'response',
       responseType: 'text',
+      observe: 'response',
       headers: headers,
       params: options ? options.params : undefined,
       withCredentials: options ? options.withCredentials : undefined,
-    });
-    return this.api.request(request).pipe(
+    }).pipe(
       map((response: ODataResponse<string>) => {
         if (this._responses == null) {
           this._responses = [];

@@ -1,4 +1,3 @@
-import { HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
@@ -8,7 +7,7 @@ import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity, ODataProperty, ODataResponse } from '../responses';
+import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -83,7 +82,7 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
   //#region Requests
   protected override post(
     params: P | null,
-    options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions & { observe?: 'body' | 'events' | 'response' }
+    options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.post(params, options);
   }
@@ -108,20 +107,6 @@ export class ODataActionResource<P, R> extends ODataResource<R> {
     options?: ODataPropertyOptions
   ): Observable<ODataProperty<R>>;
   call(params: P | null, options?: ODataNoneOptions): Observable<null>;
-  call(
-    params: P | null,
-    options: {observe: 'response'} & ODataEntityOptions &
-      ODataEntitiesOptions &
-      ODataPropertyOptions &
-      ODataNoneOptions
-  ): Observable<ODataResponse<R>>;
-  call(
-    params: P | null,
-    options: {observe: 'events'} & ODataEntityOptions &
-      ODataEntitiesOptions &
-      ODataPropertyOptions &
-      ODataNoneOptions
-  ): Observable<HttpEvent<R>>;
   call(
     params: P | null,
     options: ODataEntityOptions &

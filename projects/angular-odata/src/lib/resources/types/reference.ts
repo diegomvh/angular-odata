@@ -35,14 +35,14 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
   //#region Requests
   protected override post(
     target: ODataEntityResource<any>,
-    options?: ODataOptions & { observe?: 'body' | 'events' | 'response' }
+    options?: ODataOptions 
   ): Observable<any> {
     return super.post({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
 
   protected override put(
     target: ODataEntityResource<any>,
-    options?: ODataOptions & { etag?: string; observe?: 'body' | 'events' | 'response' }
+    options?: ODataOptions
   ): Observable<any> {
     return super.put({ [ODATA_ID]: target.endpointUrl(false) }, options);
   }
@@ -55,7 +55,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
     etag?: string;
     target?: ODataEntityResource<any>;
   } & 
-    ODataOptions & { observe?: 'body' | 'events' | 'response' } = {}): Observable<any> {
+    ODataOptions = {}): Observable<any> {
     if (target) {
       options.params = { [$ID]: target.endpointUrl(false) };
     }
@@ -100,7 +100,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   set(
     target: ODataEntityResource<any>,
-    options?: ODataOptions & { etag?: string }
+    options?: ODataOptions
   ): Observable<any> {
     return this.put(target, options);
   }
@@ -110,7 +110,7 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    * @param options Options for the request.
    * @returns Observable of the response
    */
-  unset(options?: ODataOptions & { etag?: string }): Observable<any> {
+  unset(options?: ODataOptions): Observable<any> {
     return this.delete(options);
   }
   //#endregion
@@ -123,20 +123,17 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   fetch(
     options?: ODataEntityOptions & {
-      etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntity<T>>;
   fetch(
     options?: ODataEntitiesOptions & {
-      etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
   ): Observable<ODataEntities<T>>;
   fetch(
     options: ODataEntityOptions &
       ODataEntitiesOptions & {
-        etag?: string;
         bodyQueryOptions?: QueryOptionNames[];
       } = {}
   ): Observable<any> {
@@ -150,7 +147,6 @@ export class ODataReferenceResource<T> extends ODataResource<T> {
    */
   fetchEntity(
     options: ODataOptions & {
-      etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
   ): Observable<T | null> {

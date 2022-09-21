@@ -26,7 +26,7 @@ export class ODataMetadataResource extends ODataResource<any> {
 
   //#region Requests
   protected override get(
-    options?: ODataOptions & { observe?: 'body' | 'events' | 'response' }
+    options?: ODataOptions 
   ): Observable<any> {
     return super
       .get({ responseType: 'text', ...options });

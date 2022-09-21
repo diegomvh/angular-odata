@@ -13,9 +13,11 @@ import {
   ODataFunctionResource,
   ODataMetadataResource,
   ODataNavigationPropertyResource,
+  ODataOptions,
   ODataPathSegments,
   ODataQueryOptions,
   ODataRequest,
+  ODataResource,
   ODataResponse,
   ODataSegment,
   ODataSingletonResource,
@@ -35,6 +37,7 @@ import {
   NONE_PARSER,
   Parser,
   PathSegmentNames,
+  QueryOptionNames,
 } from './types';
 
 /**
@@ -201,8 +204,44 @@ export class ODataApi {
     return ODataFunctionResource.factory<P, R>(this, { path, schema });
   }
 
-  request(req: ODataRequest<any>): Observable<any> {
+ //request(req: ODataRequest<any>): Observable<any> {
+  request<T>(
+    method: string,
+    resource: ODataResource<any>,
+    options: ODataOptions & {
+      body?: any;
+      etag?: string;
+      responseType?:
+        | 'arraybuffer'
+        | 'blob'
+        | 'json'
+        | 'text'
+        | 'value'
+        | 'property'
+        | 'entity'
+        | 'entities';
+      observe?: 'body' | 'events' | 'response';
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<any> {
+    let req = ODataRequest.factory(this, method, resource, {
+      body: options.body,
+      etag: options.etag,
+      context: options.context,
+      headers: options.headers,
+      params: options.params,
+      responseType: options.responseType,
+      observe: (options.observe === 'events' ? 'events' : 'response') as | 'events' | 'response',
+      withCount: options.withCount,
+      bodyQueryOptions: options.bodyQueryOptions,
+      reportProgress: options.reportProgress,
+      fetchPolicy: options.fetchPolicy,
+      withCredentials: options.withCredentials,
+    });
+
     let res$ = this.requester !== undefined ? this.requester(req) : NEVER;
+
     res$ = res$.pipe(
       map((res: HttpEvent<any>) =>
         res.type === HttpEventType.Response
@@ -214,9 +253,36 @@ export class ODataApi {
     if (this.errorHandler !== undefined)
       res$ = res$.pipe(catchError(this.errorHandler));
 
-    return req.observe === 'response'
-      ? this.cache.handleRequest(req, res$)
-      : res$;
+    if (options.observe === 'events') {
+      return res$;
+    }
+
+    res$ = this.cache.handleRequest(req, res$);
+
+    switch (options.observe || 'body') {
+      case 'body':
+        switch (options.responseType) {
+          case 'entities':
+            return res$.pipe(map((res: ODataResponse<T>) => res.entities()));
+          case 'entity':
+            return res$.pipe(map((res: ODataResponse<T>) => res.entity()));
+          case 'property':
+            return res$.pipe(map((res: ODataResponse<T>) => res.property()));
+          case 'value':
+            return res$.pipe(map((res: ODataResponse<T>) => res.value() as T));
+          default:
+            // Other responseTypes (arraybuffer, blob, json, text) return body
+            return res$.pipe(map((res: ODataResponse<T>) => res.body));
+        }
+      case 'response':
+        // The response stream was requested directly, so return it.
+        return res$;
+      default:
+        // Guard against new future observe types being added.
+        throw new Error(
+          `Unreachable: unhandled observe type ${options.observe}}`
+        );
+    }
   }
 
   //# region Find by Type
