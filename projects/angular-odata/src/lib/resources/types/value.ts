@@ -1,3 +1,4 @@
+import { HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ODataApi } from '../../api';
 import { $VALUE } from '../../constants';
@@ -6,6 +7,7 @@ import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
+import { ODataResponse } from '../responses';
 import { ODataOptions } from './options';
 
 export class ODataValueResource<T> extends ODataResource<T> {
@@ -64,7 +66,16 @@ export class ODataValueResource<T> extends ODataResource<T> {
    * @param options OData options.
    * @returns Observable of the value.
    */
-  fetch(options?: ODataOptions): Observable<T> {
+  fetch(
+    options: ODataOptions & { observe: 'events' }
+  ): Observable<HttpEvent<T>>;
+  fetch(
+    options: ODataOptions & { observe: 'response' }
+  ): Observable<ODataResponse<T>>;
+  fetch(
+    options?: ODataOptions 
+  ): Observable<T>;
+  fetch(options?: ODataOptions): Observable<any> {
     return this.get(options);
   }
 

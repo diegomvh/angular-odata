@@ -378,7 +378,7 @@ export class ODataResource<T> {
       body: options.body,
       api: this.api,
       resource: this,
-      observe: (options.observe !== 'body' ? options.observe : 'response') as
+      observe: (options.observe === 'events' ? 'events' : 'response') as
         | 'events'
         | 'response',
       headers: options.headers,

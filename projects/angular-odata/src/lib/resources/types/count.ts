@@ -53,7 +53,7 @@ export class ODataCountResource<T> extends ODataResource<T> {
   fetch(
     options?: ODataOptions 
   ): Observable<number>;
-  fetch(options?: ODataOptions & {observe?: any}): Observable<any> {
+  fetch(options?: ODataOptions): Observable<any> {
     return this.get(options);
   }
   //#endregion

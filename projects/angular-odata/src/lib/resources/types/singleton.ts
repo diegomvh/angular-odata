@@ -1,3 +1,4 @@
+import { HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ODataApi } from '../../api';
@@ -7,7 +8,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntity } from '../responses';
+import { ODataEntity, ODataResponse } from '../responses';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';
 import { ODataNavigationPropertyResource } from './navigation-property';
@@ -169,11 +170,31 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
    * @returns Observable of the entity with the annotations.
    */
   fetch(
+    options: ODataOptions & {
+      etag?: string;
+      observe: 'response';
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataResponse<T>>;
+  fetch(
+    options: ODataOptions & {
+      etag?: string;
+      observe: 'events';
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<HttpEvent<T>>;
+  fetch(
     options?: ODataOptions & {
       etag?: string;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<ODataEntity<T>> {
+  ): Observable<ODataEntity<T>>;
+  fetch(
+    options?: ODataOptions & {
+      etag?: string;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<any> {
     return this.get(options);
   }
 

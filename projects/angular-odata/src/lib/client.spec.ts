@@ -659,9 +659,9 @@ ${JSON.stringify(payload)}
         expect(batch.endpointUrl()).toEqual(SERVICE_ROOT + '$batch');
         return entity.fetch();
       })
-      .subscribe(({ annots: meta }) => {
-        expect(meta.entitySet).toEqual('People');
-        expect(meta.etag).toEqual('W/"08D814450D6BDB6F"');
+      .subscribe(({ annots }) => {
+        expect(annots.entitySet).toEqual('People');
+        expect(annots.etag).toEqual('W/"08D814450D6BDB6F"');
       });
 
     const headers = new HttpHeaders({
