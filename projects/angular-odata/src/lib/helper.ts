@@ -338,6 +338,10 @@ export const ODataHelper = {
       }
       return annots;
     },
+    context(annots: Map<string, any> | { [key: string]: any }) {
+      let ctx: ODataContext = {};
+      return ctx;
+    },
     attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
       return value;
     },
