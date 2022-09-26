@@ -32,9 +32,9 @@ export interface ODataVersionHelper {
   ODATA_ETAG: string;
   ODATA_CONTEXT: string;
   ODATA_MEDIA_ETAG: string;
-  ODATA_NEXTLINK: string,
-  ODATA_DEFERRED: string,
-  ODATA_ANNOTATION: string,
+  ODATA_NEXTLINK: string;
+  ODATA_DEFERRED: string;
+  ODATA_ANNOTATION: string;
 
   entity(value: { [key: string]: any }): any;
   entities(value: { [key: string]: any }): any;
@@ -200,7 +200,8 @@ const ODataVersionBaseHelper = <any>{
 
 export const ODataHelper = {
   //#region Version 4.0
-  [VERSION_4_0]: <ODataVersionHelper>{...ODataVersionBaseHelper, 
+  [VERSION_4_0]: <ODataVersionHelper>{
+    ...ODataVersionBaseHelper,
     VALUE: 'value',
     ODATA_ANNOTATION_PREFIX: '@odata',
     ODATA_FUNCTION_PREFIX: '#',
@@ -285,7 +286,8 @@ export const ODataHelper = {
   },
   //#endregion
   //#region Version 3.0
-  [VERSION_3_0]: <ODataVersionHelper>{...ODataVersionBaseHelper, 
+  [VERSION_3_0]: <ODataVersionHelper>{
+    ...ODataVersionBaseHelper,
     ODATA_ANNOTATION_PREFIX: 'odata.',
     ODATA_FUNCTION_PREFIX: '',
     ODATA_ID: 'odata.id',
@@ -317,7 +319,8 @@ export const ODataHelper = {
   },
   //#endregion
   //#region Version 2.0
-  [VERSION_2_0]: <ODataVersionHelper>{...ODataVersionBaseHelper, 
+  [VERSION_2_0]: <ODataVersionHelper>{
+    ...ODataVersionBaseHelper,
     ODATA_ID: 'id',
     ODATA_ETAG: 'etag',
     ODATA_ANNOTATION: '__metadata',

@@ -25,18 +25,14 @@ export class ODataMetadataResource extends ODataResource<any> {
   //#endregion
 
   //#region Requests
-  protected override get(
-    options?: ODataOptions 
-  ): Observable<any> {
-    return super
-      .get({ responseType: 'text', ...options });
+  protected override get(options?: ODataOptions): Observable<any> {
+    return super.get({ responseType: 'text', ...options });
   }
   //#endregion
 
   //#region Shortcuts
   fetch(options?: ODataOptions): Observable<ODataMetadata> {
-    return this.get(options)
-      .pipe(map((body: any) => new ODataMetadata(body)));
+    return this.get(options).pipe(map((body: any) => new ODataMetadata(body)));
   }
   //#endregion
 }

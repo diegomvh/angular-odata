@@ -96,9 +96,7 @@ export class ODataSingletonResource<T> extends ODataResource<T> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override delete(
-    options: ODataOptions = {}
-  ): Observable<any> {
+  protected override delete(options: ODataOptions = {}): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
 

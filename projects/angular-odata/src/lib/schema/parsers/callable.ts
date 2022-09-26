@@ -26,7 +26,7 @@ export class ODataParameterParser<T> {
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions = {...this.parserOptions, ...options};
+    const parserOptions = { ...this.parserOptions, ...options };
     return Array.isArray(value)
       ? value.map((v) => this.parser.serialize(v, parserOptions))
       : this.parser.serialize(value, parserOptions);
@@ -34,7 +34,7 @@ export class ODataParameterParser<T> {
 
   //Encode
   encode(value: any, options?: ParserOptions): string {
-    const parserOptions = {...this.parserOptions, ...options};
+    const parserOptions = { ...this.parserOptions, ...options };
     return Array.isArray(value)
       ? value.map((v) => this.parser.encode(v, parserOptions))
       : this.parser.encode(value, parserOptions);

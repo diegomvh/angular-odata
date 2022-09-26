@@ -7,11 +7,7 @@ import { PathSegmentNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import {
-  ODataEntities,
-  ODataEntity,
-  ODataProperty,
-} from '../responses';
+import { ODataEntities, ODataEntity, ODataProperty } from '../responses';
 import {
   ODataEntitiesOptions,
   ODataEntityOptions,
@@ -161,7 +157,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
 
   //#region Requests
   protected override get(
-    options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions 
+    options?: ODataEntityOptions & ODataEntitiesOptions & ODataPropertyOptions
   ): Observable<any> {
     return super.get(options);
   }
@@ -189,9 +185,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns The property value
    */
-  fetchProperty(
-    options: ODataOptions = {}
-  ): Observable<T | null> {
+  fetchProperty(options: ODataOptions = {}): Observable<T | null> {
     return this.fetch({ responseType: 'property', ...options }).pipe(
       map(({ property }) => property)
     );
@@ -202,9 +196,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
    * @param options Options for the request
    * @returns The entity
    */
-  fetchEntity(
-    options: ODataOptions = {}
-  ): Observable<T | null> {
+  fetchEntity(options: ODataOptions = {}): Observable<T | null> {
     return this.fetch({ responseType: 'entity', ...options }).pipe(
       map(({ entity }) => entity)
     );

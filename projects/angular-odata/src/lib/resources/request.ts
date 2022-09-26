@@ -53,7 +53,15 @@ export class ODataRequest<T> {
     etag?: string;
     headers?: HttpHeaders | { [header: string]: string | string[] };
     reportProgress?: boolean;
-    params?: HttpParams | {[param: string]: string | number | boolean | ReadonlyArray<string|number|boolean>};
+    params?:
+      | HttpParams
+      | {
+          [param: string]:
+            | string
+            | number
+            | boolean
+            | ReadonlyArray<string | number | boolean>;
+        };
     responseType?:
       | 'arraybuffer'
       | 'blob'
@@ -208,7 +216,10 @@ export class ODataRequest<T> {
     //#endregion
   }
 
-  static factory(api: ODataApi, method: string, resource: ODataResource<any>,
+  static factory(
+    api: ODataApi,
+    method: string,
+    resource: ODataResource<any>,
     options: ODataOptions & {
       body?: any;
       etag?: string;
@@ -224,8 +235,8 @@ export class ODataRequest<T> {
       observe: 'events' | 'response';
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
-    }) {
-
+    }
+  ) {
     const apiOptions = api.options;
     let params = options.params || {};
     if (options.withCount) {

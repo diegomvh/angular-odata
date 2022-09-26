@@ -45,7 +45,9 @@ export class ODataMediaResource extends ODataResource<any> {
   //#endregion
 
   //#region Shortcuts
-  fetch(options: { responseType: 'arraybuffer' } & ODataOptions): Observable<ArrayBuffer>;
+  fetch(
+    options: { responseType: 'arraybuffer' } & ODataOptions
+  ): Observable<ArrayBuffer>;
   fetch(options: { responseType: 'blob' } & ODataOptions): Observable<Blob>;
   fetch(options: { responseType: any } & ODataOptions): Observable<any> {
     return this.get(options);
@@ -77,10 +79,7 @@ export class ODataMediaResource extends ODataResource<any> {
     return this.upload(data, options);
   }
 
-  uploadBlob(
-    data: Blob,
-    options: ODataOptions = {}
-  ): Observable<any> {
+  uploadBlob(data: Blob, options: ODataOptions = {}): Observable<any> {
     return this.upload(data, options);
   }
   //#endregion

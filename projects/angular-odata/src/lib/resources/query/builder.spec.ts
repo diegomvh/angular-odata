@@ -3,7 +3,6 @@ import buildQuery, {
   OrderBy,
   alias,
   raw,
-  Filter,
   binary,
 } from './builder';
 

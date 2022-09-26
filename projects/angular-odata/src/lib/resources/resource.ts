@@ -1,6 +1,4 @@
-import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ODataApi } from '../api';
 import {
   DEFAULT_VERSION,
@@ -18,7 +16,7 @@ import {
   QueryOptionNames,
   PathSegmentNames,
 } from '../types';
-import { Http, Objects, Types } from '../utils/index';
+import { Objects, Types } from '../utils/index';
 import { ODataPathSegments, ODataPathSegmentsHandler } from './path';
 import {
   isQueryCustomType,
@@ -26,11 +24,9 @@ import {
   ODataQueryOptionsHandler,
   QueryCustomType,
 } from './query';
-import { ODataRequest } from './request';
 import {
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
-  ODataResponse,
 } from './responses/index';
 import { ODataOptions } from './types';
 

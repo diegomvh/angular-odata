@@ -315,7 +315,7 @@ describe('ODataClient', () => {
     const req = httpMock.expectOne(`${SERVICE_ROOT}People('russellwhyte')`);
     expect(req.request.method).toBe('GET');
 
-    const data = {...person, ...entityMetadata, ...entityFunctions};
+    const data = { ...person, ...entityMetadata, ...entityFunctions };
     req.flush(data);
   });
 

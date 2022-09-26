@@ -4,9 +4,8 @@ import {
   EnumTypeFieldConfig,
   ParserOptions,
   Parser,
-  StructuredTypeFieldOptions,
 } from '../../types';
-import { Enums, Strings } from '../../utils';
+import { Enums } from '../../utils';
 import { ODataAnnotatable } from '../annotation';
 
 export class ODataEnumTypeFieldParser<E> extends ODataAnnotatable {

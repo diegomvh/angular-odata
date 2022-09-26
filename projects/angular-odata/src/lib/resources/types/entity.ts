@@ -125,9 +125,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     return super.patch(attrs, { responseType: 'entity', ...options });
   }
 
-  protected override delete(
-    options: ODataOptions = {}
-  ): Observable<any> {
+  protected override delete(options: ODataOptions = {}): Observable<any> {
     return super.delete({ responseType: 'entity', ...options });
   }
 
@@ -150,14 +148,14 @@ export class ODataEntityResource<T> extends ODataResource<T> {
 
   update(
     attrs: Partial<T>,
-    options?: ODataOptions 
+    options?: ODataOptions
   ): Observable<ODataEntity<T>> {
     return this.put(attrs, options);
   }
 
   modify(
     attrs: Partial<T>,
-    options?: ODataOptions 
+    options?: ODataOptions
   ): Observable<ODataEntity<T>> {
     return this.patch(attrs, options);
   }
@@ -170,7 +168,7 @@ export class ODataEntityResource<T> extends ODataResource<T> {
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<ODataEntity<T>> { 
+  ): Observable<ODataEntity<T>> {
     if (!this.hasKey())
       return throwError(() => new Error('fetch: Entity resource without key'));
     return this.get(options);

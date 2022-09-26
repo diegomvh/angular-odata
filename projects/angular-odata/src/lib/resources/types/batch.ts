@@ -4,7 +4,7 @@ import {
   HttpResponse,
   HttpResponseBase,
 } from '@angular/common/http';
-import { firstValueFrom, map, Observable, of, Subject, switchMap } from 'rxjs';
+import { firstValueFrom, map, Observable, of, Subject } from 'rxjs';
 import { ODataApi } from '../../api';
 import {
   $BATCH,
@@ -160,28 +160,30 @@ export class ODataBatchResource extends ODataResource<any> {
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
       [ACCEPT]: MULTIPART_MIXED,
     });
-    return this.api.request('POST', this, {
-      body: ODataBatchResource.buildBody(bound, this._requests),
-      responseType: 'text',
-      observe: 'response',
-      headers: headers,
-      params: options ? options.params : undefined,
-      withCredentials: options ? options.withCredentials : undefined,
-    }).pipe(
-      map((response: ODataResponse<string>) => {
-        if (this._responses == null) {
-          this._responses = [];
-        }
-        this._responses = [
-          ...this._responses,
-          ...ODataBatchResource.parseResponse(this._requests, response),
-        ];
-        Arrays.zip(this._requests, this._responses).forEach((tuple) => {
-          if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
-        });
-        return response;
+    return this.api
+      .request('POST', this, {
+        body: ODataBatchResource.buildBody(bound, this._requests),
+        responseType: 'text',
+        observe: 'response',
+        headers: headers,
+        params: options ? options.params : undefined,
+        withCredentials: options ? options.withCredentials : undefined,
       })
-    );
+      .pipe(
+        map((response: ODataResponse<string>) => {
+          if (this._responses == null) {
+            this._responses = [];
+          }
+          this._responses = [
+            ...this._responses,
+            ...ODataBatchResource.parseResponse(this._requests, response),
+          ];
+          Arrays.zip(this._requests, this._responses).forEach((tuple) => {
+            if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
+          });
+          return response;
+        })
+      );
   }
 
   /**

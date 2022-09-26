@@ -1,8 +1,4 @@
-import {
-  HttpClient,
-  HttpEvent,
-  HttpParams,
-} from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ODataApi } from './api';

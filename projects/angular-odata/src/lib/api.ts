@@ -204,7 +204,7 @@ export class ODataApi {
     return ODataFunctionResource.factory<P, R>(this, { path, schema });
   }
 
- //request(req: ODataRequest<any>): Observable<any> {
+  //request(req: ODataRequest<any>): Observable<any> {
   request<T>(
     method: string,
     resource: ODataResource<any>,
@@ -232,7 +232,9 @@ export class ODataApi {
       headers: options.headers,
       params: options.params,
       responseType: options.responseType,
-      observe: (options.observe === 'events' ? 'events' : 'response') as | 'events' | 'response',
+      observe: (options.observe === 'events' ? 'events' : 'response') as
+        | 'events'
+        | 'response',
       withCount: options.withCount,
       bodyQueryOptions: options.bodyQueryOptions,
       reportProgress: options.reportProgress,

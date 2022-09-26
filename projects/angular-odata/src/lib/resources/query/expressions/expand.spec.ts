@@ -1,5 +1,4 @@
 import { ExpandExpression } from './expand';
-import { SearchExpression } from './search';
 
 describe('OData search builder', () => {
   interface Pet {
