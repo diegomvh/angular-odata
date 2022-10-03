@@ -29,11 +29,20 @@ export abstract class ODataAnnotations {
   }
 
   // Method
+  abstract union(other: ODataAnnotations): ODataAnnotations;
   abstract clone(): ODataAnnotations;
   abstract data(data: { [key: string]: any }): { [key: string]: any };
 }
 
 export class ODataPropertyAnnotations extends ODataAnnotations {
+  union(other: ODataPropertyAnnotations): ODataPropertyAnnotations {
+    return new ODataPropertyAnnotations(
+      this.helper,
+      new Map<string, any>([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context)
+    );
+  }
+
   clone(): ODataPropertyAnnotations {
     return new ODataPropertyAnnotations(
       this.helper,
@@ -48,6 +57,14 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
 }
 
 export class ODataEntityAnnotations extends ODataAnnotations {
+  union(other: ODataEntityAnnotations): ODataEntityAnnotations {
+    return new ODataEntityAnnotations(
+      this.helper,
+      new Map<string, any>([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context)
+    );
+  }
+
   clone(): ODataEntityAnnotations {
     return new ODataEntityAnnotations(
       this.helper,
@@ -122,6 +139,14 @@ export class ODataEntityAnnotations extends ODataAnnotations {
 }
 
 export class ODataEntitiesAnnotations extends ODataAnnotations {
+  union(other: ODataEntitiesAnnotations): ODataEntitiesAnnotations {
+    return new ODataEntitiesAnnotations(
+      this.helper,
+      new Map<string, any>([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context)
+    );
+  }
+
   clone(): ODataEntitiesAnnotations {
     return new ODataEntitiesAnnotations(
       this.helper,

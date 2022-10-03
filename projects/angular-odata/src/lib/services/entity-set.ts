@@ -5,7 +5,6 @@ import { ODataCollection } from '../models/collection';
 import { ODataModel } from '../models/model';
 import {
   EntityKey,
-  ODataEntities,
   ODataEntity,
   ODataEntityResource,
   ODataEntitySetResource,
@@ -54,7 +53,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * Get all entities from the entity set.
    * @param options The options for the request.
    */
-  public fetchAll(options?: ODataOptions): Observable<T[]> {
+  public fetchAll(options?: ODataOptions) {
     return this.entities().fetchAll(options);
   }
 
@@ -64,9 +63,10 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param options The options for the request.
    */
   public fetchMany(
+    top: number,
     options?: ODataOptions & { withCount?: boolean }
-  ): Observable<ODataEntities<T>> {
-    return this.entities().fetch(options);
+  ) {
+    return this.entities().fetchMany(top, options);
   }
 
   /**
@@ -76,10 +76,9 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param options The options for the request.
    */
   public fetchOne(
-    key: EntityKey<T>,
     options?: ODataOptions & { etag?: string }
-  ): Observable<ODataEntity<T>> {
-    return this.entity(key).fetch(options);
+  ) {
+    return this.entities().fetchOne(options);
   }
 
   /**
@@ -159,10 +158,10 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     attrs: Partial<T>,
     { etag, ...options }: { etag?: string } & ODataOptions = {}
   ): Observable<ODataEntity<T>> {
-    return this.fetchOne(key, { etag, ...options }).pipe(
+    return this.entity(key).fetch({ etag, ...options }).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404) return this.create(attrs, options);
-        else return throwError(error);
+        else return throwError(() => error);
       })
     );
   }

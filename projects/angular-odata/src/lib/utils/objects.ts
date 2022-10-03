@@ -10,7 +10,7 @@ function forEach(array: any[], iteratee: (value: any, index: number) => void) {
 }
 
 export const Objects = {
-  set(obj: Object, path: string, value: any) {
+  set(obj: { [attr: string]: any }, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -23,7 +23,7 @@ export const Objects = {
     }, obj);
   },
 
-  get(obj: Object, path: string, def?: any): any {
+  get(obj: { [attr: string]: any }, path: string, def?: any): any {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -34,7 +34,7 @@ export const Objects = {
     );
   },
 
-  unset(obj: Object, path: string) {
+  unset(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -46,7 +46,7 @@ export const Objects = {
     }, obj);
   },
 
-  has(obj: Object, path: string) {
+  has(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have '.' and brackets.
     const pathArray = (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -55,7 +55,7 @@ export const Objects = {
     return !!pathArray.reduce((prevObj, key) => prevObj && prevObj[key], obj);
   },
 
-  merge(target: Object, source: Object) {
+  merge(target: { [attr: string]: any }, source: { [attr: string]: any }) {
     const merge = (target: any, source: { [attr: string]: any }) => {
       for (let attr in source) {
         let value = source[attr];

@@ -1,5 +1,5 @@
-import { EMPTY, Observable } from 'rxjs';
-import { concatMap, expand, map, toArray } from 'rxjs/operators';
+import { concat, EMPTY, Observable } from 'rxjs';
+import { concatMap, expand, map, reduce, toArray } from 'rxjs/operators';
 import { ODataApi } from '../../api';
 import { ODataCollection, ODataModel } from '../../models';
 import { ODataStructuredType } from '../../schema/structured-type';
@@ -7,7 +7,7 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntity } from '../responses';
+import { ODataEntities, ODataEntitiesAnnotations, ODataEntity } from '../responses';
 import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
@@ -118,6 +118,76 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     return this.get(options);
   }
 
+  fetchOne(
+    options?: ODataOptions & {
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<{entity: T | null, annots: ODataEntitiesAnnotations}> {
+    let res = this.clone();
+    res.query((q) => q.top(1));
+    return res.fetch(options).pipe(
+      map(({entities, annots}) => ({entity: entities !== null ? entities[0] || null : null, annots}))
+    );
+  }
+
+  fetchMany(
+    top: number,
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntities<T>> {
+    let res = this.clone();
+    let fetch = (opts?: {
+      skip?: number;
+      skiptoken?: string;
+      top?: number;
+    }): Observable<ODataEntities<T>> => {
+      if (opts) {
+        res.query((q) => q.paging(opts));
+      }
+      return res.fetch(options);
+    };
+    return fetch({top}).pipe(
+      expand(({ annots }) =>
+        annots.skip || annots.skiptoken ? fetch(annots) : EMPTY
+      ),
+      reduce((acc, { entities, annots }) => ({
+        entities: [...(acc.entities || []), ...(entities || [])], 
+        annots: acc.annots.union(annots)})),
+    );
+  }
+
+  fetchAll(
+    options?: ODataOptions & {
+      withCount?: boolean;
+      bodyQueryOptions?: QueryOptionNames[];
+    }
+  ): Observable<ODataEntities<T>> {
+    let res = this.clone();
+    // Clean Paging
+    res.query((q) => q.clearPaging());
+    let fetch = (opts?: {
+      skip?: number;
+      skiptoken?: string;
+      top?: number;
+    }): Observable<ODataEntities<T>> => {
+      if (opts) {
+        res.query((q) => q.paging(opts));
+      }
+      return res.fetch(options);
+    };
+    return fetch().pipe(
+      expand(({ annots }) =>
+        annots.skip || annots.skiptoken ? fetch(annots) : EMPTY
+      ),
+      reduce((acc, { entities, annots }) => ({
+        entities: [...(acc.entities || []), ...(entities || [])], 
+        annots: acc.annots.union(annots)})),
+    );
+  }
+  //#endregion
+
   fetchEntities(
     options?: ODataOptions & {
       withCount?: boolean;
@@ -141,32 +211,4 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       )
     );
   }
-
-  fetchAll(
-    options?: ODataOptions & {
-      bodyQueryOptions?: QueryOptionNames[];
-    }
-  ): Observable<T[]> {
-    let res = this.clone();
-    // Clean Paging
-    res.query((q) => q.clearPaging());
-    let fetch = (opts?: {
-      skip?: number;
-      skiptoken?: string;
-      top?: number;
-    }): Observable<ODataEntities<T>> => {
-      if (opts) {
-        res.query((q) => q.paging(opts));
-      }
-      return res.fetch(options);
-    };
-    return fetch().pipe(
-      expand(({ annots: meta }) =>
-        meta.skip || meta.skiptoken ? fetch(meta) : EMPTY
-      ),
-      concatMap(({ entities }) => entities || []),
-      toArray()
-    );
-  }
-  //#endregion
 }

@@ -90,6 +90,7 @@ export class ODataModelEvent<T> {
     ODataModel<any> | ODataCollection<any, ODataModel<any>>,
     ODataModelField<any> | number | null
   ][];
+
   push(
     model: ODataModel<any> | ODataCollection<any, ODataModel<any>>,
     field: ODataModelField<any> | number
@@ -105,6 +106,7 @@ export class ODataModelEvent<T> {
     event.chain.splice(0, 0, [model, field]);
     return event;
   }
+
   visited(model: ODataModel<any> | ODataCollection<any, ODataModel<any>>) {
     return (
       this.chain.some((c) => c[0] === model) &&
@@ -524,6 +526,7 @@ export type ODataModelRelation<T> = {
   field: ODataModelField<T>;
   subscription?: Subscription;
 };
+
 export type ODataModelEntry<T, M extends ODataModel<T>> = {
   state: ODataModelState;
   model: M;

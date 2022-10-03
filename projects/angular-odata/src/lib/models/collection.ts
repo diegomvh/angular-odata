@@ -6,6 +6,7 @@ import { ODataHelper } from '../helper';
 import {
   EntityKey,
   ODataActionOptions,
+  ODataEntities,
   ODataEntitiesAnnotations,
   ODataEntityAnnotations,
   ODataEntityResource,
@@ -290,6 +291,21 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }) as C;
   }
 
+  private _request(obs$: Observable<ODataEntities<any>>): Observable<this> {
+    this.events$.emit(
+      new ODataModelEvent('request', { collection: this, options: { observable: obs$ } })
+    );
+
+    return obs$.pipe(
+      map(({ entities, annots }) => {
+        this._annotations = annots;
+        this.assign(entities || [], { reset: true });
+        this.events$.emit(new ODataModelEvent('sync', { collection: this, options: { entities, annots } }));
+        return this;
+      })
+    );
+  }
+
   fetch({
     withCount,
     ...options
@@ -307,49 +323,20 @@ export class ODataCollection<T, M extends ODataModel<T>>
             ...options,
           });
 
-    this.events$.emit(
-      new ODataModelEvent('request', { collection: this, value: obs$ })
-    );
-
-    return obs$.pipe(
-      map(({ entities, annots }) => {
-        this._annotations = annots;
-        this.assign(entities || [], { reset: true });
-        this.events$.emit(new ODataModelEvent('sync', { collection: this }));
-        return this;
-      })
-    );
+    return this._request(obs$);
   }
 
-  fetchAll(options?: ODataOptions): Observable<this> {
+  fetchAll({
+    withCount,
+    ...options
+  }: ODataOptions & {
+    withCount?: boolean;
+  } = {}): Observable<this> {
     const resource = this.resource();
-    if (resource instanceof ODataPropertyResource)
-      return throwError(
-        () => new Error('fetchAll: Resource is ODataPropertyResource')
-      );
 
-    const obs$ = resource.fetchAll(options);
-    this.events$.emit(
-      new ODataModelEvent('request', {
-        collection: this,
-        options: { observable: obs$ },
-      })
-    );
-    return obs$.pipe(
-      map((entities) => {
-        this._annotations = new ODataEntitiesAnnotations(
-          ODataHelper[resource?.api?.options.version || DEFAULT_VERSION]
-        );
-        this.assign(entities || [], { reset: true });
-        this.events$.emit(
-          new ODataModelEvent('sync', {
-            collection: this,
-            options: { entities },
-          })
-        );
-        return this;
-      })
-    );
+    const obs$ = resource.fetchAll({withCount, ...options});
+
+    return this._request(obs$);
   }
 
   /**
