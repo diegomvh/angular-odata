@@ -266,7 +266,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<ODataEntities<T>> {
+  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations}> {
     let res = this.clone();
     let fetch = (opts?: {
       skip?: number;
@@ -282,6 +282,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       expand(({ annots }) =>
         annots.skip || annots.skiptoken ? fetch(annots) : EMPTY
       ),
+      map(({ entities, annots }) => ({entities: entities || [], annots})),
       reduce((acc, { entities, annots }) => ({
         entities: [...(acc.entities || []), ...(entities || [])], 
         annots: acc.annots.union(annots)})),
@@ -298,7 +299,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
-  ): Observable<ODataEntities<T>> {
+  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations}> {
     let res = this.clone();
     // Clean Paging
     res.query((q) => q.clearPaging());
@@ -316,6 +317,7 @@ export class ODataPropertyResource<T> extends ODataResource<T> {
       expand(({ annots }) =>
         annots.skip || annots.skiptoken ? fetch(annots) : EMPTY
       ),
+      map(({ entities, annots }) => ({entities: entities || [], annots})),
       reduce((acc, { entities, annots }) => ({
         entities: [...(acc.entities || []), ...(entities || [])], 
         annots: acc.annots.union(annots)})),
