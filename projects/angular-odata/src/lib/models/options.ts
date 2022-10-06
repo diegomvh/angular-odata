@@ -438,18 +438,12 @@ export class ODataModelField<F> {
       : (base as ODataEntityResource<T>).property<F>(this.parser.name);
   }
 
-  annotationsFactory(
-    base: ODataEntityAnnotations
-  ): ODataEntityAnnotations | ODataEntitiesAnnotations {
-    return this.parser.collection
-      ? new ODataEntitiesAnnotations(
-          base.helper,
-          base.property(this.parser.name)
-        )
-      : new ODataEntityAnnotations(
-          base.helper,
-          base.property(this.parser.name)
-        );
+  annotationsFactory<T, F>(
+    base: ODataEntityAnnotations<T>
+  ): ODataEntityAnnotations<F> | ODataEntitiesAnnotations<F> {
+    return this.parser.collection ? 
+      base.property(this.parser.name as keyof T, 'collection') : 
+      base.property(this.parser.name as keyof T, 'single');
   }
 
   schemaFactory<T, F>(
@@ -470,7 +464,7 @@ export class ODataModelField<F> {
     // Model
     const annots = this.annotationsFactory(
       parent.annots()
-    ) as ODataEntityAnnotations;
+    ) as ODataEntityAnnotations<F>;
     let Model = this.api.modelForType(this.parser.type);
     if (Model === undefined) throw Error(`No Model type for ${this.name}`);
     if (value !== undefined) {
@@ -505,7 +499,7 @@ export class ODataModelField<F> {
     // Collection Factory
     const annots = this.annotationsFactory(
       parent.annots()
-    ) as ODataEntitiesAnnotations;
+    ) as ODataEntitiesAnnotations<F>;
     const Collection = this.api.collectionForType(this.parser.type);
     if (Collection === undefined)
       throw Error(`No Collection type for ${this.name}`);
@@ -816,7 +810,7 @@ export class ODataModelOptions<T> {
         ODataModelField<any> | null
       ];
       resource?: ODataResource<T>;
-      annots?: ODataEntityAnnotations;
+      annots?: ODataEntityAnnotations<T>;
     } = {}
   ) {
     // Parent
@@ -1334,7 +1328,7 @@ export class ODataModelOptions<T> {
   ) {
     collection._annotations = field.annotationsFactory(
       self.annots()
-    ) as ODataEntitiesAnnotations;
+    ) as ODataEntitiesAnnotations<F>;
     collection.assign(value as Partial<T>[] | { [name: string]: any }[], {
       reset: self._reset,
       reparent: self._reparent,
@@ -1350,7 +1344,7 @@ export class ODataModelOptions<T> {
   ) {
     model._annotations = field.annotationsFactory(
       self.annots()
-    ) as ODataEntityAnnotations;
+    ) as ODataEntityAnnotations<F>;
     model.assign(value as F | { [name: string]: any }, {
       reset: self._reset,
       reparent: self._reparent,

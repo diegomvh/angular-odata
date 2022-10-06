@@ -169,7 +169,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   entity(): ODataEntity<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataEntityAnnotations(
+    const annots = new ODataEntityAnnotations<T>(
       options.helper,
       this.annotations,
       this.context
@@ -193,7 +193,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   entities(): ODataEntities<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataEntitiesAnnotations(
+    const annots = new ODataEntitiesAnnotations<T>(
       options.helper,
       this.annotations,
       this.context
@@ -211,7 +211,7 @@ export class ODataResponse<T> extends HttpResponse<T> {
   property(): ODataProperty<T> {
     const options = this.options;
     const payload = this.payload;
-    const annots = new ODataPropertyAnnotations(
+    const annots = new ODataPropertyAnnotations<T>(
       options.helper,
       this.annotations,
       this.context

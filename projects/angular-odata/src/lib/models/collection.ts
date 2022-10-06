@@ -47,7 +47,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | ODataNavigationPropertyResource<T>
     | ODataPropertyResource<T>
     | null = null;
-  _annotations!: ODataEntitiesAnnotations;
+  _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
   _model: typeof ODataModel;
 
@@ -74,7 +74,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     }: {
       parent?: [ODataModel<any>, ODataModelField<any>];
       resource?: ODataResource<T>;
-      annots?: ODataEntitiesAnnotations;
+      annots?: ODataEntitiesAnnotations<T>;
       model?: typeof ODataModel;
       reset?: boolean;
     } = {}
@@ -863,11 +863,11 @@ export class ODataCollection<T, M extends ODataModel<T>>
             model.assign(entity, { reset, silent });
           } else {
             const helper = this._annotations.helper;
-            const annots = new ODataEntityAnnotations(
+            const annots = new ODataEntityAnnotations<T>(
               helper,
               helper.annotations(obj)
             );
-            const entity = annots.attributes<T>(obj, 'full');
+            const entity = annots.attributes(obj, 'full');
             model._annotations = annots;
             model.assign(entity, { reset, silent });
           }

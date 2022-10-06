@@ -2,14 +2,14 @@ import { ODataContext, ODataVersionHelper } from '../../helper';
 
 import { ODataMetadataType } from '../../types';
 
-export abstract class ODataAnnotations {
+export abstract class ODataAnnotations<T> {
   constructor(
     public helper: ODataVersionHelper,
     protected annotations: Map<string, any> = new Map<string, any>(),
     protected context?: ODataContext
   ) {}
 
-  attributes<T>(data: { [key: string]: any }, metadata: ODataMetadataType): T {
+  attributes(data: { [key: string]: any }, metadata: ODataMetadataType): T {
     return this.helper.attributes(data, metadata) as T;
   }
 
@@ -29,22 +29,22 @@ export abstract class ODataAnnotations {
   }
 
   // Method
-  abstract union(other: ODataAnnotations): ODataAnnotations;
-  abstract clone(): ODataAnnotations;
+  abstract union(other: ODataAnnotations<T>): ODataAnnotations<T>;
+  abstract clone(): ODataAnnotations<T>;
   abstract data(data: { [key: string]: any }): { [key: string]: any };
 }
 
-export class ODataPropertyAnnotations extends ODataAnnotations {
-  union(other: ODataPropertyAnnotations): ODataPropertyAnnotations {
-    return new ODataPropertyAnnotations(
+export class ODataPropertyAnnotations<T> extends ODataAnnotations<T> {
+  union(other: ODataPropertyAnnotations<T>): ODataPropertyAnnotations<T> {
+    return new ODataPropertyAnnotations<T>(
       this.helper,
       new Map<string, any>([...this.annotations, ...other.annotations]),
       Object.assign({}, this.context, other.context)
     );
   }
 
-  clone(): ODataPropertyAnnotations {
-    return new ODataPropertyAnnotations(
+  clone(): ODataPropertyAnnotations<T> {
+    return new ODataPropertyAnnotations<T>(
       this.helper,
       new Map(this.annotations),
       this.context
@@ -56,16 +56,16 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 }
 
-export class ODataEntityAnnotations extends ODataAnnotations {
-  union(other: ODataEntityAnnotations): ODataEntityAnnotations {
-    return new ODataEntityAnnotations(
+export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
+  union(other: ODataEntityAnnotations<T>): ODataEntityAnnotations<T> {
+    return new ODataEntityAnnotations<T>(
       this.helper,
       new Map<string, any>([...this.annotations, ...other.annotations]),
       Object.assign({}, this.context, other.context)
     );
   }
 
-  clone(): ODataEntityAnnotations {
+  clone(): ODataEntityAnnotations<T> {
     return new ODataEntityAnnotations(
       this.helper,
       new Map(this.annotations),
@@ -113,16 +113,24 @@ export class ODataEntityAnnotations extends ODataAnnotations {
     return this.helper.mediaContentType(this.annotations);
   }
 
-  private _properties?: Map<string, Map<string, any>>;
+  private _properties?: Map<keyof T, Map<string, any>>;
   get properties() {
     if (this._properties === undefined) {
-      this._properties = this.helper.properties(this.annotations);
+      this._properties = this.helper.properties<T>(this.annotations);
     }
     return this._properties;
   }
 
-  property(name: string) {
-    return this.properties.get(name);
+  property<F>(name: keyof T, type: 'collection'): ODataEntitiesAnnotations<F>;
+  property<F>(name: keyof T, type: 'single'): ODataEntitiesAnnotations<F>;
+  property<F>(
+    name: keyof T,
+    type: 'single' | 'collection'
+  ): ODataEntityAnnotations<F> | ODataEntitiesAnnotations<F> {
+    const props = this.properties.get(name);
+    return type === 'collection'
+      ? new ODataEntitiesAnnotations<F>(this.helper, props)
+      : new ODataEntityAnnotations<F>(this.helper, props);
   }
 
   private _functions?: { [key: string]: any };
@@ -138,17 +146,17 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   }
 }
 
-export class ODataEntitiesAnnotations extends ODataAnnotations {
-  union(other: ODataEntitiesAnnotations): ODataEntitiesAnnotations {
-    return new ODataEntitiesAnnotations(
+export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
+  union(other: ODataEntitiesAnnotations<T>): ODataEntitiesAnnotations<T> {
+    return new ODataEntitiesAnnotations<T>(
       this.helper,
       new Map<string, any>([...this.annotations, ...other.annotations]),
       Object.assign({}, this.context, other.context)
     );
   }
 
-  clone(): ODataEntitiesAnnotations {
-    return new ODataEntitiesAnnotations(
+  clone(): ODataEntitiesAnnotations<T> {
+    return new ODataEntitiesAnnotations<T>(
       this.helper,
       new Map(this.annotations),
       this.context

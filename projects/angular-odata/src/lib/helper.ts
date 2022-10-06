@@ -48,7 +48,7 @@ export interface ODataVersionHelper {
   type(annots: Map<string, any> | { [key: string]: any }): string | undefined;
   count(annots: Map<string, any>): number | undefined;
   functions(annots: Map<string, any>): Map<string, any>;
-  properties(annots: Map<string, any>): Map<string, Map<string, any>>;
+  properties<T>(annots: Map<string, any>): Map<keyof T, Map<string, any>>;
   mediaEtag(annots: Map<string, any>): string | undefined;
   metadataEtag(annots: Map<string, any>): string | undefined;
   nextLink(annots: Map<string, any>): string | undefined;

@@ -7,7 +7,6 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataResponse } from '../responses';
 import { ODataEntity } from '../responses/types';
 import { ODataActionResource } from './action';
 import { ODataFunctionResource } from './function';

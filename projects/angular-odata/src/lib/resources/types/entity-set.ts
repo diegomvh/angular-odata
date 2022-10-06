@@ -122,7 +122,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
     options?: ODataOptions & {
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entity: T | null, annots: ODataEntitiesAnnotations}> {
+  ): Observable<{entity: T | null, annots: ODataEntitiesAnnotations<T>}> {
     let res = this.clone();
     res.query((q) => q.top(1));
     return res.fetch(options).pipe(
@@ -136,7 +136,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations}> {
+  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations<T>}> {
     let res = this.clone();
     let fetch = (opts?: {
       skip?: number;
@@ -164,7 +164,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations}> {
+  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations<T>}> {
     let res = this.clone();
     // Clean Paging
     res.query((q) => q.clearPaging());

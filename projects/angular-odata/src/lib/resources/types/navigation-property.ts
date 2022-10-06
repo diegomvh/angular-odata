@@ -349,7 +349,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entity: T | null, annots: ODataEntitiesAnnotations}> {
+  ): Observable<{entity: T | null, annots: ODataEntitiesAnnotations<T>}> {
     let res = this.clone();
     res.query((q) => q.top(1));
     return res.fetch({ responseType: 'entities', ...options }).pipe(
@@ -363,7 +363,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations}> {
+  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations<T>}> {
     let res = this.clone();
     let fetch = (opts?: {
       skip?: number;
@@ -396,7 +396,7 @@ export class ODataNavigationPropertyResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     } = {}
-  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations}> {
+  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations<T>}> {
     let res = this.clone();
     // Clean Paging
     res.query((q) => q.clearPaging());

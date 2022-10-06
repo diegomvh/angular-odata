@@ -76,7 +76,7 @@ export class ODataModel<T> {
     ODataModelRelation<any>
   >();
   _resource: ODataResource<T> | null = null;
-  _annotations!: ODataEntityAnnotations;
+  _annotations!: ODataEntityAnnotations<T>;
   _reset: boolean = false;
   _reparent: boolean = false;
   _silent: boolean = false;
@@ -97,7 +97,7 @@ export class ODataModel<T> {
         ODataModelField<any> | null
       ];
       resource?: ODataResource<T>;
-      annots?: ODataEntityAnnotations;
+      annots?: ODataEntityAnnotations<T>;
       reset?: boolean;
     } = {}
   ) {
@@ -112,7 +112,7 @@ export class ODataModel<T> {
       (<any>data)[this._meta.cid] ||
       Strings.uniqueId(`${Klass.meta.schema.name.toLowerCase()}-`);
 
-    let attrs = this.annots().attributes<T>(data, 'full');
+    let attrs = this.annots().attributes(data, 'full');
     let defaults = this.defaults();
 
     this.assign(Objects.merge(defaults, attrs as {[name: string]: any}), { reset });
@@ -422,7 +422,7 @@ export class ODataModel<T> {
     return obs$.pipe(
       map(({ entity, annots }) => {
         this._annotations = annots;
-        this.assign(annots.attributes<T>(entity || {}, 'full'), {
+        this.assign(annots.attributes(entity || {}, 'full'), {
           reset: true,
         });
         this.events$.emit(
@@ -655,7 +655,8 @@ export class ODataModel<T> {
   }
 
   // Cast
-  cast<S>(type: string): ODataModel<S> {
+  //TODO: Cast annotations
+  cast<S extends T>(type: string): ODataModel<S> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource))
       throw new Error(
@@ -664,7 +665,7 @@ export class ODataModel<T> {
 
     return resource
       .cast<S>(type)
-      .asModel(this.toEntity(INCLUDE_DEEP) as {[name: string]: any}, { annots: this.annots() });
+      .asModel(this.toEntity(INCLUDE_DEEP) as {[name: string]: any}, { annots: this.annots() as any });
   }
 
   fetchNavigationProperty<S>(
