@@ -661,13 +661,13 @@ export class ODataModelOptions<T> {
     return field as ODataModelField<F>;
   }
 
-  attach<R>(
+  attach(
     self: ODataModel<T>,
     resource:
-      | ODataEntityResource<R>
-      | ODataNavigationPropertyResource<R>
-      | ODataPropertyResource<R>
-      | ODataSingletonResource<R>
+      | ODataEntityResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | ODataSingletonResource<T>
   ) {
     if (
       self._resource !== null &&
@@ -680,7 +680,7 @@ export class ODataModelOptions<T> {
 
     const current = self._resource;
     if (current === null || !current.isEqualTo(resource)) {
-      self._resource = resource as ODataResource<any>;
+      self._resource = resource;
       self.events$.emit(
         new ODataModelEvent('attach', {
           model: self,

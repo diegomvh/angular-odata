@@ -29,22 +29,22 @@ export abstract class ODataAnnotations<T> {
   }
 
   // Method
-  abstract union(other: ODataAnnotations<T>): ODataAnnotations<T>;
-  abstract clone(): ODataAnnotations<T>;
+  abstract union(other: ODataAnnotations<any>): ODataAnnotations<any>;
+  abstract clone(): ODataAnnotations<any>;
   abstract data(data: { [key: string]: any }): { [key: string]: any };
 }
 
 export class ODataPropertyAnnotations<T> extends ODataAnnotations<T> {
-  union(other: ODataPropertyAnnotations<T>): ODataPropertyAnnotations<T> {
-    return new ODataPropertyAnnotations<T>(
+  union(other: ODataPropertyAnnotations<any>): ODataPropertyAnnotations<any> {
+    return new ODataPropertyAnnotations<any>(
       this.helper,
       new Map<string, any>([...this.annotations, ...other.annotations]),
       Object.assign({}, this.context, other.context)
     );
   }
 
-  clone(): ODataPropertyAnnotations<T> {
-    return new ODataPropertyAnnotations<T>(
+  clone(): ODataPropertyAnnotations<any> {
+    return new ODataPropertyAnnotations<any>(
       this.helper,
       new Map(this.annotations),
       this.context
@@ -57,16 +57,16 @@ export class ODataPropertyAnnotations<T> extends ODataAnnotations<T> {
 }
 
 export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
-  union(other: ODataEntityAnnotations<T>): ODataEntityAnnotations<T> {
-    return new ODataEntityAnnotations<T>(
+  union(other: ODataEntityAnnotations<any>): ODataEntityAnnotations<any> {
+    return new ODataEntityAnnotations<any>(
       this.helper,
       new Map<string, any>([...this.annotations, ...other.annotations]),
       Object.assign({}, this.context, other.context)
     );
   }
 
-  clone(): ODataEntityAnnotations<T> {
-    return new ODataEntityAnnotations(
+  clone(): ODataEntityAnnotations<any> {
+    return new ODataEntityAnnotations<any>(
       this.helper,
       new Map(this.annotations),
       this.context
@@ -147,16 +147,16 @@ export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
 }
 
 export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
-  union(other: ODataEntitiesAnnotations<T>): ODataEntitiesAnnotations<T> {
-    return new ODataEntitiesAnnotations<T>(
+  union(other: ODataEntitiesAnnotations<any>): ODataEntitiesAnnotations<any> {
+    return new ODataEntitiesAnnotations<any>(
       this.helper,
       new Map<string, any>([...this.annotations, ...other.annotations]),
       Object.assign({}, this.context, other.context)
     );
   }
 
-  clone(): ODataEntitiesAnnotations<T> {
-    return new ODataEntitiesAnnotations<T>(
+  clone(): ODataEntitiesAnnotations<any> {
+    return new ODataEntitiesAnnotations<any>(
       this.helper,
       new Map(this.annotations),
       this.context

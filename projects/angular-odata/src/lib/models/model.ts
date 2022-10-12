@@ -1,6 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { forkJoin, NEVER, Observable, of, throwError } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { DEFAULT_VERSION } from '../constants';
+import { ODataHelper } from '../helper';
 import {
   EntityKey,
   ODataActionOptions,
@@ -76,11 +78,11 @@ export class ODataModel<T> {
     ODataModelRelation<any>
   >();
   _resource: ODataResource<T> | null = null;
-  _annotations!: ODataEntityAnnotations<T>;
+  _annotations: ODataEntityAnnotations<T> | null = null;
   _reset: boolean = false;
   _reparent: boolean = false;
   _silent: boolean = false;
-  _meta: ODataModelOptions<T>;
+  _meta: ODataModelOptions<any>;
   // Events
   events$ = new EventEmitter<ODataModelEvent<T>>();
 
@@ -165,14 +167,14 @@ export class ODataModel<T> {
     return field.resourceFactory<T, N>(resource) as ODataPropertyResource<N>;
   }
 
-  attach<R>(
+  attach(
     resource:
-      | ODataEntityResource<R>
-      | ODataNavigationPropertyResource<R>
-      | ODataPropertyResource<R>
-      | ODataSingletonResource<R>
+      | ODataEntityResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | ODataSingletonResource<T>
   ) {
-    return this._meta.attach<R>(this, resource);
+    return this._meta.attach(this, resource);
   }
   //#endregion
 
@@ -181,7 +183,7 @@ export class ODataModel<T> {
   }
 
   annots() {
-    return this._annotations;
+    return this._annotations ?? new ODataEntityAnnotations<T>(ODataHelper[DEFAULT_VERSION]);
   }
 
   key({
