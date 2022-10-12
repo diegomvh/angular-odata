@@ -655,8 +655,7 @@ export class ODataModel<T> {
   }
 
   // Cast
-  //TODO: Cast annotations
-  cast<S extends T>(type: string): ODataModel<S> {
+  cast<S>(type: string): ODataModel<S> {
     const resource = this.resource();
     if (!(resource instanceof ODataEntityResource))
       throw new Error(
