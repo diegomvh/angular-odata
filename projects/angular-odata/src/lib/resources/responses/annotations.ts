@@ -9,8 +9,8 @@ export abstract class ODataAnnotations<T> {
     protected context?: ODataContext
   ) {}
 
-  attributes(data: { [key: string]: any }, metadata: ODataMetadataType): T {
-    return this.helper.attributes(data, metadata) as T;
+  attributes(data: { [key: string]: any }, metadata: ODataMetadataType): Partial<T> {
+    return this.helper.attributes(data, metadata) as Partial<T>;
   }
 
   update(data: { [key: string]: any }) {
