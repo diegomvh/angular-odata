@@ -34,7 +34,11 @@ const toDate = (v: any) => new Date(v);
 
 export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   //Edm.Guid 16-byte (128-bit) unique identifier
-  'Edm.Guid': EdmParser<string>(Identity, Identity, (v: string) => raw(v)),
+  'Edm.Guid': EdmParser<string>(
+    Identity, 
+    Identity, 
+    (v: string) => raw(v)
+  ),
   //Edm.Int16 Signed 16-bit integer
   'Edm.Int16': EdmParser<number>(toNumber, toNumber, toNumber),
   //Edm.String Sequence of UTF-8 characters
@@ -53,25 +57,25 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   'Edm.Date': EdmParser<Date>(
     (v: any) => new Date(`${v}T00:00:00.000Z`),
     (v: any) => toDate(v).toISOString().substring(0, 10),
-    (v: any) => toDate(v).toISOString().substring(0, 10)
+    (v: any) => raw(toDate(v).toISOString().substring(0, 10))
   ),
   //Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
   'Edm.TimeOfDay': EdmParser<Date>(
     (v: any) => new Date(`1970-01-01T${v}Z`),
     (v: any) => toDate(v).toISOString().substring(11, 23),
-    (v: any) => toDate(v).toISOString().substring(11, 23)
+    (v: any) => raw(toDate(v).toISOString().substring(11, 23))
   ),
   //Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
   'Edm.DateTimeOffset': EdmParser<Date>(
     toDate,
     (v: any) => toDate(v).toISOString(),
-    (v: any) => toDate(v).toISOString()
+    (v: any) => raw(toDate(v).toISOString())
   ),
   //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
   'Edm.Duration': EdmParser<Duration>(
     (v: any) => Durations.toDuration(v),
     (v: Duration) => Durations.toString(v),
-    (v: Duration) => Durations.toString(v)
+    (v: Duration) => raw(Durations.toString(v))
   ),
   //Edm.Decimal Numeric values with fixed precision and scale
   'Edm.Decimal': EdmParser<number>(
@@ -97,7 +101,7 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
         if (typeof o.field.scale === 'number') {
           vstr = parseFloat(vstr).toFixed(o.field.scale);
         }
-        return vstr;
+        return raw(vstr);
       }
       return v;
     }
@@ -106,19 +110,19 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   'Edm.Double': EdmParser<number>(
     (v: any) => (v === 'INF' ? Infinity : (v as number)),
     (v: number) => (v === Infinity ? 'INF' : v),
-    (v: number) => (v === Infinity ? 'INF' : v)
+    (v: number) => raw((v === Infinity ? 'INF' : v.toString()))
   ),
   //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
   'Edm.Single': EdmParser<number>(
     (v: any) => (v === 'INF' ? Infinity : (v as number)),
     (v: number) => (v === Infinity ? 'INF' : v),
-    (v: number) => (v === Infinity ? 'INF' : v)
+    (v: number) => raw((v === Infinity ? 'INF' : v.toString()))
   ),
   //Edm.Binary Binary data
   'Edm.Binary': EdmParser<ArrayBuffer>(
     (v: string) => ArrayBuffers.toArrayBuffer(v),
     (v: ArrayBuffer) => ArrayBuffers.toString(v),
-    (v: ArrayBuffer) => ArrayBuffers.toString(v)
+    (v: ArrayBuffer) => raw(ArrayBuffers.toString(v))
   ),
 };
 
