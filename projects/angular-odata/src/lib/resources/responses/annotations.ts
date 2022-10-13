@@ -122,7 +122,7 @@ export class ODataEntityAnnotations<T> extends ODataAnnotations<T> {
   }
 
   property<F>(name: keyof T, type: 'collection'): ODataEntitiesAnnotations<F>;
-  property<F>(name: keyof T, type: 'single'): ODataEntitiesAnnotations<F>;
+  property<F>(name: keyof T, type: 'single'): ODataEntityAnnotations<F>;
   property<F>(
     name: keyof T,
     type: 'single' | 'collection'
