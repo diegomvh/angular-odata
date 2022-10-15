@@ -111,6 +111,9 @@
                                 <a href="#data" >data</a>
                             </li>
                             <li>
+                                <a href="#union" >union</a>
+                            </li>
+                            <li>
                                 <a href="#attributes" >attributes</a>
                             </li>
                             <li>
@@ -201,7 +204,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:37</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:46</a></code>
 </div>
                 </td>
             </tr>
@@ -211,7 +214,7 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../classes/ODataPropertyAnnotations.html" target="_self" >ODataPropertyAnnotations</a></code>
+                        <b>Returns : </b>        <code><a href="../classes/ODataPropertyAnnotations.html" target="_self" >ODataPropertyAnnotations&lt;any&gt;</a></code>
 
                     </div>
                 </td>
@@ -244,7 +247,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:45</a></code>
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:54</a></code>
 </div>
                 </td>
             </tr>
@@ -297,6 +300,81 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="union"></a>
+                    <span class="name">
+                        <span ><b>union</b></span>
+                        <a href="#union"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>union(other: <a href="../classes/ODataPropertyAnnotations.html" target="_self">ODataPropertyAnnotations&lt;any&gt;</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/ODataAnnotations.html" target="_self" >ODataAnnotations</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/ODataAnnotations.html#source" target="_self" >ODataAnnotations:38</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>other</td>
+                                    <td>
+                                                <code><a href="../classes/ODataPropertyAnnotations.html" target="_self" >ODataPropertyAnnotations&lt;any&gt;</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../classes/ODataPropertyAnnotations.html" target="_self" >ODataPropertyAnnotations&lt;any&gt;</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="attributes"></a>
                     <span class="name">
                         <span ><b>attributes</b></span>
@@ -324,14 +402,6 @@
                 </td>
             </tr>
 
-            <tr>
-                <td class="col-md-4">
-                    <b>Type parameters :</b>
-                    <ul class="type-parameters">
-                        <li>T</li>
-                    </ul>
-                </td>
-            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -378,7 +448,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>T</code>
+                        <b>Returns : </b>    <code>Partial&lt;T&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -477,15 +547,15 @@
 
 import { ODataMetadataType } from &#x27;../../types&#x27;;
 
-export abstract class ODataAnnotations {
+export abstract class ODataAnnotations&lt;T&gt; {
   constructor(
     public helper: ODataVersionHelper,
     protected annotations: Map&lt;string, any&gt; &#x3D; new Map&lt;string, any&gt;(),
     protected context?: ODataContext
   ) {}
 
-  attributes&lt;T&gt;(data: { [key: string]: any }, metadata: ODataMetadataType): T {
-    return this.helper.attributes(data, metadata) as T;
+  attributes(data: { [key: string]: any }, metadata: ODataMetadataType): Partial&lt;T&gt; {
+    return this.helper.attributes(data, metadata) as Partial&lt;T&gt;;
   }
 
   update(data: { [key: string]: any }) {
@@ -504,13 +574,22 @@ export abstract class ODataAnnotations {
   }
 
   // Method
-  abstract clone(): ODataAnnotations;
+  abstract union(other: ODataAnnotations&lt;any&gt;): ODataAnnotations&lt;any&gt;;
+  abstract clone(): ODataAnnotations&lt;any&gt;;
   abstract data(data: { [key: string]: any }): { [key: string]: any };
 }
 
-export class ODataPropertyAnnotations extends ODataAnnotations {
-  clone(): ODataPropertyAnnotations {
-    return new ODataPropertyAnnotations(
+export class ODataPropertyAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
+  union(other: ODataPropertyAnnotations&lt;any&gt;): ODataPropertyAnnotations&lt;any&gt; {
+    return new ODataPropertyAnnotations&lt;any&gt;(
+      this.helper,
+      new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context)
+    );
+  }
+
+  clone(): ODataPropertyAnnotations&lt;any&gt; {
+    return new ODataPropertyAnnotations&lt;any&gt;(
       this.helper,
       new Map(this.annotations),
       this.context
@@ -522,9 +601,17 @@ export class ODataPropertyAnnotations extends ODataAnnotations {
   }
 }
 
-export class ODataEntityAnnotations extends ODataAnnotations {
-  clone(): ODataEntityAnnotations {
-    return new ODataEntityAnnotations(
+export class ODataEntityAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
+  union(other: ODataEntityAnnotations&lt;any&gt;): ODataEntityAnnotations&lt;any&gt; {
+    return new ODataEntityAnnotations&lt;any&gt;(
+      this.helper,
+      new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context)
+    );
+  }
+
+  clone(): ODataEntityAnnotations&lt;any&gt; {
+    return new ODataEntityAnnotations&lt;any&gt;(
       this.helper,
       new Map(this.annotations),
       this.context
@@ -571,16 +658,24 @@ export class ODataEntityAnnotations extends ODataAnnotations {
     return this.helper.mediaContentType(this.annotations);
   }
 
-  private _properties?: Map&lt;string, Map&lt;string, any&gt;&gt;;
+  private _properties?: Map&lt;keyof T, Map&lt;string, any&gt;&gt;;
   get properties() {
     if (this._properties &#x3D;&#x3D;&#x3D; undefined) {
-      this._properties &#x3D; this.helper.properties(this.annotations);
+      this._properties &#x3D; this.helper.properties&lt;T&gt;(this.annotations);
     }
     return this._properties;
   }
 
-  property(name: string) {
-    return this.properties.get(name);
+  property&lt;F&gt;(name: keyof T, type: &#x27;collection&#x27;): ODataEntitiesAnnotations&lt;F&gt;;
+  property&lt;F&gt;(name: keyof T, type: &#x27;single&#x27;): ODataEntityAnnotations&lt;F&gt;;
+  property&lt;F&gt;(
+    name: keyof T,
+    type: &#x27;single&#x27; | &#x27;collection&#x27;
+  ): ODataEntityAnnotations&lt;F&gt; | ODataEntitiesAnnotations&lt;F&gt; {
+    const props &#x3D; this.properties.get(name);
+    return type &#x3D;&#x3D;&#x3D; &#x27;collection&#x27;
+      ? new ODataEntitiesAnnotations&lt;F&gt;(this.helper, props)
+      : new ODataEntityAnnotations&lt;F&gt;(this.helper, props);
   }
 
   private _functions?: { [key: string]: any };
@@ -596,9 +691,17 @@ export class ODataEntityAnnotations extends ODataAnnotations {
   }
 }
 
-export class ODataEntitiesAnnotations extends ODataAnnotations {
-  clone(): ODataEntitiesAnnotations {
-    return new ODataEntitiesAnnotations(
+export class ODataEntitiesAnnotations&lt;T&gt; extends ODataAnnotations&lt;T&gt; {
+  union(other: ODataEntitiesAnnotations&lt;any&gt;): ODataEntitiesAnnotations&lt;any&gt; {
+    return new ODataEntitiesAnnotations&lt;any&gt;(
+      this.helper,
+      new Map&lt;string, any&gt;([...this.annotations, ...other.annotations]),
+      Object.assign({}, this.context, other.context)
+    );
+  }
+
+  clone(): ODataEntitiesAnnotations&lt;any&gt; {
+    return new ODataEntitiesAnnotations&lt;any&gt;(
       this.helper,
       new Map(this.annotations),
       this.context

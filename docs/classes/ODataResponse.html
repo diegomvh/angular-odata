@@ -791,8 +791,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="235"
-                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:235</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="238"
+                            class="link-to-prism">projects/angular-odata/src/lib/resources/responses/response.ts:238</a></div>
                 </td>
             </tr>
 
@@ -1089,7 +1089,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   entity(): ODataEntity&lt;T&gt; {
     const options &#x3D; this.options;
     const payload &#x3D; this.payload;
-    const annots &#x3D; new ODataEntityAnnotations(
+    const annots &#x3D; new ODataEntityAnnotations&lt;T&gt;(
       options.helper,
       this.annotations,
       this.context
@@ -1113,7 +1113,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   entities(): ODataEntities&lt;T&gt; {
     const options &#x3D; this.options;
     const payload &#x3D; this.payload;
-    const annots &#x3D; new ODataEntitiesAnnotations(
+    const annots &#x3D; new ODataEntitiesAnnotations&lt;T&gt;(
       options.helper,
       this.annotations,
       this.context
@@ -1131,7 +1131,7 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
   property(): ODataProperty&lt;T&gt; {
     const options &#x3D; this.options;
     const payload &#x3D; this.payload;
-    const annots &#x3D; new ODataPropertyAnnotations(
+    const annots &#x3D; new ODataPropertyAnnotations&lt;T&gt;(
       options.helper,
       this.annotations,
       this.context
@@ -1139,7 +1139,10 @@ export class ODataResponse&lt;T&gt; extends HttpResponse&lt;T&gt; {
     const data &#x3D; payload ? (annots.data(payload) as T) : null;
     let property &#x3D; (
       data !&#x3D;&#x3D; null &amp;&amp; Types.isPlainObject(data)
-        ? options.helper.attributes(data, this.api.options.stripMetadata)
+        ? options.helper.attributes(
+            data as { [key: string]: any },
+            this.api.options.stripMetadata
+          )
         : data
     ) as T | null;
 

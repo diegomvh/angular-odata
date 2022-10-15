@@ -2697,7 +2697,8 @@
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   //#region Version 4.0
-  [VERSION_4_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
+  [VERSION_4_0]: &lt;ODataVersionHelper&gt;{
+    ...ODataVersionBaseHelper,
     VALUE: &#x27;value&#x27;,
     ODATA_ANNOTATION_PREFIX: &#x27;@odata&#x27;,
     ODATA_FUNCTION_PREFIX: &#x27;#&#x27;,
@@ -2782,7 +2783,8 @@
   },
   //#endregion
   //#region Version 3.0
-  [VERSION_3_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
+  [VERSION_3_0]: &lt;ODataVersionHelper&gt;{
+    ...ODataVersionBaseHelper,
     ODATA_ANNOTATION_PREFIX: &#x27;odata.&#x27;,
     ODATA_FUNCTION_PREFIX: &#x27;&#x27;,
     ODATA_ID: &#x27;odata.id&#x27;,
@@ -2814,7 +2816,8 @@
   },
   //#endregion
   //#region Version 2.0
-  [VERSION_2_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
+  [VERSION_2_0]: &lt;ODataVersionHelper&gt;{
+    ...ODataVersionBaseHelper,
     ODATA_ID: &#x27;id&#x27;,
     ODATA_ETAG: &#x27;etag&#x27;,
     ODATA_ANNOTATION: &#x27;__metadata&#x27;,
@@ -2831,6 +2834,10 @@
         );
       }
       return annots;
+    },
+    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+      let ctx: ODataContext &#x3D; {};
+      return ctx;
     },
     attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
       return value;
@@ -3195,7 +3202,11 @@
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
   //Edm.Guid 16-byte (128-bit) unique identifier
-  &#x27;Edm.Guid&#x27;: EdmParser&lt;string&gt;(Identity, Identity, (v: string) &#x3D;&gt; raw(v)),
+  &#x27;Edm.Guid&#x27;: EdmParser&lt;string&gt;(
+    Identity, 
+    Identity, 
+    (v: string) &#x3D;&gt; raw(v)
+  ),
   //Edm.Int16 Signed 16-bit integer
   &#x27;Edm.Int16&#x27;: EdmParser&lt;number&gt;(toNumber, toNumber, toNumber),
   //Edm.String Sequence of UTF-8 characters
@@ -3214,25 +3225,25 @@
   &#x27;Edm.Date&#x27;: EdmParser&lt;Date&gt;(
     (v: any) &#x3D;&gt; new Date(&#x60;${v}T00:00:00.000Z&#x60;),
     (v: any) &#x3D;&gt; toDate(v).toISOString().substring(0, 10),
-    (v: any) &#x3D;&gt; toDate(v).toISOString().substring(0, 10)
+    (v: any) &#x3D;&gt; raw(toDate(v).toISOString().substring(0, 10))
   ),
   //Edm.TimeOfDay Clock time 00:00-23:59:59.999999999999
   &#x27;Edm.TimeOfDay&#x27;: EdmParser&lt;Date&gt;(
     (v: any) &#x3D;&gt; new Date(&#x60;1970-01-01T${v}Z&#x60;),
     (v: any) &#x3D;&gt; toDate(v).toISOString().substring(11, 23),
-    (v: any) &#x3D;&gt; toDate(v).toISOString().substring(11, 23)
+    (v: any) &#x3D;&gt; raw(toDate(v).toISOString().substring(11, 23))
   ),
   //Edm.DateTimeOffset Date and time with a time-zone offset, no leap seconds
   &#x27;Edm.DateTimeOffset&#x27;: EdmParser&lt;Date&gt;(
     toDate,
     (v: any) &#x3D;&gt; toDate(v).toISOString(),
-    (v: any) &#x3D;&gt; toDate(v).toISOString()
+    (v: any) &#x3D;&gt; raw(toDate(v).toISOString())
   ),
   //Edm.Duration Signed duration in days, hours, minutes, and (sub)seconds
   &#x27;Edm.Duration&#x27;: EdmParser&lt;Duration&gt;(
     (v: any) &#x3D;&gt; Durations.toDuration(v),
     (v: Duration) &#x3D;&gt; Durations.toString(v),
-    (v: Duration) &#x3D;&gt; Durations.toString(v)
+    (v: Duration) &#x3D;&gt; raw(Durations.toString(v))
   ),
   //Edm.Decimal Numeric values with fixed precision and scale
   &#x27;Edm.Decimal&#x27;: EdmParser&lt;number&gt;(
@@ -3258,7 +3269,7 @@
         if (typeof o.field.scale &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
           vstr &#x3D; parseFloat(vstr).toFixed(o.field.scale);
         }
-        return vstr;
+        return raw(vstr);
       }
       return v;
     }
@@ -3267,19 +3278,19 @@
   &#x27;Edm.Double&#x27;: EdmParser&lt;number&gt;(
     (v: any) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number)),
     (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v),
-    (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v)
+    (v: number) &#x3D;&gt; raw((v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v.toString()))
   ),
   //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
   &#x27;Edm.Single&#x27;: EdmParser&lt;number&gt;(
     (v: any) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; &#x27;INF&#x27; ? Infinity : (v as number)),
     (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v),
-    (v: number) &#x3D;&gt; (v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v)
+    (v: number) &#x3D;&gt; raw((v &#x3D;&#x3D;&#x3D; Infinity ? &#x27;INF&#x27; : v.toString()))
   ),
   //Edm.Binary Binary data
   &#x27;Edm.Binary&#x27;: EdmParser&lt;ArrayBuffer&gt;(
     (v: string) &#x3D;&gt; ArrayBuffers.toArrayBuffer(v),
     (v: ArrayBuffer) &#x3D;&gt; ArrayBuffers.toString(v),
-    (v: ArrayBuffer) &#x3D;&gt; ArrayBuffers.toString(v)
+    (v: ArrayBuffer) &#x3D;&gt; raw(ArrayBuffers.toString(v))
   ),
 }</code>
                     </td>
@@ -3702,7 +3713,16 @@
 
   // Merge Params
   mergeHttpParams(
-    ...values: (HttpParams | { [param: string]: string | string[] })[]
+    ...values: (
+      | HttpParams
+      | {
+          [param: string]:
+            | string
+            | number
+            | boolean
+            | ReadonlyArray&lt;string | number | boolean&gt;;
+        }
+    )[]
   ): HttpParams {
     let params &#x3D; new HttpParams();
     values.forEach((value) &#x3D;&gt; {
@@ -3853,7 +3873,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>{
-  set(obj: Object, path: string, value: any) {
+  set(obj: { [attr: string]: any }, path: string, value: any) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
     const pathArray &#x3D; (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -3866,7 +3886,7 @@
     }, obj);
   },
 
-  get(obj: Object, path: string, def?: any): any {
+  get(obj: { [attr: string]: any }, path: string, def?: any): any {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
     const pathArray &#x3D; (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -3877,7 +3897,7 @@
     );
   },
 
-  unset(obj: Object, path: string) {
+  unset(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
     const pathArray &#x3D; (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -3889,7 +3909,7 @@
     }, obj);
   },
 
-  has(obj: Object, path: string) {
+  has(obj: { [attr: string]: any }, path: string) {
     // Check if path is string or array. Regex : ensure that we do not have &#x27;.&#x27; and brackets.
     const pathArray &#x3D; (
       Types.isArray(path) ? path : path.match(/([^[.\]])+/g)
@@ -3898,7 +3918,7 @@
     return !!pathArray.reduce((prevObj, key) &#x3D;&gt; prevObj &amp;&amp; prevObj[key], obj);
   },
 
-  merge(target: Object, source: Object) {
+  merge(target: { [attr: string]: any }, source: { [attr: string]: any }) {
     const merge &#x3D; (target: any, source: { [attr: string]: any }) &#x3D;&gt; {
       for (let attr in source) {
         let value &#x3D; source[attr];

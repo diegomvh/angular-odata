@@ -1557,6 +1557,14 @@
                 </td>
             </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
 
             <tr>
                 <td class="col-md-4">
@@ -1591,7 +1599,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Map&lt;string, Map&lt;string, any&gt;&gt;</code>
+                        <b>Returns : </b>    <code>Map&lt;T, Map&lt;string, any&gt;&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -2247,9 +2255,9 @@ export interface ODataVersionHelper {
   ODATA_ETAG: string;
   ODATA_CONTEXT: string;
   ODATA_MEDIA_ETAG: string;
-  ODATA_NEXTLINK: string,
-  ODATA_DEFERRED: string,
-  ODATA_ANNOTATION: string,
+  ODATA_NEXTLINK: string;
+  ODATA_DEFERRED: string;
+  ODATA_ANNOTATION: string;
 
   entity(value: { [key: string]: any }): any;
   entities(value: { [key: string]: any }): any;
@@ -2263,7 +2271,7 @@ export interface ODataVersionHelper {
   type(annots: Map&lt;string, any&gt; | { [key: string]: any }): string | undefined;
   count(annots: Map&lt;string, any&gt;): number | undefined;
   functions(annots: Map&lt;string, any&gt;): Map&lt;string, any&gt;;
-  properties(annots: Map&lt;string, any&gt;): Map&lt;string, Map&lt;string, any&gt;&gt;;
+  properties&lt;T&gt;(annots: Map&lt;string, any&gt;): Map&lt;keyof T, Map&lt;string, any&gt;&gt;;
   mediaEtag(annots: Map&lt;string, any&gt;): string | undefined;
   metadataEtag(annots: Map&lt;string, any&gt;): string | undefined;
   nextLink(annots: Map&lt;string, any&gt;): string | undefined;
@@ -2415,7 +2423,8 @@ const ODataVersionBaseHelper &#x3D; &lt;any&gt;{
 
 export const ODataHelper &#x3D; {
   //#region Version 4.0
-  [VERSION_4_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
+  [VERSION_4_0]: &lt;ODataVersionHelper&gt;{
+    ...ODataVersionBaseHelper,
     VALUE: &#x27;value&#x27;,
     ODATA_ANNOTATION_PREFIX: &#x27;@odata&#x27;,
     ODATA_FUNCTION_PREFIX: &#x27;#&#x27;,
@@ -2500,7 +2509,8 @@ export const ODataHelper &#x3D; {
   },
   //#endregion
   //#region Version 3.0
-  [VERSION_3_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
+  [VERSION_3_0]: &lt;ODataVersionHelper&gt;{
+    ...ODataVersionBaseHelper,
     ODATA_ANNOTATION_PREFIX: &#x27;odata.&#x27;,
     ODATA_FUNCTION_PREFIX: &#x27;&#x27;,
     ODATA_ID: &#x27;odata.id&#x27;,
@@ -2532,7 +2542,8 @@ export const ODataHelper &#x3D; {
   },
   //#endregion
   //#region Version 2.0
-  [VERSION_2_0]: &lt;ODataVersionHelper&gt;{...ODataVersionBaseHelper, 
+  [VERSION_2_0]: &lt;ODataVersionHelper&gt;{
+    ...ODataVersionBaseHelper,
     ODATA_ID: &#x27;id&#x27;,
     ODATA_ETAG: &#x27;etag&#x27;,
     ODATA_ANNOTATION: &#x27;__metadata&#x27;,
@@ -2549,6 +2560,10 @@ export const ODataHelper &#x3D; {
         );
       }
       return annots;
+    },
+    context(annots: Map&lt;string, any&gt; | { [key: string]: any }) {
+      let ctx: ODataContext &#x3D; {};
+      return ctx;
     },
     attributes(value: { [key: string]: any }, metadata: ODataMetadataType) {
       return value;

@@ -407,7 +407,7 @@
   HttpResponse,
   HttpResponseBase,
 } from &#x27;@angular/common/http&#x27;;
-import { firstValueFrom, map, Observable, of, Subject, switchMap } from &#x27;rxjs&#x27;;
+import { firstValueFrom, map, Observable, of, Subject } from &#x27;rxjs&#x27;;
 import { ODataApi } from &#x27;../../api&#x27;;
 import {
   $BATCH,
@@ -563,32 +563,30 @@ export class ODataBatchResource extends ODataResource&lt;any&gt; {
       [CONTENT_TYPE]: MULTIPART_MIXED_BOUNDARY + bound,
       [ACCEPT]: MULTIPART_MIXED,
     });
-    const request &#x3D; new ODataRequest({
-      method: &#x27;POST&#x27;,
-      body: ODataBatchResource.buildBody(bound, this._requests),
-      api: this.api,
-      resource: this,
-      observe: &#x27;response&#x27;,
-      responseType: &#x27;text&#x27;,
-      headers: headers,
-      params: options ? options.params : undefined,
-      withCredentials: options ? options.withCredentials : undefined,
-    });
-    return this.api.request(request).pipe(
-      map((response: ODataResponse&lt;string&gt;) &#x3D;&gt; {
-        if (this._responses &#x3D;&#x3D; null) {
-          this._responses &#x3D; [];
-        }
-        this._responses &#x3D; [
-          ...this._responses,
-          ...ODataBatchResource.parseResponse(this._requests, response),
-        ];
-        Arrays.zip(this._requests, this._responses).forEach((tuple) &#x3D;&gt; {
-          if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
-        });
-        return response;
+    return this.api
+      .request(&#x27;POST&#x27;, this, {
+        body: ODataBatchResource.buildBody(bound, this._requests),
+        responseType: &#x27;text&#x27;,
+        observe: &#x27;response&#x27;,
+        headers: headers,
+        params: options ? options.params : undefined,
+        withCredentials: options ? options.withCredentials : undefined,
       })
-    );
+      .pipe(
+        map((response: ODataResponse&lt;string&gt;) &#x3D;&gt; {
+          if (this._responses &#x3D;&#x3D; null) {
+            this._responses &#x3D; [];
+          }
+          this._responses &#x3D; [
+            ...this._responses,
+            ...ODataBatchResource.parseResponse(this._requests, response),
+          ];
+          Arrays.zip(this._requests, this._responses).forEach((tuple) &#x3D;&gt; {
+            if (!tuple[0].isStopped) tuple[0].onLoad(tuple[1]);
+          });
+          return response;
+        })
+      );
   }
 
   /**

@@ -918,7 +918,7 @@ export class ODataParameterParser&lt;T&gt; {
   }
 
   serialize(value: T, options?: ParserOptions): any {
-    const parserOptions &#x3D; {...this.parserOptions, ...options};
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     return Array.isArray(value)
       ? value.map((v) &#x3D;&gt; this.parser.serialize(v, parserOptions))
       : this.parser.serialize(value, parserOptions);
@@ -926,7 +926,7 @@ export class ODataParameterParser&lt;T&gt; {
 
   //Encode
   encode(value: any, options?: ParserOptions): string {
-    const parserOptions &#x3D; {...this.parserOptions, ...options};
+    const parserOptions &#x3D; { ...this.parserOptions, ...options };
     return Array.isArray(value)
       ? value.map((v) &#x3D;&gt; this.parser.encode(v, parserOptions))
       : this.parser.encode(value, parserOptions);

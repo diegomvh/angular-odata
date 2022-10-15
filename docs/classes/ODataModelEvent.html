@@ -306,7 +306,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="138" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:138</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="140" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:140</a></div>
                         </td>
                     </tr>
 
@@ -333,7 +333,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="130" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:130</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:132</a></div>
                         </td>
                     </tr>
 
@@ -474,8 +474,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="93"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:93</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="94"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:94</a></div>
                 </td>
             </tr>
 
@@ -592,8 +592,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="108"
-                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:108</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="110"
+                            class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:110</a></div>
                 </td>
             </tr>
 
@@ -667,7 +667,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="115" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:115</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:117</a></div>
                                 </td>
                             </tr>
 
@@ -689,7 +689,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:132</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="134" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:134</a></div>
                                 </td>
                             </tr>
 
@@ -711,7 +711,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="140" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:140</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="142" class="link-to-prism">projects/angular-odata/src/lib/models/options.ts:142</a></div>
                                 </td>
                             </tr>
 
@@ -814,6 +814,7 @@ export class ODataModelEvent&lt;T&gt; {
     ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
     ODataModelField&lt;any&gt; | number | null
   ][];
+
   push(
     model: ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;,
     field: ODataModelField&lt;any&gt; | number
@@ -829,6 +830,7 @@ export class ODataModelEvent&lt;T&gt; {
     event.chain.splice(0, 0, [model, field]);
     return event;
   }
+
   visited(model: ODataModel&lt;any&gt; | ODataCollection&lt;any, ODataModel&lt;any&gt;&gt;) {
     return (
       this.chain.some((c) &#x3D;&gt; c[0] &#x3D;&#x3D;&#x3D; model) &amp;&amp;
@@ -1160,18 +1162,12 @@ export class ODataModelField&lt;F&gt; {
       : (base as ODataEntityResource&lt;T&gt;).property&lt;F&gt;(this.parser.name);
   }
 
-  annotationsFactory(
-    base: ODataEntityAnnotations
-  ): ODataEntityAnnotations | ODataEntitiesAnnotations {
-    return this.parser.collection
-      ? new ODataEntitiesAnnotations(
-          base.helper,
-          base.property(this.parser.name)
-        )
-      : new ODataEntityAnnotations(
-          base.helper,
-          base.property(this.parser.name)
-        );
+  annotationsFactory&lt;T, F&gt;(
+    base: ODataEntityAnnotations&lt;T&gt;
+  ): ODataEntityAnnotations&lt;F&gt; | ODataEntitiesAnnotations&lt;F&gt; {
+    return this.parser.collection ? 
+      base.property(this.parser.name as keyof T, &#x27;collection&#x27;) : 
+      base.property(this.parser.name as keyof T, &#x27;single&#x27;);
   }
 
   schemaFactory&lt;T, F&gt;(
@@ -1192,7 +1188,7 @@ export class ODataModelField&lt;F&gt; {
     // Model
     const annots &#x3D; this.annotationsFactory(
       parent.annots()
-    ) as ODataEntityAnnotations;
+    ) as ODataEntityAnnotations&lt;F&gt;;
     let Model &#x3D; this.api.modelForType(this.parser.type);
     if (Model &#x3D;&#x3D;&#x3D; undefined) throw Error(&#x60;No Model type for ${this.name}&#x60;);
     if (value !&#x3D;&#x3D; undefined) {
@@ -1227,7 +1223,7 @@ export class ODataModelField&lt;F&gt; {
     // Collection Factory
     const annots &#x3D; this.annotationsFactory(
       parent.annots()
-    ) as ODataEntitiesAnnotations;
+    ) as ODataEntitiesAnnotations&lt;F&gt;;
     const Collection &#x3D; this.api.collectionForType(this.parser.type);
     if (Collection &#x3D;&#x3D;&#x3D; undefined)
       throw Error(&#x60;No Collection type for ${this.name}&#x60;);
@@ -1248,6 +1244,7 @@ export type ODataModelRelation&lt;T&gt; &#x3D; {
   field: ODataModelField&lt;T&gt;;
   subscription?: Subscription;
 };
+
 export type ODataModelEntry&lt;T, M extends ODataModel&lt;T&gt;&gt; &#x3D; {
   state: ODataModelState;
   model: M;
@@ -1388,13 +1385,13 @@ export class ODataModelOptions&lt;T&gt; {
     return field as ODataModelField&lt;F&gt;;
   }
 
-  attach&lt;R&gt;(
+  attach(
     self: ODataModel&lt;T&gt;,
     resource:
-      | ODataEntityResource&lt;R&gt;
-      | ODataNavigationPropertyResource&lt;R&gt;
-      | ODataPropertyResource&lt;R&gt;
-      | ODataSingletonResource&lt;R&gt;
+      | ODataEntityResource&lt;T&gt;
+      | ODataNavigationPropertyResource&lt;T&gt;
+      | ODataPropertyResource&lt;T&gt;
+      | ODataSingletonResource&lt;T&gt;
   ) {
     if (
       self._resource !&#x3D;&#x3D; null &amp;&amp;
@@ -1407,7 +1404,7 @@ export class ODataModelOptions&lt;T&gt; {
 
     const current &#x3D; self._resource;
     if (current &#x3D;&#x3D;&#x3D; null || !current.isEqualTo(resource)) {
-      self._resource &#x3D; resource as ODataResource&lt;any&gt;;
+      self._resource &#x3D; resource;
       self.events$.emit(
         new ODataModelEvent(&#x27;attach&#x27;, {
           model: self,
@@ -1537,7 +1534,7 @@ export class ODataModelOptions&lt;T&gt; {
         ODataModelField&lt;any&gt; | null
       ];
       resource?: ODataResource&lt;T&gt;;
-      annots?: ODataEntityAnnotations;
+      annots?: ODataEntityAnnotations&lt;T&gt;;
     } &#x3D; {}
   ) {
     // Parent
@@ -2055,7 +2052,7 @@ export class ODataModelOptions&lt;T&gt; {
   ) {
     collection._annotations &#x3D; field.annotationsFactory(
       self.annots()
-    ) as ODataEntitiesAnnotations;
+    ) as ODataEntitiesAnnotations&lt;F&gt;;
     collection.assign(value as Partial&lt;T&gt;[] | { [name: string]: any }[], {
       reset: self._reset,
       reparent: self._reparent,
@@ -2071,7 +2068,7 @@ export class ODataModelOptions&lt;T&gt; {
   ) {
     model._annotations &#x3D; field.annotationsFactory(
       self.annots()
-    ) as ODataEntityAnnotations;
+    ) as ODataEntityAnnotations&lt;F&gt;;
     model.assign(value as F | { [name: string]: any }, {
       reset: self._reset,
       reparent: self._reparent,
