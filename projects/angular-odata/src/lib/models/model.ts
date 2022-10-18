@@ -196,10 +196,6 @@ export class ODataModel<T> {
     return this._meta.resolveKey(this, { field_mapping, resolve });
   }
 
-  isNew() {
-    return this.key() === undefined;
-  }
-
   isParentOf(
     child: ODataModel<any> | ODataCollection<any, ODataModel<any>>
   ): boolean {
@@ -589,6 +585,10 @@ export class ODataModel<T> {
     include_navigation = false,
   }: { include_navigation?: boolean } = {}) {
     return this._meta.hasChanged(this, { include_navigation });
+  }
+
+  isNew() {
+    return this._meta.hasKey(this);
   }
 
   /**

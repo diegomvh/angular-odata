@@ -980,8 +980,7 @@ export class ODataModelOptions<T> {
     const errors = this.fields({
       include_parents: true,
       include_navigation: navigation,
-    }).reduce((acc, field) => {
-      let value = (self as any)[field.name];
+    }).reduce((acc, field) => { let value = (self as any)[field.name];
       let errs = field.validate(value, { method });
       return errs !== undefined
         ? Object.assign(acc, { [field.name]: errs })
@@ -1018,6 +1017,10 @@ export class ODataModelOptions<T> {
               (model != undefined && model.hasChanged({ include_navigation })))
         )
     );
+  }
+
+  hasKey(self: ODataModel<T>) {
+    return this.resolveKey(self) !== undefined;
   }
 
   asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {

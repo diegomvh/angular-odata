@@ -326,6 +326,19 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._request(obs$);
   }
 
+  fetchAll({
+    withCount,
+    ...options
+  }: ODataOptions & {
+    withCount?: boolean;
+  } = {}): Observable<this> {
+    const resource = this.resource();
+
+    const obs$ = resource.fetchAll({withCount, ...options});
+
+    return this._request(obs$);
+  }
+
   fetchMany(top: number, {
     withCount,
     ...options
@@ -339,17 +352,13 @@ export class ODataCollection<T, M extends ODataModel<T>>
     return this._request(obs$);
   }
 
-  fetchAll({
+  fetchOne({
     withCount,
     ...options
   }: ODataOptions & {
     withCount?: boolean;
-  } = {}): Observable<this> {
-    const resource = this.resource();
-
-    const obs$ = resource.fetchAll({withCount, ...options});
-
-    return this._request(obs$);
+  } = {}): Observable<M | null> {
+    return this.fetchMany(1, {withCount, ...options}).pipe(map(col => col.first() || null))
   }
 
   /**
