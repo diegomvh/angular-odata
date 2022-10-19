@@ -441,9 +441,9 @@ export class ODataModelField<F> {
   annotationsFactory<T, F>(
     base: ODataEntityAnnotations<T>
   ): ODataEntityAnnotations<F> | ODataEntitiesAnnotations<F> {
-    return this.parser.collection ? 
-      base.property(this.parser.name as keyof T, 'collection') : 
-      base.property(this.parser.name as keyof T, 'single');
+    return this.parser.collection
+      ? base.property(this.parser.name as keyof T, 'collection')
+      : base.property(this.parser.name as keyof T, 'single');
   }
 
   schemaFactory<T, F>(
@@ -980,7 +980,8 @@ export class ODataModelOptions<T> {
     const errors = this.fields({
       include_parents: true,
       include_navigation: navigation,
-    }).reduce((acc, field) => { let value = (self as any)[field.name];
+    }).reduce((acc, field) => {
+      let value = (self as any)[field.name];
       let errs = field.validate(value, { method });
       return errs !== undefined
         ? Object.assign(acc, { [field.name]: errs })
@@ -1022,7 +1023,6 @@ export class ODataModelOptions<T> {
   hasKey(self: ODataModel<T>) {
     return this.resolveKey(self) !== undefined;
   }
-
   asEntity<R, M extends ODataModel<T>>(self: M, func: (model: M) => R): R {
     // Build new resource
     const query = self._resource?.cloneQuery<T>();

@@ -117,7 +117,9 @@ export class ODataModel<T> {
     let attrs = this.annots().attributes(data, 'full');
     let defaults = this.defaults();
 
-    this.assign(Objects.merge(defaults, attrs as {[name: string]: any}), { reset });
+    this.assign(Objects.merge(defaults, attrs as { [name: string]: any }), {
+      reset,
+    });
   }
 
   //#region Resources
@@ -183,7 +185,10 @@ export class ODataModel<T> {
   }
 
   annots() {
-    return this._annotations ?? new ODataEntityAnnotations<T>(ODataHelper[DEFAULT_VERSION]);
+    return (
+      this._annotations ??
+      new ODataEntityAnnotations<T>(ODataHelper[DEFAULT_VERSION])
+    );
   }
 
   key({
@@ -588,7 +593,7 @@ export class ODataModel<T> {
   }
 
   isNew() {
-    return this._meta.hasKey(this);
+    return !this._meta.hasKey(this);
   }
 
   /**
@@ -666,7 +671,9 @@ export class ODataModel<T> {
 
     return resource
       .cast<S>(type)
-      .asModel(this.toEntity(INCLUDE_DEEP) as {[name: string]: any}, { annots: this.annots() as any });
+      .asModel(this.toEntity(INCLUDE_DEEP) as { [name: string]: any }, {
+        annots: this.annots() as any,
+      });
   }
 
   fetchNavigationProperty<S>(
