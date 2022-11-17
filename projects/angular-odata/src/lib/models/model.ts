@@ -67,17 +67,26 @@ export class ODataModel<T> {
   // Parent
   _parent:
     | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
+    | null = null;
+  _resource: ODataResource<T> | null = null;
+  _resources: {
+    parent:
+      | [
         ODataModel<any> | ODataCollection<any, ODataModel<any>>,
         ODataModelField<any> | null
       ]
-    | null = null;
+      | null;
+    resource: ODataResource<T> | null;
+  }[] = []
   _attributes: Map<string, any> = new Map<string, any>();
   _changes: Map<string, any> = new Map<string, any>();
   _relations: Map<string, ODataModelRelation<any>> = new Map<
     string,
     ODataModelRelation<any>
   >();
-  _resource: ODataResource<T> | null = null;
   _annotations: ODataEntityAnnotations<T> | null = null;
   _reset: boolean = false;
   _reparent: boolean = false;
@@ -133,6 +142,30 @@ export class ODataModel<T> {
       | ODataNavigationPropertyResource<T>
       | ODataPropertyResource<T>
       | ODataSingletonResource<T>;
+  }
+
+  pushResource(resource:
+    | ODataEntityResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | ODataSingletonResource<T>) {
+    // Push current parent and resource
+    this._resources.push({ parent: this._parent, resource: this._resource });
+    // Replace parent and resource
+    this._parent = null;
+    this._resource = resource;
+  }
+
+  popResource() {
+    // Pop parent and resource
+    const pop = this._resources.pop();
+    if (pop !== undefined) {
+      const current = { parent: this._parent, resource: this._resource };
+      this._parent = pop.parent;
+      this._resource = pop.resource;
+      return current;
+    }
+    return undefined;
   }
 
   navigationProperty<N>(

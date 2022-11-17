@@ -47,6 +47,19 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | ODataNavigationPropertyResource<T>
     | ODataPropertyResource<T>
     | null = null;
+  _resources: {
+    parent:
+    | [
+      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+      ODataModelField<any> | null
+    ]
+    | null;
+    resource:
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>
+    | null;
+  }[] = [];
   _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
   _model: typeof ODataModel;
@@ -136,6 +149,29 @@ export class ODataCollection<T, M extends ODataModel<T>>
       | ODataPropertyResource<T>;
   }
 
+  pushResource(resource:
+    | ODataEntitySetResource<T>
+    | ODataNavigationPropertyResource<T>
+    | ODataPropertyResource<T>) {
+    // Push current parent and resource
+    this._resources.push({ parent: this._parent, resource: this._resource });
+    // Replace parent and resource
+    this._parent = null;
+    this._resource = resource;
+  }
+
+  popResource() {
+    // Pop parent and resource
+    const pop = this._resources.pop();
+    if (pop !== undefined) {
+      const current = { parent: this._parent, resource: this._resource };
+      this._parent = pop.parent;
+      this._resource = pop.resource;
+      return current;
+    }
+    return undefined;
+  }
+
   attach(
     resource:
       | ODataEntitySetResource<T>
@@ -179,25 +215,17 @@ export class ODataCollection<T, M extends ODataModel<T>>
       throw new Error(
         'asEntitySet: Collection does not have associated EntitySet endpoint'
       );
-    // Store parent and resource
-    const store = { parent: this._parent, resource: this._resource };
-    // Replace parent and resource
-    this._parent = null;
-    this._resource = resource;
+    // Push
+    this.pushResource(resource);
     // Execute
     const result = func(this);
     if (result instanceof Observable) {
       return (result as any).pipe(
-        finalize(() => {
-          // Restore
-          this._parent = store.parent;
-          this._resource = store.resource;
-        })
+        finalize(() => this.popResource())
       );
     } else {
-      // Restore
-      this._parent = store.parent;
-      this._resource = store.resource;
+      // Pop
+      this.popResource();
       return result;
     }
   }

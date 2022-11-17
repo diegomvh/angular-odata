@@ -1029,25 +1029,20 @@ export class ODataModelOptions<T> {
     let resource = this.modelResourceFactory(query);
     if (resource === undefined)
       throw new Error('Model does not have associated Entity endpoint');
-    // Store parent and resource
-    const store = { parent: self._parent, resource: self._resource };
-    // Replace parent and resource
-    self._parent = null;
-    self._resource = resource;
+    // Push
+    self.pushResource(resource);
     // Execute function
     const result = func(self);
     if (result instanceof Observable) {
       return (result as any).pipe(
         finalize(() => {
-          // Restore parent and resource
-          self._parent = store.parent;
-          self._resource = store.resource;
+          // Pop
+          self.popResource();
         })
       );
     } else {
-      // Restore parent and resource
-      self._parent = store.parent;
-      self._resource = store.resource;
+      // Pop
+      self.popResource();
       return result;
     }
   }
