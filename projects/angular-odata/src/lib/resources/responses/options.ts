@@ -67,6 +67,12 @@ export class ODataResponseOptions implements ResponseOptions {
     this.location = location;
   }
 
+  setPreferenceApplied(preference: string) {
+    preference.split(',').forEach((prefer) => {
+      // TODO: resolve preference
+    });
+  }
+
   setCache(cacheControl: string) {
     cacheControl.split(',').forEach((directive) => {
       if (directive.startsWith(MAX_AGE)) {

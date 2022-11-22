@@ -169,6 +169,15 @@ export class ODataRequest<T> {
       prefer.push(
         `odata.include-annotations=${this.api.options.prefer?.includeAnnotations}`
       );
+    // Omit Null Values
+    if (
+      this.api.options.prefer?.omitNullValues === true &&
+      ['GET'].indexOf(this._method) !== -1
+    )
+      prefer.push(
+        `omit-values=nulls`
+      );
+    // Continue on Error
     if (
       this.api.options.prefer?.continueOnError === true &&
       ['POST'].indexOf(this._method) !== -1

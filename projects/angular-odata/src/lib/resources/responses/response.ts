@@ -15,6 +15,7 @@ import {
   LOCATION_HEADER,
   ETAG_HEADERS,
   ODATA_ENTITYID_HEADERS,
+  PREFERENCE_APPLIED,
 } from '../../constants';
 import { ODataApi } from '../../api';
 import { ODataRequest } from '../request';
@@ -100,13 +101,18 @@ export class ODataResponse<T> extends HttpResponse<T> {
           .find((p) => p.startsWith(APPLICATION_JSON)) as string;
         this._options.setFeatures(features);
       }
-      const header = Http.resolveHeaderKey(this.headers, ODATA_VERSION_HEADERS);
-      if (header) {
-        const version = (this.headers.get(header) || '').replace(/\;/g, '') as
+      const headerKey = Http.resolveHeaderKey(this.headers, ODATA_VERSION_HEADERS);
+      if (headerKey) {
+        const version = (this.headers.get(headerKey) || '').replace(/\;/g, '') as
           | '2.0'
           | '3.0'
           | '4.0';
         this._options.setVersion(version);
+      }
+
+      const preferenceApplied = this.headers.get(PREFERENCE_APPLIED);
+      if (preferenceApplied) {
+        this._options.setPreferenceApplied(preferenceApplied);
       }
 
       const location = this.headers.get(LOCATION_HEADER);

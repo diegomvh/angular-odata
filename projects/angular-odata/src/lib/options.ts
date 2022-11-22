@@ -92,6 +92,10 @@ export class ODataApiOptions implements ApiOptions {
      * @link http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398237
      */
     includeAnnotations?: string;
+    /**
+     * @link https://devblogs.microsoft.com/odata/extension-omit-null-value-properties-in-asp-net-core-odata/
+     */
+    omitNullValues?: boolean;
   };
 
   constructor(config: ApiOptions) {
