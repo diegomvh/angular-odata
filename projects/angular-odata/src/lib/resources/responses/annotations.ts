@@ -194,7 +194,7 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   }
 
   get skiptoken() {
-    let match = (this.nextLink || '').match(/[&?]{1}\$skiptoken=([\d\w\s']+)/);
+    let match = (this.nextLink || '').match(/[&?]{1}\$skiptoken=([\d\w\s'\-]+)/);
     return match !== null ? match[1] : undefined;
   }
 
