@@ -92,9 +92,10 @@ export const CACHE_KEY_SEPARATOR = ':';
 export const CID_FIELD_NAME = '_cid';
 
 // Standard vocabularies for annotating OData services
-// http://docs.oasis-open.org/odata/odata-vocabularies/v4.0/csprd01/odata-vocabularies-v4.0-csprd01.html
+// https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Core.V1.md
 
 export const COMPUTED = /.*Computed$/;
 export const OPTIMISTIC_CONCURRENCY = /.*OptimisticConcurrency$/;
 export const DESCRIPTION = /.*Description$/;
 export const LONG_DESCRIPTION = /.*LongDescription$/;
+export const OPTIONARL_PARAMETER = /.*OptionalParameter$/;
