@@ -242,6 +242,22 @@ export class FilterExpression<F> extends Expression<F> {
     return this._add(syntax.all(left, exp, alias));
   }
 
+  count<N extends object>(
+    left: N[],
+    opts: (e: {
+      t: N;
+      e: (connector?: FilterConnector) => CountExpression<N>;
+    }) => CountExpression<N>,
+    alias?: string
+  ): CountExpression<F> {
+    const exp = opts({
+      t: Field.factory<Readonly<Required<N>>>(),
+      e: (connector: FilterConnector = 'and') =>
+        new CountExpression<N>({ connector }),
+    }) as CountExpression<N>;
+    return this._add(syntax.count(left, exp, alias));
+  }
+
   isof(type: string): FilterExpression<F>;
   isof(left: F, type: string): FilterExpression<F>;
   isof(left: any, type?: string): FilterExpression<F> {
