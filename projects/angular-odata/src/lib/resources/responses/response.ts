@@ -101,12 +101,15 @@ export class ODataResponse<T> extends HttpResponse<T> {
           .find((p) => p.startsWith(APPLICATION_JSON)) as string;
         this._options.setFeatures(features);
       }
-      const headerKey = Http.resolveHeaderKey(this.headers, ODATA_VERSION_HEADERS);
+      const headerKey = Http.resolveHeaderKey(
+        this.headers,
+        ODATA_VERSION_HEADERS
+      );
       if (headerKey) {
-        const version = (this.headers.get(headerKey) || '').replace(/\;/g, '') as
-          | '2.0'
-          | '3.0'
-          | '4.0';
+        const version = (this.headers.get(headerKey) || '').replace(
+          /\;/g,
+          ''
+        ) as '2.0' | '3.0' | '4.0';
         this._options.setVersion(version);
       }
 

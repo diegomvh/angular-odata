@@ -174,9 +174,7 @@ export class ODataRequest<T> {
       this.api.options.prefer?.omitNullValues === true &&
       ['GET'].indexOf(this._method) !== -1
     )
-      prefer.push(
-        `omit-values=nulls`
-      );
+      prefer.push(`omit-values=nulls`);
     // Continue on Error
     if (
       this.api.options.prefer?.continueOnError === true &&

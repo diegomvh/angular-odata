@@ -1,4 +1,4 @@
-import { OrderByExpression } from './orderby';
+import { CountExpression } from './count';
 
 describe('OData orderBy builder', () => {
   interface Pet {
@@ -32,46 +32,20 @@ describe('OData orderBy builder', () => {
 
   describe('base condition', () => {
     describe('as factory function', () => {
-      it('asc', () => {
-        const compare1 = OrderByExpression.orderBy<Person>(({ e, t }) =>
-          e().ascending(t.Age)
+      it('count', () => {
+        const compare1 = CountExpression.count<Person>(({ e, t }) =>
+          e().field(t.Pets)
         );
 
-        expect(compare1.render()).toBe('Age asc');
+        expect(compare1.render()).toBe('Pets/$count');
       });
 
-      it('desc', () => {
-        const compare1 = OrderByExpression.orderBy<Person>(({ e, t }) =>
-          e().descending(t.Age)
+      it('count filter', () => {
+        const compare1 = CountExpression.count<Person>(({ e, t }) =>
+          e().field(t.Pets, ({ f }) => f.filter(({ e, t }) => e().gt(t.Age, 3)))
         );
 
-        expect(compare1.render()).toBe('Age desc');
-      });
-    });
-
-    describe('combination e().ascending(...).descending(...)', () => {
-      it('asc,desc', () => {
-        const compare = OrderByExpression.orderBy<Person>(({ e, t }) =>
-          e().ascending(t.Age).descending(t.CreatedOn)
-        );
-
-        expect(compare.render()).toBe('Age asc,CreatedOn desc');
-      });
-    });
-
-    describe('navigate main', () => {
-      it('navigate', () => {
-        const compare1 = OrderByExpression.orderBy<Person>(({ e, t }) =>
-          e().ascending(t.Car!.Year)
-        );
-        expect(compare1.render()).toBe('Car/Year asc');
-      });
-
-      it('combination navigate', () => {
-        const compare1 = OrderByExpression.orderBy<Person>(({ e, t }) =>
-          e().ascending(t.Car!.Year).descending(t.Car!.Model!.Name)
-        );
-        expect(compare1.render()).toBe('Car/Year asc,Car/Model/Name desc');
+        expect(compare1.render()).toBe('Pets/$count($filter=Age gt 3)');
       });
     });
   });

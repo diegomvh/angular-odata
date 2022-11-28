@@ -9,7 +9,10 @@ export abstract class ODataAnnotations<T> {
     protected context?: ODataContext
   ) {}
 
-  attributes(data: { [key: string]: any }, metadata: ODataMetadataType): Partial<T> {
+  attributes(
+    data: { [key: string]: any },
+    metadata: ODataMetadataType
+  ): Partial<T> {
     return this.helper.attributes(data, metadata) as Partial<T>;
   }
 
@@ -194,7 +197,9 @@ export class ODataEntitiesAnnotations<T> extends ODataAnnotations<T> {
   }
 
   get skiptoken() {
-    let match = (this.nextLink || '').match(/[&?]{1}\$skiptoken=([\d\w\s'\-]+)/);
+    let match = (this.nextLink || '').match(
+      /[&?]{1}\$skiptoken=([\d\w\s'\-]+)/
+    );
     return match !== null ? match[1] : undefined;
   }
 

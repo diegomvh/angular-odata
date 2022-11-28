@@ -49,16 +49,16 @@ export class ODataCollection<T, M extends ODataModel<T>>
     | null = null;
   _resources: {
     parent:
-    | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null
-    ]
-    | null;
+      | [
+          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+          ODataModelField<any> | null
+        ]
+      | null;
     resource:
-    | ODataEntitySetResource<T>
-    | ODataNavigationPropertyResource<T>
-    | ODataPropertyResource<T>
-    | null;
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | null;
   }[] = [];
   _annotations!: ODataEntitiesAnnotations<T>;
   _entries: ODataModelEntry<T, M>[] = [];
@@ -149,10 +149,12 @@ export class ODataCollection<T, M extends ODataModel<T>>
       | ODataPropertyResource<T>;
   }
 
-  pushResource(resource:
-    | ODataEntitySetResource<T>
-    | ODataNavigationPropertyResource<T>
-    | ODataPropertyResource<T>) {
+  pushResource(
+    resource:
+      | ODataEntitySetResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+  ) {
     // Push current parent and resource
     this._resources.push({ parent: this._parent, resource: this._resource });
     // Replace parent and resource
@@ -220,9 +222,7 @@ export class ODataCollection<T, M extends ODataModel<T>>
     // Execute
     const result = func(this);
     if (result instanceof Observable) {
-      return (result as any).pipe(
-        finalize(() => this.popResource())
-      );
+      return (result as any).pipe(finalize(() => this.popResource()));
     } else {
       // Pop
       this.popResource();
@@ -321,14 +321,22 @@ export class ODataCollection<T, M extends ODataModel<T>>
 
   private _request(obs$: Observable<ODataEntities<any>>): Observable<this> {
     this.events$.emit(
-      new ODataModelEvent('request', { collection: this, options: { observable: obs$ } })
+      new ODataModelEvent('request', {
+        collection: this,
+        options: { observable: obs$ },
+      })
     );
 
     return obs$.pipe(
       map(({ entities, annots }) => {
         this._annotations = annots;
         this.assign(entities || [], { reset: true });
-        this.events$.emit(new ODataModelEvent('sync', { collection: this, options: { entities, annots } }));
+        this.events$.emit(
+          new ODataModelEvent('sync', {
+            collection: this,
+            options: { entities, annots },
+          })
+        );
         return this;
       })
     );
@@ -362,20 +370,23 @@ export class ODataCollection<T, M extends ODataModel<T>>
   } = {}): Observable<this> {
     const resource = this.resource();
 
-    const obs$ = resource.fetchAll({withCount, ...options});
+    const obs$ = resource.fetchAll({ withCount, ...options });
 
     return this._request(obs$);
   }
 
-  fetchMany(top: number, {
-    withCount,
-    ...options
-  }: ODataOptions & {
-    withCount?: boolean;
-  } = {}): Observable<this> {
+  fetchMany(
+    top: number,
+    {
+      withCount,
+      ...options
+    }: ODataOptions & {
+      withCount?: boolean;
+    } = {}
+  ): Observable<this> {
     const resource = this.resource();
 
-    const obs$ = resource.fetchMany(top, {withCount, ...options});
+    const obs$ = resource.fetchMany(top, { withCount, ...options });
 
     return this._request(obs$);
   }
@@ -386,7 +397,9 @@ export class ODataCollection<T, M extends ODataModel<T>>
   }: ODataOptions & {
     withCount?: boolean;
   } = {}): Observable<M | null> {
-    return this.fetchMany(1, {withCount, ...options}).pipe(map(col => col.first() || null))
+    return this.fetchMany(1, { withCount, ...options }).pipe(
+      map((col) => col.first() || null)
+    );
   }
 
   /**

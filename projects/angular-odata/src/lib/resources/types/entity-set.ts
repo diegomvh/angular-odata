@@ -7,7 +7,11 @@ import { PathSegmentNames, QueryOptionNames } from '../../types';
 import { ODataPathSegments } from '../path';
 import { ODataQueryOptions } from '../query';
 import { ODataResource } from '../resource';
-import { ODataEntities, ODataEntitiesAnnotations, ODataEntity } from '../responses';
+import {
+  ODataEntities,
+  ODataEntitiesAnnotations,
+  ODataEntity,
+} from '../responses';
 import { ODataActionResource } from './action';
 import { ODataCountResource } from './count';
 import { ODataEntityResource } from './entity';
@@ -123,7 +127,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations<T>}> {
+  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
     // Clean Paging
     res.query((q) => q.clearPaging());
@@ -141,10 +145,11 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       expand(({ annots }) =>
         annots.skip || annots.skiptoken ? fetch(annots) : EMPTY
       ),
-      map(({ entities, annots }) => ({entities: entities || [], annots})),
+      map(({ entities, annots }) => ({ entities: entities || [], annots })),
       reduce((acc, { entities, annots }) => ({
-        entities: [...(acc.entities || []), ...(entities || [])], 
-        annots: acc.annots.union(annots)})),
+        entities: [...(acc.entities || []), ...(entities || [])],
+        annots: acc.annots.union(annots),
+      }))
     );
   }
 
@@ -154,7 +159,7 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entities: T[], annots: ODataEntitiesAnnotations<T>}> {
+  ): Observable<{ entities: T[]; annots: ODataEntitiesAnnotations<T> }> {
     let res = this.clone();
     let fetch = (opts?: {
       skip?: number;
@@ -166,14 +171,15 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       }
       return res.fetch(options);
     };
-    return fetch({top}).pipe(
+    return fetch({ top }).pipe(
       expand(({ annots }) =>
         annots.skip || annots.skiptoken ? fetch(annots) : EMPTY
       ),
-      map(({ entities, annots }) => ({entities: entities || [], annots})),
+      map(({ entities, annots }) => ({ entities: entities || [], annots })),
       reduce((acc, { entities, annots }) => ({
-        entities: [...(acc.entities || []), ...(entities || [])], 
-        annots: acc.annots.union(annots)})),
+        entities: [...(acc.entities || []), ...(entities || [])],
+        annots: acc.annots.union(annots),
+      }))
     );
   }
 
@@ -182,9 +188,12 @@ export class ODataEntitySetResource<T> extends ODataResource<T> {
       withCount?: boolean;
       bodyQueryOptions?: QueryOptionNames[];
     }
-  ): Observable<{entity: T | null, annots: ODataEntitiesAnnotations<T>}> {
+  ): Observable<{ entity: T | null; annots: ODataEntitiesAnnotations<T> }> {
     return this.fetchMany(1, options).pipe(
-      map(({entities, annots}) => ({entity: entities.length === 1 ? entities[0] : null, annots}))
+      map(({ entities, annots }) => ({
+        entity: entities.length === 1 ? entities[0] : null,
+        annots,
+      }))
     );
   }
 

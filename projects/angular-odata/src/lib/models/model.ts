@@ -67,20 +67,20 @@ export class ODataModel<T> {
   // Parent
   _parent:
     | [
-      ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-      ODataModelField<any> | null
-    ]
+        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+        ODataModelField<any> | null
+      ]
     | null = null;
   _resource: ODataResource<T> | null = null;
   _resources: {
     parent:
       | [
-        ODataModel<any> | ODataCollection<any, ODataModel<any>>,
-        ODataModelField<any> | null
-      ]
+          ODataModel<any> | ODataCollection<any, ODataModel<any>>,
+          ODataModelField<any> | null
+        ]
       | null;
     resource: ODataResource<T> | null;
-  }[] = []
+  }[] = [];
   _attributes: Map<string, any> = new Map<string, any>();
   _changes: Map<string, any> = new Map<string, any>();
   _relations: Map<string, ODataModelRelation<any>> = new Map<
@@ -144,11 +144,13 @@ export class ODataModel<T> {
       | ODataSingletonResource<T>;
   }
 
-  pushResource(resource:
-    | ODataEntityResource<T>
-    | ODataNavigationPropertyResource<T>
-    | ODataPropertyResource<T>
-    | ODataSingletonResource<T>) {
+  pushResource(
+    resource:
+      | ODataEntityResource<T>
+      | ODataNavigationPropertyResource<T>
+      | ODataPropertyResource<T>
+      | ODataSingletonResource<T>
+  ) {
     // Push current parent and resource
     this._resources.push({ parent: this._parent, resource: this._resource });
     // Replace parent and resource

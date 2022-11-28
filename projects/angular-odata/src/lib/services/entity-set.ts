@@ -75,9 +75,7 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
    * @param etag The etag for the entity.
    * @param options The options for the request.
    */
-  public fetchOne(
-    options?: ODataOptions & { etag?: string }
-  ) {
+  public fetchOne(options?: ODataOptions & { etag?: string }) {
     return this.entities().fetchOne(options);
   }
 
@@ -158,12 +156,14 @@ export class ODataEntitySetService<T> extends ODataEntityService<T> {
     attrs: Partial<T>,
     { etag, ...options }: { etag?: string } & ODataOptions = {}
   ): Observable<ODataEntity<T>> {
-    return this.entity(key).fetch({ etag, ...options }).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 404) return this.create(attrs, options);
-        else return throwError(() => error);
-      })
-    );
+    return this.entity(key)
+      .fetch({ etag, ...options })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 404) return this.create(attrs, options);
+          else return throwError(() => error);
+        })
+      );
   }
 
   /**

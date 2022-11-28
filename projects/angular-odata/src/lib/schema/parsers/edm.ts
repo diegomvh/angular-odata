@@ -34,11 +34,7 @@ const toDate = (v: any) => new Date(v);
 
 export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   //Edm.Guid 16-byte (128-bit) unique identifier
-  'Edm.Guid': EdmParser<string>(
-    Identity, 
-    Identity, 
-    (v: string) => raw(v)
-  ),
+  'Edm.Guid': EdmParser<string>(Identity, Identity, (v: string) => raw(v)),
   //Edm.Int16 Signed 16-bit integer
   'Edm.Int16': EdmParser<number>(toNumber, toNumber, toNumber),
   //Edm.String Sequence of UTF-8 characters
@@ -110,13 +106,13 @@ export const EDM_PARSERS: { [type: string]: Parser<any> } = {
   'Edm.Double': EdmParser<number>(
     (v: any) => (v === 'INF' ? Infinity : (v as number)),
     (v: number) => (v === Infinity ? 'INF' : v),
-    (v: number) => raw((v === Infinity ? 'INF' : v.toString()))
+    (v: number) => raw(v === Infinity ? 'INF' : v.toString())
   ),
   //Edm.Single IEEE 754 binary32 floating-point number (6-9 decimal digits)
   'Edm.Single': EdmParser<number>(
     (v: any) => (v === 'INF' ? Infinity : (v as number)),
     (v: number) => (v === Infinity ? 'INF' : v),
-    (v: number) => raw((v === Infinity ? 'INF' : v.toString()))
+    (v: number) => raw(v === Infinity ? 'INF' : v.toString())
   ),
   //Edm.Binary Binary data
   'Edm.Binary': EdmParser<ArrayBuffer>(

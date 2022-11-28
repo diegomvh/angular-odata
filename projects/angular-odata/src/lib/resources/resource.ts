@@ -101,7 +101,10 @@ export class ODataResource<T> {
   //#region Models
   asModel<M extends ODataModel<T>>(
     entity?: Partial<T> | { [name: string]: any },
-    { annots, reset }: { annots?: ODataEntityAnnotations<T>; reset?: boolean } = {}
+    {
+      annots,
+      reset,
+    }: { annots?: ODataEntityAnnotations<T>; reset?: boolean } = {}
   ): M {
     let resource: ODataResource<T> = this as ODataResource<T>;
     const type = annots?.type || this.returnType();

@@ -1,10 +1,4 @@
-import buildQuery, {
-  Expand,
-  OrderBy,
-  alias,
-  raw,
-  binary,
-} from './builder';
+import buildQuery, { Expand, OrderBy, alias, raw, binary } from './builder';
 
 it('should return an empty string by default', () => {
   expect(buildQuery()).toEqual('');

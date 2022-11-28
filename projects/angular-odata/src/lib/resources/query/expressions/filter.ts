@@ -1,5 +1,6 @@
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
+import { CountExpression, CountField } from './count';
 import {
   Field,
   functions,
@@ -244,18 +245,9 @@ export class FilterExpression<F> extends Expression<F> {
 
   count<N extends object>(
     left: N[],
-    opts: (e: {
-      t: N;
-      e: (connector?: FilterConnector) => CountExpression<N>;
-    }) => CountExpression<N>,
-    alias?: string
-  ): CountExpression<F> {
-    const exp = opts({
-      t: Field.factory<Readonly<Required<N>>>(),
-      e: (connector: FilterConnector = 'and') =>
-        new CountExpression<N>({ connector }),
-    }) as CountExpression<N>;
-    return this._add(syntax.count(left, exp, alias));
+    opts?: (e: { t: N; f: CountField<N> }) => CountExpression<N>
+  ): FilterExpression<F> {
+    return this._add(new CountExpression<N>().field(left, opts));
   }
 
   isof(type: string): FilterExpression<F>;

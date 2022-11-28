@@ -1,9 +1,15 @@
+import { QueryOptionNames } from '../../../types';
+import { Objects, Types } from '../../../utils';
 import type { QueryCustomType } from '../builder';
 import { Expression } from './base';
+import { FilterExpression, FilterExpressionBuilder } from './filter';
 import { render, Field, Renderable } from './syntax';
 
-export class CountField implements Renderable {
-  constructor(protected field: Renderable) {}
+export class CountField<T extends object> implements Renderable {
+  constructor(
+    protected field: any,
+    private values: { [name: string]: any } = {}
+  ) {}
 
   get [Symbol.toStringTag]() {
     return 'CountField';
@@ -24,11 +30,52 @@ export class CountField implements Renderable {
     escape?: boolean;
     prefix?: string;
   }): string {
-    return `${render(this.field, { aliases, escape, prefix })} ${this.order}`;
+    const params: { [key: string]: string } = [
+      QueryOptionNames.filter,
+      QueryOptionNames.search,
+    ]
+      .filter((key) => !Types.isEmpty(this.values[key]))
+      .reduce((acc, key) => {
+        let value: any = this.values[key];
+        if (Types.rawType(value).endsWith('Expression')) {
+          value = (value as Expression<T>).render({ aliases, prefix, escape });
+        }
+        return Object.assign(acc, { [key]: value });
+      }, {});
+    let count = `${render(this.field, { aliases, escape, prefix })}/$count`;
+    if (!Types.isEmpty(params)) {
+      count = `${count}(${Object.keys(params)
+        .map((key) => `$${key}=${params[key]}`)
+        .join(';')})`;
+    }
+    return count;
+  }
+
+  filter(
+    opts: (
+      builder: FilterExpressionBuilder<T>,
+      current?: FilterExpression<T>
+    ) => FilterExpression<T>
+  ) {
+    return this.option(
+      QueryOptionNames.filter,
+      FilterExpression.filter<T>(opts, this.values[QueryOptionNames.filter])
+    );
   }
 
   clone() {
-    return new CountField(this.field.clone());
+    const values = Object.keys(this.values).reduce(
+      (acc, key) =>
+        Object.assign(acc, { [key]: Objects.clone(this.values[key]) }),
+      {}
+    );
+    return new CountField(this.field.clone(), values);
+  }
+
+  // Option Handler
+  private option<O>(name: QueryOptionNames, opts?: O) {
+    if (opts !== undefined) this.values[name] = opts;
+    return this.values[name];
   }
 }
 
@@ -45,7 +92,7 @@ export class CountExpression<T> extends Expression<T> {
     super({ children });
   }
 
-  static orderBy<T extends object>(
+  static count<T extends object>(
     opts: (
       builder: CountExpressionBuilder<T>,
       current?: CountExpression<T>
@@ -85,5 +132,18 @@ export class CountExpression<T> extends Expression<T> {
     return new CountExpression({
       children: this._children.map((c) => c.clone()),
     });
+  }
+
+  field<F extends Object>(
+    field: F[],
+    opts?: (e: { t: F; f: CountField<F> }) => CountExpression<F>
+  ): CountExpression<F> {
+    let countField = new CountField<F>(field);
+    if (opts !== undefined)
+      opts({
+        t: Field.factory<Readonly<Required<F>>>(),
+        f: countField,
+      });
+    return this._add(countField);
   }
 }

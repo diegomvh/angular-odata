@@ -344,6 +344,40 @@ describe('OData filter builder', () => {
           );
         });
       });
+      describe('count expression', () => {
+        it('count simple', () => {
+          const func = FilterExpression.filter<Person>(({ e, t }) =>
+            e().gt(e().count(t.Pets), 3)
+          );
+          expect(func.render()).toBe('Pets/$count gt 3');
+        });
+
+        it('count', () => {
+          const func = FilterExpression.filter<Person>(({ e, t }) =>
+            e().gt(
+              e().count(t.Pets, ({ f }) =>
+                f.filter(({ e, t }) => e().gt(t.Age, 3))
+              ),
+              3
+            )
+          );
+          expect(func.render()).toBe('Pets/$count($filter=Age gt 3) gt 3');
+        });
+
+        it('count operator', () => {
+          const func = FilterExpression.filter<Person>(({ e, t }) =>
+            e().lt(
+              e().count(t.Pets, ({ f }) =>
+                f.filter(({ e, t }) => e().startsWith(t.Name, 'Poly'))
+              ),
+              3
+            )
+          );
+          expect(func.render()).toBe(
+            "Pets/$count($filter=startswith(Name, 'Poly')) lt 3"
+          );
+        });
+      });
     });
   });
 });
